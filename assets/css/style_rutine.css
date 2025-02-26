@@ -1,0 +1,27 @@
+.btn_lutine_blue {
+    line-height: 2 !important;
+    border-color:#EAECF0  !important;
+    background-color: #1570EF  !important;
+    width: 10rem  !important;
+    color:#FFFFFF  !important;
+    font-size: 20px  !important;
+    font-weight: bold  !important;
+  }
+  .btn_lutine_gray {
+    line-height: 2;
+    border-color:#EAECF0;
+    background-color: #D0D5DD;
+    width: 10rem;
+    color:#98A2B3;
+    font-size: 20px;
+    font-weight: bold;
+  }
+  .btn_lutine_white {
+    line-height: 2;
+    border-color:#EAECF0;
+    background-color: #66CC66	;
+    width: 10rem;
+    color:#000;
+    font-size: 20px;
+    font-weight: bold;
+  }
