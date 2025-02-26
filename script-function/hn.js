@@ -171,6 +171,12 @@ function setActive_feeddata_hncode_detail(ID, DocNo) {
   feeddata_hncode_detail(DocNo);
 }
 
+$("#btn_excel_all").click(function () {
+  option = "?select_SDate=" + $("#select_SDate").val()+"&select_EDate=" + $("#select_EDate").val();
+  window.open("report/phpexcel/Report_Medical_Instrument_Tracking.php" + option, "_blank");
+});
+
+
 function feeddata_hncode_detail(DocNo) {
   $.ajax({
     url: "process/hn.php",

@@ -1,4 +1,5 @@
 <?php
+include 'phpqrcode/qrlib.php';
 require('tcpdf/tcpdf.php');
 require('../connect/connect.php');
 require('Class.php');
@@ -26,8 +27,8 @@ class MYPDF extends TCPDF
 
 
         
-        $image_file = "images/logo.png";
-        $this->Image($image_file, 10, 5, 15, 8, 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);
+        // $image_file = "images/logo.png";
+        // $this->Image($image_file, 10, 5, 15, 8, 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);
         $DocNo = $_GET['DocNo'];
 
             // Set font
@@ -73,29 +74,70 @@ class MYPDF extends TCPDF
     
             $this->SetFont('db_helvethaica_x', 'b', 14);
 
-            $this->Cell(138, 8, 'รายงานขอเบิกใช้อุปกรณ์กับคนไข้', 1, 1, 'C');
+            $this->SetY(10);
+            $this->Cell(138, 5, 'รายงานขอเบิกใช้อุปกรณ์กับคนไข้', 1, 1, 'C');
+
+
+            $this->Cell(30, 30,  "", 1, 0, 'L');
+            $this->Cell(83, 30,  "", 1, 0, 'L');
+            $this->Cell(25, 30,  "", 1, 0, 'L');
+            
+
+
+
+            $this->SetFont('db_helvethaica_x', 'B', 10);
+            $this->SetY(18);
+            $this->SetX(38);
+            $this->Cell(50, 5,  "HN Code : ", 0, 1, 'L');
+            $this->SetX(38);
+            $this->Cell(50, 5,  "วันที่เข้ารับบริการ : ", 0, 1, 'L');
+            $this->SetX(38);
+            $this->Cell(50, 5,  "แพทย์ : ", 0, 1, 'L');
+            $this->SetX(38);
+            $this->Cell(50, 5,  "ห้องผ่าตัด : ", 0, 1, 'L');
+            $this->SetX(38);
+            $this->Cell(50, 5,  "หมายเหตุ : ", 0, 1, 'L');
+
+
+            $this->SetY(17);
+            $this->SetX(123);
+            $this->Cell(80, 0,  " QR Code HN ", 0, 0, 'L');
+
+            $file = "images/LOGO_bkx.png";
+            $ecc = 'H';
+            $pixel_size = 10;
+            $frame_size = 4;
+            QRcode::png('xxx', $file, $ecc, $pixel_size, $frame_size);
+            $this->Image($file, 120, 22, 20, 20, 'PNG');
+
+
+            $image_file = "images/logo.png";
+            $this->Image($image_file, 7, 25, 25, 12, 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);
+
+
+            // $this->Cell(138, 8, 'รายงานขอเบิกใช้อุปกรณ์กับคนไข้', 1, 1, 'C');
     
-            $this->Cell(30, 11,  "  HN Code", 1, 0, 'L');
-            $this->Cell(108, 11, "     ".$_hn_record_id, 1, 1, 'L');
+            // $this->Cell(30, 11,  "  HN Code", 1, 0, 'L');
+            // $this->Cell(108, 11, "     ".$_hn_record_id, 1, 1, 'L');
     
-            $this->Cell(30, 11,  "  วันที่เข้ารับบริการ", 1, 0, 'L');
-            $this->Cell(108, 11,  "    ".$_serviceDate, 1, 1, 'L');
+            // $this->Cell(30, 11,  "  วันที่เข้ารับบริการ", 1, 0, 'L');
+            // $this->Cell(108, 11,  "    ".$_serviceDate, 1, 1, 'L');
     
-            $this->Cell(30, 11,  "  แพทย์", 1, 0, 'L');
-            $this->Cell(108, 11,  "    ".$_Doctor_Name, 1, 1, 'L');
+            // $this->Cell(30, 11,  "  แพทย์", 1, 0, 'L');
+            // $this->Cell(108, 11,  "    ".$_Doctor_Name, 1, 1, 'L');
     
     
-            $this->Cell(30, 11,  "  ห้องผ่าตัด", 1, 0, 'L');
-            $this->Cell(108, 11,  "    ".$_departmentroomname, 1, 1, 'L');
+            // $this->Cell(30, 11,  "  ห้องผ่าตัด", 1, 0, 'L');
+            // $this->Cell(108, 11,  "    ".$_departmentroomname, 1, 1, 'L');
     
-            $this->Cell(30, 11,  "  หมายเหตุ", 1, 0, 'L');
-            $this->Cell(108, 11, "    ".$_Remark, 1, 1, 'L');
+            // $this->Cell(30, 11,  "  หมายเหตุ", 1, 0, 'L');
+            // $this->Cell(108, 11, "    ".$_Remark, 1, 1, 'L');
     
-            $this->Ln(1);
+            $this->Ln(23);
             $this->SetFillColor(255, 255, 255);
             $this->SetFont('db_helvethaica_x', 'b', 12);
             $this->MultiCell(138, 9,  "    หัตถการ : " . $_Procedure_TH, 1, 1, 'L');
-            // 
+            
             $this->Ln(1);
 
 
@@ -215,7 +257,7 @@ $pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
 // set default monospaced font
 $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
 // set margins
-$pdf->SetMargins(5, 90, 5);
+$pdf->SetMargins(5,58, 5);
 $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
 $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
 // set auto page breaks

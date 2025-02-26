@@ -102,6 +102,9 @@
             <div class="col-md-6">
                 <button class="btn" id="btn_Tracking" disabled style="color: #fff;background: #1570EF;font-size:20px;">Medical Instrument Tracking</button>
             </div>
+            <div class="col-md-6 text-right">
+                <button class="btn btn-success" id="btn_excel_all"  style="color: #fff;font-size:20px;">Excel All</button>
+            </div>
             <div class="col-md-12 col-lg-12 mt-2">
                 <div class="row">
                     <div class="col-md-12 " id="div_detailleft1">
