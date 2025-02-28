@@ -1310,7 +1310,7 @@ function show_detail_deproom_pay($conn, $db)
                             departmentroom ON deproom.Ref_departmentroomid = departmentroom.id
                         INNER JOIN
                             doctor ON deproom.doctor = doctor.ID
-                        INNER JOIN
+                        LEFT JOIN
                             `procedure` ON deproom.`procedure` = `procedure`.ID
                         WHERE
                             departmentroom.id = '$_id'

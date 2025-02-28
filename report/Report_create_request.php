@@ -58,7 +58,7 @@ class MYPDF extends TCPDF
                                 deproom
                             INNER JOIN
                                 doctor ON doctor.ID = deproom.doctor
-                            INNER JOIN
+                            LEFT JOIN
                                 `procedure` ON deproom.`procedure` = `procedure`.ID
                             INNER JOIN
                                 departmentroom ON deproom.Ref_departmentroomid = departmentroom.id
@@ -117,15 +117,15 @@ class MYPDF extends TCPDF
             $this->SetFont('db_helvethaica_x', 'B', 10);
             $this->SetY(18);
             $this->SetX(38);
-            $this->Cell(50, 5,  "HN Code : ", 0, 1, 'L');
+            $this->Cell(50, 5,  "HN Code : ". $_hn_record_id, 0, 1, 'L');
             $this->SetX(38);
-            $this->Cell(50, 5,  "วันที่เข้ารับบริการ : ", 0, 1, 'L');
+            $this->Cell(50, 5,  "วันที่เข้ารับบริการ : ". $_serviceDate, 0, 1, 'L');
             $this->SetX(38);
-            $this->Cell(50, 5,  "แพทย์ : ", 0, 1, 'L');
+            $this->Cell(50, 5,  "แพทย์ : ". $_Doctor_Name, 0, 1, 'L');
             $this->SetX(38);
-            $this->Cell(50, 5,  "ห้องผ่าตัด : ", 0, 1, 'L');
+            $this->Cell(50, 5,  "ห้องผ่าตัด : ". $_departmentroomname, 0, 1, 'L');
             $this->SetX(38);
-            $this->Cell(50, 5,  "หมายเหตุ : ", 0, 1, 'L');
+            $this->Cell(50, 5,  "หมายเหตุ : ". $_Remark, 0, 1, 'L');
 
 
             $this->SetY(17);
