@@ -1,4 +1,5 @@
 <?php
+require('../config/db.php');
 include 'phpqrcode/qrlib.php';
 require('tcpdf/tcpdf.php');
 require('../connect/connect.php');
@@ -6,6 +7,8 @@ require('Class.php');
 header('Content-Type: text/html; charset=utf-8');
 date_default_timezone_set("Asia/Bangkok");
 //--------------------------------------------------------------------------
+
+
 
 
 class MYPDF extends TCPDF
@@ -20,6 +23,7 @@ class MYPDF extends TCPDF
     //Page header
     public function Header()
     {
+        require('../config/db.php');
         require('../connect/connect.php');
         $datetime = new DatetimeTH();
         // date th
@@ -37,26 +41,51 @@ class MYPDF extends TCPDF
             // Title
             $this->Cell(0, 1,  'วันที่พิมพ์รายงาน' . ' ' . $printdate, 0, 0, 'R');
 
+            if($db == 1){
+                $query = " SELECT
+                                deproom.DocNo,
+                                DATE_FORMAT(deproom.serviceDate, '%d-%m-%Y') AS serviceDate,
+                                DATE_FORMAT(deproom.serviceDate, '%H:%i') AS serviceTime,
+                                deproom.hn_record_id,
+                                doctor.Doctor_Name,
+                                `procedure`.Procedure_TH,
+                                departmentroom.departmentroomname,
+                                doctor.ID AS doctor_ID,
+                                `procedure`.ID AS procedure_ID,
+                                departmentroom.id AS deproom_ID,
+                                deproom.Remark
+                            FROM
+                                deproom
+                            INNER JOIN
+                                doctor ON doctor.ID = deproom.doctor
+                            INNER JOIN
+                                `procedure` ON deproom.`procedure` = `procedure`.ID
+                            INNER JOIN
+                                departmentroom ON deproom.Ref_departmentroomid = departmentroom.id
+                            WHERE
+                                deproom.DocNo = '$DocNo' ";
+            }else{
+                $query = " SELECT
+                deproom.DocNo,
+                FORMAT(deproom.serviceDate , 'dd-MM-yyyy') AS serviceDate,
+                FORMAT(deproom.serviceDate , 'HH:mm') AS serviceTime,
+                deproom.hn_record_id,
+                doctor.Doctor_Name,
+                [procedure].Procedure_TH,
+                departmentroom.departmentroomname ,
+                doctor.ID AS doctor_ID,
+                [procedure].ID AS procedure_ID,
+                departmentroom.id AS deproom_ID,
+                deproom.Remark
+                FROM
+                deproom
+                INNER JOIN doctor ON doctor.ID = deproom.doctor
+                INNER JOIN [procedure] ON deproom.[procedure] = [procedure].ID
+                INNER JOIN departmentroom ON deproom.Ref_departmentroomid = departmentroom.id 
+                WHERE
+                deproom.DocNo = '$DocNo' ";
+            }
 
-            $query = " SELECT
-            deproom.DocNo,
-            FORMAT(deproom.serviceDate , 'dd-MM-yyyy') AS serviceDate,
-            FORMAT(deproom.serviceDate , 'HH:mm') AS serviceTime,
-            deproom.hn_record_id,
-            doctor.Doctor_Name,
-            [procedure].Procedure_TH,
-            departmentroom.departmentroomname ,
-            doctor.ID AS doctor_ID,
-            [procedure].ID AS procedure_ID,
-            departmentroom.id AS deproom_ID,
-            deproom.Remark
-            FROM
-            deproom
-            INNER JOIN doctor ON doctor.ID = deproom.doctor
-            INNER JOIN [procedure] ON deproom.[procedure] = [procedure].ID
-            INNER JOIN departmentroom ON deproom.Ref_departmentroomid = departmentroom.id 
-            WHERE
-            deproom.DocNo = '$DocNo' ";
             $meQuery = $conn->prepare($query);
             $meQuery->execute();
             while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
@@ -190,18 +219,36 @@ class MYPDF extends TCPDF
         // Arial italic 8
         $this->SetFont('db_helvethaica_x', 'i', 12);
         // Page number
+        require('../config/db.php');
         require('../connect/connect.php');
         $DocNo = $_GET['DocNo'];
 
-        $query = " SELECT
-                        CONCAT(employee.FirstName,' ',employee.LastName ) AS name ,
-                        FORMAT(deproom.serviceDate , 'dd-MM-yyyy') AS serviceDate
-                    FROM
-                        deproom
-                        INNER JOIN users ON deproom.UserCode = users.ID
-                        INNER JOIN employee ON users.EmpCode = employee.EmpCode
+
+        if($db == 1){
+            $query = "SELECT
+                            CONCAT(employee.FirstName, ' ', employee.LastName) AS name,
+                            DATE_FORMAT(deproom.serviceDate, '%d-%m-%Y') AS serviceDate
+                        FROM
+                            deproom
+                        INNER JOIN
+                            users ON deproom.UserCode = users.ID
+                        INNER JOIN
+                            employee ON users.EmpCode = employee.EmpCode
                         WHERE
-                        deproom.DocNo = '$DocNo' ";
+                            deproom.DocNo = '$DocNo' ";
+        }else{
+            $query = " SELECT
+                            CONCAT(employee.FirstName,' ',employee.LastName ) AS name ,
+                            FORMAT(deproom.serviceDate , 'dd-MM-yyyy') AS serviceDate
+                        FROM
+                            deproom
+                            INNER JOIN users ON deproom.UserCode = users.ID
+                            INNER JOIN employee ON users.EmpCode = employee.EmpCode
+                            WHERE
+                            deproom.DocNo = '$DocNo' ";
+        }
+
+
         $meQuery = $conn->prepare($query);
         $meQuery->execute();
         while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
@@ -294,7 +341,7 @@ $query = "SELECT
                 item.itemname ,
                 item.itemcode ,
                 deproomdetail.ID ,
-                SUM ( deproomdetail.IsQtyStart ) AS cnt ,
+                SUM(deproomdetail.IsQtyStart) AS cnt ,
                 itemtype.TyeName
                 FROM
                 deproom
