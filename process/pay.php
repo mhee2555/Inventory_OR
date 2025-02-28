@@ -1291,7 +1291,7 @@ function show_detail_deproom_pay($conn, $db)
                             departmentroom.id,
                             departmentroom.departmentroomname,
                             doctor.Doctor_Name,
-                            `procedure`.Procedure_TH,
+                            IFNULL(`procedure`.Procedure_TH, '') AS Procedure_TH,
                             deproom.hn_record_id,
                             DATE_FORMAT(deproom.serviceDate, '%d-%m-%Y') AS serviceDate,
                             DATE_FORMAT(deproom.serviceDate, '%H:%i') AS serviceTime,

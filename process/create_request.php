@@ -337,7 +337,7 @@ function show_detail_history($conn,$db)
                     DATE_FORMAT(deproom.serviceDate, '%H:%i') AS serviceTime,
                     deproom.hn_record_id,
                     doctor.Doctor_Name,
-                    `procedure`.Procedure_TH,
+                    IFNULL(`procedure`.Procedure_TH, '') AS Procedure_TH,
                     departmentroom.departmentroomname,
                     doctor.ID AS doctor_ID,
                     `procedure`.ID AS procedure_ID,

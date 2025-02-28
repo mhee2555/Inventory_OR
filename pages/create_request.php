@@ -128,7 +128,7 @@
                                     <div class="form-group ">
                                         <label style="color:black;font-weight: 600;">เลข HN Code</label>
                                         <div class="input-group">
-                                            <input type="text" class="form-control f18 numonly" id="input_hn_request" placeholder="" autocomplete="off">
+                                            <input type="text" class="form-control f18 " id="input_hn_request" placeholder="" autocomplete="off">
                                         </div>
                                     </div>
                                 </div>
