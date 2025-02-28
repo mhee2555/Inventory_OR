@@ -1,28 +1,29 @@
 <?php
 session_start();
+require '../config/db.php';
 require '../connect/connect.php';
 
 if (!empty($_POST['FUNC_NAME'])) {
     if ($_POST['FUNC_NAME'] == 'show_detail_stock') {
-        show_detail_stock($conn);
-    }else     if ($_POST['FUNC_NAME'] == 'feeddata_Payout_detail') {
-        feeddata_Payout_detail($conn);
+        show_detail_stock($conn, $db);
+    } else     if ($_POST['FUNC_NAME'] == 'feeddata_Payout_detail') {
+        feeddata_Payout_detail($conn, $db);
     } else if ($_POST['FUNC_NAME'] == 'onConfirmReceiveItemstock') {
-        onConfirmReceiveItemstock($conn);
+        onConfirmReceiveItemstock($conn, $db);
     } else if ($_POST['FUNC_NAME'] == 'feeddata_Payout_tab2') {
-        feeddata_Payout_tab2($conn);
+        feeddata_Payout_tab2($conn, $db);
     } else if ($_POST['FUNC_NAME'] == 'feeddata_Payout_detail_tab2') {
-        feeddata_Payout_detail_tab2($conn);
+        feeddata_Payout_detail_tab2($conn, $db);
     } else if ($_POST['FUNC_NAME'] == 'onConfirmReceiveItemstock_auto') {
-        onConfirmReceiveItemstock_auto($conn);
+        onConfirmReceiveItemstock_auto($conn, $db);
     } else if ($_POST['FUNC_NAME'] == 'show_detail_stock2') {
-        show_detail_stock2($conn);
+        show_detail_stock2($conn, $db);
     } else if ($_POST['FUNC_NAME'] == 'feeddata_Payout_detail2') {
-        feeddata_Payout_detail2($conn);
+        feeddata_Payout_detail2($conn, $db);
     }
 }
 
-function onConfirmReceiveItemstock_auto($conn)
+function onConfirmReceiveItemstock_auto($conn, $db)
 {
     $return = array();
     $ArrayItemStockID = $_POST['ArrayItemStockID'];
@@ -45,9 +46,9 @@ function onConfirmReceiveItemstock_auto($conn)
     $subItemStockID = substr($ItemStockID, 0, strlen($ItemStockID) - 1);
     $subpayoutdetailsubid = substr($payoutdetailsubid, 0, strlen($payoutdetailsubid) - 1);
 
-    updateReceivePayout_auto($conn, $subItemStockID, $subpayoutdetailsubid, 'รับเข้าแผนก', $select_departmentRoom);
+    updateReceivePayout_auto($conn, $subItemStockID, $subpayoutdetailsubid, 'รับเข้าแผนก', $select_departmentRoom, $db);
 
-    $IsStatus = updateReceivePayout_detail($conn, $DocNo);
+    $IsStatus = updateReceivePayout_detail($conn, $DocNo, $db);
 
     // insertItemStock_Transaction($conn, $subItemStockID, 1);
     // insertItemStock_Balance($conn, $subItemStockID, 1, $select_departmentRoom);
@@ -67,30 +68,53 @@ function onConfirmReceiveItemstock_auto($conn)
     die;
 }
 
-function updateReceivePayout_auto($conn, $ItemStockID, $payoutdetailsubid, $remark, $select_departmentRoom)
+function updateReceivePayout_auto($conn, $ItemStockID, $payoutdetailsubid, $remark, $select_departmentRoom, $db)
 {
 
     $DepID = $_SESSION['DepID'];
     $Userid = $_SESSION['Userid'];
 
-    $query_updateitemstock = "UPDATE itemstock  
-    SET		IsStatus = 5, 
-            IsTag = 0 ,
-            IsPrintDept = 0 ,
-            IsConfirmToSend = 0 ,
-            DepID = $DepID , 
-            LastReceiveInDeptDate = GETDATE()
-    WHERE   RowID IN (  $ItemStockID  ) ";
+
+    if ($db == 1) {
+        $query_updateitemstock = "UPDATE itemstock  
+                                    SET		IsStatus = 5, 
+                                            IsTag = 0 ,
+                                            IsPrintDept = 0 ,
+                                            IsConfirmToSend = 0 ,
+                                            DepID = $DepID , 
+                                            LastReceiveInDeptDate = NOW()
+                                    WHERE   RowID IN (  $ItemStockID  ) ";
+
+        $query_updatepayoutdetailsub = "UPDATE payoutdetailsub  
+                                    SET		IsStatus = 3, 
+                                            ReceiveDateTime = NOW() ,
+                                            UserReceiveID =   $Userid  ,
+                                            Remark = '$remark' 
+                                    WHERE   ID IN (  $payoutdetailsubid  ) ";
+    } else {
+        $query_updateitemstock = "UPDATE itemstock  
+                                    SET		IsStatus = 5, 
+                                            IsTag = 0 ,
+                                            IsPrintDept = 0 ,
+                                            IsConfirmToSend = 0 ,
+                                            DepID = $DepID , 
+                                            LastReceiveInDeptDate = GETDATE()
+                                    WHERE   RowID IN (  $ItemStockID  ) ";
+
+        $query_updatepayoutdetailsub = "UPDATE payoutdetailsub  
+                                    SET		IsStatus = 3, 
+                                            ReceiveDateTime = GETDATE() ,
+                                            UserReceiveID =   $Userid  ,
+                                            Remark = '$remark' 
+                                    WHERE   ID IN (  $payoutdetailsubid  ) ";
+    }
+
+
     $meQuery2 = $conn->prepare($query_updateitemstock);
     $meQuery2->execute();
 
 
-    $query_updatepayoutdetailsub = "UPDATE payoutdetailsub  
-                                        SET		IsStatus = 3, 
-                                                ReceiveDateTime = GETDATE() ,
-                                                UserReceiveID =   $Userid  ,
-                                                Remark = '$remark' 
-                                        WHERE   ID IN (  $payoutdetailsubid  ) ";
+
 
 
 
@@ -103,7 +127,7 @@ function updateReceivePayout_auto($conn, $ItemStockID, $payoutdetailsubid, $rema
 
 }
 
-function show_detail_stock($conn)
+function show_detail_stock($conn, $db)
 {
     $return = [];
 
@@ -112,22 +136,46 @@ function show_detail_stock($conn)
     $select_Date = explode("-", $select_Date);
     $select_Date = $select_Date[2] . '-' . $select_Date[1] . '-' . $select_Date[0];
 
-    $q1 = " SELECT
-                payout.RefDocNo
-            FROM
-                payout
-                INNER JOIN department ON department.ID = payout.DeptID
-                INNER JOIN payoutdetail ON payoutdetail.DocNo = payout.DocNo
-                INNER JOIN payoutdetailsub ON payoutdetailsub.Payoutdetail_RowID = payoutdetail.ID 
-            WHERE
-                payout.IsCancel = 0 
-                AND payout.IsSpecial = 0 
-                AND payout.IsBorrow = 0 
-                AND payout.DeptID IN ( 387, 388 ) 
-                AND ( FORMAT ( payout.CreateDate, 'yyyy-MM-dd' ) = '$select_Date' ) 
-                AND payout.IsStatus IN ( 1, 2, 3, 8 ) 
-            GROUP BY
-                payout.RefDocNo ";
+
+    if ($db == 1) {
+        $q1 = " SELECT
+                    payout.RefDocNo
+                FROM
+                    payout
+                INNER JOIN
+                    department ON department.ID = payout.DeptID
+                INNER JOIN
+                    payoutdetail ON payoutdetail.DocNo = payout.DocNo
+                INNER JOIN
+                    payoutdetailsub ON payoutdetailsub.Payoutdetail_RowID = payoutdetail.ID
+                WHERE
+                    payout.IsCancel = 0
+                    AND payout.IsSpecial = 0
+                    AND payout.IsBorrow = 0
+                    AND payout.DeptID IN (387, 388)
+                    AND DATE_FORMAT(payout.CreateDate, '%Y-%m-%d') = '$select_Date'
+                    AND payout.IsStatus IN (1, 2, 3, 8)
+                GROUP BY
+                    payout.RefDocNo ";
+    } else {
+        $q1 = " SELECT
+                    payout.RefDocNo
+                FROM
+                    payout
+                    INNER JOIN department ON department.ID = payout.DeptID
+                    INNER JOIN payoutdetail ON payoutdetail.DocNo = payout.DocNo
+                    INNER JOIN payoutdetailsub ON payoutdetailsub.Payoutdetail_RowID = payoutdetail.ID 
+                WHERE
+                    payout.IsCancel = 0 
+                    AND payout.IsSpecial = 0 
+                    AND payout.IsBorrow = 0 
+                    AND payout.DeptID IN ( 387, 388 ) 
+                    AND ( FORMAT ( payout.CreateDate, 'yyyy-MM-dd' ) = '$select_Date' ) 
+                    AND payout.IsStatus IN ( 1, 2, 3, 8 ) 
+                GROUP BY
+                    payout.RefDocNo ";
+    }
+
 
     $meQuery = $conn->prepare($q1);
     $meQuery->execute();
@@ -135,44 +183,85 @@ function show_detail_stock($conn)
         $RefDocNo = $row['RefDocNo'];
         $return['RefDocNo'][] = $row;
 
-        $query1 = "SELECT
-                payout.DocNo,
-                payout.Id,
-                department.DepName2,
-                FORMAT (
-                    payout.CreateDate,
-                    'dd-MM-yyyy HH:mm:ss'
-                ) AS CreateDate,
-                COALESCE (payout.[Desc], '') AS Descriptions,
-                payout.RefDocNo,
-                payout.IsStatus AS IsStatus,
-                COUNT(payoutdetailsub.ID) AS qty
-            FROM
-                payout
-            INNER JOIN department ON department.ID = payout.DeptID
-            INNER JOIN payoutdetail ON payoutdetail.DocNo = payout.DocNo
-            INNER JOIN payoutdetailsub ON payoutdetailsub.Payoutdetail_RowID = payoutdetail.ID
-            WHERE
-                payout.IsCancel = 0
-            AND payout.IsSpecial = 0
-            AND payout.IsBorrow = 0
-             AND payout.DeptID IN ( 387 , 388)
-            AND (FORMAT (payout.CreateDate, 'yyyy-MM-dd')  = '$select_Date' )
-            AND payout.IsStatus IN (1, 2, 3, 8)
-            AND payout.RefDocNo = '$RefDocNo'
-            GROUP BY
-                payout.DocNo,
-                payout.Id,
-                department.DepName2,
-                FORMAT (
-                    payout.CreateDate,
-                    'dd-MM-yyyy HH:mm:ss'
-                ),
-                COALESCE (payout.[Desc], ''),
-                payout.RefDocNo,
-                payout.IsStatus
-            ORDER BY
-                payout.Id  , payout.IsStatus DESC ";
+
+
+        if ($db == 1) {
+            $query1 = " SELECT
+                            payout.DocNo,
+                            payout.Id,
+                            department.DepName2,
+                            DATE_FORMAT(payout.CreateDate, '%d-%m-%Y %H:%i:%s') AS CreateDate,
+                            COALESCE(payout.`Desc`, '') AS Descriptions,
+                            payout.RefDocNo,
+                            payout.IsStatus AS IsStatus,
+                            COUNT(payoutdetailsub.ID) AS qty
+                        FROM
+                            payout
+                        INNER JOIN
+                            department ON department.ID = payout.DeptID
+                        INNER JOIN
+                            payoutdetail ON payoutdetail.DocNo = payout.DocNo
+                        INNER JOIN
+                            payoutdetailsub ON payoutdetailsub.Payoutdetail_RowID = payoutdetail.ID
+                        WHERE
+                            payout.IsCancel = 0
+                            AND payout.IsSpecial = 0
+                            AND payout.IsBorrow = 0
+                            AND payout.DeptID IN (387, 388)
+                            AND DATE_FORMAT(payout.CreateDate, '%Y-%m-%d') = '$select_Date'
+                            AND payout.IsStatus IN (1, 2, 3, 8)
+                            AND payout.RefDocNo = '$RefDocNo'
+                        GROUP BY
+                            payout.DocNo,
+                            payout.Id,
+                            department.DepName2,
+                            DATE_FORMAT(payout.CreateDate, '%d-%m-%Y %H:%i:%s'),
+                            COALESCE(payout.`Desc`, ''),
+                            payout.RefDocNo,
+                            payout.IsStatus
+                        ORDER BY
+                            payout.Id, payout.IsStatus DESC ";
+        } else {
+            $query1 = "SELECT
+                            payout.DocNo,
+                            payout.Id,
+                            department.DepName2,
+                            FORMAT (
+                                payout.CreateDate,
+                                'dd-MM-yyyy HH:mm:ss'
+                            ) AS CreateDate,
+                            COALESCE (payout.[Desc], '') AS Descriptions,
+                            payout.RefDocNo,
+                            payout.IsStatus AS IsStatus,
+                            COUNT(payoutdetailsub.ID) AS qty
+                        FROM
+                            payout
+                        INNER JOIN department ON department.ID = payout.DeptID
+                        INNER JOIN payoutdetail ON payoutdetail.DocNo = payout.DocNo
+                        INNER JOIN payoutdetailsub ON payoutdetailsub.Payoutdetail_RowID = payoutdetail.ID
+                        WHERE
+                            payout.IsCancel = 0
+                        AND payout.IsSpecial = 0
+                        AND payout.IsBorrow = 0
+                        AND payout.DeptID IN ( 387 , 388)
+                        AND (FORMAT (payout.CreateDate, 'yyyy-MM-dd')  = '$select_Date' )
+                        AND payout.IsStatus IN (1, 2, 3, 8)
+                        AND payout.RefDocNo = '$RefDocNo'
+                        GROUP BY
+                            payout.DocNo,
+                            payout.Id,
+                            department.DepName2,
+                            FORMAT (
+                                payout.CreateDate,
+                                'dd-MM-yyyy HH:mm:ss'
+                            ),
+                            COALESCE (payout.[Desc], ''),
+                            payout.RefDocNo,
+                            payout.IsStatus
+                        ORDER BY
+                            payout.Id  , payout.IsStatus DESC ";
+        }
+
 
         $meQuery1 = $conn->prepare($query1);
         $meQuery1->execute();
@@ -185,7 +274,7 @@ function show_detail_stock($conn)
     die;
 }
 
-function show_detail_stock2($conn)
+function show_detail_stock2($conn, $db)
 {
     $return = [];
 
@@ -196,7 +285,7 @@ function show_detail_stock2($conn)
 
     $q1 = "SELECT
                 sendsterile.DocNo,
-                SUM ( sendsteriledetail.Qty ) AS qty
+                SUM(sendsteriledetail.Qty) AS qty
             FROM
                 sendsterile
                 INNER JOIN  sendsteriledetail ON sendsterile.DocNo = sendsteriledetail.SendSterileDocNo 
@@ -207,8 +296,6 @@ function show_detail_stock2($conn)
     $meQuery->execute();
     while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
         $return['RefDocNo'][] = $row;
-
-
     }
     echo json_encode($return);
     unset($conn);
@@ -216,7 +303,7 @@ function show_detail_stock2($conn)
 }
 
 
-function feeddata_Payout_detail($conn)
+function feeddata_Payout_detail($conn, $db)
 {
     $return = array();
 
@@ -225,12 +312,49 @@ function feeddata_Payout_detail($conn)
     $DepID = $_SESSION['DepID'];
 
 
-    $query = "SELECT
+    if ($db == 1) {
+        $query = "SELECT
+                        item.itemcode,
+                        item.itemname,
+                        (
+                            SELECT COUNT(pds.ID)
+                            FROM payoutdetailsub AS pds
+                            INNER JOIN payoutdetail AS pd ON pd.ID = pds.Payoutdetail_RowID
+                            WHERE pd.DocNo = payoutdetail.DocNo AND pd.itemcode = itemstock.ItemCode
+                        ) AS CountItem,
+                        payoutdetail.IsStatus
+                    FROM
+                        payoutdetailsub
+                    INNER JOIN
+                        payoutdetail ON payoutdetailsub.Payoutdetail_RowID = payoutdetail.ID
+                    INNER JOIN
+                        item ON item.itemcode = payoutdetail.ItemCode
+                    INNER JOIN
+                        itemstock ON payoutdetailsub.ItemStockID = itemstock.RowId
+                    LEFT JOIN
+                        occurancetype ON occurancetype.ID = payoutdetailsub.OccuranceTypeID
+                    INNER JOIN
+                        payout ON payout.DocNo = payoutdetail.DocNo
+                    LEFT JOIN
+                        employee AS employee_1 ON employee_1.ID = payout.RecipientCode
+                    LEFT JOIN
+                        employee AS employee_2 ON employee_2.ID = payout.Approve
+                    WHERE
+                        payoutdetail.DocNo = '$DocNo'
+                    GROUP BY
+                        item.itemcode,
+                        item.itemname,
+                        payoutdetail.DocNo,
+                        itemstock.ItemCode,
+                        payoutdetail.IsStatus
+                    ORDER BY
+                        item.itemname, payoutdetail.IsStatus ASC ";
+    } else {
+        $query = "SELECT
                 item.itemcode,
                 item.itemname,
                 (
-                SELECT COUNT
-                    ( pds.ID ) 
+                SELECT COUNT( pds.ID ) 
                 FROM
                     payoutdetailsub AS pds
                     INNER JOIN payoutdetail AS pd ON pd.ID = pds.Payoutdetail_RowID 
@@ -258,6 +382,8 @@ function feeddata_Payout_detail($conn)
                 payoutdetail.IsStatus
             ORDER BY
                 item.itemname , payoutdetail.IsStatus ASC ";
+    }
+
 
     $meQuery = $conn->prepare($query);
     $meQuery->execute();
@@ -298,7 +424,7 @@ function feeddata_Payout_detail($conn)
     die;
 }
 
-function feeddata_Payout_detail2($conn)
+function feeddata_Payout_detail2($conn, $db)
 {
     $return = array();
 
@@ -320,14 +446,13 @@ function feeddata_Payout_detail2($conn)
     while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
 
         $return[] = $row;
-
     }
     echo json_encode($return);
     unset($conn);
     die;
 }
 
-function onConfirmReceiveItemstock($conn)
+function onConfirmReceiveItemstock($conn, $db)
 {
     $return = array();
     $ArrayItemStockID = $_POST['ArrayItemStockID'];
@@ -350,9 +475,9 @@ function onConfirmReceiveItemstock($conn)
     $subItemStockID = substr($ItemStockID, 0, strlen($ItemStockID) - 1);
     $subpayoutdetailsubid = substr($payoutdetailsubid, 0, strlen($payoutdetailsubid) - 1);
 
-    updateReceivePayout($conn, $subItemStockID, $subpayoutdetailsubid, 'รับเข้าแผนก', $select_departmentRoom);
+    updateReceivePayout($conn, $subItemStockID, $subpayoutdetailsubid, 'รับเข้าแผนก', $select_departmentRoom, $db);
 
-    $IsStatus = updateReceivePayout_detail($conn, $DocNo);
+    $IsStatus = updateReceivePayout_detail($conn, $DocNo, $db);
 
 
     // echo ($subItemStockID);
@@ -370,26 +495,52 @@ function onConfirmReceiveItemstock($conn)
     die;
 }
 
-function updateReceivePayout_detail($conn, $DocNo)
+function updateReceivePayout_detail($conn, $DocNo, $db)
 {
 
     $DepID = $_SESSION['DepID'];
     $Userid = $_SESSION['Userid'];
 
+    if ($db == 1) {
+        $query_updatepayoutdetail = "UPDATE payoutdetail
+                                        SET IsStatus = (
+                                            CASE
+                                                WHEN (SELECT COUNT(*) FROM payoutdetailsub WHERE Payoutdetail_RowID = payoutdetail.ID AND IsStatus <> 3) = 0 THEN 3
+                                                ELSE 2
+                                            END
+                                        )
+                                        WHERE DocNo = '$DocNo' ";
 
-    $query_updatepayoutdetail = "UPDATE payoutdetail  
+        $query_updatepayout = "UPDATE payout
+                                    SET
+                                        IsStatus = (
+                                            CASE
+                                                WHEN (SELECT COUNT(*) FROM payoutdetail WHERE DocNo = payout.DocNo AND IsStatus <> 3) = 0 THEN 3
+                                                ELSE 2
+                                            END
+                                        ),
+                                        ModifyDate = NOW(),
+                                        Remark = CONCAT(COALESCE(Remark, ''), ', แผนกรับเข้า')
+                                    WHERE
+                                        DocNo = '$DocNo' ";
+    } else {
+        $query_updatepayoutdetail = "UPDATE payoutdetail  
                                     SET	payoutdetail.IsStatus = ( CASE WHEN (
                                     (SELECT COUNT(*) FROM 	payoutdetailsub WHERE payoutdetailsub.Payoutdetail_RowID = payoutdetail.ID
                                     AND payoutdetailsub.IsStatus <> 3 ) = 0 ) THEN 3 ELSE 2 END )   
                                     WHERE payoutdetail.DocNo = '$DocNo' ";
 
-    $query_updatepayout = "UPDATE payout  
-                                    SET	payout.IsStatus = ( CASE WHEN (
-                                    (SELECT COUNT(*) FROM 	payoutdetail WHERE 	payoutdetail.DocNo = payout.DocNo
-                                    AND payoutdetail.IsStatus <> 3 ) = 0 ) THEN 3 ELSE 2 END ) ,
-                                    payout.ModifyDate = GETDATE(),
-                                    payout.Remark = CONCAT(COALESCE(Remark, ''), ', แผนกรับเข้า') 
-                                    WHERE payout.DocNo = '$DocNo' ";
+        $query_updatepayout = "UPDATE payout  
+                                SET	payout.IsStatus = ( CASE WHEN (
+                                (SELECT COUNT(*) FROM 	payoutdetail WHERE 	payoutdetail.DocNo = payout.DocNo
+                                AND payoutdetail.IsStatus <> 3 ) = 0 ) THEN 3 ELSE 2 END ) ,
+                                payout.ModifyDate = GETDATE(),
+                                payout.Remark = CONCAT(COALESCE(Remark, ''), ', แผนกรับเข้า') 
+                                WHERE payout.DocNo = '$DocNo' ";
+    }
+
+
+
 
 
     $meQuery = $conn->prepare($query_updatepayoutdetail);
@@ -398,13 +549,36 @@ function updateReceivePayout_detail($conn, $DocNo)
     $meQuery2->execute();
 }
 
-function updateReceivePayout($conn, $ItemStockID, $payoutdetailsubid, $remark, $select_departmentRoom)
+function updateReceivePayout($conn, $ItemStockID, $payoutdetailsubid, $remark, $select_departmentRoom, $db)
 {
 
     $DepID = $_SESSION['DepID'];
     $Userid = $_SESSION['Userid'];
 
-    $query_updateitemstock = "UPDATE itemstock  
+
+    if($db == 1){
+        $query_updateitemstock = "UPDATE itemstock  
+        SET		IsStatus = 5, 
+                IsTag = 0 ,
+                IsPrintDept = 0 ,
+                IsConfirmToSend = 0 ,
+                Isdeproom = 0 ,
+                departmentroomid = $select_departmentRoom ,
+                DepID = $DepID , 
+                LastReceiveInDeptDate = NOW()
+        WHERE   RowID IN (  $ItemStockID  ) ";
+        $meQuery2 = $conn->prepare($query_updateitemstock);
+        $meQuery2->execute();
+    
+    
+        $query_updatepayoutdetailsub = "UPDATE payoutdetailsub  
+                                            SET		IsStatus = 3, 
+                                                    ReceiveDateTime = NOW(),
+                                                    UserReceiveID =   $Userid  ,
+                                                    Remark = '$remark' 
+                                            WHERE   ID IN (  $payoutdetailsubid  ) ";
+    }else{
+        $query_updateitemstock = "UPDATE itemstock  
     SET		IsStatus = 5, 
             IsTag = 0 ,
             IsPrintDept = 0 ,
@@ -424,6 +598,10 @@ function updateReceivePayout($conn, $ItemStockID, $payoutdetailsubid, $remark, $
                                                 UserReceiveID =   $Userid  ,
                                                 Remark = '$remark' 
                                         WHERE   ID IN (  $payoutdetailsubid  ) ";
+    }
+
+
+
 
 
 
@@ -436,7 +614,7 @@ function updateReceivePayout($conn, $ItemStockID, $payoutdetailsubid, $remark, $
 
 }
 
-function feeddata_Payout_tab2($conn)
+function feeddata_Payout_tab2($conn, $db)
 {
     $return = array();
 
@@ -449,23 +627,47 @@ function feeddata_Payout_tab2($conn)
 
     $select_Date2 = explode("-", $select_Date2);
     $select_Date2 = $select_Date2[2] . '-' . $select_Date2[1] . '-' . $select_Date2[0];
-    
-    $q1 = " SELECT
-                payout.RefDocNo
-            FROM
-                payout
-                INNER JOIN department ON department.ID = payout.DeptID
-                INNER JOIN payoutdetail ON payoutdetail.DocNo = payout.DocNo
-                INNER JOIN payoutdetailsub ON payoutdetailsub.Payoutdetail_RowID = payoutdetail.ID 
-            WHERE
-                payout.IsCancel = 0 
-                AND payout.IsSpecial = 0 
-                AND payout.IsBorrow = 0 
-                AND payout.DeptID IN ( 387, 388 ) 
-                AND FORMAT ( payout.CreateDate, 'yyyy-MM-dd' ) BETWEEN '$select_Date1' AND '$select_Date2'
-                AND payout.IsStatus IN ( 1, 2, 3, 8 ) 
-            GROUP BY
-                payout.RefDocNo ";
+
+
+    if($db == 1){
+        $q1 = " SELECT
+                    payout.RefDocNo
+                FROM
+                    payout
+                INNER JOIN
+                    department ON department.ID = payout.DeptID
+                INNER JOIN
+                    payoutdetail ON payoutdetail.DocNo = payout.DocNo
+                INNER JOIN
+                    payoutdetailsub ON payoutdetailsub.Payoutdetail_RowID = payoutdetail.ID
+                WHERE
+                    payout.IsCancel = 0
+                    AND payout.IsSpecial = 0
+                    AND payout.IsBorrow = 0
+                    AND payout.DeptID IN (387, 388)
+                    AND DATE_FORMAT(payout.CreateDate, '%Y-%m-%d') BETWEEN '$select_Date1' AND '$select_Date2'
+                    AND payout.IsStatus IN (1, 2, 3, 8)
+                GROUP BY
+                    payout.RefDocNo ";
+    }else{
+        $q1 = " SELECT
+                    payout.RefDocNo
+                FROM
+                    payout
+                    INNER JOIN department ON department.ID = payout.DeptID
+                    INNER JOIN payoutdetail ON payoutdetail.DocNo = payout.DocNo
+                    INNER JOIN payoutdetailsub ON payoutdetailsub.Payoutdetail_RowID = payoutdetail.ID 
+                WHERE
+                    payout.IsCancel = 0 
+                    AND payout.IsSpecial = 0 
+                    AND payout.IsBorrow = 0 
+                    AND payout.DeptID IN ( 387, 388 ) 
+                    AND FORMAT ( payout.CreateDate, 'yyyy-MM-dd' ) BETWEEN '$select_Date1' AND '$select_Date2'
+                    AND payout.IsStatus IN ( 1, 2, 3, 8 ) 
+                GROUP BY
+                    payout.RefDocNo ";
+    }
+ 
 
     $meQuery = $conn->prepare($q1);
     $meQuery->execute();
@@ -473,44 +675,85 @@ function feeddata_Payout_tab2($conn)
         $RefDocNo = $row['RefDocNo'];
         $return['RefDocNo'][] = $row;
 
-        $query1 = "SELECT
-                payout.DocNo,
-                payout.Id,
-                department.DepName2,
-                FORMAT (
-                    payout.CreateDate,
-                    'dd-MM-yyyy HH:mm:ss'
-                ) AS CreateDate,
-                COALESCE (payout.[Desc], '') AS Descriptions,
-                payout.RefDocNo,
-                payout.IsStatus AS IsStatus,
-                COUNT(payoutdetailsub.ID) AS qty
-            FROM
-                payout
-            INNER JOIN department ON department.ID = payout.DeptID
-            INNER JOIN payoutdetail ON payoutdetail.DocNo = payout.DocNo
-            INNER JOIN payoutdetailsub ON payoutdetailsub.Payoutdetail_RowID = payoutdetail.ID
-            WHERE
-                payout.IsCancel = 0
-            AND payout.IsSpecial = 0
-            AND payout.IsBorrow = 0
-            AND payout.DeptID IN ( 387 , 388)
-            AND FORMAT ( payout.CreateDate, 'yyyy-MM-dd' ) = '$select_Date1'
-            AND payout.IsStatus IN (1, 2, 3, 8)
-            AND payout.RefDocNo = '$RefDocNo'
-            GROUP BY
-                payout.DocNo,
-                payout.Id,
-                department.DepName2,
-                FORMAT (
-                    payout.CreateDate,
-                    'dd-MM-yyyy HH:mm:ss'
-                ),
-                COALESCE (payout.[Desc], ''),
-                payout.RefDocNo,
-                payout.IsStatus
-            ORDER BY
-                payout.Id  , payout.IsStatus DESC ";
+
+        if($db == 1){
+            $query1 = "SELECT
+                            payout.DocNo,
+                            payout.Id,
+                            department.DepName2,
+                            DATE_FORMAT(payout.CreateDate, '%d-%m-%Y %H:%i:%s') AS CreateDate,
+                            COALESCE(payout.`Desc`, '') AS Descriptions,
+                            payout.RefDocNo,
+                            payout.IsStatus AS IsStatus,
+                            COUNT(payoutdetailsub.ID) AS qty
+                        FROM
+                            payout
+                        INNER JOIN
+                            department ON department.ID = payout.DeptID
+                        INNER JOIN
+                            payoutdetail ON payoutdetail.DocNo = payout.DocNo
+                        INNER JOIN
+                            payoutdetailsub ON payoutdetailsub.Payoutdetail_RowID = payoutdetail.ID
+                        WHERE
+                            payout.IsCancel = 0
+                            AND payout.IsSpecial = 0
+                            AND payout.IsBorrow = 0
+                            AND payout.DeptID IN (387, 388)
+                            AND DATE_FORMAT(payout.CreateDate, '%Y-%m-%d') = '$select_Date1'
+                            AND payout.IsStatus IN (1, 2, 3, 8)
+                            AND payout.RefDocNo = '$RefDocNo'
+                        GROUP BY
+                            payout.DocNo,
+                            payout.Id,
+                            department.DepName2,
+                            DATE_FORMAT(payout.CreateDate, '%d-%m-%Y %H:%i:%s'),
+                            COALESCE(payout.`Desc`, ''),
+                            payout.RefDocNo,
+                            payout.IsStatus
+                        ORDER BY
+                            payout.Id, payout.IsStatus DESC ";
+        }else{
+            $query1 = "SELECT
+                            payout.DocNo,
+                            payout.Id,
+                            department.DepName2,
+                            FORMAT (
+                                payout.CreateDate,
+                                'dd-MM-yyyy HH:mm:ss'
+                            ) AS CreateDate,
+                            COALESCE (payout.[Desc], '') AS Descriptions,
+                            payout.RefDocNo,
+                            payout.IsStatus AS IsStatus,
+                            COUNT(payoutdetailsub.ID) AS qty
+                        FROM
+                            payout
+                        INNER JOIN department ON department.ID = payout.DeptID
+                        INNER JOIN payoutdetail ON payoutdetail.DocNo = payout.DocNo
+                        INNER JOIN payoutdetailsub ON payoutdetailsub.Payoutdetail_RowID = payoutdetail.ID
+                        WHERE
+                            payout.IsCancel = 0
+                        AND payout.IsSpecial = 0
+                        AND payout.IsBorrow = 0
+                        AND payout.DeptID IN ( 387 , 388)
+                        AND FORMAT ( payout.CreateDate, 'yyyy-MM-dd' ) = '$select_Date1'
+                        AND payout.IsStatus IN (1, 2, 3, 8)
+                        AND payout.RefDocNo = '$RefDocNo'
+                        GROUP BY
+                            payout.DocNo,
+                            payout.Id,
+                            department.DepName2,
+                            FORMAT (
+                                payout.CreateDate,
+                                'dd-MM-yyyy HH:mm:ss'
+                            ),
+                            COALESCE (payout.[Desc], ''),
+                            payout.RefDocNo,
+                            payout.IsStatus
+                        ORDER BY
+                            payout.Id  , payout.IsStatus DESC ";
+        }
+
+
 
         $meQuery1 = $conn->prepare($query1);
         $meQuery1->execute();
@@ -525,7 +768,7 @@ function feeddata_Payout_tab2($conn)
     die;
 }
 
-function feeddata_Payout_detail_tab2($conn)
+function feeddata_Payout_detail_tab2($conn, $db)
 {
     $return = array();
     $RefDocNo = $_POST['RefDocNo'];

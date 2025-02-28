@@ -1,32 +1,33 @@
 <?php
 session_start();
+require '../config/db.php';
 require '../connect/connect.php';
 require '../process/Createdeproom.php';
 require '../process/Createhncode.php';
 
 if (!empty($_POST['FUNC_NAME'])) {
     if ($_POST['FUNC_NAME'] == 'show_detail_item_request') {
-        show_detail_item_request($conn);
+        show_detail_item_request($conn,$db);
     } else if ($_POST['FUNC_NAME'] == 'onconfirm_request') {
-        onconfirm_request($conn);
+        onconfirm_request($conn,$db);
     }  else if ($_POST['FUNC_NAME'] == 'show_detail_request_byDocNo') {
-        show_detail_request_byDocNo($conn);
+        show_detail_request_byDocNo($conn,$db);
     }  else if ($_POST['FUNC_NAME'] == 'onconfirm_send_request') {
-        onconfirm_send_request($conn);
+        onconfirm_send_request($conn,$db);
     }  else if ($_POST['FUNC_NAME'] == 'show_detail_history') {
-        show_detail_history($conn);
+        show_detail_history($conn,$db);
     }  else if ($_POST['FUNC_NAME'] == 'cancel_item_byDocNo') {
-        cancel_item_byDocNo($conn);
+        cancel_item_byDocNo($conn,$db);
     }  else if ($_POST['FUNC_NAME'] == 'delete_request_byItem') {
-        delete_request_byItem($conn);
+        delete_request_byItem($conn,$db);
     }  else if ($_POST['FUNC_NAME'] == 'add_request_qty') {
-        add_request_qty($conn);
+        add_request_qty($conn,$db);
     }  else if ($_POST['FUNC_NAME'] == 'delete_request_qty') {
-        delete_request_qty($conn);
+        delete_request_qty($conn,$db);
     }
 }
 
-function add_request_qty($conn)
+function add_request_qty($conn,$db)
 {
     $return = array();
     $ID = $_POST['ID'];
@@ -41,7 +42,7 @@ function add_request_qty($conn)
 }
 
 
-function delete_request_qty($conn)
+function delete_request_qty($conn,$db)
 {
     $return = array();
     $ID = $_POST['ID'];
@@ -57,7 +58,7 @@ function delete_request_qty($conn)
 
 
 
-function delete_request_byItem($conn)
+function delete_request_byItem($conn,$db)
 {
     $return = array();
     $ID = $_POST['ID'];
@@ -70,12 +71,16 @@ function delete_request_byItem($conn)
     die;
 }
 
-function cancel_item_byDocNo($conn)
+function cancel_item_byDocNo($conn,$db)
 {
     $return = array();
     $txt_docno_request = $_POST['txt_docno_request'];
 
-    $sql1 = " UPDATE deproom SET IsCancel = 1 , ModifyDate = GETDATE()  WHERE DocNo = '$txt_docno_request' ";
+    if($db == 1){
+        $sql1 = " UPDATE deproom SET IsCancel = 1 , ModifyDate = NOW()  WHERE DocNo = '$txt_docno_request' ";
+    }else{
+        $sql1 = " UPDATE deproom SET IsCancel = 1 , ModifyDate = GETDATE()  WHERE DocNo = '$txt_docno_request' ";
+    }
     $sql2 = " DELETE FROM deproomdetail WHERE DocNo = '$txt_docno_request' ";
     $meQuery1 = $conn->prepare($sql1);
     $meQuery1->execute();
@@ -87,7 +92,7 @@ function cancel_item_byDocNo($conn)
 }
 
 
-function onconfirm_send_request($conn)
+function onconfirm_send_request($conn,$db)
 {
     $return = array();
     $txt_docno_request = $_POST['txt_docno_request'];
@@ -117,11 +122,16 @@ function onconfirm_send_request($conn)
     $DepID = $_SESSION['DepID'];
 
     if($text_edit != 'edit'){
-        createhncodeDocNo($conn, $Userid, $DepID, $input_hn_request, $select_deproom_request,0, $select_procedure_request, $select_doctor_request, 'สร้างจากเมนูขอเบิกอุปกรณ์' , $txt_docno_request);
+        createhncodeDocNo($conn, $Userid, $DepID, $input_hn_request, $select_deproom_request,0, $select_procedure_request, $select_doctor_request, 'สร้างจากเมนูขอเบิกอุปกรณ์' , $txt_docno_request,$db);
     }
 
 
-    $sql1 = " UPDATE deproom SET IsStatus = 1 , serviceDate = '$select_date_request $select_time_request' , Remark = '$input_remark_request' , hn_record_id = '$input_hn_request' , doctor = '$select_doctor_request' , [procedure] = '$select_procedure_request' , Ref_departmentroomid = '$select_deproom_request' WHERE DocNo = '$txt_docno_request' AND IsCancel = 0 ";
+    if($db ==1){
+        $sql1 = " UPDATE deproom SET IsStatus = 1 , serviceDate = '$select_date_request $select_time_request' , Remark = '$input_remark_request' , hn_record_id = '$input_hn_request' , doctor = '$select_doctor_request' , `procedure` = '$select_procedure_request' , Ref_departmentroomid = '$select_deproom_request' WHERE DocNo = '$txt_docno_request' AND IsCancel = 0 ";
+    }else{
+        $sql1 = " UPDATE deproom SET IsStatus = 1 , serviceDate = '$select_date_request $select_time_request' , Remark = '$input_remark_request' , hn_record_id = '$input_hn_request' , doctor = '$select_doctor_request' , [procedure] = '$select_procedure_request' , Ref_departmentroomid = '$select_deproom_request' WHERE DocNo = '$txt_docno_request' AND IsCancel = 0 ";
+    }
+
     $sql2 = " UPDATE deproomdetail SET IsStatus = 3 WHERE DocNo = '$txt_docno_request' AND IsCancel = 0 ";
     $meQuery1 = $conn->prepare($sql1);
     $meQuery1->execute();
@@ -133,7 +143,7 @@ function onconfirm_send_request($conn)
 }
  
 
-function onconfirm_request($conn)
+function onconfirm_request($conn,$db)
 {
     $return = array();
     $txt_docno_request = $_POST['txt_docno_request'];
@@ -151,14 +161,13 @@ function onconfirm_request($conn)
     $count = 0;
     if ($txt_docno_request == "") {
         $remark = "สร้างจาก ขอเบิกอุปกรณ์ ";
-        $txt_docno_request = createDocNo($conn, $Userid , $DepID , $deproom , $remark ,0 , 0 , 0 , 0, '', '', '');
+        $txt_docno_request = createDocNo($conn, $Userid , $DepID , $deproom , $remark ,0 , 0 , 0 , 0, '', '', '',$db);
     }
 
     foreach ($array_itemcode as $key => $value) {
 
         $_cntcheck = 0;
-        $queryCheck = "SELECT COUNT
-                            ( deproomdetail.ItemCode ) AS cntcheck 
+        $queryCheck = "SELECT COUNT( deproomdetail.ItemCode ) AS cntcheck 
                         FROM
                             deproomdetail 
                         WHERE
@@ -181,9 +190,17 @@ function onconfirm_request($conn)
             $meQueryUpdate = $conn->prepare($queryUpdate);
             $meQueryUpdate->execute();
         } else {
-            $queryInsert = "INSERT INTO deproomdetail ( DocNo, ItemCode, Qty, IsStatus, PayDate, IsCancel, ModifyUser, ModifyTime , IsStart  , IsQtyStart  )
-            VALUES
-                ( '$txt_docno_request', '$value', '$array_qty[$key]', 0, GETDATE(), 0, '$Userid',GETDATE() , 1 , $array_qty[$key])";
+
+            if($db == 1){
+                $queryInsert = "INSERT INTO deproomdetail ( DocNo, ItemCode, Qty, IsStatus, PayDate, IsCancel, ModifyUser, ModifyTime , IsStart  , IsQtyStart  )
+                VALUES
+                    ( '$txt_docno_request', '$value', '$array_qty[$key]', 0, NOW(), 0, '$Userid',NOW() , 1 , $array_qty[$key])";
+            }else{
+                $queryInsert = "INSERT INTO deproomdetail ( DocNo, ItemCode, Qty, IsStatus, PayDate, IsCancel, ModifyUser, ModifyTime , IsStart  , IsQtyStart  )
+                VALUES
+                    ( '$txt_docno_request', '$value', '$array_qty[$key]', 0, GETDATE(), 0, '$Userid',GETDATE() , 1 , $array_qty[$key])";
+            }
+
 
 
             $meQueryInsert = $conn->prepare($queryInsert);
@@ -202,7 +219,7 @@ function onconfirm_request($conn)
 
 
 
-function show_detail_item_request($conn)
+function show_detail_item_request($conn,$db)
 {
     $return = array();
     $input_Search = $_POST['input_search_request'];
@@ -242,7 +259,7 @@ function show_detail_item_request($conn)
     die;
 }
 
-function show_detail_request_byDocNo($conn)
+function show_detail_request_byDocNo($conn,$db)
 {
     $return = array();
     $DepID = $_SESSION['DepID'];
@@ -252,7 +269,7 @@ function show_detail_request_byDocNo($conn)
                 item.itemname ,
                 item.itemcode ,
                 deproomdetail.ID ,
-                SUM ( deproomdetail.Qty ) AS cnt ,
+                SUM(deproomdetail.Qty) AS cnt ,
                 itemtype.TyeName
             FROM
                 deproom
@@ -281,7 +298,7 @@ function show_detail_request_byDocNo($conn)
     die;
 }
 
-function show_detail_history($conn)
+function show_detail_history($conn,$db)
 {
     $return = array();
     $DepID = $_SESSION['DepID'];
@@ -297,43 +314,94 @@ function show_detail_history($conn)
     $select_date_history_l = explode("-", $select_date_history_l);
     $select_date_history_l = $select_date_history_l[2] . '-' . $select_date_history_l[1] . '-' . $select_date_history_l[0];
 
-    $whereD = "";
-    if($select_doctor_history != ""){
-        $whereD = " AND deproom.doctor = '$select_doctor_history'";
-    }
-    $whereP = "";
-    if($select_procedure_history != ""){
-        $whereP = " AND deproom.[procedure] = '$select_procedure_history' ";
-    }
-    $whereR = "";
-    if($select_deproom_history != ""){
-        $whereR = " AND deproom.Ref_departmentroomid = '$select_deproom_history' ";
-    }
 
-    $query = " SELECT
+
+    if($db == 1){
+        $whereD = "";
+        if($select_doctor_history != ""){
+            $whereD = " AND deproom.doctor = '$select_doctor_history'";
+        }
+        $whereP = "";
+        if($select_procedure_history != ""){
+            $whereP = " AND deproom.`procedure` = '$select_procedure_history' ";
+        }
+        $whereR = "";
+        if($select_deproom_history != ""){
+            $whereR = " AND deproom.Ref_departmentroomid = '$select_deproom_history' ";
+        }
+
+
+        $query = " SELECT
                     deproom.DocNo,
-                    FORMAT(deproom.serviceDate , 'dd-MM-yyyy') AS serviceDate,
-                    FORMAT(deproom.serviceDate , 'HH:mm') AS serviceTime,
+                    DATE_FORMAT(deproom.serviceDate, '%d-%m-%Y') AS serviceDate,
+                    DATE_FORMAT(deproom.serviceDate, '%H:%i') AS serviceTime,
                     deproom.hn_record_id,
                     doctor.Doctor_Name,
-                    [procedure].Procedure_TH,
-                    departmentroom.departmentroomname ,
+                    `procedure`.Procedure_TH,
+                    departmentroom.departmentroomname,
                     doctor.ID AS doctor_ID,
-                    [procedure].ID AS procedure_ID,
+                    `procedure`.ID AS procedure_ID,
                     departmentroom.id AS deproom_ID,
                     deproom.Remark
                 FROM
                     deproom
-                    INNER JOIN dbo.doctor ON doctor.ID = deproom.doctor
-                    INNER JOIN dbo.[procedure] ON deproom.[procedure] = [procedure].ID
-                    INNER JOIN dbo.departmentroom ON deproom.Ref_departmentroomid = departmentroom.id 
+                INNER JOIN
+                    doctor ON doctor.ID = deproom.doctor
+                INNER JOIN
+                    `procedure` ON deproom.`procedure` = `procedure`.ID
+                INNER JOIN
+                    departmentroom ON deproom.Ref_departmentroomid = departmentroom.id
                 WHERE
-                    CONVERT(DATE,deproom.CreateDate)  BETWEEN  '$select_date_history_s'  AND '$select_date_history_l' 
+                    DATE(deproom.CreateDate) BETWEEN '$select_date_history_s'  AND '$select_date_history_l' 
                     AND deproom.IsCancel = 0
-                     $whereD
-                     $whereP
-                     $whereR 
-                    ORDER BY  deproom.ID DESC ";
+                    $whereD
+                    $whereP
+                    $whereR 
+                ORDER BY
+                    deproom.ID DESC ";
+    }else{
+
+        $whereD = "";
+        if($select_doctor_history != ""){
+            $whereD = " AND deproom.doctor = '$select_doctor_history'";
+        }
+        $whereP = "";
+        if($select_procedure_history != ""){
+            $whereP = " AND deproom.[procedure] = '$select_procedure_history' ";
+        }
+        $whereR = "";
+        if($select_deproom_history != ""){
+            $whereR = " AND deproom.Ref_departmentroomid = '$select_deproom_history' ";
+        }
+
+
+        $query = " SELECT
+        deproom.DocNo,
+        FORMAT(deproom.serviceDate , 'dd-MM-yyyy') AS serviceDate,
+        FORMAT(deproom.serviceDate , 'HH:mm') AS serviceTime,
+        deproom.hn_record_id,
+        doctor.Doctor_Name,
+        [procedure].Procedure_TH,
+        departmentroom.departmentroomname ,
+        doctor.ID AS doctor_ID,
+        [procedure].ID AS procedure_ID,
+        departmentroom.id AS deproom_ID,
+        deproom.Remark
+    FROM
+        deproom
+        INNER JOIN doctor ON doctor.ID = deproom.doctor
+        INNER JOIN [procedure] ON deproom.[procedure] = [procedure].ID
+        INNER JOIN departmentroom ON deproom.Ref_departmentroomid = departmentroom.id 
+    WHERE
+        CONVERT(DATE,deproom.CreateDate)  BETWEEN  '$select_date_history_s'  AND '$select_date_history_l' 
+        AND deproom.IsCancel = 0
+         $whereD
+         $whereP
+         $whereR 
+        ORDER BY  deproom.ID DESC ";
+    }
+
+
     $meQuery = $conn->prepare($query);
     $meQuery->execute();
     while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {

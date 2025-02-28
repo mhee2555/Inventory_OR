@@ -1,5 +1,6 @@
 <?php
 session_start();
+require '../config/db.php';
 require '../connect/connect.php';
 require '../process/Createdeproom.php';
 require '../process/Createhncode.php';
@@ -7,27 +8,27 @@ require '../process/CreateDamage.php';
 
 if (!empty($_POST['FUNC_NAME'])) {
     if ($_POST['FUNC_NAME'] == 'show_detail_deproom') {
-        show_detail_deproom($conn);
+        show_detail_deproom($conn, $db);
     }else if ($_POST['FUNC_NAME'] == 'show_detail_item') {
-        show_detail_item($conn);
+        show_detail_item($conn, $db);
     }else if ($_POST['FUNC_NAME'] == 'onconfirm_receive') {
-        onconfirm_receive($conn);
+        onconfirm_receive($conn, $db);
     }else if ($_POST['FUNC_NAME'] == 'show_detail_item_save') {
-        show_detail_item_save($conn);
+        show_detail_item_save($conn, $db);
     }else if ($_POST['FUNC_NAME'] == 'onconfirm_cancel') {
-        onconfirm_cancel($conn);
+        onconfirm_cancel($conn, $db);
     }else if ($_POST['FUNC_NAME'] == 'onconfirm_send') {
-        onconfirm_send($conn);
+        onconfirm_send($conn, $db);
     }else if ($_POST['FUNC_NAME'] == 'onconfirm_damage') {
-        onconfirm_damage($conn);
+        onconfirm_damage($conn, $db);
     }else if ($_POST['FUNC_NAME'] == 'checkNSterile') {
-        checkNSterile($conn);
+        checkNSterile($conn, $db);
     }else if ($_POST['FUNC_NAME'] == 'cancelDamage') {
-        cancelDamage($conn);
+        cancelDamage($conn, $db);
     }
 }
 
-function checkNSterile($conn)
+function checkNSterile($conn, $db)
 {
 
 
@@ -35,8 +36,7 @@ function checkNSterile($conn)
 
     $where1 = "	 AND ( itemstock.IsDamage = 1 OR itemstock.IsDamage = 2 OR itemstock.IsClaim = 1 OR itemstock.IsClaim = 2 )  ";
 
-    $query = "SELECT COUNT
-                    ( itemstock.RowID ) AS qty
+    $query = "SELECT COUNT(itemstock.RowID) AS qty
                 FROM
                     itemstock
                 INNER JOIN item ON itemstock.ItemCode = item.itemcode 	
@@ -55,7 +55,7 @@ function checkNSterile($conn)
     unset($conn);
     die;
 }
-function cancelDamage($conn)
+function cancelDamage($conn, $db)
 {
     $return = array();
     $itemcode = $_POST['itemcode'];
@@ -63,8 +63,31 @@ function cancelDamage($conn)
 
     
 
-
-    $query = " SELECT TOP
+    if($db == 1){
+        $query = "SELECT
+                        itemstock.RowID,
+                        itemstock.UsageCode,
+                        deproomdetailsub.ID
+                    FROM
+                        deproom
+                    INNER JOIN
+                        deproomdetail ON deproom.DocNo = deproomdetail.DocNo
+                    INNER JOIN
+                        item ON item.itemcode = deproomdetail.ItemCode
+                    INNER JOIN
+                        departmentroom ON deproom.Ref_departmentroomid = departmentroom.id
+                    INNER JOIN
+                        deproomdetailsub ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID
+                    INNER JOIN
+                        itemstock ON deproomdetailsub.ItemStockID = itemstock.RowID
+                    WHERE
+                        deproom.IsCancel = 0
+                        AND deproomdetailsub.IsStatus = 6
+                        AND itemstock.UsageCode = '$UsageCode'
+                        AND itemstock.IsDamage = '1'
+                    LIMIT 1 ";
+    }else{
+        $query = " SELECT TOP
                     1 itemstock.RowID ,
                     itemstock.UsageCode,
                     deproomdetailsub.ID 
@@ -80,6 +103,8 @@ function cancelDamage($conn)
                     AND deproomdetailsub.IsStatus = 6 
                     AND itemstock.UsageCode = '$UsageCode' 
                     AND itemstock.IsDamage = '1'  ";
+    }
+
 
     $meQuery = $conn->prepare($query);
     $meQuery->execute();
@@ -114,7 +139,7 @@ function cancelDamage($conn)
     unset($conn);
     die;
 }
-function onconfirm_damage($conn)
+function onconfirm_damage($conn, $db)
 {
     $return = array();
     $input_itemcode_damage = $_POST['input_itemcode_damage'];
@@ -127,8 +152,31 @@ function onconfirm_damage($conn)
     
     $label_DocNo = create_Damage_DocNo($conn, $DepID, $Userid, "");
 
-
-    $query = " SELECT TOP 1
+    if($db == 1){
+        $query = "SELECT
+                    itemstock.RowID,
+                    itemstock.UsageCode,
+                    deproomdetailsub.ID
+                FROM
+                    deproom
+                INNER JOIN
+                    deproomdetail ON deproom.DocNo = deproomdetail.DocNo
+                INNER JOIN
+                    item ON item.itemcode = deproomdetail.ItemCode
+                INNER JOIN
+                    departmentroom ON deproom.Ref_departmentroomid = departmentroom.id
+                INNER JOIN
+                    deproomdetailsub ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID
+                INNER JOIN
+                    itemstock ON deproomdetailsub.ItemStockID = itemstock.RowID
+                WHERE
+                    deproom.IsCancel = 0
+                    AND deproomdetailsub.IsStatus = 6
+                    AND itemstock.UsageCode = '$UsageCode'
+                    AND (itemstock.IsDamage IS NULL OR itemstock.IsDamage = '0')
+                LIMIT 1 ";
+    }else{
+        $query = " SELECT TOP 1
                     itemstock.RowID ,
                     itemstock.UsageCode,
                     deproomdetailsub.ID
@@ -144,6 +192,8 @@ function onconfirm_damage($conn)
                     AND deproomdetailsub.IsStatus = 6 
                     AND itemstock.UsageCode = '$UsageCode' 
                      AND (itemstock.IsDamage IS NULL  OR  itemstock.IsDamage = '0' )  ";
+    }
+
 
     $meQuery = $conn->prepare($query);
     $meQuery->execute();
@@ -178,7 +228,7 @@ function onconfirm_damage($conn)
     die;
 }
 
-function onconfirm_send($conn)
+function onconfirm_send($conn, $db)
 {
     $return = array();
 
@@ -233,7 +283,7 @@ function onconfirm_send($conn)
     die;
 }
 
-function onconfirm_cancel($conn)
+function onconfirm_cancel($conn, $db)
 {
     $return = array();
 
@@ -273,7 +323,7 @@ function onconfirm_cancel($conn)
     die;
 }
 
-function show_detail_item_save($conn)
+function show_detail_item_save($conn, $db)
 {
     $return = array();
 
@@ -309,7 +359,7 @@ function show_detail_item_save($conn)
     die;
 }
 
-function onconfirm_receive($conn)
+function onconfirm_receive($conn, $db)
 {
     $return = array();
     $itemCodeArray = $_POST['itemCodeArray'];
@@ -324,18 +374,39 @@ function onconfirm_receive($conn)
         if($check_radio == '1'){
             $where = "AND itemstock.departmentroomid = '$deproomArray[$key]' ";
         }
-        $select = " SELECT TOP ($qtyArray[$key])
-                        deproomdetailsub.ID ,
-                        deproomdetailsub.ItemStockID 
-                    FROM
-                        deproomdetailsub
-                        INNER JOIN itemstock ON itemstock.RowID = deproomdetailsub.ItemStockID 
-                    WHERE
-                        itemstock.Isdeproom = 4 
-                        AND deproomdetailsub.IsStatus = 4
-                        $where
-                        AND itemstock.ItemCode = '$value'
-                        AND ( itemstock.IsDamage IS NULL OR itemstock.IsDamage = 1 OR itemstock.IsDamage = 0  )  ";
+
+
+        if($db == 1){
+            $select = "SELECT
+                            deproomdetailsub.ID,
+                            deproomdetailsub.ItemStockID
+                        FROM
+                            deproomdetailsub
+                        INNER JOIN
+                            itemstock ON itemstock.RowID = deproomdetailsub.ItemStockID
+                        WHERE
+                            itemstock.Isdeproom = 4
+                            AND deproomdetailsub.IsStatus = 4
+                            $where
+                            AND itemstock.ItemCode = '$value'
+                            AND (itemstock.IsDamage IS NULL OR itemstock.IsDamage = 1 OR itemstock.IsDamage = 0)
+                        LIMIT $qtyArray[$key] ";
+        }else{
+            $select = " SELECT TOP ($qtyArray[$key])
+                            deproomdetailsub.ID ,
+                            deproomdetailsub.ItemStockID 
+                        FROM
+                            deproomdetailsub
+                            INNER JOIN itemstock ON itemstock.RowID = deproomdetailsub.ItemStockID 
+                        WHERE
+                            itemstock.Isdeproom = 4 
+                            AND deproomdetailsub.IsStatus = 4
+                            $where
+                            AND itemstock.ItemCode = '$value'
+                            AND ( itemstock.IsDamage IS NULL OR itemstock.IsDamage = 1 OR itemstock.IsDamage = 0  )  ";
+        }
+
+
 
 
         // echo $select;
@@ -393,7 +464,7 @@ function onconfirm_receive($conn)
     die;
 }
 
-function show_detail_item($conn)
+function show_detail_item($conn, $db)
 {
     $return = array();
 
@@ -403,7 +474,7 @@ function show_detail_item($conn)
                     item.itemname ,
                     item.itemcode ,
                     itemtype.TyeName ,
-                    COUNT ( deproomdetailsub.IsStatus ) AS count_item
+                    COUNT(deproomdetailsub.IsStatus) AS count_item
                 FROM
                     deproom
                     INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
@@ -436,7 +507,7 @@ function show_detail_item($conn)
     die;
 }
 
-function show_detail_deproom($conn)
+function show_detail_deproom($conn, $db)
 {
     $return = array();
 
@@ -474,7 +545,7 @@ function show_detail_deproom($conn)
                         item.itemcode ,
                         item.itemcode ,
                         itemtype.TyeName ,
-                        COUNT ( deproomdetailsub.IsStatus ) AS count_item
+                        COUNT(deproomdetailsub.IsStatus) AS count_item
                     FROM
                         deproom
                         INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo

@@ -1,18 +1,19 @@
 <?php
 session_start();
+require '../config/db.php';
 require '../connect/connect.php';
 
 if (!empty($_POST['FUNC_NAME'])) {
     if ($_POST['FUNC_NAME'] == 'feeddata') {
-        feeddata($conn);
+        feeddata($conn,$db);
     } else if ($_POST['FUNC_NAME'] == 'checkNSterile') {
-        checkNSterile($conn);
+        checkNSterile($conn,$db);
     }  else if ($_POST['FUNC_NAME'] == 'onSendNsterile') {
-        onSendNsterile($conn);
+        onSendNsterile($conn,$db);
     } 
 }
 
-function checkNSterile($conn)
+function checkNSterile($conn,$db)
 {
 
     $checkNsterile = $_POST['checkNsterile'];
@@ -21,8 +22,7 @@ function checkNSterile($conn)
 
     $where1 = "	 AND ( itemstock.IsCross = 0 OR itemstock.IsCross = 1 OR itemstock.IsCross IS NULL )";
 
-    $query = "SELECT COUNT
-                    ( itemstock.RowID ) AS qty
+    $query = "SELECT COUNT(itemstock.RowID) AS qty
                 FROM
                     itemstock
                 INNER JOIN item ON itemstock.ItemCode = item.itemcode 	
@@ -42,7 +42,7 @@ function checkNSterile($conn)
     die;
 }
 
-function feeddata($conn)
+function feeddata($conn,$db)
 {
     $DepID = $_SESSION['DepID'];
     $GN_WarningExpiringSoonDay = $_POST['GN_WarningExpiringSoonDay'];
@@ -57,7 +57,44 @@ function feeddata($conn)
     }
 
     $return = [];
-    $query = "SELECT
+
+    if($db == 1){
+        $query = " SELECT
+                    itemstock.ItemCode,
+                    itemstock.UsageCode,
+                    itemstock.RowID,
+                    DATE_FORMAT(itemstock.ExpireDate, '%d/%m/%Y') AS ExpireDate,
+                    COUNT(itemstock.Qty) AS Qty,
+                    CASE
+                        WHEN DATE(itemstock.ExpireDate) BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL $GN_WarningExpiringSoonDay DAY)
+                            AND DATE(itemstock.ExpireDate) != CURDATE() THEN 'ใกล้หมดอายุ'
+                        ELSE 'หมดอายุ'
+                    END AS IsStatus,
+                    CASE
+                        WHEN DATE(itemstock.ExpireDate) BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL $GN_WarningExpiringSoonDay DAY)
+                            AND DATE(itemstock.ExpireDate) != CURDATE() THEN DATEDIFF(itemstock.ExpireDate, CURDATE())
+                        ELSE DATEDIFF(CURDATE(), itemstock.ExpireDate)
+                    END AS Exp_day,
+                    item.itemname
+                FROM
+                    itemstock
+                LEFT JOIN
+                    item ON item.itemcode = itemstock.ItemCode
+                WHERE
+                    itemstock.IsCancel = 0
+                    $wheredep
+                    AND (DATE(itemstock.ExpireDate) <= CURDATE() OR DATE(itemstock.ExpireDate) BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL $GN_WarningExpiringSoonDay DAY))
+                GROUP BY
+                    itemstock.ItemCode,
+                    DATE_FORMAT(itemstock.ExpireDate, '%d/%m/%Y'),
+                    DATE(itemstock.ExpireDate),
+                    item.itemname,
+                    itemstock.UsageCode,
+                    itemstock.RowID
+                ORDER BY
+                    item.itemname, DATE_FORMAT(itemstock.ExpireDate, '%d/%m/%Y') ASC ";
+    }else{
+        $query = "SELECT
                     itemstock.ItemCode,
                     itemstock.UsageCode,
                     itemstock.RowID,
@@ -91,6 +128,8 @@ function feeddata($conn)
                     itemstock.RowID 
                 ORDER BY
                 item.itemname,  FORMAT ( itemstock.ExpireDate, 'dd/MM/yyyy' ) ASC";
+    }
+
 
 
     $meQuery = $conn->prepare($query);
@@ -103,7 +142,7 @@ function feeddata($conn)
     die;
 }
 
-function onSendNsterile($conn)
+function onSendNsterile($conn,$db)
 {
     $ArrayItemStockID = $_POST['ArrayItemStockID'];
     $ItemStockID = "";
@@ -122,7 +161,27 @@ function onSendNsterile($conn)
 
     $subItemStockID = substr($ItemStockID, 0, strlen($ItemStockID) - 1);
     $return = [];
-    $query = " SELECT
+
+    if($db == 1){
+        $query = " SELECT
+                        itemstock.RowID,
+                        itemstock.UsageCode,
+                        itemstock.ItemCode,
+                        itemstock.departmentroomid
+                    FROM
+                        itemstock
+                    LEFT JOIN
+                        item ON item.itemcode = itemstock.ItemCode
+                    WHERE
+                        $wheredep
+                        AND itemstock.IsCancel = 0
+                        AND DATE(itemstock.ExpireDate) <= CURDATE()
+                        AND itemstock.RowID IN ($subItemStockID)
+                    ORDER BY
+                        item.itemname,
+                        DATE_FORMAT(itemstock.ExpireDate, '%d/%m/%Y') ASC ";
+    }else{
+        $query = " SELECT
                     itemstock.RowID,
                     itemstock.UsageCode,
                     itemstock.ItemCode,
@@ -138,6 +197,8 @@ function onSendNsterile($conn)
                 ORDER BY
                     item.itemname,
                     FORMAT ( itemstock.ExpireDate, 'dd/MM/yyyy' ) ASC ";
+    }
+
     $meQuery = $conn->prepare($query);
     $meQuery->execute();
     while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {

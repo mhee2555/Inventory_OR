@@ -1,12 +1,13 @@
 <?php
 session_start();
+require '../config/db.php';
 require '../connect/connect.php';
 
 if (!empty($_POST['FUNC_NAME'])) {
     if ($_POST['FUNC_NAME'] == 'selection_departmentRoom') {
         selection_departmentRoom($conn);
     } else if ($_POST['FUNC_NAME'] == 'LoginUser') {
-        LoginUser($conn);
+        LoginUser($conn,$db);
     } else if ($_POST['FUNC_NAME'] == 'selection_Doctor') {
         selection_Doctor($conn);
     }
@@ -40,16 +41,15 @@ function selection_departmentRoom($conn)
 {
     $return = array();
 
-    $query = "SELECT
-                departmentroom.id,
-                departmentroom.departmentroomname 
-            FROM
-            dbo.departmentroom
-            WHERE departmentroom.iscancel = 0
-            AND departmentroom.IsActive = 1 
-            AND departmentroom.IsMainroom = 0
-            ORDER BY departmentroom.floor_id , departmentroom.id  ASC  ";
-
+    $query = " SELECT
+                    departmentroom.id,
+                    departmentroom.departmentroomname 
+                FROM
+                    departmentroom
+                WHERE departmentroom.iscancel = 0
+                AND departmentroom.IsActive = 1 
+                AND departmentroom.IsMainroom = 0
+                ORDER BY departmentroom.floor_id , departmentroom.id  ASC  ";
     $meQuery = $conn->prepare($query);
     $meQuery->execute();
     while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
@@ -60,7 +60,7 @@ function selection_departmentRoom($conn)
     die;
 }
 
-function LoginUser($conn)
+function LoginUser($conn,$db)
 {
     $return = array();
     $input_UserName = $_POST['input_UserName'];
@@ -95,6 +95,7 @@ function LoginUser($conn)
                 INNER JOIN department ON department.ID = employee.DepID 
              $where  AND users.IsCancel = 0  ";
 
+
     $meQuery = $conn->prepare($query);
     $meQuery->execute();
     while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
@@ -117,15 +118,28 @@ function LoginUser($conn)
         $count++;
     }
     if ($select_departmentRoom != "") {
-        $selectName = "SELECT
-        departmentroom.departmentroomname, 
-        ISNULL(doctor.ID , 0) AS doctorID,
-        ISNULL(doctor.Doctor_Name_EN, '') AS Doctor_Name
-    FROM
-        departmentroom
-    LEFT JOIN doctor ON departmentroom.doctorID = doctor.ID
-    WHERE
-        departmentroom.id = '$select_departmentRoom' ";
+
+        if($db == 1){
+            $selectName = "SELECT
+                                departmentroom.departmentroomname,
+                                IFNULL( doctor.ID, 0 ) AS doctorID,
+                                IFNULL( doctor.Doctor_Name_EN, '' ) AS Doctor_Name 
+                            FROM
+                                departmentroom
+                                LEFT JOIN doctor ON departmentroom.doctorID = doctor.ID 
+                            WHERE
+                                departmentroom.id = '$select_departmentRoom' ";
+        }else{
+            $selectName = "SELECT
+                                departmentroom.departmentroomname,
+                                ISNULL( doctor.ID, 0 ) AS doctorID,
+                                ISNULL( doctor.Doctor_Name_EN, '' ) AS Doctor_Name 
+                            FROM
+                                departmentroom
+                                LEFT JOIN doctor ON departmentroom.doctorID = doctor.ID 
+                            WHERE
+                                departmentroom.id = '$select_departmentRoom' ";
+        }
 
         $meQueryName = $conn->prepare($selectName);
         $meQueryName->execute();
@@ -140,13 +154,13 @@ function LoginUser($conn)
 
 
     if ($IsAdmin == '1') {
-            if ($select_departmentRoom != ""){
-                $_SESSION['departmentroomname'] = $_departmentroomname;
-                $_SESSION['deproom'] = $select_departmentRoom;
-            }else{
-                $_SESSION['departmentroomname'] = "คลังห้องผ่าตัด";
-                $_SESSION['deproom'] = '0';
-            }
+        if ($select_departmentRoom != "") {
+            $_SESSION['departmentroomname'] = $_departmentroomname;
+            $_SESSION['deproom'] = $select_departmentRoom;
+        } else {
+            $_SESSION['departmentroomname'] = "คลังห้องผ่าตัด";
+            $_SESSION['deproom'] = '0';
+        }
         $_SESSION['Doctor_Name'] = "";
         $_SESSION['doctorID'] = "0";
     } else {

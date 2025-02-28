@@ -1,54 +1,55 @@
 <?php
 session_start();
+require '../config/db.php';
 require '../connect/connect.php';
 
 if (!empty($_POST['FUNC_NAME'])) {
     if ($_POST['FUNC_NAME'] == 'onconfirm_CreateItemSUDs') {
-        onconfirm_CreateItemSUDs($conn);
+        onconfirm_CreateItemSUDs($conn, $db);
     } else if ($_POST['FUNC_NAME'] == 'showItemSUDs') {
-        showItemSUDs($conn);
+        showItemSUDs($conn, $db);
     } else if ($_POST['FUNC_NAME'] == 'onconfirm_CreateDocNoSUDs') {
-        onconfirm_CreateDocNoSUDs($conn);
+        onconfirm_CreateDocNoSUDs($conn, $db);
     } else if ($_POST['FUNC_NAME'] == 'showDocNoSUDs') {
-        showDocNoSUDs($conn);
+        showDocNoSUDs($conn, $db);
     } else if ($_POST['FUNC_NAME'] == 'SaveUsage_SUDs') {
-        SaveUsage_SUDs($conn);
+        SaveUsage_SUDs($conn, $db);
     } else if ($_POST['FUNC_NAME'] == 'showUsageCodeSUDs') {
-        showUsageCodeSUDs($conn);
+        showUsageCodeSUDs($conn, $db);
     } else if ($_POST['FUNC_NAME'] == 'EditUsage_SUDs') {
-        EditUsage_SUDs($conn);
+        EditUsage_SUDs($conn, $db);
     }else if ($_POST['FUNC_NAME'] == 'onconfirm_CreateItemSterile') {
-        onconfirm_CreateItemSterile($conn);
+        onconfirm_CreateItemSterile($conn, $db);
     } else if ($_POST['FUNC_NAME'] == 'showItemSterile') {
-        showItemSterile($conn);
+        showItemSterile($conn, $db);
     } else if ($_POST['FUNC_NAME'] == 'onconfirm_CreateDocNoSterile') {
-        onconfirm_CreateDocNoSterile($conn);
+        onconfirm_CreateDocNoSterile($conn, $db);
     } else if ($_POST['FUNC_NAME'] == 'showDocNoSterile') {
-        showDocNoSterile($conn);
+        showDocNoSterile($conn, $db);
     } else if ($_POST['FUNC_NAME'] == 'SaveUsage_Sterile') {
-        SaveUsage_Sterile($conn);
+        SaveUsage_Sterile($conn, $db);
     } else if ($_POST['FUNC_NAME'] == 'showUsageCodeSterile') {
-        showUsageCodeSterile($conn);
+        showUsageCodeSterile($conn, $db);
     } else if ($_POST['FUNC_NAME'] == 'EditUsage_Sterile') {
-        EditUsage_Sterile($conn);
+        EditUsage_Sterile($conn, $db);
     }else if ($_POST['FUNC_NAME'] == 'onconfirm_CreateItemimplant') {
-        onconfirm_CreateItemimplant($conn);
+        onconfirm_CreateItemimplant($conn, $db);
     } else if ($_POST['FUNC_NAME'] == 'showItemimplant') {
-        showItemimplant($conn);
+        showItemimplant($conn, $db);
     } else if ($_POST['FUNC_NAME'] == 'onconfirm_CreateDocNoimplant') {
-        onconfirm_CreateDocNoimplant($conn);
+        onconfirm_CreateDocNoimplant($conn, $db);
     } else if ($_POST['FUNC_NAME'] == 'showDocNoimplant') {
-        showDocNoimplant($conn);
+        showDocNoimplant($conn, $db);
     } else if ($_POST['FUNC_NAME'] == 'SaveUsage_implant') {
-        SaveUsage_implant($conn);
+        SaveUsage_implant($conn, $db);
     } else if ($_POST['FUNC_NAME'] == 'showUsageCodeimplant') {
-        showUsageCodeimplant($conn);
+        showUsageCodeimplant($conn, $db);
     } else if ($_POST['FUNC_NAME'] == 'EditUsage_implant') {
-        EditUsage_implant($conn);
+        EditUsage_implant($conn, $db);
     }
 }
 
-function EditUsage_implant($conn)
+function EditUsage_implant($conn, $db)
 {
     $return = array();
     $modal_input_serie_implant = $_POST['modal_input_serie_implant'];
@@ -75,7 +76,7 @@ function EditUsage_implant($conn)
 
 }
 
-function SaveUsage_implant($conn)
+function SaveUsage_implant($conn, $db)
 {
     $return = array();
     $ArraySerie = $_POST['ArraySerie'];
@@ -96,30 +97,53 @@ function SaveUsage_implant($conn)
         $DateRegis = $DateRegis[2] . '-' . $DateRegis[1] . '-' . $DateRegis[0];
 
         for ($i = 0; $i < intval($value); $i++) {
-            $gen_usage = "SELECT COALESCE
-                                    (
-                                        (
-                                        SELECT TOP
-                                            1 CONCAT (
-                                                its.ItemCode,
-                                                '-',
-                                                RIGHT (
-                                                    REPLICATE( '0',3  ) + CONVERT ( VARCHAR, CONVERT ( INT, SUBSTRING ( COALESCE ( its.UsageCode, '0' ), 11, 13 ) ) + 1 ),
-                                                3 
-                                                ) 
-                                            ) 
-                                        FROM
-                                            itemstock AS its 
-                                        WHERE
-                                            its.ItemCode = '$input_ItemCode1_implant' 
-                                        ORDER BY
-                                            its.UsageCode DESC 
-                                        ),
-                                        CONCAT (
-                                            '$input_ItemCode1_implant',
-                                            '-001' 
-                                        ) 
-                                    ) AS _UsageCode ";
+
+
+            if($db == 1){
+                $gen_usage = "SELECT COALESCE(
+                                    (SELECT 
+                                        CONCAT(
+                                            its.ItemCode,
+                                            '-',
+                                            LPAD(CAST(SUBSTRING(COALESCE(its.UsageCode, '0'), 11, 3) AS UNSIGNED) + 1, 3, '0')
+                                        )
+                                    FROM itemstock AS its
+                                    WHERE its.ItemCode = '$input_ItemCode1_implant'
+                                    ORDER BY its.UsageCode DESC
+                                    LIMIT 1),
+                                    CONCAT(
+                                        '$input_ItemCode1_implant',
+                                        '-001'
+                                    )
+                                ) AS _UsageCode ";
+            }else{
+                $gen_usage = "SELECT COALESCE
+                (
+                    (
+                    SELECT TOP
+                        1 CONCAT (
+                            its.ItemCode,
+                            '-',
+                            RIGHT (
+                                REPLICATE( '0',3  ) + CONVERT ( VARCHAR, CONVERT ( INT, SUBSTRING ( COALESCE ( its.UsageCode, '0' ), 11, 13 ) ) + 1 ),
+                            3 
+                            ) 
+                        ) 
+                    FROM
+                        itemstock AS its 
+                    WHERE
+                        its.ItemCode = '$input_ItemCode1_implant' 
+                    ORDER BY
+                        its.UsageCode DESC 
+                    ),
+                    CONCAT (
+                        '$input_ItemCode1_implant',
+                        '-001' 
+                    ) 
+                ) AS _UsageCode ";
+            }
+
+
             $meQuery = $conn->prepare($gen_usage);
             $meQuery->execute();
             while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
@@ -159,13 +183,36 @@ function SaveUsage_implant($conn)
     }
 }
 
-function showDocNoimplant($conn)
+function showDocNoimplant($conn, $db)
 {
     $return = array();
     $input_ItemCode1_implant = $_POST['input_ItemCode1_implant'];
 
 
-    $query = "SELECT
+    if($db == 1){
+        $query = " SELECT
+                        item_document.ID,
+                        item_document.ProductID,
+                        item_document.ItemType_ID,
+                        item_document.DocumentTypeID,
+                        item_document.DocumentNo,
+                        DATE(item_document.DocApprovedDate) AS DocApprovedDate,
+                        DATE(item_document.DocExpireDate) AS DocExpireDate,
+                        item_document.Description,
+                        item_document.IsActive,
+                        item_document.DocFileName,
+                        item_document.DocumentVersion,
+                        item_document.SiteName,
+                        document_type.DocumentType
+                    FROM
+                        item_document
+                    INNER JOIN
+                        document_type ON item_document.DocumentTypeID = document_type.ID
+                    WHERE
+                        item_document.ProductID = '$input_ItemCode1_implant'
+                        AND item_document.IsActive = 1 ";
+    }else{
+        $query = "SELECT
                 item_document.ID,
                 item_document.ProductID,
                 item_document.ItemType_ID,
@@ -183,6 +230,8 @@ function showDocNoimplant($conn)
                 dbo.item_document
             INNER JOIN document_type ON item_document.DocumentTypeID = document_type.ID
             WHERE item_document.ProductID = '$input_ItemCode1_implant' AND item_document.IsActive = 1   ";
+    }
+
 
 
     $meQuery = $conn->prepare($query);
@@ -195,7 +244,7 @@ function showDocNoimplant($conn)
     die;
 }
 
-function showItemimplant($conn)
+function showItemimplant($conn, $db)
 {
     $return = array();
     // $input_Search = $_POST['input_search_request'];
@@ -257,13 +306,25 @@ function showItemimplant($conn)
     die;
 }
 
-function showUsageCodeimplant($conn)
+function showUsageCodeimplant($conn, $db)
 {
     $return = array();
     $input_ItemCode1_implant = $_POST['input_ItemCode1_implant'];
 
-
-    $query = " SELECT
+    if($db == 1){
+        $query = " SELECT
+                        itemstock.serielNo,
+                        itemstock.UsageCode,
+                        itemstock.lotNo,
+                        DATE_FORMAT(itemstock.expDate, '%d-%m-%Y') AS expDate,
+                        DATE_FORMAT(itemstock.CreateDate, '%d-%m-%Y') AS CreateDate,
+                        itemstock.ItemCode
+                    FROM
+                        itemstock
+                    WHERE
+                        itemstock.ItemCode = '$input_ItemCode1_implant';  ";
+    }else{
+        $query = " SELECT
                     itemstock.serielNo,
                     itemstock.UsageCode,
                     itemstock.lotNo,
@@ -273,6 +334,8 @@ function showUsageCodeimplant($conn)
                 FROM
                     itemstock
                 WHERE itemstock.ItemCode = '$input_ItemCode1_implant'  ";
+    }
+
 
 
     $meQuery = $conn->prepare($query);
@@ -285,7 +348,7 @@ function showUsageCodeimplant($conn)
     die;
 }
 
-function onconfirm_CreateItemimplant($conn)
+function onconfirm_CreateItemimplant($conn, $db)
 {
     $input_ItemCode1_implant = $_POST['input_ItemCode1_implant'];
     $input_ItemName_implant = $_POST['input_ItemName_implant'];
@@ -311,21 +374,33 @@ function onconfirm_CreateItemimplant($conn)
     $return = [];
 
     if ($input_ItemCode1_implant == "") {
-        $genItem = "SELECT TOP
-                        1 CONCAT (
-                            'I',
-                            FORMAT ( GETDATE( ), 'yy' ),
-                            FORMAT ( GETDATE( ), 'MM' ),
-                            RIGHT (
-                                REPLICATE( '0', 4 ) + CONVERT ( VARCHAR, CONVERT ( INT, SUBSTRING ( COALESCE ( item.itemcode, '0' ), 4, 9 ) ) + 1 ), + 4 
-                            ) 
-                        ) AS itemCode
-                    FROM
-                        item 
-                    WHERE
-                        itemcode LIKE '%M%' 
-                    ORDER BY
-                        itemcode DESC ";
+
+        if($db == 1){
+            $genItem = "SELECT CONCAT('I',DATE_FORMAT(CURDATE(), '%y'),DATE_FORMAT(CURDATE(), '%m'),LPAD(CAST(SUBSTRING(COALESCE(item.itemcode, '0'), 4, 6) AS UNSIGNED) + 1, 4, '0')) AS itemCode
+                        FROM item
+                        WHERE itemcode LIKE '%M%'
+                        ORDER BY itemcode DESC
+                        LIMIT 1 ";
+        }else{
+            $genItem = "SELECT TOP
+            1 CONCAT (
+                'I',
+                FORMAT ( GETDATE( ), 'yy' ),
+                FORMAT ( GETDATE( ), 'MM' ),
+                RIGHT (
+                    REPLICATE( '0', 4 ) + CONVERT ( VARCHAR, CONVERT ( INT, SUBSTRING ( COALESCE ( item.itemcode, '0' ), 4, 9 ) ) + 1 ), + 4 
+                ) 
+            ) AS itemCode
+        FROM
+            item 
+        WHERE
+            itemcode LIKE '%M%' 
+        ORDER BY
+            itemcode DESC ";
+        }
+
+
+
         $meQuery = $conn->prepare($genItem);
         $meQuery->execute();
 
@@ -429,7 +504,7 @@ function onconfirm_CreateItemimplant($conn)
 
 }
 
-function onconfirm_CreateDocNoimplant($conn)
+function onconfirm_CreateDocNoimplant($conn, $db)
 {
     $input_ItemCode1_implant = $_POST['input_ItemCode1_implant'];
     $select_typeDocument_implant = $_POST['select_typeDocument_implant'];
@@ -455,17 +530,34 @@ function onconfirm_CreateDocNoimplant($conn)
 
     $check_row = 0;
     $Version = 1;
-    $query1 = " SELECT TOP 1
-                    item_document.ID,
-                    item_document.DocumentVersion
-                FROM
-                    item_document 
-                WHERE
-                    item_document.ProductID = '$input_ItemCode1_implant' 
-                    AND item_document.DocumentTypeID = '$select_typeDocument_implant' 
-                    AND item_document.IsActive = 1
-                ORDER BY
-                    item_document.DocumentVersion DESC ";
+
+    if($db == 1){
+        $query1 = " SELECT
+                        item_document.ID,
+                        item_document.DocumentVersion
+                    FROM
+                        item_document
+                    WHERE
+                        item_document.ProductID = '$input_ItemCode1_implant'
+                        AND item_document.DocumentTypeID = '$select_typeDocument_implant'
+                        AND item_document.IsActive = 1
+                    ORDER BY
+                        item_document.DocumentVersion DESC
+                    LIMIT 1 ";
+    }else{
+        $query1 = " SELECT TOP 1
+                        item_document.ID,
+                        item_document.DocumentVersion
+                    FROM
+                        item_document 
+                    WHERE
+                        item_document.ProductID = '$input_ItemCode1_implant' 
+                        AND item_document.DocumentTypeID = '$select_typeDocument_implant' 
+                        AND item_document.IsActive = 1
+                    ORDER BY
+                        item_document.DocumentVersion DESC ";
+        }
+
     $meQuery = $conn->prepare($query1);
     $meQuery->execute();
 
@@ -510,7 +602,7 @@ function onconfirm_CreateDocNoimplant($conn)
 
 
 
-function EditUsage_Sterile($conn)
+function EditUsage_Sterile($conn, $db)
 {
     $return = array();
     $modal_input_serie_Sterile = $_POST['modal_input_serie_Sterile'];
@@ -537,7 +629,7 @@ function EditUsage_Sterile($conn)
 
 }
 
-function SaveUsage_Sterile($conn)
+function SaveUsage_Sterile($conn, $db)
 {
     $return = array();
     $ArraySerie = $_POST['ArraySerie'];
@@ -558,30 +650,55 @@ function SaveUsage_Sterile($conn)
         $DateRegis = $DateRegis[2] . '-' . $DateRegis[1] . '-' . $DateRegis[0];
 
         for ($i = 0; $i < intval($value); $i++) {
-            $gen_usage = "SELECT COALESCE
-                                    (
-                                        (
-                                        SELECT TOP
-                                            1 CONCAT (
-                                                its.ItemCode,
-                                                '-',
-                                                RIGHT (
-                                                    REPLICATE( '0',3  ) + CONVERT ( VARCHAR, CONVERT ( INT, SUBSTRING ( COALESCE ( its.UsageCode, '0' ), 11, 13 ) ) + 1 ),
-                                                3 
-                                                ) 
-                                            ) 
-                                        FROM
-                                            itemstock AS its 
-                                        WHERE
-                                            its.ItemCode = '$input_ItemCode1_Sterile' 
-                                        ORDER BY
-                                            its.UsageCode DESC 
-                                        ),
-                                        CONCAT (
-                                            '$input_ItemCode1_Sterile',
-                                            '-001' 
-                                        ) 
-                                    ) AS _UsageCode ";
+
+
+
+            if($db == 1){
+                $gen_usage = "SELECT COALESCE(
+                                    (SELECT 
+                                        CONCAT(
+                                            its.ItemCode,
+                                            '-',
+                                            LPAD(CAST(SUBSTRING(COALESCE(its.UsageCode, '0'), 11, 3) AS UNSIGNED) + 1, 3, '0')
+                                        )
+                                    FROM itemstock AS its
+                                    WHERE its.ItemCode = '$input_ItemCode1_Sterile'
+                                    ORDER BY its.UsageCode DESC
+                                    LIMIT 1),
+                                    CONCAT(
+                                        '$input_ItemCode1_Sterile',
+                                        '-001'
+                                    )
+                                ) AS _UsageCode ";
+            }else{
+                $gen_usage = "SELECT COALESCE
+                (
+                    (
+                    SELECT TOP
+                        1 CONCAT (
+                            its.ItemCode,
+                            '-',
+                            RIGHT (
+                                REPLICATE( '0',3  ) + CONVERT ( VARCHAR, CONVERT ( INT, SUBSTRING ( COALESCE ( its.UsageCode, '0' ), 11, 13 ) ) + 1 ),
+                            3 
+                            ) 
+                        ) 
+                    FROM
+                        itemstock AS its 
+                    WHERE
+                        its.ItemCode = '$input_ItemCode1_Sterile' 
+                    ORDER BY
+                        its.UsageCode DESC 
+                    ),
+                    CONCAT (
+                        '$input_ItemCode1_Sterile',
+                        '-001' 
+                    ) 
+                ) AS _UsageCode ";
+            }
+
+
+
             $meQuery = $conn->prepare($gen_usage);
             $meQuery->execute();
             while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
@@ -621,13 +738,35 @@ function SaveUsage_Sterile($conn)
     }
 }
 
-function showDocNoSterile($conn)
+function showDocNoSterile($conn, $db)
 {
     $return = array();
     $input_ItemCode1_Sterile = $_POST['input_ItemCode1_Sterile'];
 
-
-    $query = "SELECT
+    if($db == 1){
+        $query = " SELECT
+                        item_document.ID,
+                        item_document.ProductID,
+                        item_document.ItemType_ID,
+                        item_document.DocumentTypeID,
+                        item_document.DocumentNo,
+                        DATE(item_document.DocApprovedDate) AS DocApprovedDate,
+                        DATE(item_document.DocExpireDate) AS DocExpireDate,
+                        item_document.Description,
+                        item_document.IsActive,
+                        item_document.DocFileName,
+                        item_document.DocumentVersion,
+                        item_document.SiteName,
+                        document_type.DocumentType
+                    FROM
+                        item_document
+                    INNER JOIN
+                        document_type ON item_document.DocumentTypeID = document_type.ID
+                    WHERE
+                        item_document.ProductID = '$input_ItemCode1_Sterile'
+                        AND item_document.IsActive = 1 ";
+    }else{
+        $query = "SELECT
                 item_document.ID,
                 item_document.ProductID,
                 item_document.ItemType_ID,
@@ -645,6 +784,8 @@ function showDocNoSterile($conn)
                 dbo.item_document
             INNER JOIN document_type ON item_document.DocumentTypeID = document_type.ID
             WHERE item_document.ProductID = '$input_ItemCode1_Sterile' AND item_document.IsActive = 1   ";
+    }
+
 
 
     $meQuery = $conn->prepare($query);
@@ -657,7 +798,7 @@ function showDocNoSterile($conn)
     die;
 }
 
-function showItemSterile($conn)
+function showItemSterile($conn, $db)
 {
     $return = array();
     // $input_Search = $_POST['input_search_request'];
@@ -717,13 +858,25 @@ function showItemSterile($conn)
     die;
 }
 
-function showUsageCodeSterile($conn)
+function showUsageCodeSterile($conn, $db)
 {
     $return = array();
     $input_ItemCode1_Sterile = $_POST['input_ItemCode1_Sterile'];
 
-
-    $query = " SELECT
+    if($db == 1){
+        $query = "SELECT
+                        itemstock.serielNo,
+                        itemstock.UsageCode,
+                        itemstock.lotNo,
+                        DATE_FORMAT(itemstock.expDate, '%d-%m-%Y') AS expDate,
+                        DATE_FORMAT(itemstock.CreateDate, '%d-%m-%Y') AS CreateDate,
+                        itemstock.ItemCode
+                    FROM
+                        itemstock
+                    WHERE
+                        itemstock.ItemCode = '$input_ItemCode1_Sterile' ";
+    }else{
+        $query = " SELECT
                     itemstock.serielNo,
                     itemstock.UsageCode,
                     itemstock.lotNo,
@@ -733,6 +886,8 @@ function showUsageCodeSterile($conn)
                 FROM
                     itemstock
                 WHERE itemstock.ItemCode = '$input_ItemCode1_Sterile'  ";
+    }
+
 
 
     $meQuery = $conn->prepare($query);
@@ -745,7 +900,7 @@ function showUsageCodeSterile($conn)
     die;
 }
 
-function onconfirm_CreateItemSterile($conn)
+function onconfirm_CreateItemSterile($conn, $db)
 {
     $input_ItemCode1_Sterile = $_POST['input_ItemCode1_Sterile'];
     $input_ItemCode2_Sterile = $_POST['input_ItemCode2_Sterile'];
@@ -771,21 +926,37 @@ function onconfirm_CreateItemSterile($conn)
     $return = [];
 
     if ($input_ItemCode1_Sterile == "") {
-        $genItem = "SELECT TOP
-                        1 CONCAT (
-                            'M',
-                            FORMAT ( GETDATE( ), 'yy' ),
-                            FORMAT ( GETDATE( ), 'MM' ),
-                            RIGHT (
-                                REPLICATE( '0', 4 ) + CONVERT ( VARCHAR, CONVERT ( INT, SUBSTRING ( COALESCE ( item.itemcode, '0' ), 4, 9 ) ) + 1 ), + 4 
-                            ) 
-                        ) AS itemCode
-                    FROM
-                        item 
-                    WHERE
-                        itemcode LIKE '%M%' 
-                    ORDER BY
-                        itemcode DESC ";
+
+        if($db == 1){
+            $genItem = "SELECT CONCAT(
+                                'M',
+                                DATE_FORMAT(CURDATE(), '%y'),
+                                DATE_FORMAT(CURDATE(), '%m'),
+                                LPAD(CAST(SUBSTRING(COALESCE(item.itemcode, '0'), 4, 6) AS UNSIGNED) + 1, 4, '0')
+                            ) AS itemCode
+                            FROM item
+                            WHERE itemcode LIKE '%M%'
+                            ORDER BY itemcode DESC
+                            LIMIT 1 ";
+        }else{
+            $genItem = "SELECT TOP
+            1 CONCAT (
+                'M',
+                FORMAT ( GETDATE( ), 'yy' ),
+                FORMAT ( GETDATE( ), 'MM' ),
+                RIGHT (
+                    REPLICATE( '0', 4 ) + CONVERT ( VARCHAR, CONVERT ( INT, SUBSTRING ( COALESCE ( item.itemcode, '0' ), 4, 9 ) ) + 1 ), + 4 
+                ) 
+            ) AS itemCode
+        FROM
+            item 
+        WHERE
+            itemcode LIKE '%M%' 
+        ORDER BY
+            itemcode DESC ";
+        }
+
+
         $meQuery = $conn->prepare($genItem);
         $meQuery->execute();
 
@@ -891,7 +1062,7 @@ function onconfirm_CreateItemSterile($conn)
 
 }
 
-function onconfirm_CreateDocNoSterile($conn)
+function onconfirm_CreateDocNoSterile($conn, $db)
 {
     $input_ItemCode1_Sterile = $_POST['input_ItemCode1_Sterile'];
     $select_typeDocument_Sterile = $_POST['select_typeDocument_Sterile'];
@@ -917,7 +1088,22 @@ function onconfirm_CreateDocNoSterile($conn)
 
     $check_row = 0;
     $Version = 1;
-    $query1 = " SELECT TOP 1
+
+    if($db == 1){
+        $query1 = "SELECT
+                        item_document.ID,
+                        item_document.DocumentVersion
+                    FROM
+                        item_document
+                    WHERE
+                        item_document.ProductID = '$input_ItemCode1_Sterile'
+                        AND item_document.DocumentTypeID = '$select_typeDocument_Sterile'
+                        AND item_document.IsActive = 1
+                    ORDER BY
+                        item_document.DocumentVersion DESC
+                    LIMIT 1 ";
+    }else{
+        $query1 = " SELECT TOP 1
                     item_document.ID,
                     item_document.DocumentVersion
                 FROM
@@ -928,6 +1114,8 @@ function onconfirm_CreateDocNoSterile($conn)
                     AND item_document.IsActive = 1
                 ORDER BY
                     item_document.DocumentVersion DESC ";
+    }
+
     $meQuery = $conn->prepare($query1);
     $meQuery->execute();
 
@@ -970,7 +1158,7 @@ function onconfirm_CreateDocNoSterile($conn)
     $meQueryIn->execute();
 }
 
-function EditUsage_SUDs($conn)
+function EditUsage_SUDs($conn, $db)
 {
     $return = array();
     $modal_input_serie = $_POST['modal_input_serie'];
@@ -997,7 +1185,7 @@ function EditUsage_SUDs($conn)
 
 }
 
-function SaveUsage_SUDs($conn)
+function SaveUsage_SUDs($conn, $db)
 {
     $return = array();
     $ArraySerie = $_POST['ArraySerie'];
@@ -1018,30 +1206,52 @@ function SaveUsage_SUDs($conn)
         $DateRegis = $DateRegis[2] . '-' . $DateRegis[1] . '-' . $DateRegis[0];
 
         for ($i = 0; $i < intval($value); $i++) {
-            $gen_usage = "SELECT COALESCE
-                                    (
-                                        (
-                                        SELECT TOP
-                                            1 CONCAT (
+
+            if($db == 1){
+                $gen_usage = "SELECT COALESCE(
+                                        (SELECT 
+                                            CONCAT(
                                                 its.ItemCode,
                                                 '-',
-                                                RIGHT (
-                                                    REPLICATE( '0',3  ) + CONVERT ( VARCHAR, CONVERT ( INT, SUBSTRING ( COALESCE ( its.UsageCode, '0' ), 11, 13 ) ) + 1 ),
-                                                3 
-                                                ) 
-                                            ) 
-                                        FROM
-                                            itemstock AS its 
-                                        WHERE
-                                            its.ItemCode = '$input_ItemCode1_SUDs' 
-                                        ORDER BY
-                                            its.UsageCode DESC 
-                                        ),
-                                        CONCAT (
+                                                LPAD(CAST(SUBSTRING(COALESCE(its.UsageCode, '0'), 11, 3) AS UNSIGNED) + 1, 3, '0')
+                                            )
+                                        FROM itemstock AS its
+                                        WHERE its.ItemCode = '$input_ItemCode1_SUDs'
+                                        ORDER BY its.UsageCode DESC
+                                        LIMIT 1),
+                                        CONCAT(
                                             '$input_ItemCode1_SUDs',
-                                            '-001' 
-                                        ) 
+                                            '-001'
+                                        )
                                     ) AS _UsageCode ";
+            }else{
+                $gen_usage = "SELECT COALESCE
+                (
+                    (
+                    SELECT TOP
+                        1 CONCAT (
+                            its.ItemCode,
+                            '-',
+                            RIGHT (
+                                REPLICATE( '0',3  ) + CONVERT ( VARCHAR, CONVERT ( INT, SUBSTRING ( COALESCE ( its.UsageCode, '0' ), 11, 13 ) ) + 1 ),
+                            3 
+                            ) 
+                        ) 
+                    FROM
+                        itemstock AS its 
+                    WHERE
+                        its.ItemCode = '$input_ItemCode1_SUDs' 
+                    ORDER BY
+                        its.UsageCode DESC 
+                    ),
+                    CONCAT (
+                        '$input_ItemCode1_SUDs',
+                        '-001' 
+                    ) 
+                ) AS _UsageCode ";
+            }
+
+
             $meQuery = $conn->prepare($gen_usage);
             $meQuery->execute();
             while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
@@ -1081,13 +1291,35 @@ function SaveUsage_SUDs($conn)
     }
 }
 
-function showDocNoSUDs($conn)
+function showDocNoSUDs($conn, $db)
 {
     $return = array();
     $input_ItemCode1_SUDs = $_POST['input_ItemCode1_SUDs'];
 
-
-    $query = "SELECT
+    if($db == 1){
+        $query = "SELECT
+                    item_document.ID,
+                    item_document.ProductID,
+                    item_document.ItemType_ID,
+                    item_document.DocumentTypeID,
+                    item_document.DocumentNo,
+                    DATE(item_document.DocApprovedDate) AS DocApprovedDate,
+                    DATE(item_document.DocExpireDate) AS DocExpireDate,
+                    item_document.Description,
+                    item_document.IsActive,
+                    item_document.DocFileName,
+                    item_document.DocumentVersion,
+                    item_document.SiteName,
+                    document_type.DocumentType
+                FROM
+                    item_document
+                INNER JOIN
+                    document_type ON item_document.DocumentTypeID = document_type.ID
+                WHERE
+                    item_document.ProductID = '$input_ItemCode1_SUDs'
+                    AND item_document.IsActive = 1 ";
+    }else{
+        $query = "SELECT
                 item_document.ID,
                 item_document.ProductID,
                 item_document.ItemType_ID,
@@ -1105,6 +1337,8 @@ function showDocNoSUDs($conn)
                 dbo.item_document
             INNER JOIN document_type ON item_document.DocumentTypeID = document_type.ID
             WHERE item_document.ProductID = '$input_ItemCode1_SUDs' AND item_document.IsActive = 1   ";
+    }
+
 
 
     $meQuery = $conn->prepare($query);
@@ -1117,7 +1351,7 @@ function showDocNoSUDs($conn)
     die;
 }
 
-function showItemSUDs($conn)
+function showItemSUDs($conn, $db)
 {
     $return = array();
     $input_modal_search_Suds = $_POST['input_modal_search_Suds'];
@@ -1179,13 +1413,25 @@ function showItemSUDs($conn)
     die;
 }
 
-function showUsageCodeSUDs($conn)
+function showUsageCodeSUDs($conn, $db)
 {
     $return = array();
     $input_ItemCode1_SUDs = $_POST['input_ItemCode1_SUDs'];
 
-
-    $query = " SELECT
+    if($db == 1){
+        $query = "SELECT
+                        itemstock.serielNo,
+                        itemstock.UsageCode,
+                        itemstock.lotNo,
+                        DATE_FORMAT(itemstock.expDate, '%d-%m-%Y') AS expDate,
+                        DATE_FORMAT(itemstock.CreateDate, '%d-%m-%Y') AS CreateDate,
+                        itemstock.ItemCode
+                    FROM
+                        itemstock
+                    WHERE
+                        itemstock.ItemCode = '$input_ItemCode1_SUDs' ";
+    }else{
+        $query = " SELECT
                     itemstock.serielNo,
                     itemstock.UsageCode,
                     itemstock.lotNo,
@@ -1195,6 +1441,8 @@ function showUsageCodeSUDs($conn)
                 FROM
                     itemstock
                 WHERE itemstock.ItemCode = '$input_ItemCode1_SUDs'  ";
+    }
+
 
 
     $meQuery = $conn->prepare($query);
@@ -1207,7 +1455,7 @@ function showUsageCodeSUDs($conn)
     die;
 }
 
-function onconfirm_CreateItemSUDs($conn)
+function onconfirm_CreateItemSUDs($conn, $db)
 {
     $input_ItemCode1_SUDs = $_POST['input_ItemCode1_SUDs'];
     $input_ItemCode2_SUDs = $_POST['input_ItemCode2_SUDs'];
@@ -1234,21 +1482,36 @@ function onconfirm_CreateItemSUDs($conn)
     $return = [];
 
     if ($input_ItemCode1_SUDs == "") {
-        $genItem = "SELECT TOP
-                        1 CONCAT (
+
+        if($db == 1){
+            $genItem = "SELECT CONCAT(
                             'S',
-                            FORMAT ( GETDATE( ), 'yy' ),
-                            FORMAT ( GETDATE( ), 'MM' ),
-                            RIGHT (
-                                REPLICATE( '0', 4 ) + CONVERT ( VARCHAR, CONVERT ( INT, SUBSTRING ( COALESCE ( item.itemcode, '0' ), 4, 9 ) ) + 1 ), + 4 
-                            ) 
+                            DATE_FORMAT(CURDATE(), '%y'),
+                            DATE_FORMAT(CURDATE(), '%m'),
+                            LPAD(CAST(SUBSTRING(COALESCE(item.itemcode, '0'), 4, 6) AS UNSIGNED) + 1, 4, '0')
                         ) AS itemCode
-                    FROM
-                        item 
-                    WHERE
-                        itemcode LIKE '%S%' 
-                    ORDER BY
-                        itemcode DESC ";
+                        FROM item
+                        WHERE itemcode LIKE '%S%'
+                        ORDER BY itemcode DESC
+                        LIMIT 1 ";
+        }else{
+            $genItem = "SELECT TOP
+            1 CONCAT (
+                'S',
+                FORMAT ( GETDATE( ), 'yy' ),
+                FORMAT ( GETDATE( ), 'MM' ),
+                RIGHT (
+                    REPLICATE( '0', 4 ) + CONVERT ( VARCHAR, CONVERT ( INT, SUBSTRING ( COALESCE ( item.itemcode, '0' ), 4, 9 ) ) + 1 ), + 4 
+                ) 
+            ) AS itemCode
+        FROM
+            item 
+        WHERE
+            itemcode LIKE '%S%' 
+        ORDER BY
+            itemcode DESC ";
+        }
+
         $meQuery = $conn->prepare($genItem);
         $meQuery->execute();
 
@@ -1356,7 +1619,7 @@ function onconfirm_CreateItemSUDs($conn)
 
 }
 
-function onconfirm_CreateDocNoSUDs($conn)
+function onconfirm_CreateDocNoSUDs($conn, $db)
 {
     $input_ItemCode1_SUDs = $_POST['input_ItemCode1_SUDs'];
     $select_typeDocument_SUDs = $_POST['select_typeDocument_SUDs'];
@@ -1382,7 +1645,22 @@ function onconfirm_CreateDocNoSUDs($conn)
 
     $check_row = 0;
     $Version = 1;
-    $query1 = " SELECT TOP 1
+
+    if($db == 1){
+        $query1 = "SELECT
+                        item_document.ID,
+                        item_document.DocumentVersion
+                    FROM
+                        item_document
+                    WHERE
+                        item_document.ProductID = '$input_ItemCode1_SUDs'
+                        AND item_document.DocumentTypeID = '$select_typeDocument_SUDs'
+                        AND item_document.IsActive = 1
+                    ORDER BY
+                        item_document.DocumentVersion DESC
+                    LIMIT 1 ";
+    }else{
+        $query1 = " SELECT TOP 1
                     item_document.ID,
                     item_document.DocumentVersion
                 FROM
@@ -1393,6 +1671,8 @@ function onconfirm_CreateDocNoSUDs($conn)
                     AND item_document.IsActive = 1
                 ORDER BY
                     item_document.DocumentVersion DESC ";
+    }
+
     $meQuery = $conn->prepare($query1);
     $meQuery->execute();
 

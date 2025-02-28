@@ -1,5 +1,6 @@
 <?php
 session_start();
+require '../../config/db.php';
 require '../../connect/connect.php';
 
 
@@ -9,7 +10,7 @@ if (!empty($_POST['FUNC_NAME'])) {
     } else if ($_POST['FUNC_NAME'] == 'select_doctor') {
         select_doctor($conn);
     } else if ($_POST['FUNC_NAME'] == 'select_procedure') {
-        select_procedure($conn);
+        select_procedure($conn,$db);
     } else if ($_POST['FUNC_NAME'] == 'select_sterileprocess') {
         select_sterileprocess($conn);
     } else if ($_POST['FUNC_NAME'] == 'select_typeDocument') {
@@ -46,7 +47,7 @@ function select_sterileprocess($conn)
                     sterileprocess.ID,
                     sterileprocess.SterileName
                 FROM
-                    dbo.sterileprocess ";
+                    sterileprocess ";
 
 
     $meQuery = $conn->prepare($query);
@@ -104,16 +105,27 @@ function select_doctor($conn)
     die;
 }
 
-function select_procedure($conn)
+function select_procedure($conn,$db)
 {
     $return = array();
 
-    $query = "SELECT
-                    [procedure].ID,
-                    [procedure].Procedure_TH 
-                FROM
-                    dbo.[procedure]
-                ORDER BY Procedure_TH ASC ";
+    if($db == 1){
+        $query = " SELECT
+                        ID,
+                        Procedure_TH 
+                    FROM
+                        `procedure` 
+                    ORDER BY
+                        Procedure_TH ASC  ";
+    }else{
+        $query = "SELECT
+        [procedure].ID,
+        [procedure].Procedure_TH 
+    FROM
+        [procedure]
+    ORDER BY Procedure_TH ASC ";
+    }
+
 
 
     $meQuery = $conn->prepare($query);

@@ -1,20 +1,21 @@
 <?php
 session_start();
+require '../config/db.php';
 require '../connect/connect.php';
 require '../process/Createdeproom.php';
 
 if (!empty($_POST['FUNC_NAME'])) {
     if ($_POST['FUNC_NAME'] == 'show_detail_hn') {
-        show_detail_hn($conn);
+        show_detail_hn($conn, $db);
     }else if ($_POST['FUNC_NAME'] == 'feeddata_hncode_detail') {
-        feeddata_hncode_detail($conn);
+        feeddata_hncode_detail($conn, $db);
     }else  if ($_POST['FUNC_NAME'] == 'feeddata_hncode') {
-        feeddata_hncode($conn);
+        feeddata_hncode($conn, $db);
     }
     
 }
 
-function feeddata_hncode($conn)
+function feeddata_hncode($conn, $db)
 {
     $return = array();
     $deproom = $_SESSION['deproom'];
@@ -30,37 +31,79 @@ function feeddata_hncode($conn)
         $where = "AND itemstock.UsageCode LIKE '%$input_search%' ";
     } 
 
-    $query = "SELECT
-                    hncode.ID,
-                    hncode.DocNo,
-                    FORMAT ( hncode.DocDate, 'dd-MM-yyyy' ) AS DocDate ,
-                    hncode.HnCode,
-                    departmentroom.departmentroomname,
-                    ISNULL(doctor.Doctor_Name_EN, '-' ) AS Doctor_Name ,
-                    ISNULL( [procedure].Procedure_EN , '-' ) AS Procedure_TH
-                FROM
-                    hncode
-                    INNER JOIN departmentroom ON departmentroom.id = hncode.departmentroomid
-                    INNER JOIN hncode_detail ON hncode.DocNo = hncode_detail.DocNo
-                    INNER JOIN itemstock ON hncode_detail.ItemStockID = itemstock.RowID
-                    INNER JOIN item ON itemstock.ItemCode = item.itemcode 
-                    LEFT JOIN doctor ON doctor.ID = hncode.doctor
-                    LEFT JOIN [procedure] ON [procedure].ID = hncode.[procedure]
-                WHERE
-                    hncode.IsStatus = 1
-                    AND hncode.IsCancel = 0  
-                    $where
-                    -- AND itemstock.Isdeproom = '1' 
-                GROUP BY 
-                    hncode.ID , 
-                    hncode.DocNo , 
-                    FORMAT ( hncode.DocDate, 'dd-MM-yyyy' ),
-                    hncode.HnCode ,
-                    departmentroom.departmentroomname,
-                    doctor.Doctor_Name_EN,
-                    [procedure].Procedure_EN 
-                ORDER BY
-                    hncode.ID ASC ";
+    if($db == 1){
+
+        $query = "SELECT
+                        hncode.ID,
+                        hncode.DocNo,
+                        DATE_FORMAT(hncode.DocDate, '%d-%m-%Y') AS DocDate,
+                        hncode.HnCode,
+                        departmentroom.departmentroomname,
+                        COALESCE(doctor.Doctor_Name_EN, '-') AS Doctor_Name,
+                        COALESCE(`procedure`.Procedure_EN, '-') AS Procedure_TH
+                    FROM
+                        hncode
+                    INNER JOIN
+                        departmentroom ON departmentroom.id = hncode.departmentroomid
+                    INNER JOIN
+                        hncode_detail ON hncode.DocNo = hncode_detail.DocNo
+                    INNER JOIN
+                        itemstock ON hncode_detail.ItemStockID = itemstock.RowID
+                    INNER JOIN
+                        item ON itemstock.ItemCode = item.itemcode
+                    LEFT JOIN
+                        doctor ON doctor.ID = hncode.doctor
+                    LEFT JOIN
+                        `procedure` ON `procedure`.ID = hncode.`procedure`
+                    WHERE
+                        hncode.IsStatus = 1
+                        AND hncode.IsCancel = 0
+                        $where
+                    GROUP BY
+                        hncode.ID,
+                        hncode.DocNo,
+                        DATE_FORMAT(hncode.DocDate, '%d-%m-%Y'),
+                        hncode.HnCode,
+                        departmentroom.departmentroomname,
+                        doctor.Doctor_Name_EN,
+                        `procedure`.Procedure_EN
+                    ORDER BY
+                        hncode.ID ASC ";
+
+    }else{
+        $query = "SELECT
+                        hncode.ID,
+                        hncode.DocNo,
+                        FORMAT ( hncode.DocDate, 'dd-MM-yyyy' ) AS DocDate ,
+                        hncode.HnCode,
+                        departmentroom.departmentroomname,
+                        ISNULL(doctor.Doctor_Name_EN, '-' ) AS Doctor_Name ,
+                        ISNULL( [procedure].Procedure_EN , '-' ) AS Procedure_TH
+                    FROM
+                        hncode
+                        INNER JOIN departmentroom ON departmentroom.id = hncode.departmentroomid
+                        INNER JOIN hncode_detail ON hncode.DocNo = hncode_detail.DocNo
+                        INNER JOIN itemstock ON hncode_detail.ItemStockID = itemstock.RowID
+                        INNER JOIN item ON itemstock.ItemCode = item.itemcode 
+                        LEFT JOIN doctor ON doctor.ID = hncode.doctor
+                        LEFT JOIN [procedure] ON [procedure].ID = hncode.[procedure]
+                    WHERE
+                        hncode.IsStatus = 1
+                        AND hncode.IsCancel = 0  
+                        $where
+                        -- AND itemstock.Isdeproom = '1' 
+                    GROUP BY 
+                        hncode.ID , 
+                        hncode.DocNo , 
+                        FORMAT ( hncode.DocDate, 'dd-MM-yyyy' ),
+                        hncode.HnCode ,
+                        departmentroom.departmentroomname,
+                        doctor.Doctor_Name_EN,
+                        [procedure].Procedure_EN 
+                    ORDER BY
+                        hncode.ID ASC ";
+    }
+
 
     // echo $query;
     $meQuery = $conn->prepare($query);
@@ -73,7 +116,7 @@ function feeddata_hncode($conn)
     die;
 }
 
-function feeddata_hncode_detail($conn)
+function feeddata_hncode_detail($conn, $db)
 {
     $return = array();
     $deproom = $_SESSION['deproom'];
@@ -88,8 +131,42 @@ function feeddata_hncode_detail($conn)
     // }else{
     //     $where = "AND itemstock.UsageCode LIKE '%$input_search%' ";
     // } 
-
-    $query = "SELECT
+    if($db == 1){
+        $query = " SELECT
+                        hncode.ID,
+                        item.itemname,
+                        item.LimitUse,
+                        itemtype.TyeName,
+                        itemstock.UsageCode,
+                        item.itemcode,
+                        DATE_FORMAT(hncode.DocDate, '%d-%m-%Y') AS DocDate,
+                        hncode.HnCode,
+                        hncode_detail.LastSterileDetailID,
+                        departmentroom.departmentroomname,
+                        sudslog.UsedCount
+                    FROM
+                        hncode
+                    INNER JOIN
+                        departmentroom ON departmentroom.id = hncode.departmentroomid
+                    INNER JOIN
+                        hncode_detail ON hncode.DocNo = hncode_detail.DocNo
+                    INNER JOIN
+                        itemstock ON hncode_detail.ItemStockID = itemstock.RowID
+                    INNER JOIN
+                        item ON itemstock.ItemCode = item.itemcode
+                    INNER JOIN
+                        itemtype ON itemtype.ID = item.itemtypeID
+                    LEFT JOIN
+                        sudslog ON sudslog.UniCode = itemstock.UsageCode
+                    WHERE
+                        hncode.IsStatus = 1
+                        AND hncode.IsCancel = 0
+                        AND hncode_detail.IsStatus != 99
+                        AND hncode.DocNo = '$DocNo'
+                    ORDER BY
+                        hncode.ID ASC;  ";
+    }else{
+        $query = "SELECT
                     hncode.ID,
                     item.itemname,
                     item.LimitUse,
@@ -100,7 +177,7 @@ function feeddata_hncode_detail($conn)
                     hncode.HnCode,
                     hncode_detail.LastSterileDetailID,
                     departmentroom.departmentroomname,
-	                sudslog.UsedCount
+                    sudslog.UsedCount
                 FROM
                     hncode
                     INNER JOIN departmentroom ON departmentroom.id = hncode.departmentroomid
@@ -117,6 +194,8 @@ function feeddata_hncode_detail($conn)
                     -- AND ( itemstock.IsDamage IS NULL OR  itemstock.IsDamage = 0 )
                 ORDER BY
                     hncode.ID ASC ";
+    }
+
 
     $meQuery = $conn->prepare($query);
     $meQuery->execute();
@@ -127,7 +206,7 @@ function feeddata_hncode_detail($conn)
     unset($conn);
     die;
 }
-function show_detail_hn($conn)
+function show_detail_hn($conn, $db)
 {
     $return = array();
     $deproom = $_SESSION['deproom'];
@@ -140,26 +219,54 @@ function show_detail_hn($conn)
     $select_EDate = explode("-", $select_EDate);
     $select_EDate = $select_EDate[2] . '-' . $select_EDate[1] . '-' . $select_EDate[0];
 
-    $query = "SELECT
+
+    
+    if($db == 1){
+        $query = "SELECT
                     hncode.ID,
-                    FORMAT ( hncode.DocDate, 'dd-MM-yyyy' ) AS DocDate ,
+                    DATE_FORMAT(hncode.DocDate, '%d-%m-%Y') AS DocDate,
                     hncode.HnCode,
                     hncode.DocNo,
                     departmentroom.departmentroomname,
-                    ISNULL(doctor.Doctor_Name_EN, '-' ) AS Doctor_Name ,
-                    ISNULL( [procedure].Procedure_EN , '-' ) AS Procedure_TH
+                    COALESCE(doctor.Doctor_Name_EN, '-') AS Doctor_Name,
+                    COALESCE(`procedure`.Procedure_EN, '-') AS Procedure_TH
                 FROM
                     hncode
-                    INNER JOIN departmentroom ON departmentroom.id = hncode.departmentroomid
-                    LEFT JOIN doctor ON doctor.ID = hncode.doctor
-                    LEFT JOIN [procedure] ON [procedure].ID = hncode.[procedure]
+                INNER JOIN
+                    departmentroom ON departmentroom.id = hncode.departmentroomid
+                LEFT JOIN
+                    doctor ON doctor.ID = hncode.doctor
+                LEFT JOIN
+                    `procedure` ON `procedure`.ID = hncode.`procedure`
                 WHERE
                     hncode.IsStatus = 1
-                    AND hncode.IsCancel = 0  
-                    AND	CONVERT ( DATE, hncode.DocDate ) BETWEEN  '$select_SDate'  AND '$select_EDate'
-                    -- AND itemstock.Isdeproom = '1' 
+                    AND hncode.IsCancel = 0
+                    AND DATE(hncode.DocDate) BETWEEN '$select_SDate' AND '$select_EDate'
                 ORDER BY
                     hncode.ID ASC ";
+    }else{
+        $query = " SELECT
+                        hncode.ID,
+                        FORMAT ( hncode.DocDate, 'dd-MM-yyyy' ) AS DocDate ,
+                        hncode.HnCode,
+                        hncode.DocNo,
+                        departmentroom.departmentroomname,
+                        ISNULL(doctor.Doctor_Name_EN, '-' ) AS Doctor_Name ,
+                        ISNULL( [procedure].Procedure_EN , '-' ) AS Procedure_TH
+                    FROM
+                        hncode
+                        INNER JOIN departmentroom ON departmentroom.id = hncode.departmentroomid
+                        LEFT JOIN doctor ON doctor.ID = hncode.doctor
+                        LEFT JOIN [procedure] ON [procedure].ID = hncode.[procedure]
+                    WHERE
+                        hncode.IsStatus = 1
+                        AND hncode.IsCancel = 0  
+                        AND	CONVERT ( DATE, hncode.DocDate ) BETWEEN  '$select_SDate'  AND '$select_EDate'
+                        -- AND itemstock.Isdeproom = '1' 
+                    ORDER BY
+                        hncode.ID ASC ";
+    }
+
     // echo $query;
     $meQuery = $conn->prepare($query);
     $meQuery->execute();

@@ -32,8 +32,8 @@
             <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;" id="radio_register_itemSUDs">ลงทะเบียนอุปกรณ์ SUDs</button>
             <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;" id="radio_register_itemSterile">ลงทะเบียนอุปกรณ์ Sterile</button>
             <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;" id="radio_register_implant">ลงทะเบียนอุปกรณ์ Implant</button>
-            <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;" id="radio_history_item">ประวัติการเรียกใช้อุปกรณ์</button>
-            <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;" id="radio_use_limit">ใช้งานเกินจำนวน</button>
+            <!-- <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;" id="radio_history_item">ประวัติการเรียกใช้อุปกรณ์</button>
+            <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;" id="radio_use_limit">ใช้งานเกินจำนวน</button> -->
         </div>
     </div>
 </div>

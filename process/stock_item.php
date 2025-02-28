@@ -1,48 +1,49 @@
 <?php
 session_start();
+require '../config/db.php';
 require '../connect/connect.php';
 require '../process/Createdeproom.php';
 require '../process/Createhncode.php';
 
 if (!empty($_POST['FUNC_NAME'])) {
     if ($_POST['FUNC_NAME'] == 'Save_store') {
-        Save_store($conn);
+        Save_store($conn, $db);
     }else     if ($_POST['FUNC_NAME'] == 'Show_store') {
-        Show_store($conn);
+        Show_store($conn, $db);
     }else if ($_POST['FUNC_NAME'] == 'oncheck_pay') {
-        oncheck_pay($conn);
+        oncheck_pay($conn, $db);
     }else if ($_POST['FUNC_NAME'] == 'Edit_store') {
-        Edit_store($conn);
+        Edit_store($conn, $db);
     }else if ($_POST['FUNC_NAME'] == 'Show_store_detail') {
-        Show_store_detail($conn);
+        Show_store_detail($conn, $db);
     }else if ($_POST['FUNC_NAME'] == 'Edit_store_detail') {
-        Edit_store_detail($conn);
+        Edit_store_detail($conn, $db);
     }else if ($_POST['FUNC_NAME'] == 'select_stock') {
-        select_stock($conn);
+        select_stock($conn, $db);
     }else if ($_POST['FUNC_NAME'] == 'select_location') {
-        select_location($conn);
+        select_location($conn, $db);
     }else if ($_POST['FUNC_NAME'] == 'show_detail_item') {
-        show_detail_item($conn);
+        show_detail_item($conn, $db);
     }else if ($_POST['FUNC_NAME'] == 'save_item') {
-        save_item($conn);
+        save_item($conn, $db);
     }else if ($_POST['FUNC_NAME'] == 'show_detail_item_store') {
-        show_detail_item_store($conn);
+        show_detail_item_store($conn, $db);
     }else if ($_POST['FUNC_NAME'] == 'delete_item') {
-        delete_item($conn);
+        delete_item($conn, $db);
     }else if ($_POST['FUNC_NAME'] == 'Save_store_location') {
-        Save_store_location($conn);
+        Save_store_location($conn, $db);
     }else if ($_POST['FUNC_NAME'] == 'select_rowandfloor') {
-        select_rowandfloor($conn);
+        select_rowandfloor($conn, $db);
     }else if ($_POST['FUNC_NAME'] == 'switch_item') {
-        switch_item($conn);
+        switch_item($conn, $db);
     }else if ($_POST['FUNC_NAME'] == 'onDeleteLocation') {
-        onDeleteLocation($conn);
+        onDeleteLocation($conn, $db);
     }else if ($_POST['FUNC_NAME'] == 'onDeleteLocationDetail') {
-        onDeleteLocationDetail($conn);
+        onDeleteLocationDetail($conn, $db);
     }
 }
 
-function onDeleteLocationDetail($conn)
+function onDeleteLocationDetail($conn, $db)
 {
     $rowID = $_POST['rowID'];
 
@@ -59,7 +60,7 @@ function onDeleteLocationDetail($conn)
         die;
 
 }
-function onDeleteLocation($conn)
+function onDeleteLocation($conn, $db)
 {
     $rowID = $_POST['rowID'];
 
@@ -80,7 +81,7 @@ function onDeleteLocation($conn)
         die;
 
 }
-function Save_store_location($conn)
+function Save_store_location($conn, $db)
 {
     $input_search_location = $_POST['input_search_location'];
     $input_search_floor = $_POST['input_search_floor'];
@@ -105,7 +106,7 @@ function Save_store_location($conn)
         die;
 
 }
-function switch_item($conn)
+function switch_item($conn, $db)
 {
     $itemCodeArray = $_POST['itemCodeArray'];
     $select_location_floor = $_POST['select_location_floor'];
@@ -133,7 +134,7 @@ function switch_item($conn)
         die;
 
 }
-function delete_item($conn)
+function delete_item($conn, $db)
 {
     $itemCodeArray = $_POST['itemCodeArray'];
     $return = [];
@@ -154,7 +155,7 @@ function delete_item($conn)
         die;
 
 }
-function save_item($conn)
+function save_item($conn, $db)
 {
     $itemCodeArray = $_POST['itemCodeArray'];
     $select_location_item = $_POST['select_location_item'];
@@ -198,7 +199,7 @@ function save_item($conn)
 
 }
 
-function show_detail_item_store($conn)
+function show_detail_item_store($conn, $db)
 {
     $return = array();
     $select_location_floor = $_POST['select_location_floor'];
@@ -238,7 +239,7 @@ function show_detail_item_store($conn)
     die;
 }
 
-function show_detail_item($conn)
+function show_detail_item($conn, $db)
 {
     $return = array();
     $input_Search = $_POST['input_search_item'];
@@ -280,7 +281,7 @@ function show_detail_item($conn)
 }
 
 
-function select_rowandfloor($conn)
+function select_rowandfloor($conn, $db)
 {
 
     $return = [];
@@ -304,7 +305,7 @@ function select_rowandfloor($conn)
     die;
 }
 
-function select_location($conn)
+function select_location($conn, $db)
 {
 
     $return = [];
@@ -327,7 +328,7 @@ function select_location($conn)
     die;
 }
 
-function select_stock($conn)
+function select_stock($conn, $db)
 {
 
     $return = [];
@@ -337,7 +338,7 @@ function select_stock($conn)
                     store.storeName, 
                     store.siteName
                 FROM
-                    dbo.store
+                    store
                     WHERE store.isCancel=0  ";
 
     $meQuery = $conn->prepare($query);
@@ -350,7 +351,7 @@ function select_stock($conn)
     die;
 }
 
-function Edit_store_detail($conn)
+function Edit_store_detail($conn, $db)
 {
     $input_LocationStock = $_POST['input_LocationStock'];
     $input_floor = $_POST['input_floor'];
@@ -375,7 +376,7 @@ function Edit_store_detail($conn)
 
 }
 
-function Show_store_detail($conn)
+function Show_store_detail($conn, $db)
 {
 
     $return = [];
@@ -389,9 +390,9 @@ function Show_store_detail($conn)
                     store_location_detail.rowID ,
                     store_location_detail.store_locationID 
                 FROM
-                    dbo.store
-                    INNER JOIN dbo.store_location ON store.rowID = store_location.storeID
-                    INNER JOIN dbo.store_location_detail ON store_location.RowID = store_location_detail.store_locationID 
+                    store
+                    INNER JOIN store_location ON store.rowID = store_location.storeID
+                    INNER JOIN store_location_detail ON store_location.RowID = store_location_detail.store_locationID 
                 WHERE
                     store_location_detail.store_locationID = '$rowID' AND store_location_detail.IsCancel = 0 ";
 
@@ -405,7 +406,7 @@ function Show_store_detail($conn)
     die;
 }
 
-function Edit_store($conn)
+function Edit_store($conn, $db)
 {
     $input_LocationStock = $_POST['input_LocationStock'];
     $rowid = $_POST['rowid'];
@@ -434,7 +435,7 @@ function Edit_store($conn)
 
 }
 
-function Save_store($conn)
+function Save_store($conn, $db)
 {
     $input_stock = $_POST['input_stock'];
     // $input_LocationStock = $_POST['input_LocationStock'];
@@ -447,7 +448,7 @@ function Save_store($conn)
                 store.rowID, 
                 store.storeName
             FROM
-                dbo.store
+                store
                 WHERE store.storeName ='$input_stock' ";
 
 
@@ -479,7 +480,7 @@ function Save_store($conn)
 
 }
 
-function Show_store($conn)
+function Show_store($conn, $db)
 {
 
     $return = [];

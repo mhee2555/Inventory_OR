@@ -1,16 +1,19 @@
 <?php
 session_start();
+require '../config/db.php';
 require '../connect/connect.php';
 
 if (!empty($_POST['FUNC_NAME'])) {
     if ($_POST['FUNC_NAME'] == 'show_detail_damage') {
-        show_detail_damage($conn);
+        show_detail_damage($conn, $db);
     }
 }
 
-function show_detail_damage($conn)
+function show_detail_damage($conn, $db)
 {
     $return = [];
+
+
     $query = "SELECT
                     damagedetail.Remark,
                     deproomdetailsub.isDamage,

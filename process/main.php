@@ -1,34 +1,35 @@
 <?php
 session_start();
+require '../config/db.php';
 require '../connect/connect.php';
 
 if (!empty($_POST['FUNC_NAME'])) {
     if ($_POST['FUNC_NAME'] == 'selection_itemNoUse') {
-        selection_itemNoUse($conn);
+        selection_itemNoUse($conn,$db);
     }else     if ($_POST['FUNC_NAME'] == 'selection_itemborrow') {
-        selection_itemborrow($conn);
+        selection_itemborrow($conn,$db);
     }else     if ($_POST['FUNC_NAME'] == 'selection_itemdamage') {
-        selection_itemdamage($conn);
+        selection_itemdamage($conn,$db);
     }else     if ($_POST['FUNC_NAME'] == 'onUpdatetime') {
-        onUpdatetime($conn);
+        onUpdatetime($conn,$db);
     }else     if ($_POST['FUNC_NAME'] == 'selection_receive_stock') {
-        selection_receive_stock($conn);
+        selection_receive_stock($conn,$db);
     }else     if ($_POST['FUNC_NAME'] == 'onUpdateExsoon') {
-        onUpdateExsoon($conn);
+        onUpdateExsoon($conn,$db);
     }else     if ($_POST['FUNC_NAME'] == 'selection_Ex') {
-        selection_Ex($conn);
+        selection_Ex($conn,$db);
     }else     if ($_POST['FUNC_NAME'] == 'selection_ExSoon') {
-        selection_ExSoon($conn);
+        selection_ExSoon($conn,$db);
     }else if ($_POST['FUNC_NAME'] == 'selection_use_deproom') {
-        selection_use_deproom($conn);
+        selection_use_deproom($conn,$db);
     } else if ($_POST['FUNC_NAME'] == 'onUpdateDisplay') {
-        onUpdateDisplay($conn);
+        onUpdateDisplay($conn,$db);
     } else if ($_POST['FUNC_NAME'] == 'onUpdateLang') {
-        onUpdateLang($conn);
+        onUpdateLang($conn,$db);
     }
 }
 
-function onUpdateLang($conn)
+function onUpdateLang($conn,$db)
 {
     $return = array();
     $Lang = $_POST['Lang'];
@@ -45,7 +46,7 @@ function onUpdateLang($conn)
     die;
 }
 
-function onUpdateDisplay($conn)
+function onUpdateDisplay($conn,$db)
 {
     $return = array();
     $display = $_POST['display'];
@@ -62,12 +63,11 @@ function onUpdateDisplay($conn)
     die;
 }
 
-function selection_use_deproom($conn)
+function selection_use_deproom($conn,$db)
 {
 
     $return = [];
-    $query = " SELECT COUNT
-                    ( deproom.DocNo ) AS c 
+    $query = " SELECT COUNT(deproom.DocNo) AS c 
                 FROM
                     deproom
                 WHERE
@@ -82,7 +82,7 @@ function selection_use_deproom($conn)
     die;
 }
 
-function selection_ExSoon($conn)
+function selection_ExSoon($conn,$db)
 {
     $DepID = $_SESSION['DepID'];
     $GN_WarningExpiringSoonDay = $_POST['GN_WarningExpiringSoonDay'];
@@ -96,15 +96,31 @@ function selection_ExSoon($conn)
     }
 
     $return = [];
-    $query = "SELECT COUNT(DISTINCT itemstock.UsageCode ) AS c 
-                FROM
-                    itemstock 
-                WHERE
+
+    if($db == 1){
+        $query = " SELECT
+                        COUNT( DISTINCT itemstock.UsageCode ) AS c 
+                    FROM
+                        itemstock 
+                    WHERE
                         itemstock.IsCancel = 0 
-                        AND itemstock.Isdeproom = 0
-                    AND CONVERT ( DATE, itemstock.ExpireDate ) BETWEEN CONVERT ( DATE, GETDATE( ) ) 
-                    AND DATEADD( DAY, $GN_WarningExpiringSoonDay, CONVERT ( DATE, GETDATE( ) ) ) 
-                    AND CONVERT ( DATE, itemstock.ExpireDate ) != CONVERT ( DATE, GETDATE( ) ) $wheredep ";
+                        AND itemstock.Isdeproom = 0 
+                        AND DATE( itemstock.ExpireDate ) BETWEEN CURDATE() 
+                        AND DATE_ADD( CURDATE(), INTERVAL $GN_WarningExpiringSoonDay DAY ) 
+                        AND DATE( itemstock.ExpireDate ) != CURDATE() $wheredep  ";
+    }else{
+        $query = "SELECT COUNT(DISTINCT itemstock.UsageCode ) AS c 
+        FROM
+            itemstock 
+        WHERE
+                itemstock.IsCancel = 0 
+                AND itemstock.Isdeproom = 0
+            AND CONVERT ( DATE, itemstock.ExpireDate ) BETWEEN CONVERT ( DATE, GETDATE( ) ) 
+            AND DATEADD( DAY, $GN_WarningExpiringSoonDay, CONVERT ( DATE, GETDATE( ) ) ) 
+            AND CONVERT ( DATE, itemstock.ExpireDate ) != CONVERT ( DATE, GETDATE( ) ) $wheredep ";
+    }
+
+
     $meQuery = $conn->prepare($query);
     $meQuery->execute();
     while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
@@ -116,7 +132,7 @@ function selection_ExSoon($conn)
     die;
 }
 
-function selection_Ex($conn)
+function selection_Ex($conn,$db)
 {
     $DepID = $_SESSION['DepID'];
     $deproom = $_SESSION['deproom'];
@@ -131,13 +147,25 @@ function selection_Ex($conn)
     }
 
     $return = [];
-    $query = "SELECT COUNT(DISTINCT itemstock.UsageCode ) AS c 
+
+    if($db == 1){
+        $query = " SELECT
+                        COUNT( DISTINCT itemstock.UsageCode ) AS c 
+                    FROM
+                        itemstock 
+                    WHERE
+                        itemstock.IsCancel = 0 
+                        AND DATE_FORMAT( itemstock.ExpireDate, '%Y-%m-%d' ) <= DATE_FORMAT( NOW(), '%Y-%m-%d' ) $wheredep ";
+    }else{
+        $query = "SELECT COUNT(DISTINCT itemstock.UsageCode ) AS c 
                      
-                FROM
-                    itemstock 
-                WHERE
-                     itemstock.IsCancel = 0 
-                    AND FORMAT ( itemstock.ExpireDate, 'yyyy-MM-dd' ) <= FORMAT ( GETDATE( ), 'yyyy-MM-dd' ) $wheredep  ";
+        FROM
+            itemstock 
+        WHERE
+             itemstock.IsCancel = 0 
+            AND FORMAT ( itemstock.ExpireDate, 'yyyy-MM-dd' ) <= FORMAT ( GETDATE( ), 'yyyy-MM-dd' ) $wheredep  ";
+    }
+
 
                     // echo  $query;
 
@@ -152,13 +180,12 @@ function selection_Ex($conn)
 }
 
 
-function selection_receive_stock($conn)
+function selection_receive_stock($conn,$db)
 {
     $return = [];
 
     $cnt = 0;
-    $query = "SELECT COUNT
-                    ( sendsterile.DocNo ) AS c 
+    $query = "SELECT COUNT(sendsterile.DocNo) AS c 
                 FROM
                     sendsterile ";
     // $query = "SELECT
@@ -199,7 +226,7 @@ function selection_receive_stock($conn)
     die;
 }
 
-function onUpdateExsoon($conn)
+function onUpdateExsoon($conn,$db)
 {
     $return = [];
     $Userid = $_POST['Userid'];
@@ -218,7 +245,7 @@ function onUpdateExsoon($conn)
     die;
 }
 
-function onUpdatetime($conn)
+function onUpdatetime($conn,$db)
 {
     $return = [];
     $Userid = $_POST['Userid'];
@@ -237,7 +264,7 @@ function onUpdatetime($conn)
     die;
 }
 
-function selection_itemdamage($conn)
+function selection_itemdamage($conn,$db)
 {
     $return = [];
     $query = "SELECT COUNT(itemstock.RowID) AS ccc FROM itemstock WHERE  itemstock.IsDamage = 2  ";
@@ -251,7 +278,7 @@ function selection_itemdamage($conn)
     die;
 }
 
-function selection_itemborrow($conn)
+function selection_itemborrow($conn,$db)
 {
     $return = [];
 
@@ -264,8 +291,7 @@ function selection_itemborrow($conn)
         $wheredep = "AND dental_warehouse_id = '$deproom' ";
     }
 
-    $query = "SELECT COUNT
-                    ( deproomdetailsub.ID ) AS ccc 
+    $query = "SELECT COUNT( deproomdetailsub.ID ) AS ccc 
                 FROM
                     deproomdetailsub 
                 WHERE
@@ -282,7 +308,7 @@ function selection_itemborrow($conn)
     die;
 }
 
-function selection_itemNoUse($conn)
+function selection_itemNoUse($conn,$db)
 {
     $return = [];
     $query = "SELECT COUNT(itemstock.RowID) AS ccc FROM itemstock WHERE itemstock.IsDeproom = 3  ";

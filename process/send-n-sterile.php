@@ -1,5 +1,6 @@
 <?php
 session_start();
+require '../config/db.php';
 require '../connect/connect.php';
 require '../process/Createdeproom.php';
 require '../process/Createhncode.php';
@@ -8,23 +9,23 @@ require '../process/Createsendsterile.php';
 
 if (!empty($_POST['FUNC_NAME'])) {
     if ($_POST['FUNC_NAME'] == 'show_detail_item_sterile') {
-        show_detail_item_sterile($conn);
+        show_detail_item_sterile($conn,$db);
     }else if ($_POST['FUNC_NAME'] == 'show_detail_item_suds') {
-        show_detail_item_suds($conn);
+        show_detail_item_suds($conn,$db);
     }else if ($_POST['FUNC_NAME'] == 'onconfirm_damage') {
-        onconfirm_damage($conn);
+        onconfirm_damage($conn,$db);
     }else if ($_POST['FUNC_NAME'] == 'onconfirm_create_sendsterile') {
-        onconfirm_create_sendsterile($conn);
+        onconfirm_create_sendsterile($conn,$db);
     }else if ($_POST['FUNC_NAME'] == 'onconfirm_create_sendsterile_suds') {
-        onconfirm_create_sendsterile_suds($conn);
+        onconfirm_create_sendsterile_suds($conn,$db);
     }else if ($_POST['FUNC_NAME'] == 'cancelDamage') {
-        cancelDamage($conn);
+        cancelDamage($conn,$db);
     }else if ($_POST['FUNC_NAME'] == 'show_detail_history') {
-        show_detail_history($conn);
+        show_detail_history($conn,$db);
     }
 }
 
-function onconfirm_create_sendsterile_suds($conn)
+function onconfirm_create_sendsterile_suds($conn,$db)
 {
     $return = array();
     $Userid = $_SESSION['Userid'];
@@ -63,7 +64,33 @@ function onconfirm_create_sendsterile_suds($conn)
 
     // ==============================ชำรุด
 
-    $query = "SELECT
+    if($db == 1){
+        $query = "SELECT
+                    deproom.DocNo,
+                    deproom.hn_record_id,
+                    deproom.`procedure`,
+                    deproom.doctor 
+                FROM
+                    itemstock
+                    INNER JOIN item ON itemstock.ItemCode = item.itemcode
+                    INNER JOIN deproomdetailsub ON itemstock.RowID = deproomdetailsub.ItemStockID
+                    INNER JOIN deproomdetail ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID
+                    INNER JOIN deproom ON deproom.DocNo = deproomdetail.DocNo 
+                    INNER JOIN `procedure` ON `procedure`.ID = deproom.`procedure` 
+                    INNER JOIN doctor ON doctor.ID = deproom.doctor 
+                WHERE
+                    itemstock.Isdeproom = 6 
+                    AND deproomdetailsub.IsStatus = 7 
+                    AND (itemstock.IsDamage IS NULL  OR  itemstock.IsDamage = '0' )
+                    AND item.itemtypeID = 42 
+                    AND deproom.DocNo = '$DocNo'
+                GROUP BY
+                    deproom.DocNo ,
+                    deproom.hn_record_id,
+                    deproom.`procedure`,
+                    deproom.doctor   ";
+    }else{
+        $query = "SELECT
                     deproom.DocNo,
                     deproom.hn_record_id,
                     deproom.[procedure],
@@ -87,6 +114,8 @@ function onconfirm_create_sendsterile_suds($conn)
                     deproom.hn_record_id,
                     deproom.[procedure],
                     deproom.doctor   ";
+    }
+
 
 
                 $meQuery = $conn->prepare($query);
@@ -97,7 +126,7 @@ function onconfirm_create_sendsterile_suds($conn)
                     $_doctor = $row['doctor'];
                     $_DocNo = $row['DocNo'];
 
-                    $label_DocNo = create_sendsterile_DocNo($conn, "", $DepID, $Userid, 0, "", 0, 0, 0,$round_sent_sterile);
+                    $label_DocNo = create_sendsterile_DocNo($conn, "", $DepID, $Userid, 0, "", 0, 0, 0,$round_sent_sterile,$db);
 
                     $update2  ="UPDATE sendsterile SET hncode = '$_hn_record_id' , Doctor_ID  = '$_doctor' , Procedure_ID = '$_procedure' WHERE DocNo = '$label_DocNo' ";
                     
@@ -247,7 +276,7 @@ function onconfirm_create_sendsterile_suds($conn)
     die;
 }
 
-function onconfirm_create_sendsterile($conn)
+function onconfirm_create_sendsterile($conn,$db)
 {
     $return = array();
     $Userid = $_SESSION['Userid'];
@@ -257,7 +286,7 @@ function onconfirm_create_sendsterile($conn)
 
 
     
-    $label_DocNo = create_sendsterile_DocNo($conn, "", $DepID, $Userid, 0, "", 0, 0, 0, $round_sent_sterile);
+    $label_DocNo = create_sendsterile_DocNo($conn, "", $DepID, $Userid, 0, "", 0, 0, 0, $round_sent_sterile,$db);
 
     $queryInsert = "INSERT INTO sendsteriledetail 
                     ( SendSterileDocNo, 
@@ -290,25 +319,51 @@ function onconfirm_create_sendsterile($conn)
                 $meQueryInsert->execute();
 
         // =======================================================================================================================================
-        $queryT = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty )
-                                SELECT 
-                                itemstock.RowID,
-                                itemstock.ItemCode,
-                                GETDATE(),
-                                itemstock.departmentroomid,
-                                $Userid,
-                                7,
-                                1
-                            FROM
-                                    itemstock
-                                    INNER JOIN item ON itemstock.ItemCode = item.itemcode 
-                                WHERE
-                                    itemstock.Isdeproom = 6 
-                                    AND item.itemtypeID = 44 
-                             GROUP BY
-                                itemstock.ItemCode,
-                                itemstock.RowID,
-                                itemstock.departmentroomid  ";
+
+        if($db == 1){
+            $queryT = "INSERT INTO itemstock_transaction_detail (ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty)
+                        SELECT
+                            itemstock.RowID,
+                            itemstock.ItemCode,
+                            NOW(),
+                            itemstock.departmentroomid,
+                            $Userid,
+                            7,
+                            1
+                        FROM
+                            itemstock
+                        INNER JOIN
+                            item ON itemstock.ItemCode = item.itemcode
+                        WHERE
+                            itemstock.Isdeproom = 6
+                            AND item.itemtypeID = 44
+                        GROUP BY
+                            itemstock.ItemCode,
+                            itemstock.RowID,
+                            itemstock.departmentroomid ";
+        }else{
+            $queryT = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty )
+                            SELECT 
+                            itemstock.RowID,
+                            itemstock.ItemCode,
+                            GETDATE(),
+                            itemstock.departmentroomid,
+                            $Userid,
+                            7,
+                            1
+                        FROM
+                                itemstock
+                                INNER JOIN item ON itemstock.ItemCode = item.itemcode 
+                            WHERE
+                                itemstock.Isdeproom = 6 
+                                AND item.itemtypeID = 44 
+                        GROUP BY
+                            itemstock.ItemCode,
+                            itemstock.RowID,
+                            itemstock.departmentroomid  ";
+        }
+
+
         $meQueryT = $conn->prepare($queryT);
         $meQueryT->execute();
         // =======================================================================================================================================
@@ -338,7 +393,7 @@ function onconfirm_create_sendsterile($conn)
     die;
 }
 
-function cancelDamage($conn)
+function cancelDamage($conn,$db)
 {
     $return = array();
     $itemcode = $_POST['itemcode'];
@@ -346,8 +401,31 @@ function cancelDamage($conn)
 
     
 
-
-    $query = " SELECT TOP
+    if($db == 1){
+        $query = "SELECT
+                        itemstock.RowID,
+                        itemstock.UsageCode,
+                        deproomdetailsub.ID
+                    FROM
+                        deproom
+                    INNER JOIN
+                        deproomdetail ON deproom.DocNo = deproomdetail.DocNo
+                    INNER JOIN
+                        item ON item.itemcode = deproomdetail.ItemCode
+                    INNER JOIN
+                        departmentroom ON deproom.Ref_departmentroomid = departmentroom.id
+                    INNER JOIN
+                        deproomdetailsub ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID
+                    INNER JOIN
+                        itemstock ON deproomdetailsub.ItemStockID = itemstock.RowID
+                    WHERE
+                        deproom.IsCancel = 0
+                        AND deproomdetailsub.IsStatus = 7
+                        AND itemstock.UsageCode = '$UsageCode'
+                        AND itemstock.IsDamage = '1'
+                    LIMIT 1 ";
+    }else{
+        $query = " SELECT TOP
                     1 itemstock.RowID ,
                     itemstock.UsageCode,
                     deproomdetailsub.ID 
@@ -363,6 +441,8 @@ function cancelDamage($conn)
                     AND deproomdetailsub.IsStatus = 7
                     AND itemstock.UsageCode = '$UsageCode' 
                     AND itemstock.IsDamage = '1'  ";
+    }
+
 
     $meQuery = $conn->prepare($query);
     $meQuery->execute();
@@ -398,7 +478,7 @@ function cancelDamage($conn)
     die;
 }
 
-function onconfirm_damage($conn)
+function onconfirm_damage($conn,$db)
 {
     $return = array();
     $input_itemcode_damage = $_POST['input_itemcode_damage'];
@@ -411,8 +491,31 @@ function onconfirm_damage($conn)
     
     $label_DocNo = create_Damage_DocNo($conn, $DepID, $Userid, "");
 
-
-    $query = " SELECT TOP 1
+    if($db == 1){
+        $query = " SELECT
+                        itemstock.RowID,
+                        itemstock.UsageCode,
+                        deproomdetailsub.ID
+                    FROM
+                        deproom
+                    INNER JOIN
+                        deproomdetail ON deproom.DocNo = deproomdetail.DocNo
+                    INNER JOIN
+                        item ON item.itemcode = deproomdetail.ItemCode
+                    INNER JOIN
+                        departmentroom ON deproom.Ref_departmentroomid = departmentroom.id
+                    INNER JOIN
+                        deproomdetailsub ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID
+                    INNER JOIN
+                        itemstock ON deproomdetailsub.ItemStockID = itemstock.RowID
+                    WHERE
+                        deproom.IsCancel = 0
+                        AND deproomdetailsub.IsStatus = 7
+                        AND itemstock.UsageCode = '$UsageCode'
+                        AND (itemstock.IsDamage IS NULL OR itemstock.IsDamage = '0')
+                    LIMIT 1 ";
+    }else{
+        $query = " SELECT TOP 1
                     itemstock.RowID ,
                     itemstock.UsageCode,
                     deproomdetailsub.ID
@@ -428,6 +531,8 @@ function onconfirm_damage($conn)
                     AND deproomdetailsub.IsStatus = 7 
                     AND itemstock.UsageCode = '$UsageCode' 
                      AND (itemstock.IsDamage IS NULL  OR  itemstock.IsDamage = '0' )  ";
+    }
+
 
     $meQuery = $conn->prepare($query);
     $meQuery->execute();
@@ -462,7 +567,7 @@ function onconfirm_damage($conn)
     die;
 }
 
-function show_detail_history($conn){
+function show_detail_history($conn,$db){
     $return = array();
 
     $select_date1 = $_POST['select_date1'];
@@ -474,7 +579,26 @@ function show_detail_history($conn){
     $select_date2 = explode("-", $select_date2);
     $select_date2 = $select_date2[2] . '-' . $select_date2[1] . '-' . $select_date2[0];
 
-    $query = " SELECT
+
+    if($db == 1){
+        $query = "SELECT
+                        sendsterile.DocNo,
+                        COALESCE(doctor.Doctor_Name, '') AS Doctor_Name,
+                        COALESCE(`procedure`.Procedure_TH, '') AS Procedure_TH,
+                        COALESCE(sendsterile.hncode, '') AS hncode,
+                        DATE_FORMAT(sendsterile.DocDate, '%d/%m/%Y') AS doc_date,
+                        DATE_FORMAT(sendsterile.DocDate, '%H:%i:%s') AS doc_time,
+                        sendsterile.Round
+                    FROM
+                        sendsterile
+                    LEFT JOIN
+                        doctor ON sendsterile.Doctor_ID = doctor.ID
+                    LEFT JOIN
+                        `procedure` ON sendsterile.Procedure_ID = `procedure`.ID
+                    WHERE
+                        DATE(sendsterile.DocDate) BETWEEN '$select_date1' AND '$select_date2' ";
+    }else{
+        $query = " SELECT
                     sendsterile.DocNo,
                     ISNULL(doctor.Doctor_Name,'') AS Doctor_Name,
                     ISNULL([procedure].Procedure_TH,'') AS Procedure_TH,
@@ -488,6 +612,8 @@ function show_detail_history($conn){
                     LEFT JOIN doctor ON sendsterile.Doctor_ID = doctor.ID
                     LEFT JOIN [procedure] ON sendsterile.Procedure_ID = [procedure].ID
                 WHERE  CONVERT(DATE,sendsterile.DocDate) BETWEEN  '$select_date1' AND  '$select_date2'  ";
+    }
+
 
 
     $meQuery = $conn->prepare($query);
@@ -500,11 +626,33 @@ function show_detail_history($conn){
     die;
 }
 
-function show_detail_item_sterile($conn)
+function show_detail_item_sterile($conn,$db)
 {
     $return = array();
 
-    $query = "SELECT
+    if($db == 1){
+        $query = " SELECT
+                        item.itemname,
+                        item.itemcode,
+                        itemstock.UsageCode,
+                        CASE
+                            WHEN itemstock.ExpireDate < CURDATE() THEN 'ex'
+                            ELSE 'no_ex'
+                        END AS check_exp,
+                        itemstock.isClaim
+                    FROM
+                        itemstock
+                    INNER JOIN
+                        item ON itemstock.ItemCode = item.itemcode
+                    LEFT JOIN
+                        deproomdetailsub ON itemstock.RowID = deproomdetailsub.ItemStockID
+                    WHERE
+                        itemstock.Isdeproom = 6
+                        AND item.itemtypeID = 44
+                    ORDER BY
+                        item.itemname ASC ";
+    }else{
+        $query = "SELECT
                 item.itemname,
                 item.itemcode,
                 itemstock.UsageCode,
@@ -521,6 +669,8 @@ function show_detail_item_sterile($conn)
                 itemstock.Isdeproom = 6 
                 AND item.itemtypeID = 44
             ORDER BY item.itemname ASC   ";
+    }
+
 
 
     $meQuery = $conn->prepare($query);
@@ -533,7 +683,7 @@ function show_detail_item_sterile($conn)
     die;
 }
 
-function show_detail_item_suds($conn)
+function show_detail_item_suds($conn,$db)
 {
     $return = array();
     $select_date1 = $_POST['select_date1'];
@@ -545,7 +695,43 @@ function show_detail_item_suds($conn)
     $select_date2 = explode("-", $select_date2);
     $select_date2 = $select_date2[2] . '-' . $select_date2[1] . '-' . $select_date2[0];
 
-    $query = "SELECT
+    if($db == 1){
+        $query = "SELECT
+                        deproom.DocNo,
+                        deproom.hn_record_id,
+                        `procedure`.Procedure_TH,
+                        doctor.Doctor_Name,
+                        deproom.RefDocNo,
+                        sendsterile.Round
+                    FROM
+                        itemstock
+                    INNER JOIN
+                        item ON itemstock.ItemCode = item.itemcode
+                    INNER JOIN
+                        deproomdetailsub ON itemstock.RowID = deproomdetailsub.ItemStockID
+                    INNER JOIN
+                        deproomdetail ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID
+                    INNER JOIN
+                        deproom ON deproom.DocNo = deproomdetail.DocNo
+                    INNER JOIN
+                        `procedure` ON `procedure`.ID = deproom.`procedure`
+                    INNER JOIN
+                        doctor ON doctor.ID = deproom.doctor
+                    LEFT JOIN
+                        sendsterile ON sendsterile.DocNo = deproom.RefDocNo
+                    WHERE
+                        ((itemstock.Isdeproom = 6 AND deproomdetailsub.IsStatus = 7) OR deproom.IsStatus = 4)
+                        AND item.itemtypeID = 42
+                        AND DATE(deproom.CreateDate) BETWEEN '$select_date1' AND '$select_date2'
+                    GROUP BY
+                        deproom.DocNo,
+                        deproom.hn_record_id,
+                        `procedure`.Procedure_TH,
+                        doctor.Doctor_Name,
+                        deproom.RefDocNo,
+                        sendsterile.Round ";
+    }else{
+        $query = "SELECT
                     deproom.DocNo,
                     deproom.hn_record_id,
                     [procedure].Procedure_TH,
@@ -572,6 +758,8 @@ function show_detail_item_suds($conn)
                     doctor.Doctor_Name,
                     deproom.RefDocNo,
                     sendsterile.Round ";
+    }
+
 
     // echo $query;
     // exit;

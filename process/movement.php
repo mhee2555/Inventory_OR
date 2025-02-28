@@ -1,21 +1,22 @@
 <?php
 session_start();
+require '../config/db.php';
 require '../connect/connect.php';
 
 if (!empty($_POST['FUNC_NAME'])) {
     if ($_POST['FUNC_NAME'] == 'selection_departmentRoom') {
-        selection_departmentRoom($conn);
+        selection_departmentRoom($conn, $db);
     }else if ($_POST['FUNC_NAME'] == 'selection_item') {
-        selection_item($conn);
+        selection_item($conn, $db);
     }else if ($_POST['FUNC_NAME'] == 'selection_itemSuds') {
-        selection_itemSuds($conn);
+        selection_itemSuds($conn, $db);
     }else if ($_POST['FUNC_NAME'] == 'showDetail_itemSuds') {
-        showDetail_itemSuds($conn);
+        showDetail_itemSuds($conn, $db);
     }else if ($_POST['FUNC_NAME'] == 'showDetailSub_itemSuds') {
-        showDetailSub_itemSuds($conn);
+        showDetailSub_itemSuds($conn, $db);
     }
 }
-function showDetailSub_itemSuds($conn){
+function showDetailSub_itemSuds($conn, $db){
 
     $return = array();
     $UsageCode = $_POST['UsageCode'];
@@ -46,7 +47,7 @@ function showDetailSub_itemSuds($conn){
         unset($conn);
         die;
 }
-function showDetail_itemSuds($conn){
+function showDetail_itemSuds($conn, $db){
 
     $return = array();
     $itemcode = $_POST['itemcode'];
@@ -84,7 +85,7 @@ function showDetail_itemSuds($conn){
         unset($conn);
         die;
 }
-function selection_itemSuds($conn){
+function selection_itemSuds($conn, $db){
 
     $return = array();
     
@@ -93,7 +94,7 @@ function selection_itemSuds($conn){
     $query = " SELECT
                     item.itemcode,
                     item.itemname ,
-                    COUNT ( itemstock.RowID ) AS Qty 
+                    COUNT(itemstock.RowID) AS Qty 
                 FROM
                     itemstock
                     INNER JOIN item ON item.itemcode = itemstock.ItemCode 
@@ -117,7 +118,7 @@ function selection_itemSuds($conn){
         die;
 }
 
-function selection_departmentRoom($conn)
+function selection_departmentRoom($conn, $db)
 {
     $return = array();
     $lang = $_POST['lang'];
@@ -172,7 +173,7 @@ function selection_departmentRoom($conn)
     die;
 }
 
-function selection_item($conn)
+function selection_item($conn, $db)
 {
     $return = array();
 
@@ -200,11 +201,11 @@ function selection_item($conn)
     $Q1 = " SELECT
                 item.itemname,
                 item.itemcode,
-                COUNT ( itemstock.RowID ) AS cnt,
-                ( SELECT COUNT ( itemstock_transaction_detail.ID ) FROM itemstock_transaction_detail WHERE itemstock_transaction_detail.ItemCode = item.itemcode AND itemstock_transaction_detail.IsStatus = 1  )		AS cnt_pay ,
-                ( SELECT COUNT ( itemstock_transaction_detail.ID ) FROM itemstock_transaction_detail WHERE itemstock_transaction_detail.ItemCode = item.itemcode AND itemstock_transaction_detail.IsStatus = 7  )		AS cnt_cssd ,
-                ( SELECT COUNT ( itemstock.RowID ) FROM itemstock WHERE itemstock.ItemCode = item.itemcode AND  (itemstock.IsDamage  = 0	OR itemstock.IsDamage  IS NULL)  AND itemstock.Isdeproom != 1 AND itemstock.Isdeproom != 2 AND itemstock.Isdeproom != 3  AND itemstock.Isdeproom != 4  AND itemstock.Isdeproom != 5 AND itemstock.Isdeproom != 6 AND itemstock.Isdeproom != 7 AND itemstock.Isdeproom != 8 AND itemstock.Isdeproom != 9)		AS balance , 
-                ( SELECT COUNT ( itemstock.RowID ) FROM itemstock WHERE itemstock.ItemCode = item.itemcode AND  ( itemstock.IsDamage = 1  OR  itemstock.IsDamage = 2 ) )		AS damage 
+                COUNT( itemstock.RowID ) AS cnt,
+                ( SELECT COUNT( itemstock_transaction_detail.ID ) FROM itemstock_transaction_detail WHERE itemstock_transaction_detail.ItemCode = item.itemcode AND itemstock_transaction_detail.IsStatus = 1  )		AS cnt_pay ,
+                ( SELECT COUNT( itemstock_transaction_detail.ID ) FROM itemstock_transaction_detail WHERE itemstock_transaction_detail.ItemCode = item.itemcode AND itemstock_transaction_detail.IsStatus = 7  )		AS cnt_cssd ,
+                ( SELECT COUNT( itemstock.RowID ) FROM itemstock WHERE itemstock.ItemCode = item.itemcode AND  (itemstock.IsDamage  = 0	OR itemstock.IsDamage  IS NULL)  AND itemstock.Isdeproom != 1 AND itemstock.Isdeproom != 2 AND itemstock.Isdeproom != 3  AND itemstock.Isdeproom != 4  AND itemstock.Isdeproom != 5 AND itemstock.Isdeproom != 6 AND itemstock.Isdeproom != 7 AND itemstock.Isdeproom != 8 AND itemstock.Isdeproom != 9)		AS balance , 
+                ( SELECT COUNT( itemstock.RowID ) FROM itemstock WHERE itemstock.ItemCode = item.itemcode AND  ( itemstock.IsDamage = 1  OR  itemstock.IsDamage = 2 ) )		AS damage 
             FROM
                 itemstock
                 INNER JOIN item ON itemstock.ItemCode = item.itemcode 
@@ -238,23 +239,41 @@ function selection_item($conn)
     }
 
 
+    if($db == 1){
+        $query = "SELECT
+                        itemstock_transaction_detail.ItemCode,
+                        COUNT(itemstock_transaction_detail.ID) AS Qty,
+                        itemstock_transaction_detail.departmentroomid
+                    FROM
+                        itemstock_transaction_detail
+                    WHERE
+                        itemstock_transaction_detail.ItemCode IN $whereItem
+                        AND DATE(itemstock_transaction_detail.CreateDate) = '$select_date1'
+                        AND itemstock_transaction_detail.IsStatus = 1
+                    GROUP BY
+                        itemstock_transaction_detail.departmentroomid,
+                        itemstock_transaction_detail.ItemCode
+                    ORDER BY
+                        itemstock_transaction_detail.departmentroomid ASC ";
+    }else{
+        $query = "SELECT 
+                            itemstock_transaction_detail.ItemCode ,
+                    COUNT ( itemstock_transaction_detail.ID ) AS Qty ,
+                            itemstock_transaction_detail.departmentroomid 
+                    FROM
+                        itemstock_transaction_detail 
+                    WHERE
+                        itemstock_transaction_detail.ItemCode IN $whereItem
+                    AND CONVERT(DATE,itemstock_transaction_detail.CreateDate) = '$select_date1' 
+                    AND itemstock_transaction_detail.IsStatus = 1 
+                    GROUP BY
+                        itemstock_transaction_detail.departmentroomid ,
+                        itemstock_transaction_detail.ItemCode 
+                    ORDER BY
+                        itemstock_transaction_detail.departmentroomid ASC  ";
+    }
 
 
-    $query = "SELECT 
-                    itemstock_transaction_detail.ItemCode ,
-            COUNT ( itemstock_transaction_detail.ID ) AS Qty ,
-                    itemstock_transaction_detail.departmentroomid 
-            FROM
-                itemstock_transaction_detail 
-            WHERE
-                itemstock_transaction_detail.ItemCode IN $whereItem
-            AND CONVERT(DATE,itemstock_transaction_detail.CreateDate) = '$select_date1' 
-            AND itemstock_transaction_detail.IsStatus = 1 
-            GROUP BY
-                itemstock_transaction_detail.departmentroomid ,
-                itemstock_transaction_detail.ItemCode 
-            ORDER BY
-                itemstock_transaction_detail.departmentroomid ASC  ";
     $meQuery = $conn->prepare($query);
     $meQuery->execute();
     while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {

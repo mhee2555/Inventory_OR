@@ -1,15 +1,16 @@
 <?php
 session_start();
+require '../config/db.php';
 require '../connect/connect.php';
 
 
 if (!empty($_POST['FUNC_NAME'])) {
     if ($_POST['FUNC_NAME'] == 'configuration_dental') {
-        configuration_dental($conn);
+        configuration_dental($conn,$db);
     }else if ($_POST['FUNC_NAME'] == 'configuration_floor') {
-        configuration_floor($conn);
+        configuration_floor($conn,$db);
     }else if ($_POST['FUNC_NAME'] == 'showAPI') {
-        showAPI($conn);
+        showAPI($conn,$db);
     }
 }
 function configuration_dental($conn)
