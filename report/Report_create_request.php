@@ -95,6 +95,10 @@ class MYPDF extends TCPDF
                 $_departmentroomname = $row['departmentroomname'];
                 $_Remark = $row['Remark'];
                 $_Procedure_TH = $row['Procedure_TH'];
+
+                if (strlen($_Remark) > 45) {
+                    $_Remark = substr($_Remark, 0, 45) . '...';
+                  }
             }
     
     
@@ -136,7 +140,7 @@ class MYPDF extends TCPDF
             $ecc = 'H';
             $pixel_size = 10;
             $frame_size = 4;
-            QRcode::png('xxx', $file, $ecc, $pixel_size, $frame_size);
+            QRcode::png($_hn_record_id, $file, $ecc, $pixel_size, $frame_size);
             $this->Image($file, 120, 22, 20, 20, 'PNG');
 
 
@@ -327,11 +331,11 @@ $DocNo = $_GET['DocNo'];
 
 $html = '    
     <table cellspacing="0" cellpadding="2" border="1" >
-    <tr style="font-size:16px;line-height:35px;">
+    <thead><tr style="font-size:16px;line-height:35px;">
     <th width="10 %" align="center">ลำดับ</th>
     <th width="50 %" align="center">รายการ</th>
     <th width="20 %"  align="center">ประเภท</th>
-    <th width="20 %" align="center">จำนวน</th>
+    <th width="20 %" align="center">จำนวน</th></thead>
     </tr>';
 
 
@@ -367,13 +371,14 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
 
     $pdf->SetFont('db_helvethaica_x', 'B', 18);
 
-    $html .= '<tr nobr="false" style="font-size:14px;line-height:30px;">';
+    $html .= '<tr nobr="true" style="font-size:14px;line-height:30px;">';
     $html .=   '<td width="10 %" align="center"> ' . $count . '</td>';
     $html .=   '<td width="50 %" align="left"> ' . "      " . $Result_Detail['itemname'] . '</td>';
     $html .=   '<td width="20 %" align="center">' . $Result_Detail['TyeName'] . '</td>';
     $html .=   '<td width="20 %" align="center">' . $Result_Detail['cnt'] . '</td>';
     $html .=  '</tr>';
     $count++;
+
 }
 
 

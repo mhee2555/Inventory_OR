@@ -2060,7 +2060,7 @@ function show_detail_item_surgery($conn, $db)
                         DATE_FORMAT(deproom.ServiceDate, '%H:%i') AS CreateTime,
                         doctor.Doctor_Name,
                         deproom.hn_record_id,
-                        `procedure`.Procedure_TH,
+                        IFNULL(`procedure`.Procedure_TH, '') AS Procedure_TH,
                         COUNT(deproomdetailsub.ID) AS cnt,
                         deproom.Ref_departmentroomid
                     FROM
@@ -2071,7 +2071,7 @@ function show_detail_item_surgery($conn, $db)
                         deproomdetailsub ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID
                     INNER JOIN
                         doctor ON deproom.doctor = doctor.ID
-                    INNER JOIN
+                    LEFT JOIN
                         `procedure` ON deproom.`procedure` = `procedure`.ID
                     WHERE
                         DATE_FORMAT(deproom.ServiceDate, '%Y-%m-%d') = '$select_date_surgery'

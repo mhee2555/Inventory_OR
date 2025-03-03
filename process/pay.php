@@ -482,7 +482,7 @@ function show_detail_history($conn, $db)
                         DATE_FORMAT(deproom.serviceDate, '%d-%m-%Y') AS serviceDate,
                         deproom.hn_record_id,
                         doctor.Doctor_Name,
-                        `procedure`.Procedure_TH,
+                        IFNULL(`procedure`.Procedure_TH, '') AS Procedure_TH,                        
                         departmentroom.departmentroomname,
                         doctor.ID AS doctor_ID,
                         `procedure`.ID AS procedure_ID,
@@ -492,7 +492,7 @@ function show_detail_history($conn, $db)
                         deproom
                     INNER JOIN
                         doctor ON doctor.ID = deproom.doctor
-                    INNER JOIN
+                    LEFT JOIN
                         `procedure` ON deproom.procedure = `procedure`.ID
                     INNER JOIN
                         departmentroom ON deproom.Ref_departmentroomid = departmentroom.id

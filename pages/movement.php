@@ -35,14 +35,16 @@
         <div class=" col-md-12 col-lg-9  ">
 
             <div class="btn-group btn-group-toggle" role="group" aria-label="Basic example">
-                <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;" id="radio_suds">ความเคลื่อนไหวเครื่องมือ SUDs</button>
-                <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;" id="radio_sterile">ความเคลื่อนไหวเครื่องมือ Sterile</button>
+                <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;" id="radio_suds">ความเคลื่อนไหว RFID</button>
+                <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;" id="radio_sterile">ความเคลื่อนไหวตู้ Weighing</button>
             </div>
         </div>
     </div>
 </div>
 
 <hr>
+
+
 
 <div id="suds">
     <div class="row">
@@ -155,6 +157,89 @@
                             </table>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="sterile1">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group ">
+                        <label for="" class=" col-form-label" style="color:black;">วันที่</label>
+                        <input type="text" class="form-control  datepicker-here f18" id="select_date1_rfid" data-language='en' data-date-format='dd-mm-yyyy'>
+                    </div>
+                </div>
+                <!-- <div class="col-md-3">
+                    <div class="form-group row">
+                        <div class="col-sm-10">
+                            <div class="input-group">
+                                <input type="text" class="form-control  datepicker-here f18" id="select_date2" data-language='en' data-date-format='dd-mm-yyyy'>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+
+                <div class="col-md-4">
+
+                    <div class="form-group ">
+                        <label for="" class="col-form-label " style="color:black;">ค้นหาชื่ออุปกรณ์</label>
+                            <input type="text" class="form-control  f18" id="input_search_rfid" autocomplete="off">
+                    </div>
+
+
+
+                </div>
+
+
+                <div class="col-md-12 mt-3">
+
+                    <div class="card">
+
+                        <div class="card-body">
+
+                            <div class="row">
+                                <div class="col-lg-12 mt-3  table-responsive">
+
+                                    <table class="table table-sm table-bordered" id="table_DepRoom_rfid">
+                                        <thead>
+                                            <tr id="tr_TableDephead_rfid">
+
+                                            </tr>
+                                            <tr id="tr_TableDep_rfid">
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- <table class="table table-hover table-sm" id="table_receive_stock">
+                                <thead style="background-color: #cdd6ff;">
+                                    <tr>
+                                        <th scope="col" class="text-center" id="">ลำดับ</th>
+                                        <th scope="col" class="text-center" id="">รายการ</th>
+                                        <th scope="col" class="text-center" id="">จำนวนทั้งหมด</th>
+                                        <th scope="col" class="text-center" id="">จ่ายไปห้องผ่าตัด</th>
+                                        <th scope="col" class="text-center" id="">ส่ง CSSD</th>
+                                        <th scope="col" class="text-center" id="">คงเหลือ</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table> -->
+                        </div>
+                    </div>
+
+
+
+
+
                 </div>
             </div>
         </div>
