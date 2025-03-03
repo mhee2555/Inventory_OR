@@ -134,18 +134,21 @@
 
 
                                 </div>
-                                <div class="col-md-7 mt-3">
+                                <div class="col-md-4 mt-3">
                                     <div class="form-group ">
                                         <label style="color:black;font-weight: 600;">สแกนจ่าย</label>
                                         <input type="text" class="form-control f18" id="input_pay" placeholder="" autocomplete="off">
 
                                     </div>
                                 </div>
-                                <div class="col-md-5 mt-3">
+                                <div class="col-md-4 mt-3">
                                     <div class="form-group ">
                                         <label style="color:red;font-weight: 600;">สแกนคืนคลังหลักห้องผ่าตัด</label>
                                         <input type="text" class="form-control f18" id="input_returnpay" placeholder="" style="border-color: red;" autocomplete="off">
                                     </div>
+                                </div>
+                                <div class="col-md-4 mt-3">
+                                        <button id="btn_scan_RFid" class="btn btn-info " style="font-size: 13px;margin-top: 2rem !important;line-height: 25px;">จ่ายอุปกรณ์จากตู้ RFID & Weighing</button>
                                 </div>
                             </div>
 
