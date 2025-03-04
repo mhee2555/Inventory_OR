@@ -43,7 +43,7 @@
         <div class="btn-group btn-group-toggle" role="group" aria-label="Basic example">
             <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;" id="radio_pay">จ่ายอุปกรณ์</button>
             <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;" id="radio_history_pay">ประวัติการจ่ายอุปกรณ์</button>
-            <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;" id="radio_claim">เคลม</button>
+            <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;" id="radio_claim" hidden>เคลม</button>
         </div>
     </div>
 </div>

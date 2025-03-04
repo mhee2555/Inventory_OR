@@ -1255,12 +1255,14 @@ function oncheck_use($conn, $db)
                         }
                     }
                 } else {
-                    $sql2 = "UPDATE deproomdetailsub  SET IsStatus = 2   WHERE deproomdetailsub.ID  IN (   SELECT
-                                    deproomdetailsub.ID 
-                                FROM
-                                    deproomdetail
-                                    INNER JOIN deproomdetailsub ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID
-                                WHERE deproomdetail.DocNo = '$DocNo_pay'  AND deproomdetailsub.ItemStockID = '$_RowID' ) ";
+                    $sql2 = "UPDATE deproomdetailsub
+                            INNER JOIN deproomdetail ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID 
+                            SET deproomdetailsub.IsStatus = 2 
+                            WHERE
+                                deproomdetail.DocNo = '$DocNo_pay' 
+                                AND deproomdetailsub.ItemStockID = '$_RowID' ";
+                                // echo $sql2;
+                                // exit;
                     $meQuery2 = $conn->prepare($sql2);
                     $meQuery2->execute();
 

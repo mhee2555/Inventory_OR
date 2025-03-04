@@ -432,7 +432,7 @@ function selection_item() {
                                     value.itemname
                                   }</td>
                                   <td class='text-center' style="text-wrap: nowrap;">${
-                                    value.cnt
+                                    value.Qty
                                   }</td>
                                   <td class='text-center' style="text-wrap: nowrap;background-color:#FFFAEB;">${
                                     value.cnt_pay

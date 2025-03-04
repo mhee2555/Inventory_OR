@@ -1138,31 +1138,32 @@ if (!isset($_SESSION['UserName'])) {
             });
 
             localStorage.setItem('display', '1');
-            // $(".cleardisplay").removeClass('activeFont');
-            // $("#display-1").addClass('activeFont');
+            $(".cleardisplay").removeClass('activeFont');
+            $("#display-1").addClass('activeFont');
 
-            // $(".color_menu").removeClass('color_menu3');
-            // $("#accordionSidebar").addClass('display-dark1');
-            // $("#accordionSidebar").removeClass('display-dark2');
-            // $("#accordionSidebar").removeClass('display-dark3');
+            $("#accordionSidebar").removeClass('display-dark3');
+            $("#accordionSidebar").removeClass('display-dark2');
+            $("#accordionSidebar").addClass('display-dark1');
+            $(".color_menu").addClass('color_menu2');
 
-            // $("#ic_mainpage").attr("src", "assets/icon_ui/navbar/ic_mainpage.png");
-            // $("#ic_room").attr("src", "assets/icon_ui/navbar/ic_room.png");
-            // $("#ic_setup_equipment_rooms").attr("src", "assets/icon_ui/navbar/ic_setup_equipment_rooms.png");
-            // $("#ic_receive_equipment_inventory").attr("src", "assets/icon_ui/navbar/ic_receive_equipment_inventory.png");
-            // $("#ic_retrieve_information_HN").attr("src", "assets/icon_ui/navbar/ic_retrieve_information_HN.png");
-            // $("#ic_supply_equipment_examination_room").attr("src", "assets/icon_ui/navbar/ic_supply_equipment_examination_room.png");
-            // $("#ic_receive_used_items").attr("src", "assets/icon_ui/navbar/ic_receive_used_items.png");
-            // $("#ic_send_n-sterile").attr("src", "assets/icon_ui/navbar/ic_send_n-sterile.png");
-            // $("#ic_send_n-sterile-manual").attr("src", "assets/icon_ui/navbar/ic_send_n-sterile.png");
-            // $("#ic_motion").attr("src", "assets/icon_ui/navbar/ic_motion.png");
-            // $("#ic_register_tool").attr("src", "assets/icon_ui/navbar/ic_register_tool.png");
-            // $("#ic_set_stickers").attr("src", "assets/icon_ui/navbar/ic_set_stickers.png");
-            // $("#ic_report").attr("src", "assets/icon_ui/navbar/ic_report.png");
-            // $("#ic_room").attr("src", "assets/icon_ui/navbar/ic_room.png");
+            $("#ic_operation_room").attr("src", "assets/img_project/2_icon/ic_operation_room.png");
+            $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
+            $("#ic_setup_equipment_rooms").attr("src", "assets/img_project/2_icon/ic_receiveinventory.png");
+            $("#ic_create_equipment_request").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
+            $("#ic_dispense_equipment").attr("src", "assets/img_project/2_icon/ic_dispense_equipment.png");
+            $("#ic_receive_contaminated_equipment").attr("src", "assets/img_project/2_icon/ic_receive_contaminated_equipment.png");
+            $("#ic_send_nsterile").attr("src", "assets/img_project/2_icon/ic_send_nsterile.png");
+            $("#ic_register_equipment").attr("src", "assets/img_project/2_icon/ic_register_equipment.png");
+            $("#ic_inventory_tools").attr("src", "assets/img_project/2_icon/ic_inventory_tools.png");
+            $("#ic_search_hndata").attr("src", "assets/img_project/2_icon/ic_search_hndata.png");
+            $("#ic_turnon_offdisplay").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
+            $("#ic_movement").attr("src", "assets/img_project/2_icon/ic_movement.png");
+            $("#ic_adjust_stock").attr("src", "assets/img_project/2_icon/ic_adjust_stock.png");
 
-            // $("#li_logout").css('background-color', '#194185');
-            // $("#img_logo").attr("src", "assets/img/LOGO_dt.png");
+
+
+            $("#li_logout").css('background-color', 'lightgray');
+            $("#img_logo").attr("src", "assets/img/logo.png");
 
 
         });
@@ -1178,34 +1179,32 @@ if (!isset($_SESSION['UserName'])) {
                 success: function(result) {}
             });
             localStorage.setItem('display', '2');
-            // $(".cleardisplay").removeClass('activeFont');
-            // $("#display-2").addClass('activeFont');
+            $(".cleardisplay").removeClass('activeFont');
+            $("#display-2").addClass('activeFont');
 
-            // $("#conMain").addClass('display-dark');
+            $("#accordionSidebar").removeClass('display-dark3');
+            $("#accordionSidebar").removeClass('display-dark1');
+            $("#accordionSidebar").addClass('display-dark2');
+            $(".color_menu").addClass('color_menu2');
 
-            // $(".color_menu").removeClass('color_menu3');
-            // $("#accordionSidebar").removeClass('display-dark1');
-            // $("#accordionSidebar").addClass('display-dark2');
-            // $("#accordionSidebar").removeClass('display-dark3');
-
-            // $("#ic_mainpage").attr("src", "assets/icon_ui/navbar/ic_mainpage.png");
-            // $("#ic_room").attr("src", "assets/icon_ui/navbar/ic_room.png");
-            // $("#ic_setup_equipment_rooms").attr("src", "assets/icon_ui/navbar/ic_setup_equipment_rooms.png");
-            // $("#ic_receive_equipment_inventory").attr("src", "assets/icon_ui/navbar/ic_receive_equipment_inventory.png");
-            // $("#ic_retrieve_information_HN").attr("src", "assets/icon_ui/navbar/ic_retrieve_information_HN.png");
-            // $("#ic_supply_equipment_examination_room").attr("src", "assets/icon_ui/navbar/ic_supply_equipment_examination_room.png");
-            // $("#ic_receive_used_items").attr("src", "assets/icon_ui/navbar/ic_receive_used_items.png");
-            // $("#ic_send_n-sterile").attr("src", "assets/icon_ui/navbar/ic_send_n-sterile.png");
-            // $("#ic_send_n-sterile-manual").attr("src", "assets/icon_ui/navbar/ic_send_n-sterile.png");
-            // $("#ic_motion").attr("src", "assets/icon_ui/navbar/ic_motion.png");
-            // $("#ic_register_tool").attr("src", "assets/icon_ui/navbar/ic_register_tool.png");
-            // $("#ic_set_stickers").attr("src", "assets/icon_ui/navbar/ic_set_stickers.png");
-            // $("#ic_report").attr("src", "assets/icon_ui/navbar/ic_report.png");
-            // $("#ic_room").attr("src", "assets/icon_ui/navbar/ic_room.png");
+            $("#ic_operation_room").attr("src", "assets/img_project/2_icon/ic_operation_room.png");
+            $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
+            $("#ic_setup_equipment_rooms").attr("src", "assets/img_project/2_icon/ic_receiveinventory.png");
+            $("#ic_create_equipment_request").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
+            $("#ic_dispense_equipment").attr("src", "assets/img_project/2_icon/ic_dispense_equipment.png");
+            $("#ic_receive_contaminated_equipment").attr("src", "assets/img_project/2_icon/ic_receive_contaminated_equipment.png");
+            $("#ic_send_nsterile").attr("src", "assets/img_project/2_icon/ic_send_nsterile.png");
+            $("#ic_register_equipment").attr("src", "assets/img_project/2_icon/ic_register_equipment.png");
+            $("#ic_inventory_tools").attr("src", "assets/img_project/2_icon/ic_inventory_tools.png");
+            $("#ic_search_hndata").attr("src", "assets/img_project/2_icon/ic_search_hndata.png");
+            $("#ic_turnon_offdisplay").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
+            $("#ic_movement").attr("src", "assets/img_project/2_icon/ic_movement.png");
+            $("#ic_adjust_stock").attr("src", "assets/img_project/2_icon/ic_adjust_stock.png");
 
 
-            // $("#li_logout").css('background-color', '#101828');
-            // $("#img_logo").attr("src", "assets/img/LOGO_dt.png");
+
+            $("#li_logout").css('background-color', 'lightgray');
+            $("#img_logo").attr("src", "assets/img/logo.png");
 
 
 
@@ -1269,19 +1268,26 @@ if (!isset($_SESSION['UserName'])) {
             $("#accordionSidebar").addClass('display-dark1');
 
 
-            // $("#ic_mainpage").attr("src", "assets/icon_ui/navbar/ic_mainpage.png");
-            // $("#ic_room").attr("src", "assets/icon_ui/navbar/ic_room.png");
-            // $("#ic_setup_equipment_rooms").attr("src", "assets/icon_ui/navbar/ic_setup_equipment_rooms.png");
-            // $("#ic_receive_equipment_inventory").attr("src", "assets/icon_ui/navbar/ic_receive_equipment_inventory.png");
-            // $("#ic_retrieve_information_HN").attr("src", "assets/icon_ui/navbar/ic_retrieve_information_HN.png");
-            // $("#ic_supply_equipment_examination_room").attr("src", "assets/icon_ui/navbar/ic_supply_equipment_examination_room.png");
-            // $("#ic_receive_used_items").attr("src", "assets/icon_ui/navbar/ic_receive_used_items.png");
-            // $("#ic_send_n-sterile").attr("src", "assets/icon_ui/navbar/ic_send_n-sterile.png");
-            // $("#ic_send_n-sterile-manual").attr("src", "assets/icon_ui/navbar/ic_send_n-sterile.png");
-            // $("#ic_motion").attr("src", "assets/icon_ui/navbar/ic_motion.png");
-            // $("#ic_register_tool").attr("src", "assets/icon_ui/navbar/ic_register_tool.png");
-            // $("#ic_set_stickers").attr("src", "assets/icon_ui/navbar/ic_set_stickers.png");
-            // $("#ic_report").attr("src", "assets/icon_ui/navbar/ic_report.png");
+            $("#ic_operation_room").attr("src", "assets/img_project/2_icon/ic_operation_room.png");
+
+            $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
+            $("#ic_setup_equipment_rooms").attr("src", "assets/img_project/2_icon/ic_receiveinventory.png");
+            $("#ic_create_equipment_request").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
+            $("#ic_dispense_equipment").attr("src", "assets/img_project/2_icon/ic_dispense_equipment.png");
+            $("#ic_receive_contaminated_equipment").attr("src", "assets/img_project/2_icon/ic_receive_contaminated_equipment.png");
+            $("#ic_send_nsterile").attr("src", "assets/img_project/2_icon/ic_send_nsterile.png");
+            $("#ic_register_equipment").attr("src", "assets/img_project/2_icon/ic_register_equipment.png");
+            $("#ic_inventory_tools").attr("src", "assets/img_project/2_icon/ic_inventory_tools.png");
+            $("#ic_search_hndata").attr("src", "assets/img_project/2_icon/ic_search_hndata.png");
+            $("#ic_turnon_offdisplay").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
+            $("#ic_movement").attr("src", "assets/img_project/2_icon/ic_movement.png");
+            $("#ic_adjust_stock").attr("src", "assets/img_project/2_icon/ic_adjust_stock.png");
+
+
+
+
+            $("#li_logout").css('background-color', 'lightgray');
+            $("#img_logo").attr("src", "assets/img/logo.png");
 
         }
         if (localStorage.display == '2') {
@@ -1290,22 +1296,26 @@ if (!isset($_SESSION['UserName'])) {
 
             $("#accordionSidebar").addClass('display-dark2');
 
-            // $("#ic_mainpage").attr("src", "assets/icon_ui/navbar/ic_mainpage.png");
-            // $("#ic_room").attr("src", "assets/icon_ui/navbar/ic_room.png");
-            // $("#ic_setup_equipment_rooms").attr("src", "assets/icon_ui/navbar/ic_setup_equipment_rooms.png");
-            // $("#ic_receive_equipment_inventory").attr("src", "assets/icon_ui/navbar/ic_receive_equipment_inventory.png");
-            // $("#ic_retrieve_information_HN").attr("src", "assets/icon_ui/navbar/ic_retrieve_information_HN.png");
-            // $("#ic_supply_equipment_examination_room").attr("src", "assets/icon_ui/navbar/ic_supply_equipment_examination_room.png");
-            // $("#ic_receive_used_items").attr("src", "assets/icon_ui/navbar/ic_receive_used_items.png");
-            // $("#ic_send_n-sterile").attr("src", "assets/icon_ui/navbar/ic_send_n-sterile.png");
-            // $("#ic_send_n-sterile-manual").attr("src", "assets/icon_ui/navbar/ic_send_n-sterile.png");
-            // $("#ic_motion").attr("src", "assets/icon_ui/navbar/ic_motion.png");
-            // $("#ic_register_tool").attr("src", "assets/icon_ui/navbar/ic_register_tool.png");
-            // $("#ic_set_stickers").attr("src", "assets/icon_ui/navbar/ic_set_stickers.png");
-            // $("#ic_report").attr("src", "assets/icon_ui/navbar/ic_report.png");
+            $("#ic_operation_room").attr("src", "assets/img_project/2_icon/ic_operation_room.png");
 
-            // $("#li_logout").css('background-color', '#101828');
-            // $("#img_logo").attr("src", "assets/img/LOGO_dt.png");
+            $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
+            $("#ic_setup_equipment_rooms").attr("src", "assets/img_project/2_icon/ic_receiveinventory.png");
+            $("#ic_create_equipment_request").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
+            $("#ic_dispense_equipment").attr("src", "assets/img_project/2_icon/ic_dispense_equipment.png");
+            $("#ic_receive_contaminated_equipment").attr("src", "assets/img_project/2_icon/ic_receive_contaminated_equipment.png");
+            $("#ic_send_nsterile").attr("src", "assets/img_project/2_icon/ic_send_nsterile.png");
+            $("#ic_register_equipment").attr("src", "assets/img_project/2_icon/ic_register_equipment.png");
+            $("#ic_inventory_tools").attr("src", "assets/img_project/2_icon/ic_inventory_tools.png");
+            $("#ic_search_hndata").attr("src", "assets/img_project/2_icon/ic_search_hndata.png");
+            $("#ic_turnon_offdisplay").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
+            $("#ic_movement").attr("src", "assets/img_project/2_icon/ic_movement.png");
+            $("#ic_adjust_stock").attr("src", "assets/img_project/2_icon/ic_adjust_stock.png");
+
+
+
+
+            $("#li_logout").css('background-color', 'lightgray');
+            $("#img_logo").attr("src", "assets/img/logo.png");
 
         }
         if (localStorage.display == '3') {
@@ -1447,14 +1457,14 @@ if (!isset($_SESSION['UserName'])) {
 
 
             Swal.fire({
-                title: lang_text_confirm,
-                text: lang_text_confirmLogout,
+                title: 'ยืนยัน',
+                text: 'ยืนยัน! การออกจากระบบ!',
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",
                 cancelButtonColor: "#d33",
-                confirmButtonText: lang_text_confirm,
-                cancelButtonText: lang_text_cancel,
+                confirmButtonText: 'ยืนยัน',
+                cancelButtonText: 'ยกเลิก',
             }).then((result) => {
                 if (result.isConfirmed) {
                     location.href = "login.php";

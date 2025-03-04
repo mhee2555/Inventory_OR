@@ -54,7 +54,7 @@ $("#radio_tab2").click(function() {
 });
 
 $("#radio_tab3").click(function() {
-    $("#col_sendsterile").attr('hidden', false);
+    $("#col_sendsterile").attr('hidden', true);
     $("#radio_tab3").css('color', '#bbbbb');
     $("#radio_tab3").css('background', '#EAECF0');
     $("#radio_tab2").css('color', 'black');

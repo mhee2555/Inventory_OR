@@ -37,7 +37,7 @@
         </div>
 
 
-        <div class="col-md-6 mt-3" id="col_sendsterile">
+        <div class="col-md-6 mt-3" id="col_sendsterile" >
             <div class="row">
                 <div class="col-md-4 text-center">
 

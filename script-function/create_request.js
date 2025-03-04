@@ -472,14 +472,14 @@ function delete_request_qty(ID) {
 
 function delete_request_byItem(ID) {
   Swal.fire({
-    title: settext("lang_text_confirm"),
+    title: 'ยืนยัน',
     text: "ยืนยัน! การลบ?",
     icon: "warning",
     showCancelButton: true,
     confirmButtonColor: "#3085d6",
     cancelButtonColor: "#d33",
-    confirmButtonText: settext("lang_text_confirm"),
-    cancelButtonText: settext("lang_text_cancel"),
+    confirmButtonText: 'ยืนยัน',
+    cancelButtonText: 'ยกเลิก',
   }).then((result) => {
     if (result.isConfirmed) {
       $.ajax({
