@@ -133,7 +133,7 @@ function show_detail_deproom_pay() {
                       }' value='0' onclick='open_deproom_sub(${
             value.id
           })'></i> ${kay + 1}</td>
-                      <td class="f24 text-center">${
+                      <td class="f24 text-left">${
                         value.departmentroomname
                       }</td>
                       <td class=""></td>
@@ -368,7 +368,18 @@ function updateService() {
   });
 }
 
+function showLoading() {
+  $("body").loadingModal({
+    position: "auto",
+    text: "กำลังโหลด...",
+    color: "#fff",
+    opacity: "0.7",
+    backgroundColor: "rgb(0,0,0)",
+    animation: "threeBounce",
+  });
+}
 $("#btn_scan_RFid").click(function (e) {
+  showLoading();
   oncheck_pay_rfid();
 });
 
@@ -384,6 +395,31 @@ function oncheck_pay_rfid() {
     },
     success: function (result) {
       show_detail_item_ByDocNo();
+      $("body").loadingModal("destroy");
+
+      setTimeout(() => {
+        var check_q = 0;
+        $(".loop_item_pay").each(function (key_, value_) {
+          var qP = parseInt($(this).val());
+          if (qP < $("#qty_request_" + $(this).data("itemcode")).val()) {
+            check_q++;
+          }
+        });
+
+        if (check_q == 0) {
+          $("#text_balance_" + $("#input_Hn_pay").data("docno")).text("ครบ");
+          $("#text_balance_" + $("#input_Hn_pay").data("docno")).css(
+            "color",
+            "#00bf63"
+          );
+        } else {
+          $("#text_balance_" + $("#input_Hn_pay").data("docno")).text("ค้าง");
+          $("#text_balance_" + $("#input_Hn_pay").data("docno")).css(
+            "color",
+            "#ed1c24"
+          );
+        }
+      }, 300);
     },
   });
 }
@@ -731,7 +767,7 @@ function show_detail_history() {
                       <td class='text-center'>${value.hn_record_id}</td>
                       <td class='text-left'>${value.Doctor_Name}</td>
                       <td class='text-left'>${value.Procedure_TH}</td>
-                      <td class='text-center'>${value.departmentroomname}</td>
+                      <td class='text-left'>${value.departmentroomname}</td>
                       <td class='text-center'><button class='btn btn-outline-danger f18' onclick='cancel_item_byDocNo("${
                         value.DocNo
                       }")' >ยกเลิก</button></td>
@@ -859,12 +895,12 @@ function cancel_item_byDocNo(DocNo) {
           console.log(ObjData);
 
           showDialogSuccess("ยกเลิกสำเร็จ");
-
-          setTimeout(() => {
-            show_detail_history();
-          }, 300);
         },
       });
+
+      setTimeout(() => {
+        show_detail_history();
+      }, 300);
     }
   });
 }

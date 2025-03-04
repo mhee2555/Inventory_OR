@@ -65,6 +65,7 @@ $(function () {
   select_deproom();
   select_procedure();
   select_doctor();
+  select_type();
 
   $("#select_typeItem").select2();
   $("#select_doctor_request").select2();
@@ -589,7 +590,7 @@ function show_detail_history() {
                       <td class='text-center'>${value.hn_record_id}</td>
                       <td class='text-left'>${value.Doctor_Name}</td>
                       <td class='text-left'>${value.Procedure_TH}</td>
-                      <td class='text-center'>${value.departmentroomname}</td>
+                      <td class='text-left'>${value.departmentroomname}</td>
                       <td class='text-center'><button class='btn btn-outline-dark f18' onclick='edit_item_byDocNo("${
                         value.DocNo
                       }","${value.hn_record_id}","${value.serviceDate}","${
@@ -798,6 +799,29 @@ function select_deproom() {
   });
 }
 
+
+function select_type() {
+  $.ajax({
+    url: "process/process_main/select_main.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "select_type",
+    },
+    success: function (result) {
+      var ObjData = JSON.parse(result);
+      console.log(ObjData);
+      var option = `<option value="" selected>เลือกทั้งหมด</option>`;
+      if (!$.isEmptyObject(ObjData)) {
+        $.each(ObjData, function (kay, value) {
+          option += `<option value="${value.ID}" >${value.TyeName}</option>`;
+        });
+      } else {
+        option = `<option value="0">ไม่มีข้อมูล</option>`;
+      }
+      $("#select_typeItem").html(option);
+    },
+  });
+}
 function select_doctor() {
   $.ajax({
     url: "process/process_main/select_main.php",

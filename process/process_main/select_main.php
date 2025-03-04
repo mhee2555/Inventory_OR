@@ -15,9 +15,30 @@ if (!empty($_POST['FUNC_NAME'])) {
         select_sterileprocess($conn);
     } else if ($_POST['FUNC_NAME'] == 'select_typeDocument') {
         select_typeDocument($conn);
+    } else if ($_POST['FUNC_NAME'] == 'select_type') {
+        select_type($conn);
     }
 }
+function select_type($conn)
+{
+    $return = array();
 
+    $query = "  SELECT
+                    itemtype.ID,
+                    itemtype.TyeName
+                FROM
+                    itemtype ";
+
+
+    $meQuery = $conn->prepare($query);
+    $meQuery->execute();
+    while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+        $return[] = $row;
+    }
+    echo json_encode($return);
+    unset($conn);
+    die;
+}
 function select_typeDocument($conn)
 {
     $return = array();

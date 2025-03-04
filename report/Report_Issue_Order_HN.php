@@ -1,4 +1,5 @@
 <?php
+require('../config/db.php');
 require('tcpdf/tcpdf.php');
 require('../connect/connect.php');
 require('Class.php');
@@ -19,6 +20,8 @@ class MYPDF extends TCPDF
     //Page header
     public function Header()
     {
+
+        require('../config/db.php');
         require('../connect/connect.php');
         $datetime = new DatetimeTH();
         // date th
@@ -33,25 +36,52 @@ class MYPDF extends TCPDF
         $image_file = "images/logo.png";
         $this->Image($image_file, 10, 5, 15, 8, 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);
 
-        $query = " SELECT
-                    deproom.DocNo,
-                    FORMAT(deproom.serviceDate , 'dd-MM-yyyy') AS serviceDate,
-                    FORMAT(deproom.serviceDate , 'HH:mm') AS serviceTime,
-                    deproom.hn_record_id,
-                    doctor.Doctor_Name,
-                    [procedure].Procedure_TH,
-                    departmentroom.departmentroomname ,
-                    doctor.ID AS doctor_ID,
-                    [procedure].ID AS procedure_ID,
-                    departmentroom.id AS deproom_ID,
-                    deproom.Remark
+
+        if($db == 1){
+            $query = "SELECT
+                        deproom.DocNo,
+                        DATE_FORMAT(deproom.serviceDate, '%d-%m-%Y') AS serviceDate,
+                        DATE_FORMAT(deproom.serviceDate, '%H:%i') AS serviceTime,
+                        deproom.hn_record_id,
+                        doctor.Doctor_Name,
+                        `procedure`.Procedure_TH,
+                        departmentroom.departmentroomname,
+                        doctor.ID AS doctor_ID,
+                        `procedure`.ID AS procedure_ID,
+                        departmentroom.id AS deproom_ID,
+                        deproom.Remark
                     FROM
-                    deproom
-                    INNER JOIN doctor ON doctor.ID = deproom.doctor
-                    INNER JOIN [procedure] ON deproom.[procedure] = [procedure].ID
-                    INNER JOIN departmentroom ON deproom.Ref_departmentroomid = departmentroom.id 
+                        deproom
+                    INNER JOIN
+                        doctor ON doctor.ID = deproom.doctor
+                    INNER JOIN
+                        `procedure` ON deproom.`procedure` = `procedure`.ID
+                    INNER JOIN
+                        departmentroom ON deproom.Ref_departmentroomid = departmentroom.id
                     WHERE
-                    deproom.DocNo = '$DocNo' ";
+                        deproom.DocNo = '$DocNo' ";
+        }else{
+            $query = " SELECT
+            deproom.DocNo,
+            FORMAT(deproom.serviceDate , 'dd-MM-yyyy') AS serviceDate,
+            FORMAT(deproom.serviceDate , 'HH:mm') AS serviceTime,
+            deproom.hn_record_id,
+            doctor.Doctor_Name,
+            [procedure].Procedure_TH,
+            departmentroom.departmentroomname ,
+            doctor.ID AS doctor_ID,
+            [procedure].ID AS procedure_ID,
+            departmentroom.id AS deproom_ID,
+            deproom.Remark
+            FROM
+            deproom
+            INNER JOIN doctor ON doctor.ID = deproom.doctor
+            INNER JOIN [procedure] ON deproom.[procedure] = [procedure].ID
+            INNER JOIN departmentroom ON deproom.Ref_departmentroomid = departmentroom.id 
+            WHERE
+            deproom.DocNo = '$DocNo' ";
+        }
+
         $meQuery = $conn->prepare($query);
         $meQuery->execute();
         while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
@@ -152,18 +182,39 @@ class MYPDF extends TCPDF
         $_name1 = "";
         $_name2 = "";
         $_serviceDate = "";
-        $query = " SELECT
-                        CONCAT(employee1.FirstName,' ',employee1.LastName ) AS name_1 ,
-                        CONCAT(employee2.FirstName,' ',employee2.LastName ) AS name_2 ,
-                        FORMAT(deproom.serviceDate , 'dd/MM/yyyy') AS serviceDate
+
+        if($db == 1){
+            $query = "SELECT
+                        CONCAT(employee1.FirstName, ' ', employee1.LastName) AS name_1,
+                        CONCAT(employee2.FirstName, ' ', employee2.LastName) AS name_2,
+                        DATE_FORMAT(deproom.serviceDate, '%d/%m/%Y') AS serviceDate
                     FROM
                         deproom
-                        INNER JOIN users AS user1 ON deproom.UserCode = user1.ID
-                        INNER JOIN users AS user2 ON deproom.UserPay = user2.ID
-                        INNER JOIN employee AS employee1 ON user1.EmpCode = employee1.EmpCode
-                        INNER JOIN employee AS employee2 ON user2.EmpCode = employee2.EmpCode
-                        WHERE
+                    INNER JOIN
+                        users AS user1 ON deproom.UserCode = user1.ID
+                    INNER JOIN
+                        users AS user2 ON deproom.UserPay = user2.ID
+                    INNER JOIN
+                        employee AS employee1 ON user1.EmpCode = employee1.EmpCode
+                    INNER JOIN
+                        employee AS employee2 ON user2.EmpCode = employee2.EmpCode
+                    WHERE
                         deproom.DocNo = '$DocNo' ";
+        }else{
+            $query = " SELECT
+            CONCAT(employee1.FirstName,' ',employee1.LastName ) AS name_1 ,
+            CONCAT(employee2.FirstName,' ',employee2.LastName ) AS name_2 ,
+            FORMAT(deproom.serviceDate , 'dd/MM/yyyy') AS serviceDate
+        FROM
+            deproom
+            INNER JOIN users AS user1 ON deproom.UserCode = user1.ID
+            INNER JOIN users AS user2 ON deproom.UserPay = user2.ID
+            INNER JOIN employee AS employee1 ON user1.EmpCode = employee1.EmpCode
+            INNER JOIN employee AS employee2 ON user2.EmpCode = employee2.EmpCode
+            WHERE
+            deproom.DocNo = '$DocNo' ";
+        }
+
         $meQuery = $conn->prepare($query);
         $meQuery->execute();
         while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
@@ -258,30 +309,61 @@ $html = '<table cellspacing="0" cellpadding="2" border="1" >
 
 
 $count = 1;
-$query = "SELECT
-            item.itemname ,
-            item.itemcode ,
-            deproomdetail.ID ,
-            SUM ( deproomdetail.Qty ) AS cnt ,
-            (
-                                SELECT COUNT(deproomdetailsub.ID) FROM deproomdetailsub WHERE deproomdetailsub.Deproomdetail_RowID = deproomdetail.ID
-            ) AS cnt_pay,
-            itemtype.TyeName
-            FROM
-            deproom
-            INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
-            INNER JOIN item ON deproomdetail.ItemCode = item.itemcode
-            INNER JOIN itemtype ON item.itemtypeID = itemtype.ID
-            WHERE
-            deproom.DocNo = '$DocNo' 
-            AND deproom.IsCancel = 0 
-            AND deproomdetail.IsCancel = 0 
-            GROUP BY
-            item.itemname,
-            item.itemcode,
-            deproomdetail.ID ,
-            itemtype.TyeName 
-            ORDER BY item.itemname ASC ";
+
+if($db == 1){
+    $query = "SELECT
+                    item.itemname,
+                    item.itemcode,
+                    deproomdetail.ID,
+                    SUM(deproomdetail.Qty) AS cnt,
+                    (SELECT COUNT(deproomdetailsub.ID) FROM deproomdetailsub WHERE deproomdetailsub.Deproomdetail_RowID = deproomdetail.ID) AS cnt_pay,
+                    itemtype.TyeName
+                FROM
+                    deproom
+                INNER JOIN
+                    deproomdetail ON deproom.DocNo = deproomdetail.DocNo
+                INNER JOIN
+                    item ON deproomdetail.ItemCode = item.itemcode
+                INNER JOIN
+                    itemtype ON item.itemtypeID = itemtype.ID
+                WHERE
+                    deproom.DocNo = '$DocNo'
+                    AND deproom.IsCancel = 0
+                    AND deproomdetail.IsCancel = 0
+                GROUP BY
+                    item.itemname,
+                    item.itemcode,
+                    deproomdetail.ID,
+                    itemtype.TyeName
+                ORDER BY
+                    item.itemname ASC  ";
+}else{
+    $query = "SELECT
+    item.itemname ,
+    item.itemcode ,
+    deproomdetail.ID ,
+    SUM ( deproomdetail.Qty ) AS cnt ,
+    (
+                        SELECT COUNT(deproomdetailsub.ID) FROM deproomdetailsub WHERE deproomdetailsub.Deproomdetail_RowID = deproomdetail.ID
+    ) AS cnt_pay,
+    itemtype.TyeName
+    FROM
+    deproom
+    INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
+    INNER JOIN item ON deproomdetail.ItemCode = item.itemcode
+    INNER JOIN itemtype ON item.itemtypeID = itemtype.ID
+    WHERE
+    deproom.DocNo = '$DocNo' 
+    AND deproom.IsCancel = 0 
+    AND deproomdetail.IsCancel = 0 
+    GROUP BY
+    item.itemname,
+    item.itemcode,
+    deproomdetail.ID ,
+    itemtype.TyeName 
+    ORDER BY item.itemname ASC ";
+}
+
 
 $meQuery1 = $conn->prepare($query);
 $meQuery1->execute();

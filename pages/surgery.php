@@ -30,7 +30,7 @@
 
 
 
-<div class="row mt-3">
+<div class="row mt-3" hidden>
     <div class=" col-md-12 col-lg-9  ">
         <div class="btn-group btn-group-toggle" role="group" aria-label="Basic example">
             <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;" id="radio_use">ห้องผ่าตัด</button>

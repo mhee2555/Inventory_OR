@@ -429,6 +429,8 @@ function cancel_item_byDocNo($conn, $db)
                                                                                 deproomdetail
                                                                                 INNER JOIN deproomdetailsub ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID
                                                                             WHERE deproomdetail.DocNo = '$txt_docno_request'  )  ";
+
+                                                                            echo $sql3;
     $meQuery3 = $conn->prepare($sql3);
     $meQuery3->execute();
 
