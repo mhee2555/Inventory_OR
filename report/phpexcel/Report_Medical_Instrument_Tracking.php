@@ -1,6 +1,8 @@
 <?php
-require('../../config/db.php');
+
 require 'vendor/autoload.php';
+
+require('../../config/db.php');
 require('../../connect/connect.php');
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -12,7 +14,8 @@ use PhpOffice\PhpSpreadsheet\Style\Alignment;
 $spreadsheet = new Spreadsheet();
 
 $sheet = $spreadsheet->getActiveSheet();
-$sheet->setTitle("inventory OR");
+$sheet->setTitle("SUDs");
+// --- ใส่โลโก้ ---
 
 
 $sheet->mergeCells('A1:D5');
@@ -47,16 +50,16 @@ $sheet->getCell('E4')->getStyle()->getFont()->setBold(true);
 
 // --- หัวตาราง ---
 $sheet->setCellValue('A6', 'ลำดับ');
-$sheet->setCellValue('B6', 'วันที่');
-$sheet->setCellValue('C6', 'HN Code');
-$sheet->setCellValue('D6', 'หมายเลขอุปกรณ์');
-$sheet->setCellValue('E6', 'ชื่อเครื่องมือ');
-$sheet->setCellValue('F6', 'หมายเลขซีเรียล');
-$sheet->setCellValue('G6', 'เลขล็อตการผลิต');
-$sheet->setCellValue('H6', 'หมดอายุจากผู้ผลิต');
-$sheet->setCellValue('I6', 'รหัสประจำตัวเครื่องมือ');
-$sheet->setCellValue('J6', 'หัตถการ');
-$sheet->setCellValue('K6', 'แพทย์');
+$sheet->setCellValue('B6', 'รหัสคลังอุปกรณ์ (คลัง Surgical)');
+$sheet->setCellValue('C6', 'รายการ');
+$sheet->setCellValue('D6', 'Lot No');
+$sheet->setCellValue('E6', 'Serial No');
+$sheet->setCellValue('F6', 'Exp Lot');
+$sheet->setCellValue('G6', 'Qty');
+$sheet->setCellValue('H6', 'RefPO');
+$sheet->setCellValue('I6', 'วันที่จ่าย');
+$sheet->setCellValue('J6', 'HN Code');
+$sheet->setCellValue('K6', 'จ่ายให้แผนก');
 
 
 $sheet->getColumnDimension('A')->setAutoSize(true);
@@ -89,10 +92,11 @@ if($db == 1){
                     item.itemname,
                     itemstock.UsageCode,
                     item.itemcode,
-                    DATE_FORMAT(itemstock.expDate, '%d-%m-%Y') AS expDate,
+                    DATE_FORMAT(itemstock.ExpireDate, '%d-%m-%Y') AS expDate,
                     DATE_FORMAT(itemstock.CreateDate, '%d-%m-%Y') AS CreateDate,
+                    hncode.DocNo,
                     hncode.HnCode,
-                    hncode_detail.LastSterileDetailID,
+                    hncode_detail.Qty,
                     departmentroom.departmentroomname,
                     itemtype.TyeName,
                     item.LimitUse,
@@ -173,24 +177,24 @@ if($db == 1){
 
 
 
-
-        $dataArray[] = [$row['date1'], $row['HnCode'], $row['itemcode'], $row['UsageCode'], $row['itemname'], $row['serielNo'],$row['lotNo'] , $row['expDate'] , $row['Procedure_TH'], $row['Doctor_Name']];
+        $dataArray[] = [$row['itemcode'], $row['itemname'], $row['lotNo'], $row['serielNo'], $row['expDate'], $row['Qty'], $row['DocNo'], $row['date1'], $row['HnCode'], $row['departmentroomname']];
     }
-
-    $row = 7; 
-    $count_cnt = 1 ;
+    
+    
+    $row = 7;
+    $count_cnt = 1;
     foreach ($dataArray as $item) {
-        $sheet->setCellValue('A' . $row, $count_cnt);
-        $sheet->setCellValue('B' . $row, $item[0]);
-        $sheet->setCellValue('C' . $row, $item[1]);
-        $sheet->setCellValue('D' . $row, $item[2]);
-        $sheet->setCellValue('E' . $row, $item[3].'|'.$item[4]);
-        $sheet->setCellValue('F' . $row, $item[5]);
-        $sheet->setCellValue('G' . $row, $item[6]);
-        $sheet->setCellValue('H' . $row, $item[7]);
-        $sheet->setCellValue('I' . $row, '');
-        $sheet->setCellValue('J' . $row, $item[8]);
-        $sheet->setCellValue('K' . $row, $item[9]);
+        $sheet->setCellValue('A' . $row, (string)$count_cnt);
+        $sheet->setCellValue('B' . $row, (string)$item[0]);
+        $sheet->setCellValue('C' . $row, (string)$item[1]);
+        $sheet->setCellValue('D' . $row, (string)$item[2]);
+        $sheet->setCellValue('E' . $row, (string)$item[3]);
+        $sheet->setCellValue('F' . $row, (string)$item[4]);
+        $sheet->setCellValue('G' . $row, (string)$item[5]);
+        $sheet->setCellValue('H' . $row, (string)$item[6]);
+        $sheet->setCellValue('I' . $row, (string)$item[7]);
+        $sheet->setCellValue('J' . $row, (string)$item[8]);
+        $sheet->setCellValue('K' . $row, (string)$item[9]);
         $row++;
         $count_cnt++;
     }
@@ -226,15 +230,16 @@ $styleArray_Center = [
 $sheet->getStyle('A6:K6')->applyFromArray($styleArray);
 $sheet->getStyle('A6:K' . ($row - 1))->applyFromArray($styleArray);
 $sheet->getStyle('A6:K' . ($row - 1))->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-$sheet->getStyle('E7:E' . ($row - 1))->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
-$sheet->getStyle('A7:A' . ($row - 1))->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
-$sheet->getStyle('B7:B' . ($row - 1))->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
+$sheet->getStyle('C7:C' . ($row - 1))->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
+// $sheet->getStyle('A7:A' . ($row - 1))->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
+// $sheet->getStyle('B7:B' . ($row - 1))->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
 
 // // --- จัดรูปแบบความกว้างของคอลัมน์ ---
 // $sheet->getColumnDimension('A')->setWidth(40); // คอลัมน์ A กว้างขึ้น
 // $sheet->getColumnDimension('B')->setWidth(15); // คอลัมน์ B ปรับอัตโนมัติ
 // $sheet->getColumnDimension('C')->setWidth(15); // คอลัมน์ B ปรับอัตโนมัติ
 // ====================================================================================================
+
 
 $spreadsheet->setActiveSheetIndex(0);
 

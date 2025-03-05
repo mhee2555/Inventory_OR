@@ -105,7 +105,7 @@
                                         <th scope="col" id="td_usage">รหัสอุปกรณ์</th>
                                         <th scope="col" class="text-center" id="td_itemname">ชื่ออุปกรณ์</th>
                                         <th scope="col" class="text-center" id="">จำนวน</th>
-                                        <th scope="col" class="text-center" id="">ชำรุด</th>
+                                        <th scope="col" class="text-center" id="" hidden>ชำรุด</th>
                                     </tr>
                                 </thead>
                                 <tbody  style="line-height: 40px;">

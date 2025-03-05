@@ -278,34 +278,36 @@ function onconfirm_send($conn, $db)
 
 
     // ============================== ตัวแดง
-    $queryUpdate = "UPDATE itemstock 
-                        SET Isdeproom = 3
-                        WHERE itemstock.RowID  IN (   SELECT
-                                                            deproomdetailsub.ItemStockID 
-                                                        FROM
-                                                            deproomdetail
-                                                            INNER JOIN deproomdetailsub ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID
-                                                        WHERE deproomdetail.DocNo = '$DocNo_pay'   ) AND itemstock.IsDeproom = 1 ";
-    $meQueryUpdate = $conn->prepare($queryUpdate);
-    $meQueryUpdate->execute();
+    // $queryUpdate = "UPDATE itemstock 
+    //                     SET Isdeproom = 3
+    //                     WHERE itemstock.RowID  IN (   SELECT
+    //                                                         deproomdetailsub.ItemStockID 
+    //                                                     FROM
+    //                                                         deproomdetail
+    //                                                         INNER JOIN deproomdetailsub ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID
+    //                                                     WHERE deproomdetail.DocNo = '$DocNo_pay'   ) AND itemstock.IsDeproom = 1 ";
+    // $meQueryUpdate = $conn->prepare($queryUpdate);
+    // $meQueryUpdate->execute();
 
 
-    $sql2 = "    DELETE FROM hncode_detail 
-                        WHERE
-                            hncode_detail.ItemStockID IN ( SELECT deproomdetailsub.ItemStockID FROM deproomdetail INNER JOIN deproomdetailsub ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID WHERE deproomdetail.DocNo = '$DocNo_pay' AND deproomdetailsub.IsStatus = 1 ) 
-                            
-                            AND hncode_detail.DocNo = (SELECT hncode.DocNo FROM hncode WHERE DocNo_SS = '$DocNo_pay') ";
+    $sql2 = "   DELETE hncode_detail 
+                FROM hncode_detail
+                JOIN hncode ON hncode_detail.DocNo = hncode.DocNo
+                JOIN deproomdetailsub ON hncode_detail.ItemStockID = deproomdetailsub.ItemStockID
+                JOIN deproomdetail ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID
+                WHERE deproomdetail.DocNo = '$DocNo_pay' 
+                AND deproomdetailsub.IsStatus = 1
+                AND hncode.DocNo_SS = '$DocNo_pay' ";
     $meQuery2 = $conn->prepare($sql2);
     $meQuery2->execute();
 
 
 
-    $sql3 = "UPDATE deproomdetailsub  SET IsStatus = 3   WHERE deproomdetailsub.ID  IN (   SELECT
-                                                                                                    deproomdetailsub.ID 
-                                                                                                FROM
-                                                                                                    deproomdetail
-                                                                                                    INNER JOIN deproomdetailsub ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID
-                                                                                                WHERE deproomdetail.DocNo = '$DocNo_pay'   ) AND deproomdetailsub.IsStatus = 1 ";
+    $sql3 = "UPDATE deproomdetailsub 
+                    JOIN deproomdetail ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID
+                    SET deproomdetailsub.IsStatus = 3
+                    WHERE deproomdetail.DocNo = '$DocNo_pay' 
+                    AND deproomdetailsub.IsStatus = 1 ";
     $meQuery3 = $conn->prepare($sql3);
     $meQuery3->execute();
 
@@ -321,27 +323,25 @@ function onconfirm_send($conn, $db)
 
 
     // ==============================ตัวเขียว Implant
-    $queryUpdate2 = "UPDATE itemstock 
-        SET Isdeproom = 10
-        WHERE itemstock.RowID  IN (   SELECT
-                                            deproomdetailsub.ItemStockID 
-                                        FROM
-                                            deproomdetail
-                                            INNER JOIN deproomdetailsub ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID
-                                            INNER JOIN itemstock ON itemstock.RowID = deproomdetailsub.ItemStockID
-                                            INNER JOIN item ON item.itemcode = itemstock.ItemCode
-                                        WHERE deproomdetail.DocNo = '$DocNo_pay' AND item.itemtypeID = 43  ) AND itemstock.IsDeproom = 2 ";
-    $meQueryUpdate2 = $conn->prepare($queryUpdate2);
-    $meQueryUpdate2->execute();
+    // $queryUpdate2 = "UPDATE itemstock 
+    //                 JOIN deproomdetailsub ON itemstock.RowID = deproomdetailsub.ItemStockID
+    //                 JOIN deproomdetail ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID
+    //                 JOIN item ON item.itemcode = itemstock.ItemCode
+    //                 SET itemstock.Isdeproom = 10
+    //                 WHERE deproomdetail.DocNo = '$DocNo_pay' 
+    //                 AND item.itemtypeID = 43
+    //                 AND itemstock.IsDeproom = 2 ";
+    // $meQueryUpdate2 = $conn->prepare($queryUpdate2);
+    // $meQueryUpdate2->execute();
 
-    $sql3 = "UPDATE deproomdetailsub  SET IsStatus = 10   WHERE deproomdetailsub.ID  IN (   SELECT
-                                                                                    deproomdetailsub.ID 
-                                                                                FROM
-                                                                                    deproomdetail
-                                                                                    INNER JOIN deproomdetailsub ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID
-                                                                                    INNER JOIN itemstock ON itemstock.RowID = deproomdetailsub.ItemStockID
-                                                                                    INNER JOIN item ON item.itemcode = itemstock.ItemCode
-                                                                                WHERE deproomdetail.DocNo = '$DocNo_pay' AND item.itemtypeID = 43    ) AND deproomdetailsub.IsStatus = 2 ";
+    $sql3 = "UPDATE deproomdetailsub
+            JOIN deproomdetail ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID
+            JOIN itemstock ON itemstock.RowID = deproomdetailsub.ItemStockID
+            JOIN item ON item.itemcode = itemstock.ItemCode
+            SET deproomdetailsub.IsStatus = 10
+            WHERE deproomdetail.DocNo = '$DocNo_pay' 
+            AND item.itemtypeID = 43
+            AND deproomdetailsub.IsStatus = 2 ";
     $meQuery3 = $conn->prepare($sql3);
     $meQuery3->execute();
     // ==============================ตัวเขียว
@@ -349,42 +349,43 @@ function onconfirm_send($conn, $db)
 
     // ==============================ตัวเขียว
     // =======================================================================================================================================
-    $query = "DELETE FROM itemstock_transaction_detail  WHERE ItemStockID IN (   SELECT
-                                                            deproomdetailsub.ItemStockID 
-                                                        FROM
-                                                            deproomdetail
-                                                            INNER JOIN deproomdetailsub ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID
-                                                            INNER JOIN itemstock ON itemstock.RowID = deproomdetailsub.ItemStockID
-                                                            INNER JOIN item ON item.itemcode = itemstock.ItemCode
-                                                        WHERE deproomdetail.DocNo = '$DocNo_pay' AND item.itemtypeID != 43 AND itemstock.IsDeproom = 2    ) 
-                                    AND departmentroomid = '$Ref_departmentroomid' 
-                                    AND  IsStatus = '1' ";
+    $query = "  DELETE itemstock_transaction_detail 
+                FROM itemstock_transaction_detail
+                JOIN deproomdetailsub ON itemstock_transaction_detail.ItemStockID = deproomdetailsub.ItemStockID
+                JOIN deproomdetail ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID
+                JOIN itemstock ON itemstock.RowID = deproomdetailsub.ItemStockID
+                JOIN item ON item.itemcode = itemstock.ItemCode
+                WHERE deproomdetail.DocNo = '$DocNo_pay' 
+                AND item.itemtypeID != 43 
+                AND itemstock.IsDeproom = 2
+                AND itemstock_transaction_detail.departmentroomid = '$Ref_departmentroomid' 
+                AND itemstock_transaction_detail.IsStatus = '1'  ";
     $meQuery = $conn->prepare($query);
     $meQuery->execute();
     // =======================================================================================================================================
 
 
-    $queryUpdate2 = "UPDATE itemstock 
-                        SET Isdeproom = 4
-                        WHERE itemstock.RowID  IN (   SELECT
-                                                            deproomdetailsub.ItemStockID 
-                                                        FROM
-                                                            deproomdetail
-                                                            INNER JOIN deproomdetailsub ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID
-                                                            INNER JOIN itemstock ON itemstock.RowID = deproomdetailsub.ItemStockID
-                                                            INNER JOIN item ON item.itemcode = itemstock.ItemCode
-                                                        WHERE deproomdetail.DocNo = '$DocNo_pay' AND item.itemtypeID != 43    ) AND itemstock.IsDeproom = 2 ";
-    $meQueryUpdate2 = $conn->prepare($queryUpdate2);
-    $meQueryUpdate2->execute();
+    // $queryUpdate2 = "UPDATE itemstock 
+    //                     SET Isdeproom = 4
+    //                     WHERE itemstock.RowID  IN (   SELECT
+    //                                                         deproomdetailsub.ItemStockID 
+    //                                                     FROM
+    //                                                         deproomdetail
+    //                                                         INNER JOIN deproomdetailsub ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID
+    //                                                         INNER JOIN itemstock ON itemstock.RowID = deproomdetailsub.ItemStockID
+    //                                                         INNER JOIN item ON item.itemcode = itemstock.ItemCode
+    //                                                     WHERE deproomdetail.DocNo = '$DocNo_pay' AND item.itemtypeID != 43    ) AND itemstock.IsDeproom = 2 ";
+    // $meQueryUpdate2 = $conn->prepare($queryUpdate2);
+    // $meQueryUpdate2->execute();
 
-    $sql3 = "UPDATE deproomdetailsub  SET IsStatus = 4   WHERE deproomdetailsub.ID  IN (   SELECT
-                                                                                                    deproomdetailsub.ID 
-                                                                                                FROM
-                                                                                                    deproomdetail
-                                                                                                    INNER JOIN deproomdetailsub ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID
-                                                                                                    INNER JOIN itemstock ON itemstock.RowID = deproomdetailsub.ItemStockID
-                                                                                                    INNER JOIN item ON item.itemcode = itemstock.ItemCode
-                                                                                                WHERE deproomdetail.DocNo = '$DocNo_pay' AND item.itemtypeID != 43    ) AND deproomdetailsub.IsStatus = 2 ";
+    $sql3 = "   UPDATE deproomdetailsub
+                JOIN deproomdetail ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID
+                JOIN itemstock ON itemstock.RowID = deproomdetailsub.ItemStockID
+                JOIN item ON item.itemcode = itemstock.ItemCode
+                SET deproomdetailsub.IsStatus = 4
+                WHERE deproomdetail.DocNo = '$DocNo_pay' 
+                AND item.itemtypeID != 43
+                AND deproomdetailsub.IsStatus = 2 ";
     $meQuery3 = $conn->prepare($sql3);
     $meQuery3->execute();
 
@@ -396,41 +397,40 @@ function onconfirm_send($conn, $db)
     // ==============================ชำรุด
 
     // =======================================================================================================================================
-    $query = " DELETE FROM itemstock_transaction_detail  WHERE ItemStockID IN (   SELECT
-                                                                                            deproomdetailsub.ItemStockID 
-                                                                                        FROM
-                                                                                            deproomdetail
-                                                                                            INNER JOIN deproomdetailsub ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID
-                                                                                            INNER JOIN itemstock ON itemstock.RowID = deproomdetailsub.ItemStockID
-                                                                                        WHERE deproomdetail.DocNo = '$DocNo_pay' AND itemstock.IsDamage = 1   ) 
-                AND departmentroomid = '$Ref_departmentroomid' 
-                AND  IsStatus = '1' ";
+    $query = "  DELETE itemstock_transaction_detail 
+                FROM itemstock_transaction_detail
+                JOIN deproomdetailsub ON itemstock_transaction_detail.ItemStockID = deproomdetailsub.ItemStockID
+                JOIN deproomdetail ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID
+                JOIN itemstock ON itemstock.RowID = deproomdetailsub.ItemStockID
+                WHERE deproomdetail.DocNo = '$DocNo_pay' 
+                AND itemstock.IsDamage = 1
+                AND itemstock_transaction_detail.departmentroomid = '$Ref_departmentroomid' 
+                AND itemstock_transaction_detail.IsStatus = '1' ";
     $meQuery = $conn->prepare($query);
     $meQuery->execute();
     // =======================================================================================================================================
 
 
-    $queryUpdate5 = "UPDATE itemstock 
-        SET IsDamage = 2
-        WHERE itemstock.RowID  IN (   SELECT
-                                            deproomdetailsub.ItemStockID 
-                                        FROM
-                                            deproomdetail
-                                            INNER JOIN deproomdetailsub ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID
-                                        WHERE deproomdetail.DocNo = '$DocNo_pay'   ) AND itemstock.IsDamage = 1 ";
-    $meQueryUpdate5 = $conn->prepare($queryUpdate5);
-    $meQueryUpdate5->execute();
+    // $queryUpdate5 = "UPDATE itemstock 
+    //     SET IsDamage = 2
+    //     WHERE itemstock.RowID  IN (   SELECT
+    //                                         deproomdetailsub.ItemStockID 
+    //                                     FROM
+    //                                         deproomdetail
+    //                                         INNER JOIN deproomdetailsub ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID
+    //                                     WHERE deproomdetail.DocNo = '$DocNo_pay'   ) AND itemstock.IsDamage = 1 ";
+    // $meQueryUpdate5 = $conn->prepare($queryUpdate5);
+    // $meQueryUpdate5->execute();
     // ==============================
 
 
 
 
-    $sql4 = "UPDATE deproomdetailsub  SET IsDamage = 2   WHERE deproomdetailsub.ID  IN (   SELECT
-                                                                                                    deproomdetailsub.ID 
-                                                                                                FROM
-                                                                                                    deproomdetail
-                                                                                                    INNER JOIN deproomdetailsub ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID
-                                                                                                WHERE deproomdetail.DocNo = '$DocNo_pay'   ) AND deproomdetailsub.IsDamage = 1 ";
+    $sql4 = "UPDATE deproomdetailsub
+            JOIN deproomdetail ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID
+            SET deproomdetailsub.IsDamage = 2
+            WHERE deproomdetail.DocNo = '$DocNo_pay'
+            AND deproomdetailsub.IsDamage = 1 ";
 
 
 
@@ -469,31 +469,31 @@ function onconfirm_send($conn, $db)
 
 
 
-    $sql_suds = "   SELECT 
-                        item.itemcode ,
-                        COUNT(sudslog.ID) AS count_suds,
-                        ( item.LimitUse + 1 ) AS LimitUse 
-                    FROM
-                        deproom
-                        INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
-                        INNER JOIN deproomdetailsub ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID
-                        INNER JOIN itemstock ON deproomdetailsub.ItemStockID = itemstock.RowID
-                        INNER JOIN item ON itemstock.ItemCode = item.itemcode
-                        INNER JOIN sudslog ON itemstock.UsageCode = sudslog.UniCode 
-                    WHERE
-                        deproom.DocNo = '$DocNo_pay' 
-                    AND item.itemtypeID = 42
-                    GROUP BY
-                        item.itemcode,
-                        item.LimitUse ";
+    // $sql_suds = "   SELECT 
+    //                     item.itemcode ,
+    //                     COUNT(sudslog.ID) AS count_suds,
+    //                     ( item.LimitUse + 1 ) AS LimitUse 
+    //                 FROM
+    //                     deproom
+    //                     INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
+    //                     INNER JOIN deproomdetailsub ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID
+    //                     INNER JOIN itemstock ON deproomdetailsub.ItemStockID = itemstock.RowID
+    //                     INNER JOIN item ON itemstock.ItemCode = item.itemcode
+    //                     INNER JOIN sudslog ON itemstock.UsageCode = sudslog.UniCode 
+    //                 WHERE
+    //                     deproom.DocNo = '$DocNo_pay' 
+    //                 AND item.itemtypeID = 42
+    //                 GROUP BY
+    //                     item.itemcode,
+    //                     item.LimitUse ";
 
-    $meQuery_suds = $conn->prepare($sql_suds);
-    $meQuery_suds->execute();
-    while ($row_suds = $meQuery_suds->fetch(PDO::FETCH_ASSOC)) {
-        if ($row_suds['count_suds'] == $row_suds['LimitUse']) {
-            $return[] = $row_suds;
-        }
-    }
+    // $meQuery_suds = $conn->prepare($sql_suds);
+    // $meQuery_suds->execute();
+    // while ($row_suds = $meQuery_suds->fetch(PDO::FETCH_ASSOC)) {
+    //     if ($row_suds['count_suds'] == $row_suds['LimitUse']) {
+    //         $return[] = $row_suds;
+    //     }
+    // }
 
 
 

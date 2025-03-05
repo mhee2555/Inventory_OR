@@ -118,27 +118,27 @@ function onconfirm_send(){
       $("#table_detail_item_byDocNo tbody").empty();
 
 
-      var ObjData = JSON.parse(result);
-      if (!$.isEmptyObject(ObjData)) {
+      // var ObjData = JSON.parse(result);
+      // if (!$.isEmptyObject(ObjData)) {
 
-        var txt = "";
-        $.each(ObjData, function (kay, value) {
-          console.log(value.itemcode);
-          txt +=  value.itemcode + ",";
-        });
+      //   var txt = "";
+      //   $.each(ObjData, function (kay, value) {
+      //     console.log(value.itemcode);
+      //     txt +=  value.itemcode + ",";
+      //   });
 
-        var new_txt = txt.substring(0, txt.length - 1);
+      //   var new_txt = txt.substring(0, txt.length - 1);
 
-                Swal.fire({
-                    title: 'ส่งข้อมูลสำเร็จ',
-                    html: `${new_txt} <br> SUDs นี้ Re-Sterile ครบตามกำหนดแล้ว`,
-                    icon: "warning"
-                });
+      //           Swal.fire({
+      //               title: 'ส่งข้อมูลสำเร็จ',
+      //               html: `${new_txt} <br> SUDs นี้ Re-Sterile ครบตามกำหนดแล้ว`,
+      //               icon: "warning"
+      //           });
 
-      }else{
-        showDialogSuccess('ส่งข้อมูลสำเร็จ');
-      }
+      // }else{
+      // }
 
+      showDialogSuccess('ส่งข้อมูลสำเร็จ');
 
       show_detail_item_surgery();
 
@@ -546,7 +546,7 @@ function show_detail_item_ByDocNo(DocNo) {
                                   </div>
                       </td>
                       <td   class="text-center" ${styleT}>1</td>
-                      <td class="text-center" >${iconD}</td>
+                      <td class="text-center" hidden>${iconD}</td>
                    </tr>`;
         });
       }

@@ -1,4 +1,5 @@
 <?php
+require('../config/db.php');
 include 'phpqrcode/qrlib.php';
 require('tcpdf/tcpdf.php');
 require('../connect/connect.php');
@@ -20,6 +21,7 @@ class MYPDF extends TCPDF
     //Page header
     public function Header()
     {
+        require('../config/db.php');
         require('../connect/connect.php');
         $datetime = new DatetimeTH();
         // date th
@@ -40,10 +42,26 @@ class MYPDF extends TCPDF
         $this->SetFont('db_helvethaica_x', 'b', 22);
         $DocNo = $_GET['DocNo'];
 
-        $query = " SELECT
+        if($db == 1){
+            $query = " SELECT 
+                            hncode.HnCode,
+                            DATE_FORMAT(hncode.ModifyDate, '%d/%m/%Y') AS date1,
+                            DATE_FORMAT(hncode.ModifyDate, '%H:%i') AS time1,
+                            `procedure`.Procedure_EN AS Procedure_TH,
+                            doctor.Doctor_Name_EN AS Doctor_Name,
+                            departmentroom.departmentroomname_EN 
+                        FROM 
+                            hncode
+                            LEFT JOIN `procedure` ON hncode.`procedure` = `procedure`.ID
+                            LEFT JOIN doctor ON hncode.doctor = doctor.ID
+                            INNER JOIN departmentroom ON hncode.departmentroomid = departmentroom.id
+                        WHERE 
+                            hncode.DocNo = '$DocNo' ";
+        }else{
+            $query = " SELECT
                             hncode.HnCode,
                             FORMAT(hncode.ModifyDate , 'dd/MM/yyyy') AS date1,
-		                    FORMAT(hncode.ModifyDate , 'HH:mm') AS time1,
+                            FORMAT(hncode.ModifyDate , 'HH:mm') AS time1,
                             [procedure].Procedure_EN AS Procedure_TH,
                             doctor.Doctor_Name_EN AS Doctor_Name,
                             departmentroom.departmentroomname_EN 
@@ -53,6 +71,8 @@ class MYPDF extends TCPDF
                             LEFT JOIN dbo.doctor ON hncode.doctor = doctor.ID
                             INNER JOIN dbo.departmentroom ON hncode.departmentroomid = departmentroom.id
                         WHERE  hncode.DocNo = '$DocNo' ";
+        }
+ 
         $meQuery1 = $conn->prepare($query);
         $meQuery1->execute();
         while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
@@ -239,35 +259,69 @@ $html = '<table cellspacing="0" cellpadding="2" border="1" >
 </tr> </thead>';
 
 $count = 1;
-$Sql_Detail = "SELECT
-                    hncode.ID,
-                    item.itemname,
-                    itemstock.UsageCode,
-                    item.itemcode,
-                    FORMAT ( itemstock.expDate, 'dd-MM-yyyy' ) AS expDate ,
-                    FORMAT ( itemstock.CreateDate, 'dd-MM-yyyy' ) AS CreateDate ,
-                    hncode.HnCode,
-                    hncode_detail.LastSterileDetailID,
-                    departmentroom.departmentroomname,
-                    itemtype.TyeName,
-                    item.LimitUse,
-                    sudslog.UsedCount,
-                    itemstock.lotNo,
-                    itemstock.serielNo
-                FROM
-                    hncode
-                    INNER JOIN departmentroom ON departmentroom.id = hncode.departmentroomid
-                    INNER JOIN hncode_detail ON hncode.DocNo = hncode_detail.DocNo
-                    INNER JOIN itemstock ON hncode_detail.ItemStockID = itemstock.RowID
-                    INNER JOIN item ON itemstock.ItemCode = item.itemcode 
-                    INNER JOIN itemtype ON item.itemtypeID = itemtype.ID
-                    LEFT JOIN sudslog ON sudslog.UniCode = itemstock.UsageCode 
-                WHERE
-                    hncode.IsStatus = 1
-                    AND hncode.IsCancel = 0  
-                    AND hncode.DocNo = '$DocNo'
-                ORDER BY
-                    hncode.ID ASC  ";
+
+if($db == 1){
+    $Sql_Detail = "SELECT 
+                        hncode.ID,
+                        item.itemname,
+                        itemstock.UsageCode,
+                        item.itemcode,
+                        DATE_FORMAT(itemstock.expDate, '%d-%m-%Y') AS expDate,
+                        DATE_FORMAT(itemstock.CreateDate, '%d-%m-%Y') AS CreateDate,
+                        hncode.HnCode,
+                        hncode_detail.LastSterileDetailID,
+                        departmentroom.departmentroomname,
+                        itemtype.TyeName,
+                        item.LimitUse,
+                        sudslog.UsedCount,
+                        itemstock.lotNo,
+                        itemstock.serielNo
+                    FROM 
+                        hncode
+                        INNER JOIN departmentroom ON departmentroom.id = hncode.departmentroomid
+                        INNER JOIN hncode_detail ON hncode.DocNo = hncode_detail.DocNo
+                        INNER JOIN itemstock ON hncode_detail.ItemStockID = itemstock.RowID
+                        INNER JOIN item ON itemstock.ItemCode = item.itemcode 
+                        INNER JOIN itemtype ON item.itemtypeID = itemtype.ID
+                        LEFT JOIN sudslog ON sudslog.UniCode = itemstock.UsageCode 
+                    WHERE 
+                        hncode.IsStatus = 1
+                        AND hncode.IsCancel = 0  
+                        AND hncode.DocNo = '$DocNo'
+                    ORDER BY 
+                        hncode.ID ASC ";
+}else{
+    $Sql_Detail = "SELECT
+    hncode.ID,
+    item.itemname,
+    itemstock.UsageCode,
+    item.itemcode,
+    FORMAT ( itemstock.expDate, 'dd-MM-yyyy' ) AS expDate ,
+    FORMAT ( itemstock.CreateDate, 'dd-MM-yyyy' ) AS CreateDate ,
+    hncode.HnCode,
+    hncode_detail.LastSterileDetailID,
+    departmentroom.departmentroomname,
+    itemtype.TyeName,
+    item.LimitUse,
+    sudslog.UsedCount,
+    itemstock.lotNo,
+    itemstock.serielNo
+FROM
+    hncode
+    INNER JOIN departmentroom ON departmentroom.id = hncode.departmentroomid
+    INNER JOIN hncode_detail ON hncode.DocNo = hncode_detail.DocNo
+    INNER JOIN itemstock ON hncode_detail.ItemStockID = itemstock.RowID
+    INNER JOIN item ON itemstock.ItemCode = item.itemcode 
+    INNER JOIN itemtype ON item.itemtypeID = itemtype.ID
+    LEFT JOIN sudslog ON sudslog.UniCode = itemstock.UsageCode 
+WHERE
+    hncode.IsStatus = 1
+    AND hncode.IsCancel = 0  
+    AND hncode.DocNo = '$DocNo'
+ORDER BY
+    hncode.ID ASC  ";
+}
+
 
 $meQuery1 = $conn->prepare($Sql_Detail);
 $meQuery1->execute();

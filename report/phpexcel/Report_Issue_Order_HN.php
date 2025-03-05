@@ -1,5 +1,4 @@
 <?php
-require('../../config/db.php');
 require 'vendor/autoload.php';
 require('../../connect/connect.php');
 
@@ -40,7 +39,7 @@ $sheet->mergeCells('A7:B7'); // หัวข้อ "SUDs"
 
 
 $sheet->setCellValue('B1', 'พิมพ์โดย poseMA');
-$sheet->setCellValue('B4', 'วันที่พิมพ์ ' . date('d/m/Y') . ' ' . date('H:i:s'));
+$sheet->setCellValue('B4', 'วันที่พิมพ์ '.date('d/m/Y'). ' ' .date('H:i:s'));
 $sheet->getStyle('B1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
 $sheet->getStyle('B4')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
 
@@ -63,85 +62,51 @@ $select_date_history_l = $select_date_history_l[2] . '-' . $select_date_history_
 
 $dataArray = [];
 
-
-
-if ($db == 1) {
-    $query = "SELECT
-                    item.itemname,
-                    item.itemcode,
-                    (
-                        SELECT COUNT(deproomdetailsub.ID)
-                        FROM deproomdetailsub
-                        INNER JOIN itemstock ON itemstock.RowID = deproomdetailsub.ItemStockID
-                        WHERE DATE(deproomdetailsub.PayDate) BETWEEN '$select_date_history_s' AND '$select_date_history_l'
-                        AND itemstock.ItemCode = item.itemcode
-                    ) AS cnt,
-                    itemtype.TyeName
-                FROM
-                    deproom
-                INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
-                INNER JOIN item ON deproomdetail.ItemCode = item.itemcode
-                INNER JOIN itemtype ON item.itemtypeID = itemtype.ID
-                WHERE
-                    DATE(deproom.CreateDate) BETWEEN '$select_date_history_s' AND '$select_date_history_l'
-                    AND deproom.IsCancel = 0
-                    AND deproomdetail.IsCancel = 0
-                    AND itemtype.TyeName = 'SUDs'
-                GROUP BY
-                    item.itemname,
-                    item.itemcode,
-                    itemtype.TyeName
-                ORDER BY
-                    item.itemname ASC  ";
-} else {
-    $query = "SELECT
-                item.itemname ,
-                item.itemcode ,
-                (
-                SELECT COUNT
-                    ( deproomdetailsub.ID ) 
-                FROM
-                    deproomdetailsub
-                    INNER JOIN itemstock ON itemstock.RowID = deproomdetailsub.ItemStockID 
-                WHERE
-                    CONVERT ( DATE, deproomdetailsub.PayDate ) BETWEEN '$select_date_history_s'  AND '$select_date_history_l' 
-                    AND itemstock.ItemCode = item.itemcode
-                ) AS cnt,
-                itemtype.TyeName 
+$query = "SELECT
+            item.itemname ,
+            item.itemcode ,
+            (
+            SELECT COUNT
+                ( deproomdetailsub.ID ) 
             FROM
-                deproom
-                INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
-                INNER JOIN item ON deproomdetail.ItemCode = item.itemcode
-                INNER JOIN itemtype ON item.itemtypeID = itemtype.ID 
+                deproomdetailsub
+                INNER JOIN itemstock ON itemstock.RowID = deproomdetailsub.ItemStockID 
             WHERE
-                CONVERT ( DATE, deproom.CreateDate ) BETWEEN '$select_date_history_s'  AND '$select_date_history_l' 
-                AND deproom.IsCancel = 0 
-                AND deproomdetail.IsCancel = 0 
-                AND itemtype.TyeName = 'SUDs' 
-            GROUP BY
-                item.itemname,
-                item.itemcode,
-                itemtype.TyeName 
-            ORDER BY
-                item.itemname ASC ";
-}
+                CONVERT ( DATE, deproomdetailsub.PayDate ) BETWEEN '$select_date_history_s'  AND '$select_date_history_l' 
+                AND itemstock.ItemCode = item.itemcode
+            ) AS cnt,
+            itemtype.TyeName 
+        FROM
+            deproom
+            INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
+            INNER JOIN item ON deproomdetail.ItemCode = item.itemcode
+            INNER JOIN itemtype ON item.itemtypeID = itemtype.ID 
+        WHERE
+            CONVERT ( DATE, deproom.CreateDate ) BETWEEN '$select_date_history_s'  AND '$select_date_history_l' 
+            AND deproom.IsCancel = 0 
+            AND deproomdetail.IsCancel = 0 
+            AND itemtype.TyeName = 'SUDs' 
+        GROUP BY
+            item.itemname,
+            item.itemcode,
+            itemtype.TyeName 
+        ORDER BY
+            item.itemname ASC ";
+
+    $meQuery = $conn->prepare($query);
+    $meQuery->execute();
+    while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+        $dataArray[] = [$row['itemname'], $row['cnt']];
+    }
 
 
-
-$meQuery = $conn->prepare($query);
-$meQuery->execute();
-while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
-    $dataArray[] = [$row['itemname'], $row['cnt']];
-}
-
-
-$row = 9;
-foreach ($dataArray as $item) {
-    $sheet->setCellValue('A' . $row, $item[0]);
-    $sheet->setCellValue('B' . $row, $item[1]);
-    $sheet->getRowDimension($row)->setRowHeight(30); // ตั้งค่าความสูงของแถวข้อมูล
-    $row++;
-}
+    $row = 9; 
+    foreach ($dataArray as $item) {
+        $sheet->setCellValue('A' . $row, $item[0]);
+        $sheet->setCellValue('B' . $row, $item[1]);
+        $sheet->getRowDimension($row)->setRowHeight(30); // ตั้งค่าความสูงของแถวข้อมูล
+        $row++;
+    }
 
 $sheet->getStyle('A1')->getFont()->setSize(20); // หัวข้อใหญ่
 $sheet->getStyle('A7')->getFont()->setSize(16)->setBold(true); // หัวข้อ "SUDs" ตัวหนา
@@ -215,7 +180,7 @@ $sheet2->mergeCells('A7:B7'); // หัวข้อ "SUDs"
 
 
 $sheet2->setCellValue('B1', 'พิมพ์โดย poseMA');
-$sheet2->setCellValue('B4', 'วันที่พิมพ์ ' . date('d/m/Y') . ' ' . date('H:i:s'));
+$sheet2->setCellValue('B4', 'วันที่พิมพ์ '.date('d/m/Y'). ' ' .date('H:i:s'));
 $sheet2->getStyle('B1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
 $sheet2->getStyle('B4')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
 
@@ -238,87 +203,54 @@ $select_date_history_l = $select_date_history_l[2] . '-' . $select_date_history_
 
 $dataArray = [];
 
-
-if ($db == 1) {
-    $query = "SELECT
-                    item.itemname,
-                    item.itemcode,
-                    (
-                        SELECT COUNT(deproomdetailsub.ID)
-                        FROM deproomdetailsub
-                        INNER JOIN itemstock ON itemstock.RowID = deproomdetailsub.ItemStockID
-                        WHERE DATE(deproomdetailsub.PayDate) BETWEEN '$select_date_history_s' AND '$select_date_history_l'
-                        AND itemstock.ItemCode = item.itemcode
-                    ) AS cnt,
-                    itemtype.TyeName
-                FROM
-                    deproom
-                INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
-                INNER JOIN item ON deproomdetail.ItemCode = item.itemcode
-                INNER JOIN itemtype ON item.itemtypeID = itemtype.ID
-                WHERE
-                    DATE(deproom.CreateDate) BETWEEN '$select_date_history_s' AND '$select_date_history_l'
-                    AND deproom.IsCancel = 0
-                    AND deproomdetail.IsCancel = 0
-                    AND itemtype.TyeName = 'OR Implant'
-                GROUP BY
-                    item.itemname,
-                    item.itemcode,
-                    itemtype.TyeName
-                ORDER BY
-                    item.itemname ASC ";
-} else {
-    $query = "SELECT
-                    item.itemname ,
-                    item.itemcode ,
-                    (
-                    SELECT COUNT
-                        ( deproomdetailsub.ID ) 
-                    FROM
-                        deproomdetailsub
-                        INNER JOIN itemstock ON itemstock.RowID = deproomdetailsub.ItemStockID 
-                    WHERE
-                        CONVERT ( DATE, deproomdetailsub.PayDate ) BETWEEN '$select_date_history_s'  AND '$select_date_history_l' 
-                        AND itemstock.ItemCode = item.itemcode
-                    ) AS cnt,
-                    itemtype.TyeName 
-                FROM
-                    deproom
-                    INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
-                    INNER JOIN item ON deproomdetail.ItemCode = item.itemcode
-                    INNER JOIN itemtype ON item.itemtypeID = itemtype.ID 
-                WHERE
-                    CONVERT ( DATE, deproom.CreateDate ) BETWEEN '$select_date_history_s'  AND '$select_date_history_l' 
-                    AND deproom.IsCancel = 0 
-                    AND deproomdetail.IsCancel = 0 
-                    AND itemtype.TyeName = 'OR Implant' 
-                GROUP BY
-                    item.itemname,
-                    item.itemcode,
-                    itemtype.TyeName 
-                ORDER BY
-                    item.itemname ASC ";
-}
+$query = "SELECT
+            item.itemname ,
+            item.itemcode ,
+            (
+            SELECT COUNT
+                ( deproomdetailsub.ID ) 
+            FROM
+                deproomdetailsub
+                INNER JOIN itemstock ON itemstock.RowID = deproomdetailsub.ItemStockID 
+            WHERE
+                CONVERT ( DATE, deproomdetailsub.PayDate ) BETWEEN '$select_date_history_s'  AND '$select_date_history_l' 
+                AND itemstock.ItemCode = item.itemcode
+            ) AS cnt,
+            itemtype.TyeName 
+        FROM
+            deproom
+            INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
+            INNER JOIN item ON deproomdetail.ItemCode = item.itemcode
+            INNER JOIN itemtype ON item.itemtypeID = itemtype.ID 
+        WHERE
+            CONVERT ( DATE, deproom.CreateDate ) BETWEEN '$select_date_history_s'  AND '$select_date_history_l' 
+            AND deproom.IsCancel = 0 
+            AND deproomdetail.IsCancel = 0 
+            AND itemtype.TyeName = 'OR Implant' 
+        GROUP BY
+            item.itemname,
+            item.itemcode,
+            itemtype.TyeName 
+        ORDER BY
+            item.itemname ASC ";
 
 
 
 
+    $meQuery = $conn->prepare($query);
+    $meQuery->execute();
+    while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+        $dataArray[] = [$row['itemname'], $row['cnt']];
+    }
 
 
-$meQuery = $conn->prepare($query);
-$meQuery->execute();
-while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
-    $dataArray[] = [$row['itemname'], $row['cnt']];
-}
-
-
-$row = 9;
-foreach ($dataArray as $item) {
-    $sheet2->setCellValue('A' . $row, $item[0]);
-    $sheet2->setCellValue('B' . $row, $item[1]);
-    $sheet2->getRowDimension($row)->setRowHeight(30); // ตั้งค่าความสูงของแถวข้อมูล
-    $row++;
-}
+    $row = 9; 
+    foreach ($dataArray as $item) {
+        $sheet2->setCellValue('A' . $row, $item[0]);
+        $sheet2->setCellValue('B' . $row, $item[1]);
+        $sheet2->getRowDimension($row)->setRowHeight(30); // ตั้งค่าความสูงของแถวข้อมูล
+        $row++;
+    }
 
 $sheet2->getStyle('A1')->getFont()->setSize(20); // หัวข้อใหญ่
 $sheet2->getStyle('A7')->getFont()->setSize(16)->setBold(true); // หัวข้อ "SUDs" ตัวหนา
@@ -395,7 +327,7 @@ $sheet2->mergeCells('A7:B7'); // หัวข้อ "SUDs"
 
 
 $sheet2->setCellValue('B1', 'พิมพ์โดย poseMA');
-$sheet2->setCellValue('B4', 'วันที่พิมพ์ ' . date('d/m/Y') . ' ' . date('H:i:s'));
+$sheet2->setCellValue('B4', 'วันที่พิมพ์ '.date('d/m/Y'). ' ' .date('H:i:s'));
 $sheet2->getStyle('B1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
 $sheet2->getStyle('B4')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
 
@@ -416,85 +348,52 @@ $select_date_history_l = $select_date_history_l[2] . '-' . $select_date_history_
 
 $dataArray = [];
 
-
-if ($db == 1) {
-    $query = "SELECT
-                    item.itemname,
-                    item.itemcode,
-                    (
-                        SELECT COUNT(deproomdetailsub.ID)
-                        FROM deproomdetailsub
-                        INNER JOIN itemstock ON itemstock.RowID = deproomdetailsub.ItemStockID
-                        WHERE DATE(deproomdetailsub.PayDate) BETWEEN '$select_date_history_s' AND '$select_date_history_l'
-                        AND itemstock.ItemCode = item.itemcode
-                    ) AS cnt,
-                    itemtype.TyeName
-                FROM
-                    deproom
-                INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
-                INNER JOIN item ON deproomdetail.ItemCode = item.itemcode
-                INNER JOIN itemtype ON item.itemtypeID = itemtype.ID
-                WHERE
-                    DATE(deproom.CreateDate) BETWEEN '$select_date_history_s' AND '$select_date_history_l'
-                    AND deproom.IsCancel = 0
-                    AND deproomdetail.IsCancel = 0
-                    AND itemtype.TyeName = 'Sterile'
-                GROUP BY
-                    item.itemname,
-                    item.itemcode,
-                    itemtype.TyeName
-                ORDER BY
-                    item.itemname ASC ";
-} else {
-    $query = "SELECT
-                item.itemname ,
-                item.itemcode ,
-                (
-                SELECT COUNT
-                    ( deproomdetailsub.ID ) 
-                FROM
-                    deproomdetailsub
-                    INNER JOIN itemstock ON itemstock.RowID = deproomdetailsub.ItemStockID 
-                WHERE
-                    CONVERT ( DATE, deproomdetailsub.PayDate ) BETWEEN '$select_date_history_s'  AND '$select_date_history_l' 
-                    AND itemstock.ItemCode = item.itemcode
-                ) AS cnt,
-                itemtype.TyeName 
+$query = "SELECT
+            item.itemname ,
+            item.itemcode ,
+            (
+            SELECT COUNT
+                ( deproomdetailsub.ID ) 
             FROM
-                deproom
-                INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
-                INNER JOIN item ON deproomdetail.ItemCode = item.itemcode
-                INNER JOIN itemtype ON item.itemtypeID = itemtype.ID 
+                deproomdetailsub
+                INNER JOIN itemstock ON itemstock.RowID = deproomdetailsub.ItemStockID 
             WHERE
-                CONVERT ( DATE, deproom.CreateDate ) BETWEEN '$select_date_history_s'  AND '$select_date_history_l' 
-                AND deproom.IsCancel = 0 
-                AND deproomdetail.IsCancel = 0 
-                AND itemtype.TyeName = 'Sterile' 
-            GROUP BY
-                item.itemname,
-                item.itemcode,
-                itemtype.TyeName 
-            ORDER BY
-                item.itemname ASC ";
-}
+                CONVERT ( DATE, deproomdetailsub.PayDate ) BETWEEN '$select_date_history_s'  AND '$select_date_history_l' 
+                AND itemstock.ItemCode = item.itemcode
+            ) AS cnt,
+            itemtype.TyeName 
+        FROM
+            deproom
+            INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
+            INNER JOIN item ON deproomdetail.ItemCode = item.itemcode
+            INNER JOIN itemtype ON item.itemtypeID = itemtype.ID 
+        WHERE
+            CONVERT ( DATE, deproom.CreateDate ) BETWEEN '$select_date_history_s'  AND '$select_date_history_l' 
+            AND deproom.IsCancel = 0 
+            AND deproomdetail.IsCancel = 0 
+            AND itemtype.TyeName = 'Sterile' 
+        GROUP BY
+            item.itemname,
+            item.itemcode,
+            itemtype.TyeName 
+        ORDER BY
+            item.itemname ASC ";
 
 
+    $meQuery = $conn->prepare($query);
+    $meQuery->execute();
+    while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+        $dataArray[] = [$row['itemname'], $row['cnt']];
+    }
 
 
-$meQuery = $conn->prepare($query);
-$meQuery->execute();
-while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
-    $dataArray[] = [$row['itemname'], $row['cnt']];
-}
-
-
-$row = 9;
-foreach ($dataArray as $item) {
-    $sheet2->setCellValue('A' . $row, $item[0]);
-    $sheet2->setCellValue('B' . $row, $item[1]);
-    $sheet2->getRowDimension($row)->setRowHeight(30); // ตั้งค่าความสูงของแถวข้อมูล
-    $row++;
-}
+    $row = 9; 
+    foreach ($dataArray as $item) {
+        $sheet2->setCellValue('A' . $row, $item[0]);
+        $sheet2->setCellValue('B' . $row, $item[1]);
+        $sheet2->getRowDimension($row)->setRowHeight(30); // ตั้งค่าความสูงของแถวข้อมูล
+        $row++;
+    }
 
 $sheet2->getStyle('A1')->getFont()->setSize(20); // หัวข้อใหญ่
 $sheet2->getStyle('A7')->getFont()->setSize(16)->setBold(true); // หัวข้อ "SUDs" ตัวหนา
