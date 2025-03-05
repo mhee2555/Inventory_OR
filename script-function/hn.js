@@ -217,7 +217,7 @@ function feeddata_hncode_detail(DocNo) {
             `<td class="text-center">
                 <button class="btn btn-outline-${typename} btn-sm" disabled>${value.TyeName}</button>
             </td>` +
-            `<td class="text-center">${user_count}</td>` +
+            // `<td class="text-center">${user_count}</td>` +
             `<td class="text-center" >${value.UsageCode}</td>` +
             `<td class="text-left">${value.itemname}</td>` +
             ` </tr>`;

@@ -380,7 +380,10 @@ function showLoading() {
 }
 $("#btn_scan_RFid").click(function (e) {
   showLoading();
-  oncheck_pay_rfid();
+
+  setTimeout(() => {
+    oncheck_pay_rfid();
+  }, 300);
 });
 
 function oncheck_pay_rfid() {
@@ -394,6 +397,18 @@ function oncheck_pay_rfid() {
       input_date_service: $("#input_date_service").val(),
     },
     success: function (result) {
+
+      var itemname = "";
+      var ObjData = JSON.parse(result);
+      $.each(ObjData, function (key, value) {
+
+          if(value.check_exp == 'exp'){
+            itemname += value.UsageCode+',';
+          }
+
+      });
+      itemname = itemname.substring(0, itemname.length - 1);
+
       show_detail_item_ByDocNo();
       $("body").loadingModal("destroy");
 
@@ -420,6 +435,18 @@ function oncheck_pay_rfid() {
           );
         }
       }, 300);
+
+
+      if(itemname != ""){
+        Swal.fire({
+          title:  settext("alert_fail"),
+          html: `อุปกรณ์หมดอายุไม่สามารถสแกนจ่ายได้ <br> ${itemname}`,
+          icon: "warning",
+        });
+      }
+
+
+      
     },
   });
 }

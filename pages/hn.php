@@ -113,7 +113,7 @@
                                 <tr>
                                     <th scope="col" class="text-center" style="width: 10%;" id="td_no2">ลำดับ</th>
                                     <th scope="col" class="text-center" style="width: 15%;" id="td_date2">ประเภท</th>
-                                    <th scope="col" class="text-center" style="width: 20%;" id="td_usage">จำนวนการใช้งาน</th>
+                                    <!-- <th scope="col" class="text-center" style="width: 20%;" id="td_usage">จำนวนการใช้งาน</th> -->
                                     <th scope="col" class="text-center" id="td_item">รหัสรายการ</th>
                                     <th scope="col" class="text-center" id="td_item">อุปกรณ์</th>
                                 </tr>
