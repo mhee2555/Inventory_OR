@@ -209,49 +209,16 @@ function oncheck_use(input_use) {
         show_detail_item_ByDocNo($("#input_hn_surgery").data("docno"));
       } else if (result == 3) {
         showDialogFailed("ครบรอบรายการ SUDs");
-
+      }else{
+        if(result != ""){
+          Swal.fire({
+            title:  'ล้มเหลว',
+            html: `อุปกรณ์หมดอายุไม่สามารถสแกนจ่ายได้ <br> ${result}`,
+            icon: "warning",
+          });
+        }
       } 
-      // else if (result == 4) {
-      //   Swal.fire({
-      //     title: input_use,
-      //     html: `SUDs นี้ Re-Sterile ครบตามกำหนดแล้ว`,
-      //     icon: "warning"
-      // });
-      // }
 
-      
-      // } else if (result == 2) {
-      //   show_detail_item_ByDocNo();
-      // } else {
-      //   var ObjData = JSON.parse(result);
-      //   if (!$.isEmptyObject(ObjData)) {
-      //     $.each(ObjData, function (key, value) {
-      //       $(".loop_item_pay").each(function (key_, value_) {
-      //         if ($(this).data("itemcode") == value.ItemCode) {
-      //           var _QtyRequest = $("#qty_request_" + value.ItemCode).val();
-      //           var _Qty = $(this).val();
-
-      //           if (_QtyRequest == _Qty) {
-      //             // $("#qty_request_" + value.ItemCode).val(parseInt(_Qty) + 1);
-      //           }
-      //           $(this).val(parseInt(_Qty) + 1);
-
-
-      //           var _QtyRequest_2 = $("#qty_request_" + value.ItemCode).val();
-      //           var _Qty_2 = $(this).val();
-
-
-      //           $("#balance_request_" + value.ItemCode).val(parseInt(_QtyRequest_2) - parseInt(_Qty_2));
-
-                
-
-
-
-      //         }
-      //       });
-      //     });
-      //   }
-      // }
       $("#input_use").val("");
     },
   });
@@ -546,7 +513,7 @@ function show_detail_item_ByDocNo(DocNo) {
                                   </div>
                       </td>
                       <td   class="text-center" ${styleT}>1</td>
-                      <td class="text-center" hidden>${iconD}</td>
+                      <td class="text-center" hidden></td>
                    </tr>`;
         });
       }

@@ -31,8 +31,8 @@ $drawing->setWorksheet($sheet);
 
 
 // --- ผสานเซลล์ ---
-$sheet->mergeCells('E1:J3'); // พิมพ์โดย poseMA
-$sheet->mergeCells('E4:J5'); // วันที่พิมพ์
+$sheet->mergeCells('E1:K3'); // พิมพ์โดย poseMA
+$sheet->mergeCells('E4:K5'); // วันที่พิมพ์
 // $sheet->mergeCells('B4:C4'); // เวลา
 
 
@@ -91,7 +91,7 @@ if($db == 1){
                     hncode.ID,
                     item.itemname,
                     itemstock.UsageCode,
-                    item.itemcode,
+                    item.itemcode2 AS itemcode,
                     DATE_FORMAT(itemstock.ExpireDate, '%d-%m-%Y') AS expDate,
                     DATE_FORMAT(itemstock.CreateDate, '%d-%m-%Y') AS CreateDate,
                     hncode.DocNo,

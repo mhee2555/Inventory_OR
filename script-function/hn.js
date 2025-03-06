@@ -257,11 +257,7 @@ function feeddata_hncode_detail(DocNo) {
           {
             width: "10%",
             targets: 3,
-          },
-          {
-            width: "20%",
-            targets: 4,
-          },
+          }
         ],
         info: false,
         scrollX: false,
