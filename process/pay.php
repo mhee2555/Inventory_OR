@@ -762,12 +762,15 @@ function oncheck_pay_rfid($conn, $db)
                             AND (itemstock.IsClaim IS NULL OR  itemstock.IsClaim = 0 ) ";
     }
 
+
+    // echo $query_1;
+    // exit;
     $count_itemstock = 0;
     $meQuery_1 = $conn->prepare($query_1);
     $meQuery_1->execute();
     while ($row_1 = $meQuery_1->fetch(PDO::FETCH_ASSOC)) {
 
-        $return[] = $row_1;
+        // $return[] = $row_1;
 
         $_ItemCode = $row_1['ItemCode'];
         $_Isdeproom =  $row_1['Isdeproom'];
@@ -844,7 +847,7 @@ function oncheck_pay_rfid($conn, $db)
                 $meQuery_2->execute();
                 while ($row_2 = $meQuery_2->fetch(PDO::FETCH_ASSOC)) {
 
-                    $return[] = $row_2;
+                    // $return[] = $row_2;
 
                     $_ID = $row_2['ID'];
                     $_PayDate = $row_2['PayDate'];
@@ -939,13 +942,13 @@ function oncheck_pay_rfid($conn, $db)
                     if ($db == 1) {
                         $queryInsert2 = "INSERT INTO hncode_detail (DocNo,UsageCode,ItemStockID,Qty,IsStatus,IsCancel,LastSterileDetailID)  VALUES             
                         (
-                        (SELECT hncode.DocNo FROM hncode  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.`procedure` = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$_PayDate' ), 
+                        (SELECT hncode.DocNo FROM hncode  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.`procedure` = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$_PayDate' LIMIT 1), 
                         '$input_pay',
                         '$_RowID',
                         1, 
                         1, 
                         0, 
-                         (SELECT LastSterileDetailID FROM itemstock  WHERE itemstock.RowID = $_RowID)
+                         (SELECT LastSterileDetailID FROM itemstock  WHERE itemstock.RowID = $_RowID LIMIT 1)
                         ) ";
                     } else {
                         $queryInsert2 = "INSERT INTO hncode_detail (DocNo,UsageCode,ItemStockID,Qty,IsStatus,IsCancel,LastSterileDetailID)  VALUES             
@@ -962,6 +965,9 @@ function oncheck_pay_rfid($conn, $db)
 
 
 
+                    $query_updateHN = "UPDATE hncode SET IsStatus = 1  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.`procedure` = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$_PayDate' ";
+                    $query_updateHN = $conn->prepare($query_updateHN);
+                    $query_updateHN->execute();
                     // echo $queryInsert2;
                     // exit;
                     $queryInsert2 = $conn->prepare($queryInsert2);
@@ -1051,7 +1057,7 @@ function oncheck_pay_rfid($conn, $db)
                     $meQuery_2->execute();
                     while ($row_2 = $meQuery_2->fetch(PDO::FETCH_ASSOC)) {
 
-                        $return[] = $row_2;
+                        // $return[] = $row_2;
 
                         $_ID = $row_2['ID'];
                         $_PayDate = $row_2['PayDate'];
@@ -1181,7 +1187,11 @@ function oncheck_pay_rfid($conn, $db)
                             ) ";
                         }
 
-
+                        $query_updateHN = "UPDATE hncode SET IsStatus = 1  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.`procedure` = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$_PayDate' ";
+                        $query_updateHN = $conn->prepare($query_updateHN);
+                        $query_updateHN->execute();
+                        
+                        
                         // echo $queryInsert2;
                         // exit;
                         $queryInsert2 = $conn->prepare($queryInsert2);
@@ -1192,10 +1202,10 @@ function oncheck_pay_rfid($conn, $db)
 
 
 
-                        $count_itemstock = 2;
-                        echo json_encode($count_itemstock);
-                        unset($conn);
-                        die;
+                        // $count_itemstock = 2;
+                        // echo json_encode($count_itemstock);
+                        // unset($conn);
+                        // die;
                     }
                 }
 
@@ -1207,12 +1217,17 @@ function oncheck_pay_rfid($conn, $db)
         }
     }
 
+
+    // echo json_encode($return);
+    // unset($conn);
+    // die;
+
     oncheck_pay_weighing($conn, $db);
 
     // if ($count_itemstock == 0) {
-    //     echo json_encode($return);
-    //     unset($conn);
-    //     die;
+        // echo json_encode($return);
+        // unset($conn);
+        // die;
     // } else {
     //     echo json_encode($return);
     //     unset($conn);
@@ -1264,7 +1279,7 @@ function oncheck_pay_weighing($conn, $db)
     $meQuery_1->execute();
     while ($row_1 = $meQuery_1->fetch(PDO::FETCH_ASSOC)) {
 
-        $return[] = $row_1;
+        // $return[] = $row_1;
 
         $_ItemCode = $row_1['ItemCode'];
         $_Isdeproom =  $row_1['IsDeproom'];
@@ -1339,7 +1354,7 @@ function oncheck_pay_weighing($conn, $db)
                 $meQuery_2->execute();
                 while ($row_2 = $meQuery_2->fetch(PDO::FETCH_ASSOC)) {
 
-                    $return[] = $row_2;
+                    // $return[] = $row_2;
                     $_ID = $row_2['ID'];
                     $_PayDate = $row_2['PayDate'];
                     $_departmentroomid = $row_2['departmentroomid'];
@@ -1425,7 +1440,7 @@ function oncheck_pay_weighing($conn, $db)
                     $meQueryUpdate->execute();
                     // ==============================
                     if ($db == 1) {
-                        $queryInsert2 = "INSERT INTO hncode_detail (DocNo,UsageCode,ItemStockID,Qty,IsStatus,IsCancel,LastSterileDetailID)  VALUES             
+                        $queryInsert2 = "INSERT INTO hncode_detail (DocNo,UsageCode,ItemStockID,Qty,IsStatus,IsCancel,LastSterileDetailID,ItemCode)  VALUES             
                         (
                         (SELECT hncode.DocNo FROM hncode  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.`procedure` = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$_PayDate' ), 
                         '0',
@@ -1433,10 +1448,11 @@ function oncheck_pay_weighing($conn, $db)
                         '$_Qty', 
                         1, 
                         0, 
-                         '-'
+                         '-',
+                         '$_ItemCode'
                         ) ";
                     } else {
-                        $queryInsert2 = "INSERT INTO hncode_detail (DocNo,UsageCode,ItemStockID,Qty,IsStatus,IsCancel,LastSterileDetailID)  VALUES             
+                        $queryInsert2 = "INSERT INTO hncode_detail (DocNo,UsageCode,ItemStockID,Qty,IsStatus,IsCancel,LastSterileDetailID,ItemCode)  VALUES             
                         (
                         (SELECT hncode.DocNo FROM hncode  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.[procedure] = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$_PayDate' ), 
                         '0',
@@ -1444,11 +1460,15 @@ function oncheck_pay_weighing($conn, $db)
                         '$_Qty', 
                         1, 
                         0, 
-                         '-'
+                         '-',
+                         '$_ItemCode'
                         ) ";
                     }
 
 
+                    $query_updateHN = "UPDATE hncode SET IsStatus = 1  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.`procedure` = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$_PayDate' ";
+                    $query_updateHN = $conn->prepare($query_updateHN);
+                    $query_updateHN->execute();
 
                     // echo $queryInsert2;
                     // exit;
@@ -1539,7 +1559,7 @@ function oncheck_pay_weighing($conn, $db)
                     $meQuery_2->execute();
                     while ($row_2 = $meQuery_2->fetch(PDO::FETCH_ASSOC)) {
 
-                        $return[] = $row_2;
+                        // $return[] = $row_2;
 
                         $_ID = $row_2['ID'];
                         $_PayDate = $row_2['PayDate'];
@@ -1639,29 +1659,34 @@ function oncheck_pay_weighing($conn, $db)
                         $meQueryUpdate->execute();
                          // ==============================
                             if ($db == 1) {
-                                $queryInsert2 = "INSERT INTO hncode_detail (DocNo,UsageCode,ItemStockID,Qty,IsStatus,IsCancel,LastSterileDetailID)  VALUES             
+                                $queryInsert2 = "INSERT INTO hncode_detail (DocNo,UsageCode,ItemStockID,Qty,IsStatus,IsCancel,LastSterileDetailID,ItemCode)  VALUES             
                                 (
-                                (SELECT hncode.DocNo FROM hncode  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.`procedure` = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$_PayDate' ), 
+                                (SELECT hncode.DocNo FROM hncode  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.`procedure` = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$_PayDate' LIMIT 1 ), 
                                 '0',
                                 '0',
                                 '$_Qty', 
                                 1, 
                                 0, 
-                                '-'
+                                '-',
+                                '$_ItemCode'
                                 ) ";
                             } else {
-                                $queryInsert2 = "INSERT INTO hncode_detail (DocNo,UsageCode,ItemStockID,Qty,IsStatus,IsCancel,LastSterileDetailID)  VALUES             
+                                $queryInsert2 = "INSERT INTO hncode_detail (DocNo,UsageCode,ItemStockID,Qty,IsStatus,IsCancel,LastSterileDetailID,ItemCode)  VALUES             
                                 (
-                                (SELECT hncode.DocNo FROM hncode  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.[procedure] = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$_PayDate' ), 
+                                (SELECT hncode.DocNo FROM hncode  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.[procedure] = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$_PayDate'  LIMIT 1), 
                                 '0',
                                 '0',
                                 '$_Qty', 
                                 1, 
                                 0, 
-                                '-'
+                                '-',
+                                '$_ItemCode'
                                 ) ";
                             }
 
+                            $query_updateHN = "UPDATE hncode SET IsStatus = 1  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.`procedure` = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$_PayDate' ";
+                            $query_updateHN = $conn->prepare($query_updateHN);
+                            $query_updateHN->execute();
                         // echo $queryInsert2;
                         // exit;
                         $queryInsert2 = $conn->prepare($queryInsert2);
@@ -1672,10 +1697,10 @@ function oncheck_pay_weighing($conn, $db)
 
 
 
-                        $count_itemstock = 2;
-                        echo json_encode($count_itemstock);
-                        unset($conn);
-                        die;
+                        // $count_itemstock = 2;
+                        // echo json_encode($count_itemstock);
+                        // unset($conn);
+                        // die;
                     }
                 }
 
@@ -1690,11 +1715,11 @@ function oncheck_pay_weighing($conn, $db)
 
 
     if ($count_itemstock == 0) {
-        echo json_encode($return);
+        echo json_encode($count_itemstock);
         unset($conn);
         die;
     } else {
-        echo json_encode($return);
+        echo json_encode($count_itemstock);
         unset($conn);
         die;
     }

@@ -379,7 +379,7 @@ function showLoading() {
   });
 }
 $("#btn_scan_RFid").click(function (e) {
-  // showLoading();
+  showLoading();
 
   setTimeout(() => {
     oncheck_pay_rfid();
@@ -399,15 +399,15 @@ function oncheck_pay_rfid() {
     success: function (result) {
 
       var itemname = "";
-      var ObjData = JSON.parse(result);
-      $.each(ObjData, function (key, value) {
+      // var ObjData = JSON.parse(result);
+      // $.each(ObjData, function (key, value) {
 
-          if(value.check_exp == 'exp'){
-            itemname += value.UsageCode+',';
-          }
+      //     if(value.check_exp == 'exp'){
+      //       itemname += value.UsageCode+',';
+      //     }
 
-      });
-      itemname = itemname.substring(0, itemname.length - 1);
+      // });
+      // itemname = itemname.substring(0, itemname.length - 1);
 
       show_detail_item_ByDocNo();
       $("body").loadingModal("destroy");

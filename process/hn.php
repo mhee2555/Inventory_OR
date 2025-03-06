@@ -7,12 +7,11 @@ require '../process/Createdeproom.php';
 if (!empty($_POST['FUNC_NAME'])) {
     if ($_POST['FUNC_NAME'] == 'show_detail_hn') {
         show_detail_hn($conn, $db);
-    }else if ($_POST['FUNC_NAME'] == 'feeddata_hncode_detail') {
+    } else if ($_POST['FUNC_NAME'] == 'feeddata_hncode_detail') {
         feeddata_hncode_detail($conn, $db);
-    }else  if ($_POST['FUNC_NAME'] == 'feeddata_hncode') {
+    } else  if ($_POST['FUNC_NAME'] == 'feeddata_hncode') {
         feeddata_hncode($conn, $db);
     }
-    
 }
 
 function feeddata_hncode($conn, $db)
@@ -20,18 +19,18 @@ function feeddata_hncode($conn, $db)
     $return = array();
     $deproom = $_SESSION['deproom'];
 
- 
+
     $input_type_search = $_POST['input_type_search'];
     $input_search = $_POST['input_search'];
 
     $where = "";
     if ($input_type_search == 1) {
         $where = "AND hncode.HnCode LIKE '%$input_search%' ";
-    }else{
+    } else {
         $where = "AND itemstock.UsageCode LIKE '%$input_search%' ";
-    } 
+    }
 
-    if($db == 1){
+    if ($db == 1) {
 
         $query = "SELECT
                         hncode.ID,
@@ -69,8 +68,7 @@ function feeddata_hncode($conn, $db)
                         `procedure`.Procedure_EN
                     ORDER BY
                         hncode.ID ASC ";
-
-    }else{
+    } else {
         $query = "SELECT
                         hncode.ID,
                         hncode.DocNo,
@@ -121,7 +119,10 @@ function feeddata_hncode_detail($conn, $db)
     $return = array();
     $deproom = $_SESSION['deproom'];
     $DocNo = $_POST['DocNo'];
- 
+    $HnCode = $_POST['HnCode'];
+
+
+
     // $input_type_search = $_POST['input_type_search'];
     // $input_search = $_POST['input_search'];
 
@@ -131,7 +132,28 @@ function feeddata_hncode_detail($conn, $db)
     // }else{
     //     $where = "AND itemstock.UsageCode LIKE '%$input_search%' ";
     // } 
-    if($db == 1){
+
+
+            $D = "DELETE 
+                    FROM
+                        hncode_detail 
+                    WHERE
+                        hncode_detail.DocNo = '$DocNo' 
+                        AND hncode_detail.ItemStockID NOT IN (
+                        SELECT
+                            itemstock.RowID 
+                        FROM
+                            itemstock 
+                        WHERE
+                            itemstock.Isdeproom = '1' 
+                        AND itemstock.HNCode = '$HnCode' 
+                        )
+                        AND hncode_detail.ItemCode IS NULL  ";
+
+            $meQuery_D = $conn->prepare($D);
+            $meQuery_D->execute();
+
+    if ($db == 1) {
         $query = " SELECT
                         hncode.ID,
                         item.itemname,
@@ -165,7 +187,7 @@ function feeddata_hncode_detail($conn, $db)
                         AND hncode.DocNo = '$DocNo'
                     ORDER BY
                         hncode.ID ASC;  ";
-    }else{
+    } else {
         $query = "SELECT
                     hncode.ID,
                     item.itemname,
@@ -220,8 +242,8 @@ function show_detail_hn($conn, $db)
     $select_EDate = $select_EDate[2] . '-' . $select_EDate[1] . '-' . $select_EDate[0];
 
 
-    
-    if($db == 1){
+
+    if ($db == 1) {
         $query = "SELECT
                     hncode.ID,
                     DATE_FORMAT(hncode.DocDate, '%d-%m-%Y') AS DocDate,
@@ -244,7 +266,7 @@ function show_detail_hn($conn, $db)
                     AND DATE(hncode.DocDate) BETWEEN '$select_SDate' AND '$select_EDate'
                 ORDER BY
                     hncode.ID ASC ";
-    }else{
+    } else {
         $query = " SELECT
                         hncode.ID,
                         FORMAT ( hncode.DocDate, 'dd-MM-yyyy' ) AS DocDate ,

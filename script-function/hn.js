@@ -61,7 +61,7 @@ function show_detail_hn() {
       if (!$.isEmptyObject(ObjData)) {
         $.each(ObjData, function (kay, value) {
           _tr +=
-            `<tr class="color" onclick='setActive_feeddata_hncode_detail(${value.ID},"${value.DocNo}")' id="tr_${value.ID}"> ` +
+            `<tr class="color" onclick='setActive_feeddata_hncode_detail(${value.ID},"${value.DocNo}","${value.HnCode}")' id="tr_${value.ID}"> ` +
             `<td class="text-center">${kay + 1}</td>` +
             `<td class="text-center" >${value.DocDate}</td>` +
             `<td class="text-left" >${value.HnCode}</td>` +
@@ -139,7 +139,7 @@ function feeddata_hncode(input_search) {
       if (!$.isEmptyObject(ObjData)) {
         $.each(ObjData, function (kay, value) {
           _tr +=
-            `<tr  class="color" onclick='setActive_feeddata_hncode_detail(${value.ID},"${value.DocNo}")' id="tr_${value.ID}"> ` +
+            `<tr  class="color" onclick='setActive_feeddata_hncode_detail(${value.ID},"${value.DocNo}","${value.HnCode}")' id="tr_${value.ID}"> ` +
             `<td class="text-center">${kay + 1}</td>` +
             `<td class="text-center" >${value.DocDate}</td>` +
             `<td class="text-left" >${value.HnCode}</td>` +
@@ -154,7 +154,7 @@ function feeddata_hncode(input_search) {
   });
 }
 
-function setActive_feeddata_hncode_detail(ID, DocNo) {
+function setActive_feeddata_hncode_detail(ID, DocNo,HnCode) {
   $(".color").css("background-color", "");
   $("#tr_" + ID).css("background-color", "#FEE4E2");
 
@@ -168,7 +168,7 @@ function setActive_feeddata_hncode_detail(ID, DocNo) {
   });
 
   // alert(DocNo);
-  feeddata_hncode_detail(DocNo);
+  feeddata_hncode_detail(DocNo,HnCode);
 }
 
 $("#btn_excel_all").click(function () {
@@ -177,13 +177,14 @@ $("#btn_excel_all").click(function () {
 });
 
 
-function feeddata_hncode_detail(DocNo) {
+function feeddata_hncode_detail(DocNo,HnCode) {
   $.ajax({
     url: "process/hn.php",
     type: "POST",
     data: {
       FUNC_NAME: "feeddata_hncode_detail",
       DocNo: DocNo,
+      HnCode:HnCode,
       input_type_search: $("#input_type_search").val(),
     },
     success: function (result) {
