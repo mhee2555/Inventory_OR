@@ -379,7 +379,7 @@ function showLoading() {
   });
 }
 $("#btn_scan_RFid").click(function (e) {
-  showLoading();
+  // showLoading();
 
   setTimeout(() => {
     oncheck_pay_rfid();
