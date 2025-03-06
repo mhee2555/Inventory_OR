@@ -2192,9 +2192,9 @@ function show_detail_item_ByDocNo($conn, $db)
                 item.itemcode ,
                 deproomdetail.ID ,
                 SUM(deproomdetail.Qty) AS cnt ,
-                (
-									SELECT COUNT(deproomdetailsub.ID) FROM deproomdetailsub WHERE deproomdetailsub.Deproomdetail_RowID = deproomdetail.ID
-				) AS cnt_pay,
+                IFNULL((
+				SELECT SUM(deproomdetailsub.qty_weighing) FROM deproomdetailsub WHERE deproomdetailsub.Deproomdetail_RowID = deproomdetail.ID
+				),0) AS cnt_pay,
                 itemtype.TyeName
             FROM
                 deproom
