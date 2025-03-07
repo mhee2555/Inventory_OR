@@ -205,6 +205,10 @@ function feeddata_hncode_detail(DocNo,HnCode) {
             }
             if(value.UsageCode == null){
               value.UsageCode = value.itemcode2;
+
+              var label = `<label>${value.UsageCode}</label>`;
+            }else{
+              var label = `<label style='color:blue;cursor:pointer;' onclick='open_LotNo(${value.serielNo},"${value.lotNo}","${value.ExpireDate}")' >${value.UsageCode}</label>`;
             }
             
 
@@ -215,7 +219,7 @@ function feeddata_hncode_detail(DocNo,HnCode) {
                 <button class="btn btn-sm" disabled>${value.TyeName}</button>
             </td>` +
             // `<td class="text-center">${user_count}</td>` +
-            `<td class="text-center" >${value.UsageCode}</td>` +
+            `<td class="text-center" >${label}</td>` +
             `<td class="text-left">${value.itemname}</td>` +
             `<td class="text-center">${value.Qty}</td>` +
             ` </tr>`;
@@ -274,6 +278,19 @@ function feeddata_hncode_detail(DocNo,HnCode) {
       $("th").removeClass("sorting_asc");
     },
   });
+}
+
+function open_LotNo(serielNo,lotNo,ExpireDate){
+  $("#modal_lotno").modal('toggle');
+  if(lotNo == 'null'){
+    lotNo = "";
+  }
+  if(serielNo == 'null'){
+    serielNo = "";
+  }
+  $("#lot_no").val(lotNo);
+  $("#seriel_no").val(serielNo);
+  $("#exp_lot").val(ExpireDate);
 }
 
 function session() {

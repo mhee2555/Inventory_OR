@@ -247,11 +247,10 @@ $html = '<table cellspacing="0" cellpadding="2" border="1" >
 <th width="11 %" align="center">Usage Code</th>
 <th width="11 %"  align="center">QR Code</th>
 <th width="6 %" align="center">Type</th>
-<th width="8 %" align="center">Usage Count</th>
-<th width="7 %"  align="center">Machine</th>
-<th width="7 %"  align="center">Load No</th>
-<th width="6 %"  align="center">serial No.</th>
-<th width="6 %"  align="center">Lot No.</th>
+<th width="8.5 %"  align="center">Lot No</th>
+<th width="8.5  %"  align="center">Exp No</th>
+<th width="8.5  %"  align="center">serial No</th>
+<th width="8.5  %"  align="center">จำนวน</th>
 <th width="9 %"  align="center">MFG</th>
 <th width="9 %"  align="center">EXP</th>
 <th width="15 %"  align="center">Item Name</th>
@@ -261,34 +260,39 @@ $html = '<table cellspacing="0" cellpadding="2" border="1" >
 $count = 1;
 
 if($db == 1){
-    $Sql_Detail = "SELECT 
+    $Sql_Detail = "SELECT
                         hncode.ID,
                         item.itemname,
+                        item.LimitUse,
+                        itemtype.TyeName,
                         itemstock.UsageCode,
                         item.itemcode,
+                        DATE_FORMAT(itemstock.ExpireDate, '%d-%m-%Y') AS ExpireDate,
                         DATE_FORMAT(itemstock.expDate, '%d-%m-%Y') AS expDate,
+                        DATE_FORMAT(hncode.DocDate, '%d-%m-%Y') AS DocDate,
                         DATE_FORMAT(itemstock.CreateDate, '%d-%m-%Y') AS CreateDate,
                         hncode.HnCode,
                         hncode_detail.LastSterileDetailID,
                         departmentroom.departmentroomname,
-                        itemtype.TyeName,
-                        item.LimitUse,
-                        sudslog.UsedCount,
-                        itemstock.lotNo,
-                        itemstock.serielNo
-                    FROM 
+                        hncode_detail.Qty,
+                        item2.itemname AS itemname2,
+	                    item2.itemcode AS itemcode2,
+                        itemstock.serielNo,
+                        itemstock.lotNo
+                    FROM
                         hncode
-                        INNER JOIN departmentroom ON departmentroom.id = hncode.departmentroomid
-                        INNER JOIN hncode_detail ON hncode.DocNo = hncode_detail.DocNo
-                        INNER JOIN itemstock ON hncode_detail.ItemStockID = itemstock.RowID
-                        INNER JOIN item ON itemstock.ItemCode = item.itemcode 
-                        INNER JOIN itemtype ON item.itemtypeID = itemtype.ID
-                        LEFT JOIN sudslog ON sudslog.UniCode = itemstock.UsageCode 
-                    WHERE 
+                    LEFT JOIN departmentroom ON departmentroom.id = hncode.departmentroomid
+                    LEFT JOIN hncode_detail ON hncode.DocNo = hncode_detail.DocNo
+                    LEFT JOIN itemstock ON hncode_detail.ItemStockID = itemstock.RowID
+                    LEFT JOIN item ON itemstock.ItemCode = item.itemcode
+                    LEFT JOIN itemtype ON itemtype.ID = item.itemtypeID
+                    LEFT JOIN item AS item2 ON item2.ItemCode = hncode_detail.ItemCode
+                    WHERE
                         hncode.IsStatus = 1
-                        AND hncode.IsCancel = 0  
+                        AND hncode.IsCancel = 0
+                        AND hncode_detail.IsStatus != 99
                         AND hncode.DocNo = '$DocNo'
-                    ORDER BY 
+                    ORDER BY
                         hncode.ID ASC ";
 }else{
     $Sql_Detail = "SELECT
@@ -306,20 +310,20 @@ if($db == 1){
     sudslog.UsedCount,
     itemstock.lotNo,
     itemstock.serielNo
-FROM
-    hncode
-    INNER JOIN departmentroom ON departmentroom.id = hncode.departmentroomid
-    INNER JOIN hncode_detail ON hncode.DocNo = hncode_detail.DocNo
-    INNER JOIN itemstock ON hncode_detail.ItemStockID = itemstock.RowID
-    INNER JOIN item ON itemstock.ItemCode = item.itemcode 
-    INNER JOIN itemtype ON item.itemtypeID = itemtype.ID
-    LEFT JOIN sudslog ON sudslog.UniCode = itemstock.UsageCode 
-WHERE
-    hncode.IsStatus = 1
-    AND hncode.IsCancel = 0  
-    AND hncode.DocNo = '$DocNo'
-ORDER BY
-    hncode.ID ASC  ";
+    FROM
+        hncode
+        INNER JOIN departmentroom ON departmentroom.id = hncode.departmentroomid
+        INNER JOIN hncode_detail ON hncode.DocNo = hncode_detail.DocNo
+        INNER JOIN itemstock ON hncode_detail.ItemStockID = itemstock.RowID
+        INNER JOIN item ON itemstock.ItemCode = item.itemcode 
+        INNER JOIN itemtype ON item.itemtypeID = itemtype.ID
+        LEFT JOIN sudslog ON sudslog.UniCode = itemstock.UsageCode 
+    WHERE
+        hncode.IsStatus = 1
+        AND hncode.IsCancel = 0  
+        AND hncode.DocNo = '$DocNo'
+    ORDER BY
+        hncode.ID ASC  ";
 }
 
 
@@ -329,15 +333,20 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
 
     $pdf->SetFont('db_helvethaica_x', 'B', 18);
 
-    $user_count = "";
-    if ($Result_Detail['TyeName'] == 'SUDs') {
-        $user_count = $Result_Detail['UsedCount'] . '/' . $Result_Detail['LimitUse'];
-    }
+
 
 
     // $file = "images/LOGO_bkx.png";
-    $usageCode = $Result_Detail['UsageCode'];
-    $file = 'images/temp_qrcode_' . $usageCode . '.png';  // สร้างชื่อไฟล์ QR Code แบบไม่ซ้ำกัน
+    if($Result_Detail['UsageCode'] == null){
+        $usageCode = $Result_Detail['itemcode2'];
+        $itemname = $Result_Detail['itemname2'];
+        $file = 'images/temp_qrcode_' . $usageCode . '.png';  // สร้างชื่อไฟล์ QR Code แบบไม่ซ้ำกัน
+    }else{
+        $usageCode = $Result_Detail['UsageCode'];
+        $itemname = $Result_Detail['itemname'];
+        $file = 'images/temp_qrcode_' . $usageCode . '.png';  // สร้างชื่อไฟล์ QR Code แบบไม่ซ้ำกัน
+    }
+
 
 
     //other parameters
@@ -348,27 +357,20 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
     // Generates QR Code and Save as PNG
     QRcode::png($usageCode, $file, $ecc, $pixel_size, $frame_size);
 
-    $serielNo = "";
-    $lotNo = "";
-    if ($Result_Detail['TyeName'] == 'OR Implant') {
-        $serielNo = $Result_Detail['serielNo'];
-        $lotNo = $Result_Detail['lotNo'];
-    }
+  
 
     $html .= '<tr nobr="true" style="font-size:15px;">';
     $html .=   '<td width="5%" align="center">' . htmlspecialchars($count) . '</td>';
-    $html .=   '<td width="11%" align="center">' . htmlspecialchars($Result_Detail['UsageCode']) . '</td>';
-    // $html .=   '<td width="15%" align="center"> <img src="https://api.qrserver.com/v1/create-qr-code/?size=50x50&data='.$Result_Detail['UsageCode'].'  /> </td>';
+    $html .=   '<td width="11%" align="center">' . htmlspecialchars($usageCode) . '</td>';
     $html .=   '<td width="11%" align="center"> <img src="' . $file . '"  />  </td>';
     $html .=   '<td width="6%" align="center">' . htmlspecialchars($Result_Detail['TyeName']) . '</td>';
-    $html .=   '<td width="8%" align="center">' . htmlspecialchars($user_count) . '</td>';
-    $html .=   '<td width="7%" align="center"></td>';
-    $html .=   '<td width="7%" align="center">' . htmlspecialchars($Result_Detail['lotNo']) . '</td>';
-    $html .=   '<td width="6%" align="center">' . htmlspecialchars($serielNo) . '</td>';
-    $html .=   '<td width="6%" align="center">' . htmlspecialchars($lotNo) . '</td>';
+    $html .=   '<td width="8.5%" align="center">' . htmlspecialchars($Result_Detail['lotNo']) . '</td>';
+    $html .=   '<td width="8.5%" align="center">' . htmlspecialchars($Result_Detail['ExpireDate']) . '</td>';
+    $html .=   '<td width="8.5%" align="center">' . htmlspecialchars($Result_Detail['serielNo']) . '</td>';
+    $html .=   '<td width="8.5%" align="center">' . htmlspecialchars($Result_Detail['Qty']) . '</td>';
     $html .=   '<td width="9%" align="center">' . htmlspecialchars($Result_Detail['CreateDate']) . '</td>';
     $html .=   '<td width="9%" align="center">' . htmlspecialchars($Result_Detail['expDate']) . '</td>';
-    $html .=   '<td width="15%" align="center">' . htmlspecialchars($Result_Detail['itemname']) . '</td>';
+    $html .=   '<td width="15%" align="center">' . htmlspecialchars($itemname) . '</td>';
     $html .=  '</tr>';
 
     $count++;

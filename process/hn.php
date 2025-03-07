@@ -184,7 +184,10 @@ function feeddata_hncode_detail($conn, $db)
                         departmentroom.departmentroomname,
                         hncode_detail.Qty,
                         item2.itemname AS itemname2,
-	                    item2.itemcode AS itemcode2
+	                    item2.itemcode AS itemcode2,
+                        itemstock.serielNo,
+                        itemstock.lotNo,
+                        itemstock.ExpireDate
                     FROM
                         hncode
                     LEFT JOIN departmentroom ON departmentroom.id = hncode.departmentroomid

@@ -103,7 +103,7 @@
                 <button class="btn" id="btn_Tracking" disabled style="color: #fff;background: #1570EF;font-size:20px;">Medical Instrument Tracking</button>
             </div>
             <div class="col-md-6 text-right">
-                <button class="btn btn-success" id="btn_excel_all"  style="color: #fff;font-size:20px;">Excel All</button>
+                <button class="btn btn-success" id="btn_excel_all" style="color: #fff;font-size:20px;">Excel All</button>
             </div>
             <div class="col-md-12 col-lg-12 mt-2">
                 <div class="row">
@@ -217,6 +217,37 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">ยกเลิก</button>
                 <button type="button" id="btn-save" class="btn btn-primary">บันทึก</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal_lotno" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <label for="" id="lang_text_date1" style="font-weight: 600;color:black;">Lot No</label>
+                         <input type="text" style="font-size:20px;" class="form-control" id="lot_no"  autocomplete="off" disabled>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="" id="lang_text_date1" style="font-weight: 600;color:black;">seriel No</label>
+                         <input type="text" style="font-size:20px;" class="form-control" id="seriel_no"  autocomplete="off" disabled>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="" id="lang_text_date1" style="font-weight: 600;color:black;">Exp Lot</label>
+                         <input type="text" style="font-size:20px;" class="form-control" id="exp_lot"  autocomplete="off" disabled>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
