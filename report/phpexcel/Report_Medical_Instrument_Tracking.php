@@ -14,7 +14,7 @@ use PhpOffice\PhpSpreadsheet\Style\Alignment;
 $spreadsheet = new Spreadsheet();
 
 $sheet = $spreadsheet->getActiveSheet();
-$sheet->setTitle("SUDs");
+$sheet->setTitle("HNCODE");
 // --- ใส่โลโก้ ---
 
 
@@ -87,49 +87,86 @@ $select_date_history_l = $select_date_history_l[2] . '-' . $select_date_history_
 $dataArray = [];
 
 if($db == 1){
+
     $query = "SELECT
                     hncode.ID,
                     item.itemname,
-                    itemstock.UsageCode,
-                    item.itemcode2 AS itemcode,
-                    DATE_FORMAT(itemstock.ExpireDate, '%d-%m-%Y') AS expDate,
-                    DATE_FORMAT(itemstock.CreateDate, '%d-%m-%Y') AS CreateDate,
-                    hncode.DocNo,
-                    hncode.HnCode,
-                    hncode_detail.Qty,
-                    departmentroom.departmentroomname,
-                    itemtype.TyeName,
                     item.LimitUse,
-                    sudslog.UsedCount,
-                    itemstock.lotNo,
-                    itemstock.serielNo,
-                    `procedure`.Procedure_EN AS Procedure_TH,
+                    itemtype.TyeName,
+                    itemstock.UsageCode,
+                    item.itemcode,
+                    hncode.DocNo,
+                    DATE_FORMAT( itemstock.ExpireDate, '%d-%m-%Y' ) AS ExpireDate,
+                    DATE_FORMAT( itemstock.expDate, '%d-%m-%Y' ) AS expDate,
+                    DATE_FORMAT( hncode.DocDate, '%d-%m-%Y' ) AS DocDate,
+                    DATE_FORMAT( itemstock.CreateDate, '%d-%m-%Y' ) AS CreateDate,
                     DATE_FORMAT(hncode.ModifyDate, '%d/%m/%Y') AS date1,
-                    doctor.Doctor_Name
+                    hncode.HnCode,
+                    hncode_detail.LastSterileDetailID,
+                    departmentroom.departmentroomname,
+                    hncode_detail.Qty,
+                    item2.itemname AS itemname2,
+                    item2.itemcode AS itemcode2,
+                    itemstock.serielNo,
+                    itemstock.lotNo 
                 FROM
                     hncode
-                INNER JOIN
-                    departmentroom ON departmentroom.id = hncode.departmentroomid
-                INNER JOIN
-                    hncode_detail ON hncode.DocNo = hncode_detail.DocNo
-                INNER JOIN
-                    itemstock ON hncode_detail.ItemStockID = itemstock.RowID
-                INNER JOIN
-                    item ON itemstock.ItemCode = item.itemcode
-                INNER JOIN
-                    itemtype ON item.itemtypeID = itemtype.ID
-                LEFT JOIN
-                    sudslog ON sudslog.UniCode = itemstock.UsageCode
-                LEFT JOIN
-                    `procedure` ON hncode.`procedure` = `procedure`.ID
-                LEFT JOIN
-                    doctor ON doctor.ID = hncode.doctor
+                    LEFT JOIN departmentroom ON departmentroom.id = hncode.departmentroomid
+                    LEFT JOIN hncode_detail ON hncode.DocNo = hncode_detail.DocNo
+                    LEFT JOIN itemstock ON hncode_detail.ItemStockID = itemstock.RowID
+                    LEFT JOIN item ON itemstock.ItemCode = item.itemcode
+                    LEFT JOIN itemtype ON itemtype.ID = item.itemtypeID
+                    LEFT JOIN item AS item2 ON item2.ItemCode = hncode_detail.ItemCode 
                 WHERE
                     DATE(hncode.DocDate) BETWEEN '$select_date_history_s' AND '$select_date_history_l'
-                    AND hncode.IsStatus = 1
-                    AND hncode.IsCancel = 0
+                    AND hncode.IsStatus = 1 
+                    AND hncode.IsCancel = 0 
+                    AND hncode_detail.IsStatus != 99 
                 ORDER BY
                     hncode.ID ASC ";
+    // $query = "SELECT
+    //                 hncode.ID,
+    //                 item.itemname,
+    //                 itemstock.UsageCode,
+    //                 item.itemcode2 AS itemcode,
+    //                 DATE_FORMAT(itemstock.ExpireDate, '%d-%m-%Y') AS expDate,
+    //                 DATE_FORMAT(itemstock.CreateDate, '%d-%m-%Y') AS CreateDate,
+    //                 hncode.DocNo,
+    //                 hncode.HnCode,
+    //                 hncode_detail.Qty,
+    //                 departmentroom.departmentroomname,
+    //                 itemtype.TyeName,
+    //                 item.LimitUse,
+    //                 sudslog.UsedCount,
+    //                 itemstock.lotNo,
+    //                 itemstock.serielNo,
+    //                 `procedure`.Procedure_EN AS Procedure_TH,
+    //                 DATE_FORMAT(hncode.ModifyDate, '%d/%m/%Y') AS date1,
+    //                 doctor.Doctor_Name
+    //             FROM
+    //                 hncode
+    //             INNER JOIN
+    //                 departmentroom ON departmentroom.id = hncode.departmentroomid
+    //             INNER JOIN
+    //                 hncode_detail ON hncode.DocNo = hncode_detail.DocNo
+    //             INNER JOIN
+    //                 itemstock ON hncode_detail.ItemStockID = itemstock.RowID
+    //             INNER JOIN
+    //                 item ON itemstock.ItemCode = item.itemcode
+    //             INNER JOIN
+    //                 itemtype ON item.itemtypeID = itemtype.ID
+    //             LEFT JOIN
+    //                 sudslog ON sudslog.UniCode = itemstock.UsageCode
+    //             LEFT JOIN
+    //                 `procedure` ON hncode.`procedure` = `procedure`.ID
+    //             LEFT JOIN
+    //                 doctor ON doctor.ID = hncode.doctor
+    //             WHERE
+    //                 DATE(hncode.DocDate) BETWEEN '$select_date_history_s' AND '$select_date_history_l'
+    //                 AND hncode.IsStatus = 1
+    //                 AND hncode.IsCancel = 0
+    //             ORDER BY
+    //                 hncode.ID ASC ";
 }else{
     $query = " SELECT
                     hncode.ID,
@@ -175,9 +212,12 @@ if($db == 1){
     $meQuery->execute();
     while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
 
+        if($row['UsageCode'] == null){
+            $row['UsageCode'] = $row['itemcode2'];
+            $row['itemname'] = $row['itemname2'];
+        }
 
-
-        $dataArray[] = [$row['itemcode'], $row['itemname'], $row['lotNo'], $row['serielNo'], $row['expDate'], $row['Qty'], $row['DocNo'], $row['date1'], $row['HnCode'], $row['departmentroomname']];
+        $dataArray[] = [$row['UsageCode'], $row['itemname'], $row['lotNo'], $row['serielNo'], $row['ExpireDate'], $row['Qty'], $row['DocNo'], $row['date1'], $row['HnCode'], $row['departmentroomname']];
     }
     
     
@@ -229,8 +269,10 @@ $styleArray_Center = [
 
 $sheet->getStyle('A6:K6')->applyFromArray($styleArray);
 $sheet->getStyle('A6:K' . ($row - 1))->applyFromArray($styleArray);
-$sheet->getStyle('A6:K' . ($row - 1))->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+// $sheet->getStyle('A6:K' . ($row - 1))->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 $sheet->getStyle('C7:C' . ($row - 1))->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
+$sheet->getStyle('A7:A' . ($row - 1))->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
+
 // $sheet->getStyle('A7:A' . ($row - 1))->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
 // $sheet->getStyle('B7:B' . ($row - 1))->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
 

@@ -187,7 +187,7 @@ function feeddata_hncode_detail($conn, $db)
 	                    item2.itemcode AS itemcode2,
                         itemstock.serielNo,
                         itemstock.lotNo,
-                        itemstock.ExpireDate
+                        DATE_FORMAT( itemstock.ExpireDate, '%d-%m-%Y' ) AS ExpireDate
                     FROM
                         hncode
                     LEFT JOIN departmentroom ON departmentroom.id = hncode.departmentroomid
