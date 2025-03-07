@@ -153,6 +153,23 @@ function feeddata_hncode_detail($conn, $db)
             $meQuery_D = $conn->prepare($D);
             $meQuery_D->execute();
 
+            $D2 = "DELETE 
+            FROM
+                itemstock_transaction_detail 
+            WHERE
+                itemstock_transaction_detail.ItemStockID NOT IN (
+                SELECT
+                    itemstock.RowID 
+                FROM
+                    itemstock 
+                WHERE
+                    itemstock.Isdeproom = '1' 
+                AND itemstock.HNCode = '$HnCode' 
+                )  ";
+
+    $meQuery_D2 = $conn->prepare($D2);
+    $meQuery_D2->execute();
+
     if ($db == 1) {
         $query = " SELECT
                         hncode.ID,
@@ -165,21 +182,17 @@ function feeddata_hncode_detail($conn, $db)
                         hncode.HnCode,
                         hncode_detail.LastSterileDetailID,
                         departmentroom.departmentroomname,
-                        sudslog.UsedCount
+                        hncode_detail.Qty,
+                        item2.itemname AS itemname2,
+	                    item2.itemcode AS itemcode2
                     FROM
                         hncode
-                    INNER JOIN
-                        departmentroom ON departmentroom.id = hncode.departmentroomid
-                    INNER JOIN
-                        hncode_detail ON hncode.DocNo = hncode_detail.DocNo
-                    INNER JOIN
-                        itemstock ON hncode_detail.ItemStockID = itemstock.RowID
-                    INNER JOIN
-                        item ON itemstock.ItemCode = item.itemcode
-                    INNER JOIN
-                        itemtype ON itemtype.ID = item.itemtypeID
-                    LEFT JOIN
-                        sudslog ON sudslog.UniCode = itemstock.UsageCode
+                    LEFT JOIN departmentroom ON departmentroom.id = hncode.departmentroomid
+                    LEFT JOIN hncode_detail ON hncode.DocNo = hncode_detail.DocNo
+                    LEFT JOIN itemstock ON hncode_detail.ItemStockID = itemstock.RowID
+                    LEFT JOIN item ON itemstock.ItemCode = item.itemcode
+                    LEFT JOIN itemtype ON itemtype.ID = item.itemtypeID
+                    LEFT JOIN item AS item2 ON item2.ItemCode = hncode_detail.ItemCode
                     WHERE
                         hncode.IsStatus = 1
                         AND hncode.IsCancel = 0

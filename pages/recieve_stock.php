@@ -1,4 +1,4 @@
-<div>
+<div hidden>
 
 
 
@@ -44,6 +44,8 @@
 
 <hr>
 
+
+<div hidden>
 
 <div id="receive">
     <div class="row">
@@ -289,4 +291,7 @@
             </div>
         </div>
     </div>
+</div>
+
+
 </div>

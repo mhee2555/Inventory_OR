@@ -392,6 +392,11 @@ if (!isset($_SESSION['UserName'])) {
         })
 
         $('#a_recieve_stock').on("click", function(e) {
+
+
+            window.open("http://10.11.9.3:8003/Login/Index?user=stock&pass=111", "_blank");
+
+
             e.preventDefault();
             var link = this.href;
             $.get(link, function(res) {

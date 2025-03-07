@@ -43,7 +43,7 @@
 
 
 
-                    <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_recieve_stock" hidden>
+                    <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_recieve_stock" >
                         <a class="collapse-item" href="pages/recieve_stock.php" style="color: black;font-size: 16px;" id="a_recieve_stock">
                             <img id="ic_setup_equipment_rooms" style="width: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;">
                             <label style="font-size: 20px;color: #667085;" class="" id="menu2">รับอุปกรณ์เข้าคลัง</label>

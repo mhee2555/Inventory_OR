@@ -116,6 +116,7 @@
                                     <!-- <th scope="col" class="text-center" style="width: 20%;" id="td_usage">จำนวนการใช้งาน</th> -->
                                     <th scope="col" class="text-center" id="td_item">รหัสรายการ</th>
                                     <th scope="col" class="text-center" id="td_item">อุปกรณ์</th>
+                                    <th scope="col" class="text-center" id="">จำนวน</th>
                                 </tr>
                             </thead>
                             <tbody>

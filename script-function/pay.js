@@ -481,19 +481,19 @@ function oncheck_pay(input_pay) {
   // });
 
   setTimeout(() => {
-    if (_exp == "exp") {
-      showDialogFailed(settext("alert_expired"));
-      console.log("exp");
-      $("#input_pay").val("");
-      return;
-    }
+    // if (_exp == "exp") {
+    //   showDialogFailed(settext("alert_expired"));
+    //   console.log("exp");
+    //   $("#input_pay").val("");
+    //   return;
+    // }
 
-    if (_Isdeproom == "2" || _Isdeproom == "4") {
-      console.log("hn");
-      $("#input_pay").val("");
-      search_hn_alert(input_pay);
-      return;
-    }
+    // if (_Isdeproom == "2" || _Isdeproom == "4") {
+    //   console.log("hn");
+    //   $("#input_pay").val("");
+    //   search_hn_alert(input_pay);
+    //   return;
+    // }
 
     var ArrayItemStockID = [];
     var Arraypayoutdetailsubid = [];

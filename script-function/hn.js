@@ -199,28 +199,25 @@ function feeddata_hncode_detail(DocNo,HnCode) {
                 user_count = value.UsedCount+'/'+value.LimitUse;
             }
 
-            var typename = "";
-            if (value.TyeName == "SUDs") {
-              typename = "danger";
+            
+            if(value.itemname == null){
+              value.itemname = value.itemname2;
             }
-            if (value.TyeName == "OR Implant") {
-              typename = "primary";
-            }
-            if (value.TyeName == "Sterile") {
-              typename = "success";
+            if(value.UsageCode == null){
+              value.UsageCode = value.itemcode2;
             }
             
-
 
           _tr +=
             `<tr id='tdDetail_${value.ID}'> ` +
             `<td class="text-center">${kay + 1}</td>` +
             `<td class="text-center">
-                <button class="btn btn-outline-${typename} btn-sm" disabled>${value.TyeName}</button>
+                <button class="btn btn-sm" disabled>${value.TyeName}</button>
             </td>` +
             // `<td class="text-center">${user_count}</td>` +
             `<td class="text-center" >${value.UsageCode}</td>` +
             `<td class="text-left">${value.itemname}</td>` +
+            `<td class="text-center">${value.Qty}</td>` +
             ` </tr>`;
         });
       }
@@ -258,6 +255,10 @@ function feeddata_hncode_detail(DocNo,HnCode) {
           {
             width: "10%",
             targets: 3,
+          },
+          {
+            width: "10%",
+            targets: 4,
           }
         ],
         info: false,
