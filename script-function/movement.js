@@ -371,9 +371,9 @@ function selection_departmentRoom() {
       tr += `<th class='text-center' style="text-wrap: nowrap;width: 25%;" rowspan="2" id="td_item">รายการ</th>`;
       tr += `<th style="text-wrap: nowrap;width: 5%;" class='text-center' rowspan="2" id="">จำนวนทั้งหมด</th>`;
       tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#FEF0C7;border-bottom-color: #F79009;" class='text-center' rowspan="2" id="">จ่ายไปห้องผ่าตัด</th>`;
-      tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#D1FADF;border-bottom-color: #12B76A;" class='text-center' rowspan="2" id="">ส่ง CSSD</th>`;
+      // tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#D1FADF;border-bottom-color: #12B76A;" class='text-center' rowspan="2" id="">ส่ง CSSD</th>`;
       // tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#FEE4E2;border-bottom-color: #D92D20;" class='text-center' rowspan="2" id="">ชำรุด</th>`;
-      // tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#EAECF0;border-bottom-color: #667085;" class='text-center' rowspan="2" id="">คงเหลือ</th>`;
+      tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#EAECF0;border-bottom-color: #667085;" class='text-center' rowspan="2" id="">คงเหลือ</th>`;
       // var tr = ``;
       if (!$.isEmptyObject(ObjData)) {
         $.each(ObjData["floor"], function (kay, value) {
@@ -421,8 +421,8 @@ function selection_item() {
       // var tr = ``;
       if (!$.isEmptyObject(ObjData)) {
         $.each(ObjData["item"], function (kay, value) {
-          // var balance =
-          //   parseInt(value.cnt) -  (parseInt(value.cnt_pay) + parseInt(value.cnt_cssd));
+          var balance =
+            parseInt(value.Qty) -  (parseInt(value.cnt_pay) + parseInt(value.cnt_cssd));
 
           tr += `<tr>f
                                   <td class='text-center' style="text-wrap: nowrap;">${
@@ -437,8 +437,8 @@ function selection_item() {
                                   <td class='text-center' style="text-wrap: nowrap;background-color:#FFFAEB;">${
                                     value.cnt_pay
                                   }</td>
-                                  <td class='text-center' style="text-wrap: nowrap;background-color:#ECFDF3;">${
-                                    value.cnt_cssd
+                                  <td class='text-center' style="text-wrap: nowrap;background-color: #ECFDF3;">${
+                                    balance
                                   }</td>`;
 
           var sumcount = 0;

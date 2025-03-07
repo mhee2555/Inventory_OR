@@ -369,8 +369,8 @@ function selection_item($conn, $db)
                 item.itemname,
                 item.itemcode,
                 itemslotincabinet.Qty,
-                ( SELECT COUNT( itemstock_transaction_detail.ID ) FROM itemstock_transaction_detail WHERE itemstock_transaction_detail.ItemCode = item.itemcode AND itemstock_transaction_detail.IsStatus = 1 ) AS cnt_pay,
-                ( SELECT COUNT( itemstock_transaction_detail.ID ) FROM itemstock_transaction_detail WHERE itemstock_transaction_detail.ItemCode = item.itemcode AND itemstock_transaction_detail.IsStatus = 7 ) AS cnt_cssd
+                ( SELECT SUM( itemstock_transaction_detail.Qty ) FROM itemstock_transaction_detail WHERE itemstock_transaction_detail.ItemCode = item.itemcode AND itemstock_transaction_detail.IsStatus = 1 ) AS cnt_pay,
+                ( SELECT SUM( itemstock_transaction_detail.Qty ) FROM itemstock_transaction_detail WHERE itemstock_transaction_detail.ItemCode = item.itemcode AND itemstock_transaction_detail.IsStatus = 7 ) AS cnt_cssd
             FROM
                 itemslotincabinet
                 INNER JOIN item ON item.itemcode = itemslotincabinet.itemcode 
@@ -382,6 +382,15 @@ function selection_item($conn, $db)
     $meQuery1 = $conn->prepare($Q1);
     $meQuery1->execute();
     while ($row1 = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
+
+        if($row1['cnt_pay'] == null){
+            $row1['cnt_pay'] = 0;
+        }
+        if($row1['cnt_cssd'] == null){
+            $row1['cnt_cssd'] = 0;
+        }
+
+
         $return['item'][] = $row1;
         $_itemcode[] = $row1['itemcode'];
     }
@@ -403,7 +412,7 @@ function selection_item($conn, $db)
     if($db == 1){
         $query = "SELECT
                         itemstock_transaction_detail.ItemCode,
-                        COUNT(itemstock_transaction_detail.ID) AS Qty,
+                        SUM(itemstock_transaction_detail.Qty) AS Qty,
                         itemstock_transaction_detail.departmentroomid
                     FROM
                         itemstock_transaction_detail
