@@ -942,7 +942,7 @@ function oncheck_pay_rfid($conn, $db)
                     if ($db == 1) {
                         $queryInsert2 = "INSERT INTO hncode_detail (DocNo,UsageCode,ItemStockID,Qty,IsStatus,IsCancel,LastSterileDetailID)  VALUES             
                         (
-                        (SELECT hncode.DocNo FROM hncode  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.`procedure` = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$_PayDate' LIMIT 1), 
+                        (SELECT hncode.DocNo FROM hncode  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.`procedure` = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$input_date_service' LIMIT 1), 
                         '$input_pay',
                         '$_RowID',
                         1, 
@@ -953,7 +953,7 @@ function oncheck_pay_rfid($conn, $db)
                     } else {
                         $queryInsert2 = "INSERT INTO hncode_detail (DocNo,UsageCode,ItemStockID,Qty,IsStatus,IsCancel,LastSterileDetailID)  VALUES             
                         (
-                        (SELECT hncode.DocNo FROM hncode  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.[procedure] = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$_PayDate' ), 
+                        (SELECT hncode.DocNo FROM hncode  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.[procedure] = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$input_date_service' ), 
                         '$input_pay',
                         '$_RowID',
                         1, 
@@ -965,7 +965,7 @@ function oncheck_pay_rfid($conn, $db)
 
 
 
-                    $query_updateHN = "UPDATE hncode SET IsStatus = 1  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.`procedure` = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$_PayDate' ";
+                    $query_updateHN = "UPDATE hncode SET IsStatus = 1  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.`procedure` = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$input_date_service' ";
                     $query_updateHN = $conn->prepare($query_updateHN);
                     $query_updateHN->execute();
                     // echo $queryInsert2;
@@ -1166,7 +1166,7 @@ function oncheck_pay_rfid($conn, $db)
                         if ($db == 1) {
                             $queryInsert2 = "INSERT INTO hncode_detail (DocNo,UsageCode,ItemStockID,Qty,IsStatus,IsCancel,LastSterileDetailID)  VALUES             
                             (
-                            (SELECT hncode.DocNo FROM hncode  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.`procedure` = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$_PayDate' ), 
+                            (SELECT hncode.DocNo FROM hncode  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.`procedure` = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$input_date_service' ), 
                             '$input_pay',
                             '$_RowID',
                             1, 
@@ -1177,7 +1177,7 @@ function oncheck_pay_rfid($conn, $db)
                         } else {
                             $queryInsert2 = "INSERT INTO hncode_detail (DocNo,UsageCode,ItemStockID,Qty,IsStatus,IsCancel,LastSterileDetailID)  VALUES             
                             (
-                            (SELECT hncode.DocNo FROM hncode  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.[procedure] = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$_PayDate' ), 
+                            (SELECT hncode.DocNo FROM hncode  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.[procedure] = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$input_date_service' ), 
                             '$input_pay',
                             '$_RowID',
                             1, 
@@ -1187,7 +1187,7 @@ function oncheck_pay_rfid($conn, $db)
                             ) ";
                         }
 
-                        $query_updateHN = "UPDATE hncode SET IsStatus = 1  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.`procedure` = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$_PayDate' ";
+                        $query_updateHN = "UPDATE hncode SET IsStatus = 1  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.`procedure` = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$input_date_service' ";
                         $query_updateHN = $conn->prepare($query_updateHN);
                         $query_updateHN->execute();
                         
@@ -1442,7 +1442,7 @@ function oncheck_pay_weighing($conn, $db)
                     if ($db == 1) {
                         $queryInsert2 = "INSERT INTO hncode_detail (DocNo,UsageCode,ItemStockID,Qty,IsStatus,IsCancel,LastSterileDetailID,ItemCode)  VALUES             
                         (
-                        (SELECT hncode.DocNo FROM hncode  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.`procedure` = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$_PayDate' ), 
+                        (SELECT hncode.DocNo FROM hncode  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.`procedure` = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$input_date_service' ), 
                         '0',
                         '0',
                         '$_Qty', 
@@ -1454,7 +1454,7 @@ function oncheck_pay_weighing($conn, $db)
                     } else {
                         $queryInsert2 = "INSERT INTO hncode_detail (DocNo,UsageCode,ItemStockID,Qty,IsStatus,IsCancel,LastSterileDetailID,ItemCode)  VALUES             
                         (
-                        (SELECT hncode.DocNo FROM hncode  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.[procedure] = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$_PayDate' ), 
+                        (SELECT hncode.DocNo FROM hncode  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.[procedure] = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$input_date_service' ), 
                         '0',
                         '0',
                         '$_Qty', 
@@ -1466,7 +1466,7 @@ function oncheck_pay_weighing($conn, $db)
                     }
 
 
-                    $query_updateHN = "UPDATE hncode SET IsStatus = 1  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.`procedure` = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$_PayDate' ";
+                    $query_updateHN = "UPDATE hncode SET IsStatus = 1  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.`procedure` = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$input_date_service' ";
                     $query_updateHN = $conn->prepare($query_updateHN);
                     $query_updateHN->execute();
 
@@ -1661,7 +1661,7 @@ function oncheck_pay_weighing($conn, $db)
                             if ($db == 1) {
                                 $queryInsert2 = "INSERT INTO hncode_detail (DocNo,UsageCode,ItemStockID,Qty,IsStatus,IsCancel,LastSterileDetailID,ItemCode)  VALUES             
                                 (
-                                (SELECT hncode.DocNo FROM hncode  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.`procedure` = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$_PayDate' LIMIT 1 ), 
+                                (SELECT hncode.DocNo FROM hncode  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.`procedure` = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$input_date_service' LIMIT 1 ), 
                                 '0',
                                 '0',
                                 '$_Qty', 
@@ -1673,7 +1673,7 @@ function oncheck_pay_weighing($conn, $db)
                             } else {
                                 $queryInsert2 = "INSERT INTO hncode_detail (DocNo,UsageCode,ItemStockID,Qty,IsStatus,IsCancel,LastSterileDetailID,ItemCode)  VALUES             
                                 (
-                                (SELECT hncode.DocNo FROM hncode  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.[procedure] = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$_PayDate'  LIMIT 1), 
+                                (SELECT hncode.DocNo FROM hncode  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.[procedure] = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$input_date_service'  LIMIT 1), 
                                 '0',
                                 '0',
                                 '$_Qty', 
@@ -1684,7 +1684,7 @@ function oncheck_pay_weighing($conn, $db)
                                 ) ";
                             }
 
-                            $query_updateHN = "UPDATE hncode SET IsStatus = 1  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.`procedure` = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$_PayDate' ";
+                            $query_updateHN = "UPDATE hncode SET IsStatus = 1  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.`procedure` = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$input_date_service' ";
                             $query_updateHN = $conn->prepare($query_updateHN);
                             $query_updateHN->execute();
                         // echo $queryInsert2;
@@ -1981,7 +1981,7 @@ function oncheck_pay($conn, $db)
                 if ($db == 1) {
                     $queryInsert2 = "INSERT INTO hncode_detail (DocNo,UsageCode,ItemStockID,Qty,IsStatus,IsCancel,LastSterileDetailID)  VALUES             
                     (
-                    (SELECT hncode.DocNo FROM hncode  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.`procedure` = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$_PayDate' ), 
+                    (SELECT hncode.DocNo FROM hncode  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.`procedure` = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$input_date_service' ), 
                     '$input_pay',
                     '$_RowID',
                     1, 
@@ -1992,7 +1992,7 @@ function oncheck_pay($conn, $db)
                 } else {
                     $queryInsert2 = "INSERT INTO hncode_detail (DocNo,UsageCode,ItemStockID,Qty,IsStatus,IsCancel,LastSterileDetailID)  VALUES             
                     (
-                    (SELECT hncode.DocNo FROM hncode  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.[procedure] = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$_PayDate' ), 
+                    (SELECT hncode.DocNo FROM hncode  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.[procedure] = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$input_date_service' ), 
                     '$input_pay',
                     '$_RowID',
                     1, 
@@ -2197,7 +2197,7 @@ function oncheck_pay($conn, $db)
                     if ($db == 1) {
                         $queryInsert2 = "INSERT INTO hncode_detail (DocNo,UsageCode,ItemStockID,Qty,IsStatus,IsCancel,LastSterileDetailID)  VALUES             
                         (
-                        (SELECT hncode.DocNo FROM hncode  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.`procedure` = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$_PayDate' ), 
+                        (SELECT hncode.DocNo FROM hncode  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.`procedure` = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$input_date_service' ), 
                         '$input_pay',
                         '$_RowID',
                         1, 
@@ -2208,7 +2208,7 @@ function oncheck_pay($conn, $db)
                     } else {
                         $queryInsert2 = "INSERT INTO hncode_detail (DocNo,UsageCode,ItemStockID,Qty,IsStatus,IsCancel,LastSterileDetailID)  VALUES             
                         (
-                        (SELECT hncode.DocNo FROM hncode  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.[procedure] = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$_PayDate' ), 
+                        (SELECT hncode.DocNo FROM hncode  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.[procedure] = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$input_date_service' ), 
                         '$input_pay',
                         '$_RowID',
                         1, 

@@ -2,7 +2,7 @@
 
 
 
-function createhncodeDocNo($conn, $S_UserId, $DepID,  $HnCode, $departmentroomid, $IsStatus, $select_procedure_main, $select_doctor_main, $Remark, $txt_docno_request, $db)
+function createhncodeDocNo($conn, $S_UserId, $DepID,  $HnCode, $departmentroomid, $IsStatus, $select_procedure_main, $select_doctor_main, $Remark, $txt_docno_request, $db , $select_date_request)
 {
 
     if ($db == 1) {
@@ -56,7 +56,7 @@ function createhncodeDocNo($conn, $S_UserId, $DepID,  $HnCode, $departmentroomid
 
         if($db == 1){
             $query3 = "INSERT INTO hncode (DocNo,HnCode,DocDate,ModifyDate,UserCode,DeptID,IsStatus,IsCancel,`procedure`,doctor,departmentroomid ,Remark,DocNo_SS) 
-        VALUES ('$_DocNo','$HnCode',NOW(),NOW(),'$S_UserId','$DepID',$IsStatus,0,'$select_procedure_main','$select_doctor_main' , $departmentroomid , '$Remark','$txt_docno_request') ";
+        VALUES ('$_DocNo','$HnCode','$select_date_request',NOW(),'$S_UserId','$DepID',$IsStatus,0,'$select_procedure_main','$select_doctor_main' , $departmentroomid , '$Remark','$txt_docno_request') ";
         }else{
             $query3 = "INSERT INTO hncode (DocNo,HnCode,DocDate,ModifyDate,UserCode,DeptID,IsStatus,IsCancel,[procedure],doctor,departmentroomid ,Remark,DocNo_SS) 
         VALUES ('$_DocNo','$HnCode',GETDATE(),GETDATE(),'$S_UserId','$DepID',$IsStatus,0,'$select_procedure_main','$select_doctor_main' , $departmentroomid , '$Remark','$txt_docno_request') ";

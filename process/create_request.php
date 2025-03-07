@@ -122,7 +122,7 @@ function onconfirm_send_request($conn,$db)
     $DepID = $_SESSION['DepID'];
 
     if($text_edit != 'edit'){
-        createhncodeDocNo($conn, $Userid, $DepID, $input_hn_request, $select_deproom_request,0, $select_procedure_request, $select_doctor_request, 'สร้างจากเมนูขอเบิกอุปกรณ์' , $txt_docno_request,$db);
+        createhncodeDocNo($conn, $Userid, $DepID, $input_hn_request, $select_deproom_request,0, $select_procedure_request, $select_doctor_request, 'สร้างจากเมนูขอเบิกอุปกรณ์' , $txt_docno_request,$db , $select_date_request);
     }
 
 
