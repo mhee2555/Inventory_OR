@@ -185,6 +185,7 @@ function feeddata_hncode_detail($conn, $db)
                         hncode_detail.Qty,
                         item2.itemname AS itemname2,
 	                    item2.itemcode AS itemcode2,
+                        type2.TyeName AS TyeName2,
                         itemstock.serielNo,
                         itemstock.lotNo,
                         DATE_FORMAT( itemstock.ExpireDate, '%d-%m-%Y' ) AS ExpireDate
@@ -196,6 +197,7 @@ function feeddata_hncode_detail($conn, $db)
                     LEFT JOIN item ON itemstock.ItemCode = item.itemcode
                     LEFT JOIN itemtype ON itemtype.ID = item.itemtypeID
                     LEFT JOIN item AS item2 ON item2.ItemCode = hncode_detail.ItemCode
+                    LEFT JOIN itemtype as type2 ON type2.ID = item2.itemtypeID
                     WHERE
                         hncode.IsStatus = 1
                         AND hncode.IsCancel = 0

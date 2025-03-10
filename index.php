@@ -10,6 +10,9 @@ if (!isset($_GET['s'])) {
     header("location:login.php");
     exit(0);
 }
+$UserName_login = $_SESSION['UserName_login'];
+$Password = $_SESSION['Password'];
+
 $UserName = $_SESSION['UserName'];
 $deproom = $_SESSION['deproom'];
 $RefDepID = $_SESSION['RefDepID'];
@@ -393,8 +396,10 @@ if (!isset($_SESSION['UserName'])) {
 
         $('#a_recieve_stock').on("click", function(e) {
 
+            var UserName_login = '<?php echo $UserName_login; ?>';
+            var Password = '<?php echo $Password; ?>';
 
-            window.open("http://10.11.9.3:8003/Login/Index?user=stock&pass=111", "_blank");
+            // window.open("http://10.11.9.3:8003/Login/Index?user="+UserName_login+"&pass="+Password, "_blank");
 
 
             e.preventDefault();

@@ -7,7 +7,7 @@ if (!empty($_POST['FUNC_NAME'])) {
     if ($_POST['FUNC_NAME'] == 'selection_departmentRoom') {
         selection_departmentRoom($conn);
     } else if ($_POST['FUNC_NAME'] == 'LoginUser') {
-        LoginUser($conn,$db);
+        LoginUser($conn, $db);
     } else if ($_POST['FUNC_NAME'] == 'selection_Doctor') {
         selection_Doctor($conn);
     }
@@ -60,7 +60,7 @@ function selection_departmentRoom($conn)
     die;
 }
 
-function LoginUser($conn,$db)
+function LoginUser($conn, $db)
 {
     $return = array();
     $input_UserName = $_POST['input_UserName'];
@@ -78,6 +78,8 @@ function LoginUser($conn,$db)
 
     $query = "SELECT 
                 users.ID,
+                users.UserName AS UserName_login,
+                users.Password,
                 users.time_out,
                 users.B_ID,
                 users.Lang,
@@ -99,6 +101,9 @@ function LoginUser($conn,$db)
     $meQuery = $conn->prepare($query);
     $meQuery->execute();
     while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+        $_SESSION['UserName_login'] = $row['UserName_login'];
+        $_SESSION['Password'] = $row['Password'];
+
         $_SESSION['Userid'] = $row['ID'];
         $_SESSION['B_ID'] = $row['B_ID'];
         $_SESSION['DepID'] = $row['DepID'];
@@ -119,7 +124,7 @@ function LoginUser($conn,$db)
     }
     if ($select_departmentRoom != "") {
 
-        if($db == 1){
+        if ($db == 1) {
             $selectName = "SELECT
                                 departmentroom.departmentroomname,
                                 IFNULL( doctor.ID, 0 ) AS doctorID,
@@ -129,7 +134,7 @@ function LoginUser($conn,$db)
                                 LEFT JOIN doctor ON departmentroom.doctorID = doctor.ID 
                             WHERE
                                 departmentroom.id = '$select_departmentRoom' ";
-        }else{
+        } else {
             $selectName = "SELECT
                                 departmentroom.departmentroomname,
                                 ISNULL( doctor.ID, 0 ) AS doctorID,

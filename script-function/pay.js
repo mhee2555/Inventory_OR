@@ -434,7 +434,7 @@ function oncheck_pay_rfid() {
             "#ed1c24"
           );
         }
-      }, 500);
+      }, 1000);
 
 
       if(itemname != ""){

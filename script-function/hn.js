@@ -195,11 +195,9 @@ function feeddata_hncode_detail(DocNo,HnCode) {
         $.each(ObjData, function (kay, value) {
 
             var user_count = "";
-            if(value.TyeName == 'SUDs'){
-                user_count = value.UsedCount+'/'+value.LimitUse;
+            if(value.TyeName == null){
+              value.TyeName = value.TyeName2;
             }
-
-            
             if(value.itemname == null){
               value.itemname = value.itemname2;
             }
