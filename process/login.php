@@ -93,8 +93,8 @@ function LoginUser($conn, $db)
                 employee.EmpCode 
             FROM
                 users
-                INNER JOIN employee ON users.EmpCode = employee.EmpCode
-                INNER JOIN department ON department.ID = employee.DepID 
+                LEFT JOIN employee ON users.EmpCode = employee.EmpCode
+                LEFT JOIN department ON department.ID = employee.DepID 
              $where  AND users.IsCancel = 0  ";
 
 

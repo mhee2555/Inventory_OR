@@ -6,6 +6,21 @@ $(function () {
   var minutes = String(now.getMinutes()).padStart(2, "0");
   var currentTime = hours + ":" + minutes;
 
+
+  var d = new Date();
+  var month = d.getMonth() + 1;
+  var day = d.getDate();
+  var year = d.getFullYear();
+  var output =
+    (("" + day).length < 2 ? "0" : "") +
+    day +
+    "-" +
+    (("" + month).length < 2 ? "0" : "") +
+    month +
+    "-" +
+    year;
+
+
   // Set the value of the input
   $("#select_time_request").val(currentTime);
 
@@ -13,13 +28,13 @@ $(function () {
   $("#select_date_request").datepicker({
     onSelect: function (date) {},
   });
-  $("#select_date_history_s").val(set_date());
+  $("#select_date_history_s").val(output);
   $("#select_date_history_s").datepicker({
     onSelect: function (date) {
       show_detail_history();
     },
   });
-  $("#select_date_history_l").val(set_date());
+  $("#select_date_history_l").val(output);
   $("#select_date_history_l").datepicker({
     onSelect: function (date) {
       show_detail_history();

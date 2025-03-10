@@ -3,25 +3,39 @@ var UserName = "";
 $(function () {
   session();
 
-  $("#select_date_pay").val(set_date());
+  var d = new Date();
+  var month = d.getMonth() + 1;
+  var day = d.getDate();
+  var year = d.getFullYear();
+  var output =
+    (("" + day).length < 2 ? "0" : "") +
+    day +
+    "-" +
+    (("" + month).length < 2 ? "0" : "") +
+    month +
+    "-" +
+    year;
+
+
+  $("#select_date_pay").val(output);
   $("#select_date_pay").datepicker({
     onSelect: function (date) {
       show_detail_deproom_pay();
     },
   });
-  $("#select_date_history_S").val(set_date());
+  $("#select_date_history_S").val(output);
   $("#select_date_history_S").datepicker({
     onSelect: function (date) {
       show_detail_history();
     },
   });
-  $("#select_date_history_L").val(set_date());
+  $("#select_date_history_L").val(output);
   $("#select_date_history_L").datepicker({
     onSelect: function (date) {
       show_detail_history();
     },
   });
-  $("#input_date_service").val(set_date());
+  $("#input_date_service").val(output);
   $("#input_date_service").datepicker({
     onSelect: function (date) {
       updateService();
@@ -133,9 +147,7 @@ function show_detail_deproom_pay() {
                       }' value='0' onclick='open_deproom_sub(${
             value.id
           })'></i> ${kay + 1}</td>
-                      <td class="f24 text-left">${
-                        value.departmentroomname
-                      }</td>
+                      <td class="f24 text-left">${value.departmentroomname}</td>
                       <td class=""></td>
                    </tr>`;
           $.each(ObjData[value.id], function (kay, value2) {
@@ -397,7 +409,6 @@ function oncheck_pay_rfid() {
       input_date_service: $("#input_date_service").val(),
     },
     success: function (result) {
-
       var itemname = "";
       // var ObjData = JSON.parse(result);
       // $.each(ObjData, function (key, value) {
@@ -436,17 +447,13 @@ function oncheck_pay_rfid() {
         }
       }, 1000);
 
-
-      if(itemname != ""){
+      if (itemname != "") {
         Swal.fire({
-          title:  settext("alert_fail"),
+          title: settext("alert_fail"),
           html: `อุปกรณ์หมดอายุไม่สามารถสแกนจ่ายได้ <br> ${itemname}`,
           icon: "warning",
         });
       }
-
-
-      
     },
   });
 }
