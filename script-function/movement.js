@@ -26,6 +26,12 @@ $(function () {
     selection_item();
   });
 
+
+  $("#input_search_rfid").keyup(function () {
+    selection_item_rfid();
+  });
+
+
   $("#suds").hide();
   $("#sterile").hide();
 
@@ -591,6 +597,9 @@ function selection_departmentRoom_rfid() {
     },
   });
 }
+
+
+
 
 function selection_item_rfid() {
   $.ajax({

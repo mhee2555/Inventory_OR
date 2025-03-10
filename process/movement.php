@@ -374,6 +374,7 @@ function selection_item($conn, $db)
             FROM
                 itemslotincabinet
                 INNER JOIN item ON item.itemcode = itemslotincabinet.itemcode 
+            WHERE ( item.itemname LIKE '%$input_search%' OR item.itemcode LIKE '%$input_search%' )
             GROUP BY
                 item.itemname,
                 item.itemcode  ";
