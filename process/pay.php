@@ -2003,6 +2003,10 @@ function oncheck_pay($conn, $db)
                 }
 
 
+                $query_updateHN = "UPDATE hncode SET IsStatus = 1  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.`procedure` = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$input_date_service' ";
+                $query_updateHN = $conn->prepare($query_updateHN);
+                $query_updateHN->execute();
+
 
                 // echo $queryInsert2;
                 // exit;
@@ -2219,6 +2223,12 @@ function oncheck_pay($conn, $db)
                     }
 
 
+
+                    $query_updateHN = "UPDATE hncode SET IsStatus = 1  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.`procedure` = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$input_date_service' ";
+                    $query_updateHN = $conn->prepare($query_updateHN);
+                    $query_updateHN->execute();
+
+                    
                     // echo $queryInsert2;
                     // exit;
                     $queryInsert2 = $conn->prepare($queryInsert2);
