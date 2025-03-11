@@ -6,17 +6,17 @@ require '../connect/connect.php';
 if (!empty($_POST['FUNC_NAME'])) {
     if ($_POST['FUNC_NAME'] == 'selection_departmentRoom') {
         selection_departmentRoom($conn, $db);
-    }else if ($_POST['FUNC_NAME'] == 'selection_item') {
+    } else if ($_POST['FUNC_NAME'] == 'selection_item') {
         selection_item($conn, $db);
-    }else if ($_POST['FUNC_NAME'] == 'selection_itemSuds') {
+    } else if ($_POST['FUNC_NAME'] == 'selection_itemSuds') {
         selection_itemSuds($conn, $db);
-    }else if ($_POST['FUNC_NAME'] == 'showDetail_itemSuds') {
+    } else if ($_POST['FUNC_NAME'] == 'showDetail_itemSuds') {
         showDetail_itemSuds($conn, $db);
-    }else if ($_POST['FUNC_NAME'] == 'showDetailSub_itemSuds') {
+    } else if ($_POST['FUNC_NAME'] == 'showDetailSub_itemSuds') {
         showDetailSub_itemSuds($conn, $db);
-    }else if ($_POST['FUNC_NAME'] == 'selection_departmentRoom_rfid') {
+    } else if ($_POST['FUNC_NAME'] == 'selection_departmentRoom_rfid') {
         selection_departmentRoom_rfid($conn, $db);
-    }else if ($_POST['FUNC_NAME'] == 'selection_item_rfid') {
+    } else if ($_POST['FUNC_NAME'] == 'selection_item_rfid') {
         selection_item_rfid($conn, $db);
     }
 }
@@ -93,6 +93,48 @@ function selection_item_rfid($conn, $db)
 
     $_itemcode = array();
 
+
+
+    $D = "DELETE 
+            FROM
+                hncode_detail 
+            WHERE
+                DATE(hncode_detail.CreateDate) = '$select_date1' 
+                AND hncode_detail.ItemStockID  IN (
+                SELECT
+                    itemstock.RowID 
+                FROM
+                    itemstock 
+                WHERE
+                    itemstock.Isdeproom = '1' 
+                AND ( itemstock.HNCode IS NULL OR itemstock.HNCode = '' )
+                )
+                AND hncode_detail.ItemCode IS NULL  ";
+
+    $meQuery_D = $conn->prepare($D);
+    $meQuery_D->execute();
+
+    $D2 = "DELETE 
+            FROM
+            itemstock_transaction_detail 
+            WHERE
+            DATE(itemstock_transaction_detail.CreateDate) = '$select_date1' 
+            AND itemstock_transaction_detail.ItemStockID IN (
+            SELECT
+                itemstock.RowID 
+            FROM
+                itemstock 
+            WHERE
+                itemstock.Isdeproom = '1' 
+            AND ( itemstock.HNCode IS NULL OR itemstock.HNCode = '' )
+            )  ";
+
+    $meQuery_D2 = $conn->prepare($D2);
+    $meQuery_D2->execute();
+
+
+
+
     $Q1 = " SELECT
                 item.itemname,
                 item.itemcode,
@@ -133,7 +175,7 @@ function selection_item_rfid($conn, $db)
     }
 
 
-    if($db == 1){
+    if ($db == 1) {
         $query = "SELECT
                         itemstock_transaction_detail.ItemCode,
                         COUNT(itemstock_transaction_detail.ID) AS Qty,
@@ -149,7 +191,7 @@ function selection_item_rfid($conn, $db)
                         itemstock_transaction_detail.ItemCode
                     ORDER BY
                         itemstock_transaction_detail.departmentroomid ASC ";
-    }else{
+    } else {
         $query = "SELECT 
                             itemstock_transaction_detail.ItemCode ,
                     COUNT ( itemstock_transaction_detail.ID ) AS Qty ,
@@ -183,11 +225,12 @@ function selection_item_rfid($conn, $db)
 }
 
 
-function showDetailSub_itemSuds($conn, $db){
+function showDetailSub_itemSuds($conn, $db)
+{
 
     $return = array();
     $UsageCode = $_POST['UsageCode'];
-    
+
     $query = " SELECT
                     sudslog.UniCode,
                     sudslog.UsedCount,
@@ -203,22 +246,23 @@ function showDetailSub_itemSuds($conn, $db){
                     LEFT JOIN employee ON users.EmpCode = employee.EmpCode 
                 WHERE sudslog.UniCode = '$UsageCode' ";
 
-        $meQuery = $conn->prepare($query);
-        $meQuery->execute();
-        while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
-            $return[] = $row;
-        }
+    $meQuery = $conn->prepare($query);
+    $meQuery->execute();
+    while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+        $return[] = $row;
+    }
 
 
-        echo json_encode($return);
-        unset($conn);
-        die;
+    echo json_encode($return);
+    unset($conn);
+    die;
 }
-function showDetail_itemSuds($conn, $db){
+function showDetail_itemSuds($conn, $db)
+{
 
     $return = array();
     $itemcode = $_POST['itemcode'];
-    
+
     $query = " SELECT
                     itemstock.UsageCode,
                     itemstock.RowID,
@@ -241,21 +285,22 @@ function showDetail_itemSuds($conn, $db){
                     item.itemtypeID = 42
                     AND item.itemcode = '$itemcode'  ";
 
-        $meQuery = $conn->prepare($query);
-        $meQuery->execute();
-        while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
-            $return[] = $row;
-        }
+    $meQuery = $conn->prepare($query);
+    $meQuery->execute();
+    while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+        $return[] = $row;
+    }
 
 
-        echo json_encode($return);
-        unset($conn);
-        die;
+    echo json_encode($return);
+    unset($conn);
+    die;
 }
-function selection_itemSuds($conn, $db){
+function selection_itemSuds($conn, $db)
+{
 
     $return = array();
-    
+
     $input_search_suds = $_POST['input_search_suds'];
 
     $query = " SELECT
@@ -273,16 +318,16 @@ function selection_itemSuds($conn, $db){
                     item.itemname,
                     item.itemcode ";
 
-        $meQuery = $conn->prepare($query);
-        $meQuery->execute();
-        while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
-            $return[] = $row;
-        }
+    $meQuery = $conn->prepare($query);
+    $meQuery->execute();
+    while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+        $return[] = $row;
+    }
 
 
-        echo json_encode($return);
-        unset($conn);
-        die;
+    echo json_encode($return);
+    unset($conn);
+    die;
 }
 
 function selection_departmentRoom($conn, $db)
@@ -363,6 +408,44 @@ function selection_item($conn, $db)
     // }
 
 
+    $D = "DELETE 
+    FROM
+        hncode_detail 
+    WHERE
+        DATE(hncode_detail.CreateDate) = '$select_date1' 
+        AND hncode_detail.ItemStockID  IN (
+        SELECT
+            itemstock.RowID 
+        FROM
+            itemstock 
+        WHERE
+            itemstock.Isdeproom = '1' 
+        AND ( itemstock.HNCode IS NULL OR itemstock.HNCode = '' )
+        )
+        AND hncode_detail.ItemCode IS NULL  ";
+
+    $meQuery_D = $conn->prepare($D);
+    $meQuery_D->execute();
+
+    $D2 = "DELETE 
+    FROM
+    itemstock_transaction_detail 
+    WHERE
+    DATE(itemstock_transaction_detail.CreateDate) = '$select_date1' 
+    AND itemstock_transaction_detail.ItemStockID IN (
+    SELECT
+        itemstock.RowID 
+    FROM
+        itemstock 
+    WHERE
+        itemstock.Isdeproom = '1' 
+    AND ( itemstock.HNCode IS NULL OR itemstock.HNCode = '' )
+    )  ";
+
+    $meQuery_D2 = $conn->prepare($D2);
+    $meQuery_D2->execute();
+
+
     $_itemcode = array();
 
     $Q1 = " SELECT
@@ -384,10 +467,10 @@ function selection_item($conn, $db)
     $meQuery1->execute();
     while ($row1 = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
 
-        if($row1['cnt_pay'] == null){
+        if ($row1['cnt_pay'] == null) {
             $row1['cnt_pay'] = 0;
         }
-        if($row1['cnt_cssd'] == null){
+        if ($row1['cnt_cssd'] == null) {
             $row1['cnt_cssd'] = 0;
         }
 
@@ -410,7 +493,7 @@ function selection_item($conn, $db)
     }
 
 
-    if($db == 1){
+    if ($db == 1) {
         $query = "SELECT
                         itemstock_transaction_detail.ItemCode,
                         SUM(itemstock_transaction_detail.Qty) AS Qty,
@@ -426,7 +509,7 @@ function selection_item($conn, $db)
                         itemstock_transaction_detail.ItemCode
                     ORDER BY
                         itemstock_transaction_detail.departmentroomid ASC ";
-    }else{
+    } else {
         $query = "SELECT 
                             itemstock_transaction_detail.ItemCode ,
                     COUNT ( itemstock_transaction_detail.ID ) AS Qty ,
