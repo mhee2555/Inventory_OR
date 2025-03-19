@@ -2,14 +2,30 @@ var departmentroomname = "";
 var UserName = "";
 
 $(function () {
+
+
+  var d = new Date();
+  var month = d.getMonth() + 1;
+  var day = d.getDate();
+  var year = d.getFullYear();
+  var output =
+    (("" + day).length < 2 ? "0" : "") +
+    day +
+    "-" +
+    (("" + month).length < 2 ? "0" : "") +
+    month +
+    "-" +
+    year;
+
+
   session();
-  $("#select_SDate").val(set_date());
+  $("#select_SDate").val(output);
   $("#select_SDate").datepicker({
     onSelect: function (date) {
       show_detail_hn();
     },
   });
-  $("#select_EDate").val(set_date());
+  $("#select_EDate").val(output);
   $("#select_EDate").datepicker({
     onSelect: function (date) {
       show_detail_hn();

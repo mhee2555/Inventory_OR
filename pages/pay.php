@@ -42,8 +42,9 @@
     <div class=" col-md-12 col-lg-9  ">
         <div class="btn-group btn-group-toggle" role="group" aria-label="Basic example">
             <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;" id="radio_pay">จ่ายอุปกรณ์</button>
+            <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;" id="radio_pay_manual">จ่ายอุปกรณ์ Manual</button>
             <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;" id="radio_history_pay">ประวัติการจ่ายอุปกรณ์</button>
-            <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;" id="radio_claim" hidden>เคลม</button>
+            <!-- <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;" id="radio_claim" hidden>เคลม</button> -->
         </div>
     </div>
 </div>
@@ -148,12 +149,151 @@
                                     </div>
                                 </div>
                                 <div class="col-md-4 mt-3">
-                                        <button id="btn_scan_RFid" class="btn btn-info " style="font-size: 13px;margin-top: 2rem !important;line-height: 25px;">จ่ายอุปกรณ์จากตู้ RFID & Weighing</button>
+                                    <button id="btn_scan_RFid" class="btn btn-info " style="font-size: 13px;margin-top: 2rem !important;line-height: 25px;">จ่ายอุปกรณ์จากตู้ RFID & Weighing</button>
                                 </div>
                             </div>
 
 
                             <table class="table table-hover table-sm" id="table_deproom_DocNo_pay">
+                                <thead style="background-color: #cdd6ff;">
+                                    <tr>
+                                        <th scope="col" class="text-center" id="" style="width: 70%;">รายการ</th>
+                                        <th scope="col" class="text-center" id="">ขอเบิก</th>
+                                        <th scope="col" class="text-center" id="">สแกนจ่าย</th>
+                                        <th scope="col" class="text-center" id="">คงเหลือ</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div id="pay_manual">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label style="color:black;font-weight: 600;">HN Code</label>
+                                    <input type='text' class='form-control f18' id="input_Hn_pay_manual">
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group ">
+                                        <label style="color:black;font-weight: 600;">วันที่รับบริการ</label>
+                                        <input type="text" class="form-control datepicker-here f18" id="input_date_service_manual" data-language='en' data-date-format='dd-mm-yyyy'>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group ">
+                                        <label style="color:black;font-weight: 600;">เวลารับบริการ</label>
+                                        <input type="time" class="form-control datepicker-here f18" id="input_time_service_manual" data-language='en' data-date-format='dd-mm-yyyy'>
+                                    </div>
+                                </div>
+
+
+
+
+
+
+                                <div class="col-md-3">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group x">
+                                                <label style="color:black;font-weight: 600;">แพทย์</label>
+                                                <select class="form-control f18" autocomplete="off" id="select_doctor_manual"></select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+
+                                            <div class="col-md-12" style="display: ruby;" id="row_doctor">
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                                <div class="col-md-3">
+                                    <div class="form-group ">
+                                        <label style="color:black;font-weight: 600;">ห้องผ่าตัด</label>
+                                        <select class="form-control f18" autocomplete="off" id="select_deproom_manual"></select>
+                                    </div>
+                                </div>
+
+
+
+
+                                <div class="col-md-3">
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group ">
+                                                <label style="color:black;font-weight: 600;">หัตถการ</label>
+                                                <select class="form-control f18" autocomplete="off" id="select_procedure_manual"></select>
+                                            </div>
+                                        </div>
+
+                                            <div class="col-md-12" style="display: ruby;" id="row_procedure">
+                                            </div>
+
+                                    </div>
+
+
+                                </div>
+
+
+
+
+
+
+                                <div class="col-md-3 ">
+                                    <div class="form-group ">
+                                        <label style="color:black;font-weight: 600;">สแกนจ่าย</label>
+                                        <input type="text" class="form-control f18" id="input_pay_manual" placeholder="" autocomplete="off">
+
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group ">
+                                        <label style="color:red;font-weight: 600;">สแกนคืนคลังหลักห้องผ่าตัด</label>
+                                        <input type="text" class="form-control f18" id="input_returnpay_manual" placeholder="" style="border-color: red;" autocomplete="off">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3" hidden>
+                                    <div class="form-group ">
+                                        <label style="color:red;font-weight: 600;">เอกสาร</label>
+                                        <input type="text" class="form-control f18" id="input_docNo_deproom_manual" autocomplete="off">
+                                    </div>
+                                </div>
+                                <div class="col-md-3" hidden>
+                                    <div class="form-group ">
+                                        <label style="color:red;font-weight: 600;">เอกสาร HN</label>
+                                        <input type="text" class="form-control f18" id="input_docNo_HN_manual" autocomplete="off">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3 ">
+                                    <button id="btn_scan_RFid_manual" class="btn btn-info " style="font-size: 13px;margin-top: 2rem !important;line-height: 25px;">จ่ายอุปกรณ์จากตู้ RFID & Weighing</button>
+                                </div>
+                            </div>
+
+
+                            <table class="table table-hover table-sm mt-3" id="table_deproom_DocNo_pay_manual">
                                 <thead style="background-color: #cdd6ff;">
                                     <tr>
                                         <th scope="col" class="text-center" id="" style="width: 70%;">รายการ</th>
@@ -292,7 +432,7 @@
                                         <div class="input-group mb-2">
                                             <input type="text" class="form-control f18" id="input_return_claim" placeholder="สแกนอุปกรณ์กลับ" style="border-color: red;" autocomplete="off">
                                             <div class="input-group-append">
-                                                <div class="input-group-text" style="border-color: red;" ><i class="fa-solid fa-qrcode"></i></div>
+                                                <div class="input-group-text" style="border-color: red;"><i class="fa-solid fa-qrcode"></i></div>
                                             </div>
 
                                         </div>
@@ -326,5 +466,56 @@
             </div>
         </div>
 
+    </div>
+</div>
+
+
+<div class="modal fade" id="myModal_Procedure" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">หัตถการ</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-hover table-sm" id="table_detail_Procedure">
+                    <thead style="background-color: #cdd6ff;">
+                        <tr>
+                            <th scope="col" class="text-center" id="">ลำดับ</th>
+                            <th scope="col" class="text-center" id="">หัตถการ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModal_Doctor" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">แพทย์</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-hover table-sm" id="table_detail_Doctor">
+                    <thead style="background-color: #cdd6ff;">
+                        <tr>
+                            <th scope="col" class="text-center" id="">ลำดับ</th>
+                            <th scope="col" class="text-center" id="">แพทย์</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>

@@ -29,6 +29,26 @@
    text-align: center;
 } */
 
+.custom-label {
+        display: inline-block;
+        padding: 8px 15px;
+        /* เพิ่มระยะขอบ */
+        border: 2px solid #007bff;
+        /* เส้นขอบสีฟ้า */
+        border-radius: 8px;
+        /* มุมโค้งมน */
+        font-size: 16px;
+        font-weight: bold;
+        color: #007bff;
+        background-color: #f8f9fa;
+        /* สีพื้นหลัง */
+    }
+
+    .custom-label:hover {
+        background-color: #007bff;
+        color: white;
+    }
+
     .switch {
         position: relative;
         display: inline-block;

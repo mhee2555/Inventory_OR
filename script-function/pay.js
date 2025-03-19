@@ -1,7 +1,15 @@
 var departmentroomname = "";
 var UserName = "";
+
+var procedure_id_Array = [];
+var doctor_Array = [];
 $(function () {
   session();
+
+  var now = new Date();
+  var hours = String(now.getHours()).padStart(2, "0");
+  var minutes = String(now.getMinutes()).padStart(2, "0");
+  var currentTime = hours + ":" + minutes;
 
   var d = new Date();
   var month = d.getMonth() + 1;
@@ -16,6 +24,7 @@ $(function () {
     "-" +
     year;
 
+  $("#input_time_service_manual").val(currentTime);
 
   $("#select_date_pay").val(output);
   $("#select_date_pay").datepicker({
@@ -42,12 +51,18 @@ $(function () {
     },
   });
 
+  $("#input_date_service_manual").val(output);
+  $("#input_date_service_manual").datepicker({
+    onSelect: function (date) {},
+  });
+
   $("#input_time_service").change(function (e) {
     updateService();
   });
 
   $("#history_pay").hide();
   $("#claim").hide();
+  $("#pay_manual").hide();
 
   $("#radio_pay").css("color", "#bbbbb");
   $("#radio_pay").css("background", "#EAECF0");
@@ -60,10 +75,94 @@ $(function () {
     $("#radio_history_pay").css("background", "");
     $("#radio_claim").css("color", "black");
     $("#radio_claim").css("background", "");
+    $("#radio_pay_manual").css("color", "black");
+    $("#radio_pay_manual").css("background", "");
 
     $("#pay").show();
     $("#history_pay").hide();
     $("#claim").hide();
+    $("#pay_manual").hide();
+
+    show_detail_deproom_pay();
+  });
+
+  $("#radio_pay_manual").click(function () {
+    $("#radio_pay_manual").css("color", "#bbbbb");
+    $("#radio_pay_manual").css("background", "#EAECF0");
+
+    $("#radio_history_pay").css("color", "black");
+    $("#radio_history_pay").css("background", "");
+    $("#radio_claim").css("color", "black");
+    $("#radio_claim").css("background", "");
+    $("#radio_pay").css("color", "black");
+    $("#radio_pay").css("background", "");
+
+    $("#pay").hide();
+    $("#history_pay").hide();
+    $("#claim").hide();
+    $("#pay_manual").show();
+
+    $("#select_deproom_manual").select2();
+    $("#select_doctor_manual").select2();
+    $("#select_procedure_manual").select2();
+
+    $("#input_Hn_pay_manual").val("");
+    $("#input_date_service_manual").val(output);
+    $("#select_doctor_manual").val("").trigger("change");
+    $("#select_deproom_manual").val("").trigger("change");
+    $("#select_procedure_manual").val("").trigger("change");
+    $("#input_docNo_deproom_manual").val("");
+    $("#input_docNo_HN_manual").val("");
+
+    $("#table_deproom_DocNo_pay_manual tbody").html("");
+
+
+    $(".clear_doctor").attr('hidden', true);
+    doctor_Array = [];
+    $(".clear_procedure").attr('hidden', true);
+    procedure_id_Array = [];
+    
+
+    setTimeout(() => {
+      $("#select_doctor_manual").on("select2:select", function (e) {
+        var selectedValue = e.params.data.id; // ดึงค่า value
+        var selectedText = e.params.data.text; // ดึงค่า text
+        if (selectedValue != "") {
+          var index = doctor_Array.indexOf(selectedValue);
+          if (index == -1) {
+            doctor_Array.push(selectedValue);
+            var _row = "";
+            _row += `       <div  class='div_${selectedValue}  clear_doctor' onclick='DeleteDoctor(${selectedValue})'>
+                                <label for="" class="custom-label">${selectedText}</label>
+                            </div> `;
+
+            $("#row_doctor").append(_row);
+
+            $("#select_doctor_manual").val("").trigger("change");
+          }
+        }
+      });
+
+      $("#select_procedure_manual").on("select2:select", function (e) {
+        var selectedValue = e.params.data.id; // ดึงค่า value
+        var selectedText = e.params.data.text; // ดึงค่า text
+        if (selectedValue != "") {
+          var index = procedure_id_Array.indexOf(selectedValue);
+          if (index == -1) {
+            procedure_id_Array.push(selectedValue);
+            var _row = "";
+            _row += `       <div  class='div_${selectedValue} clear_procedure' onclick='Deletprocedure(${selectedValue})'>
+                                <label for="" class="custom-label">${selectedText}</label>
+                            </div> `;
+    
+            $("#row_procedure").append(_row);
+    
+            $("#select_procedure_manual").val("").trigger("change");
+          }
+        }
+      });
+
+    }, 500);
   });
 
   $("#radio_history_pay").click(function () {
@@ -74,10 +173,13 @@ $(function () {
     $("#radio_pay").css("background", "");
     $("#radio_claim").css("color", "black");
     $("#radio_claim").css("background", "");
+    $("#radio_pay_manual").css("color", "black");
+    $("#radio_pay_manual").css("background", "");
 
     $("#pay").hide();
     $("#history_pay").show();
     $("#claim").hide();
+    $("#pay_manual").hide();
 
     show_detail_history();
 
@@ -93,10 +195,13 @@ $(function () {
     $("#radio_pay").css("background", "");
     $("#radio_history_pay").css("color", "black");
     $("#radio_history_pay").css("background", "");
+    $("#radio_pay_manual").css("color", "black");
+    $("#radio_pay_manual").css("background", "");
 
     $("#pay").hide();
     $("#history_pay").hide();
     $("#claim").show();
+    $("#pay_manual").hide();
 
     feeddataClaim();
   });
@@ -115,6 +220,21 @@ $("#input_pay").keypress(function (e) {
     oncheck_pay($(this).val());
   }
 });
+
+$("#input_pay_manual").keypress(function (e) {
+  if (e.which == 13) {
+    $("#input_pay_manual").val(convertString($(this).val()));
+    oncheck_pay_manual($(this).val());
+  }
+});
+
+$("#input_returnpay_manual").keypress(function (e) {
+  if (e.which == 13) {
+    $("#input_returnpay_manual").val(convertString($(this).val()));
+    oncheck_Returnpay_manual($(this).val());
+  }
+});
+
 $("#input_returnpay").keypress(function (e) {
   if (e.which == 13) {
     $("#input_returnpay").val(convertString($(this).val()));
@@ -124,6 +244,38 @@ $("#input_returnpay").keypress(function (e) {
 $("#select_deproom_pay").change(function (e) {
   show_detail_deproom_pay();
 });
+
+
+
+function DeleteDoctor(selectedValue) {
+
+  var index = doctor_Array.indexOf(String(selectedValue));
+  console.log(index);
+
+  if (index !== -1) {
+    doctor_Array.splice(index, 1);
+  }
+
+  console.log(doctor_Array);
+  $(".div_" + selectedValue).attr('hidden', true);
+
+}
+
+function Deletprocedure(selectedValue) {
+
+  var index = procedure_id_Array.indexOf(String(selectedValue));
+  console.log(index);
+
+  if (index !== -1) {
+    procedure_id_Array.splice(index, 1);
+  }
+
+  console.log(procedure_id_Array);
+  $(".div_" + selectedValue).attr('hidden', true);
+
+}
+
+
 
 function show_detail_deproom_pay() {
   $.ajax({
@@ -151,7 +303,7 @@ function show_detail_deproom_pay() {
                       <td class=""></td>
                    </tr>`;
           $.each(ObjData[value.id], function (kay, value2) {
-            if (value2.cnt_sub >= value2.cnt_detail) {
+            if (value2.cnt_detail == "ครบ") {
               var txt = "ครบ";
               var sty = "color:#00bf63 ";
             } else {
@@ -159,6 +311,12 @@ function show_detail_deproom_pay() {
               var sty = "color:#ed1c24 ";
             }
 
+            if (value2.Procedure_TH == "button") {
+              value2.Procedure_TH = `<a class="text-primary" style="cursor:pointer;" onclick='showDetail_Procedure("${value2.procedure}")'>หัตถการ</a>`;
+            }
+            if (value2.Doctor_Name == "button") {
+              value2.Doctor_Name = `<a class="text-primary" style="cursor:pointer;" onclick='showDetail_Doctor("${value2.doctor}")'>แพทย์</a>`;
+            }
             _tr += `<tr class='tr_${value.id} all111' >
                           <td class='text-center'>
                             <div class="form-check">
@@ -239,6 +397,65 @@ function show_detail_deproom_pay() {
   });
 }
 
+function showDetail_Doctor(doctor) {
+  $("#myModal_Doctor").modal("toggle");
+
+  $.ajax({
+    url: "process/pay.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "showDetail_Doctor",
+      doctor: doctor,
+    },
+    success: function (result) {
+      // $("#table_item_claim").DataTable().destroy();
+      $("#table_detail_Doctor tbody").html("");
+      var ObjData = JSON.parse(result);
+      if (!$.isEmptyObject(ObjData)) {
+        var _tr = ``;
+        var allpage = 0;
+        $.each(ObjData, function (kay, value) {
+          _tr += `<tr>
+              <td class="text-center">${kay + 1}</td>
+              <td class="text-left">${value.Doctor_Name}</td>
+            </tr>`;
+        });
+
+        $("#table_detail_Doctor tbody").html(_tr);
+      }
+    },
+  });
+}
+function showDetail_Procedure(procedure) {
+  $("#myModal_Procedure").modal("toggle");
+
+  $.ajax({
+    url: "process/pay.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "showDetail_Procedure",
+      procedure: procedure,
+    },
+    success: function (result) {
+      // $("#table_item_claim").DataTable().destroy();
+      $("#table_detail_Procedure tbody").html("");
+      var ObjData = JSON.parse(result);
+      if (!$.isEmptyObject(ObjData)) {
+        var _tr = ``;
+        var allpage = 0;
+        $.each(ObjData, function (kay, value) {
+          _tr += `<tr>
+              <td class="text-center">${kay + 1}</td>
+              <td class="text-left">${value.Procedure_TH}</td>
+            </tr>`;
+        });
+
+        $("#table_detail_Procedure tbody").html(_tr);
+      }
+    },
+  });
+}
+
 function oncheck_show_byDocNo(DocNo, hn_record_id, serviceDate, serviceTime) {
   $(".clear_checkbox").prop("checked", false);
   $("#checkbox_" + DocNo).prop("checked", true);
@@ -304,64 +521,28 @@ function show_detail_item_ByDocNo() {
       }
 
       $("#table_deproom_DocNo_pay tbody").html(_tr);
-      // $("#table_deproom_DocNo_pay").DataTable({
-      //   language: {
-      //     emptyTable: settext("dataTables_empty"),
-      //     paginate: {
-      //       next: settext("table_itemStock_next"),
-      //       previous: settext("table_itemStock_previous"),
-      //     },
-      //     search: settext("btn_Search"),
-      //     info:
-      //       settext("dataTables_Showing") +
-      //       " _START_ " +
-      //       settext("dataTables_to") +
-      //       " _END_ " +
-      //       settext("dataTables_of") +
-      //       " _TOTAL_ " +
-      //       settext("dataTables_entries") +
-      //       " ",
-      //   },
-      //   columnDefs: [
-      //     {
-      //       width: "40%",
-      //       targets: 0,
-      //     },
-      //     {
-      //       width: "10%",
-      //       targets: 1,
-      //     },
-      //     {
-      //       width: "10%",
-      //       targets: 2,
-      //     },
-      //     {
-      //       width: "10%",
-      //       targets: 3,
-      //     },
-      //   ],
-      //   info: false,
-      //   scrollX: false,
-      //   scrollCollapse: false,
-      //   visible: false,
-      //   searching: false,
-      //   lengthChange: false,
-      //   fixedHeader: false,
-      //   ordering: false,
-      // });
-      // $("th").removeClass("sorting_asc");
-      // if (_tr == "") {
-      //   $(".dataTables_info").text(
-      //     settext("dataTables_Showing") +
-      //       " 0 " +
-      //       settext("dataTables_to") +
-      //       " 0 " +
-      //       settext("dataTables_of") +
-      //       " 0 " +
-      //       settext("dataTables_entries") +
-      //       ""
-      //   );
-      // }
+
+      var check_q = 0;
+      $(".loop_item_pay").each(function (key_, value_) {
+        var qP = parseInt($(this).val());
+        if (qP < $("#qty_request_" + $(this).data("itemcode")).val()) {
+          check_q++;
+        }
+      });
+
+      if (check_q == 0) {
+        $("#text_balance_" + $("#input_Hn_pay").data("docno")).text("ครบ");
+        $("#text_balance_" + $("#input_Hn_pay").data("docno")).css(
+          "color",
+          "#00bf63"
+        );
+      } else {
+        $("#text_balance_" + $("#input_Hn_pay").data("docno")).text("ค้าง");
+        $("#text_balance_" + $("#input_Hn_pay").data("docno")).css(
+          "color",
+          "#ed1c24"
+        );
+      }
     },
   });
 }
@@ -423,29 +604,29 @@ function oncheck_pay_rfid() {
       show_detail_item_ByDocNo();
       $("body").loadingModal("destroy");
 
-      setTimeout(() => {
-        var check_q = 0;
-        $(".loop_item_pay").each(function (key_, value_) {
-          var qP = parseInt($(this).val());
-          if (qP < $("#qty_request_" + $(this).data("itemcode")).val()) {
-            check_q++;
-          }
-        });
+      // setTimeout(() => {
+      //   var check_q = 0;
+      //   $(".loop_item_pay").each(function (key_, value_) {
+      //     var qP = parseInt($(this).val());
+      //     if (qP < $("#qty_request_" + $(this).data("itemcode")).val()) {
+      //       check_q++;
+      //     }
+      //   });
 
-        if (check_q == 0) {
-          $("#text_balance_" + $("#input_Hn_pay").data("docno")).text("ครบ");
-          $("#text_balance_" + $("#input_Hn_pay").data("docno")).css(
-            "color",
-            "#00bf63"
-          );
-        } else {
-          $("#text_balance_" + $("#input_Hn_pay").data("docno")).text("ค้าง");
-          $("#text_balance_" + $("#input_Hn_pay").data("docno")).css(
-            "color",
-            "#ed1c24"
-          );
-        }
-      }, 1000);
+      //   if (check_q == 0) {
+      //     $("#text_balance_" + $("#input_Hn_pay").data("docno")).text("ครบ");
+      //     $("#text_balance_" + $("#input_Hn_pay").data("docno")).css(
+      //       "color",
+      //       "#00bf63"
+      //     );
+      //   } else {
+      //     $("#text_balance_" + $("#input_Hn_pay").data("docno")).text("ค้าง");
+      //     $("#text_balance_" + $("#input_Hn_pay").data("docno")).css(
+      //       "color",
+      //       "#ed1c24"
+      //     );
+      //   }
+      // }, 1000);
 
       if (itemname != "") {
         Swal.fire({
@@ -454,6 +635,107 @@ function oncheck_pay_rfid() {
           icon: "warning",
         });
       }
+    },
+  });
+}
+
+$("#btn_scan_RFid_manual").click(function (e) {
+  showLoading();
+
+  setTimeout(() => {
+    oncheck_pay_rfid_manual();
+  }, 300);
+});
+
+function oncheck_pay_rfid_manual() {
+
+  if (doctor_Array == [] ) {
+    showDialogFailed("กรุณาเลือกแพทย์");
+    return;
+  }
+
+  if ($("#select_deproom_manual").val() == "") {
+    showDialogFailed("กรุณาเลือกห้องตรวจ");
+    return;
+  }
+
+  if (procedure_id_Array == [] ) {
+    showDialogFailed("กรุณาเลือกหัตถการ");
+    return;
+  }
+
+
+  $.ajax({
+    url: "process/pay.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "oncheck_pay_rfid_manual",
+      input_Hn_pay_manual: $("#input_Hn_pay_manual").val(),
+      input_docNo_deproom_manual: $("#input_docNo_deproom_manual").val(),
+      input_docNo_HN_manual: $("#input_docNo_HN_manual").val(),
+      input_date_service_manual: $("#input_date_service_manual").val(),
+      input_time_service_manual: $("#input_time_service_manual").val(),
+      // select_doctor_manual: $("#select_doctor_manual").val(),
+      select_deproom_manual: $("#select_deproom_manual").val(),
+      // select_procedure_manual: $("#select_procedure_manual").val(),
+      select_doctor_manual: doctor_Array,
+      select_procedure_manual: procedure_id_Array,
+    },
+    success: function (result) {
+      var ObjData = JSON.parse(result);
+
+      $("#input_docNo_deproom_manual").val(ObjData.input_docNo_deproom_manual);
+      $("#input_docNo_HN_manual").val(ObjData.input_docNo_HN_manual);
+
+      show_detail_item_ByDocNo_manual();
+      $("#input_pay_manual").val("");
+    },
+  });
+}
+
+function oncheck_pay_manual(input_pay_manual) {
+
+  if (doctor_Array == [] ) {
+    showDialogFailed("กรุณาเลือกแพทย์");
+    return;
+  }
+
+  if ($("#select_deproom_manual").val() == "") {
+    showDialogFailed("กรุณาเลือกห้องตรวจ");
+    return;
+  }
+
+  if (procedure_id_Array == [] ) {
+    showDialogFailed("กรุณาเลือกหัตถการ");
+    return;
+  }
+
+
+  $.ajax({
+    url: "process/pay.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "oncheck_pay_manual",
+      input_pay_manual: input_pay_manual,
+      input_Hn_pay_manual: $("#input_Hn_pay_manual").val(),
+      input_docNo_deproom_manual: $("#input_docNo_deproom_manual").val(),
+      input_docNo_HN_manual: $("#input_docNo_HN_manual").val(),
+      input_date_service_manual: $("#input_date_service_manual").val(),
+      input_time_service_manual: $("#input_time_service_manual").val(),
+      // select_doctor_manual: $("#select_doctor_manual").val(),
+      select_deproom_manual: $("#select_deproom_manual").val(),
+      // select_procedure_manual: $("#select_procedure_manual").val(),
+      select_doctor_manual: doctor_Array,
+      select_procedure_manual: procedure_id_Array,
+    },
+    success: function (result) {
+      var ObjData = JSON.parse(result);
+
+      $("#input_docNo_deproom_manual").val(ObjData.input_docNo_deproom_manual);
+      $("#input_docNo_HN_manual").val(ObjData.input_docNo_HN_manual);
+
+      show_detail_item_ByDocNo_manual();
+      $("#input_pay_manual").val("");
     },
   });
 }
@@ -664,6 +946,29 @@ function search_hn_alert(input) {
   });
 }
 
+function oncheck_Returnpay_manual(input_returnpay_manual) {
+  $.ajax({
+    url: "process/pay.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "oncheck_Returnpay_manual",
+      input_returnpay_manual: input_returnpay_manual,
+      input_Hn_pay_manual: $("#input_Hn_pay_manual").val(),
+      input_docNo_deproom_manual: $("#input_docNo_deproom_manual").val(),
+      input_docNo_HN_manual: $("#input_docNo_HN_manual").val(),
+      input_date_service_manual: $("#input_date_service_manual").val(),
+      input_time_service_manual: $("#input_time_service_manual").val(),
+      select_doctor_manual: $("#select_doctor_manual").val(),
+      select_deproom_manual: $("#select_deproom_manual").val(),
+      select_procedure_manual: $("#select_procedure_manual").val(),
+    },
+    success: function (result) {
+      show_detail_item_ByDocNo_manual();
+      $("#input_returnpay_manual").val("");
+    },
+  });
+}
+
 function oncheck_Returnpay(input_returnpay) {
   if ($("#input_Hn_pay").data("docno") == "") {
     showDialogFailed("กรุณาเลือกห้องผ่าตัด");
@@ -765,6 +1070,61 @@ function open_deproom_sub(id) {
 
     // $(".tr_"+id).attr('hidden',false);
   }
+}
+
+function show_detail_item_ByDocNo_manual() {
+  $.ajax({
+    url: "process/pay.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "show_detail_item_ByDocNo_manual",
+      input_docNo_deproom_manual: $("#input_docNo_deproom_manual").val(),
+    },
+    success: function (result) {
+      var _tr = "";
+      $("#table_deproom_DocNo_pay_manual tbody").html("");
+      var ObjData = JSON.parse(result);
+      if (!$.isEmptyObject(ObjData)) {
+        $.each(ObjData, function (kay, value) {
+          var balance = value.cnt - value.cnt_pay;
+
+          if (balance < 0) {
+            // balance = 0;
+            balance = value.cnt_pay - value.cnt;
+
+            balance = "+" + balance;
+          }
+
+          var typename = "";
+          if (value.TyeName == "SUDs") {
+            typename = "danger";
+          }
+          if (value.TyeName == "OR Implant") {
+            typename = "primary";
+          }
+          if (value.TyeName == "Sterile") {
+            typename = "success";
+          }
+          _tr += `<tr>
+                      <td>
+
+                                  <div class="d-flex align-items-center">
+                                    <span class="mr-2">${value.itemname}</span>
+                                    <button class="btn btn-outline-${typename} btn-sm" disabled>${value.TyeName}</button>
+                                  </div>
+
+                      
+                      </td>
+                      <td class='text-center'><input type='text' class='form-control text-center f18' value="${value.cnt}" disabled id="qty_request_${value.itemcode}"></td>
+                      <td class='text-center'><input type='text' class='form-control text-center f18 loop_item_pay' value="${value.cnt_pay}"  data-itemcode='${value.itemcode}' disabled></td>
+                      <td class='text-center'><input type='text' class='form-control text-center f18 loop_item_balance' disabled value="${balance}" id="balance_request_${value.itemcode}"></td>
+                   </tr>`;
+        });
+      }
+
+      $("#table_deproom_DocNo_pay_manual tbody").html(_tr);
+    },
+  });
 }
 
 // history
@@ -984,6 +1344,7 @@ function select_deproom() {
       }
       $("#select_deproom_pay").html(option);
       $("#select_deproom_history").html(option);
+      $("#select_deproom_manual").html(option);
     },
   });
 }
@@ -1006,6 +1367,7 @@ function select_doctor() {
         option = `<option value="0">ไม่มีข้อมูล</option>`;
       }
       $("#select_doctor_history").html(option);
+      $("#select_doctor_manual").html(option);
     },
   });
 }
@@ -1028,6 +1390,7 @@ function select_procedure() {
         option = `<option value="0">ไม่มีข้อมูล</option>`;
       }
       $("#select_procedure_history").html(option);
+      $("#select_procedure_manual").html(option);
     },
   });
 }
@@ -1210,58 +1573,6 @@ function feeddataClaim() {
         });
 
         $("#table_item_claim tbody").html(_tr);
-        // $("#table_item_claim").DataTable({
-        //   language: {
-        //     emptyTable: settext("dataTables_empty"),
-        //     paginate: {
-        //       next: settext("table_itemStock_next"),
-        //       previous: settext("table_itemStock_previous"),
-        //     },
-        //     info:
-        //       settext("dataTables_Showing") +
-        //       " _START_ " +
-        //       settext("dataTables_to") +
-        //       " _END_ " +
-        //       settext("dataTables_of") +
-        //       " _TOTAL_ " +
-        //       settext("dataTables_entries") +
-        //       " ",
-        //   },
-        //   columnDefs: [
-        //     {
-        //       width: "5%",
-        //       targets: 0,
-        //       width: "5%",
-        //       targets: 1,
-        //       width: "70%",
-        //       targets: 2,
-        //       width: "20%",
-        //       targets: 3,
-        //     },
-        //   ],
-        //   info: true,
-        //   scrollX: false,
-        //   scrollCollapse: false,
-        //   visible: false,
-        //   searching: false,
-        //   lengthChange: false,
-        //   fixedHeader: false,
-        //   ordering: false,
-        // });
-
-        $("th").removeClass("sorting_asc");
-        if (_tr == "") {
-          $(".dataTables_info").text(
-            settext("dataTables_Showing") +
-              " 0 " +
-              settext("dataTables_to") +
-              " 0 " +
-              settext("dataTables_of") +
-              " 0 " +
-              settext("dataTables_entries") +
-              ""
-          );
-        }
       }
     },
   });

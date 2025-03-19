@@ -5,7 +5,7 @@
 
 
 
-<div class="row">
+    <div class="row">
         <div class="col-md-6">
         </div>
         <div class="col-lg-3 mt-3 text-right">
@@ -147,7 +147,7 @@
                                     <div class="form-group row">
                                         <label style="color:black;font-weight: 600;">เวลาเข้ารับบริการ</label>
                                         <div class="input-group pr-2">
-                                            <input type="time" autocomplete="off" class="form-control  f18" id="select_time_request" >
+                                            <input type="time" autocomplete="off" class="form-control  f18" id="select_time_request">
                                         </div>
                                     </div>
                                 </div>
@@ -157,6 +157,9 @@
                                         <label style="color:black;font-weight: 600;">แพทย์</label>
                                         <select class="form-control f18" autocomplete="off" id="select_doctor_request"></select>
                                     </div>
+                                </div>
+
+                                <div class="col-md-12" style="display: contents;" id="row_doctor">
                                 </div>
 
                                 <div class="col-md-12">
@@ -173,6 +176,9 @@
                                     </div>
                                 </div>
 
+
+                                <div class="col-md-12" style="display: contents;" id="row_procedure">
+                                </div>
 
                                 <div class="col-md-12">
                                     <div class="form-group ">

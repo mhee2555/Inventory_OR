@@ -1,11 +1,13 @@
 var departmentroomname = "";
 var UserName = "";
+var procedure_id_Array = [];
+var doctor_Array = [];
+
 $(function () {
   var now = new Date();
   var hours = String(now.getHours()).padStart(2, "0");
   var minutes = String(now.getMinutes()).padStart(2, "0");
   var currentTime = hours + ":" + minutes;
-
 
   var d = new Date();
   var month = d.getMonth() + 1;
@@ -19,7 +21,6 @@ $(function () {
     month +
     "-" +
     year;
-
 
   // Set the value of the input
   $("#select_time_request").val(currentTime);
@@ -101,9 +102,78 @@ $(function () {
   $(".numonly").on("input", function () {
     this.value = this.value.replace(/[^0-9-]/g, ""); //<-- replace all other than given set of values
   });
+
+  $("#select_procedure_request").on("select2:select", function (e) {
+    var selectedValue = e.params.data.id; // ดึงค่า value
+    var selectedText = e.params.data.text; // ดึงค่า text
+    if (selectedValue != "") {
+      var index = procedure_id_Array.indexOf(selectedValue);
+      if (index == -1) {
+        procedure_id_Array.push(selectedValue);
+        var _row = "";
+        _row += `       <div  class='div_${selectedValue} pl-3 clear_procedure' onclick='Deletprocedure(${selectedValue})'>
+                            <label for="" class="custom-label">${selectedText}</label>
+                        </div> `;
+
+        $("#row_procedure").append(_row);
+
+        $("#select_procedure_request").val("").trigger("change");
+      }
+    }
+  });
+
+  $("#select_doctor_request").on("select2:select", function (e) {
+    var selectedValue = e.params.data.id; // ดึงค่า value
+    var selectedText = e.params.data.text; // ดึงค่า text
+    if (selectedValue != "") {
+      var index = doctor_Array.indexOf(selectedValue);
+      if (index == -1) {
+        doctor_Array.push(selectedValue);
+        var _row = "";
+        _row += `       <div  class='div_${selectedValue} pl-3 clear_doctor' onclick='DeleteDoctor(${selectedValue})'>
+                            <label for="" class="custom-label">${selectedText}</label>
+                        </div> `;
+
+        $("#row_doctor").append(_row);
+
+        $("#select_doctor_request").val("").trigger("change");
+      }
+    }
+  });
+
+
 });
 
 // create_Request
+function DeleteDoctor(selectedValue) {
+
+  var index = doctor_Array.indexOf(String(selectedValue));
+  console.log(index);
+
+  if (index !== -1) {
+    doctor_Array.splice(index, 1);
+  }
+
+  console.log(doctor_Array);
+  $(".div_" + selectedValue).attr('hidden', true);
+
+}
+
+function Deletprocedure(selectedValue) {
+
+  var index = procedure_id_Array.indexOf(String(selectedValue));
+  console.log(index);
+
+  if (index !== -1) {
+    procedure_id_Array.splice(index, 1);
+  }
+
+  console.log(procedure_id_Array);
+  $(".div_" + selectedValue).attr('hidden', true);
+
+}
+
+
 $("#btn_search_request").click(function () {
   show_detail_item_request();
 });
@@ -159,6 +229,8 @@ $("#input_search_request").on("keydown", function (e) {
   show_detail_item_request();
 });
 
+
+
 $("#btn_confirm_send_request").click(function () {
   if ($("#txt_docno_request").val() == "") {
     showDialogFailed("กรุณากรอก เพิ่มรายการ");
@@ -178,15 +250,17 @@ $("#btn_confirm_send_request").click(function () {
     return;
   }
 
-  if ($("#select_doctor_request").val() == "") {
+  if (doctor_Array == [] ) {
     showDialogFailed("กรุณาเลือกแพทย์");
     return;
   }
+
   if ($("#select_deproom_request").val() == "") {
     showDialogFailed("กรุณาเลือกห้องตรวจ");
     return;
   }
-  if ($("#select_procedure_request").val() == "") {
+
+  if (procedure_id_Array == [] ) {
     showDialogFailed("กรุณาเลือกหัตถการ");
     return;
   }
@@ -487,14 +561,14 @@ function delete_request_qty(ID) {
 
 function delete_request_byItem(ID) {
   Swal.fire({
-    title: 'ยืนยัน',
+    title: "ยืนยัน",
     text: "ยืนยัน! การลบ?",
     icon: "warning",
     showCancelButton: true,
     confirmButtonColor: "#3085d6",
     cancelButtonColor: "#d33",
-    confirmButtonText: 'ยืนยัน',
-    cancelButtonText: 'ยกเลิก',
+    confirmButtonText: "ยืนยัน",
+    cancelButtonText: "ยกเลิก",
   }).then((result) => {
     if (result.isConfirmed) {
       $.ajax({
@@ -535,8 +609,8 @@ function onconfirm_send_request() {
       txt_docno_request: $("#txt_docno_request").val(),
       select_deproom_request: $("#select_deproom_request").val(),
       input_hn_request: $("#input_hn_request").val(),
-      select_doctor_request: $("#select_doctor_request").val(),
-      select_procedure_request: $("#select_procedure_request").val(),
+      select_doctor_request: doctor_Array,
+      select_procedure_request: procedure_id_Array,
       input_remark_request: $("#input_remark_request").val(),
       select_date_request: $("#select_date_request").val(),
       select_time_request: $("#select_time_request").val(),
@@ -550,6 +624,8 @@ function onconfirm_send_request() {
 
       showDialogSuccess("บันทึกสำเร็จ");
 
+
+
       setTimeout(() => {
         $("#table_item_detail_request").DataTable().destroy();
         $("#table_item_detail_request tbody").empty();
@@ -562,6 +638,9 @@ function onconfirm_send_request() {
         $("#select_doctor_request").val("");
         $("#select2-select_doctor_request-container").text("กรุณาเลือกแพทย์");
 
+        $(".clear_doctor").attr('hidden', true);
+        doctor_Array = [];
+
         $("#select_deproom_request").val("");
         $("#select2-select_deproom_request-container").text(
           "กรุณาเลือกห้องผ่าตัด"
@@ -571,6 +650,8 @@ function onconfirm_send_request() {
         $("#select2-select_procedure_request-container").text(
           "กรุณาเลือกหัตถการ"
         );
+        $(".clear_procedure").attr('hidden', true);
+        procedure_id_Array = [];
 
         $("#input_remark_request").val("");
       }, 300);
@@ -709,7 +790,11 @@ function show_detail_history() {
 }
 
 $("#btn_show_report").click(function () {
-  option = "?select_date_history_s=" + $("#select_date_history_s").val()+"&select_date_history_l=" + $("#select_date_history_l").val();
+  option =
+    "?select_date_history_s=" +
+    $("#select_date_history_s").val() +
+    "&select_date_history_l=" +
+    $("#select_date_history_l").val();
   window.open("report/phpexcel/Report_Create_Order_HN.php" + option, "_blank");
 });
 
@@ -813,7 +898,6 @@ function select_deproom() {
     },
   });
 }
-
 
 function select_type() {
   $.ajax({

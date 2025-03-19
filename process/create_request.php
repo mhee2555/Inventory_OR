@@ -107,6 +107,18 @@ function onconfirm_send_request($conn,$db)
     $qty_Array = $_POST['qty_Array'];
     $id_Array = $_POST['id_Array'];
 
+
+    // $select_doctor_request = implode(",", $select_doctor_request);
+    // $select_procedure_request = implode(",", $select_procedure_request);
+
+    $select_procedure_request = implode(",", $select_procedure_request);
+    $select_doctor_request = implode(",", $select_doctor_request);
+
+
+    // $id_Array = $_POST['id_Array'];
+    // $id_Array = $_POST['id_Array'];
+
+
     foreach ($id_Array as $key => $value) {
         $update = "UPDATE deproomdetail SET Qty = '$qty_Array[$key]' WHERE ID = '$value' ";
         $meQueryU = $conn->prepare($update);
