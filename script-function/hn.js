@@ -76,6 +76,18 @@ function show_detail_hn() {
       var _tr = ``;
       if (!$.isEmptyObject(ObjData)) {
         $.each(ObjData, function (kay, value) {
+
+
+          if (value.Procedure_TH == "button") {
+            value.Procedure_TH = `<a class="text-primary" style="cursor:pointer;" onclick='showDetail_Procedure("${value.procedure}")'>หัตถการ</a>`;
+          }
+          if (value.Doctor_Name == "button") {
+            value.Doctor_Name = `<a class="text-primary" style="cursor:pointer;" onclick='showDetail_Doctor("${value.doctor}")'>แพทย์</a>`;
+          }
+
+
+
+
           _tr +=
             `<tr class="color" onclick='setActive_feeddata_hncode_detail(${value.ID},"${value.DocNo}","${value.HnCode}")' id="tr_${value.ID}"> ` +
             `<td class="text-center">${kay + 1}</td>` +
@@ -137,6 +149,7 @@ function show_detail_hn() {
     },
   });
 }
+
 function feeddata_hncode(input_search) {
   $.ajax({
     url: "process/hn.php",
@@ -191,6 +204,66 @@ $("#btn_excel_all").click(function () {
   option = "?select_SDate=" + $("#select_SDate").val()+"&select_EDate=" + $("#select_EDate").val();
   window.open("report/phpexcel/Report_Medical_Instrument_Tracking.php" + option, "_blank");
 });
+
+
+function showDetail_Doctor(doctor) {
+  $("#myModal_Doctor").modal("toggle");
+
+  $.ajax({
+    url: "process/pay.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "showDetail_Doctor",
+      doctor: doctor,
+    },
+    success: function (result) {
+      // $("#table_item_claim").DataTable().destroy();
+      $("#table_detail_Doctor tbody").html("");
+      var ObjData = JSON.parse(result);
+      if (!$.isEmptyObject(ObjData)) {
+        var _tr = ``;
+        var allpage = 0;
+        $.each(ObjData, function (kay, value) {
+          _tr += `<tr>
+              <td class="text-center">${kay + 1}</td>
+              <td class="text-left">${value.Doctor_Name}</td>
+            </tr>`;
+        });
+
+        $("#table_detail_Doctor tbody").html(_tr);
+      }
+    },
+  });
+}
+function showDetail_Procedure(procedure) {
+  $("#myModal_Procedure").modal("toggle");
+
+  $.ajax({
+    url: "process/pay.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "showDetail_Procedure",
+      procedure: procedure,
+    },
+    success: function (result) {
+      // $("#table_item_claim").DataTable().destroy();
+      $("#table_detail_Procedure tbody").html("");
+      var ObjData = JSON.parse(result);
+      if (!$.isEmptyObject(ObjData)) {
+        var _tr = ``;
+        var allpage = 0;
+        $.each(ObjData, function (kay, value) {
+          _tr += `<tr>
+              <td class="text-center">${kay + 1}</td>
+              <td class="text-left">${value.Procedure_TH}</td>
+            </tr>`;
+        });
+
+        $("#table_detail_Procedure tbody").html(_tr);
+      }
+    },
+  });
+}
 
 
 function feeddata_hncode_detail(DocNo,HnCode) {
@@ -323,6 +396,7 @@ function session() {
     },
   });
 }
+
 function showDialogFailed(text) {
   Swal.fire({
     title: settext("alert_fail"),
@@ -330,6 +404,7 @@ function showDialogFailed(text) {
     icon: "error",
   });
 }
+
 function showDialogSuccess(text) {
   Swal.fire({
     title: settext("alert_success"),
@@ -338,6 +413,7 @@ function showDialogSuccess(text) {
     timer: 1000,
   });
 }
+
 function convertString(S_Input) {
   var S_QR = "";
 
@@ -353,6 +429,7 @@ function convertString(S_Input) {
 
   return S_QR;
 }
+
 function convertEN(char) {
   switch (char) {
     case "ข":
@@ -485,6 +562,7 @@ function convertEN(char) {
       return " ";
   }
 }
+
 function set_date() {
   var d = new Date();
   var month = d.getMonth() + 1;

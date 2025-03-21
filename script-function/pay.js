@@ -223,6 +223,11 @@ $("#input_pay").keypress(function (e) {
 
 $("#input_pay_manual").keypress(function (e) {
   if (e.which == 13) {
+    
+
+
+
+
     $("#input_pay_manual").val(convertString($(this).val()));
     oncheck_pay_manual($(this).val());
   }
@@ -230,6 +235,13 @@ $("#input_pay_manual").keypress(function (e) {
 
 $("#input_returnpay_manual").keypress(function (e) {
   if (e.which == 13) {
+
+    if ($("#input_returnpay_manual") == "") {
+      showDialogFailed("กรุณาเลือกรายการ");
+      return;
+    }
+
+
     $("#input_returnpay_manual").val(convertString($(this).val()));
     oncheck_Returnpay_manual($(this).val());
   }
@@ -649,10 +661,12 @@ $("#btn_scan_RFid_manual").click(function (e) {
 
 function oncheck_pay_rfid_manual() {
 
-  if (doctor_Array == [] ) {
+
+  if (doctor_Array.length === 0) {
     showDialogFailed("กรุณาเลือกแพทย์");
     return;
   }
+
 
   if ($("#select_deproom_manual").val() == "") {
     showDialogFailed("กรุณาเลือกห้องตรวจ");
@@ -695,7 +709,18 @@ function oncheck_pay_rfid_manual() {
 
 function oncheck_pay_manual(input_pay_manual) {
 
-  if (doctor_Array == [] ) {
+  if ($("#input_Hn_pay_manual").val() == "") {
+    showDialogFailed("กรุณากรอก HN");
+    return;
+  }
+
+  if ($("#input_pay_manual").val()  == "") {
+    showDialogFailed("กรุณาเลือกรายการ");
+    return;
+  }
+
+
+  if (doctor_Array.length === 0) {
     showDialogFailed("กรุณาเลือกแพทย์");
     return;
   }
@@ -705,7 +730,7 @@ function oncheck_pay_manual(input_pay_manual) {
     return;
   }
 
-  if (procedure_id_Array == [] ) {
+  if (doctor_Array.length === 0) {
     showDialogFailed("กรุณาเลือกหัตถการ");
     return;
   }
@@ -733,7 +758,7 @@ function oncheck_pay_manual(input_pay_manual) {
 
       $("#input_docNo_deproom_manual").val(ObjData.input_docNo_deproom_manual);
       $("#input_docNo_HN_manual").val(ObjData.input_docNo_HN_manual);
-
+      $("body").loadingModal("destroy");
       show_detail_item_ByDocNo_manual();
       $("#input_pay_manual").val("");
     },
@@ -1115,9 +1140,9 @@ function show_detail_item_ByDocNo_manual() {
 
                       
                       </td>
-                      <td class='text-center'><input type='text' class='form-control text-center f18' value="${value.cnt}" disabled id="qty_request_${value.itemcode}"></td>
+                      <td hidden class='text-center'><input type='text' class='form-control text-center f18' value="${value.cnt}" disabled id="qty_request_${value.itemcode}"></td>
                       <td class='text-center'><input type='text' class='form-control text-center f18 loop_item_pay' value="${value.cnt_pay}"  data-itemcode='${value.itemcode}' disabled></td>
-                      <td class='text-center'><input type='text' class='form-control text-center f18 loop_item_balance' disabled value="${balance}" id="balance_request_${value.itemcode}"></td>
+                      <td hidden class='text-center'><input type='text' class='form-control text-center f18 loop_item_balance' disabled value="${balance}" id="balance_request_${value.itemcode}"></td>
                    </tr>`;
         });
       }
@@ -1155,12 +1180,23 @@ function show_detail_history() {
       var ObjData = JSON.parse(result);
       if (!$.isEmptyObject(ObjData)) {
         $.each(ObjData, function (kay, value) {
+
+
+          if (value.Procedure_TH == "button") {
+            value.Procedure_TH = `<a class="text-primary" style="cursor:pointer;" onclick='showDetail_Procedure("${value.procedure}")'>หัตถการ</a>`;
+          }
+          if (value.Doctor_Name == "button") {
+            value.Doctor_Name = `<a class="text-primary" style="cursor:pointer;" onclick='showDetail_Doctor("${value.doctor}")'>แพทย์</a>`;
+          }
+
+
+
           _tr += `<tr>
                       <td class='text-center'>${kay + 1}</td>
                       <td class='text-center'>${value.serviceDate}</td>
                       <td class='text-center'>${value.hn_record_id}</td>
-                      <td class='text-left'>${value.Doctor_Name}</td>
-                      <td class='text-left'>${value.Procedure_TH}</td>
+                      <td class='text-center'>${value.Doctor_Name}</td>
+                      <td class='text-center'>${value.Procedure_TH}</td>
                       <td class='text-left'>${value.departmentroomname}</td>
                       <td class='text-center'><button class='btn btn-outline-danger f18' onclick='cancel_item_byDocNo("${
                         value.DocNo

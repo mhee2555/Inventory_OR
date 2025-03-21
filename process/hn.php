@@ -269,7 +269,9 @@ function show_detail_hn($conn, $db)
                     hncode.DocNo,
                     departmentroom.departmentroomname,
                     COALESCE(doctor.Doctor_Name_EN, '-') AS Doctor_Name,
-                    COALESCE(`procedure`.Procedure_EN, '-') AS Procedure_TH
+                    COALESCE(`procedure`.Procedure_EN, '-') AS Procedure_TH,
+                    hncode.doctor ,
+                    hncode.`procedure`
                 FROM
                     hncode
                 INNER JOIN
@@ -292,7 +294,9 @@ function show_detail_hn($conn, $db)
                         hncode.DocNo,
                         departmentroom.departmentroomname,
                         ISNULL(doctor.Doctor_Name_EN, '-' ) AS Doctor_Name ,
-                        ISNULL( [procedure].Procedure_EN , '-' ) AS Procedure_TH
+                        ISNULL( [procedure].Procedure_EN , '-' ) AS Procedure_TH,
+                        hncode.doctor ,
+                        hncode.`procedure`
                     FROM
                         hncode
                         INNER JOIN departmentroom ON departmentroom.id = hncode.departmentroomid
@@ -311,6 +315,14 @@ function show_detail_hn($conn, $db)
     $meQuery = $conn->prepare($query);
     $meQuery->execute();
     while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+
+        if (str_contains($row['procedure'], ',')) {
+            $row['Procedure_TH'] = 'button';
+        }
+        if (str_contains($row['doctor'], ',')) {
+            $row['Doctor_Name'] = 'button';
+        }
+        
         $return[] = $row;
     }
     echo json_encode($return);

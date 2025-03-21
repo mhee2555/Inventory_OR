@@ -262,8 +262,8 @@
 
                                 <div class="col-md-3 ">
                                     <div class="form-group ">
-                                        <label style="color:black;font-weight: 600;">สแกนจ่าย</label>
-                                        <input type="text" class="form-control f18" id="input_pay_manual" placeholder="" autocomplete="off">
+                                        <label style="color:green;font-weight: 600;">สแกนจ่าย</label>
+                                        <input type="text" class="form-control f18" id="input_pay_manual" placeholder="" style="border-color: green;" autocomplete="off">
 
                                     </div>
                                 </div>
@@ -297,9 +297,9 @@
                                 <thead style="background-color: #cdd6ff;">
                                     <tr>
                                         <th scope="col" class="text-center" id="" style="width: 70%;">รายการ</th>
-                                        <th scope="col" class="text-center" id="">ขอเบิก</th>
-                                        <th scope="col" class="text-center" id="">สแกนจ่าย</th>
-                                        <th scope="col" class="text-center" id="">คงเหลือ</th>
+                                        <!-- <th scope="col" class="text-center" id="">ขอเบิก</th> -->
+                                        <th scope="col" class="text-center" id="" style="width: 10%;">สแกนจ่าย</th>
+                                        <!-- <th scope="col" class="text-center" id="">คงเหลือ</th> -->
                                     </tr>
                                 </thead>
                                 <tbody>

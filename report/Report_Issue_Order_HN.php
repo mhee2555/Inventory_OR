@@ -49,7 +49,9 @@ class MYPDF extends TCPDF
                         doctor.ID AS doctor_ID,
                         `procedure`.ID AS procedure_ID,
                         departmentroom.id AS deproom_ID,
-                        deproom.Remark
+                        deproom.Remark,
+                        deproom.doctor,
+                        deproom.`procedure`
                     FROM
                         deproom
                     INNER JOIN
@@ -72,7 +74,9 @@ class MYPDF extends TCPDF
             doctor.ID AS doctor_ID,
             [procedure].ID AS procedure_ID,
             departmentroom.id AS deproom_ID,
-            deproom.Remark
+            deproom.Remark,
+            deproom.doctor,
+            deproom.`procedure`
             FROM
             deproom
             INNER JOIN doctor ON doctor.ID = deproom.doctor
@@ -87,10 +91,40 @@ class MYPDF extends TCPDF
         while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
             $_hn_record_id = $row['hn_record_id'];
             $_serviceDate = $row['serviceDate'];
-            $_Doctor_Name = $row['Doctor_Name'];
+            $_Doctor_Name = "";
             $_departmentroomname = $row['departmentroomname'];
             $_Remark = $row['Remark'];
-            $_Procedure_TH = $row['Procedure_TH'];
+            $_Procedure_TH = "";
+            $_doctor = $row['doctor'];
+            $_procedure = $row['procedure'];
+
+
+            $queryD = "SELECT doctor.Doctor_Name FROM doctor WHERE doctor.ID IN ($_doctor) ";
+
+            // echo $query;
+            $meQueryD = $conn->prepare($queryD);
+            $meQueryD->execute();
+            while ($rowD = $meQueryD->fetch(PDO::FETCH_ASSOC)) {
+                $_Doctor_Name .= " ".$rowD['Doctor_Name']. " " . " ,";
+            }
+            $_Doctor_Name = substr($_Doctor_Name, 0, -1);
+
+
+            $queryP = "SELECT
+                            `procedure`.Procedure_TH 
+                        FROM
+                            `procedure` 
+                        WHERE
+                            `procedure`.ID IN ( $_procedure ) ";
+
+                // echo $query;
+                $meQueryP = $conn->prepare($queryP);
+                $meQueryP->execute();
+                while ($rowP = $meQueryP->fetch(PDO::FETCH_ASSOC)) {
+                    $_Procedure_TH .= " ".$rowP['Procedure_TH']. " " . " ,";
+                }
+                $_Procedure_TH = substr($_Procedure_TH, 0, -1);
+
         }
 
         $this->Ln(9);
@@ -176,7 +210,7 @@ class MYPDF extends TCPDF
         // Arial italic 8
         $this->SetFont('db_helvethaica_x', 'i', 12);
         // Page number
-
+        require('../config/db.php');
         require('../connect/connect.php');
         $DocNo = $_GET['DocNo'];
         $_name1 = "";
