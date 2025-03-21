@@ -332,6 +332,7 @@ if (!isset($_SESSION['UserName'])) {
                     $("#menu10").css('color', '#667085');
                     $("#menu11").css('color', '#667085');
                     $("#menu12").css('color', '#667085');
+                    $("#menu13").css('color', '#667085');
                     $("#menu14").css('color', '#667085');
 
                     $("#ic_operation_room").attr("src", "assets/img_project/2_icon/ic_operation_room.png");
@@ -346,6 +347,7 @@ if (!isset($_SESSION['UserName'])) {
                     $("#ic_turnon_offdisplay").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
                     $("#ic_movement").attr("src", "assets/img_project/2_icon/ic_movement.png");
                     $("#ic_adjust_stock").attr("src", "assets/img_project/2_icon/ic_adjust_stock.png");
+                    $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
 
                 }
 
@@ -425,8 +427,9 @@ if (!isset($_SESSION['UserName'])) {
                     $("#menu10").css('color', '#667085');
                     $("#menu11").css('color', '#667085');
                     $("#menu12").css('color', '#667085');
+                    $("#menu13").css('color', '#667085');
 
-
+                    
                     $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
                     $("#ic_create_equipment_request").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
                     $("#ic_dispense_equipment").attr("src", "assets/img_project/2_icon/ic_dispense_equipment.png");
@@ -438,6 +441,7 @@ if (!isset($_SESSION['UserName'])) {
                     $("#ic_turnon_offdisplay").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
                     $("#ic_movement").attr("src", "assets/img_project/2_icon/ic_movement.png");
                     $("#ic_adjust_stock").attr("src", "assets/img_project/2_icon/ic_adjust_stock.png");
+                    $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
 
                 }
 
@@ -472,6 +476,7 @@ if (!isset($_SESSION['UserName'])) {
                 $("#menu10").css('color', '#667085');
                 $("#menu11").css('color', '#667085');
                 $("#menu12").css('color', '#667085');
+                $("#menu13").css('color', '#667085');
 
                 $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
                 $("#ic_setup_equipment_rooms").attr("src", "assets/img_project/2_icon/ic_receiveinventory.png");
@@ -482,8 +487,10 @@ if (!isset($_SESSION['UserName'])) {
                 $("#ic_inventory_tools").attr("src", "assets/img_project/2_icon/ic_inventory_tools.png");
                 $("#ic_search_hndata").attr("src", "assets/img_project/2_icon/ic_search_hndata.png");
                 $("#ic_turnon_offdisplay").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
+                $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
                 $("#ic_movement").attr("src", "assets/img_project/2_icon/ic_movement.png");
                 $("#ic_adjust_stock").attr("src", "assets/img_project/2_icon/ic_adjust_stock.png");
+                $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
 
 
 
@@ -518,7 +525,9 @@ if (!isset($_SESSION['UserName'])) {
                 $("#menu10").css('color', '#667085');
                 $("#menu11").css('color', '#667085');
                 $("#menu12").css('color', '#667085');
+                $("#menu13").css('color', '#667085');
 
+                $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
                 $("#ic_create_equipment_request").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
                 $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
                 $("#ic_setup_equipment_rooms").attr("src", "assets/img_project/2_icon/ic_receiveinventory.png");
@@ -528,6 +537,7 @@ if (!isset($_SESSION['UserName'])) {
                 $("#ic_inventory_tools").attr("src", "assets/img_project/2_icon/ic_inventory_tools.png");
                 $("#ic_search_hndata").attr("src", "assets/img_project/2_icon/ic_search_hndata.png");
                 $("#ic_turnon_offdisplay").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
+                $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
                 $("#ic_movement").attr("src", "assets/img_project/2_icon/ic_movement.png");
                 $("#ic_adjust_stock").attr("src", "assets/img_project/2_icon/ic_adjust_stock.png");
 
@@ -564,7 +574,9 @@ if (!isset($_SESSION['UserName'])) {
                 $("#menu10").css('color', '#667085');
                 $("#menu11").css('color', '#667085');
                 $("#menu12").css('color', '#667085');
+                $("#menu13").css('color', '#667085');
 
+                $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
                 $("#ic_dispense_equipment").attr("src", "assets/img_project/2_icon/ic_dispense_equipment.png");
                 $("#ic_create_equipment_request").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
                 $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
@@ -609,7 +621,9 @@ if (!isset($_SESSION['UserName'])) {
                 $("#menu10").css('color', '#667085');
                 $("#menu11").css('color', '#667085');
                 $("#menu12").css('color', '#667085');
+                $("#menu13").css('color', '#667085');
 
+                $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
                 $("#ic_receive_contaminated_equipment").attr("src", "assets/img_project/2_icon/ic_receive_contaminated_equipment.png");
                 $("#ic_dispense_equipment").attr("src", "assets/img_project/2_icon/ic_dispense_equipment.png");
                 $("#ic_create_equipment_request").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
@@ -653,7 +667,9 @@ if (!isset($_SESSION['UserName'])) {
                 $("#menu10").css('color', '#667085');
                 $("#menu11").css('color', '#667085');
                 $("#menu12").css('color', '#667085');
+                $("#menu13").css('color', '#667085');
 
+                $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
                 $("#ic_send_nsterile").attr("src", "assets/img_project/2_icon/ic_send_nsterile.png");
                 $("#ic_receive_contaminated_equipment").attr("src", "assets/img_project/2_icon/ic_receive_contaminated_equipment.png");
                 $("#ic_dispense_equipment").attr("src", "assets/img_project/2_icon/ic_dispense_equipment.png");
@@ -697,7 +713,9 @@ if (!isset($_SESSION['UserName'])) {
                 $("#menu10").css('color', '#667085');
                 $("#menu11").css('color', '#667085');
                 $("#menu12").css('color', '#667085');
+                $("#menu13").css('color', '#667085');
 
+                $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
                 $("#ic_register_equipment").attr("src", "assets/img_project/2_icon/ic_register_equipment.png");
                 $("#ic_send_nsterile").attr("src", "assets/img_project/2_icon/ic_send_nsterile.png");
                 $("#ic_receive_contaminated_equipment").attr("src", "assets/img_project/2_icon/ic_receive_contaminated_equipment.png");
@@ -763,7 +781,9 @@ if (!isset($_SESSION['UserName'])) {
                 $("#menu10").css('color', '#667085');
                 $("#menu11").css('color', '#667085');
                 $("#menu12").css('color', '#667085');
+                $("#menu13").css('color', '#667085');
 
+                $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
                 $("#ic_inventory_tools").attr("src", "assets/img_project/2_icon/ic_inventory_tools.png");
                 $("#ic_register_equipment").attr("src", "assets/img_project/2_icon/ic_register_equipment.png");
                 $("#ic_send_nsterile").attr("src", "assets/img_project/2_icon/ic_send_nsterile.png");
@@ -808,7 +828,9 @@ if (!isset($_SESSION['UserName'])) {
                 $("#menu9").css('color', '#667085');
                 $("#menu11").css('color', '#667085');
                 $("#menu12").css('color', '#667085');
+                $("#menu13").css('color', '#667085');
 
+                $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
                 $("#ic_search_hndata").attr("src", "assets/img_project/2_icon/ic_search_hndata.png");
                 $("#ic_inventory_tools").attr("src", "assets/img_project/2_icon/ic_inventory_tools.png");
                 $("#ic_register_equipment").attr("src", "assets/img_project/2_icon/ic_register_equipment.png");
@@ -852,7 +874,9 @@ if (!isset($_SESSION['UserName'])) {
                 $("#menu9").css('color', '#667085');
                 $("#menu10").css('color', '#667085');
                 $("#menu12").css('color', '#667085');
+                $("#menu13").css('color', '#667085');
 
+                $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png"); 
                 $("#ic_turnon_offdisplay").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
                 $("#ic_search_hndata").attr("src", "assets/img_project/2_icon/ic_search_hndata.png");
                 $("#ic_inventory_tools").attr("src", "assets/img_project/2_icon/ic_inventory_tools.png");
@@ -896,8 +920,9 @@ if (!isset($_SESSION['UserName'])) {
                 $("#menu9").css('color', '#667085');
                 $("#menu10").css('color', '#667085');
                 $("#menu11").css('color', '#667085');
+                $("#menu13").css('color', '#667085');
 
-
+                $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
                 $("#ic_movement").attr("src", "assets/img_project/2_icon/ic_movement.png");
                 $("#ic_turnon_offdisplay").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
                 $("#ic_search_hndata").attr("src", "assets/img_project/2_icon/ic_search_hndata.png");
@@ -918,6 +943,52 @@ if (!isset($_SESSION['UserName'])) {
                 loadScript('script-function/adjuststock.js');
             });
         })
+
+        $('#a_manage').on("click", function(e) {
+            e.preventDefault();
+            var link = this.href;
+            $.get(link, function(res) {
+
+                $(".nav-item").removeClass("active");
+                $(".nav-item").css("background-color", "");
+
+                $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/3_icon/ic_turnon_offdisplay.png");
+                $("#menu13").css('color', 'white');
+
+
+                $("#menu1").css('color', '#667085');
+                $("#menu2").css('color', '#667085');
+                $("#menu3").css('color', '#667085');
+                $("#menu4").css('color', '#667085');
+                $("#menu5").css('color', '#667085');
+                $("#menu6").css('color', '#667085');
+                $("#menu7").css('color', '#667085');
+                $("#menu8").css('color', '#667085');
+                $("#menu9").css('color', '#667085');
+                $("#menu10").css('color', '#667085');
+                $("#menu11").css('color', '#667085');
+
+                $("#ic_movement").attr("src", "assets/img_project/2_icon/ic_movement.png");
+                $("#ic_turnon_offdisplay").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
+                $("#ic_search_hndata").attr("src", "assets/img_project/2_icon/ic_search_hndata.png");
+                $("#ic_inventory_tools").attr("src", "assets/img_project/2_icon/ic_inventory_tools.png");
+                $("#ic_register_equipment").attr("src", "assets/img_project/2_icon/ic_register_equipment.png");
+                $("#ic_send_nsterile").attr("src", "assets/img_project/2_icon/ic_send_nsterile.png");
+                $("#ic_receive_contaminated_equipment").attr("src", "assets/img_project/2_icon/ic_receive_contaminated_equipment.png");
+                $("#ic_dispense_equipment").attr("src", "assets/img_project/2_icon/ic_dispense_equipment.png");
+                $("#ic_create_equipment_request").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
+                $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
+                $("#ic_setup_equipment_rooms").attr("src", "assets/img_project/2_icon/ic_receiveinventory.png");
+
+                $("#conMain").html(res);
+                $("#li_manage").addClass("active");
+                $("#li_manage").css("background-color", "#5271ff");
+                history.pushState({}, "Results for `Cats`", 'index.php?s=manage');
+                document.title = "manage";
+                loadScript('script-function/manage.js');
+            });
+        })
+
         $('#a_return-confirm').on("click", function(e) {
             e.preventDefault();
             var link = this.href;

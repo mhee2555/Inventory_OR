@@ -126,10 +126,15 @@
                     </li>
 
 
-
+                    <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_manage"  >
+                        <a class="collapse-item" href="pages/manage.php" style="color: black;font-size: 16px;" id="a_manage">
+                            <img id="ic_turnon_offdisplay_2" style="width: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;">
+                            <label style="font-size: 20px;color: #667085;" class="" id="menu13">จัดการข้อมูลระบบ</label>
+                        </a>
+                    </li>
                     
 
-
+                    
 
 
 

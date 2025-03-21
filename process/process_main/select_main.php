@@ -17,8 +17,32 @@ if (!empty($_POST['FUNC_NAME'])) {
         select_typeDocument($conn);
     } else if ($_POST['FUNC_NAME'] == 'select_type') {
         select_type($conn);
+    } else if ($_POST['FUNC_NAME'] == 'select_floor') {
+        select_floor($conn);
     }
 }
+
+function select_floor($conn)
+{
+    $return = array();
+
+    $query = "  SELECT
+                    floor.ID,
+                    floor.name_floor
+                FROM
+                    floor ";
+
+
+    $meQuery = $conn->prepare($query);
+    $meQuery->execute();
+    while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+        $return[] = $row;
+    }
+    echo json_encode($return);
+    unset($conn);
+    die;
+}
+
 function select_type($conn)
 {
     $return = array();
