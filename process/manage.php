@@ -57,8 +57,8 @@ function saveDeproom($conn)
 
 
     if ($input_IDDeproom == "") {
-        $query = "INSERT INTO departmentroom ( departmentroomname ,  floor_id ,  IsActive  ,  departmentroomname_EN   ) 
-        VALUES             ('$input_DeproomNameTH'  , '$input_DeproomFloor'  , $IsActive , '$input_DeproomNameEN'   ) ";
+        $query = "INSERT INTO departmentroom ( departmentroomname ,  floor_id ,  IsActive  ,  departmentroomname_EN ,  IsMainroom   ) 
+        VALUES             ('$input_DeproomNameTH'  , '$input_DeproomFloor'  , $IsActive , '$input_DeproomNameEN'  , 0 ) ";
     } else {
         $query = "UPDATE departmentroom SET   departmentroomname = '$input_DeproomNameTH' , floor_id = $input_DeproomFloor , IsActive = $IsActive , departmentroomname_EN = '$input_DeproomNameEN'
                   WHERE id = '$input_IDDeproom'  ";
@@ -132,11 +132,12 @@ function saveUser($conn)
 
 
     if ($input_IDUser == "") {
-        $query = "INSERT INTO users ( EmpCode ,  UserName ,  Password ,  IsCancel  ) 
-        VALUES             ('$input_empcodeUser'  , '$input_userName'  , '$input_passWord'  , $IsCancel   ) ";
+        $query = "INSERT INTO users ( EmpCode ,  UserName ,  Password ,  IsCancel , DeptID , display ) 
+        VALUES             ('$input_empcodeUser'  , '$input_userName'  , '$input_passWord'  , $IsCancel ,2  ,3 ) ";
 
-        $query2 = "INSERT INTO employee ( EmpCode ,  FirstName ,  LastName   , IsAdmin ) 
-        VALUES             ('$input_empcodeUser'  , '$input_nameUser' , '$input_lastUser'   ,  $IsAdmin ) ";
+        $query2 = "INSERT INTO employee ( EmpCode ,  FirstName ,  LastName   , IsAdmin , DepID ) 
+        VALUES             ('$input_empcodeUser'  , '$input_nameUser' , '$input_lastUser'   ,  $IsAdmin ,2) ";
+
 
         $meQuery = $conn->prepare($query);
         $meQuery->execute();
@@ -166,7 +167,6 @@ function saveUser($conn)
         $meQuery2 = $conn->prepare($query2);
         $meQuery2->execute();
     }
-
 
 
     echo "insert success";
@@ -276,12 +276,11 @@ function saveProcedure($conn)
     $input_IDProcedure = $_POST['input_IDProcedure'];
 
     if ($input_IDProcedure == "") {
-        $query = "INSERT INTO `procedure` ( Procedure_TH ,  IsActive ) 
-        VALUES             ('$input_Procedure'  , '1' ) ";
+        $query = "INSERT INTO `procedure` ( Procedure_TH , Procedure_EN, IsActive ) 
+        VALUES             ('$input_Procedure'  , '$input_Procedure' , '1' ) ";
     } else {
         $query = "UPDATE `procedure` SET Procedure_TH = '$input_Procedure' WHERE ID = '$input_IDProcedure'  ";
     }
-
 
 
     $meQuery = $conn->prepare($query);

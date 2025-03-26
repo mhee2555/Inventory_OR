@@ -37,7 +37,7 @@
                                     <label for="" style="font-size: 18px;font-weight: bold;color:black;">รหัสผ่าน</label>
                                     <input type="password" class="form-control form-control-user" id="input_PassWord" placeholder="รหัสผ่าน">
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group" hidden>
                                     <label for="" style="font-size: 18px;font-weight: bold;color:black;">ห้องตรวจ</label>
                                     <select id="select_departmentRoom" class="form-control" style="font-size: 20px;">
                                     </select>

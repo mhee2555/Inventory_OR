@@ -730,7 +730,7 @@ function oncheck_pay_manual(input_pay_manual) {
     return;
   }
 
-  if (doctor_Array.length === 0) {
+  if (procedure_id_Array.length === 0) {
     showDialogFailed("กรุณาเลือกหัตถการ");
     return;
   }

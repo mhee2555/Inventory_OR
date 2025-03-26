@@ -250,7 +250,7 @@ $("#btn_confirm_send_request").click(function () {
     return;
   }
 
-  if (doctor_Array == [] ) {
+  if (doctor_Array.length === 0 ) {
     showDialogFailed("กรุณาเลือกแพทย์");
     return;
   }
@@ -260,7 +260,7 @@ $("#btn_confirm_send_request").click(function () {
     return;
   }
 
-  if (procedure_id_Array == [] ) {
+  if (procedure_id_Array.length === 0) {
     showDialogFailed("กรุณาเลือกหัตถการ");
     return;
   }
@@ -305,7 +305,7 @@ function show_detail_item_request() {
                       <td>${value.Item_name}</td>
                       <td class='text-center'>${value.TyeName}</td>
                       <td class='text-center'> <img src="assets/img_project/1_icon/ic_fileimg.png" style='width:30%;'></td>
-                      <td class='text-center'><input type='text' class='form-control loop_qty_request text-center' data-itemcode="${
+                      <td class='text-center'><input type='number' class='form-control loop_qty_request text-center' data-itemcode="${
                         value.itemcode
                       }"></td>
                    </tr>`;

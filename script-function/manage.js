@@ -412,9 +412,16 @@ $("#btn_saveUser").click(function () {
     showDialogFailed("กรุณากรอก รหัสพนักงาน");
     return;
   }
-  saveDoctor();
+  saveUser();
 });
 function saveUser() {
+
+  if ($("#radio_statusUser1").is(":checked")) {
+    var IsCancel = 0;
+  } else {
+    var IsCancel = 1;
+  }
+
   $.ajax({
     url: "process/manage.php",
     type: "POST",
@@ -426,6 +433,7 @@ function saveUser() {
       input_userName: $("#input_userName").val(),
       input_passWord: $("#input_passWord").val(),
       input_IDUser: $("#input_IDUser").val(),
+      IsCancel: IsCancel,
     },
     success: function (result) {
       showDialogSuccess(result);

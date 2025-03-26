@@ -614,7 +614,7 @@ function show_detail_history($conn, $db)
                         $whereR ";
     }
 
-
+    
 
     $meQuery = $conn->prepare($query);
     $meQuery->execute();
