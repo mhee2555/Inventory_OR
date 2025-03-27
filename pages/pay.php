@@ -27,22 +27,18 @@
             </div>
         </div>
     </div>
-
-
-
 </div>
 
 
 
 </div>
-
-
 
 <div class="row mt-3">
     <div class=" col-md-12 col-lg-9  ">
         <div class="btn-group btn-group-toggle" role="group" aria-label="Basic example">
             <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;" id="radio_pay">จ่ายอุปกรณ์</button>
             <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;" id="radio_pay_manual">จ่ายอุปกรณ์ Manual</button>
+            <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;" id="radio_return_pay">สแกนอุปกรณ์คืนคลัง</button>
             <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;" id="radio_history_pay">ประวัติการจ่ายอุปกรณ์</button>
             <!-- <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;" id="radio_claim" hidden>เคลม</button> -->
         </div>
@@ -175,8 +171,6 @@
     </div>
 </div>
 
-
-
 <div id="pay_manual">
     <div class="row">
         <div class="col-md-12">
@@ -308,6 +302,52 @@
 
             </div>
         </div>
+    </div>
+</div>
+
+<div id="return">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+
+                    <div class="row">
+                        <div class="col-md-12">
+                                    <div class="form-group ">
+                                        <div class="input-group mb-2">
+                                            <input type="text" class="form-control f18" id="input_scan_return" autocomplete="off" placeholder="สแกนคืน">
+                                            <div class="input-group-append">
+                                                <div class="input-group-text"><i class="fa-solid fa-qrcode"></i></div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                        </div>
+
+                    </div>
+
+
+                    <table class="table table-hover table-sm" id="table_item_return">
+                        <thead style="background-color: #cdd6ff;">
+                            <tr>
+                                <th scope="col" class="text-center" id="">ลำดับ</th>
+                                <th scope="col" class="text-center" id="">รหัสอุปกรณ์</th>
+                                <th scope="col" class="text-center" id="" style="width: 60%;">อุปกรณ์</th>
+                                <th scope="col" class="text-center" id="">จำนวน</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+
+                    <div class="col-md-12 text-right mt-2">
+                        <button class="btn f18" style="background-color:#1570EF;color:#fff;" id="btn_send_return_data">ส่งข้อมูล</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
 

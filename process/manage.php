@@ -135,8 +135,8 @@ function saveUser($conn)
         $query = "INSERT INTO users ( EmpCode ,  UserName ,  Password ,  IsCancel , DeptID , display ) 
         VALUES             ('$input_empcodeUser'  , '$input_userName'  , '$input_passWord'  , $IsCancel ,1  ,3 ) ";
 
-        $query2 = "INSERT INTO employee ( EmpCode ,  FirstName ,  LastName   , IsAdmin , DepID ,IsAdmin) 
-        VALUES             ('$input_empcodeUser'  , '$input_nameUser' , '$input_lastUser'   ,  $IsAdmin ,1,1) ";
+        $query2 = "INSERT INTO employee ( EmpCode ,  FirstName ,  LastName   , DepID ,IsAdmin) 
+        VALUES             ('$input_empcodeUser'  , '$input_nameUser' , '$input_lastUser',1,1) ";
 
 
         $meQuery = $conn->prepare($query);

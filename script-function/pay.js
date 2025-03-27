@@ -63,6 +63,7 @@ $(function () {
   $("#history_pay").hide();
   $("#claim").hide();
   $("#pay_manual").hide();
+  $("#return").hide();
 
   $("#radio_pay").css("color", "#bbbbb");
   $("#radio_pay").css("background", "#EAECF0");
@@ -77,11 +78,16 @@ $(function () {
     $("#radio_claim").css("background", "");
     $("#radio_pay_manual").css("color", "black");
     $("#radio_pay_manual").css("background", "");
+    $("#radio_return_pay").css("background", "");
+    $("#radio_return_pay").css("color", "black");
 
     $("#pay").show();
     $("#history_pay").hide();
     $("#claim").hide();
     $("#pay_manual").hide();
+    $("#return").hide();
+
+    
 
     show_detail_deproom_pay();
   });
@@ -96,11 +102,14 @@ $(function () {
     $("#radio_claim").css("background", "");
     $("#radio_pay").css("color", "black");
     $("#radio_pay").css("background", "");
+    $("#radio_return_pay").css("background", "");
+    $("#radio_return_pay").css("color", "black");
 
     $("#pay").hide();
     $("#history_pay").hide();
     $("#claim").hide();
     $("#pay_manual").show();
+    $("#return").hide();
 
     $("#select_deproom_manual").select2();
     $("#select_doctor_manual").select2();
@@ -165,6 +174,25 @@ $(function () {
     }, 500);
   });
 
+  $("#radio_return_pay").click(function () {
+    $("#radio_return_pay").css("color", "#bbbbb");
+    $("#radio_return_pay").css("background", "#EAECF0");
+    $("#radio_pay").css("color", "black");
+    $("#radio_pay").css("background", "");
+    $("#radio_history_pay").css("color", "black");
+    $("#radio_history_pay").css("background", "");
+    $("#radio_pay_manual").css("color", "black");
+    $("#radio_pay_manual").css("background", "");
+
+    $("#pay").hide();
+    $("#history_pay").hide();
+    $("#return").show();
+    $("#pay_manual").hide();
+
+    feeddata_waitReturn();
+    // feeddataClaim();
+  });
+
   $("#radio_history_pay").click(function () {
     $("#radio_history_pay").css("color", "#bbbbb");
     $("#radio_history_pay").css("background", "#EAECF0");
@@ -175,11 +203,15 @@ $(function () {
     $("#radio_claim").css("background", "");
     $("#radio_pay_manual").css("color", "black");
     $("#radio_pay_manual").css("background", "");
+    $("#radio_return_pay").css("background", "");
+    $("#radio_return_pay").css("color", "black");
+
 
     $("#pay").hide();
     $("#history_pay").show();
     $("#claim").hide();
     $("#pay_manual").hide();
+    $("#return").hide();
 
     show_detail_history();
 
@@ -187,6 +219,7 @@ $(function () {
     $("#select_doctor_history").select2();
     $("#select_procedure_history").select2();
   });
+
   $("#radio_claim").click(function () {
     $("#radio_claim").css("color", "#bbbbb");
     $("#radio_claim").css("background", "#EAECF0");
@@ -253,6 +286,7 @@ $("#input_returnpay").keypress(function (e) {
     oncheck_Returnpay($(this).val());
   }
 });
+
 $("#select_deproom_pay").change(function (e) {
   show_detail_deproom_pay();
 });
@@ -438,6 +472,7 @@ function showDetail_Doctor(doctor) {
     },
   });
 }
+
 function showDetail_Procedure(procedure) {
   $("#myModal_Procedure").modal("toggle");
 
@@ -1436,6 +1471,112 @@ function select_procedure() {
     },
   });
 }
+
+// return
+
+$("#btn_send_return_data").click(function () {
+  Swal.fire({
+    title: "ยืนยัน",
+    text: "ยืนยัน! การส่งข้อมูล ?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "ยืนยัน",
+    cancelButtonText: "ยกเลิก",
+  }).then((result) => {
+    if (result.isConfirmed) {
+
+      $.ajax({
+        url: "process/pay.php",
+        type: "POST",
+        data: {
+          FUNC_NAME: "onReturnData",
+        },
+        success: function (result) {
+
+          feeddata_waitReturn();
+        },
+      });
+
+
+    }
+  });
+});
+$("#input_scan_return").keypress(function (e) {
+  if (e.which == 13) {
+    $("#input_scan_return").val(convertString($(this).val().trim()));
+    $.ajax({
+      url: "process/pay.php",
+      type: "POST",
+      data: {
+        FUNC_NAME: "checkScanReturn",
+        UsageCode: $(this).val(),
+      },
+      success: function (result) {
+        var ObjData = JSON.parse(result);
+
+        if (!$.isEmptyObject(ObjData)) {
+          $.each(ObjData, function (kay, value) {
+            var UsageCode = value.UsageCode;
+            // alert(UsageCode);
+            $.ajax({
+              url: "process/pay.php",
+              type: "POST",
+              data: {
+                FUNC_NAME: "updateReturn",
+                UsageCode: UsageCode,
+              },
+              success: function (result) {
+                feeddata_waitReturn();
+              },
+            });
+          });
+        } else {
+          showDialogFailed(settext("alert_noItem"));
+        }
+
+        $("#input_scan_return").val("");
+      },
+    });
+  }
+});
+
+function feeddata_waitReturn() {
+  $.ajax({
+    url: "process/pay.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "feeddata_waitReturn",
+    },
+    success: function (result) {
+      // $("#table_item_claim").DataTable().destroy();
+      $("#table_item_return tbody").html("");
+      var ObjData = JSON.parse(result);
+      if (!$.isEmptyObject(ObjData)) {
+        var _tr = ``;
+        var allpage = 0;
+        $.each(ObjData, function (kay, value) {
+
+          if(value.cnt > 0){
+            _tr +=
+            `<tr> ` +
+            `<td class="text-center">${kay + 1}</td>` +
+            `<td class="text-center">${value.itemcode}</td>` +
+            `<td class="text-left">${value.itemname}</td>` +
+            `<td class="text-center">${value.cnt}</td>` +
+            ` </tr>`;
+          }
+
+        });
+
+        $("#table_item_return tbody").html(_tr);
+      }
+    },
+  });
+}
+
+
 
 // claim
 $("#input_scanclaim").keypress(function (e) {

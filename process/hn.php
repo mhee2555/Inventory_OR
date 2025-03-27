@@ -134,41 +134,41 @@ function feeddata_hncode_detail($conn, $db)
     // } 
 
 
-            $D = "DELETE 
-                    FROM
-                        hncode_detail 
-                    WHERE
-                        hncode_detail.DocNo = '$DocNo' 
-                        AND hncode_detail.ItemStockID NOT IN (
-                        SELECT
-                            itemstock.RowID 
-                        FROM
-                            itemstock 
-                        WHERE
-                            itemstock.Isdeproom = '1' 
-                        AND itemstock.HNCode = '$HnCode' 
-                        )
-                        AND hncode_detail.ItemCode IS NULL  ";
+            // $D = "DELETE 
+            //         FROM
+            //             hncode_detail 
+            //         WHERE
+            //             hncode_detail.DocNo = '$DocNo' 
+            //             AND hncode_detail.ItemStockID NOT IN (
+            //             SELECT
+            //                 itemstock.RowID 
+            //             FROM
+            //                 itemstock 
+            //             WHERE
+            //                 itemstock.Isdeproom = '1' 
+            //             AND itemstock.HNCode = '$HnCode' 
+            //             )
+            //             AND hncode_detail.ItemCode IS NULL  ";
 
-            $meQuery_D = $conn->prepare($D);
-            $meQuery_D->execute();
+            // $meQuery_D = $conn->prepare($D);
+            // $meQuery_D->execute();
 
-            $D2 = "DELETE 
-            FROM
-                itemstock_transaction_detail 
-            WHERE
-                itemstock_transaction_detail.ItemStockID NOT IN (
-                SELECT
-                    itemstock.RowID 
-                FROM
-                    itemstock 
-                WHERE
-                    itemstock.Isdeproom = '1' 
-                AND itemstock.HNCode = '$HnCode' 
-                )  ";
+            // $D2 = "DELETE 
+            // FROM
+            //     itemstock_transaction_detail 
+            // WHERE
+            //     itemstock_transaction_detail.ItemStockID NOT IN (
+            //     SELECT
+            //         itemstock.RowID 
+            //     FROM
+            //         itemstock 
+            //     WHERE
+            //         itemstock.Isdeproom = '1' 
+            //     AND itemstock.HNCode = '$HnCode' 
+            //     )  ";
 
-    $meQuery_D2 = $conn->prepare($D2);
-    $meQuery_D2->execute();
+    // $meQuery_D2 = $conn->prepare($D2);
+    // $meQuery_D2->execute();
 
     if ($db == 1) {
         $query = " SELECT
