@@ -332,7 +332,7 @@ function show_detail_deproom_pay() {
             _tr += `<tr class='tr_${value.id} all111' >
                           <td class='text-center'>
                             <div class="form-check">
-                              <input style="width: 20px;height: 20px;" class="form-check-input position-static clear_checkbox" type="checkbox" id="checkbox_${value2.DocNo}" onclick='oncheck_show_byDocNo("${value2.DocNo}","${value2.hn_record_id}","${value2.serviceDate}","${value2.serviceTime}")'>
+                              <input style="width: 20px;height: 20px;" class="form-check-input position-static clear_checkbox" type="checkbox" id="checkbox_${value2.DocNo}" onclick='oncheck_show_byDocNo("${value.id}","${value2.DocNo}","${value2.hn_record_id}","${value2.serviceDate}","${value2.serviceTime}")'>
                             </div>
                           </td>
                           <td>
@@ -468,13 +468,18 @@ function showDetail_Procedure(procedure) {
   });
 }
 
-function oncheck_show_byDocNo(DocNo, hn_record_id, serviceDate, serviceTime) {
+function oncheck_show_byDocNo(departmeneoomID,DocNo, hn_record_id, serviceDate, serviceTime) {
   $(".clear_checkbox").prop("checked", false);
   $("#checkbox_" + DocNo).prop("checked", true);
 
   $("#input_Hn_pay").val("HN Code : " + hn_record_id);
   $("#input_Hn_pay").data("docno", DocNo);
   $("#input_Hn_pay").data("hncode", hn_record_id);
+
+
+  $("#input_Hn_pay").data("departmeneoomid", departmeneoomID);
+
+
   $("#input_date_service").val(serviceDate);
   $("#input_time_service").val(serviceTime);
 
@@ -852,6 +857,7 @@ function oncheck_pay(input_pay) {
         input_pay: input_pay,
         DocNo_pay: $("#input_Hn_pay").data("docno"),
         hncode: $("#input_Hn_pay").data("hncode"),
+        departmeneoomID: $("#input_Hn_pay").data("departmeneoomid"),
         input_date_service: $("#input_date_service").val(),
       },
       success: function (result) {

@@ -354,7 +354,9 @@ function show_detail_history($conn,$db)
                     doctor.ID AS doctor_ID,
                     `procedure`.ID AS procedure_ID,
                     departmentroom.id AS deproom_ID,
-                    deproom.Remark
+                    deproom.Remark,
+                    deproom.doctor ,
+                    deproom.`procedure`
                 FROM
                     deproom
                 INNER JOIN
@@ -399,24 +401,33 @@ function show_detail_history($conn,$db)
         [procedure].ID AS procedure_ID,
         departmentroom.id AS deproom_ID,
         deproom.Remark
-    FROM
-        deproom
-        INNER JOIN doctor ON doctor.ID = deproom.doctor
-        INNER JOIN [procedure] ON deproom.[procedure] = [procedure].ID
-        INNER JOIN departmentroom ON deproom.Ref_departmentroomid = departmentroom.id 
-    WHERE
-        CONVERT(DATE,deproom.CreateDate)  BETWEEN  '$select_date_history_s'  AND '$select_date_history_l' 
-        AND deproom.IsCancel = 0
-         $whereD
-         $whereP
-         $whereR 
-        ORDER BY  deproom.ID DESC ";
+        FROM
+            deproom
+            INNER JOIN doctor ON doctor.ID = deproom.doctor
+            INNER JOIN [procedure] ON deproom.[procedure] = [procedure].ID
+            INNER JOIN departmentroom ON deproom.Ref_departmentroomid = departmentroom.id 
+        WHERE
+            CONVERT(DATE,deproom.CreateDate)  BETWEEN  '$select_date_history_s'  AND '$select_date_history_l' 
+            AND deproom.IsCancel = 0
+            $whereD
+            $whereP
+            $whereR 
+            ORDER BY  deproom.ID DESC ";
     }
 
 
     $meQuery = $conn->prepare($query);
     $meQuery->execute();
     while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+
+        if (str_contains($row['procedure'], ',')) {
+            $row['Procedure_TH'] = 'button';
+        }
+        if (str_contains($row['doctor'], ',')) {
+            $row['Doctor_Name'] = 'button';
+        }
+
+
         $return[] = $row;
     }
     echo json_encode($return);

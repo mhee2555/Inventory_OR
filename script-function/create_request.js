@@ -140,13 +140,10 @@ $(function () {
       }
     }
   });
-
-
 });
 
 // create_Request
 function DeleteDoctor(selectedValue) {
-
   var index = doctor_Array.indexOf(String(selectedValue));
   console.log(index);
 
@@ -155,12 +152,10 @@ function DeleteDoctor(selectedValue) {
   }
 
   console.log(doctor_Array);
-  $(".div_" + selectedValue).attr('hidden', true);
-
+  $(".div_" + selectedValue).attr("hidden", true);
 }
 
 function Deletprocedure(selectedValue) {
-
   var index = procedure_id_Array.indexOf(String(selectedValue));
   console.log(index);
 
@@ -169,10 +164,8 @@ function Deletprocedure(selectedValue) {
   }
 
   console.log(procedure_id_Array);
-  $(".div_" + selectedValue).attr('hidden', true);
-
+  $(".div_" + selectedValue).attr("hidden", true);
 }
-
 
 $("#btn_search_request").click(function () {
   show_detail_item_request();
@@ -229,8 +222,6 @@ $("#input_search_request").on("keydown", function (e) {
   show_detail_item_request();
 });
 
-
-
 $("#btn_confirm_send_request").click(function () {
   if ($("#txt_docno_request").val() == "") {
     showDialogFailed("กรุณากรอก เพิ่มรายการ");
@@ -250,7 +241,7 @@ $("#btn_confirm_send_request").click(function () {
     return;
   }
 
-  if (doctor_Array.length === 0 ) {
+  if (doctor_Array.length === 0) {
     showDialogFailed("กรุณาเลือกแพทย์");
     return;
   }
@@ -624,8 +615,6 @@ function onconfirm_send_request() {
 
       showDialogSuccess("บันทึกสำเร็จ");
 
-
-
       setTimeout(() => {
         $("#table_item_detail_request").DataTable().destroy();
         $("#table_item_detail_request tbody").empty();
@@ -638,7 +627,7 @@ function onconfirm_send_request() {
         $("#select_doctor_request").val("");
         $("#select2-select_doctor_request-container").text("กรุณาเลือกแพทย์");
 
-        $(".clear_doctor").attr('hidden', true);
+        $(".clear_doctor").attr("hidden", true);
         doctor_Array = [];
 
         $("#select_deproom_request").val("");
@@ -650,7 +639,7 @@ function onconfirm_send_request() {
         $("#select2-select_procedure_request-container").text(
           "กรุณาเลือกหัตถการ"
         );
-        $(".clear_procedure").attr('hidden', true);
+        $(".clear_procedure").attr("hidden", true);
         procedure_id_Array = [];
 
         $("#input_remark_request").val("");
@@ -680,6 +669,13 @@ function show_detail_history() {
       var ObjData = JSON.parse(result);
       if (!$.isEmptyObject(ObjData)) {
         $.each(ObjData, function (kay, value) {
+          if (value.Procedure_TH == "button") {
+            value.Procedure_TH = `<a class="text-primary" style="cursor:pointer;" onclick='showDetail_Procedure("${value.procedure}")'>หัตถการ</a>`;
+          }
+          if (value.Doctor_Name == "button") {
+            value.Doctor_Name = `<a class="text-primary" style="cursor:pointer;" onclick='showDetail_Doctor("${value.doctor}")'>แพทย์</a>`;
+          }
+
           _tr += `<tr>
                       <td class='text-center'>${kay + 1}</td>
                       <td class='text-center'>${value.serviceDate}</td>
@@ -692,8 +688,8 @@ function show_detail_history() {
                       }","${value.hn_record_id}","${value.serviceDate}","${
             value.doctor_ID
           }","${value.procedure_ID}","${value.deproom_ID}","${value.Remark}","${
-            value.Doctor_Name
-          }","${value.Procedure_TH}","${value.departmentroomname}","edit","${
+            value.doctor
+          }","${value.procedure}","${value.departmentroomname}","edit","${
             value.serviceTime
           }")'><i class="fa-regular fa-pen-to-square"></i> แก้ไข</button></td>
                       <td hidden class='text-center'><button class='btn btn-outline-danger f18' onclick='cancel_item_byDocNo("${
@@ -789,6 +785,65 @@ function show_detail_history() {
   });
 }
 
+function showDetail_Doctor(doctor) {
+  $("#myModal_Doctor").modal("toggle");
+
+  $.ajax({
+    url: "process/pay.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "showDetail_Doctor",
+      doctor: doctor,
+    },
+    success: function (result) {
+      // $("#table_item_claim").DataTable().destroy();
+      $("#table_detail_Doctor tbody").html("");
+      var ObjData = JSON.parse(result);
+      if (!$.isEmptyObject(ObjData)) {
+        var _tr = ``;
+        var allpage = 0;
+        $.each(ObjData, function (kay, value) {
+          _tr += `<tr>
+              <td class="text-center">${kay + 1}</td>
+              <td class="text-left">${value.Doctor_Name}</td>
+            </tr>`;
+        });
+
+        $("#table_detail_Doctor tbody").html(_tr);
+      }
+    },
+  });
+}
+function showDetail_Procedure(procedure) {
+  $("#myModal_Procedure").modal("toggle");
+
+  $.ajax({
+    url: "process/pay.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "showDetail_Procedure",
+      procedure: procedure,
+    },
+    success: function (result) {
+      // $("#table_item_claim").DataTable().destroy();
+      $("#table_detail_Procedure tbody").html("");
+      var ObjData = JSON.parse(result);
+      if (!$.isEmptyObject(ObjData)) {
+        var _tr = ``;
+        var allpage = 0;
+        $.each(ObjData, function (kay, value) {
+          _tr += `<tr>
+              <td class="text-center">${kay + 1}</td>
+              <td class="text-left">${value.Procedure_TH}</td>
+            </tr>`;
+        });
+
+        $("#table_detail_Procedure tbody").html(_tr);
+      }
+    },
+  });
+}
+
 $("#btn_show_report").click(function () {
   option =
     "?select_date_history_s=" +
@@ -859,14 +914,66 @@ function edit_item_byDocNo(
   $("#select_doctor_request").val(doctor_ID);
   $("#select_time_request").val(serviceTime);
 
-  $("#select2-select_doctor_request-container").text(Doctor_Name);
   $("#select2-select_deproom_request-container").text(departmentroomname);
-  $("#select2-select_procedure_request-container").text(Procedure_TH);
+  $("#select_deproom_request").val(deproom_ID);
+
+  // $("#select2-select_procedure_request-container").text(Procedure_TH);
+  // $("#select2-select_doctor_request-container").text(Doctor_Name);
+
+  // $("#select_procedure_request").val(procedure_ID);
+
+  $.ajax({
+    url: "process/pay.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "showDetail_Doctor",
+      doctor: Doctor_Name,
+    },
+    success: function (result) {
+      var ObjData = JSON.parse(result);
+      if (!$.isEmptyObject(ObjData)) {
+        var _row = "";
+        $.each(ObjData, function (kay, value) {
+          doctor_Array.push(value.ID);
+          _row += `       <div  class='div_${value.ID} pl-3 clear_doctor' onclick='DeleteDoctor(${value.ID})'>
+                              <label for="" class="custom-label">${value.Doctor_Name}</label>
+                          </div> `;
+        });
+        $("#row_doctor").append(_row);
+
+      }
+    },
+  });
+
+  $.ajax({
+    url: "process/pay.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "showDetail_Procedure",
+      procedure: Procedure_TH,
+    },
+    success: function (result) {
+      var ObjData = JSON.parse(result);
+      if (!$.isEmptyObject(ObjData)) {
+        var _row = "";
+        $.each(ObjData, function (kay, value) {
+          procedure_id_Array.push(value.ID);
+
+          
+          _row += `       <div  class='div_${value.ID} pl-3 clear_doctor' onclick='DeleteDoctor(${value.ID})'>
+                              <label for="" class="custom-label">${value.Procedure_TH}</label>
+                          </div> `;
+        });
+
+        $("#row_procedure").append(_row);
+
+      }
+    },
+  });
+
 
   $("#text_edit").val(text_edit);
 
-  $("#select_deproom_request").val(deproom_ID);
-  $("#select_procedure_request").val(procedure_ID);
   $("#input_remark_request").val(Remark);
 
   show_detail_request_byDocNo();

@@ -186,17 +186,17 @@
                         <div class="card-body">
 
                             <div class="row">
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <label style="color:black;font-weight: 600;">HN Code</label>
                                     <input type='text' class='form-control f18' id="input_Hn_pay_manual">
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <div class="form-group ">
                                         <label style="color:black;font-weight: 600;">วันที่รับบริการ</label>
                                         <input type="text" class="form-control datepicker-here f18" id="input_date_service_manual" data-language='en' data-date-format='dd-mm-yyyy'>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <div class="form-group ">
                                         <label style="color:black;font-weight: 600;">เวลารับบริการ</label>
                                         <input type="time" class="form-control datepicker-here f18" id="input_time_service_manual" data-language='en' data-date-format='dd-mm-yyyy'>
@@ -204,11 +204,31 @@
                                 </div>
 
 
+                                <div class="col-md-4">
+                                    <div class="form-group ">
+                                        <label style="color:black;font-weight: 600;">ห้องผ่าตัด</label>
+                                        <select class="form-control f18" autocomplete="off" id="select_deproom_manual"></select>
+                                    </div>
+                                </div>
 
 
+                                
+                                <div class="col-md-4">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group ">
+                                                <label style="color:black;font-weight: 600;">หัตถการ</label>
+                                                <select class="form-control f18" autocomplete="off" id="select_procedure_manual"></select>
+                                            </div>
+                                        </div>
+
+                                            <div class="col-md-12" style="display: ruby;" id="row_procedure">
+                                            </div>
+                                    </div>
+                                </div>
 
 
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group x">
@@ -227,47 +247,24 @@
 
 
 
-                                <div class="col-md-3">
-                                    <div class="form-group ">
-                                        <label style="color:black;font-weight: 600;">ห้องผ่าตัด</label>
-                                        <select class="form-control f18" autocomplete="off" id="select_deproom_manual"></select>
-                                    </div>
-                                </div>
-
-
-
-
-                                <div class="col-md-3">
-
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="form-group ">
-                                                <label style="color:black;font-weight: 600;">หัตถการ</label>
-                                                <select class="form-control f18" autocomplete="off" id="select_procedure_manual"></select>
-                                            </div>
-                                        </div>
-
-                                            <div class="col-md-12" style="display: ruby;" id="row_procedure">
-                                            </div>
-
-                                    </div>
-
-
-                                </div>
+              
 
 
 
 
 
 
-                                <div class="col-md-3 ">
+
+
+
+                                <div class="col-md-4 ">
                                     <div class="form-group ">
                                         <label style="color:green;font-weight: 600;">สแกนจ่าย</label>
                                         <input type="text" class="form-control f18" id="input_pay_manual" placeholder="" style="border-color: green;" autocomplete="off">
 
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <div class="form-group ">
                                         <label style="color:red;font-weight: 600;">สแกนคืนคลังหลักห้องผ่าตัด</label>
                                         <input type="text" class="form-control f18" id="input_returnpay_manual" placeholder="" style="border-color: red;" autocomplete="off">
@@ -287,7 +284,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-3 ">
+                                <div class="col-md-4 ">
                                     <button id="btn_scan_RFid_manual" class="btn btn-info " style="font-size: 13px;margin-top: 2rem !important;line-height: 25px;">จ่ายอุปกรณ์จากตู้ RFID & Weighing</button>
                                 </div>
                             </div>
