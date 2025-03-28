@@ -305,7 +305,7 @@ function feeddata() {
                             value.IsStatus = settext("ex");
                             var disabled = "disabled";
                             _tr += `<tr id='tr_${value.UsageCode}'> ` +
-                                `<td class="text-center"><input ${disabled} value="${value.UsageCode}"  type="checkbox"    data-itemstockid="${value.RowID}"    class="form-check-input checkAllSub_${kay}  checkAllSub checkAllSubxx_${value.UsageCode}" id="checkAllSub_${value.UsageCode}"   style="width: 25px;height: 20px;"></td>` +
+                                // `<td class="text-center"><input ${disabled} value="${value.UsageCode}"  type="checkbox"    data-itemstockid="${value.RowID}"    class="form-check-input checkAllSub_${kay}  checkAllSub checkAllSubxx_${value.UsageCode}" id="checkAllSub_${value.UsageCode}"   style="width: 25px;height: 20px;"></td>` +
                                 `<td class="text-center"><label >${kay + 1}</label></td>` +
                                 `<td class="text-center"><label >${value.UsageCode}</label></td>` +
                                 `<td class="text-left"><label >${value.itemname}</label></td>` +

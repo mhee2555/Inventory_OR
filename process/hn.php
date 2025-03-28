@@ -259,6 +259,15 @@ function show_detail_hn($conn, $db)
     $select_EDate = explode("-", $select_EDate);
     $select_EDate = $select_EDate[2] . '-' . $select_EDate[1] . '-' . $select_EDate[0];
 
+    $input_type_search = $_POST['input_type_search'];
+    $input_search = $_POST['input_search'];
+
+    $where = "";
+    if ($input_type_search == 1) {
+        $where = "AND hncode.HnCode LIKE '%$input_search%' ";
+    } else {
+        $where = "AND itemstock.UsageCode LIKE '%$input_search%' ";
+    }
 
 
     if ($db == 1) {
@@ -280,10 +289,16 @@ function show_detail_hn($conn, $db)
                     doctor ON doctor.ID = hncode.doctor
                 LEFT JOIN
                     `procedure` ON `procedure`.ID = hncode.`procedure`
+                LEFT JOIN
+                        hncode_detail ON hncode.DocNo = hncode_detail.DocNo
+                LEFT JOIN
+                        itemstock ON hncode_detail.ItemStockID = itemstock.RowID
                 WHERE
                     hncode.IsStatus = 1
                     AND hncode.IsCancel = 0
+                    $where
                     AND DATE(hncode.DocDate) BETWEEN '$select_SDate' AND '$select_EDate'
+                GROUP BY hncode.DocNo
                 ORDER BY
                     hncode.ID ASC ";
     } else {

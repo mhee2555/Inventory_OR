@@ -55,6 +55,25 @@
                             <div class="col-md-12 mt-3" hidden>
                                 <input type="text" class="form-control" id="input_IDdoctor" autocomplete="off" >
                             </div>
+                            <div class="col-md-12 mt-3">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label for="" style="color:black;" id="radio_statusDoctor">สถานะ</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="form-check-inline">
+                                            <label class="form-check-label" style="color:black;">
+                                                <input type="radio" class="form-check-input" name="radio_statusDoctor" id="radio_statusDoctor1" checked>Active
+                                            </label>
+                                        </div>
+                                        <div class="form-check-inline">
+                                            <label class="form-check-label" style="color:black;">
+                                                <input type="radio" class="form-check-input" name="radio_statusDoctor" id="radio_statusDoctor2">InActive
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="col-md-12 mt-3 text-right">
                                 <button type="button" class="btn" id="btn_clearDoctor" style="font-size:20px;">ล้างข้อมูล</button>
                                 <button type="button" class="btn btn-primary" id="btn_saveDoctor" style="color: #fff;background-color: #1570EF;color:#fff;font-size:20px;">บันทึก</button>
@@ -98,6 +117,25 @@
                             </div>
                             <div class="col-md-12 mt-3" hidden>
                                 <input type="text" class="form-control" id="input_IDProcedure" autocomplete="off" >
+                            </div>
+                            <div class="col-md-12 mt-3">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label for="" style="color:black;" id="radio_statusProcedure">สถานะ</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="form-check-inline">
+                                            <label class="form-check-label" style="color:black;">
+                                                <input type="radio" class="form-check-input" name="radio_statusProcedure" id="radio_statusProcedure1" checked>Active
+                                            </label>
+                                        </div>
+                                        <div class="form-check-inline">
+                                            <label class="form-check-label" style="color:black;">
+                                                <input type="radio" class="form-check-input" name="radio_statusProcedure" id="radio_statusProcedure2">InActive
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="col-md-12 mt-3 text-right">
                                 <button type="button" class="btn" id="btn_clearProcedure" style="font-size:20px;">ล้างข้อมูล</button>
@@ -152,7 +190,6 @@
                                 <input type="text" class="form-control" id="input_IDDeproom" autocomplete="off" >
                             </div>
                             <div class="col-md-12 mt-3">
-
                                 <div class="row">
                                     <div class="col-md-4">
                                         <label for="" style="color:black;" id="radio_statusDeproom">สถานะ</label>
@@ -170,8 +207,6 @@
                                         </div>
                                     </div>
                                 </div>
-
-
                             </div>
                             <div class="col-md-12 mt-3" hidden>
 

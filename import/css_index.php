@@ -184,7 +184,7 @@
         #div_login {
             opacity: 0.95;
             border-radius: 25px;
-            margin-left: -37rem;
+            /* margin-left: -37rem; */
         }
 
         #input_UserName {

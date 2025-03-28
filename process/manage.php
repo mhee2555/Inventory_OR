@@ -219,12 +219,14 @@ function saveDoctor($conn)
 {
     $input_doctorth = $_POST['input_doctorth'];
     $input_IDdoctor = $_POST['input_IDdoctor'];
+    $IsActive = $_POST['IsActive'];
+
 
     if ($input_IDdoctor == "") {
-        $query = "INSERT INTO `doctor` ( Doctor_Name) 
-        VALUES             ('$input_doctorth' ) ";
+        $query = "INSERT INTO `doctor` ( Doctor_Name , IsCancel) 
+        VALUES             ('$input_doctorth' , $IsActive ) ";
     } else {
-        $query = "UPDATE `doctor` SET Doctor_Name = '$input_doctorth' WHERE ID = '$input_IDdoctor'  ";
+        $query = "UPDATE `doctor` SET Doctor_Name = '$input_doctorth' , IsCancel = $IsActive WHERE ID = '$input_IDdoctor'  ";
     }
 
 
@@ -240,10 +242,10 @@ function feeddata_detailDoctor($conn, $db)
 {
     $return = array();
 
-
     $query = " SELECT
                      `doctor`.ID,
-                     `doctor`.Doctor_Name
+                     `doctor`.Doctor_Name,
+                     `doctor`.IsCancel
                 FROM
                      `doctor`  ";
 
@@ -274,12 +276,14 @@ function saveProcedure($conn)
 {
     $input_Procedure = $_POST['input_Procedure'];
     $input_IDProcedure = $_POST['input_IDProcedure'];
+    $IsActive = $_POST['IsActive'];
+
 
     if ($input_IDProcedure == "") {
         $query = "INSERT INTO `procedure` ( Procedure_TH , Procedure_EN, IsActive ) 
-        VALUES             ('$input_Procedure'  , '$input_Procedure' , '1' ) ";
+        VALUES             ('$input_Procedure'  , '$input_Procedure' , '$IsActive' ) ";
     } else {
-        $query = "UPDATE `procedure` SET Procedure_TH = '$input_Procedure' WHERE ID = '$input_IDProcedure'  ";
+        $query = "UPDATE `procedure` SET Procedure_TH = '$input_Procedure' , IsActive = '$IsActive'  WHERE ID = '$input_IDProcedure'  ";
     }
 
 
@@ -297,7 +301,8 @@ function feeddata_detailProcedure($conn, $db)
 
     $query = " SELECT
                      `procedure`.ID,
-                     `procedure`.Procedure_EN AS Procedure_TH
+                     `procedure`.Procedure_EN AS Procedure_TH,
+                     `procedure`.IsActive
                 FROM
                      `procedure`  ";
 

@@ -99,6 +99,14 @@ $("#btn_saveDoctor").click(function () {
   saveDoctor();
 });
 function saveDoctor() {
+
+  if ($("#radio_statusDoctor1").is(":checked")) {
+    var IsActive = 0;
+  } else {
+    var IsActive = 1;
+  }
+
+
   $.ajax({
     url: "process/manage.php",
     type: "POST",
@@ -106,6 +114,7 @@ function saveDoctor() {
       FUNC_NAME: "saveDoctor",
       input_doctorth: $("#input_doctorth").val(),
       input_IDdoctor: $("#input_IDdoctor").val(),
+      IsActive: IsActive,
     },
     success: function (result) {
       showDialogSuccess(result);
@@ -116,9 +125,16 @@ function saveDoctor() {
     },
   });
 }
-function editDoctor(ID, Doctor_Name) {
+function editDoctor(ID, Doctor_Name,IsCancel) {
   $("#input_doctorth").val(Doctor_Name);
   $("#input_IDdoctor").val(ID);
+
+  if (IsCancel == "0") {
+    $("#radio_statusDoctor1").prop("checked", true);
+  } else {
+    $("#radio_statusDoctor2").prop("checked", true);
+  }
+
 }
 
 function deleteDoctor(ID) {
@@ -172,9 +188,7 @@ function feeddata_detailDoctor() {
                       <td class="text-left">${value.Doctor_Name}</td>
                       <td class="text-center"><label style='color:blue;font-weight:bold;cursor:pointer;' onclick='editDoctor("${
                         value.ID
-                      }","${
-            value.Doctor_Name
-          }")'>แก้ไข</label> | <label style='color:red;font-weight:bold;cursor:pointer;' onclick='deleteDoctor(${
+                      }","${value.Doctor_Name}","${value.IsCancel}")'>แก้ไข</label> | <label style='color:red;font-weight:bold;cursor:pointer;' onclick='deleteDoctor(${
             value.ID
           })'>ลบ</label></td>
                        </tr>`;
@@ -251,6 +265,13 @@ $("#btn_saveProcedure").click(function () {
 });
 
 function saveProcedure() {
+
+  if ($("#radio_statusProcedure1").is(":checked")) {
+    var IsActive = 1;
+  } else {
+    var IsActive = 0;
+  }
+
   $.ajax({
     url: "process/manage.php",
     type: "POST",
@@ -258,6 +279,7 @@ function saveProcedure() {
       FUNC_NAME: "saveProcedure",
       input_Procedure: $("#input_Procedure").val(),
       input_IDProcedure: $("#input_IDProcedure").val(),
+      IsActive: IsActive,
     },
     success: function (result) {
       showDialogSuccess(result);
@@ -269,9 +291,15 @@ function saveProcedure() {
   });
 }
 
-function editProcedure(ID, Procedure_TH) {
+function editProcedure(ID, Procedure_TH , IsActive) {
   $("#input_Procedure").val(Procedure_TH);
   $("#input_IDProcedure").val(ID);
+
+  if (IsActive == "1") {
+    $("#radio_statusProcedure1").prop("checked", true);
+  } else {
+    $("#radio_statusProcedure2").prop("checked", true);
+  }
 }
 
 function deleteProcedure(ID) {
@@ -326,7 +354,7 @@ function feeddata_detailProcedure() {
             `<tr> ` +
             `<td class="text-center">${kay + 1}</td>` +
             `<td class="text-left">${value.Procedure_TH}</td>` +
-            `<td class="text-center"><label style='color:blue;font-weight:bold;cursor:pointer;' onclick='editProcedure("${value.ID}","${value.Procedure_TH}")'>แก้ไข</label> | <label style='color:red;font-weight:bold;cursor:pointer;' onclick='deleteProcedure(${value.ID})'>ลบ</label></td>` +
+            `<td class="text-center"><label style='color:blue;font-weight:bold;cursor:pointer;' onclick='editProcedure("${value.ID}","${value.Procedure_TH}","${value.IsActive}")'>แก้ไข</label> | <label style='color:red;font-weight:bold;cursor:pointer;' onclick='deleteProcedure(${value.ID})'>ลบ</label></td>` +
             ` </tr>`;
         });
       }
@@ -402,6 +430,10 @@ $("#btn_saveUser").click(function () {
   }
   if ($("#input_lastUser").val() == "") {
     showDialogFailed("กรุณากรอก นามสกุล");
+    return;
+  }
+  if ($("#input_userName").val() == "") {
+    showDialogFailed("กรุณากรอก userName");
     return;
   }
   if ($("#input_passWord").val() == "") {

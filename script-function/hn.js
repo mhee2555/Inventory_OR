@@ -31,19 +31,28 @@ $(function () {
       show_detail_hn();
     },
   });
-  show_detail_hn();
 
   $("#input_type_search").val(1);
 
 
   $("#input_search").keypress(function (e) {
     if (e.which == 13) {
-      feeddata_hncode($(this).val().trim());
 
-      $("#table_detail_sub tbody").empty();
-      $("#input_search").val("");
+
+      show_detail_hn();
+
+      // feeddata_hncode($(this).val().trim());
+
+      // $("#table_detail_sub tbody").empty();
+      // $("#input_search").val("");
     }
   });
+
+
+
+  setTimeout(() => {
+    show_detail_hn();
+  }, 500);
 });
 
 
@@ -56,7 +65,7 @@ $(function () {
   });
 
   $("#a_usage").click(function () {
-    $("#btn_input").text("รหัสอุปกรณ์ SUDs");
+    $("#btn_input").text("รหัสอุปกรณ์");
     $("#input_type_search").val(2);
   });
 
@@ -68,6 +77,8 @@ function show_detail_hn() {
       FUNC_NAME: "show_detail_hn",
       select_SDate: $("#select_SDate").val(),
       select_EDate: $("#select_EDate").val(),
+      input_search: $("#input_search").val(),
+      input_type_search: $("#input_type_search").val(),
     },
     success: function (result) {
       $("#table_detail").DataTable().destroy();
@@ -123,6 +134,26 @@ function show_detail_hn() {
             width: "10%",
             targets: 0,
           },
+          {
+            width: "15%",
+            targets: 1,
+          },
+          {
+            width: "15%",
+            targets: 2,
+          },
+          {
+            width: "30%",
+            targets: 3,
+          },
+          {
+            width: "15%",
+            targets: 4,
+          },
+          {
+            width: "15%",
+            targets: 5,
+          },
         ],
         info: false,
         scrollX: false,
@@ -130,6 +161,7 @@ function show_detail_hn() {
         visible: false,
         searching: false,
         lengthChange: false,
+        autoWidth: false,
         fixedHeader: false,
         ordering: false,
       });

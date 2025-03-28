@@ -206,7 +206,7 @@
                                 </div>
 
 
-                                
+
                                 <div class="col-md-4">
                                     <div class="row">
                                         <div class="col-md-12">
@@ -216,8 +216,8 @@
                                             </div>
                                         </div>
 
-                                            <div class="col-md-12" style="display: ruby;" id="row_procedure">
-                                            </div>
+                                        <div class="col-md-12" style="display: ruby;" id="row_procedure">
+                                        </div>
                                     </div>
                                 </div>
 
@@ -241,7 +241,7 @@
 
 
 
-              
+
 
 
 
@@ -313,16 +313,16 @@
 
                     <div class="row">
                         <div class="col-md-12">
-                                    <div class="form-group ">
-                                        <div class="input-group mb-2">
-                                            <input type="text" class="form-control f18" id="input_scan_return" autocomplete="off" placeholder="สแกนคืน">
-                                            <div class="input-group-append">
-                                                <div class="input-group-text"><i class="fa-solid fa-qrcode"></i></div>
-                                            </div>
-
-                                        </div>
-
+                            <div class="form-group ">
+                                <div class="input-group mb-2">
+                                    <input type="text" class="form-control f18" id="input_scan_return" autocomplete="off" placeholder="สแกนคืน">
+                                    <div class="input-group-append">
+                                        <div class="input-group-text"><i class="fa-solid fa-qrcode"></i></div>
                                     </div>
+
+                                </div>
+
+                            </div>
                         </div>
 
                     </div>
@@ -390,19 +390,33 @@
                     </div>
                 </div>
 
+
+
                 <div class="col-md-3">
-                    <div class="form-group ">
-                        <label style="color:black;font-weight: 600;">แพทย์</label>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group ">
+                                <label style="color:black;font-weight: 600;">แพทย์</label>
+                                <select class="form-control f18" autocomplete="off" id="select_doctor_history"></select>
+                            </div>
+                        </div>
 
-                        <select class="form-control f18" id="select_doctor_history"></select>
-
+                        <div class="col-md-12" style="display: ruby;" id="row_doctor_history">
+                        </div>
                     </div>
                 </div>
 
                 <div class="col-md-2">
-                    <div class="form-group ">
-                        <label style="color:black;font-weight: 600;">หัตถการ</label>
-                        <select class="form-control f18" id="select_procedure_history"></select>
+
+                <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group ">
+                                <label style="color:black;font-weight: 600;">หัตถการ</label>
+                                <select class="form-control f18" autocomplete="off" id="select_procedure_history"></select>
+                            </div>
+                        </div>
+                        <div class="col-md-12" style="display: ruby;" id="row_procedure_history">
+                        </div>
                     </div>
                 </div>
                 <div class="col-md-1">

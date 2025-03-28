@@ -122,6 +122,12 @@ function LoginUser($conn, $db)
         $return[] = $row;
         $count++;
     }
+
+
+    $_departmentroomname = "";
+    $_doctorID = "";
+    $_Doctor_Name = "";
+    
     if ($select_departmentRoom != "") {
 
         if ($db == 1) {
@@ -135,6 +141,9 @@ function LoginUser($conn, $db)
                             WHERE
                                 departmentroom.id = '$select_departmentRoom' ";
         } else {
+
+
+
             $selectName = "SELECT
                                 departmentroom.departmentroomname,
                                 ISNULL( doctor.ID, 0 ) AS doctorID,

@@ -137,6 +137,7 @@ function select_doctor($conn)
                     doctor.Doctor_Name 
                 FROM
                     doctor
+                WHERE doctor.IsCancel = 0
                 ORDER BY Doctor_Name ASC  ";
 
 
@@ -160,6 +161,7 @@ function select_procedure($conn,$db)
                         Procedure_TH 
                     FROM
                         `procedure` 
+                    WHERE `procedure`.IsActive = 1
                     ORDER BY
                         Procedure_TH ASC  ";
     }else{

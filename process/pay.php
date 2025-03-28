@@ -737,8 +737,7 @@ function show_detail_history($conn, $db)
     $select_date_history_s = $_POST['select_date_history_s'];
     $select_date_history_l = $_POST['select_date_history_l'];
     $select_deproom_history = $_POST['select_deproom_history'];
-    $select_doctor_history = $_POST['select_doctor_history'];
-    $select_procedure_history = $_POST['select_procedure_history'];
+
 
     $select_date_history_s = explode("-", $select_date_history_s);
     $select_date_history_s = $select_date_history_s[2] . '-' . $select_date_history_s[1] . '-' . $select_date_history_s[0];
@@ -746,17 +745,29 @@ function show_detail_history($conn, $db)
     $select_date_history_l = explode("-", $select_date_history_l);
     $select_date_history_l = $select_date_history_l[2] . '-' . $select_date_history_l[1] . '-' . $select_date_history_l[0];
 
+    if(isset($_POST['select_doctor_history'])){
+        $select_doctor_history = $_POST['select_doctor_history'];
+    }
+    if(isset($_POST['select_procedure_history'])){
+        $select_procedure_history = $_POST['select_procedure_history'];
+    }
+
+    $whereP = "";
+    if(isset($select_procedure_history)){
+        $select_procedure_history = implode(",", $select_procedure_history);
+        $whereP = " AND  FIND_IN_SET('$select_procedure_history', deproom.`procedure`) ";
+    }
+    $whereD = "";
+    if(isset($select_doctor_history)){
+        $select_doctor_history = implode(",", $select_doctor_history);
+        $whereD = " AND  FIND_IN_SET('$select_doctor_history', deproom.`doctor`)  ";
+    }
+
 
     if ($db == 1) {
 
-        $whereD = "";
-        if ($select_doctor_history != "") {
-            $whereD = " AND deproom.doctor = '$select_doctor_history'";
-        }
-        $whereP = "";
-        if ($select_procedure_history != "") {
-            $whereP = " AND deproom.`procedure` = '$select_procedure_history' ";
-        }
+
+
         $whereR = "";
         if ($select_deproom_history != "") {
             $whereR = " AND deproom.Ref_departmentroomid = '$select_deproom_history' ";
@@ -791,6 +802,10 @@ function show_detail_history($conn, $db)
                         $whereD
                         $whereP
                         $whereR ";
+
+                        // echo $query;
+                        // exit;
+
     } else {
 
         $whereD = "";
