@@ -4865,7 +4865,6 @@ function oncheck_pay($conn, $db)
                     $meQuery->execute();
                     // =======================================================================================================================================
 
-
                     $queryUpdate = "UPDATE itemstock 
                         SET Isdeproom = 1 ,
                         departmentroomid = '$_departmentroomid'

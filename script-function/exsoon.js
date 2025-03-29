@@ -272,7 +272,6 @@ $('#btn_send').on("click", function(e) {
                             value.IsStatus = settext("ex");
                         }
                         _tr += `<tr> ` +
-                            `<td class="text-center "></td>` +
                             `<td class="text-center"><label >${kay + 1}</label></td>` +
                             `<td class="text-center"><label >${value.UsageCode}</label></td>` +
                             `<td class="text-left"><label >${value.itemname}</label></td>` +
@@ -287,8 +286,6 @@ $('#btn_send').on("click", function(e) {
 
                             value.IsStatus = settext("exsoon");
                             _tr += `<tr> ` +
-                                `<td class="text-center "></td>` +
-
                                 `<td class="text-center"><label >${kay + 1}</label></td>` +
                                 `<td class="text-center"><label >${value.UsageCode}</label></td>` +
                                 `<td class="text-left"><label >${value.itemname}</label></td>` +
