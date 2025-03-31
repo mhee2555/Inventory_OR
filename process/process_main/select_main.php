@@ -19,7 +19,126 @@ if (!empty($_POST['FUNC_NAME'])) {
         select_type($conn);
     } else if ($_POST['FUNC_NAME'] == 'select_floor') {
         select_floor($conn);
+    } else if ($_POST['FUNC_NAME'] == 'set_deproom') {
+        set_deproom($conn);
+    } else if ($_POST['FUNC_NAME'] == 'set_proceduce') {
+        set_proceduce($conn);
     }
+}
+
+function set_proceduce($conn)
+{
+    $return = array();
+
+    
+
+    $select_deproom_request = $_POST['select_deproom_request'];
+
+
+
+    $departmentroom_ids = "";
+    $count_doctor = 0;
+    $select = " SELECT GROUP_CONCAT(procedure_id SEPARATOR ', ') AS procedure_ids FROM mapping_departmentroom WHERE mapping_departmentroom.departmentroom_id IN( $select_deproom_request )  ";
+    $meQuery_select = $conn->prepare($select);
+    $meQuery_select->execute();
+
+    $procedure_ids = $meQuery_select->fetchColumn();
+
+        if ($procedure_ids) {
+
+            $query = " SELECT
+                            ID,
+                            Procedure_TH 
+                        FROM
+                            `procedure` 
+                        WHERE `procedure`.ID IN ($procedure_ids)
+                        ORDER BY
+                            Procedure_TH ASC  ";
+
+
+        } else {
+            $query = " SELECT
+                            ID,
+                            Procedure_TH 
+                        FROM
+                            `procedure` 
+                        WHERE `procedure`.IsActive = 1
+                        ORDER BY
+                            Procedure_TH ASC  ";
+        }
+
+
+
+
+
+
+
+
+    $meQuery = $conn->prepare($query);
+    $meQuery->execute();
+    while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+        $return[] = $row;
+    }
+    echo json_encode($return);
+    unset($conn);
+    die;
+}
+
+function set_deproom($conn)
+{
+    $return = array();
+
+    $doctor_Array = " ''  ";
+    if(isset($_POST['doctor_Array'])){
+        $doctor_Array = $_POST['doctor_Array'];
+        $doctor_Array = implode(",", $doctor_Array);
+    }
+
+
+
+    $departmentroom_ids = "";
+    $count_doctor = 0;
+    $select = " SELECT GROUP_CONCAT(departmentroom_id SEPARATOR ', ') AS departmentroom_ids FROM mapping_doctor WHERE mapping_doctor.doctor_id IN( $doctor_Array )  ";
+
+    $meQuery_select = $conn->prepare($select);
+    $meQuery_select->execute();
+
+
+    $departmentroom_ids = $meQuery_select->fetchColumn();
+
+        if ($departmentroom_ids) {
+            $query = "SELECT
+                        departmentroom.id,
+                        departmentroom.departmentroomname 
+                    FROM
+                        departmentroom
+                    WHERE departmentroom.id IN ($departmentroom_ids)
+                    ORDER BY departmentroomname ";
+        } else {
+            $query = "SELECT
+                            departmentroom.id,
+                            departmentroom.departmentroomname 
+                        FROM
+                            departmentroom
+                        WHERE departmentroom.IsMainroom = 0
+                        ORDER BY departmentroomname ";
+        }
+
+
+
+
+
+
+
+
+    $meQuery = $conn->prepare($query);
+    $meQuery->execute();
+    while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+        $return[] = $row;
+    }
+    echo json_encode($return);
+    unset($conn);
+    die;
 }
 
 function select_floor($conn)

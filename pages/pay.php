@@ -199,6 +199,24 @@
 
 
                                 <div class="col-md-4">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group x">
+                                                <label style="color:black;font-weight: 600;">แพทย์</label>
+                                                <select class="form-control f18" autocomplete="off" id="select_doctor_manual"></select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+
+                                            <div class="col-md-12" style="display: ruby;" id="row_doctor">
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-md-4">
                                     <div class="form-group ">
                                         <label style="color:black;font-weight: 600;">ห้องผ่าตัด</label>
                                         <select class="form-control f18" autocomplete="off" id="select_deproom_manual"></select>
@@ -222,22 +240,7 @@
                                 </div>
 
 
-                                <div class="col-md-4">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="form-group x">
-                                                <label style="color:black;font-weight: 600;">แพทย์</label>
-                                                <select class="form-control f18" autocomplete="off" id="select_doctor_manual"></select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-
-                                            <div class="col-md-12" style="display: ruby;" id="row_doctor">
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
+     
 
 
 

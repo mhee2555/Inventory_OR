@@ -62,8 +62,34 @@ if (!empty($_POST['FUNC_NAME'])) {
         feeddata_waitReturn($conn, $db);
     } else if ($_POST['FUNC_NAME'] == 'onReturnData') {
         onReturnData($conn, $db);
+    } else if ($_POST['FUNC_NAME'] == 'showDetail_deproom') {
+        showDetail_deproom($conn, $db);
     }
 }
+
+
+function showDetail_deproom($conn, $db)
+{
+    $return = array();
+    $departmentroom_id = $_POST['departmentroom_id'];
+    $deproom = $_SESSION['deproom'];
+
+
+    $query = "SELECT departmentroom.id , departmentroom.departmentroomname FROM departmentroom WHERE departmentroom.id IN ($departmentroom_id) ";
+
+    // echo $query;
+    $meQuery = $conn->prepare($query);
+    $meQuery->execute();
+    while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+        $return[] = $row;
+    }
+
+
+    echo json_encode($return);
+    unset($conn);
+    die;
+}
+
 function showDetail_Doctor($conn, $db)
 {
     $return = array();

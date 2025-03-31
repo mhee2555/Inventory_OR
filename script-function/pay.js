@@ -115,6 +115,12 @@ $(function () {
     $("#select_doctor_manual").select2();
     $("#select_procedure_manual").select2();
 
+
+
+    $("#select_deproom_manual").change(function () {
+      set_proceduce($("#select_deproom_manual").val());
+    });
+
     $("#input_Hn_pay_manual").val("");
     $("#input_date_service_manual").val(output);
     $("#select_doctor_manual").val("").trigger("change");
@@ -148,6 +154,9 @@ $(function () {
             $("#row_doctor").append(_row);
 
             $("#select_doctor_manual").val("").trigger("change");
+
+            set_deproom();
+
           }
         }
       });
@@ -241,7 +250,6 @@ $(function () {
 
             $("#select_doctor_history").val("").trigger("change");
           }
-
 
 
           show_detail_history();
@@ -361,7 +369,7 @@ function DeleteDoctor(selectedValue) {
   console.log(doctor_Array);
   $(".div_" + selectedValue).attr('hidden', true);
 
-
+  set_deproom();
   show_detail_history();
 
 }
@@ -1820,6 +1828,62 @@ function feeddataClaim() {
     },
   });
 }
+
+
+
+
+function set_proceduce(select_deproom_request) {
+
+  $.ajax({
+    url: "process/process_main/select_main.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "set_proceduce",
+      select_deproom_request: select_deproom_request,
+    },
+    success: function (result) {
+      var ObjData = JSON.parse(result);
+      console.log(ObjData);
+      var option = `<option value="" selected>กรุณาเลือกหัตถการ</option>`;
+      if (!$.isEmptyObject(ObjData)) {
+        $.each(ObjData, function (kay, value) {
+          option += `<option value="${value.ID}" >${value.Procedure_TH}</option>`;
+        });
+      } else {
+        option = `<option value="0">ไม่มีข้อมูล</option>`;
+      }
+      $("#select_procedure_manual").html(option);
+    },
+  });
+}
+
+function set_deproom() {
+
+  $.ajax({
+    url: "process/process_main/select_main.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "set_deproom",
+      doctor_Array: doctor_Array,
+    },
+    success: function (result) {
+      var ObjData = JSON.parse(result);
+      console.log(ObjData);
+      var option = `<option value="" selected>กรุณาเลือกห้องผ่าตัด</option>`;
+      if (!$.isEmptyObject(ObjData)) {
+        $.each(ObjData, function (kay, value) {
+          option += `<option value="${value.id}" >${value.departmentroomname}</option>`;
+        });
+      } else {
+        option = `<option value="0">ไม่มีข้อมูล</option>`;
+      }
+      $("#select_deproom_manual").html(option);
+    },
+  });
+}
+
+
+
 //////////////////////////////////////////////////////////////// select
 
 function session() {
