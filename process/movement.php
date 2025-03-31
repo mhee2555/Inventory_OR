@@ -18,7 +18,181 @@ if (!empty($_POST['FUNC_NAME'])) {
         selection_departmentRoom_rfid($conn, $db);
     } else if ($_POST['FUNC_NAME'] == 'selection_item_rfid') {
         selection_item_rfid($conn, $db);
+    } else if ($_POST['FUNC_NAME'] == 'selection_item_normal') {
+        selection_item_normal($conn, $db);
+    } else if ($_POST['FUNC_NAME'] == 'selection_departmentRoom_normal') {
+        selection_departmentRoom_normal($conn, $db);
     }
+}
+
+
+function selection_item_normal($conn, $db)
+{
+    $return = array();
+
+    $deproom = $_SESSION['deproom'];
+    $DepID = $_SESSION['DepID'];
+    $input_search = $_POST['input_search'];
+    $select_date1 = $_POST['select_date1'];
+
+
+    $select_date1 = explode("-", $select_date1);
+    $select_date1 = $select_date1[2] . '-' . $select_date1[1] . '-' . $select_date1[0];
+
+
+
+    $_itemcode = array();
+
+
+
+
+
+
+
+
+    $Q1 = " SELECT
+                item.itemname,
+                item.itemcode,
+                COUNT( itemstock.RowID ) AS cnt,
+                ( SELECT COUNT( itemstock_transaction_detail.ID ) FROM itemstock_transaction_detail WHERE itemstock_transaction_detail.ItemCode = item.itemcode AND itemstock_transaction_detail.IsStatus = 1  )		AS cnt_pay ,
+                ( SELECT COUNT( itemstock_transaction_detail.ID ) FROM itemstock_transaction_detail WHERE itemstock_transaction_detail.ItemCode = item.itemcode AND itemstock_transaction_detail.IsStatus = 7  )		AS cnt_cssd ,
+                ( SELECT COUNT( itemstock.RowID ) FROM itemstock WHERE itemstock.ItemCode = item.itemcode AND  (itemstock.IsDamage  = 0	OR itemstock.IsDamage  IS NULL)  AND itemstock.Isdeproom != 1 AND itemstock.Isdeproom != 2 AND itemstock.Isdeproom != 3  AND itemstock.Isdeproom != 4  AND itemstock.Isdeproom != 5 AND itemstock.Isdeproom != 6 AND itemstock.Isdeproom != 7 AND itemstock.Isdeproom != 8 AND itemstock.Isdeproom != 9)		AS balance , 
+                ( SELECT COUNT( itemstock.RowID ) FROM itemstock WHERE itemstock.ItemCode = item.itemcode AND  ( itemstock.IsDamage = 1  OR  itemstock.IsDamage = 2 ) )		AS damage 
+            FROM
+                itemstock
+                INNER JOIN item ON itemstock.ItemCode = item.itemcode 
+            WHERE
+                     ( item.itemname LIKE '%$input_search%' OR item.itemcode LIKE '%$input_search%' ) 
+                 AND item.IsSpecial = '1'
+            GROUP BY
+                item.itemname,
+                item.itemcode  ";
+
+
+    $meQuery1 = $conn->prepare($Q1);
+    $meQuery1->execute();
+    while ($row1 = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
+        $return['item'][] = $row1;
+        $_itemcode[] = $row1['itemcode'];
+    }
+
+    if (count($_itemcode) == 0) {
+        $whereItem = " ('') ";
+    } else {
+        $whereItem = " ( ";
+        foreach ($_itemcode as $key => $value) {
+            $whereItem .= " '$value' ,";
+        }
+
+        $whereItem =  substr($whereItem, 0, -1);
+
+        $whereItem .= " ) ";
+    }
+
+
+    if ($db == 1) {
+        $query = "SELECT
+                        itemstock_transaction_detail.ItemCode,
+                        COUNT(itemstock_transaction_detail.ID) AS Qty,
+                        itemstock_transaction_detail.departmentroomid
+                    FROM
+                        itemstock_transaction_detail
+                    WHERE
+                        itemstock_transaction_detail.ItemCode IN $whereItem
+                        AND DATE(itemstock_transaction_detail.CreateDate) = '$select_date1'
+                        AND itemstock_transaction_detail.IsStatus = 1
+                    GROUP BY
+                        itemstock_transaction_detail.departmentroomid,
+                        itemstock_transaction_detail.ItemCode
+                    ORDER BY
+                        itemstock_transaction_detail.departmentroomid ASC ";
+    } else {
+        $query = "SELECT 
+                            itemstock_transaction_detail.ItemCode ,
+                    COUNT ( itemstock_transaction_detail.ID ) AS Qty ,
+                            itemstock_transaction_detail.departmentroomid 
+                    FROM
+                        itemstock_transaction_detail 
+                    WHERE
+                        itemstock_transaction_detail.ItemCode IN $whereItem
+                    AND CONVERT(DATE,itemstock_transaction_detail.CreateDate) = '$select_date1' 
+                    AND itemstock_transaction_detail.IsStatus = 1 
+                    GROUP BY
+                        itemstock_transaction_detail.departmentroomid ,
+                        itemstock_transaction_detail.ItemCode 
+                    ORDER BY
+                        itemstock_transaction_detail.departmentroomid ASC  ";
+    }
+
+
+    $meQuery = $conn->prepare($query);
+    $meQuery->execute();
+    while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+        $return['detail'][] = $row;
+    }
+
+
+
+
+    echo json_encode($return);
+    unset($conn);
+    die;
+}
+
+
+function selection_departmentRoom_normal($conn, $db)
+{
+    $return = array();
+    $lang = $_POST['lang'];
+    $deproom = $_SESSION['deproom'];
+    $DepID = $_SESSION['DepID'];
+    // $select_floor = $_POST['select_floor'];
+
+
+    $where = "";
+
+
+    if ($lang == 'en') {
+        $Q1 = " SELECT
+                    ID, 
+                    floor.name_floor_EN AS name_floor
+                FROM
+                    floor  ";
+    } else {
+        $Q1 = " SELECT
+                    ID, 
+                    name_floor
+                FROM
+                    floor  ";
+    }
+
+    $meQuery1 = $conn->prepare($Q1);
+    $meQuery1->execute();
+    while ($row1 = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
+
+
+        $return['floor'][] = $row1;
+        $_ID = $row1['ID'];
+
+
+
+        $query = "SELECT
+                departmentroom.id,
+                departmentroom.departmentroomname,
+                departmentroom.departmentroomname_sub 
+            FROM
+                departmentroom
+            WHERE departmentroom.iscancel = 0 AND floor_id = '$_ID'  AND  departmentroom.IsMainroom = 0  ";
+
+        $meQuery = $conn->prepare($query);
+        $meQuery->execute();
+        while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+            $return[$_ID][] = $row;
+        }
+    }
+    echo json_encode($return);
+    unset($conn);
+    die;
 }
 
 function selection_departmentRoom_rfid($conn, $db)

@@ -52,6 +52,7 @@ function set_proceduce($conn)
                         FROM
                             `procedure` 
                         WHERE `procedure`.ID IN ($procedure_ids)
+                        AND `procedure`.IsActive = 1
                         ORDER BY
                             Procedure_TH ASC  ";
 
@@ -113,6 +114,7 @@ function set_deproom($conn)
                     FROM
                         departmentroom
                     WHERE departmentroom.id IN ($departmentroom_ids)
+                    AND  departmentroom.IsActive = 1
                     ORDER BY departmentroomname ";
         } else {
             $query = "SELECT
@@ -121,6 +123,7 @@ function set_deproom($conn)
                         FROM
                             departmentroom
                         WHERE departmentroom.IsMainroom = 0
+                        AND  departmentroom.IsActive = 1
                         ORDER BY departmentroomname ";
         }
 
@@ -234,6 +237,7 @@ function select_deproom($conn)
                 FROM
                      departmentroom
                 WHERE departmentroom.IsMainroom = 0
+                AND  departmentroom.IsActive = 1
                 ORDER BY departmentroomname ";
 
 

@@ -403,7 +403,10 @@ if (!isset($_SESSION['UserName'])) {
             var UserName_login = '<?php echo $UserName_login; ?>';
             var Password = '<?php echo $Password; ?>';
 
-            window.open("http://10.11.9.3:8003/Login/Index?user="+UserName_login+"&pass="+Password, "_blank");
+
+            // http://10.11.9.54:8000/Login/Index?user=stock&pass=111
+
+            window.open(" http://10.11.9.54:8000/Login/Index?user="+UserName_login+"&pass="+Password, "_blank");
 
 
             e.preventDefault();

@@ -867,7 +867,10 @@ function oncheck_pay_manual(input_pay_manual) {
       $("body").loadingModal("destroy");
       $("#input_docNo_deproom_manual").val(ObjData.input_docNo_deproom_manual);
       $("#input_docNo_HN_manual").val(ObjData.input_docNo_HN_manual);
-      show_detail_item_ByDocNo_manual();
+
+      setTimeout(() => {
+        show_detail_item_ByDocNo_manual();
+      }, 500);
       $("#input_pay_manual").val("");
     },
   });
@@ -1240,6 +1243,7 @@ function show_detail_item_ByDocNo_manual() {
             typename = "success";
           }
           _tr += `<tr>
+                      <td>${kay+1}</td>
                       <td>
 
                                   <div class="d-flex align-items-center">

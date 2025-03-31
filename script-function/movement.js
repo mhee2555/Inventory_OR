@@ -16,6 +16,13 @@ $(function () {
       selection_item_rfid();
     },
   });
+
+  $("#select_date1_normal").val(set_date());
+  $("#select_date1_normal").datepicker({
+    onSelect: function (date) {
+      selection_item_normal();
+    },
+  });
   // $("#select_date2").val(set_date());
   // $("#select_date2").datepicker({
   //   onSelect: function (date) {
@@ -31,11 +38,16 @@ $(function () {
     selection_item_rfid();
   });
 
+  $("#input_search_normal").keyup(function () {
+    selection_item_normal();
+  });
+
 
   $("#suds").hide();
   $("#sterile").hide();
+  $("#normal").hide();
 
-
+  
   
   $("#radio_suds").css("color", "#bbbbb");
   $("#radio_suds").css(
@@ -61,8 +73,13 @@ $(function () {
     $("#radio_sterile").css("color", "black");
     $("#radio_sterile").css("background", "");
 
+    $("#radio_normal").css("color", "black");
+    $("#radio_normal").css("background", "");
+
     $("#sterile1").show();
     $("#sterile").hide();
+    $("#normal").hide();
+
   });
 
   $("#radio_sterile").click(function () {
@@ -74,9 +91,12 @@ $(function () {
 
     $("#radio_suds").css("color", "black");
     $("#radio_suds").css("background", "");
+    $("#radio_normal").css("color", "black");
+    $("#radio_normal").css("background", "");
 
     $("#sterile1").hide();
     $("#sterile").show();
+    $("#normal").hide();
 
     selection_departmentRoom();
 
@@ -87,6 +107,29 @@ $(function () {
 
   $("#input_search_suds").keyup(function () {
     selection_itemSuds();
+  });
+
+  $("#radio_normal").click(function () {
+    $("#radio_normal").css("color", "#bbbbb");
+    $("#radio_normal").css(
+      "background",
+      "#EAECF0"
+    );
+
+    $("#radio_suds").css("color", "black");
+    $("#radio_suds").css("background", "");
+    $("#radio_sterile").css("color", "black");
+    $("#radio_sterile").css("background", "");
+
+    $("#sterile1").hide();
+    $("#sterile").hide();
+    $("#normal").show();
+
+    selection_departmentRoom_normal();
+
+    setTimeout(() => {
+      selection_item_normal();
+    }, 1000);
   });
 });
 
@@ -600,7 +643,6 @@ function selection_departmentRoom_rfid() {
 
 
 
-
 function selection_item_rfid() {
   $.ajax({
     url: "process/movement.php",
@@ -701,4 +743,125 @@ function selection_item_rfid() {
   });
 }
 
+
+function selection_departmentRoom_normal() {
+  depRoom = [];
+  $.ajax({
+    url: "process/movement.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "selection_departmentRoom_normal",
+      // 'select_floor': $("#select_floor").val(),
+      lang: localStorage.lang,
+    },
+    success: function (result) {
+      var ObjData = JSON.parse(result);
+      console.log(ObjData);
+
+      if (localStorage.lang == "en") {
+        var tr = `<th class='text-center' style="text-wrap: nowrap;width: 3%;" rowspan="2">No.</th>`;
+      } else {
+        var tr = `<th class='text-center' style="text-wrap: nowrap;width: 3%;" rowspan="2">ลำดับ</th>`;
+      }
+
+      tr += `<th class='text-center' style="text-wrap: nowrap;width: 25%;" rowspan="2" id="td_item">รายการ</th>`;
+      tr += `<th style="text-wrap: nowrap;width: 5%;" class='text-center' rowspan="2" id="">จำนวนทั้งหมด</th>`;
+      tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#FEF0C7;border-bottom-color: #F79009;" class='text-center' rowspan="2" id="">จ่ายไปห้องผ่าตัด</th>`;
+      // tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#D1FADF;border-bottom-color: #12B76A;" class='text-center' rowspan="2" id="">ส่ง CSSD</th>`;
+      // tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#FEE4E2;border-bottom-color: #D92D20;" class='text-center' rowspan="2" id="">ชำรุด</th>`;
+      tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#EAECF0;border-bottom-color: #667085;" class='text-center' rowspan="2" id="">คงเหลือ</th>`;
+      // var tr = ``;
+      if (!$.isEmptyObject(ObjData)) {
+        $.each(ObjData["floor"], function (kay, value) {
+          var colsp = 0;
+          $.each(ObjData[value.ID], function (kay, value) {
+            colsp++;
+          });
+          tr += `<th style="text-wrap: nowrap;" class='text-center' colspan="${colsp}">${value.name_floor}</th>`;
+        });
+
+        var tr2 = "";
+        $.each(ObjData["floor"], function (kay, value) {
+          $.each(ObjData[value.ID], function (kay2, value2) {
+            tr2 += `<th style="text-wrap: nowrap;" class='text-center'>${value2.departmentroomname_sub}</th>`;
+
+            depRoom.push(value2.id);
+          });
+        });
+        $("#tr_TableDep_normal").html(tr2);
+      } else {
+      }
+
+      tr += `<th style="text-wrap: nowrap;" class='text-center' rowspan="2" id="td_all">รวม</th>`;
+      $("#tr_TableDephead_normal").html(tr);
+    },
+  });
+}
+
+function selection_item_normal() {
+  $.ajax({
+    url: "process/movement.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "selection_item_normal",
+      select_date1: $("#select_date1_normal").val(),
+      input_search: $("#input_search_normal").val(),
+    },
+    success: function (result) {
+      var ObjData = JSON.parse(result);
+      // $('#table_DepRoom').DataTable().destroy();
+      $("#table_DepRoom_normal tbody").html("");
+      console.log(ObjData);
+      var tr = ``;
+      // var tr = ``;
+      if (!$.isEmptyObject(ObjData)) {
+        $.each(ObjData["item"], function (kay, value) {
+          var balance =  parseInt(value.cnt) -  (parseInt(value.cnt_pay));
+
+          tr += `<tr>f
+                                  <td class='text-center' style="text-wrap: nowrap;">${
+                                    kay + 1
+                                  }</td>
+                                  <td style="text-wrap: nowrap;">${
+                                    value.itemname
+                                  }</td>
+                                  <td class='text-center' style="text-wrap: nowrap;">${
+                                    value.cnt
+                                  }</td>
+                                  <td class='text-center' style="text-wrap: nowrap;background-color:#FFFAEB;">${
+                                    value.cnt_pay
+                                  }</td>
+                                     <td class='text-center' style="text-wrap: nowrap;background-color:#ECFDF3;">${
+                                    balance
+                                  }</td>`;
+
+          var sumcount = 0;
+          $.each(depRoom, function (keydep, valuedep) {
+            var checkcount = 0;
+            $.each(ObjData["detail"], function (kay2, value2) {
+              if (value2.ItemCode == value.itemcode) {
+                if (valuedep == value2.departmentroomid) {
+                  tr += `<td class='text-center' style="text-wrap: nowrap;background-color: gold;">${value2.Qty}</</td>`;
+                  checkcount = 1;
+                  sumcount += parseInt(value2.Qty);
+                }
+              }
+            });
+            if (checkcount == 0) {
+              tr += `<td class='text-center' style="text-wrap: nowrap;">0</</td>`;
+            }
+          });
+
+          tr += `<td class='text-center' style="text-wrap: nowrap;">${sumcount}</</td>`;
+
+          tr += `</tr>`;
+        });
+      } else {
+      }
+
+      $("#table_DepRoom_normal tbody").html(tr);
+
+    },
+  });
+}
 

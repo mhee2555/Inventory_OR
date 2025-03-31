@@ -64,6 +64,8 @@ if (!empty($_POST['FUNC_NAME'])) {
         onReturnData($conn, $db);
     } else if ($_POST['FUNC_NAME'] == 'showDetail_deproom') {
         showDetail_deproom($conn, $db);
+    } else if ($_POST['FUNC_NAME'] == 'show_detail_item_ByDocNo_manual') {
+        show_detail_item_ByDocNo_manual($conn, $db);
     }
 }
 
@@ -696,14 +698,17 @@ function cancel_item_byDocNo($conn, $db)
 
     if ($db == 1) {
         $sql1 = " UPDATE deproom SET IsCancel = 1 , ModifyDate = NOW()  WHERE DocNo = '$txt_docno_request' ";
+        $sql_hn = " UPDATE hncode SET IsCancel = 1 WHERE DocNo_SS = '$txt_docno_request' ";
     } else {
         $sql1 = " UPDATE deproom SET IsCancel = 1 , ModifyDate = GETDATE()  WHERE DocNo = '$txt_docno_request' ";
+        $sql_hn = " UPDATE hncode SET IsCancel = 1 WHERE DocNo_SS = '$txt_docno_request' ";
     }
 
     $meQuery1 = $conn->prepare($sql1);
     $meQuery1->execute();
 
-
+    $meQuery_hn = $conn->prepare($sql_hn);
+    $meQuery_hn->execute();
 
     $query = "DELETE FROM itemstock_transaction_detail  WHERE ItemStockID IN (   SELECT
                                                                 deproomdetailsub.ItemStockID 
