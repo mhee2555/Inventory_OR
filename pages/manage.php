@@ -115,7 +115,7 @@
             </div>
         </div>
     </div>
-    <div class="mt-3" id="row_procedure">
+    <div class="mt-3" id="row_procedure_">
         <div class="row">
             <div class="col-md-4">
                 <div class="card">
@@ -178,7 +178,7 @@
             </div>
         </div>
     </div>
-    <div class="mt-3" id="row_deproom">
+    <div class="mt-3" id="row_deproom_">
         <div class="row">
             <div class="col-md-3">
                 <div class="card">

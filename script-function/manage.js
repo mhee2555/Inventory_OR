@@ -53,8 +53,8 @@ function click_main() {
 }
 
 function click_menu() {
-  $("#row_procedure").hide();
-  $("#row_deproom").hide();
+  $("#row_procedure_").hide();
+  $("#row_deproom_").hide();
   $("#row_users").hide();
 
   $("#radio1").css("color", "#bbbbb");
@@ -74,8 +74,8 @@ function click_menu() {
     $("#radio4").css("background", "");
 
     $("#row_doctor").show();
-    $("#row_procedure").hide();
-    $("#row_deproom").hide();
+    $("#row_procedure_").hide();
+    $("#row_deproom_").hide();
     $("#row_users").hide();
 
     feeddata_detailDoctor();
@@ -93,8 +93,8 @@ function click_menu() {
     $("#radio4").css("background", "");
 
     $("#row_doctor").hide();
-    $("#row_procedure").show();
-    $("#row_deproom").hide();
+    $("#row_procedure_").show();
+    $("#row_deproom_").hide();
     $("#row_users").hide();
 
     feeddata_detailProcedure();
@@ -112,8 +112,8 @@ function click_menu() {
     $("#radio4").css("background", "");
 
     $("#row_doctor").hide();
-    $("#row_procedure").hide();
-    $("#row_deproom").show();
+    $("#row_procedure_").hide();
+    $("#row_deproom_").show();
     $("#row_users").hide();
 
     select_floor();
@@ -132,8 +132,8 @@ function click_menu() {
     $("#radio1").css("background", "");
 
     $("#row_doctor").hide();
-    $("#row_procedure").hide();
-    $("#row_deproom").hide();
+    $("#row_procedure_").hide();
+    $("#row_deproom_").hide();
     $("#row_users").show();
     feeddata_detailUser();
   });
@@ -1241,6 +1241,9 @@ function onconfirm_save_doctor() {
         $("#select_deproom").attr("disabled", true);
         $("#row_deproom").html("");
         deproom_Array = [];
+
+
+        show_detail_doctor();
       }, 300);
     },
   });
@@ -1394,6 +1397,7 @@ $("#btn_Clear_doctor_deproom").click(function () {
           $("#select_proceduce").attr("disabled", true);
           $("#row_procedure").html("");
           procedure_id_Array = [];
+          show_detail_deproom();
         }, 300);
       },
     });
