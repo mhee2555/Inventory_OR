@@ -1243,7 +1243,7 @@ function show_detail_item_ByDocNo_manual() {
             typename = "success";
           }
           _tr += `<tr>
-                      <td>${kay+1}</td>
+                      <td  class='text-center'>${kay+1}</td>
                       <td>
 
                                   <div class="d-flex align-items-center">

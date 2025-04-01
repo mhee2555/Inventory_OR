@@ -20,18 +20,13 @@ function show_detail_borrow() {
       if (!$.isEmptyObject(ObjData)) {
         $.each(ObjData, function (kay, value) {
 
-          if(value.date_borrow == null){
-            var txt = value.depNameBorrow;
-          }else{
-            var txt = value.depNameBorrow +"/" + value.date_borrow;
-          }
+
           _tr += `<tr>
                         <td class='text-center'>${kay + 1}</td>
                         <td class='text-center'>${value.UsageCode}</td>
-                        <td class='text-center'>${value.itemname}</td>
-                        <td class='text-center'>Sterile</td>
-                        <td class='text-center'>${txt}</td>
-                        <td class='text-center'>${value.depName} / ${value.date_}</td>
+                        <td class='text-left'>${value.itemname}</td>
+                        <td class='text-center'>${value.hn_record_id_borrow}</td>
+                        <td class='text-center'>${value.hn_record_id}</td>
                      </tr>`;
         });
       }

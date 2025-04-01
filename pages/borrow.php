@@ -43,9 +43,8 @@
                             <th scope="col" class="text-center" id="">ลำดับ</th>
                             <th scope="col" class="text-center" id="">รหัสอุปกรณ์</th>
                             <th scope="col" class="text-center" id="">อุปกรณ์</th>
-                            <th scope="col" class="text-center" id="">ประเภท</th>
-                            <th scope="col" class="text-center" id="">ห้องเดิม</th>
-                            <th scope="col" class="text-center" id="">ห้องใหม่</th>
+                            <th scope="col" class="text-center" id="">โดนยืม HN</th>
+                            <th scope="col" class="text-center" id="">HN ที่ยืม</th>
                         </tr>
                     </thead>
                     <tbody>

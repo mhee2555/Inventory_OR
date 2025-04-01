@@ -295,9 +295,9 @@ function selection_itemborrow($conn,$db)
                 FROM
                     deproomdetailsub 
                 WHERE
-                    deproomdetailsub.dental_warehouse_id_borrow IS NOT NULL 
-                    $wheredep
-                    AND NOT deproomdetailsub.dental_warehouse_id_borrow = 99  ";
+                    deproomdetailsub.hn_record_id_borrow IS NOT NULL  
+                    AND deproomdetailsub.hn_record_id_borrow != ''
+                    $wheredep  ";
     $meQuery = $conn->prepare($query);
     $meQuery->execute();
     while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {

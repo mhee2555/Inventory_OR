@@ -26,30 +26,20 @@ function show_detail_borrow($conn,$db)
                         deproomdetailsub.ID,
                         itemstock.UsageCode,
                         item.itemname,
-                        deproomdetailsub.dental_warehouse_id,
-                        dep1.departmentroomname AS depName,
-                        deproomdetailsub.dental_warehouse_id_borrow,
-                        dep2.departmentroomname AS depNameBorrow,
-                        DATE_FORMAT(deproom.serviceDate, '%H:%i') AS date_,
-                        DATE_FORMAT(deproomdetailsub.date_borrow, '%H:%i') AS date_borrow
+                        deproomdetailsub.hn_record_id,
+                        deproomdetailsub.hn_record_id_borrow
                     FROM
                         deproomdetailsub
-                    INNER JOIN
-                        itemstock ON deproomdetailsub.ItemStockID = itemstock.RowID
-                    INNER JOIN
-                        item ON itemstock.ItemCode = item.itemcode
-                    INNER JOIN
-                        departmentroom AS dep1 ON deproomdetailsub.dental_warehouse_id = dep1.id
-                    INNER JOIN
-                        departmentroom AS dep2 ON deproomdetailsub.dental_warehouse_id_borrow = dep2.id
-                    INNER JOIN
-                        deproomdetail ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID
-                    INNER JOIN
-                        deproom ON deproom.DocNo = deproomdetail.DocNo
+                        INNER JOIN itemstock ON deproomdetailsub.ItemStockID = itemstock.RowID
+                        INNER JOIN item ON itemstock.ItemCode = item.itemcode
+                        INNER JOIN departmentroom AS dep1 ON deproomdetailsub.dental_warehouse_id = dep1.id
+                        INNER JOIN deproomdetail ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID
+                        INNER JOIN deproom ON deproom.DocNo = deproomdetail.DocNo 
                     WHERE
-                        deproomdetailsub.dental_warehouse_id_borrow IS NOT NULL
-                        AND deproomdetailsub.dental_warehouse_id_borrow != 99
-                        $wheredep ";
+                        deproomdetailsub.hn_record_id_borrow IS NOT NULL 
+                        AND deproomdetailsub.hn_record_id_borrow != ''
+
+    $wheredep ";
     }else{
         $query = "SELECT
                 deproomdetailsub.ID,

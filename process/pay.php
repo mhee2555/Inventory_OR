@@ -2295,6 +2295,10 @@ function oncheck_pay_rfid_manual($conn, $db)
         $input_pay =  $row_1['UsageCode'];
         $check_exp =  $row_1['check_exp'];
 
+
+        $check_exp =  'no_exp';
+
+
         $count_itemstock++;
 
         $count_itemstock = 0;
@@ -3480,7 +3484,7 @@ function oncheck_pay_rfid($conn, $db)
         $_RowID =  $row_1['RowID'];
         $input_pay =  $row_1['UsageCode'];
         $check_exp =  $row_1['check_exp'];
-
+        $check_exp = 'no_exp';
         $count_itemstock++;
 
         $count_itemstock = 0;
@@ -4961,7 +4965,7 @@ function oncheck_pay($conn, $db)
 
 
         // ยืม
-        if ($_Isdeproom == 1 && ($departmeneoomID != $_departmentroomid)) {
+        if ($_Isdeproom == 1) {
 
 
             $query_old = " SELECT
@@ -4970,7 +4974,8 @@ function oncheck_pay($conn, $db)
                                 hncode_detail.ID AS hndetail_ID,
                                 deproomdetail.ItemCode,
                                 SUM( deproomdetail.Qty ) AS deproom_qty,
-                                COUNT( hncode_detail.Qty ) AS hncode_qty 
+                                COUNT( hncode_detail.Qty ) AS hncode_qty ,
+	                            deproom.hn_record_id
                             FROM
                                 deproom
                                 LEFT JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
@@ -4992,6 +4997,8 @@ function oncheck_pay($conn, $db)
                 $deproom_qty = $row_old['deproom_qty'];
                 $hncode_qty = $row_old['hncode_qty'];
                 $deproomdetailsub_id = $row_old['ID'];
+                $_hn_record_id_borrow = $row_old['hn_record_id'];
+
             }
 
 
@@ -5080,7 +5087,8 @@ function oncheck_pay($conn, $db)
                                     hn_record_id,
                                     doctor,
                                     `procedure`,
-                                     qty_weighing
+                                     qty_weighing,
+                                     hn_record_id_borrow
                                 )
                                 VALUES
                                 (
@@ -5093,7 +5101,8 @@ function oncheck_pay($conn, $db)
                                     '$_hn_record_id', 
                                     '$_doctor', 
                                     '$_procedure',
-                                    1
+                                    1,
+                                    '$_hn_record_id_borrow'
                                 ) ";
 
 
@@ -5120,7 +5129,7 @@ function oncheck_pay($conn, $db)
                 // ==============================
                 $queryInsert2 = "INSERT INTO hncode_detail (DocNo,UsageCode,ItemStockID,Qty,IsStatus,IsCancel,LastSterileDetailID)  VALUES             
                     (
-                    (SELECT hncode.DocNo FROM hncode  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.`procedure` = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$input_date_service' ), 
+                    (SELECT hncode.DocNo FROM hncode  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.`procedure` = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$input_date_service' LIMIT 1 ), 
                     '$input_pay',
                     '$_RowID',
                     1, 
@@ -5247,7 +5256,8 @@ function oncheck_pay($conn, $db)
                                             hn_record_id,
                                             doctor,
                                             `procedure`,
-                                            qty_weighing
+                                            qty_weighing,
+                                            hn_record_id_borrow
                                         )
                                         VALUES
                                         (
@@ -5260,7 +5270,8 @@ function oncheck_pay($conn, $db)
                                             '$_hn_record_id', 
                                             '$_doctor', 
                                             '$_procedure',
-                                            1
+                                            1,
+                                            '$_hn_record_id_borrow'
                                         ) ";
 
 
@@ -5288,7 +5299,7 @@ function oncheck_pay($conn, $db)
 
                     $queryInsert2 = "INSERT INTO hncode_detail (DocNo,UsageCode,ItemStockID,Qty,IsStatus,IsCancel,LastSterileDetailID)  VALUES             
                         (
-                        (SELECT hncode.DocNo FROM hncode  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.`procedure` = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$input_date_service' ), 
+                        (SELECT hncode.DocNo FROM hncode  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.`procedure` = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$input_date_service' LIMIT 1), 
                         '$input_pay',
                         '$_RowID',
                         1, 
