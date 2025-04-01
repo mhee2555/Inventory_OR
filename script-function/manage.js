@@ -276,7 +276,7 @@ function feeddata_detailDoctor() {
             targets: 2,
           },
         ],
-        info: true,
+        info: false,
         scrollX: false,
         scrollCollapse: false,
         visible: false,
@@ -440,7 +440,7 @@ function feeddata_detailProcedure() {
             targets: 2,
           },
         ],
-        info: true,
+        info: false,
         scrollX: false,
         scrollCollapse: false,
         visible: false,
@@ -682,7 +682,7 @@ function feeddata_detailUser() {
             targets: 7,
           },
         ],
-        info: true,
+        info: false,
         scrollX: false,
         scrollCollapse: false,
         visible: false,
@@ -885,7 +885,7 @@ function feeddata_detailDeproom() {
             targets: 5,
           },
         ],
-        info: true,
+        info: false,
         scrollX: false,
         scrollCollapse: false,
         visible: false,
@@ -1830,6 +1830,13 @@ function select_procedure() {
       $("#select_proceduce").html(option);
     },
   });
+}
+function settext(key) {
+  if (localStorage.lang == "en") {
+    return en[key];
+  } else {
+    return th[key];
+  }
 }
 // //////////////////////////////////////////////////////////////// select
 // function showDialogSuccess(text) {

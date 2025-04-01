@@ -96,9 +96,11 @@ class MYPDF extends TCPDF
                 $_Remark = $row['Remark'];
                 $_Procedure_TH = $row['Procedure_TH'];
 
-                if (strlen($_Remark) > 45) {
-                    $_Remark = substr($_Remark, 0, 45) . '...';
-                  }
+       
+                
+                // if (strlen($_Remark) > 45) {
+                //     $_Remark = substr($_Remark, 0, 45) . '...';
+                //   }
             }
     
     

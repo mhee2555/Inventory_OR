@@ -290,7 +290,7 @@
                             <table class="table table-hover table-sm mt-3" id="table_deproom_DocNo_pay_manual">
                                 <thead style="background-color: #cdd6ff;">
                                     <tr>
-                                        <th scope="col" class="text-center" id="" style="width: 70%;">ลำดับ</th>
+                                        <th scope="col" class="text-center" id="" style="width: 10%;">ลำดับ</th>
                                         <th scope="col" class="text-center" id="" style="width: 70%;">รายการ</th>
                                         <!-- <th scope="col" class="text-center" id="">ขอเบิก</th> -->
                                         <th scope="col" class="text-center" id="" style="width: 10%;">สแกนจ่าย</th>

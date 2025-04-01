@@ -63,7 +63,7 @@ function selection_item_normal($conn, $db)
                 INNER JOIN item ON itemstock.ItemCode = item.itemcode 
             WHERE
                      ( item.itemname LIKE '%$input_search%' OR item.itemcode LIKE '%$input_search%' ) 
-                 AND item.IsSpecial = '1'
+                 AND item.SpecialID = '1'
             GROUP BY
                 item.itemname,
                 item.itemcode  ";
