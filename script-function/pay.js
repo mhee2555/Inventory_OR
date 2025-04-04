@@ -657,9 +657,9 @@ function show_detail_item_ByDocNo() {
 
                       
                       </td>
-                      <td class='text-center'><input type='text' class='form-control text-center f18' value="${value.cnt}" disabled id="qty_request_${value.itemcode}"></td>
+                      <td hidden class='text-center'><input type='text' class='form-control text-center f18' value="${value.cnt}" disabled id="qty_request_${value.itemcode}"></td>
                       <td class='text-center'><input type='text' class='form-control text-center f18 loop_item_pay' value="${value.cnt_pay}"  data-itemcode='${value.itemcode}' disabled></td>
-                      <td class='text-center'><input type='text' class='form-control text-center f18 loop_item_balance' disabled value="${balance}" id="balance_request_${value.itemcode}"></td>
+                      <td hidden class='text-center'><input type='text' class='form-control text-center f18 loop_item_balance' disabled value="${balance}" id="balance_request_${value.itemcode}"></td>
                    </tr>`;
         });
       }
@@ -1437,7 +1437,26 @@ function show_Report(DocNo) {
   window.open("report/Report_Issue_Order_HN.php" + option, "_blank");
 }
 
+
+
+function showLoading() {
+  $("body").loadingModal({
+    position: "auto",
+    text: "กำลังโหลด...",
+    color: "#fff",
+    opacity: "0.7",
+    backgroundColor: "rgb(0,0,0)",
+    animation: "threeBounce",
+  });
+}
+
+
+
+
 function cancel_item_byDocNo(DocNo) {
+
+
+
   Swal.fire({
     title: "ยืนยัน",
     text: "ยืนยัน! การยกเลิก?",
@@ -1449,6 +1468,10 @@ function cancel_item_byDocNo(DocNo) {
     cancelButtonText: "ยกเลิก",
   }).then((result) => {
     if (result.isConfirmed) {
+
+      showLoading();
+
+
       $.ajax({
         url: "process/pay.php",
         type: "POST",
@@ -1459,7 +1482,7 @@ function cancel_item_byDocNo(DocNo) {
         success: function (result) {
           var ObjData = JSON.parse(result);
           console.log(ObjData);
-
+          $("body").loadingModal("destroy");
           showDialogSuccess("ยกเลิกสำเร็จ");
         },
       });

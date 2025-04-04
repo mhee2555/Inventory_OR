@@ -99,12 +99,30 @@
     </div>
     <div class="col-md-6 mt-4">
         <div class="row ">
+
+
+
+
             <div class="col-md-6">
-                <button class="btn" id="btn_Tracking" disabled style="color: #fff;background: #1570EF;font-size:20px;">Medical Instrument Tracking</button>
+
+                <div class="dropdown">
+                    <button style="background-color: #1570EF;color:white;" class="btn  dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        รายงาน
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="z-index: 9999;">
+                        <a class="dropdown-item" href="#" id="" style="color: green;">Excel ค่าใช้จ่าย</a>
+                        <a class="dropdown-item" href="#" id="btn_excel_all" style="color: green;">Excel All</a>
+                        <a class="dropdown-item" href="#" id="" style="color: #1570EF;">สรุปค่าใช้จ่าย</a>
+                        <a class="dropdown-item" href="#" id="btn_Tracking" style="color: #1570EF;">Medical Instrument Tracking</a>
+                    </div>
+                </div>
+
+
+                <!-- <button class="btn" id="btn_Tracking" disabled style="color: #fff;background: #1570EF;font-size:20px;">Medical Instrument Tracking</button> -->
             </div>
-            <div class="col-md-6 text-right">
+            <!-- <div class="col-md-6 text-right">
                 <button class="btn btn-success" id="btn_excel_all" style="color: #fff;font-size:20px;">Excel All</button>
-            </div>
+            </div> -->
             <div class="col-md-12 col-lg-12 mt-2">
                 <div class="row">
                     <div class="col-md-12 " id="div_detailleft1">
@@ -236,15 +254,15 @@
                 <div class="row">
                     <div class="col-md-12">
                         <label for="" id="lang_text_date1" style="font-weight: 600;color:black;">Lot No</label>
-                         <input type="text" style="font-size:20px;" class="form-control" id="lot_no"  autocomplete="off" disabled>
+                        <input type="text" style="font-size:20px;" class="form-control" id="lot_no" autocomplete="off" disabled>
                     </div>
                     <div class="col-md-12">
                         <label for="" id="lang_text_date1" style="font-weight: 600;color:black;">seriel No</label>
-                         <input type="text" style="font-size:20px;" class="form-control" id="seriel_no"  autocomplete="off" disabled>
+                        <input type="text" style="font-size:20px;" class="form-control" id="seriel_no" autocomplete="off" disabled>
                     </div>
                     <div class="col-md-12">
                         <label for="" id="lang_text_date1" style="font-weight: 600;color:black;">Exp Lot</label>
-                         <input type="text" style="font-size:20px;" class="form-control" id="exp_lot"  autocomplete="off" disabled>
+                        <input type="text" style="font-size:20px;" class="form-control" id="exp_lot" autocomplete="off" disabled>
                     </div>
                 </div>
 

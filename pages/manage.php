@@ -193,6 +193,9 @@
                             <div class="col-md-12 mt-2">
                                 <input type="text" class="form-control" id="input_DeproomNameEN" autocomplete="off" placeholder="ชื่อห้อง อังกฤษ">
                             </div>
+                            <div class="col-md-12 mt-2">
+                                <input type="text" class="form-control" id="input_DeproomName_sub" autocomplete="off" placeholder="ตัวย่อ">
+                            </div>
                             <div class="col-md-12 mt-3">
                                 <select name="" id="input_DeproomFloor" class="form-control" style="font-size:20px;">
                                 </select>
@@ -264,6 +267,7 @@
                                     <th scope="col" id="td_numberdep" class="text-center" class="text-center">ลำดับ</th>
                                     <th scope="col" style="width: 20%;" class="text-center" id="td_namethdep">ห้องตรวจไทย</th>
                                     <th scope="col" style="width: 20%;" class="text-center" id="td_nameendep">ห้องตรวจอังกฤษ</th>
+                                    <th scope="col" style="width: 20%;" class="text-center" id="">ห้องตรวจย่อ</th>
                                     <th scope="col" style="width: 20%;" class="text-center" id="td_floordep">ชั้น</th>
                                     <th scope="col" style="width: 20%;" class="text-center" id="td_statusdep">สถานะ</th>
                                     <th scope="col" style="width: 20%;" class="text-center">#</th>

@@ -106,7 +106,7 @@ function show_detail_hn() {
             `<td class="text-left" >${value.HnCode}</td>` +
             `<td class="text-left">${value.departmentroomname}</td>` +
             `<td class="text-left">${value.Doctor_Name}</td>` +
-            `<td class="text-left">${value.Procedure_TH}</td>` +
+            `<td class="text-left" >${value.Procedure_TH}</td>` +
             ` </tr>`;
         });
       } else {
@@ -131,7 +131,7 @@ function show_detail_hn() {
         },
         columnDefs: [
           {
-            width: "10%",
+            width: "5%",
             targets: 0,
           },
           {
@@ -147,16 +147,16 @@ function show_detail_hn() {
             targets: 3,
           },
           {
-            width: "15%",
+            width: "10%",
             targets: 4,
           },
           {
-            width: "15%",
+            width: "25%",
             targets: 5,
           },
         ],
         info: false,
-        scrollX: false,
+        scrollX: true,
         scrollCollapse: false,
         visible: false,
         searching: false,

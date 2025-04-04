@@ -139,12 +139,17 @@ function onconfirm_send_request($conn,$db)
 
 
     if($db ==1){
+        $sql_ = " UPDATE hncode SET DocDate  = '$select_date_request $select_time_request' WHERE DocNo_SS = '$txt_docno_request' ";
+       
+       
         $sql1 = " UPDATE deproom SET IsStatus = 1 , serviceDate = '$select_date_request $select_time_request' , Remark = '$input_remark_request' , hn_record_id = '$input_hn_request' , doctor = '$select_doctor_request' , `procedure` = '$select_procedure_request' , Ref_departmentroomid = '$select_deproom_request' WHERE DocNo = '$txt_docno_request' AND IsCancel = 0 ";
     }else{
         $sql1 = " UPDATE deproom SET IsStatus = 1 , serviceDate = '$select_date_request $select_time_request' , Remark = '$input_remark_request' , hn_record_id = '$input_hn_request' , doctor = '$select_doctor_request' , [procedure] = '$select_procedure_request' , Ref_departmentroomid = '$select_deproom_request' WHERE DocNo = '$txt_docno_request' AND IsCancel = 0 ";
     }
 
     $sql2 = " UPDATE deproomdetail SET IsStatus = 3 WHERE DocNo = '$txt_docno_request' AND IsCancel = 0 ";
+    $meQuery_ = $conn->prepare($sql_);
+    $meQuery_->execute();
     $meQuery1 = $conn->prepare($sql1);
     $meQuery1->execute();
     $meQuery2 = $conn->prepare($sql2);

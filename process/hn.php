@@ -277,8 +277,8 @@ function show_detail_hn($conn, $db)
                     hncode.HnCode,
                     hncode.DocNo,
                     departmentroom.departmentroomname,
-                    COALESCE(doctor.Doctor_Name_EN, '-') AS Doctor_Name,
-                    COALESCE(`procedure`.Procedure_EN, '-') AS Procedure_TH,
+                    COALESCE(doctor.Doctor_Name, '-') AS Doctor_Name,
+                    COALESCE(`procedure`.Procedure_TH, '-') AS Procedure_TH,
                     hncode.doctor ,
                     hncode.`procedure`
                 FROM

@@ -49,6 +49,7 @@ function saveDeproom($conn)
     $input_DeproomFloor = $_POST['input_DeproomFloor'];
     $input_DeproomNameTH = $_POST['input_DeproomNameTH'];
     $input_DeproomNameEN = $_POST['input_DeproomNameEN'];
+    $input_DeproomName_sub = $_POST['input_DeproomName_sub'];
     $input_IDDeproom = $_POST['input_IDDeproom'];
     $IsActive = $_POST['IsActive'];
 
@@ -57,10 +58,10 @@ function saveDeproom($conn)
 
 
     if ($input_IDDeproom == "") {
-        $query = "INSERT INTO departmentroom ( departmentroomname ,  floor_id ,  IsActive  ,  departmentroomname_EN ,  IsMainroom   ) 
-        VALUES             ('$input_DeproomNameTH'  , '$input_DeproomFloor'  , $IsActive , '$input_DeproomNameEN'  , 0 ) ";
+        $query = "INSERT INTO departmentroom ( departmentroomname ,  floor_id ,  IsActive  ,  departmentroomname_EN ,  IsMainroom , departmentroomname_sub  ) 
+        VALUES             ('$input_DeproomNameTH'  , '$input_DeproomFloor'  , $IsActive , '$input_DeproomNameEN'  , 0 , '$input_DeproomName_sub') ";
     } else {
-        $query = "UPDATE departmentroom SET   departmentroomname = '$input_DeproomNameTH' , floor_id = $input_DeproomFloor , IsActive = $IsActive , departmentroomname_EN = '$input_DeproomNameEN'
+        $query = "UPDATE departmentroom SET   departmentroomname = '$input_DeproomNameTH' , floor_id = $input_DeproomFloor , IsActive = $IsActive , departmentroomname_EN = '$input_DeproomNameEN' , departmentroomname_sub = '$input_DeproomName_sub'
                   WHERE id = '$input_IDDeproom'  ";
     }
 
@@ -86,7 +87,8 @@ function feeddata_detailDeproom($conn, $db)
                     floor.ID  AS ID_floor ,
                     departmentroom.IsActive,
                     departmentroom.IsMainroom,
-                    departmentroom.departmentroomname_EN 
+                    departmentroom.departmentroomname_EN,
+                    departmentroom.departmentroomname_sub
                 FROM
                     departmentroom
                 INNER JOIN floor ON departmentroom.floor_id = floor.ID  ";

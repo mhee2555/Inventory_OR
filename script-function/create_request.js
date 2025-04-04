@@ -305,7 +305,7 @@ function show_detail_item_request() {
                       <td>${value.Item_name}</td>
                       <td class='text-center'>${value.TyeName}</td>
                       <td class='text-center'> <img src="assets/img_project/1_icon/ic_fileimg.png" style='width:30%;'></td>
-                      <td class='text-center'><input type='number' class='form-control loop_qty_request text-center' data-itemcode="${
+                      <td class='text-center'><input type='text' class='numonly form-control loop_qty_request text-center' data-itemcode="${
                         value.itemcode
                       }"></td>
                    </tr>`;
@@ -375,9 +375,24 @@ function show_detail_item_request() {
             ""
         );
       }
+
+
+      $(".numonly").on("input", function () {
+        this.value = this.value.replace(/[^0-9]/g, ""); //<-- replace all other than given set of values
+      });
+
     },
   });
 }
+
+
+function validateNumber(input) {
+  alert(23);
+  if (input.value < 0) {
+      input.value = 0;
+  }
+}
+
 
 function onconfirm_request() {
   qty_array = [];
@@ -630,7 +645,9 @@ function onconfirm_send_request() {
         $("#txt_docno_request").val("");
         $("#input_hn_request").val("");
         $("#select_date_request").val("");
-        $("#select_time_request").val("");
+        // $("#select_time_request").val("");
+        $("#select_time_request").val(currentTime);
+
         $("#text_edit").val("");
 
         $("#select_doctor_request").val("");

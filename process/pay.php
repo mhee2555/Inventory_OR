@@ -490,7 +490,7 @@ function onReturnData($conn, $db)
             }
 
 
-            
+
             $queryUpdate = "UPDATE itemstock 
             SET Isdeproom = 0 ,
             departmentroomid = '35',
@@ -499,7 +499,6 @@ function onReturnData($conn, $db)
             RowID = '$_RowID' ";
             $meQueryUpdate = $conn->prepare($queryUpdate);
             $meQueryUpdate->execute();
-            
         }
     }
 
@@ -734,14 +733,18 @@ function cancel_item_byDocNo($conn, $db)
     $meQuery2->execute();
 
 
-    $sql3 = " DELETE FROM deproomdetailsub WHERE deproomdetailsub.ID IN ( SELECT
-                                                                                deproomdetailsub.ID 
-                                                                            FROM
-                                                                                deproomdetail
-                                                                                INNER JOIN deproomdetailsub ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID
-                                                                            WHERE deproomdetail.DocNo = '$txt_docno_request'  )  ";
+    $sql3 = "DELETE deproomdetailsub
+                FROM deproomdetailsub
+            INNER JOIN deproomdetail ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID
+            WHERE deproomdetail.DocNo = '$txt_docno_request' ";
 
-    echo $sql3;
+    // $sql3 = " DELETE FROM deproomdetailsub WHERE deproomdetailsub.ID IN ( SELECT
+    //                                                                             deproomdetailsub.ID 
+    //                                                                         FROM
+    //                                                                             deproomdetail
+    //                                                                             INNER JOIN deproomdetailsub ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID
+    //                                                                         WHERE deproomdetail.DocNo = '$txt_docno_request'  )  ";
+
     $meQuery3 = $conn->prepare($sql3);
     $meQuery3->execute();
 
@@ -776,20 +779,20 @@ function show_detail_history($conn, $db)
     $select_date_history_l = explode("-", $select_date_history_l);
     $select_date_history_l = $select_date_history_l[2] . '-' . $select_date_history_l[1] . '-' . $select_date_history_l[0];
 
-    if(isset($_POST['select_doctor_history'])){
+    if (isset($_POST['select_doctor_history'])) {
         $select_doctor_history = $_POST['select_doctor_history'];
     }
-    if(isset($_POST['select_procedure_history'])){
+    if (isset($_POST['select_procedure_history'])) {
         $select_procedure_history = $_POST['select_procedure_history'];
     }
 
     $whereP = "";
-    if(isset($select_procedure_history)){
+    if (isset($select_procedure_history)) {
         $select_procedure_history = implode(",", $select_procedure_history);
         $whereP = " AND  FIND_IN_SET('$select_procedure_history', deproom.`procedure`) ";
     }
     $whereD = "";
-    if(isset($select_doctor_history)){
+    if (isset($select_doctor_history)) {
         $select_doctor_history = implode(",", $select_doctor_history);
         $whereD = " AND  FIND_IN_SET('$select_doctor_history', deproom.`doctor`)  ";
     }
@@ -834,8 +837,8 @@ function show_detail_history($conn, $db)
                         $whereP
                         $whereR ";
 
-                        // echo $query;
-                        // exit;
+        // echo $query;
+        // exit;
 
     } else {
 
@@ -1612,14 +1615,15 @@ function oncheck_pay_manual($conn, $db)
 
             if ($_Isdeproom == 1) {
 
-                $query_old = " SELECT
+                $query_old = "SELECT
                                     deproomdetailsub.ID,
                                     deproomdetail.ID AS detailID,
                                     hncode_detail.ID AS hndetail_ID,
                                     deproomdetail.ItemCode,
-                                    SUM( deproomdetail.Qty ) AS deproom_qty,
-                                    COUNT( hncode_detail.Qty ) AS hncode_qty ,
-	                                deproom.hn_record_id
+                                    COUNT( deproomdetailsub.ID ) AS deproom_qty,
+                                    COUNT(hncode_detail.ID ) AS hncode_qty,
+                                    deproom.hn_record_id ,
+                                    deproom.Ref_departmentroomid 
                                 FROM
                                     deproom
                                     LEFT JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
@@ -1628,9 +1632,31 @@ function oncheck_pay_manual($conn, $db)
                                     LEFT JOIN hncode_detail ON hncode_detail.DocNo = hncode.DocNo 
                                 WHERE
                                     deproomdetail.ItemCode = '$_ItemCode' 
-                                    AND hncode_detail.UsageCode = '$input_pay_manual'
-                                    ORDER BY deproomdetailsub.ID DESC
+                                    AND hncode_detail.UsageCode = '$input_pay_manual' 
+
+                                ORDER BY
+                                    deproomdetailsub.ID DESC 
                                     LIMIT 1 ";
+
+                // $query_old = " SELECT
+                //                     deproomdetailsub.ID,
+                //                     deproomdetail.ID AS detailID,
+                //                     hncode_detail.ID AS hndetail_ID,
+                //                     deproomdetail.ItemCode,
+                //                     SUM( deproomdetail.Qty ) AS deproom_qty,
+                //                     COUNT( hncode_detail.Qty ) AS hncode_qty ,
+	            //                     deproom.hn_record_id
+                //                 FROM
+                //                     deproom
+                //                     LEFT JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
+                //                     LEFT JOIN deproomdetailsub ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID
+                //                     LEFT JOIN hncode ON hncode.DocNo_SS = deproom.DocNo
+                //                     LEFT JOIN hncode_detail ON hncode_detail.DocNo = hncode.DocNo 
+                //                 WHERE
+                //                     deproomdetail.ItemCode = '$_ItemCode' 
+                //                     AND hncode_detail.UsageCode = '$input_pay_manual'
+                //                     ORDER BY deproomdetailsub.ID DESC
+                //                     LIMIT 1 ";
 
 
                 $meQuery_old = $conn->prepare($query_old);
@@ -1642,37 +1668,56 @@ function oncheck_pay_manual($conn, $db)
                     $hncode_qty = $row_old['hncode_qty'];
                     $deproomdetailsub_id = $row_old['ID'];
                     $_hn_record_id_borrow = $row_old['hn_record_id'];
-
+                    $_Ref_departmentroomid = $row_old['Ref_departmentroomid'];
                 }
 
 
-                if ($deproom_qty == 1) {
-                    $update_old_detail = "DELETE FROM deproomdetail WHERE ID =  '$detailID' ";
-                    $meQuery_old_detail = $conn->prepare($update_old_detail);
-                    $meQuery_old_detail->execute();
+                // =======================================================================================================================================
 
-                    $update_old_sub = "DELETE FROM deproomdetailsub WHERE deproomdetailsub.ID =  '$deproomdetailsub_id'    ";
-                    $meQuery_old_sub = $conn->prepare($update_old_sub);
-                    $meQuery_old_sub->execute();
-                } else {
-                    $update_old_detail = "UPDATE deproomdetail SET Qty = Qty-1 WHERE  deproomdetail.ID = '$detailID' ";
-                    $meQuery_old_detail = $conn->prepare($update_old_detail);
-                    $meQuery_old_detail->execute();
+                $query = "DELETE FROM itemstock_transaction_detail  WHERE ItemStockID = '$_RowID' 
+                AND ItemCode = '$_ItemCode' 
+                AND departmentroomid = '$_Ref_departmentroomid' 
+                AND  IsStatus = '1'
+                AND DATE(CreateDate) = '$input_date_service_manual' ";
 
-                    $update_old_sub = "DELETE FROM deproomdetailsub WHERE deproomdetailsub.ID =  '$deproomdetailsub_id'   ";
-                    $meQuery_old_sub = $conn->prepare($update_old_sub);
-                    $meQuery_old_sub->execute();
-                }
+                $meQuery = $conn->prepare($query);
+                $meQuery->execute();
+                // =======================================================================================================================================
 
-                if ($hncode_qty == 1) {
-                    $queryD2 = "DELETE FROM hncode_detail WHERE ID =  '$hndetail_ID' ";
-                    $meQueryD2 = $conn->prepare($queryD2);
-                    $meQueryD2->execute();
-                } else {
-                    $queryInsert0 = "UPDATE hncode_detail SET Qty = Qty-1 WHERE  ID =  '$hndetail_ID' ";
-                    $meQuery0 = $conn->prepare($queryInsert0);
-                    $meQuery0->execute();
-                }
+
+                // if ($deproom_qty == 1) {
+                //     // $update_old_detail = "DELETE FROM deproomdetail WHERE ID =  '$detailID' ";
+                //     // $meQuery_old_detail = $conn->prepare($update_old_detail);
+                //     // $meQuery_old_detail->execute();
+
+                // } else {
+                //     // $update_old_detail = "UPDATE deproomdetail SET Qty = Qty-1 WHERE  deproomdetail.ID = '$detailID' ";
+                //     // $meQuery_old_detail = $conn->prepare($update_old_detail);
+                //     // $meQuery_old_detail->execute();
+
+                //     $update_old_sub = "DELETE FROM deproomdetailsub WHERE deproomdetailsub.ID =  '$deproomdetailsub_id'   ";
+                //     $meQuery_old_sub = $conn->prepare($update_old_sub);
+                //     $meQuery_old_sub->execute();
+                // }
+
+
+                
+                $update_old_sub = "DELETE FROM deproomdetailsub WHERE deproomdetailsub.ID =  '$deproomdetailsub_id'    ";
+                $meQuery_old_sub = $conn->prepare($update_old_sub);
+                $meQuery_old_sub->execute();
+
+                $queryD2 = "DELETE FROM hncode_detail WHERE ID =  '$hndetail_ID' ";
+                $meQueryD2 = $conn->prepare($queryD2);
+                $meQueryD2->execute();
+
+
+                // if ($hncode_qty == 1) {
+
+                // } else {
+                //     $queryInsert0 = "UPDATE hncode_detail SET Qty = Qty-1 WHERE  ID =  '$hndetail_ID' ";
+                //     $meQuery0 = $conn->prepare($queryInsert0);
+                //     $meQuery0->execute();
+                // }
 
 
 
@@ -4702,7 +4747,7 @@ function oncheck_pay($conn, $db)
                 if ($db == 1) {
                     $queryInsert2 = "INSERT INTO hncode_detail (DocNo,UsageCode,ItemStockID,Qty,IsStatus,IsCancel,LastSterileDetailID)  VALUES             
                     (
-                    (SELECT hncode.DocNo FROM hncode  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.`procedure` = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$input_date_service' ), 
+                    (SELECT hncode.DocNo FROM hncode  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.`procedure` = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$input_date_service' LIMIT 1 ), 
                     '$input_pay',
                     '$_RowID',
                     1, 
@@ -4713,7 +4758,7 @@ function oncheck_pay($conn, $db)
                 } else {
                     $queryInsert2 = "INSERT INTO hncode_detail (DocNo,UsageCode,ItemStockID,Qty,IsStatus,IsCancel,LastSterileDetailID)  VALUES             
                     (
-                    (SELECT hncode.DocNo FROM hncode  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.[procedure] = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$input_date_service' ), 
+                    (SELECT hncode.DocNo FROM hncode  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.[procedure] = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$input_date_service' LIMIT 1  ), 
                     '$input_pay',
                     '$_RowID',
                     1, 
@@ -5005,7 +5050,6 @@ function oncheck_pay($conn, $db)
                 $hncode_qty = $row_old['hncode_qty'];
                 $deproomdetailsub_id = $row_old['ID'];
                 $_hn_record_id_borrow = $row_old['hn_record_id'];
-
             }
 
 
@@ -5461,7 +5505,7 @@ function show_detail_deproom_pay($conn, $db)
                     INNER JOIN
                         departmentroom ON deproom.Ref_departmentroomid = departmentroom.id
                     WHERE
-                        DATE(deproom.CreateDate) = '$select_date_pay'
+                        DATE(deproom.serviceDate) = '$select_date_pay'
                         $whereDep
                         AND deproom.IsCancel = 0
                     GROUP BY
@@ -5475,7 +5519,7 @@ function show_detail_deproom_pay($conn, $db)
                         deproom
                         INNER JOIN departmentroom ON deproom.Ref_departmentroomid = departmentroom.id 
                     WHERE
-                        CONVERT(DATE,deproom.CreateDate) =  '$select_date_pay' 
+                        CONVERT(DATE,deproom.serviceDate) =  '$select_date_pay' 
                         $whereDep
                         AND deproom.IsCancel = 0
                     GROUP BY
@@ -5518,7 +5562,7 @@ function show_detail_deproom_pay($conn, $db)
                         WHERE
                             departmentroom.id = '$_id'
                             AND deproom.IsCancel = 0
-                            AND DATE(deproom.CreateDate) = '$select_date_pay'
+                            AND DATE(deproom.serviceDate) = '$select_date_pay'
                         GROUP BY
                             deproom.DocNo,
                             departmentroom.id,
@@ -5560,7 +5604,7 @@ function show_detail_deproom_pay($conn, $db)
                         WHERE 
                         departmentroom.id = '$_id'  
                         AND deproom.IsCancel = 0  
-                        AND CONVERT(DATE,deproom.CreateDate) =  '$select_date_pay' 
+                        AND CONVERT(DATE,deproom.serviceDate) =  '$select_date_pay' 
                         GROUP BY
                             deproom.DocNo,
                             departmentroom.id,

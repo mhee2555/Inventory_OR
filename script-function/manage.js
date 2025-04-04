@@ -719,7 +719,12 @@ $("#btn_saveDeproom").click(function () {
     showDialogFailed("กรุณากรอก ชื่อห้อง อังกฤษ");
     return;
   }
-
+  if ($("#input_DeproomName_sub").val() == "") {
+    showDialogFailed("กรุณากรอก ตัวย่อ");
+    return;
+  }
+  
+  
   saveDeproom();
 });
 function saveDeproom() {
@@ -736,6 +741,7 @@ function saveDeproom() {
       FUNC_NAME: "saveDeproom",
       input_DeproomNameTH: $("#input_DeproomNameTH").val(),
       input_DeproomNameEN: $("#input_DeproomNameEN").val(),
+      input_DeproomName_sub: $("#input_DeproomName_sub").val(),
       input_IDDeproom: $("#input_IDDeproom").val(),
       input_DeproomFloor: $("#input_DeproomFloor").val(),
       IsActive: IsActive
@@ -746,6 +752,7 @@ function saveDeproom() {
       showDialogSuccess("บันทึกสำเร็จ");
       $("#input_DeproomNameTH").val("");
       $("#input_DeproomNameEN").val("");
+      $("#input_DeproomName_sub").val("");
       $("#input_IDDeproom").val("");
     },
   });
@@ -755,10 +762,14 @@ function editDeproom(
   departmentroomname,
   departmentroomname_EN,
   ID_floor,
-  IsActive
+  IsActive,
+  departmentroomname_sub
 ) {
   $("#input_DeproomNameTH").val(departmentroomname);
   $("#input_DeproomNameEN").val(departmentroomname_EN);
+  $("#input_DeproomName_sub").val(departmentroomname_sub);
+
+  
   $("#input_DeproomFloor").val(ID_floor);
   $("#input_IDDeproom").val(id);
 
@@ -800,6 +811,9 @@ $("#btn_clearDeproom").click(function () {
   $("#input_DeproomNameTH").val("");
   $("#input_DeproomNameEN").val("");
   $("#input_IDDeproom").val("");
+  $("#input_DeproomName_sub").val("");
+
+  
 });
 function feeddata_detailDeproom() {
   $.ajax({
@@ -826,15 +840,10 @@ function feeddata_detailDeproom() {
                       <td class="text-center">${kay + 1}</td>
                       <td class="text-left">${value.departmentroomname}</td>
                       <td class="text-left">${value.departmentroomname_EN}</td>
+                      <td class="text-left">${value.departmentroomname_sub}</td>
                       <td class="text-center">${value.floor_id}</td>
                       <td class="text-center">${value.IsActive}</td>
-                      <td class="text-center"><label style='color:blue;font-weight:bold;cursor:pointer;' onclick='editDeproom("${
-                        value.id
-                      }","${value.departmentroomname}","${
-            value.departmentroomname_EN
-          }","${value.ID_floor}","${
-            value.IsActive
-          }")'>แก้ไข</label> | <label style='color:red;font-weight:bold;cursor:pointer;' onclick='deleteDeproom(${
+                      <td class="text-center"><label style='color:blue;font-weight:bold;cursor:pointer;' onclick='editDeproom("${value.id}","${value.departmentroomname}","${value.departmentroomname_EN}","${value.ID_floor}","${value.IsActive}","${value.departmentroomname_sub}")'>แก้ไข</label> | <label style='color:red;font-weight:bold;cursor:pointer;' onclick='deleteDeproom(${
             value.id
           })'>ลบ</label></td>
                        </tr>`;
@@ -883,6 +892,10 @@ function feeddata_detailDeproom() {
           {
             width: "10%",
             targets: 5,
+          },
+          {
+            width: "10%",
+            targets: 6,
           },
         ],
         info: false,
