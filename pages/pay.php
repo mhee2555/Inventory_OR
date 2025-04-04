@@ -281,8 +281,12 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-4 ">
+                                <div class="col-md-2">
                                     <button id="btn_scan_RFid_manual" class="btn btn-info " style="font-size: 13px;margin-top: 2rem !important;line-height: 25px;">จ่ายอุปกรณ์จากตู้ RFID & Weighing</button>
+                                </div>
+
+                                <div class="col-md-2 text-right">
+                                    <button id="btn_clear_manual" class="btn btn-danger " style="font-size: 18px;margin-top: 2rem !important;line-height: 25px;"><i class="fa-solid fa-shower"></i> เคลียร์ข้อมูล</button>
                                 </div>
                             </div>
 

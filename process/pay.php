@@ -1610,7 +1610,7 @@ function oncheck_pay_manual($conn, $db)
             }
 
 
-            if ($_Isdeproom == 1 && ($select_deproom_manual != $_departmentroomid)) {
+            if ($_Isdeproom == 1) {
 
                 $query_old = " SELECT
                                     deproomdetailsub.ID,
@@ -1618,7 +1618,8 @@ function oncheck_pay_manual($conn, $db)
                                     hncode_detail.ID AS hndetail_ID,
                                     deproomdetail.ItemCode,
                                     SUM( deproomdetail.Qty ) AS deproom_qty,
-                                    COUNT( hncode_detail.Qty ) AS hncode_qty 
+                                    COUNT( hncode_detail.Qty ) AS hncode_qty ,
+	                                deproom.hn_record_id
                                 FROM
                                     deproom
                                     LEFT JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
@@ -1640,6 +1641,8 @@ function oncheck_pay_manual($conn, $db)
                     $deproom_qty = $row_old['deproom_qty'];
                     $hncode_qty = $row_old['hncode_qty'];
                     $deproomdetailsub_id = $row_old['ID'];
+                    $_hn_record_id_borrow = $row_old['hn_record_id'];
+
                 }
 
 
@@ -1727,7 +1730,8 @@ function oncheck_pay_manual($conn, $db)
                                             hn_record_id,
                                             doctor,
                                             `procedure`,
-                                            qty_weighing
+                                            qty_weighing,
+                                            hn_record_id_borrow
                                         )
                                         VALUES
                                         (
@@ -1740,7 +1744,8 @@ function oncheck_pay_manual($conn, $db)
                                             '$_hn_record_id', 
                                             '$_doctor', 
                                             '$_procedure',
-                                            1
+                                            1,
+                                            '$_hn_record_id_borrow'
                                         ) ";
 
 
@@ -1858,7 +1863,8 @@ function oncheck_pay_manual($conn, $db)
                                             hn_record_id,
                                             doctor,
                                             `procedure`,
-                                            qty_weighing
+                                            qty_weighing,
+                                            hn_record_id_borrow
                                             )
                                             VALUES
                                             (
@@ -1871,7 +1877,8 @@ function oncheck_pay_manual($conn, $db)
                                                 '$_hn_record_id', 
                                                 '$_doctor', 
                                                 '$_procedure',
-                                                1
+                                                1,
+                                            '$_hn_record_id_borrow'
                                             ) ";
 
 

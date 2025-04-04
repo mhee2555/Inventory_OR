@@ -92,6 +92,29 @@ $(function () {
     show_detail_deproom_pay();
   });
 
+
+  
+
+  $("#btn_clear_manual").click(function () {
+
+    $("#input_Hn_pay_manual").val("");
+    $("#input_date_service_manual").val(output);
+    $("#select_doctor_manual").val("").trigger("change");
+    $("#select_deproom_manual").val("").trigger("change");
+    $("#select_procedure_manual").val("").trigger("change");
+    $("#input_docNo_deproom_manual").val("");
+    $("#input_docNo_HN_manual").val("");
+
+    $("#table_deproom_DocNo_pay_manual tbody").html("");
+
+
+    $(".clear_doctor").attr('hidden', true);
+    doctor_Array = [];
+    $(".clear_procedure").attr('hidden', true);
+    procedure_id_Array = [];
+    
+  });
+
   $("#radio_pay_manual").click(function () {
     $("#radio_pay_manual").css("color", "#bbbbb");
     $("#radio_pay_manual").css("background", "#EAECF0");
