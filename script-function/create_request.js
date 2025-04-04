@@ -639,6 +639,11 @@ function onconfirm_send_request() {
 
       showDialogSuccess("บันทึกสำเร็จ");
 
+      var now = new Date();
+      var hours = String(now.getHours()).padStart(2, "0");
+      var minutes = String(now.getMinutes()).padStart(2, "0");
+      var currentTime = hours + ":" + minutes;
+
       setTimeout(() => {
         $("#table_item_detail_request").DataTable().destroy();
         $("#table_item_detail_request tbody").empty();

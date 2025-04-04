@@ -250,8 +250,6 @@ $query = " SELECT
             ORDER BY
                 item.itemname ASC ";
 
-    echo $query;
-    exit;
 
 
     $meQuery = $conn->prepare($query);
