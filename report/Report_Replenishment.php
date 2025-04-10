@@ -6,6 +6,8 @@ require('../connect/connect.php');
 require('Class.php');
 header('Content-Type: text/html; charset=utf-8');
 date_default_timezone_set("Asia/Bangkok");
+
+error_reporting(E_ALL & ~E_WARNING);
 //--------------------------------------------------------------------------
 
 
@@ -30,21 +32,21 @@ class MYPDF extends TCPDF
 
 
         // if ($this->page == 1) {
-            // Set font
-            $this->SetFont('db_helvethaica_x', '', 14);
+        // Set font
+        $this->SetFont('db_helvethaica_x', '', 14);
 
-            // Title
-            $this->Cell(0, 10,  'วันที่พิมพ์รายงาน' . ' ' . $printdate, 0, 1, 'R');
-
-
+        // Title
+        $this->Cell(0, 10,  'วันที่พิมพ์รายงาน' . ' ' . $printdate, 0, 1, 'R');
 
 
 
 
 
 
-            $image_file = "images/logo1.png";
-            $this->Image($image_file, 10, 10, 20, 30, 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);
+
+
+        $image_file = "images/logo1.png";
+        $this->Image($image_file, 10, 10, 20, 30, 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);
 
 
 
@@ -110,36 +112,36 @@ $checkmonth = $_GET['checkmonth'];
 
 $datetime = new DatetimeTH();
 
-if($type_date == 1){
+if ($type_date == 1) {
 
-    if($checkday == 1){
+    if ($checkday == 1) {
         $date1 = explode("-", $date1);
-        $text_date = "วันที่เติมอุปกรณ์ : " . $date1[0] . " " . $datetime->getTHmonthFromnum($date1[1]) . " " . " พ.ศ." . " " .($date1[2] + 543 );
-    }else{
+        $text_date = "วันที่เติมอุปกรณ์ : " . $date1[0] . " " . $datetime->getTHmonthFromnum($date1[1]) . " " . " พ.ศ." . " " . ($date1[2] + 543);
+    } else {
         $date1 = explode("-", $date1);
         $date2 = explode("-", $date2);
 
-        $text_date = "วันที่เติมอุปกรณ์ : " . $date1[0] . " " . $datetime->getTHmonthFromnum($date1[1]) . " " . " พ.ศ." . " " .($date1[2] + 543 ) . " ถึง " .  $date2[0] . " " . $datetime->getTHmonthFromnum($date2[1]) . " " . " พ.ศ." . " " .($date2[2] + 543 );
+        $text_date = "วันที่เติมอุปกรณ์ : " . $date1[0] . " " . $datetime->getTHmonthFromnum($date1[1]) . " " . " พ.ศ." . " " . ($date1[2] + 543) . " ถึง " .  $date2[0] . " " . $datetime->getTHmonthFromnum($date2[1]) . " " . " พ.ศ." . " " . ($date2[2] + 543);
     }
 }
 
-if($type_date == 2){
+if ($type_date == 2) {
 
-    if($checkmonth == 1){
+    if ($checkmonth == 1) {
         $text_date = "เดือนที่เติมอุปกรณ์ : " . $datetime->getTHmonthFromnum($month1);
-    }else{
+    } else {
         $text_date = "เดือนที่เติมอุปกรณ์ : " . $datetime->getTHmonthFromnum($month1) . " ถึง " . $datetime->getTHmonthFromnum($month2);
     }
 }
 
 
-    $pdf->SetFont('db_helvethaica_x', 'b', 16);
+$pdf->SetFont('db_helvethaica_x', 'b', 16);
 
-    $pdf->Ln(5);
+$pdf->Ln(5);
 
 
-    $pdf->Cell(0, 10,  "รายงานเติมอุปกรณ์ประจำวันตู้ RFID SmartCabinet", 0, 1, 'C');
-    $pdf->Cell(0, 10,  $text_date, 0, 1, 'C');
+$pdf->Cell(0, 10,  "รายงานเติมอุปกรณ์ประจำวันตู้ RFID SmartCabinet", 0, 1, 'C');
+$pdf->Cell(0, 10,  $text_date, 0, 1, 'C');
 
 
 
@@ -163,24 +165,23 @@ $html = '<table cellspacing="0" cellpadding="2" border="1" >
 
 
 
-if($type_date == 1){
+if ($type_date == 1) {
 
-    if($checkday == 1){
+    if ($checkday == 1) {
         $date1 = $date1[2] . '-' . $date1[1] . '-' . $date1[0];
 
         $where_date = "WHERE DATE(itemstock.LastCabinetModify) = '$date1'  ";
-    }else{
+    } else {
         $date1 = $date1[2] . '-' . $date1[1] . '-' . $date1[0];
         $date2 = $date2[2] . '-' . $date2[1] . '-' . $date2[0];
 
         $where_date = "WHERE DATE(itemstock.LastCabinetModify) BETWEEN '$date1' 	AND '$date2' ";
-
     }
 }
-if($type_date == 2){
+if ($type_date == 2) {
 
-    if($checkmonth == 1){
-    }else{
+    if ($checkmonth == 1) {
+    } else {
     }
 }
 
@@ -218,11 +219,11 @@ $query = " SELECT
 $meQuery1 = $conn->prepare($query);
 $meQuery1->execute();
 while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
-    
+
     $pdf->SetFont('db_helvethaica_x', 'B', 18);
 
     $html .= '<tr nobr="true" style="font-size:15px;">';
-    $html .=   '<td width="6 %" align="center"> ' . $count . '</td>';
+    $html .=   '<td width="6 %" align="center"> ' . (string)$count . '</td>';
     $html .=   '<td width="20 %" align="center"> ' . $Result_Detail['itemcode2'] . '</td>';
     $html .=   '<td width="36 %" align="left">' . $Result_Detail['itemname'] . '</td>';
     $html .=   '<td width="10 %" align="center">' . $Result_Detail['all_'] -  $Result_Detail['qty']   . '</td>';
@@ -253,36 +254,36 @@ $checkday = $_GET['checkday'];
 $checkmonth = $_GET['checkmonth'];
 
 
-if($type_date == 1){
+if ($type_date == 1) {
 
-    if($checkday == 1){
+    if ($checkday == 1) {
         $date1 = explode("-", $date1);
-        $text_date = "วันที่เติมอุปกรณ์ : " . $date1[0] . " " . $datetime->getTHmonthFromnum($date1[1]) . " " . " พ.ศ." . " " .($date1[2] + 543 );
-    }else{
+        $text_date = "วันที่เติมอุปกรณ์ : " . $date1[0] . " " . $datetime->getTHmonthFromnum($date1[1]) . " " . " พ.ศ." . " " . ($date1[2] + 543);
+    } else {
         $date1 = explode("-", $date1);
         $date2 = explode("-", $date2);
 
-        $text_date = "วันที่เติมอุปกรณ์ : " . $date1[0] . " " . $datetime->getTHmonthFromnum($date1[1]) . " " . " พ.ศ." . " " .($date1[2] + 543 ) . " ถึง " .  $date2[0] . " " . $datetime->getTHmonthFromnum($date2[1]) . " " . " พ.ศ." . " " .($date2[2] + 543 );
+        $text_date = "วันที่เติมอุปกรณ์ : " . $date1[0] . " " . $datetime->getTHmonthFromnum($date1[1]) . " " . " พ.ศ." . " " . ($date1[2] + 543) . " ถึง " .  $date2[0] . " " . $datetime->getTHmonthFromnum($date2[1]) . " " . " พ.ศ." . " " . ($date2[2] + 543);
     }
 }
 
-if($type_date == 2){
+if ($type_date == 2) {
 
-    if($checkmonth == 1){
+    if ($checkmonth == 1) {
         $text_date = "เดือนที่เติมอุปกรณ์ : " . $datetime->getTHmonthFromnum($month1);
-    }else{
+    } else {
         $text_date = "เดือนที่เติมอุปกรณ์ : " . $datetime->getTHmonthFromnum($month1) . " ถึง " . $datetime->getTHmonthFromnum($month2);
     }
 }
 
 
-    $pdf->SetFont('db_helvethaica_x', 'b', 16);
+$pdf->SetFont('db_helvethaica_x', 'b', 16);
 
-    $pdf->Ln(5);
+$pdf->Ln(5);
 
 
-    $pdf->Cell(0, 10,  "รายงานการเติมอุปกรณ์ประจำวันของตู้ Weighing SmartCabinet", 0, 1, 'C');
-    $pdf->Cell(0, 10,  $text_date, 0, 1, 'C');
+$pdf->Cell(0, 10,  "รายงานการเติมอุปกรณ์ประจำวันของตู้ Weighing SmartCabinet", 0, 1, 'C');
+$pdf->Cell(0, 10,  $text_date, 0, 1, 'C');
 
 
 
@@ -306,24 +307,23 @@ $html = '<table cellspacing="0" cellpadding="2" border="1" >
 
 
 
-if($type_date == 1){
+if ($type_date == 1) {
 
-    if($checkday == 1){
+    if ($checkday == 1) {
         $date1 = $date1[2] . '-' . $date1[1] . '-' . $date1[0];
 
         $where_date = "WHERE DATE(itemstock.LastCabinetModify) = '$date1'  ";
-    }else{
+    } else {
         $date1 = $date1[2] . '-' . $date1[1] . '-' . $date1[0];
         $date2 = $date2[2] . '-' . $date2[1] . '-' . $date2[0];
 
         $where_date = "WHERE DATE(itemstock.LastCabinetModify) BETWEEN '$date1' 	AND '$date2' ";
-
     }
 }
-if($type_date == 2){
+if ($type_date == 2) {
 
-    if($checkmonth == 1){
-    }else{
+    if ($checkmonth == 1) {
+    } else {
     }
 }
 
@@ -344,11 +344,11 @@ $query = " SELECT
 $meQuery1 = $conn->prepare($query);
 $meQuery1->execute();
 while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
-    
+
     $pdf->SetFont('db_helvethaica_x', 'B', 18);
 
     $html .= '<tr nobr="true" style="font-size:15px;">';
-    $html .=   '<td width="6 %" align="center"> ' . $count . '</td>';
+    $html .=   '<td width="6 %" align="center"> ' . (string)$count . '</td>';
     $html .=   '<td width="20 %" align="center"> ' . $Result_Detail['itemcode2'] . '</td>';
     $html .=   '<td width="36 %" align="left">' . $Result_Detail['itemname'] . '</td>';
     $html .=   '<td width="10 %" align="center">' . $Result_Detail['all_'] . '</td>';

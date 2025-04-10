@@ -214,7 +214,7 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
     $pdf->SetFont('db_helvethaica_x', 'B', 18);
 
     $html .= '<tr nobr="true" style="font-size:15px;">';
-    $html .=   '<td width="6 %" align="center"> ' . $count . '</td>';
+    $html .=   '<td width="6 %" align="center"> ' .(int)$count . '</td>';
     $html .=   '<td width="20 %" align="center"> ' . $Result_Detail['itemcode2'] . '</td>';
     $html .=   '<td width="34 %" align="left">' . $Result_Detail['itemname'] . '</td>';
     $html .=   '<td width="10 %" align="center">' . $Result_Detail['all_'] . '</td>';
