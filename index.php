@@ -1029,7 +1029,7 @@ if (!isset($_SESSION['UserName'])) {
             });
         })
 
-        $('#a_mapping').on("click", function(e) {
+        $('#a_report').on("click", function(e) {
             e.preventDefault();
             var link = this.href;
             $.get(link, function(res) {
@@ -1068,11 +1068,11 @@ if (!isset($_SESSION['UserName'])) {
                 $("#ic_setup_equipment_rooms").attr("src", "assets/img_project/2_icon/ic_receiveinventory.png");
 
                 $("#conMain").html(res);
-                $("#li_mapping").addClass("active");
-                $("#li_mapping").css("background-color", "#5271ff");
-                history.pushState({}, "Results for `Cats`", 'index.php?s=mapping');
-                document.title = "mapping";
-                loadScript('script-function/mapping.js');
+                $("#li_report").addClass("active");
+                $("#li_report").css("background-color", "#5271ff");
+                history.pushState({}, "Results for `Cats`", 'index.php?s=report');
+                document.title = "report";
+                loadScript('script-function/report.js');
             });
         })
 

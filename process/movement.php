@@ -582,42 +582,42 @@ function selection_item($conn, $db)
     // }
 
 
-    $D = "DELETE 
-    FROM
-        hncode_detail 
-    WHERE
-        DATE(hncode_detail.CreateDate) = '$select_date1' 
-        AND hncode_detail.ItemStockID  IN (
-        SELECT
-            itemstock.RowID 
-        FROM
-            itemstock 
-        WHERE
-            itemstock.Isdeproom = '1' 
-        AND ( itemstock.HNCode IS NULL OR itemstock.HNCode = '' )
-        )
-        AND hncode_detail.ItemCode IS NULL  ";
+    // $D = "DELETE 
+    // FROM
+    //     hncode_detail 
+    // WHERE
+    //     DATE(hncode_detail.CreateDate) = '$select_date1' 
+    //     AND hncode_detail.ItemStockID  IN (
+    //     SELECT
+    //         itemstock.RowID 
+    //     FROM
+    //         itemstock 
+    //     WHERE
+    //         itemstock.Isdeproom = '1' 
+    //     AND ( itemstock.HNCode IS NULL OR itemstock.HNCode = '' )
+    //     )
+    //     AND hncode_detail.ItemCode IS NULL  ";
 
-    $meQuery_D = $conn->prepare($D);
-    $meQuery_D->execute();
+    // $meQuery_D = $conn->prepare($D);
+    // $meQuery_D->execute();
 
-    $D2 = "DELETE 
-    FROM
-    itemstock_transaction_detail 
-    WHERE
-    DATE(itemstock_transaction_detail.CreateDate) = '$select_date1' 
-    AND itemstock_transaction_detail.ItemStockID IN (
-    SELECT
-        itemstock.RowID 
-    FROM
-        itemstock 
-    WHERE
-        itemstock.Isdeproom = '1' 
-    AND ( itemstock.HNCode IS NULL OR itemstock.HNCode = '' )
-    )  ";
+    // $D2 = "DELETE 
+    // FROM
+    // itemstock_transaction_detail 
+    // WHERE
+    // DATE(itemstock_transaction_detail.CreateDate) = '$select_date1' 
+    // AND itemstock_transaction_detail.ItemStockID IN (
+    // SELECT
+    //     itemstock.RowID 
+    // FROM
+    //     itemstock 
+    // WHERE
+    //     itemstock.Isdeproom = '1' 
+    // AND ( itemstock.HNCode IS NULL OR itemstock.HNCode = '' )
+    // )  ";
 
-    $meQuery_D2 = $conn->prepare($D2);
-    $meQuery_D2->execute();
+    // $meQuery_D2 = $conn->prepare($D2);
+    // $meQuery_D2->execute();
 
 
     $_itemcode = array();

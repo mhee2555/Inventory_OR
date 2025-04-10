@@ -86,7 +86,6 @@
                                     <tr>
                                         <th scope="col" class="text-left" style="width:5%;">ลำดับ</th>
                                         <th scope="col" class="text-center" style="width:40%;">ห้องผ่าตัด</th>
-                                        <th scope="col" class="text-center" style="width:10%;">สถานะ</th>
                                     </tr>
                                 </thead>
                                 <tbody>

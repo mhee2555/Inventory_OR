@@ -133,10 +133,10 @@
                         </a>
                     </li>
                     
-                    <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_mapping"  hidden>
-                        <a class="collapse-item" href="pages/mapping.php" style="color: black;font-size: 16px;" id="a_mapping">
+                    <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_report"  >
+                        <a class="collapse-item" href="pages/report.php" style="color: black;font-size: 16px;" id="a_report">
                             <img id="ic_turnon_offdisplay_3" style="width: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;">
-                            <label style="font-size: 20px;color: #667085;" class="" id="menu14">data Mapping</label>
+                            <label style="font-size: 20px;color: #667085;" class="" id="menu14">รายงาน</label>
                         </a>
                     </li>
                     

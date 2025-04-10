@@ -438,7 +438,7 @@ function show_detail_deproom_pay() {
             value.id
           })'></i> ${kay + 1}</td>
                       <td class="f24 text-left">${value.departmentroomname}</td>
-                      <td class=""></td>
+                      <td class="" hidden></td>
                    </tr>`;
           $.each(ObjData[value.id], function (kay, value2) {
             if (value2.cnt_detail == "ครบ") {
@@ -470,7 +470,7 @@ function show_detail_deproom_pay() {
                             </div>
                           
                            </td>
-                          <td class='text-center'> <label id='text_balance_${value2.DocNo}' class='f18' style='font-weight:bold;${sty};text-decoration-line: underline;'>${txt}</label> </td>
+                          <td hidden class='text-center'> <label id='text_balance_${value2.DocNo}' class='f18' style='font-weight:bold;${sty};text-decoration-line: underline;'>${txt}</label> </td>
 
                         </tr>`;
           });
