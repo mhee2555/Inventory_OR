@@ -1332,6 +1332,7 @@ function show_detail_history() {
 
           _tr += `<tr>
                       <td class='text-center'>${kay + 1}</td>
+                      <td class='text-center'>${value.CreateDate}</td>
                       <td class='text-center'>${value.serviceDate}</td>
                       <td class='text-center'>${value.hn_record_id}</td>
                       <td class='text-center'>${value.Doctor_Name}</td>
@@ -1380,24 +1381,28 @@ function show_detail_history() {
             targets: 2,
           },
           {
-            width: "10%",
+            width: "5%",
             targets: 3,
           },
           {
-            width: "15%",
+            width: "10%",
             targets: 4,
           },
           {
-            width: "10%",
+            width: "15%",
             targets: 5,
           },
           {
-            width: "5%",
+            width: "10%",
             targets: 6,
           },
           {
-            width: "8%",
+            width: "5%",
             targets: 7,
+          },
+          {
+            width: "8%",
+            targets: 8,
           },
         ],
         info: false,

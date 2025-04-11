@@ -72,7 +72,7 @@ class MYPDF extends TCPDF
             $this->Ln(15);
 
 
-              $this->Cell(0, 10,  " รายงานการใช้อุปกรณ์ประจำวัน ", 0, 1, 'C');
+            $this->Cell(0, 10,  " รายงานการใช้อุปกรณ์ประจำวัน ", 0, 1, 'C');
             //   $this->Cell(0, 10,  $text_date, 0, 1, 'C');
 
 
@@ -82,12 +82,6 @@ class MYPDF extends TCPDF
 
             $image_file = "images/logo1.png";
             $this->Image($image_file, 10, 10, 20, 30, 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);
-
-
-
-
-
-
         }
     }
     // Page footer
@@ -138,7 +132,7 @@ $pdf->Ln(25);
 
 $DocNo = $_GET['DocNo'];
 
-
+$checkloopDoctor  = "";
 
 $query = "SELECT
             CONCAT(employee1.FirstName, ' ', employee1.LastName) AS name_1,
@@ -147,19 +141,17 @@ $query = "SELECT
             deproom.hn_record_id,
             departmentroom.departmentroomname,
             deproom.`procedure`,
-            deproom.doctor
+            deproom.doctor,
+            doctor.Doctor_Name,
+            doctor.Doctor_Code 
             FROM
             deproom
-            INNER JOIN
-            users AS user1 ON deproom.UserCode = user1.ID
-            INNER JOIN
-            users AS user2 ON deproom.UserPay = user2.ID
-            INNER JOIN
-            employee AS employee1 ON user1.EmpCode = employee1.EmpCode
-            INNER JOIN
-            employee AS employee2 ON user2.EmpCode = employee2.EmpCode
-            INNER JOIN
-            departmentroom ON deproom.Ref_departmentroomid = departmentroom.id
+            INNER JOIN users AS user1 ON deproom.UserCode = user1.ID
+            INNER JOIN users AS user2 ON deproom.UserPay = user2.ID
+            INNER JOIN employee AS employee1 ON user1.EmpCode = employee1.EmpCode
+            INNER JOIN employee AS employee2 ON user2.EmpCode = employee2.EmpCode
+            INNER JOIN departmentroom ON deproom.Ref_departmentroomid = departmentroom.id
+            INNER JOIN doctor ON deproom.doctor = doctor.ID 
             WHERE
             deproom.DocNo = '$DocNo' ";
 
@@ -173,23 +165,66 @@ while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
     $_hn_record_id = $row['hn_record_id'];
     $_procedure = $row['procedure'];
     $_doctor = $row['doctor'];
+    $_departmentroomname = $row['departmentroomname'];
+
+    $_Doctor_Name = $row['Doctor_Name'];
+    $_Doctor_Code = $row['Doctor_Code'];
+
+    if (str_contains($row['doctor'], ',')) {
+        $checkloopDoctor = 'loop';
+    }
 }
 
 
+$select = " SELECT GROUP_CONCAT(Procedure_TH SEPARATOR ', ') AS procedure_ids FROM `procedure` WHERE `procedure`.ID IN( $_procedure )  ";
+$meQuery_select = $conn->prepare($select);
+$meQuery_select->execute();
+while ($row_select = $meQuery_select->fetch(PDO::FETCH_ASSOC)) {
+    $_procedure_ids = $row_select['procedure_ids'];
+}
 
 
 $pdf->Cell(130, 5,  "วันที่ใช้อุปกรณ์ : " . $_serviceDate, 0, 0, 'L');
-$pdf->Cell(50, 5,  "ชื่อ : " . $_name1 , 0, 1, 'R');
+$pdf->Cell(50, 5,  "ชื่อ : " . $_name1, 0, 1, 'R');
 
-$pdf->Cell(130, 5,  "เลข HN Code : " . $_hn_record_id , 0, 0, 'L');
+$pdf->Cell(130, 5,  "เลข HN Code : " . $_hn_record_id, 0, 0, 'L');
 $pdf->Cell(50, 5,  "ห้องผ่าตัด : " . $_departmentroomname, 0, 1, 'R');
 
-$pdf->Cell(130, 5,  "หัตถการ : Laparoscope, ผ่าตัดช่องท้อง", 0, 1, 'L');
+$pdf->Cell(130, 5,  "หัตถการ : " . $_procedure_ids, 0, 1, 'L');
 
 $pdf->Cell(130, 5,  "แพทย์", 0, 1, 'L');
-$pdf->Cell(50, 5,  "1. นพ0123544221 นายแพทย์สัตยา ศรียาบ", 0, 1, 'L');
-$pdf->Cell(50, 5,  "2. นพ0123544221 นายแพทย์สัตยา ศรียาบ", 0, 1, 'L');
-$pdf->Cell(50, 5,  "3. นพ0123544221 นายแพทย์สัตยา ศรียาบ", 0, 1, 'L');
+
+if ($checkloopDoctor == 'loop') {
+
+    $_doctor = explode(",", $_doctor);
+
+    foreach ($_doctor as $key => $value) {
+
+        $query_D = "SELECT
+                    doctor.ID,
+                    doctor.Doctor_Name ,
+                    doctor.Doctor_Code 
+                FROM
+                    doctor
+                WHERE doctor.ID = $value
+                    
+                ORDER BY Doctor_Name ASC  ";
+
+
+        $meQuery_D = $conn->prepare($query_D);
+        $meQuery_D->execute();
+        while ($row_D = $meQuery_D->fetch(PDO::FETCH_ASSOC)) {
+            $_Doctor_Name = $row_D['Doctor_Name'];
+            $_Doctor_Code = $row_D['Doctor_Code'];
+        }
+
+
+        $pdf->Cell(50, 5, ($key + 1). ". " . $_Doctor_Code  ." ". $_Doctor_Name, 0, 1, 'L');
+    }
+} else {
+    $pdf->Cell(50, 5,  "1. " . $_Doctor_Code ." ". $_Doctor_Name, 0, 1, 'L');
+}
+
 
 $pdf->Ln(5);
 
@@ -198,12 +233,10 @@ $pdf->SetFont('db_helvethaica_x', 'B', 18);
 $html = '<table cellspacing="0" cellpadding="2" border="1" >
 <thead><tr style="font-size:18px;color:#fff;background-color:#663399;">
 <th width="6 %" align="center">ลำดับ</th>
-<th width="20 %" align="center">รหัสอุปกรณ์</th>
-<th width="36 %"  align="center">อุปกรณ์</th>
-<th width="10 %" align="center">ประเภท</th>
+<th width="11 %" align="center">รหัสอุปกรณ์</th>
+<th width="50 %"  align="center">อุปกรณ์</th>
+<th width="25 %" align="center">ประเภท</th>
 <th width="10 %" align="center">จ่าย</th>
-<th width="10 %" align="center">คืน</th>
-<th width="10 %" align="center">ใช้</th>
 </tr> </thead>';
 
 
@@ -240,37 +273,49 @@ $html = '<table cellspacing="0" cellpadding="2" border="1" >
 //     }
 // }
 
-// $count = 1;
-// $query = " SELECT
-//                 item.itemname,
-//                 item.itemcode2,
-//                 COUNT( itemstock.ItemCode ) AS all_,
-//                 ( SELECT COUNT( itemstock.RowID ) FROM itemstock WHERE itemstock.ItemCode = item.itemcode AND  ( itemstock.StockID IS NOT NULL ) )		AS qty 
-//             FROM
-//                 itemstock
-//                 INNER JOIN item ON itemstock.ItemCode = item.itemcode 
-//             $where_date
-//             GROUP BY
-//                 item.itemname
-//             ORDER BY  qty DESC ";
+$count = 1;
+$query = "SELECT
+            item.itemname,
+            item.itemcode,
+            deproomdetail.ID,
+            SUM(deproomdetail.Qty) AS cnt,
+            (SELECT COUNT(deproomdetailsub.ID) FROM deproomdetailsub WHERE deproomdetailsub.Deproomdetail_RowID = deproomdetail.ID) AS cnt_pay,
+            itemtype.TyeName
+            FROM
+            deproom
+            INNER JOIN
+            deproomdetail ON deproom.DocNo = deproomdetail.DocNo
+            INNER JOIN
+            item ON deproomdetail.ItemCode = item.itemcode
+            INNER JOIN
+            itemtype ON item.itemtypeID = itemtype.ID
+            WHERE
+            deproom.DocNo = '$DocNo'
+            AND deproom.IsCancel = 0
+            AND deproomdetail.IsCancel = 0
+            GROUP BY
+            item.itemname,
+            item.itemcode,
+            deproomdetail.ID,
+            itemtype.TyeName
+            ORDER BY
+            item.itemname ASC  ";
 
-// $meQuery1 = $conn->prepare($query);
-// $meQuery1->execute();
-// while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
-    
-//     $pdf->SetFont('db_helvethaica_x', 'B', 18);
+$meQuery1 = $conn->prepare($query);
+$meQuery1->execute();
+while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
 
-//     $html .= '<tr nobr="true" style="font-size:15px;">';
-//     $html .=   '<td width="6 %" align="center"> ' .(int)$count . '</td>';
-//     $html .=   '<td width="20 %" align="center"> ' . $Result_Detail['itemcode2'] . '</td>';
-//     $html .=   '<td width="36 %" align="left">' . $Result_Detail['itemname'] . '</td>';
-//     $html .=   '<td width="10 %" align="center">' . $Result_Detail['all_'] . '</td>';
-//     $html .=   '<td width="10 %" align="center">' . $Result_Detail['qty'] . '</td>';
-//     $html .=   '<td width="10 %" align="center">' . $Result_Detail['all_'] -  $Result_Detail['qty']   . '</td>';
-//     $html .=   '<td width="10 %" align="center">' . $Result_Detail['qty'] . '</td>';
-//     $html .=  '</tr>';
-//     $count++;
-// }
+    $pdf->SetFont('db_helvethaica_x', 'B', 18);
+
+    $html .= '<tr nobr="true" style="font-size:15px;">';
+    $html .=   '<td width="6 %" align="center"> ' .(int)$count . '</td>';
+    $html .=   '<td width="11 %" align="center"> ' . $Result_Detail['itemcode'] . '</td>';
+    $html .=   '<td width="50 %" align="left">' . $Result_Detail['itemname'] . '</td>';
+    $html .=   '<td width="25 %" align="center">' . $Result_Detail['TyeName'] . '</td>';
+    $html .=   '<td width="10 %" align="center">' . $Result_Detail['cnt_pay'] . '</td>';
+    $html .=  '</tr>';
+    $count++;
+}
 
 
 

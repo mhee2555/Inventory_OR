@@ -438,6 +438,7 @@
                                 <thead style="background-color: #cdd6ff;">
                                     <tr>
                                         <th scope="col" class="text-center" id="">ลำดับ</th>
+                                        <th scope="col" class="text-center" id="">วันที่จ่ายอุปกรณ์</th>
                                         <th scope="col" class="text-center" id="">วันที่รับบริการ</th>
                                         <th scope="col" class="text-center" id="">HN Code</th>
                                         <th scope="col" class="text-center" id="">แพทย์</th>

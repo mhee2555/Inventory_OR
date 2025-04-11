@@ -817,6 +817,7 @@ function show_detail_history($conn, $db)
         $query = " SELECT
                         deproom.DocNo,
                         DATE_FORMAT(deproom.serviceDate, '%d-%m-%Y') AS serviceDate,
+                        DATE_FORMAT(deproom.CreateDate, '%d-%m-%Y') AS CreateDate,
                         deproom.hn_record_id,
                         doctor.Doctor_Name,
                         IFNULL(`procedure`.Procedure_TH, '') AS Procedure_TH,                        
