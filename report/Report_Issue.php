@@ -133,7 +133,7 @@ $pdf->Ln(25);
 $DocNo = $_GET['DocNo'];
 
 $checkloopDoctor  = "";
-
+$_procedure = "";
 $query = "SELECT
             CONCAT(employee1.FirstName, ' ', employee1.LastName) AS name_1,
             CONCAT(employee2.FirstName, ' ', employee2.LastName) AS name_2,
@@ -146,12 +146,12 @@ $query = "SELECT
             doctor.Doctor_Code 
             FROM
             deproom
-            INNER JOIN users AS user1 ON deproom.UserCode = user1.ID
-            INNER JOIN users AS user2 ON deproom.UserPay = user2.ID
-            INNER JOIN employee AS employee1 ON user1.EmpCode = employee1.EmpCode
-            INNER JOIN employee AS employee2 ON user2.EmpCode = employee2.EmpCode
-            INNER JOIN departmentroom ON deproom.Ref_departmentroomid = departmentroom.id
-            INNER JOIN doctor ON deproom.doctor = doctor.ID 
+            LEFT JOIN users AS user1 ON deproom.UserCode = user1.ID
+            LEFT JOIN users AS user2 ON deproom.UserPay = user2.ID
+            LEFT JOIN employee AS employee1 ON user1.EmpCode = employee1.EmpCode
+            LEFT JOIN employee AS employee2 ON user2.EmpCode = employee2.EmpCode
+            LEFT JOIN departmentroom ON deproom.Ref_departmentroomid = departmentroom.id
+            LEFT JOIN doctor ON deproom.doctor = doctor.ID 
             WHERE
             deproom.DocNo = '$DocNo' ";
 
@@ -185,12 +185,15 @@ while ($row_select = $meQuery_select->fetch(PDO::FETCH_ASSOC)) {
 
 
 $pdf->Cell(130, 5,  "วันที่ใช้อุปกรณ์ : " . $_serviceDate, 0, 0, 'L');
-$pdf->Cell(50, 5,  "ชื่อ : " . $_name1, 0, 1, 'R');
+$pdf->Cell(50, 5,  "ชื่อ : - " , 0, 1, 'R');
 
 $pdf->Cell(130, 5,  "เลข HN Code : " . $_hn_record_id, 0, 0, 'L');
 $pdf->Cell(50, 5,  "ห้องผ่าตัด : " . $_departmentroomname, 0, 1, 'R');
 
-$pdf->Cell(130, 5,  "หัตถการ : " . $_procedure_ids, 0, 1, 'L');
+$pdf->SetFillColor(255, 255, 255);
+$pdf->MultiCell(180, 5, "หัตถการ : " . $_procedure_ids, 0, 'L', 0, 1);
+
+// $pdf->Cell(130, 5,  "หัตถการ : " . $_procedure_ids, 0, 1, 'L');
 
 $pdf->Cell(130, 5,  "แพทย์", 0, 1, 'L');
 
@@ -219,10 +222,10 @@ if ($checkloopDoctor == 'loop') {
         }
 
 
-        $pdf->Cell(50, 5, ($key + 1). ". " . $_Doctor_Code  ." ". $_Doctor_Name, 0, 1, 'L');
+        $pdf->Cell(50, 5, ($key + 1). ". ". $_Doctor_Name, 0, 1, 'L');
     }
 } else {
-    $pdf->Cell(50, 5,  "1. " . $_Doctor_Code ." ". $_Doctor_Name, 0, 1, 'L');
+    $pdf->Cell(50, 5,  "1. " . $_Doctor_Name, 0, 1, 'L');
 }
 
 
@@ -307,14 +310,18 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
 
     $pdf->SetFont('db_helvethaica_x', 'B', 18);
 
-    $html .= '<tr nobr="true" style="font-size:15px;">';
-    $html .=   '<td width="6 %" align="center"> ' .(int)$count . '</td>';
-    $html .=   '<td width="11 %" align="center"> ' . $Result_Detail['itemcode'] . '</td>';
-    $html .=   '<td width="50 %" align="left">' . $Result_Detail['itemname'] . '</td>';
-    $html .=   '<td width="25 %" align="center">' . $Result_Detail['TyeName'] . '</td>';
-    $html .=   '<td width="10 %" align="center">' . $Result_Detail['cnt_pay'] . '</td>';
-    $html .=  '</tr>';
-    $count++;
+    if($Result_Detail['cnt_pay'] > 0){
+        $html .= '<tr nobr="true" style="font-size:15px;">';
+        $html .=   '<td width="6 %" align="center"> ' .(int)$count . '</td>';
+        $html .=   '<td width="11 %" align="center"> ' . $Result_Detail['itemcode'] . '</td>';
+        $html .=   '<td width="50 %" align="left">' . $Result_Detail['itemname'] . '</td>';
+        $html .=   '<td width="25 %" align="center">' . $Result_Detail['TyeName'] . '</td>';
+        $html .=   '<td width="10 %" align="center">' . $Result_Detail['cnt_pay'] . '</td>';
+        $html .=  '</tr>';
+        $count++;
+    }
+
+
 }
 
 
