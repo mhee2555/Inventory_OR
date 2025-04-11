@@ -285,7 +285,7 @@
                                 </div>
 
                                 <div class="col-md-2 text-right">
-                                    <button id="btn_clear_manual" class="btn btn-danger " style="font-size: 18px;margin-top: 2rem !important;line-height: 25px;"><i class="fa-solid fa-shower"></i> เคลียร์ข้อมูล</button>
+                                    <button id="btn_clear_manual" class="btn btn-danger " style="font-size: 18px;margin-top: 2rem !important;line-height: 25px;"><i class="fa-solid fa-repeat"></i> เคลียร์ข้อมูล</button>
                                 </div>
                             </div>
 

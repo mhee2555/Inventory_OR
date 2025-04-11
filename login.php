@@ -232,11 +232,11 @@
                             IsAdmin = value.IsAdmin;
                             console.log(IsAdmin);
                             if (IsAdmin == '0') {
-                                if ($("#select_departmentRoom").val() == "") {
-                                    text = "กรุณาเลือกห้องตรวจ";
-                                    showDialogFailed(text);
-                                    return;
-                                }
+                                // if ($("#select_departmentRoom").val() == "") {
+                                //     text = "กรุณาเลือกห้องตรวจ";
+                                //     showDialogFailed(text);
+                                //     return;
+                                // }
 
                                 location.href = "index.php?s=main";
                             } else if (IsAdmin == '1') {

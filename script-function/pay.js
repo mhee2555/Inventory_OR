@@ -134,6 +134,9 @@ $(function () {
     $("#pay_manual").show();
     $("#return").hide();
 
+
+    $("#input_Hn_pay_manual").focus();
+
     $("#select_deproom_manual").select2();
     $("#select_doctor_manual").select2();
     $("#select_procedure_manual").select2();
@@ -1434,7 +1437,7 @@ $("#btn_show_report").click(function () {
 
 function show_Report(DocNo) {
   option = "?DocNo=" + DocNo;
-  window.open("report/Report_Issue_Order_HN.php" + option, "_blank");
+  window.open("report/Report_Issue.php" + option, "_blank");
 }
 
 

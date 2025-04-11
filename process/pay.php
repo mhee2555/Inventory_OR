@@ -5563,7 +5563,7 @@ function show_detail_deproom_pay($conn, $db)
                             deproom.`procedure`
                         FROM
                             deproom
-                        INNER JOIN
+                        LEFT JOIN
                             deproomdetail ON deproom.DocNo = deproomdetail.DocNo
                         INNER JOIN
                             departmentroom ON deproom.Ref_departmentroomid = departmentroom.id
@@ -5609,7 +5609,7 @@ function show_detail_deproom_pay($conn, $db)
                             ) AS cnt_sub
                         FROM
                             deproom
-                            INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
+                            LEFT JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
                             INNER JOIN departmentroom ON deproom.Ref_departmentroomid = departmentroom.id
                             INNER JOIN doctor ON deproom.doctor = doctor.ID
                             INNER JOIN [procedure] ON deproom.[procedure] = [procedure].ID 
@@ -5629,6 +5629,8 @@ function show_detail_deproom_pay($conn, $db)
         }
 
         // echob$query_sub
+        // echo $query_sub;
+        // exit;
         $meQuery_sub = $conn->prepare($query_sub);
         $meQuery_sub->execute();
         while ($row_sub = $meQuery_sub->fetch(PDO::FETCH_ASSOC)) {

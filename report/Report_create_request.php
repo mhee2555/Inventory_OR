@@ -146,8 +146,8 @@ class MYPDF extends TCPDF
             $this->Image($file, 120, 22, 20, 20, 'PNG');
 
 
-            $image_file = "images/logo.png";
-            $this->Image($image_file, 7, 25, 25, 12, 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);
+            $image_file = "images/logo1.png";
+            $this->Image($image_file, 10, 25, 20, 18, 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);
 
 
             // $this->Cell(138, 8, 'รายงานขอเบิกใช้อุปกรณ์กับคนไข้', 1, 1, 'C');

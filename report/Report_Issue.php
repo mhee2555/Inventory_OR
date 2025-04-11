@@ -36,35 +36,35 @@ class MYPDF extends TCPDF
             // Title
             $this->Cell(0, 10,  'วันที่พิมพ์รายงาน' . ' ' . $printdate, 0, 1, 'R');
 
-            $type_date = $_GET['type_date'];
-            $date1 = $_GET['date1'];
-            $date2 = $_GET['date2'];
-            $month1 = $_GET['month1'];
-            $month2 = $_GET['month2'];
-            $checkday = $_GET['checkday'];
-            $checkmonth = $_GET['checkmonth'];
+            // $type_date = $_GET['type_date'];
+            // $date1 = $_GET['date1'];
+            // $date2 = $_GET['date2'];
+            // $month1 = $_GET['month1'];
+            // $month2 = $_GET['month2'];
+            // $checkday = $_GET['checkday'];
+            // $checkmonth = $_GET['checkmonth'];
 
-            if($type_date == 1){
+            // if($type_date == 1){
 
-                if($checkday == 1){
-                    $date1 = explode("-", $date1);
-                    $text_date = "วันที่ใช้อุปกรณ์ : " . $date1[0] . " " . $datetime->getTHmonthFromnum($date1[1]) . " " . " พ.ศ." . " " .($date1[2] + 543 );
-                }else{
-                    $date1 = explode("-", $date1);
-                    $date2 = explode("-", $date2);
+            //     if($checkday == 1){
+            //         $date1 = explode("-", $date1);
+            //         $text_date = "วันที่ใช้อุปกรณ์ : " . $date1[0] . " " . $datetime->getTHmonthFromnum($date1[1]) . " " . " พ.ศ." . " " .($date1[2] + 543 );
+            //     }else{
+            //         $date1 = explode("-", $date1);
+            //         $date2 = explode("-", $date2);
 
-                    $text_date = "วันที่ใช้อุปกรณ์ : " . $date1[0] . " " . $datetime->getTHmonthFromnum($date1[1]) . " " . " พ.ศ." . " " .($date1[2] + 543 ) . " ถึง " .  $date1[0] . " " . $datetime->getTHmonthFromnum($date1[1]) . " " . " พ.ศ." . " " .($date1[2] + 543 );
-                }
-            }
+            //         $text_date = "วันที่ใช้อุปกรณ์ : " . $date1[0] . " " . $datetime->getTHmonthFromnum($date1[1]) . " " . " พ.ศ." . " " .($date1[2] + 543 ) . " ถึง " .  $date1[0] . " " . $datetime->getTHmonthFromnum($date1[1]) . " " . " พ.ศ." . " " .($date1[2] + 543 );
+            //     }
+            // }
 
-            if($type_date == 2){
+            // if($type_date == 2){
 
-                if($checkmonth == 1){
-                    $text_date = "เดือนที่ใช้อุปกรณ์ : " . $datetime->getTHmonthFromnum($month1);
-                }else{
-                    $text_date = "เดือนที่ใช้อุปกรณ์ : " . $datetime->getTHmonthFromnum($month1) . " ถึง " . $datetime->getTHmonthFromnum($month2);
-                }
-            }
+            //     if($checkmonth == 1){
+            //         $text_date = "เดือนที่ใช้อุปกรณ์ : " . $datetime->getTHmonthFromnum($month1);
+            //     }else{
+            //         $text_date = "เดือนที่ใช้อุปกรณ์ : " . $datetime->getTHmonthFromnum($month1) . " ถึง " . $datetime->getTHmonthFromnum($month2);
+            //     }
+            // }
 
 
             $this->SetFont('db_helvethaica_x', 'b', 16);
@@ -73,7 +73,7 @@ class MYPDF extends TCPDF
 
 
               $this->Cell(0, 10,  " รายงานการใช้อุปกรณ์ประจำวัน ", 0, 1, 'C');
-              $this->Cell(0, 10,  $text_date, 0, 1, 'C');
+            //   $this->Cell(0, 10,  $text_date, 0, 1, 'C');
 
 
 
@@ -136,12 +136,53 @@ $pdf->AddPage('P', 'A4');
 $pdf->SetFont('db_helvethaica_x', 'B', 15);
 $pdf->Ln(25);
 
+$DocNo = $_GET['DocNo'];
 
-$pdf->Cell(130, 5,  "วันที่ใช้อุปกรณ์ : 27 มีนาคม 2568", 0, 0, 'L');
-$pdf->Cell(50, 5,  "ชื่อ ศักดิธัช หนุนนาค", 0, 1, 'R');
 
-$pdf->Cell(130, 5,  "เลข HN Code : 1542101168", 0, 0, 'L');
-$pdf->Cell(50, 5,  "ห้องผ่าตัด : ศัลยกรรมกระดูกและข้อ", 0, 1, 'R');
+
+$query = "SELECT
+            CONCAT(employee1.FirstName, ' ', employee1.LastName) AS name_1,
+            CONCAT(employee2.FirstName, ' ', employee2.LastName) AS name_2,
+            DATE_FORMAT(deproom.serviceDate, '%d/%m/%Y') AS serviceDate,
+            deproom.hn_record_id,
+            departmentroom.departmentroomname,
+            deproom.`procedure`,
+            deproom.doctor
+            FROM
+            deproom
+            INNER JOIN
+            users AS user1 ON deproom.UserCode = user1.ID
+            INNER JOIN
+            users AS user2 ON deproom.UserPay = user2.ID
+            INNER JOIN
+            employee AS employee1 ON user1.EmpCode = employee1.EmpCode
+            INNER JOIN
+            employee AS employee2 ON user2.EmpCode = employee2.EmpCode
+            INNER JOIN
+            departmentroom ON deproom.Ref_departmentroomid = departmentroom.id
+            WHERE
+            deproom.DocNo = '$DocNo' ";
+
+
+$meQuery = $conn->prepare($query);
+$meQuery->execute();
+while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+    $_name1 = $row['name_1'];
+    $_name2 = $row['name_2'];
+    $_serviceDate = $row['serviceDate'];
+    $_hn_record_id = $row['hn_record_id'];
+    $_procedure = $row['procedure'];
+    $_doctor = $row['doctor'];
+}
+
+
+
+
+$pdf->Cell(130, 5,  "วันที่ใช้อุปกรณ์ : " . $_serviceDate, 0, 0, 'L');
+$pdf->Cell(50, 5,  "ชื่อ : " . $_name1 , 0, 1, 'R');
+
+$pdf->Cell(130, 5,  "เลข HN Code : " . $_hn_record_id , 0, 0, 'L');
+$pdf->Cell(50, 5,  "ห้องผ่าตัด : " . $_departmentroomname, 0, 1, 'R');
 
 $pdf->Cell(130, 5,  "หัตถการ : Laparoscope, ผ่าตัดช่องท้อง", 0, 1, 'L');
 
@@ -166,70 +207,70 @@ $html = '<table cellspacing="0" cellpadding="2" border="1" >
 </tr> </thead>';
 
 
-$type_date = $_GET['type_date'];
-$date1 = $_GET['date1'];
-$date2 = $_GET['date2'];
-$month1 = $_GET['month1'];
-$month2 = $_GET['month2'];
-$checkday = $_GET['checkday'];
-$checkmonth = $_GET['checkmonth'];
+// $type_date = $_GET['type_date'];
+// $date1 = $_GET['date1'];
+// $date2 = $_GET['date2'];
+// $month1 = $_GET['month1'];
+// $month2 = $_GET['month2'];
+// $checkday = $_GET['checkday'];
+// $checkmonth = $_GET['checkmonth'];
 
 
-if($type_date == 1){
+// if($type_date == 1){
 
-    if($checkday == 1){
-        $date1 = explode("-", $date1);
-        $date1 = $date1[2] . '-' . $date1[1] . '-' . $date1[0];
+//     if($checkday == 1){
+//         $date1 = explode("-", $date1);
+//         $date1 = $date1[2] . '-' . $date1[1] . '-' . $date1[0];
 
-        $where_date = "WHERE DATE(itemstock.LastCabinetModify) = '$date1'  ";
-    }else{
-        $date1 = explode("-", $date1);
-        $date1 = $date1[2] . '-' . $date1[1] . '-' . $date1[0];
-        $date2 = explode("-", $date2);
-        $date2 = $date2[2] . '-' . $date2[1] . '-' . $date2[0];
+//         $where_date = "WHERE DATE(itemstock.LastCabinetModify) = '$date1'  ";
+//     }else{
+//         $date1 = explode("-", $date1);
+//         $date1 = $date1[2] . '-' . $date1[1] . '-' . $date1[0];
+//         $date2 = explode("-", $date2);
+//         $date2 = $date2[2] . '-' . $date2[1] . '-' . $date2[0];
 
-        $where_date = "WHERE DATE(itemstock.LastCabinetModify) BETWEEN '$date1' 	AND '$date2' ";
+//         $where_date = "WHERE DATE(itemstock.LastCabinetModify) BETWEEN '$date1' 	AND '$date2' ";
 
-    }
-}
-if($type_date == 2){
+//     }
+// }
+// if($type_date == 2){
 
-    if($checkmonth == 1){
-    }else{
-    }
-}
+//     if($checkmonth == 1){
+//     }else{
+//     }
+// }
 
-$count = 1;
-$query = " SELECT
-                item.itemname,
-                item.itemcode2,
-                COUNT( itemstock.ItemCode ) AS all_,
-                ( SELECT COUNT( itemstock.RowID ) FROM itemstock WHERE itemstock.ItemCode = item.itemcode AND  ( itemstock.StockID IS NOT NULL ) )		AS qty 
-            FROM
-                itemstock
-                INNER JOIN item ON itemstock.ItemCode = item.itemcode 
-            $where_date
-            GROUP BY
-                item.itemname
-            ORDER BY  qty DESC ";
+// $count = 1;
+// $query = " SELECT
+//                 item.itemname,
+//                 item.itemcode2,
+//                 COUNT( itemstock.ItemCode ) AS all_,
+//                 ( SELECT COUNT( itemstock.RowID ) FROM itemstock WHERE itemstock.ItemCode = item.itemcode AND  ( itemstock.StockID IS NOT NULL ) )		AS qty 
+//             FROM
+//                 itemstock
+//                 INNER JOIN item ON itemstock.ItemCode = item.itemcode 
+//             $where_date
+//             GROUP BY
+//                 item.itemname
+//             ORDER BY  qty DESC ";
 
-$meQuery1 = $conn->prepare($query);
-$meQuery1->execute();
-while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
+// $meQuery1 = $conn->prepare($query);
+// $meQuery1->execute();
+// while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
     
-    $pdf->SetFont('db_helvethaica_x', 'B', 18);
+//     $pdf->SetFont('db_helvethaica_x', 'B', 18);
 
-    $html .= '<tr nobr="true" style="font-size:15px;">';
-    $html .=   '<td width="6 %" align="center"> ' .(int)$count . '</td>';
-    $html .=   '<td width="20 %" align="center"> ' . $Result_Detail['itemcode2'] . '</td>';
-    $html .=   '<td width="36 %" align="left">' . $Result_Detail['itemname'] . '</td>';
-    $html .=   '<td width="10 %" align="center">' . $Result_Detail['all_'] . '</td>';
-    $html .=   '<td width="10 %" align="center">' . $Result_Detail['qty'] . '</td>';
-    $html .=   '<td width="10 %" align="center">' . $Result_Detail['all_'] -  $Result_Detail['qty']   . '</td>';
-    $html .=   '<td width="10 %" align="center">' . $Result_Detail['qty'] . '</td>';
-    $html .=  '</tr>';
-    $count++;
-}
+//     $html .= '<tr nobr="true" style="font-size:15px;">';
+//     $html .=   '<td width="6 %" align="center"> ' .(int)$count . '</td>';
+//     $html .=   '<td width="20 %" align="center"> ' . $Result_Detail['itemcode2'] . '</td>';
+//     $html .=   '<td width="36 %" align="left">' . $Result_Detail['itemname'] . '</td>';
+//     $html .=   '<td width="10 %" align="center">' . $Result_Detail['all_'] . '</td>';
+//     $html .=   '<td width="10 %" align="center">' . $Result_Detail['qty'] . '</td>';
+//     $html .=   '<td width="10 %" align="center">' . $Result_Detail['all_'] -  $Result_Detail['qty']   . '</td>';
+//     $html .=   '<td width="10 %" align="center">' . $Result_Detail['qty'] . '</td>';
+//     $html .=  '</tr>';
+//     $count++;
+// }
 
 
 
