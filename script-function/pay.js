@@ -87,16 +87,10 @@ $(function () {
     $("#pay_manual").hide();
     $("#return").hide();
 
-    
-
     show_detail_deproom_pay();
   });
 
-
-  
-
   $("#btn_clear_manual").click(function () {
-
     $("#input_Hn_pay_manual").val("");
     $("#input_date_service_manual").val(output);
     $("#select_doctor_manual").val("").trigger("change");
@@ -107,13 +101,15 @@ $(function () {
 
     $("#table_deproom_DocNo_pay_manual tbody").html("");
 
-
-    $(".clear_doctor").attr('hidden', true);
+    $(".clear_doctor").attr("hidden", true);
     doctor_Array = [];
-    $(".clear_procedure").attr('hidden', true);
+    $(".clear_procedure").attr("hidden", true);
     procedure_id_Array = [];
-    
   });
+
+
+
+
 
   $("#radio_pay_manual").click(function () {
     $("#radio_pay_manual").css("color", "#bbbbb");
@@ -134,18 +130,58 @@ $(function () {
     $("#pay_manual").show();
     $("#return").hide();
 
-
     $("#input_Hn_pay_manual").focus();
 
     $("#select_deproom_manual").select2();
     $("#select_doctor_manual").select2();
     $("#select_procedure_manual").select2();
 
+    
+  $("#select_deproom_manual").change(function () {
+    set_proceduce($("#select_deproom_manual").val());
+  });
+  setTimeout(() => {
+    $("#select_doctor_manual").on("select2:select", function (e) {
+      var selectedValue = e.params.data.id; // ดึงค่า value
+      var selectedText = e.params.data.text; // ดึงค่า text
+      if (selectedValue != "") {
+        var index = doctor_Array.indexOf(selectedValue);
+        if (index == -1) {
+          doctor_Array.push(selectedValue);
+          var _row = "";
+          _row += `       <div  class='div_${selectedValue}  clear_doctor' onclick='DeleteDoctor(${selectedValue})'>
+                              <label for="" class="custom-label">${selectedText}</label>
+                          </div> `;
 
+          $("#row_doctor").append(_row);
 
-    $("#select_deproom_manual").change(function () {
-      set_proceduce($("#select_deproom_manual").val());
+          $("#select_doctor_manual").val("").trigger("change");
+
+          set_deproom();
+        }
+      }
     });
+
+    $("#select_procedure_manual").on("select2:select", function (e) {
+      var selectedValue = e.params.data.id; // ดึงค่า value
+      var selectedText = e.params.data.text; // ดึงค่า text
+      if (selectedValue != "") {
+        var index = procedure_id_Array.indexOf(selectedValue);
+        if (index == -1) {
+          procedure_id_Array.push(selectedValue);
+          var _row = "";
+          _row += `       <div  class='div_${selectedValue} clear_procedure' onclick='Deletprocedure(${selectedValue})'>
+                              <label for="" class="custom-label">${selectedText}</label>
+                          </div> `;
+
+          $("#row_procedure").append(_row);
+
+          $("#select_procedure_manual").val("").trigger("change");
+        }
+      }
+    });
+  }, 500);
+  
 
     $("#input_Hn_pay_manual").val("");
     $("#input_date_service_manual").val(output);
@@ -157,56 +193,10 @@ $(function () {
 
     $("#table_deproom_DocNo_pay_manual tbody").html("");
 
-
-    $(".clear_doctor").attr('hidden', true);
+    $(".clear_doctor").attr("hidden", true);
     doctor_Array = [];
-    $(".clear_procedure").attr('hidden', true);
+    $(".clear_procedure").attr("hidden", true);
     procedure_id_Array = [];
-    
-
-    setTimeout(() => {
-      $("#select_doctor_manual").on("select2:select", function (e) {
-        var selectedValue = e.params.data.id; // ดึงค่า value
-        var selectedText = e.params.data.text; // ดึงค่า text
-        if (selectedValue != "") {
-          var index = doctor_Array.indexOf(selectedValue);
-          if (index == -1) {
-            doctor_Array.push(selectedValue);
-            var _row = "";
-            _row += `       <div  class='div_${selectedValue}  clear_doctor' onclick='DeleteDoctor(${selectedValue})'>
-                                <label for="" class="custom-label">${selectedText}</label>
-                            </div> `;
-
-            $("#row_doctor").append(_row);
-
-            $("#select_doctor_manual").val("").trigger("change");
-
-            set_deproom();
-
-          }
-        }
-      });
-
-      $("#select_procedure_manual").on("select2:select", function (e) {
-        var selectedValue = e.params.data.id; // ดึงค่า value
-        var selectedText = e.params.data.text; // ดึงค่า text
-        if (selectedValue != "") {
-          var index = procedure_id_Array.indexOf(selectedValue);
-          if (index == -1) {
-            procedure_id_Array.push(selectedValue);
-            var _row = "";
-            _row += `       <div  class='div_${selectedValue} clear_procedure' onclick='Deletprocedure(${selectedValue})'>
-                                <label for="" class="custom-label">${selectedText}</label>
-                            </div> `;
-    
-            $("#row_procedure").append(_row);
-    
-            $("#select_procedure_manual").val("").trigger("change");
-          }
-        }
-      });
-
-    }, 500);
   });
 
   $("#radio_return_pay").click(function () {
@@ -241,16 +231,15 @@ $(function () {
     $("#radio_return_pay").css("background", "");
     $("#radio_return_pay").css("color", "black");
 
-
     $("#pay").hide();
     $("#history_pay").show();
     $("#claim").hide();
     $("#pay_manual").hide();
     $("#return").hide();
 
-    $(".clear_doctor").attr('hidden', true);
+    $(".clear_doctor").attr("hidden", true);
     doctor_Array = [];
-    $(".clear_procedure").attr('hidden', true);
+    $(".clear_procedure").attr("hidden", true);
     procedure_id_Array = [];
 
     show_detail_history();
@@ -277,7 +266,6 @@ $(function () {
             $("#select_doctor_history").val("").trigger("change");
           }
 
-
           show_detail_history();
         }
       });
@@ -293,21 +281,22 @@ $(function () {
             _row += `       <div  class='div_${selectedValue} clear_procedure' onclick='Deletprocedure(${selectedValue})'>
                                 <label for="" class="custom-label">${selectedText}</label>
                             </div> `;
-    
+
             $("#row_procedure_history").append(_row);
-    
+
             $("#select_procedure_history").val("").trigger("change");
           }
 
-
           show_detail_history();
-
         }
       });
-
     }, 500);
+  });
 
-
+  $("#input_hn_history").keypress(function (e) {
+    if (e.which == 13) {
+      show_detail_history();
+    }
   });
 
   $("#radio_claim").click(function () {
@@ -346,11 +335,6 @@ $("#input_pay").keypress(function (e) {
 
 $("#input_pay_manual").keypress(function (e) {
   if (e.which == 13) {
-    
-
-
-
-
     $("#input_pay_manual").val(convertString($(this).val()));
     oncheck_pay_manual($(this).val());
   }
@@ -358,12 +342,10 @@ $("#input_pay_manual").keypress(function (e) {
 
 $("#input_returnpay_manual").keypress(function (e) {
   if (e.which == 13) {
-
     if ($("#input_returnpay_manual") == "") {
       showDialogFailed("กรุณาเลือกรายการ");
       return;
     }
-
 
     $("#input_returnpay_manual").val(convertString($(this).val()));
     oncheck_Returnpay_manual($(this).val());
@@ -381,10 +363,7 @@ $("#select_deproom_pay").change(function (e) {
   show_detail_deproom_pay();
 });
 
-
-
 function DeleteDoctor(selectedValue) {
-
   var index = doctor_Array.indexOf(String(selectedValue));
   console.log(index);
 
@@ -393,15 +372,13 @@ function DeleteDoctor(selectedValue) {
   }
 
   console.log(doctor_Array);
-  $(".div_" + selectedValue).attr('hidden', true);
+  $(".div_" + selectedValue).attr("hidden", true);
 
   set_deproom();
   show_detail_history();
-
 }
 
 function Deletprocedure(selectedValue) {
-
   var index = procedure_id_Array.indexOf(String(selectedValue));
   console.log(index);
 
@@ -410,13 +387,10 @@ function Deletprocedure(selectedValue) {
   }
 
   console.log(procedure_id_Array);
-  $(".div_" + selectedValue).attr('hidden', true);
+  $(".div_" + selectedValue).attr("hidden", true);
 
   show_detail_history();
-
 }
-
-
 
 function show_detail_deproom_pay() {
   $.ajax({
@@ -598,7 +572,13 @@ function showDetail_Procedure(procedure) {
   });
 }
 
-function oncheck_show_byDocNo(departmeneoomID,DocNo, hn_record_id, serviceDate, serviceTime) {
+function oncheck_show_byDocNo(
+  departmeneoomID,
+  DocNo,
+  hn_record_id,
+  serviceDate,
+  serviceTime
+) {
   $(".clear_checkbox").prop("checked", false);
   $("#checkbox_" + DocNo).prop("checked", true);
 
@@ -606,9 +586,7 @@ function oncheck_show_byDocNo(departmeneoomID,DocNo, hn_record_id, serviceDate, 
   $("#input_Hn_pay").data("docno", DocNo);
   $("#input_Hn_pay").data("hncode", hn_record_id);
 
-
   $("#input_Hn_pay").data("departmeneoomid", departmeneoomID);
-
 
   $("#input_date_service").val(serviceDate);
   $("#input_time_service").val(serviceTime);
@@ -795,13 +773,10 @@ $("#btn_scan_RFid_manual").click(function (e) {
 });
 
 function oncheck_pay_rfid_manual() {
-
-
   if (doctor_Array.length === 0) {
     showDialogFailed("กรุณาเลือกแพทย์");
     return;
   }
-
 
   if ($("#select_deproom_manual").val() == "") {
     showDialogFailed("กรุณาเลือกห้องตรวจ");
@@ -812,7 +787,6 @@ function oncheck_pay_rfid_manual() {
     showDialogFailed("กรุณาเลือกหัตถการ");
     return;
   }
-
 
   $.ajax({
     url: "process/pay.php",
@@ -843,17 +817,15 @@ function oncheck_pay_rfid_manual() {
 }
 
 function oncheck_pay_manual(input_pay_manual) {
-
   if ($("#input_Hn_pay_manual").val() == "") {
     showDialogFailed("กรุณากรอก HN");
     return;
   }
 
-  if ($("#input_pay_manual").val()  == "") {
+  if ($("#input_pay_manual").val() == "") {
     showDialogFailed("กรุณาเลือกรายการ");
     return;
   }
-
 
   if (doctor_Array.length === 0) {
     showDialogFailed("กรุณาเลือกแพทย์");
@@ -869,7 +841,6 @@ function oncheck_pay_manual(input_pay_manual) {
     showDialogFailed("กรุณาเลือกหัตถการ");
     return;
   }
-
 
   $.ajax({
     url: "process/pay.php",
@@ -891,12 +862,20 @@ function oncheck_pay_manual(input_pay_manual) {
     success: function (result) {
       var ObjData = JSON.parse(result);
       $("body").loadingModal("destroy");
-      $("#input_docNo_deproom_manual").val(ObjData.input_docNo_deproom_manual);
-      $("#input_docNo_HN_manual").val(ObjData.input_docNo_HN_manual);
 
-      setTimeout(() => {
-        show_detail_item_ByDocNo_manual();
-      }, 500);
+      if (ObjData.input_docNo_deproom_manual == "") {
+        showDialogFailed("ไม่พบข้อมูล");
+      } else {
+        $("#input_docNo_deproom_manual").val(
+          ObjData.input_docNo_deproom_manual
+        );
+        $("#input_docNo_HN_manual").val(ObjData.input_docNo_HN_manual);
+
+        setTimeout(() => {
+          show_detail_item_ByDocNo_manual();
+        }, 500);
+      }
+
       $("#input_pay_manual").val("");
     },
   });
@@ -1269,19 +1248,27 @@ function show_detail_item_ByDocNo_manual() {
             typename = "success";
           }
           _tr += `<tr>
-                      <td  class='text-center'>${kay+1}</td>
+                      <td  class='text-center'>${kay + 1}</td>
                       <td>
 
                                   <div class="d-flex align-items-center">
                                     <span class="mr-2">${value.itemname}</span>
-                                    <button class="btn btn-outline-${typename} btn-sm" disabled>${value.TyeName}</button>
+                                    <button class="btn btn-outline-${typename} btn-sm" disabled>${
+            value.TyeName
+          }</button>
                                   </div>
 
                       
                       </td>
-                      <td hidden class='text-center'><input type='text' class='form-control text-center f18' value="${value.cnt}" disabled id="qty_request_${value.itemcode}"></td>
-                      <td class='text-center'><input type='text' class='form-control text-center f18 loop_item_pay' value="${value.cnt_pay}"  data-itemcode='${value.itemcode}' disabled></td>
-                      <td hidden class='text-center'><input type='text' class='form-control text-center f18 loop_item_balance' disabled value="${balance}" id="balance_request_${value.itemcode}"></td>
+                      <td hidden class='text-center'><input type='text' class='form-control text-center f18' value="${
+                        value.cnt
+                      }" disabled id="qty_request_${value.itemcode}"></td>
+                      <td class='text-center'><input type='text' class='form-control text-center f18 loop_item_pay' value="${
+                        value.cnt_pay
+                      }"  data-itemcode='${value.itemcode}' disabled></td>
+                      <td hidden class='text-center'><input type='text' class='form-control text-center f18 loop_item_balance' disabled value="${balance}" id="balance_request_${
+            value.itemcode
+          }"></td>
                    </tr>`;
         });
       }
@@ -1310,6 +1297,7 @@ function show_detail_history() {
       select_date_history_s: $("#select_date_history_S").val(),
       select_date_history_l: $("#select_date_history_L").val(),
       select_deproom_history: $("#select_deproom_history").val(),
+      input_hn_history: $("#input_hn_history").val(),
       select_doctor_history: doctor_Array,
       select_procedure_history: procedure_id_Array,
     },
@@ -1319,8 +1307,6 @@ function show_detail_history() {
       var ObjData = JSON.parse(result);
       if (!$.isEmptyObject(ObjData)) {
         $.each(ObjData, function (kay, value) {
-
-
           if (value.Procedure_TH == "button") {
             value.Procedure_TH = `<a class="text-primary" style="cursor:pointer;" onclick='showDetail_Procedure("${value.procedure}")'>หัตถการ</a>`;
           }
@@ -1328,7 +1314,11 @@ function show_detail_history() {
             value.Doctor_Name = `<a class="text-primary" style="cursor:pointer;" onclick='showDetail_Doctor("${value.doctor}")'>แพทย์</a>`;
           }
 
-
+          if (value.cnt_pay > 0) {
+            var hidden = "";
+          } else {
+            var hidden = "hidden";
+          }
 
           _tr += `<tr>
                       <td class='text-center'>${kay + 1}</td>
@@ -1341,9 +1331,9 @@ function show_detail_history() {
                       <td class='text-center'><button class='btn btn-outline-danger f18' onclick='cancel_item_byDocNo("${
                         value.DocNo
                       }")' >ยกเลิก</button></td>
-                      <td class='text-center'><button class='btn f18' style='background-color:#1570EF;color:#fff;' onclick='show_Report("${
-                        value.DocNo
-                      }")'>รายงาน</button></td>
+                      <td class='text-center'><button ${hidden} class='btn f18' style='background-color:#1570EF;color:#fff;' onclick='show_Report("${
+            value.DocNo
+          }")'>รายงาน</button></td>
                    </tr>`;
         });
       }
@@ -1445,8 +1435,6 @@ function show_Report(DocNo) {
   window.open("report/Report_Issue.php" + option, "_blank");
 }
 
-
-
 function showLoading() {
   $("body").loadingModal({
     position: "auto",
@@ -1458,13 +1446,7 @@ function showLoading() {
   });
 }
 
-
-
-
 function cancel_item_byDocNo(DocNo) {
-
-
-
   Swal.fire({
     title: "ยืนยัน",
     text: "ยืนยัน! การยกเลิก?",
@@ -1476,9 +1458,7 @@ function cancel_item_byDocNo(DocNo) {
     cancelButtonText: "ยกเลิก",
   }).then((result) => {
     if (result.isConfirmed) {
-
       showLoading();
-
 
       $.ajax({
         url: "process/pay.php",
@@ -1612,7 +1592,6 @@ $("#btn_send_return_data").click(function () {
     cancelButtonText: "ยกเลิก",
   }).then((result) => {
     if (result.isConfirmed) {
-
       $.ajax({
         url: "process/pay.php",
         type: "POST",
@@ -1620,12 +1599,9 @@ $("#btn_send_return_data").click(function () {
           FUNC_NAME: "onReturnData",
         },
         success: function (result) {
-
           feeddata_waitReturn();
         },
       });
-
-
     }
   });
 });
@@ -1683,17 +1659,15 @@ function feeddata_waitReturn() {
         var _tr = ``;
         var allpage = 0;
         $.each(ObjData, function (kay, value) {
-
-          if(value.cnt > 0){
+          if (value.cnt > 0) {
             _tr +=
-            `<tr> ` +
-            `<td class="text-center">${kay + 1}</td>` +
-            `<td class="text-center">${value.itemcode}</td>` +
-            `<td class="text-left">${value.itemname}</td>` +
-            `<td class="text-center">${value.cnt}</td>` +
-            ` </tr>`;
+              `<tr> ` +
+              `<td class="text-center">${kay + 1}</td>` +
+              `<td class="text-center">${value.itemcode}</td>` +
+              `<td class="text-left">${value.itemname}</td>` +
+              `<td class="text-center">${value.cnt}</td>` +
+              ` </tr>`;
           }
-
         });
 
         $("#table_item_return tbody").html(_tr);
@@ -1701,8 +1675,6 @@ function feeddata_waitReturn() {
     },
   });
 }
-
-
 
 // claim
 $("#input_scanclaim").keypress(function (e) {
@@ -1887,11 +1859,7 @@ function feeddataClaim() {
   });
 }
 
-
-
-
 function set_proceduce(select_deproom_request) {
-
   $.ajax({
     url: "process/process_main/select_main.php",
     type: "POST",
@@ -1916,7 +1884,6 @@ function set_proceduce(select_deproom_request) {
 }
 
 function set_deproom() {
-
   $.ajax({
     url: "process/process_main/select_main.php",
     type: "POST",
@@ -1939,8 +1906,6 @@ function set_deproom() {
     },
   });
 }
-
-
 
 //////////////////////////////////////////////////////////////// select
 

@@ -53,7 +53,7 @@ class MYPDF extends TCPDF
                     $date1 = explode("-", $date1);
                     $date2 = explode("-", $date2);
 
-                    $text_date = "วันที่เบิกอุปกรณ์ : " . $date1[0] . " " . $datetime->getTHmonthFromnum($date1[1]) . " " . " พ.ศ." . " " .($date1[2] + 543 ) . " ถึง " .  $date1[0] . " " . $datetime->getTHmonthFromnum($date1[1]) . " " . " พ.ศ." . " " .($date1[2] + 543 );
+                    $text_date = "วันที่เบิกอุปกรณ์ : " . $date1[0] . " " . $datetime->getTHmonthFromnum($date1[1]) . " " . " พ.ศ." . " " .($date1[2] + 543 ) . " ถึง " .  $date2[0] . " " . $datetime->getTHmonthFromnum($date2[1]) . " " . " พ.ศ." . " " .($date2[2] + 543 );
                 }
             }
 

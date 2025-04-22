@@ -31,7 +31,6 @@ class MYPDF extends TCPDF
 
 
 
-        // if ($this->page == 1) {
         // Set font
         $this->SetFont('db_helvethaica_x', '', 14);
 
@@ -43,6 +42,7 @@ class MYPDF extends TCPDF
 
 
 
+        // if ($this->page == 1) {
 
 
         $image_file = "images/logo1.png";
@@ -64,7 +64,7 @@ class MYPDF extends TCPDF
         // Page number
 
 
-        $this->Cell(210, 10,  "หน้า" . $this->getAliasNumPage() . '/' . $this->getAliasNbPages(), 0, 0, 'R');
+        $this->Cell(190, 10,  "หน้า" . $this->getAliasNumPage() . '/' . $this->getAliasNbPages(), 0, 0, 'R');
     }
 }
 
@@ -84,11 +84,11 @@ $pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
 // set default monospaced font
 $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
 // set margins
-$pdf->SetMargins(15, PDF_MARGIN_TOP, 15);
+$pdf->SetMargins(15, 45, 15);
 $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
 $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
 // set auto page breaks
-$pdf->SetAutoPageBreak(TRUE, 27);
+$pdf->SetAutoPageBreak(TRUE, 35);
 // set image scale factor
 $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 // ------------------------------------------------------------------------------
@@ -133,6 +133,8 @@ if ($type_date == 2) {
         $text_date = "เดือนที่เติมอุปกรณ์ : " . $datetime->getTHmonthFromnum($month1) . " ถึง " . $datetime->getTHmonthFromnum($month2);
     }
 }
+
+$pdf->SetY(20);
 
 
 $pdf->SetFont('db_helvethaica_x', 'b', 16);

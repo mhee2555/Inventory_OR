@@ -31,7 +31,7 @@ $(function () {
       $("#row_ex").attr('hidden',false);
       $("#row_exsoon").attr('hidden',false);
       $("#row_receive_stock").attr('hidden',true);
-      $("#row_nouse").attr('hidden',false);
+      $("#row_nouse").attr('hidden',true);
       $("#row_borrow").attr('hidden',false);
       $("#row_damage").attr('hidden',true);
       // $("#row_addon").attr('hidden',false);

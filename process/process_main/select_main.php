@@ -34,39 +34,51 @@ function set_proceduce($conn)
 
     $select_deproom_request = $_POST['select_deproom_request'];
 
+    if($select_deproom_request != ""){
+        $departmentroom_ids = "";
+        $count_doctor = 0;
+        $select = " SELECT GROUP_CONCAT(procedure_id SEPARATOR ', ') AS procedure_ids FROM mapping_departmentroom WHERE mapping_departmentroom.departmentroom_id IN( $select_deproom_request )  ";
+        $meQuery_select = $conn->prepare($select);
+        $meQuery_select->execute();
+    
+        $procedure_ids = $meQuery_select->fetchColumn();
+    
+            if ($procedure_ids) {
+    
+                $query = " SELECT
+                                ID,
+                                Procedure_TH 
+                            FROM
+                                `procedure` 
+                            WHERE `procedure`.ID IN ($procedure_ids)
+                            AND `procedure`.IsActive = 1
+                            ORDER BY
+                                Procedure_TH ASC  ";
+    
+    
+            } else {
+                $query = " SELECT
+                                ID,
+                                Procedure_TH 
+                            FROM
+                                `procedure` 
+                            WHERE `procedure`.IsActive = 1
+                            ORDER BY
+                                Procedure_TH ASC  ";
+            }
+    }else{
+        $query = " SELECT
+                        ID,
+                        Procedure_TH 
+                    FROM
+                        `procedure` 
+                    WHERE `procedure`.ID IN ('')
+                    AND `procedure`.IsActive = 1
+                    ORDER BY
+                        Procedure_TH ASC  ";
 
+    }
 
-    $departmentroom_ids = "";
-    $count_doctor = 0;
-    $select = " SELECT GROUP_CONCAT(procedure_id SEPARATOR ', ') AS procedure_ids FROM mapping_departmentroom WHERE mapping_departmentroom.departmentroom_id IN( $select_deproom_request )  ";
-    $meQuery_select = $conn->prepare($select);
-    $meQuery_select->execute();
-
-    $procedure_ids = $meQuery_select->fetchColumn();
-
-        if ($procedure_ids) {
-
-            $query = " SELECT
-                            ID,
-                            Procedure_TH 
-                        FROM
-                            `procedure` 
-                        WHERE `procedure`.ID IN ($procedure_ids)
-                        AND `procedure`.IsActive = 1
-                        ORDER BY
-                            Procedure_TH ASC  ";
-
-
-        } else {
-            $query = " SELECT
-                            ID,
-                            Procedure_TH 
-                        FROM
-                            `procedure` 
-                        WHERE `procedure`.IsActive = 1
-                        ORDER BY
-                            Procedure_TH ASC  ";
-        }
 
 
 

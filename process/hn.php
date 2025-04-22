@@ -300,7 +300,7 @@ function show_detail_hn($conn, $db)
                     AND DATE(hncode.DocDate) BETWEEN '$select_SDate' AND '$select_EDate'
                 GROUP BY hncode.DocNo
                 ORDER BY
-                    hncode.ID ASC ";
+                    DATE_FORMAT(hncode.DocDate, '%d-%m-%Y') ASC ";
     } else {
         $query = " SELECT
                         hncode.ID,

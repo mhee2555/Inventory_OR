@@ -776,8 +776,9 @@ function show_detail_history($conn, $db)
     $select_date_history_s = $_POST['select_date_history_s'];
     $select_date_history_l = $_POST['select_date_history_l'];
     $select_deproom_history = $_POST['select_deproom_history'];
+    $input_hn_history = $_POST['input_hn_history'];
 
-
+    
     $select_date_history_s = explode("-", $select_date_history_s);
     $select_date_history_s = $select_date_history_s[2] . '-' . $select_date_history_s[1] . '-' . $select_date_history_s[0];
 
@@ -794,12 +795,19 @@ function show_detail_history($conn, $db)
     $whereP = "";
     if (isset($select_procedure_history)) {
         $select_procedure_history = implode(",", $select_procedure_history);
-        $whereP = " AND  FIND_IN_SET('$select_procedure_history', deproom.`procedure`) ";
+        // $whereP = " AND  FIND_IN_SET('$select_procedure_history', deproom.`procedure`) ";
+        $whereP = "  AND deproom.`procedure` LIKE '%$select_procedure_history%'  ";
+
     }
     $whereD = "";
     if (isset($select_doctor_history)) {
         $select_doctor_history = implode(",", $select_doctor_history);
-        $whereD = " AND  FIND_IN_SET('$select_doctor_history', deproom.`doctor`)  ";
+        $whereD = "  AND deproom.`doctor` LIKE '%$select_doctor_history%'  ";
+    }
+
+    $whereHN = "";
+    if (isset($input_hn_history)) {
+        $whereHN = "  AND deproom.hn_record_id LIKE '%$input_hn_history%'  ";
     }
 
 
@@ -818,6 +826,7 @@ function show_detail_history($conn, $db)
                         deproom.DocNo,
                         DATE_FORMAT(deproom.serviceDate, '%d-%m-%Y') AS serviceDate,
                         DATE_FORMAT(deproom.CreateDate, '%d-%m-%Y') AS CreateDate,
+                        COUNT(deproomdetailsub.ID) AS cnt_pay,
                         deproom.hn_record_id,
                         doctor.Doctor_Name,
                         IFNULL(`procedure`.Procedure_TH, '') AS Procedure_TH,                        
@@ -830,6 +839,10 @@ function show_detail_history($conn, $db)
                         deproom.`procedure`
                     FROM
                         deproom
+                    LEFT JOIN
+                        deproomdetail ON deproom.DocNo = deproomdetail.DocNo
+                    LEFT JOIN
+                        deproomdetailsub ON deproomdetailsub.Deproomdetail_RowID = deproomdetail.ID
                     INNER JOIN
                         doctor ON doctor.ID = deproom.doctor
                     LEFT JOIN
@@ -841,10 +854,11 @@ function show_detail_history($conn, $db)
                         AND deproom.IsCancel = 0
                         $whereD
                         $whereP
-                        $whereR ";
+                        $whereR
+                        $whereHN
+                    GROUP BY deproom.DocNo ";
 
-        // echo $query;
-        // exit;
+
 
     } else {
 
@@ -5046,7 +5060,7 @@ function oncheck_pay($conn, $db)
                                 ORDER BY deproomdetailsub.ID DESC
                                 LIMIT 1 ";
 
-
+            
             $meQuery_old = $conn->prepare($query_old);
             $meQuery_old->execute();
             while ($row_old = $meQuery_old->fetch(PDO::FETCH_ASSOC)) {

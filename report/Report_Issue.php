@@ -69,10 +69,9 @@ class MYPDF extends TCPDF
 
             $this->SetFont('db_helvethaica_x', 'b', 16);
 
-            $this->Ln(15);
 
 
-            $this->Cell(0, 10,  " รายงานการใช้อุปกรณ์ประจำวัน ", 0, 1, 'C');
+            $this->Cell(0, 10,  " ใบสรุปการจ่ายอุปกรณ์ให้คนไข้ ", 0, 1, 'C');
             //   $this->Cell(0, 10,  $text_date, 0, 1, 'C');
 
 
@@ -81,7 +80,7 @@ class MYPDF extends TCPDF
 
 
             $image_file = "images/logo1.png";
-            $this->Image($image_file, 10, 10, 20, 30, 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);
+            $this->Image($image_file, 10, 5, 10, 15, 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);
         }
     }
     // Page footer
@@ -128,7 +127,6 @@ $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 // add a page
 $pdf->AddPage('P', 'A4');
 $pdf->SetFont('db_helvethaica_x', 'B', 15);
-$pdf->Ln(25);
 
 $DocNo = $_GET['DocNo'];
 
@@ -184,14 +182,14 @@ while ($row_select = $meQuery_select->fetch(PDO::FETCH_ASSOC)) {
 }
 
 
-$pdf->Cell(130, 5,  "วันที่ใช้อุปกรณ์ : " . $_serviceDate, 0, 0, 'L');
-$pdf->Cell(50, 5,  "ชื่อ : - " , 0, 1, 'R');
+$pdf->Cell(40, 5,  "เลข HN Code : " . $_hn_record_id, 0, 0, 'L');
+$pdf->Cell(50, 5,  "ชื่อ : - " , 0, 1, 'C');
 
-$pdf->Cell(130, 5,  "เลข HN Code : " . $_hn_record_id, 0, 0, 'L');
-$pdf->Cell(50, 5,  "ห้องผ่าตัด : " . $_departmentroomname, 0, 1, 'R');
+$pdf->Cell(130, 5,  "วันที่เข้ารับบริการ : " . $_serviceDate, 0, 1, 'L');
+
 
 $pdf->SetFillColor(255, 255, 255);
-$pdf->MultiCell(180, 5, "หัตถการ : " . $_procedure_ids, 0, 'L', 0, 1);
+$pdf->MultiCell(180, 5, "Procedure : " . $_procedure_ids, 0, 'L', 0, 1);
 
 // $pdf->Cell(130, 5,  "หัตถการ : " . $_procedure_ids, 0, 1, 'L');
 
@@ -234,12 +232,11 @@ $pdf->Ln(5);
 $pdf->SetFont('db_helvethaica_x', 'B', 18);
 
 $html = '<table cellspacing="0" cellpadding="2" border="1" >
-<thead><tr style="font-size:18px;color:#fff;background-color:#663399;">
-<th width="6 %" align="center">ลำดับ</th>
-<th width="11 %" align="center">รหัสอุปกรณ์</th>
-<th width="50 %"  align="center">อุปกรณ์</th>
-<th width="25 %" align="center">ประเภท</th>
-<th width="10 %" align="center">จ่าย</th>
+<thead><tr style="font-size:18px;">
+<th width="12 %" align="center">Code</th>
+<th width="30 %" align="center">BarCode</th>
+<th width="50 %"  align="center">Name</th>
+<th width="10 %" align="center">Qty</th>
 </tr> </thead>';
 
 
@@ -279,7 +276,7 @@ $html = '<table cellspacing="0" cellpadding="2" border="1" >
 $count = 1;
 $query = "SELECT
             item.itemname,
-            item.itemcode,
+            item.itemcode2,
             deproomdetail.ID,
             SUM(deproomdetail.Qty) AS cnt,
             (SELECT COUNT(deproomdetailsub.ID) FROM deproomdetailsub WHERE deproomdetailsub.Deproomdetail_RowID = deproomdetail.ID) AS cnt_pay,
@@ -298,7 +295,7 @@ $query = "SELECT
             AND deproomdetail.IsCancel = 0
             GROUP BY
             item.itemname,
-            item.itemcode,
+            item.itemcode2,
             deproomdetail.ID,
             itemtype.TyeName
             ORDER BY
@@ -310,12 +307,36 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
 
     $pdf->SetFont('db_helvethaica_x', 'B', 18);
 
+    $style = array(
+        'position' => '',
+        'align' => 'S',
+        'stretch' => false,
+        'fitwidth' => false,
+        'cellfitalign' => '',
+        'border' => false,
+        'hpadding' => 0,
+        'vpadding' => 0,
+        'fgcolor' => array(0,0,0),
+        'bgcolor' => false,
+        'text' => true,
+        'font' => 'helvetica',
+        'fontsize' => 4,
+        'stretchtext' => 4
+    );
+
+    // $params = $pdf->serializeTCPDFtagParameters(array(
+    //     $Result_Detail['itemcode'], 'C39', '', '', 53, 9, 0.4, $style, 'N'  // เปลี่ยนจาก 8 เป็น 12
+    // ));
+
+    $params = $pdf->serializeTCPDFtagParameters(array($Result_Detail['itemcode2'], 'C39', '', '', 53, 20, 0.4, array('position' => 'S', 'border' => false, 'padding' => 4, 'fgcolor' => array(0, 0, 0), 'bgcolor' => array(255, 255, 255), 'text' => true, 'font' => 'helvetica', 'fontsize' => 8, 'stretchtext' => 1), 'N'));
+
+
     if($Result_Detail['cnt_pay'] > 0){
-        $html .= '<tr nobr="true" style="font-size:15px;">';
-        $html .=   '<td width="6 %" align="center"> ' .(int)$count . '</td>';
-        $html .=   '<td width="11 %" align="center"> ' . $Result_Detail['itemcode'] . '</td>';
-        $html .=   '<td width="50 %" align="left">' . $Result_Detail['itemname'] . '</td>';
-        $html .=   '<td width="25 %" align="center">' . $Result_Detail['TyeName'] . '</td>';
+        $html .= '<tr nobr="true" style="font-size:18px;height:30px;">';
+        $html .=   '<td width="12 %" align="center"> ' . $Result_Detail['itemcode2'] . '</td>';
+        $html .=   '<td width="30 %" align="center" style="vertical-align: middle;"><tcpdf method="write1DBarcode" params="' . $params . '" /></td>';
+        // $html .=   '<td width="36 %" align="center"> ' . $Result_Detail['itemcode'] . '</td>';
+        $html .=   '<td width="50 %" align="left"> ' . $Result_Detail['itemname'] . '</td>';
         $html .=   '<td width="10 %" align="center">' . $Result_Detail['cnt_pay'] . '</td>';
         $html .=  '</tr>';
         $count++;

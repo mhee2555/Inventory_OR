@@ -94,7 +94,7 @@
                                         <th scope="col" class="text-center" id="">ลำดับ</th>
                                         <th scope="col" class="text-center" id="">รายการ</th>
                                         <th scope="col" class="text-center" id="">ลักษณะการใช้งาน</th>
-                                        <th scope="col" class="text-center" id="">รูปภาพ</th>
+                                        <!-- <th scope="col" class="text-center" id="">รูปภาพ</th> -->
                                         <th scope="col" class="text-center" id="">จำนวน</th>
                                     </tr>
                                 </thead>

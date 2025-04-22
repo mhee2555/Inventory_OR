@@ -239,7 +239,7 @@
                                 </div>
 
 
-     
+
 
 
 
@@ -415,7 +415,7 @@
 
                 <div class="col-md-2">
 
-                <div class="row">
+                    <div class="row">
                         <div class="col-md-12">
                             <div class="form-group ">
                                 <label style="color:black;font-weight: 600;">หัตถการ</label>
@@ -428,6 +428,17 @@
                 </div>
                 <div class="col-md-1">
                     <button class="btn btn-success" style="margin-top: 1.9rem !important;" id="btn_show_report">EXCEL</button>
+                </div>
+                <div class="col-md-2">
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group ">
+                                <label style="color:black;font-weight: 600;">HN Code</label>
+                                <input type="text" class="form-control f18" autocomplete="off" id="input_hn_history">
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-md-12 mt-3">
 

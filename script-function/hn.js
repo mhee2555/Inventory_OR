@@ -330,18 +330,21 @@ function feeddata_hncode_detail(DocNo,HnCode) {
               var label = `<label style='color:blue;cursor:pointer;' onclick='open_LotNo(${value.serielNo},"${value.lotNo}","${value.ExpireDate}")' >${value.UsageCode}</label>`;
             }
             
+            if(value.Qty > 0){
+              _tr +=
+              `<tr id='tdDetail_${value.ID}'> ` +
+              `<td class="text-center">${kay + 1}</td>` +
+              `<td class="text-center">
+                  <button class="btn btn-sm" disabled>${value.TyeName}</button>
+              </td>` +
+              // `<td class="text-center">${user_count}</td>` +
+              `<td class="text-center" >${label}</td>` +
+              `<td class="text-left">${value.itemname}</td>` +
+              `<td class="text-center">${value.Qty}</td>` +
+              ` </tr>`;
+            }
 
-          _tr +=
-            `<tr id='tdDetail_${value.ID}'> ` +
-            `<td class="text-center">${kay + 1}</td>` +
-            `<td class="text-center">
-                <button class="btn btn-sm" disabled>${value.TyeName}</button>
-            </td>` +
-            // `<td class="text-center">${user_count}</td>` +
-            `<td class="text-center" >${label}</td>` +
-            `<td class="text-left">${value.itemname}</td>` +
-            `<td class="text-center">${value.Qty}</td>` +
-            ` </tr>`;
+
         });
       }
       $("#table_detail_sub tbody").html(_tr);
