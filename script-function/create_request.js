@@ -304,10 +304,7 @@ function show_detail_item_request() {
                       <td class='text-center' >${kay + 1}</td>
                       <td>${value.Item_name}</td>
                       <td class='text-center'>${value.TyeName}</td>
-                      <td hidden class='text-center'> <img src="assets/img_project/1_icon/ic_fileimg.png" style='width:30%;'></td>
-                      <td class='text-center'><input type='text' class='numonly form-control loop_qty_request text-center' data-itemcode="${
-                        value.itemcode
-                      }"></td>
+                      <td class='text-center'><input type='text' class='numonly form-control loop_qty_request text-center' data-itemcode="${ value.itemcode }"></td>
                    </tr>`;
         });
       }
@@ -347,11 +344,7 @@ function show_detail_item_request() {
           {
             width: "10%",
             targets: 3,
-          },
-          {
-            width: "10%",
-            targets: 4,
-          },
+          }
         ],
         info: false,
         scrollX: false,

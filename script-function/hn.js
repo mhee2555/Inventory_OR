@@ -228,6 +228,14 @@ function setActive_feeddata_hncode_detail(ID, DocNo,HnCode) {
     window.open("report/Report_Medical_Instrument_Tracking.php" + option, "_blank");
   });
 
+  $("#btn_cost").click(function () {
+    option = "?DocNo=" + $("#btn_Tracking").data("DocNo");
+    window.open("report/Report_Patient_Cost_Summary.php" + option, "_blank");
+  });
+
+
+  
+
   // alert(DocNo);
   feeddata_hncode_detail(DocNo,HnCode);
 }

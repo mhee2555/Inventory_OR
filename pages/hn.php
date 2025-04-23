@@ -112,7 +112,7 @@
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="z-index: 9999;">
                         <a class="dropdown-item" href="#" id="" style="color: green;">Excel ค่าใช้จ่าย</a>
                         <a class="dropdown-item" href="#" id="btn_excel_all" style="color: green;">Excel All</a>
-                        <a class="dropdown-item" href="#" id="" style="color: #1570EF;">สรุปค่าใช้จ่าย</a>
+                        <a class="dropdown-item" href="#" id="btn_cost" style="color: #1570EF;">สรุปค่าใช้จ่าย</a>
                         <a class="dropdown-item" href="#" id="btn_Tracking" style="color: #1570EF;">Medical Instrument Tracking</a>
                     </div>
                 </div>

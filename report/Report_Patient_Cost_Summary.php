@@ -36,35 +36,6 @@ class MYPDF extends TCPDF
             // Title
             $this->Cell(0, 10,  'วันที่พิมพ์รายงาน' . ' ' . $printdate, 0, 1, 'R');
 
-            $type_date = $_GET['type_date'];
-            $date1 = $_GET['date1'];
-            $date2 = $_GET['date2'];
-            $month1 = $_GET['month1'];
-            $month2 = $_GET['month2'];
-            $checkday = $_GET['checkday'];
-            $checkmonth = $_GET['checkmonth'];
-
-            if($type_date == 1){
-
-                if($checkday == 1){
-                    $date1 = explode("-", $date1);
-                    $text_date = "วันที่ใช้อุปกรณ์ : " . $date1[0] . " " . $datetime->getTHmonthFromnum($date1[1]) . " " . " พ.ศ." . " " .($date1[2] + 543 );
-                }else{
-                    $date1 = explode("-", $date1);
-                    $date2 = explode("-", $date2);
-
-                    $text_date = "วันที่ใช้อุปกรณ์ : " . $date1[0] . " " . $datetime->getTHmonthFromnum($date1[1]) . " " . " พ.ศ." . " " .($date1[2] + 543 ) . " ถึง " .  $date1[0] . " " . $datetime->getTHmonthFromnum($date1[1]) . " " . " พ.ศ." . " " .($date1[2] + 543 );
-                }
-            }
-
-            if($type_date == 2){
-
-                if($checkmonth == 1){
-                    $text_date = "เดือนที่ใช้อุปกรณ์ : " . $datetime->getTHmonthFromnum($month1);
-                }else{
-                    $text_date = "เดือนที่ใช้อุปกรณ์ : " . $datetime->getTHmonthFromnum($month1) . " ถึง " . $datetime->getTHmonthFromnum($month2);
-                }
-            }
 
 
             $this->SetFont('db_helvethaica_x', 'b', 16);
@@ -99,7 +70,7 @@ class MYPDF extends TCPDF
         // Page number
 
 
-        $this->Cell(210, 10,  "หน้า" . $this->getAliasNumPage() . '/' . $this->getAliasNbPages(), 0, 0, 'R');
+        $this->Cell(190, 10,  "หน้า" . $this->getAliasNumPage() . '/' . $this->getAliasNbPages(), 0, 0, 'R');
     }
 }
 
@@ -137,75 +108,130 @@ $pdf->SetFont('db_helvethaica_x', 'B', 15);
 $pdf->Ln(15);
 
 
-$pdf->Cell(50, 5,  "HN 0655780", 0, 0, 'L');
-$pdf->Cell(50, 5,  "ชื่อ ศักดิธัช หนุนนาค", 0, 1, 'R');
+$DocNo = $_GET['DocNo'];
 
-$pdf->Cell(130, 5,  "Procedure Laparoscope, ผ่าตัดช่องท้อง", 0, 1, 'L');
+$checkloopDoctor  = "";
+$_procedure = "";
+$query = "SELECT
+                CONCAT( employee1.FirstName, ' ', employee1.LastName ) AS name_1,
+                DATE_FORMAT(hncode.CreateDate, '%d/%m/%Y') AS CreateDate,
+                hncode.HnCode,
+                departmentroom.departmentroomname,
+                hncode.`procedure`,
+                hncode.doctor,
+                doctor.Doctor_Name,
+                doctor.Doctor_Code 
+            FROM
+                hncode
+                LEFT JOIN users AS user1 ON hncode.UserCode = user1.ID
+                LEFT JOIN employee AS employee1 ON user1.EmpCode = employee1.EmpCode
+                LEFT JOIN departmentroom ON hncode.departmentroomid = departmentroom.id
+                LEFT JOIN doctor ON hncode.doctor = doctor.ID 
+            WHERE
+                hncode.DocNo = '$DocNo' ";
+$meQuery = $conn->prepare($query);
+$meQuery->execute();
+while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+    $_name1 = $row['name_1'];
+    $_HnCode = $row['HnCode'];
+    $_procedure = $row['procedure'];
+    $_doctor = $row['doctor'];
+    $_departmentroomname = $row['departmentroomname'];
+    $_Doctor_Name = $row['Doctor_Name'];
+    $_Doctor_Code = $row['Doctor_Code'];
+    $_CreateDate = $row['CreateDate'];
+
+
+    
+
+    if (str_contains($row['doctor'], ',')) {
+        $checkloopDoctor = 'loop';
+    }
+}
+
+$select = " SELECT GROUP_CONCAT(Procedure_TH SEPARATOR ', ') AS procedure_ids FROM `procedure` WHERE `procedure`.ID IN( $_procedure )  ";
+$meQuery_select = $conn->prepare($select);
+$meQuery_select->execute();
+while ($row_select = $meQuery_select->fetch(PDO::FETCH_ASSOC)) {
+    $_procedure_ids = $row_select['procedure_ids'];
+}
+
+$pdf->Cell(50, 5,  "HN :" . $_HnCode, 0, 0, 'L');
+$pdf->Cell(50, 5,  "ชื่อ :" . $_name1, 0, 1, 'R');
+
+$pdf->Cell(130, 5,  "วันที่เข้ารับบริการ : " . $_CreateDate, 0, 1, 'L');
+
+$pdf->Cell(130, 5,   "Procedure : " . $_procedure_ids, 0, 1, 'L');
 
 
 $pdf->Cell(130, 5,  "แพทย์", 0, 1, 'L');
-$pdf->Cell(50, 5,  "1. นพ0123544221 นายแพทย์สัตยา ศรียาบ", 0, 1, 'L');
-$pdf->Cell(50, 5,  "2. นพ0123544221 นายแพทย์สัตยา ศรียาบ", 0, 1, 'L');
-$pdf->Cell(50, 5,  "3. นพ0123544221 นายแพทย์สัตยา ศรียาบ", 0, 1, 'L');
+
+
+if ($checkloopDoctor == 'loop') {
+
+    $_doctor = explode(",", $_doctor);
+
+    foreach ($_doctor as $key => $value) {
+
+        $query_D = "SELECT
+                    doctor.ID,
+                    doctor.Doctor_Name ,
+                    doctor.Doctor_Code 
+                FROM
+                    doctor
+                WHERE doctor.ID = $value
+                    
+                ORDER BY Doctor_Name ASC  ";
+
+
+        $meQuery_D = $conn->prepare($query_D);
+        $meQuery_D->execute();
+        while ($row_D = $meQuery_D->fetch(PDO::FETCH_ASSOC)) {
+            $_Doctor_Name = $row_D['Doctor_Name'];
+            $_Doctor_Code = $row_D['Doctor_Code'];
+        }
+
+
+        $pdf->Cell(50, 5, ($key + 1). ". ". $_Doctor_Name, 0, 1, 'L');
+    }
+} else {
+    $pdf->Cell(50, 5,  "1. " . $_Doctor_Name, 0, 1, 'L');
+}
+
+
 
 $pdf->Ln(5);
 
 $pdf->SetFont('db_helvethaica_x', 'B', 18);
 
 $html = '<table cellspacing="0" cellpadding="2" border="1" >
-<thead><tr style="font-size:18px;">
-<th width="6 %" align="center">Code</th>
-<th width="20 %" align="center">Barcode</th>
-<th width="34 %"  align="center">Name</th>
+<thead><tr style="font-size:18px;color:#fff;background-color:#663399;">
+<th width="8 %" align="center">Code</th>
+<th width="30 %" align="center">Barcode</th>
+<th width="32 %"  align="center">Name</th>
 <th width="10 %" align="center">Oty</th>
-<th width="15 %" align="center">Unit Price</th>
-<th width="15 %" align="center">Total Price</th>
+<th width="10 %" align="center">Unit Price</th>
+<th width="10 %" align="center">Total Price</th>
 </tr> </thead>';
 
 
-$type_date = $_GET['type_date'];
-$date1 = $_GET['date1'];
-$date2 = $_GET['date2'];
-$month1 = $_GET['month1'];
-$month2 = $_GET['month2'];
-$checkday = $_GET['checkday'];
-$checkmonth = $_GET['checkmonth'];
-
-
-if($type_date == 1){
-    if($checkday == 1){
-        $date1 = explode("-", $date1);
-        $date1 = $date1[2] . '-' . $date1[1] . '-' . $date1[0];
-
-        $where_date = "WHERE DATE(itemstock.LastCabinetModify) = '$date1'  ";
-    }else{
-        $date1 = explode("-", $date1);
-        $date1 = $date1[2] . '-' . $date1[1] . '-' . $date1[0];
-        $date2 = explode("-", $date2);
-        $date2 = $date2[2] . '-' . $date2[1] . '-' . $date2[0];
-        $where_date = "WHERE DATE(itemstock.LastCabinetModify) BETWEEN '$date1' 	AND '$date2' ";
-    }
-}
-if($type_date == 2){
-
-    if($checkmonth == 1){
-    }else{
-    }
-}
 
 $count = 1;
 $query = " SELECT
                 item.itemname,
                 item.itemcode2,
-                COUNT( itemstock.ItemCode ) AS all_,
-                ( SELECT COUNT( itemstock.RowID ) FROM itemstock WHERE itemstock.ItemCode = item.itemcode AND  ( itemstock.StockID IS NOT NULL ) )		AS qty 
+                hncode_detail.ID,
+                SUM( hncode_detail.Qty ) AS cnt,
+                itemtype.TyeName 
             FROM
-                itemstock
-                INNER JOIN item ON itemstock.ItemCode = item.itemcode 
-            $where_date
-            GROUP BY
-                item.itemname
-            ORDER BY  qty DESC ";
+                hncode
+                INNER JOIN hncode_detail ON hncode_detail.DocNo = hncode.DocNo
+                INNER JOIN item ON hncode_detail.ItemCode = item.itemcode
+                INNER JOIN itemtype ON item.itemtypeID = itemtype.ID 
+            WHERE
+                hncode.DocNo = '$DocNo' 
+            ORDER BY
+                item.itemname ASC  ";
 
 $meQuery1 = $conn->prepare($query);
 $meQuery1->execute();
@@ -213,18 +239,45 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
     
     $pdf->SetFont('db_helvethaica_x', 'B', 18);
 
+    $style = array(
+        'position' => '',
+        'align' => 'S',
+        'stretch' => false,
+        'fitwidth' => false,
+        'cellfitalign' => '',
+        'border' => false,
+        'hpadding' => 0,
+        'vpadding' => 0,
+        'fgcolor' => array(0,0,0),
+        'bgcolor' => false,
+        'text' => true,
+        'font' => 'helvetica',
+        'fontsize' => 4,
+        'stretchtext' => 4
+    );
+
+    // $params = $pdf->serializeTCPDFtagParameters(array(
+    //     $Result_Detail['itemcode'], 'C39', '', '', 53, 9, 0.4, $style, 'N'  // เปลี่ยนจาก 8 เป็น 12
+    // ));
+
+    $itemcode = strtoupper(preg_replace('/[^A-Z0-9 \-.\$\/\+\%]/', '', $Result_Detail['itemcode2']));
+    $params = $pdf->serializeTCPDFtagParameters(array($itemcode, 'C39', '', '', 50, 20, 0.4, array('position' => 'S', 'border' => false, 'padding' => 4, 'fgcolor' => array(0, 0, 0), 'bgcolor' => array(255, 255, 255), 'text' => true, 'font' => 'helvetica', 'fontsize' => 8, 'stretchtext' => 1), 'N'));
+
     $html .= '<tr nobr="true" style="font-size:15px;">';
-    $html .=   '<td width="6 %" align="center"> ' .(int)$count . '</td>';
-    $html .=   '<td width="20 %" align="center"> ' . $Result_Detail['itemcode2'] . '</td>';
-    $html .=   '<td width="34 %" align="left">' . $Result_Detail['itemname'] . '</td>';
-    $html .=   '<td width="10 %" align="center">' . $Result_Detail['all_'] . '</td>';
-    $html .=   '<td width="15 %" align="center">' . $Result_Detail['qty'] . '</td>';
-    $html .=   '<td width="15 %" align="center">' . $Result_Detail['all_'] -  $Result_Detail['qty']   . '</td>';
+    $html .=   '<td width="8 %" align="center"> ' . $Result_Detail['itemcode2'] . '</td>';
+    $html .=   '<td width="30 %" align="center"> <tcpdf method="write1DBarcode" params="' . $params . '" /> </td>';
+    $html .=   '<td width="32 %" align="left">' . $Result_Detail['itemname'] . '</td>';
+    $html .=   '<td width="10 %" align="center">' . $Result_Detail['cnt'] . '</td>';
+    $html .=   '<td width="10 %" align="center">0</td>';
+    $html .=   '<td width="10 %" align="center">0</td>';
     $html .=  '</tr>';
     $count++;
 }
 
-
+$html .= '<tr nobr="true" style="font-size:15px;">';
+$html .=   '<td width="90 %" align="center" rowspan="5">Grand Total</td>';
+$html .=   '<td width="10 %" align="center">0</td>';
+$html .=  '</tr>';
 
 
 $html .= '</table>';

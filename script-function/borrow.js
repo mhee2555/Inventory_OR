@@ -70,11 +70,7 @@ function show_detail_borrow() {
           {
             width: "10%",
             targets: 4,
-          },
-          {
-            width: "10%",
-            targets: 5,
-          },
+          }
         ],
         info: false,
         scrollX: false,
@@ -86,18 +82,7 @@ function show_detail_borrow() {
         ordering: false,
       });
       $("th").removeClass("sorting_asc");
-      if (_tr == "") {
-        $(".dataTables_info").text(
-          settext("dataTables_Showing") +
-            " 0 " +
-            settext("dataTables_to") +
-            " 0 " +
-            settext("dataTables_of") +
-            " 0 " +
-            settext("dataTables_entries") +
-            ""
-        );
-      }
+
     },
   });
 }
