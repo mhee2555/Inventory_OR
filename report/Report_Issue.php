@@ -136,6 +136,7 @@ $query = "SELECT
             CONCAT(employee1.FirstName, ' ', employee1.LastName) AS name_1,
             CONCAT(employee2.FirstName, ' ', employee2.LastName) AS name_2,
             DATE_FORMAT(deproom.serviceDate, '%d/%m/%Y') AS serviceDate,
+            TIME(deproom.serviceDate) AS serviceTime,
             deproom.hn_record_id,
             departmentroom.departmentroomname,
             deproom.`procedure`,
@@ -163,6 +164,7 @@ while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
     $_hn_record_id = $row['hn_record_id'];
     $_procedure = $row['procedure'];
     $_doctor = $row['doctor'];
+    $_serviceTime = $row['serviceTime'];
     $_departmentroomname = $row['departmentroomname'];
 
     $_Doctor_Name = $row['Doctor_Name'];
@@ -186,6 +188,7 @@ $pdf->Cell(40, 5,  "เลข HN Code : " . $_hn_record_id, 0, 0, 'L');
 $pdf->Cell(50, 5,  "ชื่อ : - " , 0, 1, 'C');
 
 $pdf->Cell(130, 5,  "วันที่เข้ารับบริการ : " . $_serviceDate, 0, 1, 'L');
+$pdf->Cell(130, 5,  "เวลาเข้ารับบริการ : " . $_serviceTime, 0, 1, 'L');
 
 
 $pdf->SetFillColor(255, 255, 255);
@@ -328,8 +331,8 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
     //     $Result_Detail['itemcode'], 'C39', '', '', 53, 9, 0.4, $style, 'N'  // เปลี่ยนจาก 8 เป็น 12
     // ));
 
-    $params = $pdf->serializeTCPDFtagParameters(array($Result_Detail['itemcode2'], 'C39', '', '', 53, 20, 0.4, array('position' => 'S', 'border' => false, 'padding' => 4, 'fgcolor' => array(0, 0, 0), 'bgcolor' => array(255, 255, 255), 'text' => true, 'font' => 'helvetica', 'fontsize' => 8, 'stretchtext' => 1), 'N'));
-
+    $itemcode = strtoupper(preg_replace('/[^A-Z0-9 \-.\$\/\+\%]/', '', $Result_Detail['itemcode2']));
+    $params = $pdf->serializeTCPDFtagParameters(array($itemcode, 'C39', '', '', 53, 20, 0.4, array('position' => 'S', 'border' => false, 'padding' => 4, 'fgcolor' => array(0, 0, 0), 'bgcolor' => array(255, 255, 255), 'text' => true, 'font' => 'helvetica', 'fontsize' => 8, 'stretchtext' => 1), 'N'));
 
     if($Result_Detail['cnt_pay'] > 0){
         $html .= '<tr nobr="true" style="font-size:18px;height:30px;">';

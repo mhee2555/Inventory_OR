@@ -48,6 +48,14 @@ function click_main() {
     show_detail_doctor();
     show_detail_deproom();
 
+
+    $("#select_deproom").attr("disabled", true);
+    $("#row_deproom").html("");
+    deproom_Array = [];
+
+    $("#select_proceduce").attr("disabled", true);
+    $("#row_procedure").html("");
+    procedure_id_Array = [];
     
   });
 }
