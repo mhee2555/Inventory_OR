@@ -307,6 +307,25 @@ if (!isset($_SESSION['UserName'])) {
 
         var page = '<?php echo $page; ?>';
 
+        if (page == 'borrow') {
+
+
+            var link = 'pages/borrow.php';
+
+            $.get(link, function(res) {
+
+                $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
+                $("#menu1").css('color', '#667085');
+
+                $("#conMain").html(res);
+                history.pushState({}, "Results for `Cats`", 'index.php?s=borrow');
+                document.title = "borrow";
+                loadScript('script-function/borrow.js');
+
+            });
+
+        }
+
         setTimeout(() => {
             $('#a_' + page).click();
         }, 300);
@@ -397,7 +416,6 @@ if (!isset($_SESSION['UserName'])) {
                 loadScript('script-function/pay_roomcheck.js');
             });
         })
-
         $('#a_recieve_stock').on("click", function(e) {
 
             var UserName_login = '<?php echo $UserName_login; ?>';
@@ -407,7 +425,7 @@ if (!isset($_SESSION['UserName'])) {
             // http://10.11.9.54:8000/Login/Index?user=stock&pass=111
             // http://192.168.2.101:8003/
             // http://10.11.9.54:8000/
-            window.open(" http://192.168.2.101:8003/Login/Index?user="+UserName_login+"&pass="+Password, "_blank");
+            window.open(" http://192.168.2.101:8003/Login/Index?user=" + UserName_login + "&pass=" + Password, "_blank");
 
 
             e.preventDefault();
@@ -911,7 +929,7 @@ if (!isset($_SESSION['UserName'])) {
 
 
                 $("#ic_turnon_offdisplay_3").attr("src", "assets/img_project/2_icon/ic_report.png");
-                $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png"); 
+                $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
                 $("#ic_turnon_offdisplay").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
                 $("#ic_search_hndata").attr("src", "assets/img_project/2_icon/ic_search_hndata.png");
                 $("#ic_inventory_tools").attr("src", "assets/img_project/2_icon/ic_inventory_tools.png");
@@ -982,7 +1000,7 @@ if (!isset($_SESSION['UserName'])) {
                 loadScript('script-function/adjuststock.js');
             });
         })
-        
+
         $('#a_manage').on("click", function(e) {
             e.preventDefault();
             var link = this.href;
@@ -1679,8 +1697,6 @@ if (!isset($_SESSION['UserName'])) {
     function renderlang() {
         <?php include_once('assets/lang/' . $page . '_set.js'); ?>
     }
-
-
 
     function LoginUser() {
 

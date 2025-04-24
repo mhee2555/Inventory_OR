@@ -115,6 +115,7 @@ $_procedure = "";
 $query = "SELECT
                 CONCAT( employee1.FirstName, ' ', employee1.LastName ) AS name_1,
                 DATE_FORMAT(hncode.CreateDate, '%d/%m/%Y') AS CreateDate,
+                TIME(hncode.CreateDate) AS CreateTime,
                 hncode.HnCode,
                 departmentroom.departmentroomname,
                 hncode.`procedure`,
@@ -140,6 +141,7 @@ while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
     $_Doctor_Name = $row['Doctor_Name'];
     $_Doctor_Code = $row['Doctor_Code'];
     $_CreateDate = $row['CreateDate'];
+    $_CreateTime = $row['CreateTime'];
 
 
     
@@ -157,9 +159,10 @@ while ($row_select = $meQuery_select->fetch(PDO::FETCH_ASSOC)) {
 }
 
 $pdf->Cell(50, 5,  "HN :" . $_HnCode, 0, 0, 'L');
-$pdf->Cell(50, 5,  "ชื่อ :" . $_name1, 0, 1, 'R');
+$pdf->Cell(50, 5,  "ชื่อ : - " , 0, 1, 'R');
 
 $pdf->Cell(130, 5,  "วันที่เข้ารับบริการ : " . $_CreateDate, 0, 1, 'L');
+$pdf->Cell(130, 5,  "เวลาเข้ารับบริการ : " . $_CreateTime, 0, 1, 'L');
 
 $pdf->Cell(130, 5,   "Procedure : " . $_procedure_ids, 0, 1, 'L');
 
@@ -225,13 +228,15 @@ $query = " SELECT
                 itemtype.TyeName 
             FROM
                 hncode
-                INNER JOIN hncode_detail ON hncode_detail.DocNo = hncode.DocNo
-                INNER JOIN item ON hncode_detail.ItemCode = item.itemcode
-                INNER JOIN itemtype ON item.itemtypeID = itemtype.ID 
+                LEFT JOIN hncode_detail ON hncode_detail.DocNo = hncode.DocNo
+                LEFT JOIN itemstock ON itemstock.RowID = hncode_detail.ItemStockID
+                LEFT JOIN item ON itemstock.ItemCode = item.itemcode
+                LEFT JOIN itemtype ON item.itemtypeID = itemtype.ID 
             WHERE
                 hncode.DocNo = '$DocNo' 
+            GROUP BY  item.itemname
             ORDER BY
-                item.itemname ASC  ";
+                item.itemname ASC ";
 
 $meQuery1 = $conn->prepare($query);
 $meQuery1->execute();
@@ -260,18 +265,26 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
     //     $Result_Detail['itemcode'], 'C39', '', '', 53, 9, 0.4, $style, 'N'  // เปลี่ยนจาก 8 เป็น 12
     // ));
 
-    $itemcode = strtoupper(preg_replace('/[^A-Z0-9 \-.\$\/\+\%]/', '', $Result_Detail['itemcode2']));
-    $params = $pdf->serializeTCPDFtagParameters(array($itemcode, 'C39', '', '', 50, 20, 0.4, array('position' => 'S', 'border' => false, 'padding' => 4, 'fgcolor' => array(0, 0, 0), 'bgcolor' => array(255, 255, 255), 'text' => true, 'font' => 'helvetica', 'fontsize' => 8, 'stretchtext' => 1), 'N'));
 
-    $html .= '<tr nobr="true" style="font-size:15px;">';
-    $html .=   '<td width="8 %" align="center"> ' . $Result_Detail['itemcode2'] . '</td>';
-    $html .=   '<td width="30 %" align="center"> <tcpdf method="write1DBarcode" params="' . $params . '" /> </td>';
-    $html .=   '<td width="32 %" align="left">' . $Result_Detail['itemname'] . '</td>';
-    $html .=   '<td width="10 %" align="center">' . $Result_Detail['cnt'] . '</td>';
-    $html .=   '<td width="10 %" align="center">0</td>';
-    $html .=   '<td width="10 %" align="center">0</td>';
-    $html .=  '</tr>';
-    $count++;
+    if($Result_Detail['cnt'] != 0){
+        $itemcode = "";
+        if($Result_Detail['itemcode2'] != null){
+            $itemcode = strtoupper(preg_replace('/[^A-Z0-9 \-.\$\/\+\%]/', '', $Result_Detail['itemcode2']));
+        }
+        $params = $pdf->serializeTCPDFtagParameters(array($itemcode, 'C39', '', '', 50, 10, 0.4, array('position' => 'S', 'border' => false, 'padding' => 0, 'fgcolor' => array(0, 0, 0), 'bgcolor' => array(255, 255, 255), 'text' => true, 'font' => 'helvetica', 'fontsize' => 8, 'stretchtext' => 1), 'N'));
+    
+        $html .= '<tr nobr="true" style="font-size:15px;">';
+        $html .=   '<td width="8 %" align="center"> ' . $Result_Detail['itemcode2'] . '</td>';
+        $html .=   '<td width="30 %" align="center"> <tcpdf method="write1DBarcode" params="' . $params . '" /> </td>';
+        $html .=   '<td width="32 %" align="left">' . $Result_Detail['itemname'] . '</td>';
+        $html .=   '<td width="10 %" align="center">' . $Result_Detail['cnt'] . '</td>';
+        $html .=   '<td width="10 %" align="center">0</td>';
+        $html .=   '<td width="10 %" align="center">0</td>';
+        $html .=  '</tr>';
+        $count++;
+    }
+
+
 }
 
 $html .= '<tr nobr="true" style="font-size:15px;">';
