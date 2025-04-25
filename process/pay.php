@@ -454,9 +454,9 @@ function onReturnData($conn, $db)
                 $serviceDate = $row_2['serviceDate'];
 
                 // ==============================
-                $queryD1 = "DELETE FROM deproomdetailsub WHERE ID =  '$_ID' ";
-                $meQueryD1 = $conn->prepare($queryD1);
-                $meQueryD1->execute();
+                // $queryD1 = "DELETE FROM deproomdetailsub WHERE ID =  '$_ID' ";
+                // $meQueryD1 = $conn->prepare($queryD1);
+                // $meQueryD1->execute();
 
                 $queryD2 = "DELETE FROM hncode_detail WHERE ID =  '$_hndetail_ID' ";
                 $meQueryD2 = $conn->prepare($queryD2);

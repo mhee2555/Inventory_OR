@@ -3,6 +3,9 @@ var UserName = "";
 var procedure_id_Array = [];
 var doctor_Array = [];
 
+var procedure_id_history_Array = [];
+var doctor_history_Array = [];
+
 $(function () {
   var now = new Date();
   var hours = String(now.getHours()).padStart(2, "0");
@@ -75,6 +78,50 @@ $(function () {
     $("#select_deproom_history").select2();
     $("#select_doctor_history").select2();
     $("#select_procedure_history").select2();
+
+    setTimeout(() => {
+      $("#select_doctor_history").on("select2:select", function (e) {
+        var selectedValue = e.params.data.id; // ดึงค่า value
+        var selectedText = e.params.data.text; // ดึงค่า text
+        if (selectedValue != "") {
+          var index = doctor_history_Array.indexOf(selectedValue);
+          if (index == -1) {
+            doctor_history_Array.push(selectedValue);
+            var _row = "";
+            _row += `       <div  class='div_${selectedValue}  clear_doctor' onclick='DeleteDoctor_history(${selectedValue})'>
+                                <label for="" class="custom-label">${selectedText}</label>
+                            </div> `;
+
+            $("#row_doctor_history").append(_row);
+
+            $("#select_doctor_history").val("").trigger("change");
+          }
+
+          show_detail_history();
+        }
+      });
+
+      $("#select_procedure_history").on("select2:select", function (e) {
+        var selectedValue = e.params.data.id; // ดึงค่า value
+        var selectedText = e.params.data.text; // ดึงค่า text
+        if (selectedValue != "") {
+          var index = procedure_id_history_Array.indexOf(selectedValue);
+          if (index == -1) {
+            procedure_id_history_Array.push(selectedValue);
+            var _row = "";
+            _row += `       <div  class='div_${selectedValue} clear_procedure' onclick='Deletprocedure_history(${selectedValue})'>
+                                <label for="" class="custom-label">${selectedText}</label>
+                            </div> `;
+
+            $("#row_procedure_history").append(_row);
+
+            $("#select_procedure_history").val("").trigger("change");
+          }
+
+          show_detail_history();
+        }
+      });
+    }, 500);
   });
 
   show_detail_item_request();
@@ -87,9 +134,6 @@ $(function () {
   $("#select_doctor_request").select2();
   $("#select_procedure_request").select2();
   $("#select_deproom_request").select2();
-
-
-  
 
   $("#select_deproom_request").change(function () {
     set_proceduce($("#select_deproom_request").val());
@@ -150,7 +194,8 @@ $(function () {
 });
 
 // create_Request
-function DeleteDoctor(selectedValue) {
+
+function DeleteDoctor_history(selectedValue) {
   var index = doctor_Array.indexOf(String(selectedValue));
   console.log(index);
 
@@ -159,6 +204,36 @@ function DeleteDoctor(selectedValue) {
   }
 
   console.log(doctor_Array);
+  $(".div_" + selectedValue).attr("hidden", true);
+
+  set_deproom();
+  show_detail_history();
+}
+
+function Deletprocedure_history(selectedValue) {
+  var index = procedure_id_history_Array.indexOf(String(selectedValue));
+  console.log(index);
+
+  if (index !== -1) {
+    procedure_id_history_Array.splice(index, 1);
+  }
+
+  console.log(procedure_id_history_Array);
+  $(".div_" + selectedValue).attr("hidden", true);
+
+  show_detail_history();
+}
+
+
+function DeleteDoctor(selectedValue) {
+  var index = doctor_history_Array.indexOf(String(selectedValue));
+  console.log(index);
+
+  if (index !== -1) {
+    doctor_history_Array.splice(index, 1);
+  }
+
+  console.log(doctor_history_Array);
   $(".div_" + selectedValue).attr("hidden", true);
 
   set_deproom();
@@ -304,7 +379,9 @@ function show_detail_item_request() {
                       <td class='text-center' >${kay + 1}</td>
                       <td>${value.Item_name}</td>
                       <td class='text-center'>${value.TyeName}</td>
-                      <td class='text-center'><input type='text' class='numonly form-control loop_qty_request text-center' data-itemcode="${ value.itemcode }"></td>
+                      <td class='text-center'><input type='text' class='numonly form-control loop_qty_request text-center' data-itemcode="${
+                        value.itemcode
+                      }"></td>
                    </tr>`;
         });
       }
@@ -344,7 +421,7 @@ function show_detail_item_request() {
           {
             width: "10%",
             targets: 3,
-          }
+          },
         ],
         info: false,
         scrollX: false,
@@ -369,23 +446,19 @@ function show_detail_item_request() {
         );
       }
 
-
       $(".numonly").on("input", function () {
         this.value = this.value.replace(/[^0-9]/g, ""); //<-- replace all other than given set of values
       });
-
     },
   });
 }
 
-
 function validateNumber(input) {
   alert(23);
   if (input.value < 0) {
-      input.value = 0;
+    input.value = 0;
   }
 }
-
 
 function onconfirm_request() {
   qty_array = [];
@@ -684,8 +757,8 @@ function show_detail_history() {
       select_date_history_s: $("#select_date_history_s").val(),
       select_date_history_l: $("#select_date_history_l").val(),
       select_deproom_history: $("#select_deproom_history").val(),
-      select_doctor_history: $("#select_doctor_history").val(),
-      select_procedure_history: $("#select_procedure_history").val(),
+      select_doctor_history: doctor_history_Array,
+      select_procedure_history: procedure_id_history_Array,
     },
     success: function (result) {
       var _tr = "";
@@ -964,7 +1037,6 @@ function edit_item_byDocNo(
                           </div> `;
         });
         $("#row_doctor").append(_row);
-
       }
     },
   });
@@ -983,18 +1055,15 @@ function edit_item_byDocNo(
         $.each(ObjData, function (kay, value) {
           procedure_id_Array.push(value.ID);
 
-          
           _row += `       <div  class='div_${value.ID} pl-3 clear_doctor' onclick='DeleteDoctor(${value.ID})'>
                               <label for="" class="custom-label">${value.Procedure_TH}</label>
                           </div> `;
         });
 
         $("#row_procedure").append(_row);
-
       }
     },
   });
-
 
   $("#text_edit").val(text_edit);
 
@@ -1008,7 +1077,6 @@ function edit_item_byDocNo(
 //////////////////////////////////////////////////////////////// select
 
 function set_proceduce(select_deproom_request) {
-
   $.ajax({
     url: "process/process_main/select_main.php",
     type: "POST",
@@ -1033,7 +1101,6 @@ function set_proceduce(select_deproom_request) {
 }
 
 function set_deproom() {
-
   $.ajax({
     url: "process/process_main/select_main.php",
     type: "POST",
@@ -1056,7 +1123,6 @@ function set_deproom() {
     },
   });
 }
-
 
 function select_deproom() {
   $.ajax({

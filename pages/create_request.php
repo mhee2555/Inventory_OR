@@ -255,17 +255,32 @@
                 </div>
 
                 <div class="col-md-3">
-                    <div class="form-group ">
-                        <label style="color:black;font-weight: 600;">แพทย์</label>
-                        <select class="form-control f18" autocomplete="off" id="select_doctor_history"></select>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group ">
+                                <label style="color:black;font-weight: 600;">แพทย์</label>
+                                <select class="form-control f18" autocomplete="off" id="select_doctor_history"></select>
+                            </div>
+                        </div>
+                        <div class="col-md-12" style="display: ruby;" id="row_doctor_history">
+                        </div>
                     </div>
                 </div>
 
                 <div class="col-md-2">
-                    <div class="form-group ">
-                        <label style="color:black;font-weight: 600;">หัตถการ</label>
-                        <select class="form-control f18" autocomplete="off" id="select_procedure_history"></select>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group ">
+                                <label style="color:black;font-weight: 600;">หัตถการ</label>
+                                <select class="form-control f18" autocomplete="off" id="select_procedure_history"></select>
+                            </div>
+                        </div>
+                        <div class="col-md-12" style="display: ruby;" id="row_procedure_history">
+                        </div>
                     </div>
+
                 </div>
                 <div class="col-md-1">
                     <button class="btn btn-success" style="margin-top: 1.9rem !important;" id="btn_show_report">EXCEL</button>

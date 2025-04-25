@@ -383,21 +383,15 @@
                                 </div>
                             </div>
                         </div>
-
-
                     </div>
                 </div>
 
                 <div class="col-md-2">
                     <div class="form-group row">
                         <label style="color:black;font-weight: 600;">ห้องผ่าตัด</label>
-
                         <select class="form-control f18" id="select_deproom_history"></select>
-
                     </div>
                 </div>
-
-
 
                 <div class="col-md-3">
                     <div class="row">
@@ -407,14 +401,12 @@
                                 <select class="form-control f18" autocomplete="off" id="select_doctor_history"></select>
                             </div>
                         </div>
-
                         <div class="col-md-12" style="display: ruby;" id="row_doctor_history">
                         </div>
                     </div>
                 </div>
 
                 <div class="col-md-2">
-
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group ">
