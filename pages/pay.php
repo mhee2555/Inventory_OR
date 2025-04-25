@@ -240,8 +240,15 @@
 
 
 
+                                <div class="col-md-4"></div>
+                                <div class="col-md-4"></div>
 
-
+                                <div class="col-md-4">
+                                    <div class="form-group ">
+                                        <label style="color:black;font-weight: 600;">หมายเหตุ</label>
+                                        <input type="text" class="form-control f18" id="input_remark_manual">
+                                    </div>
+                                </div>
 
 
 

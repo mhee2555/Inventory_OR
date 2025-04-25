@@ -935,8 +935,9 @@ function oncheck_pay_manual($conn, $db)
     $select_doctor_manual = $_POST['select_doctor_manual'];
     $select_deproom_manual = $_POST['select_deproom_manual'];
     $select_procedure_manual = $_POST['select_procedure_manual'];
+    $input_remark_manual = $_POST['input_remark_manual'];
 
-
+    
     $input_date_service_manual = explode("-", $input_date_service_manual);
     $input_date_service_manual = $input_date_service_manual[2] . '-' . $input_date_service_manual[1] . '-' . $input_date_service_manual[0];
 
@@ -1203,10 +1204,10 @@ function oncheck_pay_manual($conn, $db)
         while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
 
 
-
+            
             if ($input_docNo_deproom_manual == "") {
                 $remark = "สร้างจาก ขอเบิกอุปกรณ์ ";
-                $input_docNo_deproom_manual = createDocNo($conn, $Userid, $DepID, $deproom, $remark, 0, 0, 0, 0, '', '', '', $db);
+                $input_docNo_deproom_manual = createDocNo($conn, $Userid, $DepID, $deproom, $input_remark_manual, 0, 0, 0, 0, '', '', '', $db);
                 $input_docNo_HN_manual = createhncodeDocNo($conn, $Userid, $DepID, $input_Hn_pay_manual, $select_deproom_manual, 0, $select_procedure_manual, $select_doctor_manual, 'สร้างจากเมนูขอเบิกอุปกรณ์', $input_docNo_deproom_manual, $db, $input_date_service_manual);
 
                 $sql1 = " UPDATE deproom SET IsStatus = 1 , serviceDate = '$input_date_service_manual $input_time_service_manual'  , hn_record_id = '$input_Hn_pay_manual' , doctor = '$select_doctor_manual' , `procedure` = '$select_procedure_manual' , Ref_departmentroomid = '$select_deproom_manual' WHERE DocNo = '$input_docNo_deproom_manual' AND IsCancel = 0 ";

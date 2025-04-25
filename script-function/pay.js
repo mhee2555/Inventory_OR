@@ -96,6 +96,9 @@ $(function () {
     $("#select_doctor_manual").val("").trigger("change");
     $("#select_deproom_manual").val("").trigger("change");
     $("#select_procedure_manual").val("").trigger("change");
+
+    
+    $("#input_remark_manual").val("");
     $("#input_docNo_deproom_manual").val("");
     $("#input_docNo_HN_manual").val("");
 
@@ -190,9 +193,8 @@ $(function () {
     $("#select_procedure_manual").val("").trigger("change");
     $("#input_docNo_deproom_manual").val("");
     $("#input_docNo_HN_manual").val("");
-
+    $("#input_remark_manual").val("");
     $("#table_deproom_DocNo_pay_manual tbody").html("");
-
     $(".clear_doctor").attr("hidden", true);
     doctor_Array = [];
     $(".clear_procedure").attr("hidden", true);
@@ -795,7 +797,7 @@ function oncheck_pay_rfid_manual() {
     showDialogFailed("กรุณาเลือกหัตถการ");
     return;
   }
-
+  
   $.ajax({
     url: "process/pay.php",
     type: "POST",
@@ -808,6 +810,7 @@ function oncheck_pay_rfid_manual() {
       input_time_service_manual: $("#input_time_service_manual").val(),
       // select_doctor_manual: $("#select_doctor_manual").val(),
       select_deproom_manual: $("#select_deproom_manual").val(),
+      input_remark_manual: $("#input_remark_manual").val(),
       // select_procedure_manual: $("#select_procedure_manual").val(),
       select_doctor_manual: doctor_Array,
       select_procedure_manual: procedure_id_Array,
@@ -849,7 +852,7 @@ function oncheck_pay_manual(input_pay_manual) {
     showDialogFailed("กรุณาเลือกหัตถการ");
     return;
   }
-
+  
   $.ajax({
     url: "process/pay.php",
     type: "POST",
@@ -863,6 +866,7 @@ function oncheck_pay_manual(input_pay_manual) {
       input_time_service_manual: $("#input_time_service_manual").val(),
       // select_doctor_manual: $("#select_doctor_manual").val(),
       select_deproom_manual: $("#select_deproom_manual").val(),
+      input_remark_manual: $("#input_remark_manual").val(),
       // select_procedure_manual: $("#select_procedure_manual").val(),
       select_doctor_manual: doctor_Array,
       select_procedure_manual: procedure_id_Array,
