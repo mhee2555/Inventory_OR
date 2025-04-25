@@ -481,7 +481,10 @@ if (!isset($_SESSION['UserName'])) {
         })
         $('#a_create_request').on("click", function(e) {
             e.preventDefault();
-            var link = this.href;
+
+            var link = 'pages/create_request.php';
+
+            // var link = this.href;
             $.get(link, function(res) {
 
                 $(".nav-item").removeClass("active");

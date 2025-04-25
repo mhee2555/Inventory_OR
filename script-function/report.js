@@ -32,8 +32,12 @@ $(function () {
   $("#row_typemonth").hide();
   $("#row_month").hide();
 
+  $("#row_typeyear").hide();
+  $("#row_year").hide();
+
   $("#select_date2").hide();
   $("#select_month2").hide();
+  $("#select_year2").hide();
 
   $("#radio_date1").click(function (e) {
     if ($("#radio_date1").is(":checked")) {
@@ -55,6 +59,16 @@ $(function () {
       $("#select_month2").show();
     }
   });
+  $("#radio_year1").click(function (e) {
+    if ($("#radio_year1").is(":checked")) {
+      $("#select_year2").hide();
+    }
+  });
+  $("#radio_year2").click(function (e) {
+    if ($("#radio_year2").is(":checked")) {
+      $("#select_year2").show();
+    }
+  });
 
   $("#select_type_date").change(function (e) {
     if ($(this).val() == "") {
@@ -70,13 +84,26 @@ $(function () {
 
       $("#row_typemonth").hide();
       $("#row_month").hide();
+      $("#row_typeyear").hide();
+      $("#row_year").hide();
     }
     if ($(this).val() == "2") {
       $("#row_typeday").hide();
       $("#row_day").hide();
+      $("#row_typeyear").hide();
+      $("#row_year").hide();
 
       $("#row_typemonth").show();
       $("#row_month").show();
+    }
+    if ($(this).val() == "3") {
+      $("#row_typeday").hide();
+      $("#row_day").hide();
+      $("#row_typemonth").hide();
+      $("#row_month").hide();
+
+      $("#row_typeyear").show();
+      $("#row_year").show();
     }
   });
 
@@ -123,7 +150,11 @@ $(function () {
         } else {
           var checkmonth = 2;
         }
-
+        if ($("#radio_year1").is(":checked")) {
+          var checkyear = 1;
+        } else {
+          var checkyear = 2;
+        }
         var option =
           "?type_date=" +
           $("#select_type_date").val() +
@@ -135,10 +166,16 @@ $(function () {
           $("#select_month1").val() +
           "&month2=" +
           $("#select_month2").val() +
+          "&year1=" +
+          $("#select_year1").val() +
+          "&year2=" +
+          $("#select_year2").val() +
           "&checkday=" +
           checkday +
           "&checkmonth=" +
-          checkmonth;
+          checkmonth
+          "&checkyear=" +
+          checkyear;
 
         window.open("report/Report_Patient_Requisition.php" + option, "_blank");
       }

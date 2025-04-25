@@ -289,7 +289,7 @@ function show_detail_hn($conn, $db)
                     doctor ON doctor.ID = hncode.doctor
                 LEFT JOIN
                     `procedure` ON `procedure`.ID = hncode.`procedure`
-                LEFT JOIN
+                INNER JOIN
                         hncode_detail ON hncode.DocNo = hncode_detail.DocNo
                 LEFT JOIN
                         itemstock ON hncode_detail.ItemStockID = itemstock.RowID

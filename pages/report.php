@@ -49,6 +49,7 @@
                             <option value="">ประเภทรายงาน</option>
                             <option value="1">วัน</option>
                             <option value="2">เดือน</option>
+                            <option value="3">ปี</option>
                         </select>
                     </div>
                     <div class="col-md-12 mt-3" id="row_typeday">
@@ -78,6 +79,22 @@
                             <div class="form-check-inline">
                                 <label class="form-check-label" style="color:black;">
                                     <input type="radio" class="form-check-input f18" name="radio_month" id="radio_month2">หลายเดือน
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 mt-3" id="row_typeyear">
+                        <label for="" style="font-weight: 600;color:black;" class="f18">รูปแบบ</label>
+                        <div class="col-md-8">
+                            <div class="form-check-inline">
+                                <label class="form-check-label" style="color:black;">
+                                    <input type="radio" class="form-check-input f18" name="radio_date" id="radio_year1" checked="">หนึ่งปี
+                                </label>
+                            </div>
+                            <div class="form-check-inline">
+                                <label class="form-check-label" style="color:black;">
+                                    <input type="radio" class="form-check-input f18" name="radio_date" id="radio_year2">หลายปี
                                 </label>
                             </div>
                         </div>
@@ -131,6 +148,24 @@
                                     <option value="10">ตุลาคม</option>
                                     <option value="11">พฤศจิกายน</option>
                                     <option value="12">ธันวาคม</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-12 mt-3" id="row_year">
+                        <label for="" style="font-weight: 600;color:black;" class="f18">ปี</label>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <select class="form-control f18" id="select_year1">
+                                    <option value="2568">2568</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <select class="form-control f18" id="select_year2">
+                                    <option value="2568">2568</option>
                                 </select>
                             </div>
                         </div>

@@ -877,13 +877,19 @@ function oncheck_pay_manual(input_pay_manual) {
 
 
       if (ObjData.count_itemstock == 3) {
-        showDialogFailed("สแกนซ้ำ");
+        showDialogFailed("สแกนอุปกรณ์ซ้ำ");
+        $("#input_pay_manual").val("");
+        return;
+      }
+
+      if (ObjData.count_itemstock == 0) {
+        showDialogFailed("QR Code ไม่ถูกต้องไม่พบรหัสนี้ในระบบ");
         $("#input_pay_manual").val("");
         return;
       }
 
       if (ObjData.input_docNo_deproom_manual == "") {
-        showDialogFailed("รหัสไม่มีในระบบ");
+        showDialogFailed("QR Code ไม่ถูกต้องไม่พบรหัสนี้ในระบบ");
       } else {
         $("#input_docNo_deproom_manual").val(
           ObjData.input_docNo_deproom_manual
@@ -992,13 +998,13 @@ function oncheck_pay(input_pay) {
       },
       success: function (result) {
         if (result == 0) {
-          showDialogFailed("รหัสไม่มีในระบบ");
+          showDialogFailed("QR Code ไม่ถูกต้องไม่พบรหัสนี้ในระบบ");
         } else if (result == 1) {
           showDialogFailed("จ่ายครบแล้ว");
         } else if (result == 2) {
           show_detail_item_ByDocNo();
         } else if (result == 3) {
-          showDialogFailed("สแกนซ้ำ");
+          showDialogFailed("สแกนอุปกรณ์ซ้ำ");
         }  else {
           var ObjData = JSON.parse(result);
           if (!$.isEmptyObject(ObjData)) {
@@ -1128,10 +1134,10 @@ function oncheck_Returnpay_manual(input_returnpay_manual) {
     success: function (result) {
 
       if (result == 2) {
-        showDialogFailed("รหัสอุปกรณ์อยู่สต๊อก");
+        showDialogFailed("รหัสนี้อยู่คลังสต๊อกห้องผ่าตัด");
       } 
       if (result == 0) {
-        showDialogFailed("สแกนคืนรหัสไม่มีในระบบ");
+        showDialogFailed("QR Code ไม่ถูกต้องไม่พบรหัสนี้ในระบบ");
       }else{
         show_detail_item_ByDocNo_manual();
       } 
@@ -1159,10 +1165,10 @@ function oncheck_Returnpay(input_returnpay) {
     },
     success: function (result) {
       if (result == 2) {
-        showDialogFailed("รหัสอุปกรณ์อยู่สต๊อก");
+        showDialogFailed("รหัสนี้อยู่คลังสต๊อกห้องผ่าตัด");
       } 
       if (result == 0) {
-        showDialogFailed("สแกนคืนรหัสไม่มีในระบบ");
+        showDialogFailed("QR Code ไม่ถูกต้องไม่พบรหัสนี้ในระบบ");
       } else {
         var ObjData = JSON.parse(result);
         if (!$.isEmptyObject(ObjData)) {
@@ -1654,7 +1660,7 @@ $("#input_scan_return").keypress(function (e) {
           $.each(ObjData, function (kay, value) {
             
             if(value.Isdeproom == 0){
-            showDialogFailed("รหัสอุปกรณ์อยู่สต๊อก");
+            showDialogFailed("รหัสนี้อยู่คลังสต๊อกห้องผ่าตัด");
             $("#input_scan_return").val("");
               return;
             }
@@ -1678,7 +1684,7 @@ $("#input_scan_return").keypress(function (e) {
             });
           });
         } else {
-          showDialogFailed("สแกนคืนรหัสไม่มีในระบบ");
+          showDialogFailed("QR Code ไม่ถูกต้องไม่พบรหัสนี้ในระบบ");
         }
 
         $("#input_scan_return").val("");

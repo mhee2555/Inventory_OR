@@ -49,7 +49,7 @@
 
         .wallpaper {
 
-            background-image: url(assets/img/bg-1194.png);
+            background-image: url(assets/img/bg-6.png);
             background-size: cover;
             background-position: center;
             height: 100vh;
@@ -168,7 +168,6 @@
     }
 
     @media screen and (min-width: 1920px) {
-
         .wallpaper {
 
             background-image: url(assets/img/bg-6.png);

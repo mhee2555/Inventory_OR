@@ -51,7 +51,7 @@
                     </li>
 
                     <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_create_request" >
-                        <a class="collapse-item" href="pages/create_request.php" style="color: black;font-size: 16px;" id="a_create_request">
+                        <a class="collapse-item" href="index.php?s=create_request" style="color: black;font-size: 16px;" id="a_create_request">
                             <img id="ic_create_equipment_request" style="width: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;">
                             <label style="font-size: 20px;color: #667085;" class="" id="menu3">สร้างใบขอเบิกอุปกรณ์</label>
                         </a>

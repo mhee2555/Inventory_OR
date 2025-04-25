@@ -954,7 +954,7 @@ function oncheck_pay_manual($conn, $db)
     $count_itemstock = 0;
 
 
-    $count_itemstock++;
+    // $count_itemstock++;
 
 
     $count_new_item_itemcode = 0;
@@ -1203,7 +1203,7 @@ function oncheck_pay_manual($conn, $db)
         $meQuery->execute();
         while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
 
-
+            $count_itemstock = 1;
             
             if ($input_docNo_deproom_manual == "") {
                 $remark = "สร้างจาก ขอเบิกอุปกรณ์ ";

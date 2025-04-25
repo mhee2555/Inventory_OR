@@ -92,7 +92,7 @@ class MYPDF extends TCPDF
         // Page number
 
 
-        $this->Cell(210, 10,  "หน้า" . $this->getAliasNumPage() . '/' . $this->getAliasNbPages(), 0, 0, 'R');
+        $this->Cell(190, 10,  "หน้า" . $this->getAliasNumPage() . '/' . $this->getAliasNbPages(), 0, 0, 'R');
     }
 }
 
@@ -234,8 +234,8 @@ $pdf->Ln(5);
 
 $pdf->SetFont('db_helvethaica_x', 'B', 18);
 
-$html = '<table cellspacing="0" cellpadding="2" border="1" >
-<thead><tr style="font-size:18px;">
+$html = '<table cellspacing="0" cellpadding="1" border="1" >
+<thead><tr style="font-size:18px;color:#fff;background-color:#663399;">
 <th width="12 %" align="center">Code</th>
 <th width="30 %" align="center">BarCode</th>
 <th width="50 %"  align="center">Name</th>
@@ -332,14 +332,29 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
     // ));
 
     $itemcode = strtoupper(preg_replace('/[^A-Z0-9 \-.\$\/\+\%]/', '', $Result_Detail['itemcode2']));
-    $params = $pdf->serializeTCPDFtagParameters(array($itemcode, 'C39', '', '', 53, 20, 0.4, array('position' => 'S', 'border' => false, 'padding' => 4, 'fgcolor' => array(0, 0, 0), 'bgcolor' => array(255, 255, 255), 'text' => true, 'font' => 'helvetica', 'fontsize' => 8, 'stretchtext' => 1), 'N'));
-
+    $params = $pdf->serializeTCPDFtagParameters(array(
+        $itemcode, 'C39', '', '', 
+        53, 15, // <== กำหนดความกว้าง 53mm, ความสูง 9mm
+        0.4, 
+        array(
+            'position' => 'S',
+            'border' => false,
+            'padding' => 2,
+            'fgcolor' => array(0, 0, 0),
+            'bgcolor' => array(255, 255, 255),
+            'text' => true,
+            'font' => 'helvetica',
+            'fontsize' => 5,
+            'stretchtext' => 0
+        ), 
+        'N'
+    ));
     if($Result_Detail['cnt_pay'] > 0){
         $html .= '<tr nobr="true" style="font-size:18px;height:30px;">';
         $html .=   '<td width="12 %" align="center"> ' . $Result_Detail['itemcode2'] . '</td>';
-        $html .=   '<td width="30 %" align="center" style="vertical-align: middle;"><tcpdf method="write1DBarcode" params="' . $params . '" /></td>';
+        $html .=   '<td width="30 %" align="center" style="vertical-align: bottom; padding: 0px;"><tcpdf method="write1DBarcode" params="' . $params . '" /></td>';
         // $html .=   '<td width="36 %" align="center"> ' . $Result_Detail['itemcode'] . '</td>';
-        $html .=   '<td width="50 %" align="left"> ' . $Result_Detail['itemname'] . '</td>';
+        $html .=   '<td width="50 %" align="left"  style="line-height:40px;vertical-align: middle;"> ' . $Result_Detail['itemname'] . '</td>';
         $html .=   '<td width="10 %" align="center">' . $Result_Detail['cnt_pay'] . '</td>';
         $html .=  '</tr>';
         $count++;

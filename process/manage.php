@@ -282,15 +282,32 @@ function saveProcedure($conn)
 
 
     if ($input_IDProcedure == "") {
-        $query = "INSERT INTO `procedure` ( Procedure_TH , Procedure_EN, IsActive ) 
-        VALUES             ('$input_Procedure'  , '$input_Procedure' , '$IsActive' ) ";
+
+
+        $stmt = $conn->prepare("INSERT INTO `procedure` (Procedure_TH, Procedure_EN, IsActive) VALUES (?, ?, ?)");
+        $stmt->execute([$input_Procedure, $input_Procedure, $IsActive]);
+
+        // $stmt = $conn->prepare("INSERT INTO `procedure` (Procedure_TH, Procedure_EN, IsActive) VALUES (?, ?, ?)");
+        // $stmt->bind_param("sss", $input_Procedure, $input_Procedure, $IsActive);
+        // $stmt->execute();
+
+
+        // $query = "INSERT INTO `procedure` ( Procedure_TH , Procedure_EN, IsActive ) 
+        // VALUES             ('$input_Procedure'  , '$input_Procedure' , '$IsActive' ) ";
+
+        // $meQuery = $conn->prepare($query);
+        // $meQuery->execute();
     } else {
-        $query = "UPDATE `procedure` SET Procedure_TH = '$input_Procedure' , IsActive = '$IsActive'  WHERE ID = '$input_IDProcedure'  ";
+
+        $stmt = $conn->prepare("UPDATE `procedure` SET Procedure_TH = ?, Procedure_EN = ?, IsActive = ? WHERE ID = ?");
+        $stmt->execute([$input_Procedure, $input_Procedure, $IsActive, $input_IDProcedure]);
+        // $query = "UPDATE `procedure` SET Procedure_TH = '$input_Procedure' , IsActive = '$IsActive'  WHERE ID = '$input_IDProcedure'  ";
+
+
     }
 
+    
 
-    $meQuery = $conn->prepare($query);
-    $meQuery->execute();
     echo "insert success";
     unset($conn);
     die;
