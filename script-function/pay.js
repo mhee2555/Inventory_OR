@@ -328,15 +328,19 @@ $(function () {
 
 $("#input_pay").keypress(function (e) {
   if (e.which == 13) {
-    $("#input_pay").val(convertString($(this).val()));
-    oncheck_pay($(this).val());
+    if($(this).val().trim() != ""){
+      $("#input_pay").val(convertString($(this).val()));
+      oncheck_pay($(this).val());
+    }
   }
 });
 
 $("#input_pay_manual").keypress(function (e) {
   if (e.which == 13) {
-    $("#input_pay_manual").val(convertString($(this).val()));
-    oncheck_pay_manual($(this).val());
+    if($(this).val().trim() != ""){
+      $("#input_pay_manual").val(convertString($(this).val()));
+      oncheck_pay_manual($(this).val());
+    }
   }
 });
 
@@ -354,8 +358,12 @@ $("#input_returnpay_manual").keypress(function (e) {
 
 $("#input_returnpay").keypress(function (e) {
   if (e.which == 13) {
-    $("#input_returnpay").val(convertString($(this).val()));
-    oncheck_Returnpay($(this).val());
+
+    if($(this).val().trim() != ""){
+      $("#input_returnpay").val(convertString($(this).val()));
+      oncheck_Returnpay($(this).val());
+    }
+
   }
 });
 
@@ -863,8 +871,15 @@ function oncheck_pay_manual(input_pay_manual) {
       var ObjData = JSON.parse(result);
       $("body").loadingModal("destroy");
 
+
+      if (ObjData.count_itemstock == 3) {
+        showDialogFailed("สแกนซ้ำ");
+        $("#input_pay_manual").val("");
+        return;
+      }
+
       if (ObjData.input_docNo_deproom_manual == "") {
-        showDialogFailed("ไม่พบข้อมูล");
+        showDialogFailed("รหัสไม่มีในระบบ");
       } else {
         $("#input_docNo_deproom_manual").val(
           ObjData.input_docNo_deproom_manual
@@ -973,12 +988,14 @@ function oncheck_pay(input_pay) {
       },
       success: function (result) {
         if (result == 0) {
-          showDialogFailed("ไม่พบข้อมูล");
+          showDialogFailed("รหัสไม่มีในระบบ");
         } else if (result == 1) {
           showDialogFailed("จ่ายครบแล้ว");
         } else if (result == 2) {
           show_detail_item_ByDocNo();
-        } else {
+        } else if (result == 3) {
+          showDialogFailed("สแกนซ้ำ");
+        }  else {
           var ObjData = JSON.parse(result);
           if (!$.isEmptyObject(ObjData)) {
             $.each(ObjData, function (key, value) {
@@ -1105,7 +1122,15 @@ function oncheck_Returnpay_manual(input_returnpay_manual) {
       select_procedure_manual: $("#select_procedure_manual").val(),
     },
     success: function (result) {
-      show_detail_item_ByDocNo_manual();
+
+      if (result == 2) {
+        showDialogFailed("รหัสอุปกรณ์อยู่สต๊อก");
+      } 
+      if (result == 0) {
+        showDialogFailed("สแกนคืนรหัสไม่มีในระบบ");
+      }else{
+        show_detail_item_ByDocNo_manual();
+      } 
       $("#input_returnpay_manual").val("");
     },
   });
@@ -1129,8 +1154,11 @@ function oncheck_Returnpay(input_returnpay) {
       input_date_service: $("#input_date_service").val(),
     },
     success: function (result) {
+      if (result == 2) {
+        showDialogFailed("รหัสอุปกรณ์อยู่สต๊อก");
+      } 
       if (result == 0) {
-        showDialogFailed(settext("Not_Found"));
+        showDialogFailed("สแกนคืนรหัสไม่มีในระบบ");
       } else {
         var ObjData = JSON.parse(result);
         if (!$.isEmptyObject(ObjData)) {
@@ -1620,6 +1648,17 @@ $("#input_scan_return").keypress(function (e) {
 
         if (!$.isEmptyObject(ObjData)) {
           $.each(ObjData, function (kay, value) {
+            
+            if(value.Isdeproom == 0){
+            showDialogFailed("รหัสอุปกรณ์อยู่สต๊อก");
+            $("#input_scan_return").val("");
+              return;
+            }
+            if(value.IsCross == 9){
+              showDialogFailed("สแกนรหัสซ้ำ");
+              $("#input_scan_return").val("");
+                return;
+              }
             var UsageCode = value.UsageCode;
             // alert(UsageCode);
             $.ajax({
@@ -1635,7 +1674,7 @@ $("#input_scan_return").keypress(function (e) {
             });
           });
         } else {
-          showDialogFailed(settext("alert_noItem"));
+          showDialogFailed("สแกนคืนรหัสไม่มีในระบบ");
         }
 
         $("#input_scan_return").val("");

@@ -423,9 +423,9 @@ if (!isset($_SESSION['UserName'])) {
 
 
             // http://10.11.9.54:8000/Login/Index?user=stock&pass=111
-            // http://192.168.2.101:8003/
-            // http://10.11.9.54:8000/
-            window.open(" http://192.168.2.101:8003/Login/Index?user=" + UserName_login + "&pass=" + Password, "_blank");
+            // http://10.11.9.54:8000/ จริง
+            // http://10.11.9.3:8003/ test
+            window.open(" http://10.11.9.3:8003/Login/Index?user=" + UserName_login + "&pass=" + Password, "_blank");
 
 
             e.preventDefault();
