@@ -177,7 +177,7 @@ if ($type_date == 1) {
     if ($checkday == 1) {
         $date1 = $date1[2] . '-' . $date1[1] . '-' . $date1[0];
 
-        $where_date = "AND DATE(hncode.serviceDate) = '$date1'  ";
+        $where_date = "AND DATE(deproom.serviceDate) = '$date1'  ";
     } else {
         $date1 = $date1[2] . '-' . $date1[1] . '-' . $date1[0];
         $date2 = $date2[2] . '-' . $date2[1] . '-' . $date2[0];
@@ -197,6 +197,10 @@ if ($type_date == 2) {
 }
 
 if ($type_date == 3) {
+
+    $year1 = $year1-543;
+    $year2 = $year2-543;
+
 
     if ($checkyear == 1) {
         $where_date = "AND YEAR(deproom.serviceDate) = '$year1'  ";

@@ -182,7 +182,8 @@ if ($type_date == 2) {
 }
 
 if ($type_date == 3) {
-
+    $year1 = $year1-543;
+    $year2 = $year2-543;
     if ($checkyear == 1) {
         $where_date = "WHERE YEAR(hncode.CreateDate) = '$year1'  ";
 

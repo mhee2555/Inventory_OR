@@ -119,29 +119,29 @@ if ($type_date == 1) {
 
     if ($checkday == 1) {
         $date1 = explode("-", $date1);
-        $text_date = "วันที่เติมอุปกรณ์ : " . $date1[0] . " " . $datetime->getTHmonthFromnum($date1[1]) . " " . " พ.ศ." . " " . ($date1[2] + 543);
+        $text_date = "วันที่เบิกอุปกรณ์ : " . $date1[0] . " " . $datetime->getTHmonthFromnum($date1[1]) . " " . " พ.ศ." . " " . ($date1[2] + 543);
     } else {
         $date1 = explode("-", $date1);
         $date2 = explode("-", $date2);
 
-        $text_date = "วันที่เติมอุปกรณ์ : " . $date1[0] . " " . $datetime->getTHmonthFromnum($date1[1]) . " " . " พ.ศ." . " " . ($date1[2] + 543) . " ถึง " .  $date2[0] . " " . $datetime->getTHmonthFromnum($date2[1]) . " " . " พ.ศ." . " " . ($date2[2] + 543);
+        $text_date = "วันที่เบิกอุปกรณ์ : " . $date1[0] . " " . $datetime->getTHmonthFromnum($date1[1]) . " " . " พ.ศ." . " " . ($date1[2] + 543) . " ถึง " .  $date2[0] . " " . $datetime->getTHmonthFromnum($date2[1]) . " " . " พ.ศ." . " " . ($date2[2] + 543);
     }
 }
 
 if ($type_date == 2) {
 
     if ($checkmonth == 1) {
-        $text_date = "เดือนที่เติมอุปกรณ์ : " . $datetime->getTHmonthFromnum($month1);
+        $text_date = "เดือนที่เบิกอุปกรณ์ : " . $datetime->getTHmonthFromnum($month1);
     } else {
-        $text_date = "เดือนที่เติมอุปกรณ์ : " . $datetime->getTHmonthFromnum($month1) . " ถึง " . $datetime->getTHmonthFromnum($month2);
+        $text_date = "เดือนที่เบิกอุปกรณ์ : " . $datetime->getTHmonthFromnum($month1) . " ถึง " . $datetime->getTHmonthFromnum($month2);
     }
 }
 if ($type_date == 3) {
 
     if ($checkyear == 1) {
-        $text_date = "ปีที่เติมอุปกรณ์ : " . $year1;
+        $text_date = "ปีที่เบิกอุปกรณ์ : " . $year1;
     } else {
-        $text_date = "ปีที่เติมอุปกรณ์ : " . $year1 . " ถึง " . $year2;
+        $text_date = "ปีที่เบิกอุปกรณ์ : " . $year1 . " ถึง " . $year2;
     }
 }
 $pdf->SetY(20);
@@ -203,6 +203,9 @@ if ($type_date == 2) {
 }
 
 if ($type_date == 3) {
+
+    $year1 = $year1-543;
+    $year2 = $year2-543;
 
     if ($checkyear == 1) {
         $where_date = "AND YEAR(log_cabinet.ModifyDate) = '$year1'  ";
@@ -282,21 +285,21 @@ if ($type_date == 1) {
 
     if ($checkday == 1) {
         $date1 = explode("-", $date1);
-        $text_date = "วันที่เติมอุปกรณ์ : " . $date1[0] . " " . $datetime->getTHmonthFromnum($date1[1]) . " " . " พ.ศ." . " " . ($date1[2] + 543);
+        $text_date = "วันที่เบิกอุปกรณ์ : " . $date1[0] . " " . $datetime->getTHmonthFromnum($date1[1]) . " " . " พ.ศ." . " " . ($date1[2] + 543);
     } else {
         $date1 = explode("-", $date1);
         $date2 = explode("-", $date2);
 
-        $text_date = "วันที่เติมอุปกรณ์ : " . $date1[0] . " " . $datetime->getTHmonthFromnum($date1[1]) . " " . " พ.ศ." . " " . ($date1[2] + 543) . " ถึง " .  $date2[0] . " " . $datetime->getTHmonthFromnum($date2[1]) . " " . " พ.ศ." . " " . ($date2[2] + 543);
+        $text_date = "วันที่เบิกอุปกรณ์ : " . $date1[0] . " " . $datetime->getTHmonthFromnum($date1[1]) . " " . " พ.ศ." . " " . ($date1[2] + 543) . " ถึง " .  $date2[0] . " " . $datetime->getTHmonthFromnum($date2[1]) . " " . " พ.ศ." . " " . ($date2[2] + 543);
     }
 }
 
 if ($type_date == 2) {
 
     if ($checkmonth == 1) {
-        $text_date = "เดือนที่เติมอุปกรณ์ : " . $datetime->getTHmonthFromnum($month1);
+        $text_date = "เดือนที่เบิกอุปกรณ์ : " . $datetime->getTHmonthFromnum($month1);
     } else {
-        $text_date = "เดือนที่เติมอุปกรณ์ : " . $datetime->getTHmonthFromnum($month1) . " ถึง " . $datetime->getTHmonthFromnum($month2);
+        $text_date = "เดือนที่เบิกอุปกรณ์ : " . $datetime->getTHmonthFromnum($month1) . " ถึง " . $datetime->getTHmonthFromnum($month2);
     }
 }
 

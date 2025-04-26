@@ -341,6 +341,13 @@ $("#btn_edit_hn").click(function () {
     $("#select_procedure_editHN").select2();
   }, 500);
 
+  procedure_edit_hn_Array = [];
+  doctor_edit_hn_Array = [];
+
+
+  $("#row_doctor_editHN").html("");
+  $("#row_procedure_editHN").html("");
+
   $.ajax({
     url: "process/pay.php",
     type: "POST",
@@ -353,7 +360,7 @@ $("#btn_edit_hn").click(function () {
       if (!$.isEmptyObject(ObjData)) {
         var _row = "";
         $.each(ObjData, function (kay, value) {
-          doctor_edit_hn_Array.push(value.ID);
+          doctor_edit_hn_Array.push(value.ID.toString());
           _row += `       <div  class='div_${value.ID} pl-3 clear_doctor' onclick='DeleteDoctor_editHN(${value.ID})'>
                               <label for="" class="custom-label">${value.Doctor_Name}</label>
                           </div> `;
@@ -375,7 +382,7 @@ $("#btn_edit_hn").click(function () {
       if (!$.isEmptyObject(ObjData)) {
         var _row = "";
         $.each(ObjData, function (kay, value) {
-          procedure_edit_hn_Array.push(value.ID);
+          procedure_edit_hn_Array.push(value.ID.toString());
 
           _row += `       <div  class='div_${value.ID} pl-3 clear_doctor' onclick='Deleteprocedure_editHN(${value.ID})'>
                               <label for="" class="custom-label">${value.Procedure_TH}</label>
@@ -386,8 +393,8 @@ $("#btn_edit_hn").click(function () {
       }
     },
   });
-  $("#row_doctor_editHN").html("");
-  $("#row_procedure_editHN").html("");
+
+
   setTimeout(() => {
 
 
@@ -643,6 +650,12 @@ function show_detail_deproom_pay() {
             if (value2.Doctor_Name == "button") {
               value2.Doctor_Name = `<a class="text-primary" style="cursor:pointer;" onclick='showDetail_Doctor("${value2.doctor}")'>แพทย์</a>`;
             }
+            
+            if(value2.hn_record_id == ''){
+                var tttt = value2.number_box;
+            }else{
+              var tttt = value2.hn_record_id;
+            }
 
             _tr += `<tr class='tr_${value.id} all111' >
                           <td class='text-center'>
@@ -664,7 +677,7 @@ function show_detail_deproom_pay() {
                           </td>
                           <td>
                             <div class="row">
-                              <div class="col-md-3 text-left"> ${value2.hn_record_id}</div>
+                              <div class="col-md-3 text-left"> ${tttt}</div>
                               <div class="col-md-5 text-center">${value2.Procedure_TH}</div>
                               <div class="col-md-4 text-center">${value2.Doctor_Name}</div>
 

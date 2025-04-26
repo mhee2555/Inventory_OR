@@ -983,6 +983,11 @@ function save_edit_hn($conn, $db)
                 ':DocNo' => $DocNo_editHN
             ]);
 
+        
+
+            echo $doctor_edit_hn_Array;
+            exit;
+    
     echo json_encode($return);
     unset($conn);
     die;
