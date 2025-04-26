@@ -66,6 +66,8 @@ if (!empty($_POST['FUNC_NAME'])) {
         showDetail_deproom($conn, $db);
     } else if ($_POST['FUNC_NAME'] == 'show_detail_item_ByDocNo_manual') {
         show_detail_item_ByDocNo_manual($conn, $db);
+    } else if ($_POST['FUNC_NAME'] == 'save_edit_hn') {
+        save_edit_hn($conn, $db);
     }
 }
 
@@ -922,6 +924,70 @@ function show_detail_history($conn, $db)
     die;
 }
 
+function save_edit_hn($conn, $db)
+{
+    $DocNo_editHN = $_POST['DocNo_editHN'];
+    $input_box_pay_editHN = $_POST['input_box_pay_editHN'];
+    $input_Hn_pay_editHN = $_POST['input_Hn_pay_editHN'];
+    $input_date_service_editHN = $_POST['input_date_service_editHN'];
+    $input_time_service_editHN = $_POST['input_time_service_editHN'];
+    $select_deproom_editHN = $_POST['select_deproom_editHN'];
+    $procedure_edit_hn_Array = $_POST['procedure_edit_hn_Array'];
+    $doctor_edit_hn_Array = $_POST['doctor_edit_hn_Array'];
+
+    $return = array();
+
+    $procedure_edit_hn_Array = implode(",", $procedure_edit_hn_Array);
+    $doctor_edit_hn_Array = implode(",", $doctor_edit_hn_Array);
+
+    $input_date_service_editHN = explode("-", $input_date_service_editHN);
+    $input_date_service_editHN = $input_date_service_editHN[2] . '-' . $input_date_service_editHN[1] . '-' . $input_date_service_editHN[0];
+
+    $update1 = "UPDATE deproom SET
+                        number_box = :number_box,
+                        hn_record_id = :hn_record_id,
+                        serviceDate = :serviceDate,
+                        Ref_departmentroomid = :Ref_departmentroomid,
+                        doctor = :doctor,
+                        `procedure` = :procedure
+                WHERE DocNo = :DocNo";
+
+                $stmt = $conn->prepare($update1);
+                $stmt->execute([
+                    ':number_box' => $input_box_pay_editHN,
+                    ':hn_record_id' => $input_Hn_pay_editHN,
+                    ':serviceDate' => $input_date_service_editHN . ' ' . $input_time_service_editHN,
+                    ':Ref_departmentroomid' => $select_deproom_editHN,
+                    ':doctor' => $doctor_edit_hn_Array, // เห็นว่าคุณส่ง $input_box_pay_editHN ให้ doctor ด้วย ถูกไหมครับ?
+                    ':procedure' => $procedure_edit_hn_Array,
+                    ':DocNo' => $DocNo_editHN
+                ]);
+
+    $update2 = "UPDATE hncode SET
+                        number_box = :number_box,
+                        HnCode = :hn_record_id,
+                        CreateDate = :serviceDate,
+                        departmentroomid = :Ref_departmentroomid,
+                        doctor = :doctor,
+                        `procedure` = :procedure
+                WHERE DocNo_SS = :DocNo";
+
+            $stmt = $conn->prepare($update2);
+            $stmt->execute([
+                ':number_box' => $input_box_pay_editHN,
+                ':hn_record_id' => $input_Hn_pay_editHN,
+                ':serviceDate' => $input_date_service_editHN . ' ' . $input_time_service_editHN,
+                ':Ref_departmentroomid' => $select_deproom_editHN,
+                ':doctor' => $doctor_edit_hn_Array, // เห็นว่าคุณส่ง $input_box_pay_editHN ให้ doctor ด้วย ถูกไหมครับ?
+                ':procedure' => $procedure_edit_hn_Array,
+                ':DocNo' => $DocNo_editHN
+            ]);
+
+    echo json_encode($return);
+    unset($conn);
+    die;
+}
+
 
 function oncheck_pay_manual($conn, $db)
 {
@@ -929,6 +995,9 @@ function oncheck_pay_manual($conn, $db)
     $input_pay_manual = $_POST['input_pay_manual'];
     $input_docNo_deproom_manual = $_POST['input_docNo_deproom_manual'];
     $input_docNo_HN_manual = $_POST['input_docNo_HN_manual'];
+    $input_box_pay_manual = $_POST['input_box_pay_manual'];
+
+    
     $input_Hn_pay_manual = $_POST['input_Hn_pay_manual'];
     $input_date_service_manual = $_POST['input_date_service_manual'];
     $input_time_service_manual = $_POST['input_time_service_manual'];
@@ -980,8 +1049,8 @@ function oncheck_pay_manual($conn, $db)
 
         if ($input_docNo_deproom_manual == "") {
             $remark = "สร้างจาก ขอเบิกอุปกรณ์ ";
-            $input_docNo_deproom_manual = createDocNo($conn, $Userid, $DepID, $deproom, $remark, 0, 0, 0, 0, '', '', '', $db);
-            $input_docNo_HN_manual = createhncodeDocNo($conn, $Userid, $DepID, $input_Hn_pay_manual, $select_deproom_manual, 0, $select_procedure_manual, $select_doctor_manual, 'สร้างจากเมนูขอเบิกอุปกรณ์', $input_docNo_deproom_manual, $db, $input_date_service_manual);
+            $input_docNo_deproom_manual = createDocNo($conn, $Userid, $DepID, $deproom, $input_remark_manual, 0, 0, 0, 0, '', '', $input_Hn_pay_manual,$input_box_pay_manual, $db);
+            $input_docNo_HN_manual = createhncodeDocNo($conn, $Userid, $DepID, $input_Hn_pay_manual, $select_deproom_manual, 0, $select_procedure_manual, $select_doctor_manual, 'สร้างจากเมนูขอเบิกอุปกรณ์', $input_docNo_deproom_manual, $db, $input_date_service_manual,$input_box_pay_manual);
 
             $sql1 = " UPDATE deproom SET IsStatus = 1 , serviceDate = '$input_date_service_manual $input_time_service_manual'  , hn_record_id = '$input_Hn_pay_manual' , doctor = '$select_doctor_manual' , `procedure` = '$select_procedure_manual' , Ref_departmentroomid = '$select_deproom_manual' WHERE DocNo = '$input_docNo_deproom_manual' AND IsCancel = 0 ";
             $meQueryUpdate = $conn->prepare($sql1);
@@ -1207,8 +1276,8 @@ function oncheck_pay_manual($conn, $db)
             
             if ($input_docNo_deproom_manual == "") {
                 $remark = "สร้างจาก ขอเบิกอุปกรณ์ ";
-                $input_docNo_deproom_manual = createDocNo($conn, $Userid, $DepID, $deproom, $input_remark_manual, 0, 0, 0, 0, '', '', '', $db);
-                $input_docNo_HN_manual = createhncodeDocNo($conn, $Userid, $DepID, $input_Hn_pay_manual, $select_deproom_manual, 0, $select_procedure_manual, $select_doctor_manual, 'สร้างจากเมนูขอเบิกอุปกรณ์', $input_docNo_deproom_manual, $db, $input_date_service_manual);
+                $input_docNo_deproom_manual = createDocNo($conn, $Userid, $DepID, $deproom, $input_remark_manual, 0, 0, 0, 0, '', '', $input_Hn_pay_manual,$input_box_pay_manual, $db);
+                $input_docNo_HN_manual = createhncodeDocNo($conn, $Userid, $DepID, $input_Hn_pay_manual, $select_deproom_manual, 0, $select_procedure_manual, $select_doctor_manual, 'สร้างจากเมนูขอเบิกอุปกรณ์', $input_docNo_deproom_manual, $db, $input_date_service_manual,$input_box_pay_manual);
 
                 $sql1 = " UPDATE deproom SET IsStatus = 1 , serviceDate = '$input_date_service_manual $input_time_service_manual'  , hn_record_id = '$input_Hn_pay_manual' , doctor = '$select_doctor_manual' , `procedure` = '$select_procedure_manual' , Ref_departmentroomid = '$select_deproom_manual' WHERE DocNo = '$input_docNo_deproom_manual' AND IsCancel = 0 ";
                 $meQueryUpdate = $conn->prepare($sql1);
@@ -2273,14 +2342,17 @@ function oncheck_pay_rfid_manual($conn, $db)
 
     $input_docNo_deproom_manual = $_POST['input_docNo_deproom_manual'];
     $input_docNo_HN_manual = $_POST['input_docNo_HN_manual'];
+    $input_box_pay_manual = $_POST['input_box_pay_manual'];
     $input_Hn_pay_manual = $_POST['input_Hn_pay_manual'];
     $input_date_service_manual = $_POST['input_date_service_manual'];
     $input_time_service_manual = $_POST['input_time_service_manual'];
     $select_doctor_manual = $_POST['select_doctor_manual'];
     $select_deproom_manual = $_POST['select_deproom_manual'];
     $select_procedure_manual = $_POST['select_procedure_manual'];
+    $input_remark_manual = $_POST['input_remark_manual'];
 
 
+    
 
 
     $Userid = $_SESSION['Userid'];
@@ -2297,8 +2369,8 @@ function oncheck_pay_rfid_manual($conn, $db)
 
     if ($input_docNo_deproom_manual == "") {
         $remark = "สร้างจาก ขอเบิกอุปกรณ์ ";
-        $input_docNo_deproom_manual = createDocNo($conn, $Userid, $DepID, $deproom, $remark, 0, 0, 0, 0, '', '', '', $db);
-        $input_docNo_HN_manual = createhncodeDocNo($conn, $Userid, $DepID, $input_Hn_pay_manual, $select_deproom_manual, 0, $select_procedure_manual, $select_doctor_manual, 'สร้างจากเมนูขอเบิกอุปกรณ์', $input_docNo_deproom_manual, $db, $input_date_service_manual);
+        $input_docNo_deproom_manual = createDocNo($conn, $Userid, $DepID, $deproom, $input_remark_manual, 0, 0, 0, 0, '', '', $input_Hn_pay_manual,$input_box_pay_manual, $db);
+        $input_docNo_HN_manual = createhncodeDocNo($conn, $Userid, $DepID, $input_Hn_pay_manual, $select_deproom_manual, 0, $select_procedure_manual, $select_doctor_manual, 'สร้างจากเมนูขอเบิกอุปกรณ์', $input_docNo_deproom_manual, $db, $input_date_service_manual,$input_box_pay_manual);
 
         $sql1 = " UPDATE deproom SET IsStatus = 1 , serviceDate = '$input_date_service_manual $input_time_service_manual'  , hn_record_id = '$input_Hn_pay_manual' , doctor = '$select_doctor_manual' , `procedure` = '$select_procedure_manual' , Ref_departmentroomid = '$select_deproom_manual' WHERE DocNo = '$input_docNo_deproom_manual' AND IsCancel = 0 ";
         $meQueryUpdate = $conn->prepare($sql1);
@@ -5814,7 +5886,10 @@ function show_detail_deproom_pay($conn, $db)
                             DATE_FORMAT(deproom.serviceDate, '%H:%i') AS serviceTime,
                             SUM(deproomdetail.Qty) AS cnt_detail,
                             deproom.doctor ,
-                            deproom.`procedure`
+                            deproom.`procedure`,
+                            deproom.doctor AS doctorHN,
+                            deproom.`procedure` AS procedureHN,
+                            deproom.number_box
                         FROM
                             deproom
                         LEFT JOIN
@@ -5901,27 +5976,27 @@ function show_detail_deproom_pay($conn, $db)
             $DocNo_ = $row_sub['DocNo'];
 
             $check_q = 0;
-            $querych = "SELECT
-                            deproomdetail.ID,
-                            SUM( deproomdetail.Qty ) AS cnt,
-                            IFNULL(( SELECT SUM( deproomdetailsub.qty_weighing ) FROM deproomdetailsub WHERE deproomdetailsub.Deproomdetail_RowID = deproomdetail.ID ), 0 ) AS cnt_pay 
-                        FROM
-                            deproom
-                            INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo 
-                        WHERE
-                            deproom.DocNo = '$DocNo_' 
-                            AND deproom.IsCancel = 0 
-                            AND deproomdetail.IsCancel = 0 
-                        GROUP BY
-                            deproomdetail.ID  ";
-            $meQuerych = $conn->prepare($querych);
-            $meQuerych->execute();
-            while ($rowch = $meQuerych->fetch(PDO::FETCH_ASSOC)) {
+            // $querych = "SELECT
+            //                 deproomdetail.ID,
+            //                 SUM( deproomdetail.Qty ) AS cnt,
+            //                 IFNULL(( SELECT SUM( deproomdetailsub.qty_weighing ) FROM deproomdetailsub WHERE deproomdetailsub.Deproomdetail_RowID = deproomdetail.ID ), 0 ) AS cnt_pay 
+            //             FROM
+            //                 deproom
+            //                 INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo 
+            //             WHERE
+            //                 deproom.DocNo = '$DocNo_' 
+            //                 AND deproom.IsCancel = 0 
+            //                 AND deproomdetail.IsCancel = 0 
+            //             GROUP BY
+            //                 deproomdetail.ID  ";
+            // $meQuerych = $conn->prepare($querych);
+            // $meQuerych->execute();
+            // while ($rowch = $meQuerych->fetch(PDO::FETCH_ASSOC)) {
 
-                if ($rowch['cnt_pay'] < $rowch['cnt']) {
-                    $check_q++;
-                }
-            }
+            //     if ($rowch['cnt_pay'] < $rowch['cnt']) {
+            //         $check_q++;
+            //     }
+            // }
 
             if ($check_q == 0) {
                 $row_sub['cnt_detail'] = 'ครบ';

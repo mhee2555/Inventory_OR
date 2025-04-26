@@ -108,11 +108,19 @@
                         <div class="card-body">
 
                             <div class="row">
+
+                                <div class="col-md-8">
+                                    <label style="color:black;font-weight: 600;">เลขที่กล่อง</label>
+                                    <input type='text' class='form-control f18' id="input_box_pay" disabled>
+                                </div>
                                 <div class="col-md-4">
+                                    <button disabled class="btn btn-danger btn-block f18" style="margin-top: 2rem;" id="btn_edit_hn"><i class="fa-solid fa-pen-to-square"></i> แก้ไขข้อมูล</button>
+                                </div>
+                                <div class="col-md-4 mt-3">
                                     <label style="color:black;font-weight: 600;">HN Code</label>
                                     <input type='text' class='form-control f18' id="input_Hn_pay" disabled>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-4 mt-3">
 
                                     <div class="form-group ">
                                         <label style="color:black;font-weight: 600;">วันที่รับบริการ</label>
@@ -121,7 +129,7 @@
 
 
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-4 mt-3">
 
                                     <div class="form-group ">
                                         <label style="color:black;font-weight: 600;">เวลารับบริการ</label>
@@ -179,17 +187,21 @@
                         <div class="card-body">
 
                             <div class="row">
-                                <div class="col-md-4">
+                                <div class="col-md-6">
+                                    <label style="color:black;font-weight: 600;">เลขที่กล่อง</label>
+                                    <input type='text' class='form-control f18' id="input_box_pay_manual">
+                                </div>
+                                <div class="col-md-6">
                                     <label style="color:black;font-weight: 600;">HN Code</label>
                                     <input type='text' class='form-control f18' id="input_Hn_pay_manual">
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-4 mt-3">
                                     <div class="form-group ">
                                         <label style="color:black;font-weight: 600;">วันที่รับบริการ</label>
                                         <input type="text" class="form-control datepicker-here f18" id="input_date_service_manual" data-language='en' data-date-format='dd-mm-yyyy'>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-4 mt-3">
                                     <div class="form-group ">
                                         <label style="color:black;font-weight: 600;">เวลารับบริการ</label>
                                         <input type="time" class="form-control datepicker-here f18" id="input_time_service_manual" data-language='en' data-date-format='dd-mm-yyyy'>
@@ -197,7 +209,7 @@
                                 </div>
 
 
-                                <div class="col-md-4">
+                                <div class="col-md-4 mt-3">
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group x">
@@ -238,10 +250,6 @@
                                     </div>
                                 </div>
 
-
-
-                                <div class="col-md-4"></div>
-                                <div class="col-md-4"></div>
 
                                 <div class="col-md-4">
                                     <div class="form-group ">
@@ -584,6 +592,97 @@
                     <tbody>
                     </tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModal_edit_hn" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+
+                    <div class="col-md-12">
+                        <label style="color:black;font-weight: 600;">เลขที่กล่อง</label>
+                        <input type='text' class='form-control f18' id="input_box_pay_editHN">
+                    </div>
+                    <div class="col-md-4 mt-3">
+                        <label style="color:black;font-weight: 600;">HN Code</label>
+                        <input type='text' class='form-control f18' id="input_Hn_pay_editHN">
+                    </div>
+                    <div class="col-md-4 mt-3">
+
+                        <div class="form-group ">
+                            <label style="color:black;font-weight: 600;">วันที่รับบริการ</label>
+                            <input type="text" class="form-control datepicker-here f18" id="input_date_service_editHN" data-language='en' data-date-format='dd-mm-yyyy'>
+                        </div>
+
+
+                    </div>
+                    <div class="col-md-4 mt-3">
+
+                        <div class="form-group ">
+                            <label style="color:black;font-weight: 600;">เวลารับบริการ</label>
+                            <input type="time" class="form-control datepicker-here f18" id="input_time_service_editHN" data-language='en' data-date-format='dd-mm-yyyy'>
+                        </div>
+
+
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group x">
+                                    <label style="color:black;font-weight: 600;">แพทย์</label>
+                                    <select class="form-control f18" autocomplete="off" id="select_doctor_editHN"></select>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+
+                                <div class="col-md-12" style="display: ruby;" id="row_doctor_editHN">
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-4">
+                        <div class="form-group ">
+                            <label style="color:black;font-weight: 600;">ห้องผ่าตัด</label>
+                            <select class="form-control f18" autocomplete="off" id="select_deproom_editHN"></select>
+                        </div>
+                    </div>
+
+
+
+                    <div class="col-md-4">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group ">
+                                    <label style="color:black;font-weight: 600;">หัตถการ</label>
+                                    <select class="form-control f18" autocomplete="off" id="select_procedure_editHN"></select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12" style="display: ruby;" id="row_procedure_editHN">
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn-success btn f18" id="btn_save_edit_hn">บันทึก</button>
+                <button class="btn-danger btn f18" data-dismiss="modal">ยกเลิก</button>
             </div>
         </div>
     </div>
