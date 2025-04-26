@@ -31,6 +31,11 @@ $(function () {
 
   $("#input_time_service_editHN").val(currentTime);
   $("#input_date_service_editHN").val(output);
+  $("#input_date_service_editHN").datepicker({
+    onSelect: function (date) {
+    },
+  });
+
 
   $("#select_date_pay").val(output);
   $("#select_date_pay").datepicker({
@@ -101,7 +106,7 @@ $(function () {
     $("#input_box_pay_manual").val("");
 
     $("#input_box_pay_manual").attr("disabled", false);
-    $("#input_Hn_pay_manual").val("disabled", false);
+    $("#input_Hn_pay_manual").attr("disabled", false);
 
     $("#input_date_service_manual").val(output);
     $("#select_doctor_manual").val("").trigger("change");
@@ -191,6 +196,11 @@ $(function () {
     }, 500);
 
     $("#input_Hn_pay_manual").val("");
+    $("#input_box_pay_manual").val("");
+
+    $("#input_Hn_pay_manual").attr('disabled',false);
+    $("#input_box_pay_manual").attr('disabled',false);
+
     $("#input_date_service_manual").val(output);
     $("#select_doctor_manual").val("").trigger("change");
     $("#select_deproom_manual").val("").trigger("change");
@@ -348,6 +358,10 @@ $("#btn_edit_hn").click(function () {
   $("#row_doctor_editHN").html("");
   $("#row_procedure_editHN").html("");
 
+  $("#select_deproom_editHN").change(function () {
+    set_proceduce2($("#select_deproom_editHN").val());
+  });
+
   $.ajax({
     url: "process/pay.php",
     type: "POST",
@@ -366,6 +380,10 @@ $("#btn_edit_hn").click(function () {
                           </div> `;
         });
         $("#row_doctor_editHN").append(_row);
+
+
+        set_deproom2();
+
       }
     },
   });
@@ -412,7 +430,7 @@ $("#btn_edit_hn").click(function () {
                           </div> `;
 
           $("#row_doctor_editHN").append(_row);
-
+          set_deproom2();
           $("#select_doctor_editHN").val("").trigger("change");
         }
       }
@@ -439,14 +457,21 @@ $("#btn_edit_hn").click(function () {
   }, 500);
 
   // $("#btn_edit_hn").data('docno');
-  $("#input_box_pay_editHN").data('docno',$("#btn_edit_hn").data("docno"));
-  $("#input_box_pay_editHN").val($("#btn_edit_hn").data("numberbox"));
-  $("#input_Hn_pay_editHN").val($("#btn_edit_hn").data("hncode"));
-  $("#input_date_service_editHN").val($("#btn_edit_hn").data("servicedate"));
-  $("#input_time_service_editHN").val($("#btn_edit_hn").data("servicetime"));
-  $("#select_deproom_editHN")
-    .val($("#btn_edit_hn").data("departmeneoomid"))
-    .trigger("change");
+  setTimeout(() => {
+    $("#input_box_pay_editHN").data('docno',$("#btn_edit_hn").data("docno"));
+    $("#input_box_pay_editHN").val($("#btn_edit_hn").data("numberbox"));
+    $("#input_Hn_pay_editHN").val($("#btn_edit_hn").data("hncode"));
+    $("#input_date_service_editHN").val($("#btn_edit_hn").data("servicedate"));
+    $("#input_time_service_editHN").val($("#btn_edit_hn").data("servicetime"));
+    $("#select_deproom_editHN")
+      .val($("#btn_edit_hn").data("departmeneoomid"))
+      .trigger("change");
+
+
+    set_proceduce2($("#btn_edit_hn").data("departmeneoomid"));
+
+  }, 500);
+
 });
 
 
@@ -514,14 +539,14 @@ $("#input_pay_manual").keypress(function (e) {
   }
 });
 
-$("#input_box_pay_manual").keypress(function (e) {
+$("#input_box_pay_manual").keyup(function (e) {
   if ($(this).val().trim() != "") {
     $("#input_Hn_pay_manual").attr("disabled", true);
   } else {
     $("#input_Hn_pay_manual").attr("disabled", false);
   }
 });
-$("#input_Hn_pay_manual").keypress(function (e) {
+$("#input_Hn_pay_manual").keyup(function (e) {
   if ($(this).val().trim() != "") {
     $("#input_box_pay_manual").attr("disabled", true);
   } else {
@@ -563,6 +588,8 @@ function DeleteDoctor_editHN(selectedValue) {
   }
 
   console.log(doctor_edit_hn_Array);
+
+  set_deproom2();
   $(".div_" + selectedValue).attr("hidden", true);
 
 }
@@ -2124,6 +2151,30 @@ function feeddataClaim() {
   });
 }
 
+function set_proceduce2(select_deproom_request) {
+  $.ajax({
+    url: "process/process_main/select_main.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "set_proceduce",
+      select_deproom_request: select_deproom_request,
+    },
+    success: function (result) {
+      var ObjData = JSON.parse(result);
+      console.log(ObjData);
+      var option = `<option value="" selected>กรุณาเลือกหัตถการ</option>`;
+      if (!$.isEmptyObject(ObjData)) {
+        $.each(ObjData, function (kay, value) {
+          option += `<option value="${value.ID}" >${value.Procedure_TH}</option>`;
+        });
+      } else {
+        option = `<option value="0">ไม่มีข้อมูล</option>`;
+      }
+      $("#select_procedure_editHN").html(option);
+    },
+  });
+}
+
 function set_proceduce(select_deproom_request) {
   $.ajax({
     url: "process/process_main/select_main.php",
@@ -2147,6 +2198,32 @@ function set_proceduce(select_deproom_request) {
     },
   });
 }
+
+
+function set_deproom2() {
+  $.ajax({
+    url: "process/process_main/select_main.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "set_deproom",
+      doctor_Array: doctor_edit_hn_Array,
+    },
+    success: function (result) {
+      var ObjData = JSON.parse(result);
+      console.log(ObjData);
+      var option = `<option value="" selected>กรุณาเลือกห้องผ่าตัด</option>`;
+      if (!$.isEmptyObject(ObjData)) {
+        $.each(ObjData, function (kay, value) {
+          option += `<option value="${value.id}" >${value.departmentroomname}</option>`;
+        });
+      } else {
+        option = `<option value="0">ไม่มีข้อมูล</option>`;
+      }
+      $("#select_deproom_editHN").html(option);
+    },
+  });
+}
+
 
 function set_deproom() {
   $.ajax({

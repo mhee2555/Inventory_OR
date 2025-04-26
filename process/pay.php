@@ -966,7 +966,7 @@ function save_edit_hn($conn, $db)
     $update2 = "UPDATE hncode SET
                         number_box = :number_box,
                         HnCode = :hn_record_id,
-                        CreateDate = :serviceDate,
+                        DocDate = :serviceDate,
                         departmentroomid = :Ref_departmentroomid,
                         doctor = :doctor,
                         `procedure` = :procedure
@@ -976,7 +976,7 @@ function save_edit_hn($conn, $db)
             $stmt->execute([
                 ':number_box' => $input_box_pay_editHN,
                 ':hn_record_id' => $input_Hn_pay_editHN,
-                ':serviceDate' => $input_date_service_editHN . ' ' . $input_time_service_editHN,
+                ':serviceDate' => $input_date_service_editHN,
                 ':Ref_departmentroomid' => $select_deproom_editHN,
                 ':doctor' => $doctor_edit_hn_Array, // เห็นว่าคุณส่ง $input_box_pay_editHN ให้ doctor ด้วย ถูกไหมครับ?
                 ':procedure' => $procedure_edit_hn_Array,
