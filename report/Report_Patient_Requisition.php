@@ -109,6 +109,9 @@ $month1 = $_GET['month1'];
 $month2 = $_GET['month2'];
 $checkday = $_GET['checkday'];
 $checkmonth = $_GET['checkmonth'];
+$checkyear = $_GET['checkyear'];
+$year1 = $_GET['year1'];
+$year2 = $_GET['year2'];
 
 $datetime = new DatetimeTH();
 
@@ -133,7 +136,14 @@ if ($type_date == 2) {
         $text_date = "เดือนที่เติมอุปกรณ์ : " . $datetime->getTHmonthFromnum($month1) . " ถึง " . $datetime->getTHmonthFromnum($month2);
     }
 }
+if ($type_date == 3) {
 
+    if ($checkyear == 1) {
+        $text_date = "ปีที่เติมอุปกรณ์ : " . $year1;
+    } else {
+        $text_date = "ปีที่เติมอุปกรณ์ : " . $year1 . " ถึง " . $year2;
+    }
+}
 $pdf->SetY(20);
 
 
@@ -185,9 +195,23 @@ if ($type_date == 1) {
 if ($type_date == 2) {
 
     if ($checkmonth == 1) {
+        $where_date = "AND MONTH(log_cabinet.ModifyDate) = '$month1'  ";
+
     } else {
+        $where_date = "AND MONTH(log_cabinet.ModifyDate) BETWEEN '$month1' 	AND '$month2' ";
     }
 }
+
+if ($type_date == 3) {
+
+    if ($checkyear == 1) {
+        $where_date = "AND YEAR(log_cabinet.ModifyDate) = '$year1'  ";
+
+    } else {
+        $where_date = "AND YEAR(log_cabinet.ModifyDate) BETWEEN '$year1' 	AND '$year2' ";
+    }
+}
+
 
 $count = 1;
 $query = " SELECT

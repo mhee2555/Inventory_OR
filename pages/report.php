@@ -41,6 +41,7 @@
                             <option value="3">รายงานใช้อุปกรณ์</option>
                             <option value="4">รายงานหยิบอุปกรณ์</option>
                             <option value="5">สรุปค่าใช้จ่าย OR</option>
+                            <option value="6">รายงานจ่ายอุปกรณ์</option>
                         </select>
                     </div>
                     <div class="col-md-12 mt-3">

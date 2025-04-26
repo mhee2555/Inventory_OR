@@ -173,7 +173,7 @@ $(function () {
           "&checkday=" +
           checkday +
           "&checkmonth=" +
-          checkmonth
+          checkmonth +
           "&checkyear=" +
           checkyear;
 
@@ -250,7 +250,11 @@ $(function () {
         } else {
           var checkmonth = 2;
         }
-
+        if ($("#radio_year1").is(":checked")) {
+          var checkyear = 1;
+        } else {
+          var checkyear = 2;
+        }
         var option =
           "?type_date=" +
           $("#select_type_date").val() +
@@ -262,16 +266,60 @@ $(function () {
           $("#select_month1").val() +
           "&month2=" +
           $("#select_month2").val() +
+          "&year1=" +
+          $("#select_year1").val() +
+          "&year2=" +
+          $("#select_year2").val() +
           "&checkday=" +
           checkday +
           "&checkmonth=" +
-          checkmonth;
+          checkmonth +
+          "&checkyear=" +
+          checkyear;
 
-        window.open(
-          "report/Report_Patient_Cost_Summary.php" + option,
-          "_blank"
-        );
+        window.open("report/Report_Patient_Cost_Summary2.php" + option, "_blank");
       }
+      if ($("#select_report").val() == 6) {
+        if ($("#radio_date1").is(":checked")) {
+          var checkday = 1;
+        } else {
+          var checkday = 2;
+        }
+        if ($("#radio_month1").is(":checked")) {
+          var checkmonth = 1;
+        } else {
+          var checkmonth = 2;
+        }
+        if ($("#radio_year1").is(":checked")) {
+          var checkyear = 1;
+        } else {
+          var checkyear = 2;
+        }
+        var option =
+          "?type_date=" +
+          $("#select_type_date").val() +
+          "&date1=" +
+          $("#select_date1").val() +
+          "&date2=" +
+          $("#select_date2").val() +
+          "&month1=" +
+          $("#select_month1").val() +
+          "&month2=" +
+          $("#select_month2").val() +
+          "&year1=" +
+          $("#select_year1").val() +
+          "&year2=" +
+          $("#select_year2").val() +
+          "&checkday=" +
+          checkday +
+          "&checkmonth=" +
+          checkmonth +
+          "&checkyear=" +
+          checkyear;
+
+        window.open("report/Report_Issue2.php" + option, "_blank");
+      }
+      
     }
   });
 });
