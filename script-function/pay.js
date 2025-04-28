@@ -1237,6 +1237,7 @@ function oncheck_pay(input_pay) {
         hncode: $("#input_Hn_pay").data("hncode"),
         departmeneoomID: $("#input_Hn_pay").data("departmeneoomid"),
         input_date_service: $("#input_date_service").val(),
+        input_box_pay: $("#input_box_pay").val(),
       },
       success: function (result) {
         if (result == 0) {

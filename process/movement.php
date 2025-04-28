@@ -322,7 +322,7 @@ function selection_item_rfid($conn, $db)
                 INNER JOIN item ON itemstock.ItemCode = item.itemcode 
             WHERE
                      ( item.itemname LIKE '%$input_search%' OR item.itemcode LIKE '%$input_search%' ) 
-                --  AND item.itemtypeID = '44'
+                 AND item.SpecialID = '0'
             GROUP BY
                 item.itemname,
                 item.itemcode  ";
@@ -398,7 +398,6 @@ function selection_item_rfid($conn, $db)
     die;
 }
 
-
 function showDetailSub_itemSuds($conn, $db)
 {
 
@@ -431,6 +430,7 @@ function showDetailSub_itemSuds($conn, $db)
     unset($conn);
     die;
 }
+
 function showDetail_itemSuds($conn, $db)
 {
 
@@ -470,6 +470,7 @@ function showDetail_itemSuds($conn, $db)
     unset($conn);
     die;
 }
+
 function selection_itemSuds($conn, $db)
 {
 
@@ -632,6 +633,7 @@ function selection_item($conn, $db)
                 itemslotincabinet
                 INNER JOIN item ON item.itemcode = itemslotincabinet.itemcode 
             WHERE ( item.itemname LIKE '%$input_search%' OR item.itemcode LIKE '%$input_search%' )
+             AND item.SpecialID = '2'
             GROUP BY
                 item.itemname,
                 item.itemcode  ";

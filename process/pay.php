@@ -431,7 +431,7 @@ function onReturnData($conn, $db)
                             deproomdetailsub.ID ,
                             hncode_detail.ID AS hndetail_ID,
 	                        deproomdetail.ItemCode,
-	                        DATE(deproom.serviceDate) AS serviceDate
+	                        DATE(deproom.ModifyDate) AS ModifyDate
                         FROM
                             deproom
                             INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
@@ -453,7 +453,7 @@ function onReturnData($conn, $db)
 
                 $_ID = $row_2['ID'];
                 $_hndetail_ID = $row_2['hndetail_ID'];
-                $serviceDate = $row_2['serviceDate'];
+                $_ModifyDate = $row_2['ModifyDate'];
 
                 // ==============================
                 // $queryD1 = "DELETE FROM deproomdetailsub WHERE ID =  '$_ID' ";
@@ -472,13 +472,13 @@ function onReturnData($conn, $db)
                     AND ItemCode = '$_ItemCode' 
                     AND departmentroomid = '$_departmentroomid' 
                     AND  IsStatus = '1'
-                    AND DATE(CreateDate) = '$serviceDate' ";
+                    AND DATE(CreateDate) = '$_ModifyDate' ";
                 } else {
                     $query = "DELETE FROM itemstock_transaction_detail  WHERE ItemStockID = '$_RowID' 
                     AND ItemCode = '$_ItemCode' 
                     AND departmentroomid = '$_departmentroomid' 
                     AND  IsStatus = '1'
-                    AND CONVERT(DATE,CreateDate) = '$serviceDate' ";
+                    AND CONVERT(DATE,CreateDate) = '$_ModifyDate' ";
                 }
 
                 $meQuery = $conn->prepare($query);
@@ -1072,7 +1072,8 @@ function oncheck_pay_manual($conn, $db)
                         deproomdetail.ItemCode,
                         deproomdetail.Qty ,
                         deproomdetail.PayDate ,
-                        COUNT(deproomdetailsub.ID)  AS cnt_sub
+                        COUNT(deproomdetailsub.ID)  AS cnt_sub,
+                        DATE(deproom.ModifyDate) AS ModifyDate
                     FROM
                         deproomdetail
                         INNER JOIN deproom ON deproomdetail.DocNo = deproom.DocNo 
@@ -1094,13 +1095,14 @@ function oncheck_pay_manual($conn, $db)
         while ($row_2 = $meQuery_2->fetch(PDO::FETCH_ASSOC)) {
 
             $count_new_item_itemcode++;
-
             $_ID = $row_2['ID'];
             $_departmentroomid = $row_2['departmentroomid'];
             $_procedure = $row_2['procedure'];
             $_hn_record_id = $row_2['hn_record_id'];
             $_doctor = $row_2['doctor'];
+            $_ModifyDate = $row_2['ModifyDate'];
 
+            
             $queryInsert0 = "UPDATE deproomdetail SET Qty = Qty+1 WHERE  deproomdetail.ID = '$_ID' ";
             $meQuery0 = $conn->prepare($queryInsert0);
             $meQuery0->execute();
@@ -1136,7 +1138,7 @@ function oncheck_pay_manual($conn, $db)
             // =======================================================================================================================================
             $query = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty ,hncode)
                                         VALUES
-                                        ( '0', '$_itemcode','$input_date_service_manual','$_departmentroomid', $Userid,1,1,'$_hn_record_id') ";
+                                        ( '0', '$_itemcode','$_ModifyDate','$_departmentroomid', $Userid,1,1,'$_hn_record_id') ";
             $meQuery = $conn->prepare($query);
             $meQuery->execute();
             // =======================================================================================================================================
@@ -1169,7 +1171,8 @@ function oncheck_pay_manual($conn, $db)
                                 deproomdetail.ItemCode,
                                 deproomdetail.Qty ,
                                 deproomdetail.PayDate ,
-                                COUNT(deproomdetailsub.ID )  AS cnt_sub
+                                COUNT(deproomdetailsub.ID )  AS cnt_sub,
+                                DATE(deproom.ModifyDate )  AS ModifyDate
                             FROM
                                 deproomdetail
                                 INNER JOIN deproom ON deproomdetail.DocNo = deproom.DocNo 
@@ -1197,6 +1200,7 @@ function oncheck_pay_manual($conn, $db)
                 $_doctor = $row_2['doctor'];
                 $_Qty_detail = $row_2['Qty'];
                 $_Qty_detail_sub = $row_2['cnt_sub'];
+                $_ModifyDate = $row_2['ModifyDate'];
 
                 $queryInsert1 = "INSERT INTO deproomdetailsub (
                             Deproomdetail_RowID,
@@ -1229,7 +1233,7 @@ function oncheck_pay_manual($conn, $db)
 
                 $query = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty,hncode )
                                         VALUES
-                                        ( '0', '$_itemcode','$input_date_service_manual','$_departmentroomid', $Userid,1,1,'$_hn_record_id') ";
+                                        ( '0', '$_itemcode','$_ModifyDate','$_departmentroomid', $Userid,1,1,'$_hn_record_id') ";
                 $meQuery = $conn->prepare($query);
                 $meQuery->execute();
 
@@ -1312,7 +1316,8 @@ function oncheck_pay_manual($conn, $db)
                                     deproomdetail.ItemCode,
                                     deproomdetail.Qty ,
                                     deproomdetail.PayDate ,
-                                    COUNT(deproomdetailsub.ID)  AS cnt_sub
+                                    COUNT(deproomdetailsub.ID)  AS cnt_sub,
+                                    DATE(deproom.ModifyDate) AS ModifyDate
                                 FROM
                                     deproomdetail
                                     INNER JOIN deproom ON deproomdetail.DocNo = deproom.DocNo 
@@ -1372,6 +1377,9 @@ function oncheck_pay_manual($conn, $db)
                     $_doctor = $row_2['doctor'];
                     $_Qty_detail = $row_2['Qty'];
                     $_Qty_detail_sub = $row_2['cnt_sub'];
+                    $_ModifyDate = $row_2['ModifyDate'];
+
+                    
                     // ==============================
 
                     if ($db == 1) {
@@ -1434,7 +1442,7 @@ function oncheck_pay_manual($conn, $db)
                     // =======================================================================================================================================
                     $query = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty ,hncode )
                                 VALUES
-                                ( $_RowID, '$_ItemCode','$input_date_service_manual','$_departmentroomid', $Userid,1,1 ,'$_hn_record_id') ";
+                                ( $_RowID, '$_ItemCode','$_ModifyDate','$_departmentroomid', $Userid,1,1 ,'$_hn_record_id') ";
                     $meQuery = $conn->prepare($query);
                     $meQuery->execute();
                     // =======================================================================================================================================
@@ -1518,7 +1526,8 @@ function oncheck_pay_manual($conn, $db)
                                         deproomdetail.ItemCode,
                                         deproomdetail.Qty ,
                                         deproomdetail.PayDate ,
-                                        COUNT(deproomdetailsub.ID )  AS cnt_sub
+                                        COUNT(deproomdetailsub.ID )  AS cnt_sub,
+                                        DATE(deproom.ModifyDate )  AS ModifyDate
                                     FROM
                                         deproomdetail
                                         INNER JOIN deproom ON deproomdetail.DocNo = deproom.DocNo 
@@ -1575,6 +1584,7 @@ function oncheck_pay_manual($conn, $db)
                         $_procedure = $row_2['procedure'];
                         $_hn_record_id = $row_2['hn_record_id'];
                         $_doctor = $row_2['doctor'];
+                        $_ModifyDate = $row_2['ModifyDate'];
 
                         // ==============================
 
@@ -1639,7 +1649,7 @@ function oncheck_pay_manual($conn, $db)
                         // =======================================================================================================================================
                         $query = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty , hncode )
                                 VALUES
-                                ( $_RowID, '$_ItemCode','$input_date_service_manual','$_departmentroomid', $Userid,1,1 ,'$_hn_record_id') ";
+                                ( $_RowID, '$_ItemCode','$_ModifyDate','$_departmentroomid', $Userid,1,1 ,'$_hn_record_id') ";
                         $meQuery = $conn->prepare($query);
                         $meQuery->execute();
                         // =======================================================================================================================================
@@ -1716,7 +1726,10 @@ function oncheck_pay_manual($conn, $db)
                                     COUNT( deproomdetailsub.ID ) AS deproom_qty,
                                     COUNT(hncode_detail.ID ) AS hncode_qty,
                                     deproom.hn_record_id ,
-                                    deproom.Ref_departmentroomid 
+                                    deproom.Ref_departmentroomid ,
+                                    DATE(deproom.ModifyDate )  AS ModifyDate,
+                                    deproom.number_box 
+
                                 FROM
                                     deproom
                                     LEFT JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
@@ -1743,10 +1756,12 @@ function oncheck_pay_manual($conn, $db)
                     $deproomdetailsub_id = $row_old['ID'];
                     $_hn_record_id_borrow = $row_old['hn_record_id'];
                     $_Ref_departmentroomid = $row_old['Ref_departmentroomid'];
+                    $_ModifyDate = $row_old['ModifyDate'];
+                    $_number_box = $row_old['number_box'];
                 }
 
 
-                if ($input_Hn_pay_manual != $_hn_record_id_borrow) {
+                if ($input_Hn_pay_manual != $_hn_record_id_borrow  || $input_box_pay_manual != $_number_box) {
 
                     // =======================================================================================================================================
 
@@ -1754,7 +1769,7 @@ function oncheck_pay_manual($conn, $db)
                     AND ItemCode = '$_ItemCode' 
                     AND departmentroomid = '$_Ref_departmentroomid' 
                     AND  IsStatus = '1'
-                    AND DATE(CreateDate) = '$input_date_service_manual' ";
+                    AND DATE(CreateDate) = '$_ModifyDate' ";
 
                     $meQuery = $conn->prepare($query);
                     $meQuery->execute();
@@ -1806,7 +1821,8 @@ function oncheck_pay_manual($conn, $db)
                                     deproomdetail.ItemCode,
                                     deproomdetail.Qty ,
                                     deproomdetail.PayDate ,
-                                    COUNT(deproomdetailsub.ID)  AS cnt_sub
+                                    COUNT(deproomdetailsub.ID)  AS cnt_sub,
+                                    DATE(deproom.ModifyDate )  AS ModifyDate
                                 FROM
                                     deproomdetail
                                     INNER JOIN deproom ON deproomdetail.DocNo = deproom.DocNo 
@@ -1839,6 +1855,7 @@ function oncheck_pay_manual($conn, $db)
                         $_doctor = $row_2['doctor'];
                         $_Qty_detail = $row_2['Qty'];
                         $_Qty_detail_sub = $row_2['cnt_sub'];
+                        $_ModifyDate = $row_2['ModifyDate'];
                         // ==============================
 
                         $queryInsert1 = "INSERT INTO deproomdetailsub (
@@ -1876,7 +1893,7 @@ function oncheck_pay_manual($conn, $db)
                         // =======================================================================================================================================
                         $query = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty ,hncode )
                                 VALUES
-                                ( $_RowID, '$_ItemCode','$input_date_service_manual','$_departmentroomid', $Userid,1,1 ,'$_hn_record_id') ";
+                                ( $_RowID, '$_ItemCode','$_ModifyDate','$_departmentroomid', $Userid,1,1 ,'$_hn_record_id') ";
                         $meQuery = $conn->prepare($query);
                         $meQuery->execute();
                         // =======================================================================================================================================
@@ -1941,7 +1958,8 @@ function oncheck_pay_manual($conn, $db)
                                         deproomdetail.ItemCode,
                                         deproomdetail.Qty ,
                                         deproomdetail.PayDate ,
-                                        COUNT(deproomdetailsub.ID )  AS cnt_sub
+                                        COUNT(deproomdetailsub.ID )  AS cnt_sub,
+                                        DATE(deproom.ModifyDate )  AS ModifyDate
                                     FROM
                                         deproomdetail
                                         INNER JOIN deproom ON deproomdetail.DocNo = deproom.DocNo 
@@ -1971,6 +1989,7 @@ function oncheck_pay_manual($conn, $db)
                             $_procedure = $row_2['procedure'];
                             $_hn_record_id = $row_2['hn_record_id'];
                             $_doctor = $row_2['doctor'];
+                            $_ModifyDate = $row_2['ModifyDate'];
 
                             // ==============================
 
@@ -2010,7 +2029,7 @@ function oncheck_pay_manual($conn, $db)
                             // =======================================================================================================================================
                             $query = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty , hncode )
                                 VALUES
-                                ( $_RowID, '$_ItemCode','$input_date_service_manual','$_departmentroomid', $Userid,1,1 ,'$_hn_record_id') ";
+                                ( $_RowID, '$_ItemCode','$_ModifyDate','$_departmentroomid', $Userid,1,1 ,'$_hn_record_id') ";
                             $meQuery = $conn->prepare($query);
                             $meQuery->execute();
                             // =======================================================================================================================================
@@ -2257,7 +2276,8 @@ function oncheck_Returnpay_manual($conn, $db)
                 $query_2 = "SELECT
                                 deproomdetailsub.ID ,
                                 hncode_detail.ID AS hndetail_ID,
-                                deproomdetail.ItemCode
+                                deproomdetail.ItemCode,
+                                DATE(deproom.ModifyDate )  AS ModifyDate
                             FROM
                                 deproom
                                 INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
@@ -2278,6 +2298,7 @@ function oncheck_Returnpay_manual($conn, $db)
 
                     $_ID = $row_2['ID'];
                     $_hndetail_ID = $row_2['hndetail_ID'];
+                    $_ModifyDate = $row_2['ModifyDate'];
 
                     // ==============================
                     $queryD1 = "DELETE FROM deproomdetailsub WHERE ID =  '$_ID' ";
@@ -2296,13 +2317,13 @@ function oncheck_Returnpay_manual($conn, $db)
                                     AND ItemCode = '$_ItemCode' 
                                     AND departmentroomid = '$_departmentroomid' 
                                     AND  IsStatus = '1'
-                                    AND DATE(CreateDate) = '$input_date_service_manual' ";
+                                    AND DATE(CreateDate) = '$_ModifyDate' ";
                     } else {
                         $query = "DELETE FROM itemstock_transaction_detail  WHERE ItemStockID = '$_RowID' 
                                     AND ItemCode = '$_ItemCode' 
                                     AND departmentroomid = '$_departmentroomid' 
                                     AND  IsStatus = '1'
-                                    AND CONVERT(DATE,CreateDate) = '$input_date_service_manual' ";
+                                    AND CONVERT(DATE,CreateDate) = '$_ModifyDate' ";
                     }
 
                     $meQuery = $conn->prepare($query);
@@ -2454,7 +2475,8 @@ function oncheck_pay_rfid_manual($conn, $db)
                                     deproomdetail.ItemCode,
                                     deproomdetail.Qty ,
                                     deproomdetail.PayDate ,
-                                    COUNT(deproomdetailsub.ID)  AS cnt_sub
+                                    COUNT(deproomdetailsub.ID)  AS cnt_sub,
+                                    DATE(deproom.ModifyDate )  AS ModifyDate    
                                 FROM
                                     deproomdetail
                                     INNER JOIN deproom ON deproomdetail.DocNo = deproom.DocNo 
@@ -2515,6 +2537,7 @@ function oncheck_pay_rfid_manual($conn, $db)
                     $_Qty_detail = $row_2['Qty'];
                     $_Qty_detail_sub = $row_2['cnt_sub'];
                     $_ItemCode = $row_2['ItemCode'];
+                    $_ModifyDate = $row_2['ModifyDate'];
                     // ==============================
 
                     if ($db == 1) {
@@ -2581,7 +2604,7 @@ function oncheck_pay_rfid_manual($conn, $db)
                     // =======================================================================================================================================
                     $query = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty ,hncode)
                         VALUES
-                        ( $_RowID, '$_ItemCode','$input_date_service_manual','$_departmentroomid', $Userid,1,1,'$_hn_record_id') ";
+                        ( $_RowID, '$_ItemCode','$_ModifyDate','$_departmentroomid', $Userid,1,1,'$_hn_record_id') ";
                     $meQuery = $conn->prepare($query);
                     $meQuery->execute();
                     // =======================================================================================================================================
@@ -2664,7 +2687,8 @@ function oncheck_pay_rfid_manual($conn, $db)
                                         deproomdetail.ItemCode,
                                         deproomdetail.Qty ,
                                         deproomdetail.PayDate ,
-                                        COUNT(deproomdetailsub.ID )  AS cnt_sub
+                                        COUNT(deproomdetailsub.ID )  AS cnt_sub,
+                                        DATE(deproom.ModifyDate )  AS ModifyDate 
                                     FROM
                                         deproomdetail
                                         INNER JOIN deproom ON deproomdetail.DocNo = deproom.DocNo 
@@ -2725,6 +2749,7 @@ function oncheck_pay_rfid_manual($conn, $db)
                         $_Qty_detail = $row_2['Qty'];
                         $_Qty_detail_sub = $row_2['cnt_sub'];
                         $_ItemCode = $row_2['ItemCode'];
+                        $_ModifyDate = $row_2['ModifyDate'];
 
                         // if($_Qty_detail == $_Qty_detail_sub){
 
@@ -2805,7 +2830,7 @@ function oncheck_pay_rfid_manual($conn, $db)
                         // =======================================================================================================================================
                         $query = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty ,hncode)
                         VALUES
-                        ( $_RowID, '$_ItemCode','$input_date_service_manual','$_departmentroomid', $Userid,1,1,'$_hn_record_id') ";
+                        ( $_RowID, '$_ItemCode','$_ModifyDate','$_departmentroomid', $Userid,1,1,'$_hn_record_id') ";
                         $meQuery = $conn->prepare($query);
                         $meQuery->execute();
                         // =======================================================================================================================================
@@ -2969,7 +2994,8 @@ function oncheck_pay_weighing_manual($conn, $db)
                                     deproomdetail.ItemCode,
                                     deproomdetail.Qty ,
                                     deproomdetail.PayDate ,
-                                    COUNT(deproomdetailsub.ID)  AS cnt_sub
+                                    COUNT(deproomdetailsub.ID)  AS cnt_sub,
+                                    DATE(deproom.ModifyDate )  AS ModifyDate 
                                 FROM
                                     deproomdetail
                                     INNER JOIN deproom ON deproomdetail.DocNo = deproom.DocNo 
@@ -3028,6 +3054,7 @@ function oncheck_pay_weighing_manual($conn, $db)
                 $_doctor = $row_2['doctor'];
                 $_Qty_detail = $row_2['Qty'];
                 $_Qty_detail_sub = $row_2['cnt_sub'];
+                $_ModifyDate = $row_2['ModifyDate'];
                 // ==============================
 
                 if ($db == 1) {
@@ -3090,7 +3117,7 @@ function oncheck_pay_weighing_manual($conn, $db)
                 // =======================================================================================================================================
                 $query = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty ,hncode)
                         VALUES
-                        ( '0', '$_ItemCode','$input_date_service_manual','$_departmentroomid', $Userid,1,'$_Qty','$_hn_record_id') ";
+                        ( '0', '$_ItemCode','$_ModifyDate','$_departmentroomid', $Userid,1,'$_Qty','$_hn_record_id') ";
                 $meQuery = $conn->prepare($query);
                 $meQuery->execute();
                 // =======================================================================================================================================
@@ -3174,7 +3201,8 @@ function oncheck_pay_weighing_manual($conn, $db)
                                         deproomdetail.ItemCode,
                                         deproomdetail.Qty ,
                                         deproomdetail.PayDate ,
-                                        COUNT(deproomdetailsub.ID )  AS cnt_sub
+                                        COUNT(deproomdetailsub.ID )  AS cnt_sub,
+                                        DATE(deproom.ModifyDate )  AS ModifyDate
                                     FROM
                                         deproomdetail
                                         INNER JOIN deproom ON deproomdetail.DocNo = deproom.DocNo 
@@ -3234,6 +3262,7 @@ function oncheck_pay_weighing_manual($conn, $db)
                     $_doctor = $row_2['doctor'];
                     $_Qty_detail = $row_2['Qty'];
                     $_Qty_detail_sub = $row_2['cnt_sub'];
+                    $_ModifyDate = $row_2['ModifyDate'];
 
                     // if($_Qty_detail == $_Qty_detail_sub){
 
@@ -3310,7 +3339,7 @@ function oncheck_pay_weighing_manual($conn, $db)
                     // =======================================================================================================================================
                     $query = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty,hncode )
                         VALUES
-                        ( '0', '$_ItemCode','$input_date_service_manual','$_departmentroomid', $Userid,1,'$_Qty','$_hn_record_id') ";
+                        ( '0', '$_ItemCode','$_ModifyDate','$_departmentroomid', $Userid,1,'$_Qty','$_hn_record_id') ";
                     $meQuery = $conn->prepare($query);
                     $meQuery->execute();
                     // =======================================================================================================================================
@@ -3449,7 +3478,8 @@ function oncheck_Returnpay($conn, $db)
             $query_2 = "SELECT
                             deproomdetailsub.ID ,
                             hncode_detail.ID AS hndetail_ID,
-	                        deproomdetail.ItemCode
+	                        deproomdetail.ItemCode,
+                            DATE(deproom.ModifyDate )  AS ModifyDate
                         FROM
                             deproom
                             INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
@@ -3470,6 +3500,7 @@ function oncheck_Returnpay($conn, $db)
 
                 $_ID = $row_2['ID'];
                 $_hndetail_ID = $row_2['hndetail_ID'];
+                $_ModifyDate = $row_2['ModifyDate'];
 
                 // ==============================
                 $queryD1 = "DELETE FROM deproomdetailsub WHERE ID =  '$_ID' ";
@@ -3488,13 +3519,13 @@ function oncheck_Returnpay($conn, $db)
                     AND ItemCode = '$_ItemCode' 
                     AND departmentroomid = '$_departmentroomid' 
                     AND  IsStatus = '1'
-                    AND DATE(CreateDate) = '$input_date_service' ";
+                    AND DATE(CreateDate) = '$_ModifyDate' ";
                 } else {
                     $query = "DELETE FROM itemstock_transaction_detail  WHERE ItemStockID = '$_RowID' 
                     AND ItemCode = '$_ItemCode' 
                     AND departmentroomid = '$_departmentroomid' 
                     AND  IsStatus = '1'
-                    AND CONVERT(DATE,CreateDate) = '$input_date_service' ";
+                    AND CONVERT(DATE,CreateDate) = '$_ModifyDate' ";
                 }
 
                 $meQuery = $conn->prepare($query);
@@ -3642,7 +3673,8 @@ function oncheck_pay_rfid($conn, $db)
                                     deproomdetail.ItemCode,
                                     deproomdetail.Qty ,
                                     deproomdetail.PayDate ,
-                                    COUNT(deproomdetailsub.ID)  AS cnt_sub
+                                    COUNT(deproomdetailsub.ID)  AS cnt_sub,
+                                    DATE(deproom.ModifyDate )  AS ModifyDate
                                 FROM
                                     deproomdetail
                                     INNER JOIN deproom ON deproomdetail.DocNo = deproom.DocNo 
@@ -3703,6 +3735,7 @@ function oncheck_pay_rfid($conn, $db)
                     $_Qty_detail = $row_2['Qty'];
                     $_Qty_detail_sub = $row_2['cnt_sub'];
                     $_ItemCode = $row_2['ItemCode'];
+                    $_ModifyDate = $row_2['ModifyDate'];
                     // ==============================
 
                     if ($db == 1) {
@@ -3769,7 +3802,7 @@ function oncheck_pay_rfid($conn, $db)
                     // =======================================================================================================================================
                     $query = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty ,hncode)
                         VALUES
-                        ( $_RowID, '$_ItemCode','$input_date_service','$_departmentroomid', $Userid,1,1,'$_hn_record_id') ";
+                        ( $_RowID, '$_ItemCode','$_ModifyDate','$_departmentroomid', $Userid,1,1,'$_hn_record_id') ";
                     $meQuery = $conn->prepare($query);
                     $meQuery->execute();
                     // =======================================================================================================================================
@@ -3852,7 +3885,8 @@ function oncheck_pay_rfid($conn, $db)
                                         deproomdetail.ItemCode,
                                         deproomdetail.Qty ,
                                         deproomdetail.PayDate ,
-                                        COUNT(deproomdetailsub.ID )  AS cnt_sub
+                                        COUNT(deproomdetailsub.ID )  AS cnt_sub,
+                                        DATE(deproom.ModifyDate )  AS ModifyDate
                                     FROM
                                         deproomdetail
                                         INNER JOIN deproom ON deproomdetail.DocNo = deproom.DocNo 
@@ -3913,6 +3947,7 @@ function oncheck_pay_rfid($conn, $db)
                         $_Qty_detail = $row_2['Qty'];
                         $_Qty_detail_sub = $row_2['cnt_sub'];
                         $_ItemCode = $row_2['ItemCode'];
+                        $_ModifyDate = $row_2['ModifyDate'];
 
                         // if($_Qty_detail == $_Qty_detail_sub){
 
@@ -3993,7 +4028,7 @@ function oncheck_pay_rfid($conn, $db)
                         // =======================================================================================================================================
                         $query = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty ,hncode)
                         VALUES
-                        ( $_RowID, '$_ItemCode','$input_date_service','$_departmentroomid', $Userid,1,1,'$_hn_record_id') ";
+                        ( $_RowID, '$_ItemCode','$_ModifyDate','$_departmentroomid', $Userid,1,1,'$_hn_record_id') ";
                         $meQuery = $conn->prepare($query);
                         $meQuery->execute();
                         // =======================================================================================================================================
@@ -4149,7 +4184,8 @@ function oncheck_pay_weighing($conn, $db)
                                     deproomdetail.ItemCode,
                                     deproomdetail.Qty ,
                                     deproomdetail.PayDate ,
-                                    COUNT(deproomdetailsub.ID)  AS cnt_sub
+                                    COUNT(deproomdetailsub.ID)  AS cnt_sub,
+                                    DATE(deproom.ModifyDate )  AS ModifyDate
                                 FROM
                                     deproomdetail
                                     INNER JOIN deproom ON deproomdetail.DocNo = deproom.DocNo 
@@ -4208,6 +4244,9 @@ function oncheck_pay_weighing($conn, $db)
                 $_doctor = $row_2['doctor'];
                 $_Qty_detail = $row_2['Qty'];
                 $_Qty_detail_sub = $row_2['cnt_sub'];
+                $_ModifyDate = $row_2['ModifyDate'];
+
+                
                 // ==============================
 
                 if ($db == 1) {
@@ -4270,7 +4309,7 @@ function oncheck_pay_weighing($conn, $db)
                 // =======================================================================================================================================
                 $query = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty ,hncode)
                         VALUES
-                        ( '0', '$_ItemCode','$input_date_service','$_departmentroomid', $Userid,1,'$_Qty','$_hn_record_id') ";
+                        ( '0', '$_ItemCode','$_ModifyDate','$_departmentroomid', $Userid,1,'$_Qty','$_hn_record_id') ";
                 $meQuery = $conn->prepare($query);
                 $meQuery->execute();
                 // =======================================================================================================================================
@@ -4354,7 +4393,8 @@ function oncheck_pay_weighing($conn, $db)
                                         deproomdetail.ItemCode,
                                         deproomdetail.Qty ,
                                         deproomdetail.PayDate ,
-                                        COUNT(deproomdetailsub.ID )  AS cnt_sub
+                                        COUNT(deproomdetailsub.ID )  AS cnt_sub,
+                                        DATE(deproom.ModifyDate )  AS ModifyDate
                                     FROM
                                         deproomdetail
                                         INNER JOIN deproom ON deproomdetail.DocNo = deproom.DocNo 
@@ -4414,7 +4454,9 @@ function oncheck_pay_weighing($conn, $db)
                     $_doctor = $row_2['doctor'];
                     $_Qty_detail = $row_2['Qty'];
                     $_Qty_detail_sub = $row_2['cnt_sub'];
+                    $_ModifyDate = $row_2['ModifyDate'];
 
+                    
                     // if($_Qty_detail == $_Qty_detail_sub){
 
                     //     $updateD = "UPDATE deproomdetail SET Qty = Qty+1 WHERE deproomdetail.ID = '$_ID'  ";
@@ -4490,7 +4532,7 @@ function oncheck_pay_weighing($conn, $db)
                     // =======================================================================================================================================
                     $query = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty,hncode )
                         VALUES
-                        ( '0', '$_ItemCode','$input_date_service','$_departmentroomid', $Userid,1,'$_Qty','$_hn_record_id') ";
+                        ( '0', '$_ItemCode','$_ModifyDate','$_departmentroomid', $Userid,1,'$_Qty','$_hn_record_id') ";
                     $meQuery = $conn->prepare($query);
                     $meQuery->execute();
                     // =======================================================================================================================================
@@ -4585,8 +4627,9 @@ function oncheck_pay($conn, $db)
     $DepID = $_SESSION['DepID'];
     $input_date_service = $_POST['input_date_service'];
     $departmeneoomID = $_POST['departmeneoomID'];
+    $input_box_pay = $_POST['input_box_pay'];
 
-
+    
 
     $input_date_service = explode("-", $input_date_service);
     $input_date_service = $input_date_service[2] . '-' . $input_date_service[1] . '-' . $input_date_service[0];
@@ -4629,7 +4672,8 @@ function oncheck_pay($conn, $db)
                         deproomdetail.ItemCode,
                         deproomdetail.Qty ,
                         deproomdetail.PayDate ,
-                        COUNT(deproomdetailsub.ID)  AS cnt_sub
+                        COUNT(deproomdetailsub.ID)  AS cnt_sub,
+                        DATE(deproom.ModifyDate )  AS ModifyDate
                     FROM
                         deproomdetail
                         INNER JOIN deproom ON deproomdetail.DocNo = deproom.DocNo 
@@ -4657,7 +4701,10 @@ function oncheck_pay($conn, $db)
             $_procedure = $row_2['procedure'];
             $_hn_record_id = $row_2['hn_record_id'];
             $_doctor = $row_2['doctor'];
+            $_ModifyDate = $row_2['ModifyDate'];
 
+
+            
             $queryInsert0 = "UPDATE deproomdetail SET Qty = Qty+1 WHERE  deproomdetail.ID = '$_ID' ";
             $meQuery0 = $conn->prepare($queryInsert0);
             $meQuery0->execute();
@@ -4693,7 +4740,7 @@ function oncheck_pay($conn, $db)
             // =======================================================================================================================================
             $query = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty ,hncode)
                                         VALUES
-                                        ( '0', '$_itemcode','$input_date_service','$_departmentroomid', $Userid,1,1,'$_hn_record_id') ";
+                                        ( '0', '$_itemcode','$_ModifyDate','$_departmentroomid', $Userid,1,1,'$_hn_record_id') ";
             $meQuery = $conn->prepare($query);
             $meQuery->execute();
             // =======================================================================================================================================
@@ -4735,7 +4782,8 @@ function oncheck_pay($conn, $db)
                                 deproomdetail.ItemCode,
                                 deproomdetail.Qty ,
                                 deproomdetail.PayDate ,
-                                COUNT(deproomdetailsub.ID )  AS cnt_sub
+                                COUNT(deproomdetailsub.ID )  AS cnt_sub,
+                                DATE(deproom.ModifyDate )  AS ModifyDate
                             FROM
                                 deproomdetail
                                 INNER JOIN deproom ON deproomdetail.DocNo = deproom.DocNo 
@@ -4763,6 +4811,7 @@ function oncheck_pay($conn, $db)
                 $_doctor = $row_2['doctor'];
                 $_Qty_detail = $row_2['Qty'];
                 $_Qty_detail_sub = $row_2['cnt_sub'];
+                $_ModifyDate = $row_2['ModifyDate'];
 
                 $queryInsert1 = "INSERT INTO deproomdetailsub (
                             Deproomdetail_RowID,
@@ -4795,7 +4844,7 @@ function oncheck_pay($conn, $db)
 
                 $query = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty,hncode )
                                         VALUES
-                                        ( '0', '$_itemcode','$input_date_service','$_departmentroomid', $Userid,1,1,'$_hn_record_id') ";
+                                        ( '0', '$_itemcode','$_ModifyDate','$_departmentroomid', $Userid,1,1,'$_hn_record_id') ";
                 $meQuery = $conn->prepare($query);
                 $meQuery->execute();
 
@@ -4931,7 +4980,8 @@ function oncheck_pay($conn, $db)
                                     deproomdetail.ItemCode,
                                     deproomdetail.Qty ,
                                     deproomdetail.PayDate ,
-                                    COUNT(deproomdetailsub.ID)  AS cnt_sub
+                                    COUNT(deproomdetailsub.ID)  AS cnt_sub,
+                                    DATE(deproom.ModifyDate )  AS ModifyDate
                                 FROM
                                     deproomdetail
                                     INNER JOIN deproom ON deproomdetail.DocNo = deproom.DocNo 
@@ -4991,6 +5041,10 @@ function oncheck_pay($conn, $db)
                     $_doctor = $row_2['doctor'];
                     $_Qty_detail = $row_2['Qty'];
                     $_Qty_detail_sub = $row_2['cnt_sub'];
+                    $_ModifyDate = $row_2['ModifyDate'];
+
+
+                    
                     // ==============================
 
                     if ($db == 1) {
@@ -5053,7 +5107,7 @@ function oncheck_pay($conn, $db)
                     // =======================================================================================================================================
                     $query = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty ,hncode )
                         VALUES
-                        ( $_RowID, '$_ItemCode','$input_date_service','$_departmentroomid', $Userid,1,1 ,'$_hn_record_id') ";
+                        ( $_RowID, '$_ItemCode','$_ModifyDate','$_departmentroomid', $Userid,1,1 ,'$_hn_record_id') ";
                     $meQuery = $conn->prepare($query);
                     $meQuery->execute();
                     // =======================================================================================================================================
@@ -5138,7 +5192,8 @@ function oncheck_pay($conn, $db)
                                         deproomdetail.ItemCode,
                                         deproomdetail.Qty ,
                                         deproomdetail.PayDate ,
-                                        COUNT(deproomdetailsub.ID )  AS cnt_sub
+                                        COUNT(deproomdetailsub.ID )  AS cnt_sub,
+                                        DATE(deproom.ModifyDate )  AS ModifyDate
                                     FROM
                                         deproomdetail
                                         INNER JOIN deproom ON deproomdetail.DocNo = deproom.DocNo 
@@ -5198,7 +5253,9 @@ function oncheck_pay($conn, $db)
                         $_doctor = $row_2['doctor'];
                         $_Qty_detail = $row_2['Qty'];
                         $_Qty_detail_sub = $row_2['cnt_sub'];
+                        $_ModifyDate = $row_2['ModifyDate'];
 
+                        
                         // if($_Qty_detail == $_Qty_detail_sub){
                         //     $updateD = "UPDATE deproomdetail SET Qty = Qty+1 WHERE deproomdetail.ID = '$_ID'  ";
                         //     $queryupdateD = $conn->prepare($updateD);
@@ -5272,7 +5329,7 @@ function oncheck_pay($conn, $db)
                         // =======================================================================================================================================
                         $query = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty , hncode )
                         VALUES
-                        ( $_RowID, '$_ItemCode','$input_date_service','$_departmentroomid', $Userid,1,1 ,'$_hn_record_id') ";
+                        ( $_RowID, '$_ItemCode','$_ModifyDate','$_departmentroomid', $Userid,1,1 ,'$_hn_record_id') ";
                         $meQuery = $conn->prepare($query);
                         $meQuery->execute();
                         // =======================================================================================================================================
@@ -5354,7 +5411,9 @@ function oncheck_pay($conn, $db)
                                     COUNT( hncode_detail.Qty ) AS hncode_qty ,
                                     deproom.hn_record_id,
 	                                DATE(deproom.serviceDate) AS serviceDate ,
-                                    deproom.Ref_departmentroomid 
+                                    deproom.Ref_departmentroomid ,
+                                    DATE(deproom.ModifyDate )  AS ModifyDate,
+                                    deproom.number_box
                                 FROM
                                     deproom
                                     LEFT JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
@@ -5377,13 +5436,13 @@ function oncheck_pay($conn, $db)
                     $hncode_qty = $row_old['hncode_qty'];
                     $deproomdetailsub_id = $row_old['ID'];
                     $_hn_record_id_borrow = $row_old['hn_record_id'];
-                    $__serviceDate = $row_old['serviceDate'];
+                    $_ModifyDate = $row_old['ModifyDate'];
                     $__Ref_departmentroomid = $row_old['Ref_departmentroomid'];
-
+                    $_number_box = $row_old['number_box'];
                 }
 
 
-                if ($hncode != $_hn_record_id_borrow) {
+                if ($hncode != $_hn_record_id_borrow || $input_box_pay != $_number_box ) {
 
                     if ($deproom_qty == 1) {
                         $update_old_detail = "DELETE FROM deproomdetail WHERE ID =  '$detailID' ";
@@ -5419,7 +5478,7 @@ function oncheck_pay($conn, $db)
                     AND ItemCode = '$_ItemCode' 
                     AND departmentroomid = '$__Ref_departmentroomid' 
                     AND  IsStatus = '1'
-                    AND DATE(CreateDate) = '$__serviceDate' ";
+                    AND DATE(CreateDate) = '$_ModifyDate' ";
                     $meQuery_old = $conn->prepare($query_old);
                     $meQuery_old->execute();
 
@@ -5439,7 +5498,8 @@ function oncheck_pay($conn, $db)
                                     deproomdetail.ItemCode,
                                     deproomdetail.Qty ,
                                     deproomdetail.PayDate ,
-                                    COUNT(deproomdetailsub.ID)  AS cnt_sub
+                                    COUNT(deproomdetailsub.ID)  AS cnt_sub,
+                                    DATE(deproom.ModifyDate )  AS ModifyDate
                                 FROM
                                     deproomdetail
                                     INNER JOIN deproom ON deproomdetail.DocNo = deproom.DocNo 
@@ -5469,6 +5529,9 @@ function oncheck_pay($conn, $db)
                         $_doctor = $row_2['doctor'];
                         $_Qty_detail = $row_2['Qty'];
                         $_Qty_detail_sub = $row_2['cnt_sub'];
+                        $_ModifyDate = $row_2['ModifyDate'];
+
+                        
                         // ==============================
 
                         $queryInsert1 = "INSERT INTO deproomdetailsub (
@@ -5508,7 +5571,7 @@ function oncheck_pay($conn, $db)
                         // =======================================================================================================================================
                         $query = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty ,hncode )
                             VALUES
-                            ( $_RowID, '$_ItemCode','$input_date_service','$_departmentroomid', $Userid,1,1 ,'$_hn_record_id') ";
+                            ( $_RowID, '$_ItemCode','$_ModifyDate','$_departmentroomid', $Userid,1,1 ,'$_hn_record_id') ";
                         $meQuery = $conn->prepare($query);
                         $meQuery->execute();
                         // =======================================================================================================================================
@@ -5578,7 +5641,8 @@ function oncheck_pay($conn, $db)
                                             deproomdetail.ItemCode,
                                             deproomdetail.Qty ,
                                             deproomdetail.PayDate ,
-                                            COUNT(deproomdetailsub.ID )  AS cnt_sub
+                                            COUNT(deproomdetailsub.ID )  AS cnt_sub,
+                                            DATE(deproom.ModifyDate )  AS ModifyDate
                                         FROM
                                             deproomdetail
                                             INNER JOIN deproom ON deproomdetail.DocNo = deproom.DocNo 
@@ -5638,6 +5702,7 @@ function oncheck_pay($conn, $db)
                             $_doctor = $row_2['doctor'];
                             $_Qty_detail = $row_2['Qty'];
                             $_Qty_detail_sub = $row_2['cnt_sub'];
+                            $_ModifyDate = $row_2['ModifyDate'];
 
 
 
@@ -5677,7 +5742,7 @@ function oncheck_pay($conn, $db)
                             // =======================================================================================================================================
                             $query = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty , hncode )
                             VALUES
-                            ( $_RowID, '$_ItemCode','$input_date_service','$_departmentroomid', $Userid,1,1 ,'$_hn_record_id') ";
+                            ( $_RowID, '$_ItemCode','$_ModifyDate','$_departmentroomid', $Userid,1,1 ,'$_hn_record_id') ";
                             $meQuery = $conn->prepare($query);
                             $meQuery->execute();
                             // =======================================================================================================================================
