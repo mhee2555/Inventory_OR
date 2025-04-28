@@ -134,7 +134,7 @@ function onconfirm_send_request($conn,$db)
     $DepID = $_SESSION['DepID'];
 
     if($text_edit != 'edit'){
-        createhncodeDocNo($conn, $Userid, $DepID, $input_hn_request, $select_deproom_request,0, $select_procedure_request, $select_doctor_request, 'สร้างจากเมนูขอเบิกอุปกรณ์' , $txt_docno_request,$db , $select_date_request);
+        createhncodeDocNo($conn, $Userid, $DepID, $input_hn_request, $select_deproom_request,0, $select_procedure_request, $select_doctor_request, 'สร้างจากเมนูขอเบิกอุปกรณ์' , $txt_docno_request,$db , $select_date_request,'');
     }
 
 
@@ -178,7 +178,7 @@ function onconfirm_request($conn,$db)
     $count = 0;
     if ($txt_docno_request == "") {
         $remark = "สร้างจาก ขอเบิกอุปกรณ์ ";
-        $txt_docno_request = createDocNo($conn, $Userid , $DepID , $deproom , $remark ,0 , 0 , 0 , 0, '', '', '',$db);
+        $txt_docno_request = createDocNo($conn, $Userid , $DepID , $deproom , $remark ,0 , 0 , 0 , 0, '', '', '', '',$db);
     }
 
     foreach ($array_itemcode as $key => $value) {

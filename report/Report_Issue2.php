@@ -383,10 +383,7 @@ $query = "SELECT
             $where_date
             AND deproomdetail.IsCancel = 0
             GROUP BY
-            item.itemname,
-            item.itemcode2,
-            deproomdetail.ID,
-            itemtype.TyeName
+            item.itemcode
             ORDER BY
             item.itemname ASC  ";
 

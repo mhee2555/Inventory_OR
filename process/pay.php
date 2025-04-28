@@ -5352,7 +5352,9 @@ function oncheck_pay($conn, $db)
                                     deproomdetail.ItemCode,
                                     SUM( deproomdetail.Qty ) AS deproom_qty,
                                     COUNT( hncode_detail.Qty ) AS hncode_qty ,
-                                    deproom.hn_record_id
+                                    deproom.hn_record_id,
+	                                DATE(deproom.serviceDate) AS serviceDate ,
+                                    deproom.Ref_departmentroomid 
                                 FROM
                                     deproom
                                     LEFT JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
@@ -5375,6 +5377,9 @@ function oncheck_pay($conn, $db)
                     $hncode_qty = $row_old['hncode_qty'];
                     $deproomdetailsub_id = $row_old['ID'];
                     $_hn_record_id_borrow = $row_old['hn_record_id'];
+                    $__serviceDate = $row_old['serviceDate'];
+                    $__Ref_departmentroomid = $row_old['Ref_departmentroomid'];
+
                 }
 
 
@@ -5407,6 +5412,17 @@ function oncheck_pay($conn, $db)
                         $meQuery0 = $conn->prepare($queryInsert0);
                         $meQuery0->execute();
                     }
+
+
+                    
+                    $query_old = "DELETE FROM itemstock_transaction_detail  WHERE ItemStockID = '$_RowID' 
+                    AND ItemCode = '$_ItemCode' 
+                    AND departmentroomid = '$__Ref_departmentroomid' 
+                    AND  IsStatus = '1'
+                    AND DATE(CreateDate) = '$__serviceDate' ";
+                    $meQuery_old = $conn->prepare($query_old);
+                    $meQuery_old->execute();
+
 
 
 
@@ -5486,6 +5502,8 @@ function oncheck_pay($conn, $db)
 
                         $queryInsert1 = $conn->prepare($queryInsert1);
                         $queryInsert1->execute();
+
+
 
                         // =======================================================================================================================================
                         $query = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty ,hncode )
