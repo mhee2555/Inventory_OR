@@ -161,11 +161,15 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <select class="form-control f18" id="select_year1">
+                                    <option value="2566">2566</option>
+                                    <option value="2567">2567</option>
                                     <option value="2568">2568</option>
                                 </select>
                             </div>
                             <div class="col-md-6">
                                 <select class="form-control f18" id="select_year2">
+                                    <option value="2566">2566</option>
+                                    <option value="2567">2567</option>
                                     <option value="2568">2568</option>
                                 </select>
                             </div>
@@ -179,7 +183,7 @@
             <div class="col-md-5 mt-5 text-right ">
                         <div class="row">
                             <div class="col-md-12 text-right">
-                                <button class="btn btn-light  f18 " style="border-color: black;width: 200px;line-height: 40px;"><i class="fa-solid fa-repeat"></i> รีเซ็ต</button>
+                                <button class="btn btn-light  f18 " id="btn_reset" style="border-color: black;width: 200px;line-height: 40px;"><i class="fa-solid fa-repeat"></i> รีเซ็ต</button>
                             </div>
                             <div class="col-md-12 text-right mt-3">
                                 <button class="btn btn-danger f18" id="btn_report" style="width: 200px;line-height: 40px;"><i class="fa-solid fa-file-pdf"></i> PDF</button>

@@ -1439,7 +1439,7 @@ function select_proceduce_deproom() {
 
 $("#btn_Clear_deproom_proceduce").click(function () {
   $("#select_deproom_proceduce").val("");
-  $("#select2-select_deproom_proceduce-container").text("กรุณาเลือกแพทย์");
+  $("#select2-select_deproom_proceduce-container").text("กรุณาเลือกห้องผ่าตัด");
   $("#select_proceduce").attr("disabled", true);
   $("#row_procedure").html("");
   procedure_id_Array = [];

@@ -93,31 +93,35 @@ class MYPDF extends TCPDF
         $DocNo = $_GET['DocNo'];
 
 
-        $pageHeight = $this->getPageHeight();
-        $x = 160; // คงที่ตามที่คุณอยากได้
-        $y = $pageHeight - 45; // 40 คือความสูงของ QR + ขอบล่างเหลือเผื่อไว้
+        if ($this->last_page_flag) {
+            $pageHeight = $this->getPageHeight();
+            $x = 160; // คงที่ตามที่คุณอยากได้
+            $y = $pageHeight - 45; // 40 คือความสูงของ QR + ขอบล่างเหลือเผื่อไว้
+    
+            $style = array(
+                'border' => true,
+                'vpadding' => 'auto',
+                'hpadding' => 'auto',
+                'fgcolor' => array(0, 0, 0),
+                'bgcolor' => false, //array(255,255,255)
+                'module_width' => 1, // width of a single module in points
+                'module_height' => 1 // height of a single module in points
+            );
+            $url = 'http://10.11.9.54/Inventory_OR/pages/confirm_pay.php?doc=' . urlencode($DocNo); // หรือ link อะไรก็ได้
+            $this->write2DBarcode($url, 'QRCODE,L', $x, $y, 80, 30, $style, 'N');
+    
+    
+                    // ข้อความที่ต้องการ
+                $text = 'สแกนเพื่อยืนยันรับอุปกรณ์ไปใช้กับคนไข้';
+    
+                // เลื่อน cursor ไปที่ตำแหน่ง
+                $this->SetXY($x, $y - 8); // ขยับขึ้นจาก QR ประมาณ 8 หน่วย (เผื่อความสวย)
+    
+                // วาด Cell ขนาดเท่าความกว้างของ QR แล้วจัดกลาง
+                $this->Cell(35, 5, $text, 0, 1, 'C');
+        }
 
-        $style = array(
-            'border' => true,
-            'vpadding' => 'auto',
-            'hpadding' => 'auto',
-            'fgcolor' => array(0, 0, 0),
-            'bgcolor' => false, //array(255,255,255)
-            'module_width' => 1, // width of a single module in points
-            'module_height' => 1 // height of a single module in points
-        );
-        $url = 'http://10.11.9.54/Inventory_OR/pages/confirm_pay.php?doc=' . urlencode($DocNo); // หรือ link อะไรก็ได้
-        $this->write2DBarcode($url, 'QRCODE,L', $x, $y, 80, 30, $style, 'N');
 
-
-                // ข้อความที่ต้องการ
-            $text = 'สแกนเพื่อยืนยันรับอุปกรณ์ไปใช้กับคนไข้';
-
-            // เลื่อน cursor ไปที่ตำแหน่ง
-            $this->SetXY($x, $y - 8); // ขยับขึ้นจาก QR ประมาณ 8 หน่วย (เผื่อความสวย)
-
-            // วาด Cell ขนาดเท่าความกว้างของ QR แล้วจัดกลาง
-            $this->Cell(35, 5, $text, 0, 1, 'C');
 
             $this->SetY(-15);
 
@@ -145,7 +149,7 @@ $pdf->SetMargins(15, PDF_MARGIN_TOP, 15);
 $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
 $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
 // set auto page breaks
-$pdf->SetAutoPageBreak(TRUE, 27);
+$pdf->SetAutoPageBreak(TRUE, 55);
 // set image scale factor
 $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 // ------------------------------------------------------------------------------
@@ -171,7 +175,9 @@ $query = "SELECT
             deproom.`procedure`,
             deproom.doctor,
             doctor.Doctor_Name,
-            doctor.Doctor_Code 
+            doctor.Doctor_Code ,
+            deproom.number_box  ,
+            deproom.Remark 
             FROM
             deproom
             LEFT JOIN users AS user1 ON deproom.UserCode = user1.ID
@@ -195,9 +201,15 @@ while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
     $_doctor = $row['doctor'];
     $_serviceTime = $row['serviceTime'];
     $_departmentroomname = $row['departmentroomname'];
+    $number_box = $row['number_box'];
+    $Remark = $row['Remark'];
 
     $_Doctor_Name = $row['Doctor_Name'];
     $_Doctor_Code = $row['Doctor_Code'];
+
+    if($_hn_record_id == ''){
+        $_hn_record_id = $number_box;
+    }
 
     if (str_contains($row['doctor'], ',')) {
         $checkloopDoctor = 'loop';
@@ -222,6 +234,9 @@ $pdf->Cell(130, 5,  "เวลาเข้ารับบริการ : " . $
 
 $pdf->SetFillColor(255, 255, 255);
 $pdf->MultiCell(180, 5, "Procedure : " . $_procedure_ids, 0, 'L', 0, 1);
+
+
+$pdf->Cell(130, 5,  "หมายเหตุ : " . $Remark, 0, 1, 'L');
 
 // $pdf->Cell(130, 5,  "หัตถการ : " . $_procedure_ids, 0, 1, 'L');
 

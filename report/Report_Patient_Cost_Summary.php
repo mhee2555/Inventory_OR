@@ -114,8 +114,8 @@ $checkloopDoctor  = "";
 $_procedure = "";
 $query = "SELECT
                 CONCAT( employee1.FirstName, ' ', employee1.LastName ) AS name_1,
-                DATE_FORMAT(hncode.CreateDate, '%d/%m/%Y') AS CreateDate,
-                TIME(hncode.CreateDate) AS CreateTime,
+								DATE_FORMAT(deproom.serviceDate, '%d/%m/%Y') AS CreateDate,
+                TIME(deproom.serviceDate) AS CreateTime,
                 hncode.HnCode,
                 departmentroom.departmentroomname,
                 hncode.`procedure`,
@@ -128,6 +128,7 @@ $query = "SELECT
                 LEFT JOIN employee AS employee1 ON user1.EmpCode = employee1.EmpCode
                 LEFT JOIN departmentroom ON hncode.departmentroomid = departmentroom.id
                 LEFT JOIN doctor ON hncode.doctor = doctor.ID 
+                LEFT JOIN deproom ON deproom.DocNo = hncode.DocNo_SS 
             WHERE
                 hncode.DocNo = '$DocNo' ";
 $meQuery = $conn->prepare($query);
@@ -278,8 +279,8 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
         $html .=   '<td width="30 %" align="center"> <tcpdf method="write1DBarcode" params="' . $params . '" /> </td>';
         $html .=   '<td width="32 %" align="left">' . $Result_Detail['itemname'] . '</td>';
         $html .=   '<td width="10 %" align="center">' . $Result_Detail['cnt'] . '</td>';
-        $html .=   '<td width="10 %" align="center">0</td>';
-        $html .=   '<td width="10 %" align="center">0</td>';
+        $html .=   '<td width="10 %" align="center">0.00</td>';
+        $html .=   '<td width="10 %" align="center">0.00</td>';
         $html .=  '</tr>';
         $count++;
     }
@@ -289,7 +290,7 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
 
 $html .= '<tr nobr="true" style="font-size:15px;">';
 $html .=   '<td width="90 %" align="center" rowspan="5">Grand Total</td>';
-$html .=   '<td width="10 %" align="center">0</td>';
+$html .=   '<td width="10 %" align="center">0.00</td>';
 $html .=  '</tr>';
 
 

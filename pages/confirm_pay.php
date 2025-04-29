@@ -108,9 +108,11 @@ $doc = $_GET['doc'];
             var doc = '<?php echo $doc; ?>';
 
 
-            check_hn(doc);
             set_users();
 
+            setTimeout(() => {
+                check_hn(doc);
+            }, 500);
             $("#select_users").select2();
 
 
@@ -201,7 +203,7 @@ $doc = $_GET['doc'];
                             if (value.Procedure_TH == "button") {
                                 value.Procedure_TH = `<a class="text-primary" style="cursor:pointer;" onclick='showDetail_Procedure("${value.procedure}")'>หัตถการ</a>`;
 
-                                var procedure = `<strong>หัตถการ :</strong> <a >${value.Doctor_Name}</a>`;
+                                var procedure = `<strong>หัตถการ :</strong> <a >${value.Procedure_TH}</a>`;
                             } else {
                                 var procedure = `<strong>หัตถการ :</strong> <label >${value.Procedure_TH}</label>`;
                             }
@@ -220,7 +222,7 @@ $doc = $_GET['doc'];
                                 $("#btn_save_item").attr('hidden',true);
                             }
                             
-
+                            $('#select_users').val(value.userConfirm_pay).trigger('change');
                             $("#text_hn").text(value.hn_record_id);
                             $("#text_doctor").html(doctor);
                             $("#text_doctor").html(doctor);

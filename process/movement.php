@@ -182,7 +182,7 @@ function selection_departmentRoom_normal($conn, $db)
                 departmentroom.departmentroomname_sub 
             FROM
                 departmentroom
-            WHERE departmentroom.iscancel = 0 AND floor_id = '$_ID'  AND  departmentroom.IsMainroom = 0  ";
+            WHERE departmentroom.iscancel = 0 AND floor_id = '$_ID'  AND  departmentroom.IsMainroom = 0 AND  departmentroom.IsActive = 1   ";
 
         $meQuery = $conn->prepare($query);
         $meQuery->execute();

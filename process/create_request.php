@@ -178,7 +178,7 @@ function onconfirm_request($conn,$db)
     $count = 0;
     if ($txt_docno_request == "") {
         $remark = "สร้างจาก ขอเบิกอุปกรณ์ ";
-        $txt_docno_request = createDocNo($conn, $Userid , $DepID , $deproom , $remark ,0 , 0 , 0 , 0, '', '', '', '',$db);
+        $txt_docno_request = createDocNo($conn, $Userid , $DepID , $deproom , $remark ,0 , 0 , 0 , 0, '', '', '', '',$db,0);
     }
 
     foreach ($array_itemcode as $key => $value) {
@@ -359,35 +359,38 @@ function show_detail_history($conn,$db)
 
 
         $query = " SELECT
-                    deproom.DocNo,
-                    DATE_FORMAT(deproom.serviceDate, '%d-%m-%Y') AS serviceDate,
-                    DATE_FORMAT(deproom.serviceDate, '%H:%i') AS serviceTime,
-                    deproom.hn_record_id,
-                    doctor.Doctor_Name,
-                    IFNULL(`procedure`.Procedure_TH, '') AS Procedure_TH,
-                    departmentroom.departmentroomname,
-                    doctor.ID AS doctor_ID,
-                    `procedure`.ID AS procedure_ID,
-                    departmentroom.id AS deproom_ID,
-                    deproom.Remark,
-                    deproom.doctor ,
-                    deproom.`procedure`
-                FROM
-                    deproom
-                INNER JOIN
-                    doctor ON doctor.ID = deproom.doctor
-                LEFT JOIN
-                    `procedure` ON deproom.`procedure` = `procedure`.ID
-                INNER JOIN
-                    departmentroom ON deproom.Ref_departmentroomid = departmentroom.id
-                WHERE
-                    DATE(deproom.CreateDate) BETWEEN '$select_date_history_s'  AND '$select_date_history_l' 
-                    AND deproom.IsCancel = 0
-                    $whereD
-                    $whereP
-                    $whereR 
-                ORDER BY
-                    deproom.ID DESC ";
+                        deproom.DocNo,
+                        DATE_FORMAT( deproom.serviceDate, '%d-%m-%Y' ) AS serviceDate,
+                        DATE_FORMAT( deproom.serviceDate, '%H:%i' ) AS serviceTime,
+                        deproom.hn_record_id,
+                        doctor.Doctor_Name,
+                        IFNULL( `procedure`.Procedure_TH, '' ) AS Procedure_TH,
+                        departmentroom.departmentroomname,
+                        doctor.ID AS doctor_ID,
+                        `procedure`.ID AS procedure_ID,
+                        departmentroom.id AS deproom_ID,
+                        deproom.Remark,
+                        deproom.doctor,
+                        deproom.`procedure` ,
+                        deproomdetailsub.ID  AS cnt_id
+                    FROM
+                        deproom
+                        INNER JOIN doctor ON doctor.ID = deproom.doctor
+                        LEFT JOIN `procedure` ON deproom.`procedure` = `procedure`.ID
+                        INNER JOIN departmentroom ON deproom.Ref_departmentroomid = departmentroom.id
+                        LEFT JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
+                        LEFT JOIN deproomdetailsub ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID 
+                    WHERE
+                        DATE( deproom.CreateDate ) BETWEEN '$select_date_history_s'  AND '$select_date_history_l' 
+                        AND deproom.IsCancel = 0 
+                        AND deproom.IsManual = 0
+                        $whereD
+                        $whereP
+                        $whereR 
+                    GROUP BY
+                        deproom.DocNo 
+                    ORDER BY
+                        deproom.ID DESC ";
     }else{
 
         $whereD = "";

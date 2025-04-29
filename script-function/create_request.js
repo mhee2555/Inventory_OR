@@ -773,6 +773,15 @@ function show_detail_history() {
             value.Doctor_Name = `<a class="text-primary" style="cursor:pointer;" onclick='showDetail_Doctor("${value.doctor}")'>แพทย์</a>`;
           }
 
+          if (value.cnt_id == null) {
+            var edit_id = `<button class='btn btn-outline-dark f18' onclick='edit_item_byDocNo("${value.DocNo}","${value.hn_record_id}","${value.serviceDate}","${value.doctor_ID}","${value.procedure_ID}","${value.deproom_ID}","${value.Remark}","${value.doctor}","${value.procedure}","${value.departmentroomname}","edit","${value.serviceTime}")'><i class="fa-regular fa-pen-to-square"></i> แก้ไข</button>`;
+            var showreport = `<button class='btn f18' style='background-color:#1570EF;color:#fff;' onclick='show_Report("${value.DocNo }")'>รายงานขอเบิก</button>`;
+          }else{
+             var edit_id = ``;
+             var showreport = `<button class='btn f18 btn-success' )'>ถูกสแกนจ่าย</button>`;
+          }
+          
+
           _tr += `<tr>
                       <td class='text-center'>${kay + 1}</td>
                       <td class='text-center'>${value.serviceDate}</td>
@@ -780,21 +789,11 @@ function show_detail_history() {
                       <td class='text-left'>${value.Doctor_Name}</td>
                       <td class='text-left'>${value.Procedure_TH}</td>
                       <td class='text-left'>${value.departmentroomname}</td>
-                      <td class='text-center'><button class='btn btn-outline-dark f18' onclick='edit_item_byDocNo("${
-                        value.DocNo
-                      }","${value.hn_record_id}","${value.serviceDate}","${
-            value.doctor_ID
-          }","${value.procedure_ID}","${value.deproom_ID}","${value.Remark}","${
-            value.doctor
-          }","${value.procedure}","${value.departmentroomname}","edit","${
-            value.serviceTime
-          }")'><i class="fa-regular fa-pen-to-square"></i> แก้ไข</button></td>
+                      <td class='text-center'>${edit_id}</td>
                       <td hidden class='text-center'><button class='btn btn-outline-danger f18' onclick='cancel_item_byDocNo("${
                         value.DocNo
                       }")' >ยกเลิก</button></td>
-                      <td class='text-center'><button class='btn f18' style='background-color:#1570EF;color:#fff;' onclick='show_Report("${
-                        value.DocNo
-                      }")'>รายงานขอเบิก</button></td>
+                      <td class='text-center'>${showreport}</td>
                    </tr>`;
         });
       }

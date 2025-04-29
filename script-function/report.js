@@ -77,6 +77,9 @@ $(function () {
 
       $("#row_typemonth").hide();
       $("#row_month").hide();
+
+      $("#row_typeyear").hide();
+      $("#row_year").hide();
     }
     if ($(this).val() == "1") {
       $("#row_typeday").show();
@@ -107,6 +110,9 @@ $(function () {
     }
   });
 
+  $("#select_report").change(function (e) {
+      $("#select_type_date").val("").change();
+  });
   $("#btn_report").click(function (e) {
     if ($("#select_type_date").val() != "") {
       if ($("#select_report").val() == 1) {
@@ -322,4 +328,11 @@ $(function () {
       
     }
   });
+
+
+  $("#btn_reset").click(function (e) {
+    $("#select_type_date").val("").change();
+    $("#select_report").val(1);
+  });
+  
 });

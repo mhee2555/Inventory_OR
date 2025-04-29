@@ -210,7 +210,7 @@ if ($type_date == 3) {
     }
 }
 
-$pdf->Cell(0, 10,  "รายงานจ่ายอุปกรณ์ประจำวัน", 0, 1, 'C');
+$pdf->Cell(0, 10,  "รายงานจ่ายอุปกรณ์", 0, 1, 'C');
 $pdf->Cell(0, 10,  $text_date, 0, 1, 'C');
 
 
@@ -368,7 +368,7 @@ $query = "SELECT
             item.itemcode,
             deproomdetail.ID,
             SUM(deproomdetail.Qty) AS cnt,
-            (SELECT COUNT(deproomdetailsub.ID) FROM deproomdetailsub WHERE deproomdetailsub.Deproomdetail_RowID = deproomdetail.ID) AS cnt_pay,
+            COUNT( deproomdetailsub.ID)  AS cnt_pay,
             itemtype.TyeName
             FROM
             deproom
@@ -378,6 +378,7 @@ $query = "SELECT
             item ON deproomdetail.ItemCode = item.itemcode
             INNER JOIN
             itemtype ON item.itemtypeID = itemtype.ID
+            INNER JOIN deproomdetailsub ON deproomdetailsub.Deproomdetail_RowID = deproomdetail.ID 
             WHERE
              deproom.IsCancel = 0
             $where_date

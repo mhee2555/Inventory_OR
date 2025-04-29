@@ -224,10 +224,10 @@ $query = " SELECT
                 itemtype.TyeName 
             FROM
                 hncode
-                LEFT JOIN hncode_detail ON hncode_detail.DocNo = hncode.DocNo
-                LEFT JOIN itemstock ON itemstock.RowID = hncode_detail.ItemStockID
-                LEFT JOIN item ON itemstock.ItemCode = item.itemcode
-                LEFT JOIN itemtype ON item.itemtypeID = itemtype.ID 
+                INNER JOIN hncode_detail ON hncode_detail.DocNo = hncode.DocNo
+                INNER JOIN itemstock ON itemstock.RowID = hncode_detail.ItemStockID
+                INNER JOIN item ON itemstock.ItemCode = item.itemcode
+                INNER JOIN itemtype ON item.itemtypeID = itemtype.ID 
             $where_date
             GROUP BY  item.itemname
             ORDER BY
@@ -268,8 +268,8 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
         $html .=   '<td width="30 %" align="center">' . $Result_Detail['itemcode'] . '</td>';
         $html .=   '<td width="32 %" align="left">' . $Result_Detail['itemname'] . '</td>';
         $html .=   '<td width="10 %" align="center">' . $Result_Detail['cnt'] . '</td>';
-        $html .=   '<td width="10 %" align="center">0</td>';
-        $html .=   '<td width="10 %" align="center">0</td>';
+        $html .=   '<td width="10 %" align="center">0.00</td>';
+        $html .=   '<td width="10 %" align="center">0.00</td>';
         $html .=  '</tr>';
         $count++;
     }
@@ -279,7 +279,7 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
 
 $html .= '<tr nobr="true" style="font-size:15px;">';
 $html .=   '<td width="90 %" align="center" rowspan="5">Grand Total</td>';
-$html .=   '<td width="10 %" align="center">0</td>';
+$html .=   '<td width="10 %" align="center">0.00</td>';
 $html .=  '</tr>';
 
 

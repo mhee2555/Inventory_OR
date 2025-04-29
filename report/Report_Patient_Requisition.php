@@ -152,7 +152,7 @@ $pdf->SetFont('db_helvethaica_x', 'b', 16);
 $pdf->Ln(5);
 
 
-$pdf->Cell(0, 10,  "รายงานการเบิกอุปกรณ์ประจำวันตู้ RFID SmartCabinet", 0, 1, 'C');
+$pdf->Cell(0, 10,  "รายงานการเบิกอุปกรณ์ตู้ RFID SmartCabinet", 0, 1, 'C');
 $pdf->Cell(0, 10,  $text_date, 0, 1, 'C');
 
 
@@ -309,7 +309,7 @@ $pdf->SetFont('db_helvethaica_x', 'b', 16);
 $pdf->Ln(5);
 
 
-$pdf->Cell(0, 10,  "รายงานการเบิกอุปกรณ์ประจำวันตู้ Weighing Smart Cabinet", 0, 1, 'C');
+$pdf->Cell(0, 10,  "รายงานการเบิกอุปกรณ์ตู้ Weighing Smart Cabinet", 0, 1, 'C');
 $pdf->Cell(0, 10,  $text_date, 0, 1, 'C');
 
 
@@ -327,9 +327,8 @@ $html = '<table cellspacing="0" cellpadding="2" border="1" >
 <th width="30 %"  align="center">อุปกรณ์</th>
 <th width="10 %" align="center">รหัสใช้งาน</th>
 <th width="10 %" align="center">ผู้เบิก</th>
-<th width="10 %" align="center">วันที่/เวลา<br>เบิก</th>
-<th width="10 %" align="center">HN Code</th>
-<th width="10 %" align="center">สถานะ</th>
+<th width="20 %" align="center">วันที่/เวลา เบิก</th>
+<th width="10 %" align="center">Qty</th>
 </tr> </thead>';
 
 
@@ -361,49 +360,16 @@ $query = " SELECT
                 item.itemcode2,
                 item.itemname,
                 NULL AS UsageCode,
-                CONCAT( employee.FirstName, ' ', employee.LastName ) AS Issue_Name,
+                CONCAT(employee.FirstName, ' ', employee.LastName) AS Issue_Name,
                 log_cabinet.ModifyDate,
-                itemslotincabinet_detail.HnCode,
-            CASE
-                    
-                    WHEN itemslotincabinet_detail.HnCode IS NOT NULL THEN
-                    'ถูกยิงใช้กับคนไข้' ELSE 'ไม่ถูกยิงใช้กับคนไข้' 
-            END AS STATUS 
+                log_cabinet.Qty
             FROM
                 log_cabinet
                 INNER JOIN item ON log_cabinet.itemcode = item.itemcode
                 INNER JOIN users ON log_cabinet.UserID = users.ID
                 INNER JOIN employee ON users.EmpCode = employee.EmpCode
-                LEFT JOIN itemslotincabinet_detail ON item.itemcode = itemslotincabinet_detail.itemcode 
-            WHERE
-                log_cabinet.Rfid IS NULL 
-                $where_date
-                
-                UNION ALL
-
-            SELECT
-                item.itemcode2,
-                item.itemname,
-                itemstock.UsageCode,
-                CONCAT( employee.FirstName, ' ', employee.LastName ) AS Issue_Name,
-                log_cabinet.ModifyDate,
-                hncode.HnCode,
-            CASE
-                    
-                    WHEN hncode.HnCode IS NOT NULL THEN
-                    'ถูกยิงใช้กับคนไข้' ELSE 'ไม่ถูกยิงใช้กับคนไข้' 
-            END AS STATUS 
-            FROM
-                log_cabinet
-                INNER JOIN itemstock ON log_cabinet.Rfid = itemstock.RfidCode
-                INNER JOIN item ON itemstock.ItemCode = item.itemcode
-                INNER JOIN users ON log_cabinet.UserID = users.ID
-                INNER JOIN employee ON users.EmpCode = employee.EmpCode
-                LEFT JOIN hncode_detail ON itemstock.RowID = hncode_detail.ItemStockID
-                LEFT JOIN hncode ON hncode_detail.DocNo = hncode.DocNo 
-            WHERE
-                log_cabinet.Rfid IS NOT NULL
-                $where_date ";
+            WHERE   log_cabinet.Rfid IS NULL 
+                $where_date  ";
 
 $meQuery1 = $conn->prepare($query);
 $meQuery1->execute();
@@ -417,9 +383,8 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
     $html .=   '<td width="30 %" align="left">' .   $Result_Detail['itemname'] . '</td>';
     $html .=   '<td width="10 %" align="center">' . $Result_Detail['UsageCode'] . '</td>';
     $html .=   '<td width="10 %" align="center">' . $Result_Detail['Issue_Name'] . '</td>';
-    $html .=   '<td width="10 %" align="center">' . $Result_Detail['ModifyDate'] . '</td>';
-    $html .=   '<td width="10 %" align="center">' . $Result_Detail['HnCode'] . '</td>';
-    $html .=   '<td width="10 %" align="center">' . $Result_Detail['STATUS'] . '</td>';
+    $html .=   '<td width="20 %" align="center">' . $Result_Detail['ModifyDate'] . '</td>';
+    $html .=   '<td width="10 %" align="center">' . $Result_Detail['Qty'] . '</td>';
     $html .=  '</tr>';
     $count++;
 }

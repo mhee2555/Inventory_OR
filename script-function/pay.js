@@ -32,10 +32,8 @@ $(function () {
   $("#input_time_service_editHN").val(currentTime);
   $("#input_date_service_editHN").val(output);
   $("#input_date_service_editHN").datepicker({
-    onSelect: function (date) {
-    },
+    onSelect: function (date) {},
   });
-
 
   $("#select_date_pay").val(output);
   $("#select_date_pay").datepicker({
@@ -198,9 +196,10 @@ $(function () {
     $("#input_Hn_pay_manual").val("");
     $("#input_box_pay_manual").val("");
 
-    $("#input_Hn_pay_manual").attr('disabled',false);
-    $("#input_box_pay_manual").attr('disabled',false);
+    $("#input_Hn_pay_manual").attr("disabled", false);
+    $("#input_box_pay_manual").attr("disabled", false);
 
+    $("#input_time_service_manual").val(currentTime);
     $("#input_date_service_manual").val(output);
     $("#select_doctor_manual").val("").trigger("change");
     $("#select_deproom_manual").val("").trigger("change");
@@ -346,14 +345,22 @@ $("#btn_edit_hn").click(function () {
   $("#myModal_edit_hn").modal("toggle");
 
   setTimeout(() => {
-    $("#select_doctor_editHN").select2();
-    $("#select_deproom_editHN").select2();
-    $("#select_procedure_editHN").select2();
+    $("#select_doctor_editHN").select2({
+      dropdownParent: $("#myModal_edit_hn"), // 👈 ต้องชี้ dropdownParent เป็น modal
+    });
+
+    $("#select_deproom_editHN").select2({
+      dropdownParent: $("#myModal_edit_hn"), // 👈 ต้องชี้ dropdownParent เป็น modal
+    });
+
+    $("#select_procedure_editHN").select2({
+      dropdownParent: $("#myModal_edit_hn"), // 👈 ต้องชี้ dropdownParent เป็น modal
+    });
+
   }, 500);
 
   procedure_edit_hn_Array = [];
   doctor_edit_hn_Array = [];
-
 
   $("#row_doctor_editHN").html("");
   $("#row_procedure_editHN").html("");
@@ -381,9 +388,7 @@ $("#btn_edit_hn").click(function () {
         });
         $("#row_doctor_editHN").append(_row);
 
-
         set_deproom2();
-
       }
     },
   });
@@ -412,11 +417,7 @@ $("#btn_edit_hn").click(function () {
     },
   });
 
-
   setTimeout(() => {
-
-
-
     $("#select_doctor_editHN").on("select2:select", function (e) {
       var selectedValue = e.params.data.id; // ดึงค่า value
       var selectedText = e.params.data.text; // ดึงค่า text
@@ -458,7 +459,7 @@ $("#btn_edit_hn").click(function () {
 
   // $("#btn_edit_hn").data('docno');
   setTimeout(() => {
-    $("#input_box_pay_editHN").data('docno',$("#btn_edit_hn").data("docno"));
+    $("#input_box_pay_editHN").data("docno", $("#btn_edit_hn").data("docno"));
     $("#input_box_pay_editHN").val($("#btn_edit_hn").data("numberbox"));
     $("#input_Hn_pay_editHN").val($("#btn_edit_hn").data("hncode"));
     $("#input_date_service_editHN").val($("#btn_edit_hn").data("servicedate"));
@@ -467,16 +468,11 @@ $("#btn_edit_hn").click(function () {
       .val($("#btn_edit_hn").data("departmeneoomid"))
       .trigger("change");
 
-
     set_proceduce2($("#btn_edit_hn").data("departmeneoomid"));
-
   }, 500);
-
 });
 
-
 $("#btn_save_edit_hn").click(function () {
-
   Swal.fire({
     title: "ยืนยัน",
     text: "ยืนยัน! การแก้ไขข้อมูล ?",
@@ -493,7 +489,7 @@ $("#btn_save_edit_hn").click(function () {
         type: "POST",
         data: {
           FUNC_NAME: "save_edit_hn",
-          DocNo_editHN: $("#input_box_pay_editHN").data('docno'),
+          DocNo_editHN: $("#input_box_pay_editHN").data("docno"),
           input_box_pay_editHN: $("#input_box_pay_editHN").val(),
           input_Hn_pay_editHN: $("#input_Hn_pay_editHN").val(),
           input_date_service_editHN: $("#input_date_service_editHN").val(),
@@ -503,23 +499,18 @@ $("#btn_save_edit_hn").click(function () {
           doctor_edit_hn_Array: doctor_edit_hn_Array,
         },
         success: function (result) {
-
           show_detail_deproom_pay();
           $("#myModal_edit_hn").modal("toggle");
           setTimeout(() => {
-            $("#checkbox_"+$("#input_box_pay_editHN").data('docno')).click();
+            $("#checkbox_" + $("#input_box_pay_editHN").data("docno")).click();
           }, 1000);
-
-
 
           // feeddata_waitReturn();
         },
       });
     }
   });
-
 });
-
 
 $("#input_pay").keypress(function (e) {
   if (e.which == 13) {
@@ -591,7 +582,6 @@ function DeleteDoctor_editHN(selectedValue) {
 
   set_deproom2();
   $(".div_" + selectedValue).attr("hidden", true);
-
 }
 
 function Deleteprocedure_editHN(selectedValue) {
@@ -604,9 +594,7 @@ function Deleteprocedure_editHN(selectedValue) {
 
   console.log(procedure_edit_hn_Array);
   $(".div_" + selectedValue).attr("hidden", true);
-
 }
-
 
 function DeleteDoctor(selectedValue) {
   var index = doctor_Array.indexOf(String(selectedValue));
@@ -677,16 +665,16 @@ function show_detail_deproom_pay() {
             if (value2.Doctor_Name == "button") {
               value2.Doctor_Name = `<a class="text-primary" style="cursor:pointer;" onclick='showDetail_Doctor("${value2.doctor}")'>แพทย์</a>`;
             }
-            
-            if(value2.hn_record_id == ''){
-                var tttt = value2.number_box;
-            }else{
+
+            if (value2.hn_record_id == "") {
+              var tttt = value2.number_box;
+            } else {
               var tttt = value2.hn_record_id;
             }
 
-            if(value2.IsConfirm_pay == 1){
+            if (value2.IsConfirm_pay == 1) {
               var sty = `style=background-color:#00bf63 `;
-            }else{
+            } else {
               var sty = ``;
             }
 
@@ -815,9 +803,7 @@ function oncheck_show_byDocNo(
   doctor,
   procedure
 ) {
-
-  
-  $("#btn_edit_hn").attr('disabled',false);
+  $("#btn_edit_hn").attr("disabled", false);
 
   $(".clear_checkbox").prop("checked", false);
   $("#checkbox_" + DocNo).prop("checked", true);
@@ -840,10 +826,6 @@ function oncheck_show_byDocNo(
   $("#btn_edit_hn").data("departmeneoomid", departmeneoomID);
   $("#btn_edit_hn").data("doctor", doctor);
   $("#btn_edit_hn").data("procedure", procedure);
-
-
-  
-  
 
   show_detail_item_ByDocNo();
 }
@@ -1606,10 +1588,18 @@ function show_detail_history() {
             var hidden = "hidden";
           }
 
+          if (value.hn_record_id == "") {
+            value.hn_record_id = value.number_box;
+          }
+          if (value.FirstName == null) {
+            value.FirstName = '';
+          }
+          
           _tr += `<tr>
                       <td class='text-center'>${kay + 1}</td>
                       <td class='text-center'>${value.CreateDate}</td>
                       <td class='text-center'>${value.serviceDate}</td>
+                      <td class='text-center'>${value.FirstName}</td>
                       <td class='text-center'>${value.hn_record_id}</td>
                       <td class='text-center'>${value.Doctor_Name}</td>
                       <td class='text-center'>${value.Procedure_TH}</td>
@@ -1661,24 +1651,28 @@ function show_detail_history() {
             targets: 3,
           },
           {
-            width: "10%",
+            width: "5%",
             targets: 4,
           },
           {
-            width: "15%",
+            width: "10%",
             targets: 5,
           },
           {
-            width: "10%",
+            width: "15%",
             targets: 6,
           },
           {
-            width: "5%",
+            width: "10%",
             targets: 7,
           },
           {
-            width: "8%",
+            width: "5%",
             targets: 8,
+          },
+          {
+            width: "8%",
+            targets: 9,
           },
         ],
         info: false,
@@ -2206,7 +2200,6 @@ function set_proceduce(select_deproom_request) {
   });
 }
 
-
 function set_deproom2() {
   $.ajax({
     url: "process/process_main/select_main.php",
@@ -2230,7 +2223,6 @@ function set_deproom2() {
     },
   });
 }
-
 
 function set_deproom() {
   $.ajax({
