@@ -684,7 +684,13 @@ function show_detail_deproom_pay() {
               var tttt = value2.hn_record_id;
             }
 
-            _tr += `<tr class='tr_${value.id} all111' >
+            if(value2.IsConfirm_pay == 1){
+              var sty = `style=background-color:#00bf63 `;
+            }else{
+              var sty = ``;
+            }
+
+            _tr += `<tr class='tr_${value.id} all111' ${sty}>
                           <td class='text-center'>
                             <div class="form-check">
                              <input 

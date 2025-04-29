@@ -1,6 +1,6 @@
 <?php
 require('../config/db.php');
-include 'phpqrcode/qrlib.php';
+// include 'phpqrcode/qrlib.php';
 require('tcpdf/tcpdf.php');
 require('../connect/connect.php');
 require('Class.php');
@@ -90,7 +90,36 @@ class MYPDF extends TCPDF
         // Arial italic 8
         $this->SetFont('db_helvethaica_x', 'i', 12);
         // Page number
+        $DocNo = $_GET['DocNo'];
 
+
+        $pageHeight = $this->getPageHeight();
+        $x = 160; // คงที่ตามที่คุณอยากได้
+        $y = $pageHeight - 45; // 40 คือความสูงของ QR + ขอบล่างเหลือเผื่อไว้
+
+        $style = array(
+            'border' => true,
+            'vpadding' => 'auto',
+            'hpadding' => 'auto',
+            'fgcolor' => array(0, 0, 0),
+            'bgcolor' => false, //array(255,255,255)
+            'module_width' => 1, // width of a single module in points
+            'module_height' => 1 // height of a single module in points
+        );
+        $url = 'http://10.11.9.54/Inventory_OR/pages/confirm_pay.php?doc=' . urlencode($DocNo); // หรือ link อะไรก็ได้
+        $this->write2DBarcode($url, 'QRCODE,L', $x, $y, 80, 30, $style, 'N');
+
+
+                // ข้อความที่ต้องการ
+            $text = 'สแกนเพื่อยืนยันรับอุปกรณ์ไปใช้กับคนไข้';
+
+            // เลื่อน cursor ไปที่ตำแหน่ง
+            $this->SetXY($x, $y - 8); // ขยับขึ้นจาก QR ประมาณ 8 หน่วย (เผื่อความสวย)
+
+            // วาด Cell ขนาดเท่าความกว้างของ QR แล้วจัดกลาง
+            $this->Cell(35, 5, $text, 0, 1, 'C');
+
+            $this->SetY(-15);
 
         $this->Cell(190, 10,  "หน้า" . $this->getAliasNumPage() . '/' . $this->getAliasNbPages(), 0, 0, 'R');
     }

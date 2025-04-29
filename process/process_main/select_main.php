@@ -10,7 +10,7 @@ if (!empty($_POST['FUNC_NAME'])) {
     } else if ($_POST['FUNC_NAME'] == 'select_doctor') {
         select_doctor($conn);
     } else if ($_POST['FUNC_NAME'] == 'select_procedure') {
-        select_procedure($conn,$db);
+        select_procedure($conn, $db);
     } else if ($_POST['FUNC_NAME'] == 'select_sterileprocess') {
         select_sterileprocess($conn);
     } else if ($_POST['FUNC_NAME'] == 'select_typeDocument') {
@@ -23,29 +23,59 @@ if (!empty($_POST['FUNC_NAME'])) {
         set_deproom($conn);
     } else if ($_POST['FUNC_NAME'] == 'set_proceduce') {
         set_proceduce($conn);
+    } else if ($_POST['FUNC_NAME'] == 'set_users') {
+        set_users($conn);
     }
+}
+
+function set_users($conn)
+{
+    $return = array();
+
+
+    $query = " SELECT
+                    users.ID,
+                    users.EmpCode,
+                    employee.FirstName,
+                    employee.LastName,
+                    users.UserName,
+                    users.Password,
+                    users.IsCancel,
+                    users.DeptID 
+                FROM
+                    users
+                    INNER JOIN employee ON users.EmpCode = employee.EmpCode   ";
+
+    $meQuery = $conn->prepare($query);
+    $meQuery->execute();
+    while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+        $return[] = $row;
+    }
+    echo json_encode($return);
+    unset($conn);
+    die;
 }
 
 function set_proceduce($conn)
 {
     $return = array();
 
-    
+
 
     $select_deproom_request = $_POST['select_deproom_request'];
 
-    if($select_deproom_request != ""){
+    if ($select_deproom_request != "") {
         $departmentroom_ids = "";
         $count_doctor = 0;
         $select = " SELECT GROUP_CONCAT(procedure_id SEPARATOR ', ') AS procedure_ids FROM mapping_departmentroom WHERE mapping_departmentroom.departmentroom_id IN( $select_deproom_request )  ";
         $meQuery_select = $conn->prepare($select);
         $meQuery_select->execute();
-    
+
         $procedure_ids = $meQuery_select->fetchColumn();
-    
-            if ($procedure_ids) {
-    
-                $query = " SELECT
+
+        if ($procedure_ids) {
+
+            $query = " SELECT
                                 ID,
                                 Procedure_TH 
                             FROM
@@ -54,10 +84,8 @@ function set_proceduce($conn)
                             AND `procedure`.IsActive = 1
                             ORDER BY
                                 Procedure_TH ASC  ";
-    
-    
-            } else {
-                $query = " SELECT
+        } else {
+            $query = " SELECT
                                 ID,
                                 Procedure_TH 
                             FROM
@@ -65,8 +93,8 @@ function set_proceduce($conn)
                             WHERE `procedure`.IsActive = 1
                             ORDER BY
                                 Procedure_TH ASC  ";
-            }
-    }else{
+        }
+    } else {
         $query = " SELECT
                         ID,
                         Procedure_TH 
@@ -76,7 +104,6 @@ function set_proceduce($conn)
                     AND `procedure`.IsActive = 1
                     ORDER BY
                         Procedure_TH ASC  ";
-
     }
 
 
@@ -102,7 +129,7 @@ function set_deproom($conn)
     $return = array();
 
     $doctor_Array = " ''  ";
-    if(isset($_POST['doctor_Array'])){
+    if (isset($_POST['doctor_Array'])) {
         $doctor_Array = $_POST['doctor_Array'];
         $doctor_Array = implode(",", $doctor_Array);
     }
@@ -119,8 +146,8 @@ function set_deproom($conn)
 
     $departmentroom_ids = $meQuery_select->fetchColumn();
 
-        if ($departmentroom_ids) {
-            $query = "SELECT
+    if ($departmentroom_ids) {
+        $query = "SELECT
                         departmentroom.id,
                         departmentroom.departmentroomname 
                     FROM
@@ -128,8 +155,8 @@ function set_deproom($conn)
                     WHERE departmentroom.id IN ($departmentroom_ids)
                     AND  departmentroom.IsActive = 1
                     ORDER BY departmentroomname ";
-        } else {
-            $query = "SELECT
+    } else {
+        $query = "SELECT
                             departmentroom.id,
                             departmentroom.departmentroomname 
                         FROM
@@ -137,7 +164,7 @@ function set_deproom($conn)
                         WHERE departmentroom.IsMainroom = 0
                         AND  departmentroom.IsActive = 1
                         ORDER BY departmentroomname ";
-        }
+    }
 
 
 
@@ -286,11 +313,11 @@ function select_doctor($conn)
     die;
 }
 
-function select_procedure($conn,$db)
+function select_procedure($conn, $db)
 {
     $return = array();
 
-    if($db == 1){
+    if ($db == 1) {
         $query = " SELECT
                         ID,
                         Procedure_TH 
@@ -299,7 +326,7 @@ function select_procedure($conn,$db)
                     WHERE `procedure`.IsActive = 1
                     ORDER BY
                         Procedure_TH ASC  ";
-    }else{
+    } else {
         $query = "SELECT
         [procedure].ID,
         [procedure].Procedure_TH 

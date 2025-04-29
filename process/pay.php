@@ -5977,7 +5977,8 @@ function show_detail_deproom_pay($conn, $db)
                             deproom.`procedure`,
                             deproom.doctor AS doctorHN,
                             deproom.`procedure` AS procedureHN,
-                            deproom.number_box
+                            deproom.number_box,
+                            deproom.IsConfirm_pay
                         FROM
                             deproom
                         LEFT JOIN
