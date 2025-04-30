@@ -109,7 +109,8 @@ $month1 = $_GET['month1'];
 $month2 = $_GET['month2'];
 $checkday = $_GET['checkday'];
 $checkmonth = $_GET['checkmonth'];
-
+$year1 = $_GET['year1'];
+$year2 = $_GET['year2'];
 $datetime = new DatetimeTH();
 
 if ($type_date == 1) {
@@ -128,9 +129,18 @@ if ($type_date == 1) {
 if ($type_date == 2) {
 
     if ($checkmonth == 1) {
-        $text_date = "เดือนที่เติมอุปกรณ์ : " . $datetime->getTHmonthFromnum($month1);
+        $text_date = "เดือนที่เติมอุปกรณ์ : " . $datetime->getTHmonthFromnum($month1)." ปี " .$year1;
     } else {
-        $text_date = "เดือนที่เติมอุปกรณ์ : " . $datetime->getTHmonthFromnum($month1) . " ถึง " . $datetime->getTHmonthFromnum($month2);
+        $text_date = "เดือนที่เติมอุปกรณ์ : " . $datetime->getTHmonthFromnum($month1) . " ถึง " . $datetime->getTHmonthFromnum($month2)." ปี " .$year1;
+    }
+}
+
+if ($type_date == 3) {
+
+    if ($checkmonth == 1) {
+        $text_date = "ปีที่เติมอุปกรณ์ : " . $year1;
+    } else {
+        $text_date = "ปีที่เติมอุปกรณ์ : " . $year1 . " ถึง " . $year2;
     }
 }
 
@@ -181,9 +191,24 @@ if ($type_date == 1) {
     }
 }
 if ($type_date == 2) {
+    $year1 = $year1-543;
 
     if ($checkmonth == 1) {
+        $where_date = "WHERE MONTH(itemstock.LastCabinetModify) = '$month1' AND YEAR(hncode.DocDate) = '$year1'   ";
+
     } else {
+        $where_date = "WHERE MONTH(itemstock.LastCabinetModify) BETWEEN '$month1' 	AND '$month2' AND YEAR(itemstock.LastCabinetModify) = '$year1'  ";
+    }
+}
+
+if ($type_date == 3) {
+    $year1 = $year1-543;
+    $year2 = $year2-543;
+    if ($checkyear == 1) {
+        $where_date = "WHERE YEAR(itemstock.LastCabinetModify) = '$year1'  ";
+
+    } else {
+        $where_date = "WHERE YEAR(itemstock.LastCabinetModify) BETWEEN '$year1' 	AND '$year2' ";
     }
 }
 

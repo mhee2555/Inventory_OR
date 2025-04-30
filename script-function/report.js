@@ -134,7 +134,11 @@ $(function () {
         } else {
           var checkmonth = 2;
         }
-
+        if ($("#radio_year1").is(":checked")) {
+          var checkyear = 1;
+        } else {
+          var checkyear = 2;
+        }
         var option =
           "?type_date=" +
           $("#select_type_date").val() +
@@ -146,10 +150,16 @@ $(function () {
           $("#select_month1").val() +
           "&month2=" +
           $("#select_month2").val() +
+          "&year1=" +
+          $("#select_year1").val() +
+          "&year2=" +
+          $("#select_year2").val() +
           "&checkday=" +
           checkday +
           "&checkmonth=" +
-          checkmonth;
+          checkmonth +
+          "&checkyear=" +
+          checkyear;
 
         window.open("report/Report_Replenishment.php" + option, "_blank");
       }
