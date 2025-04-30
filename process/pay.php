@@ -5855,11 +5855,36 @@ function oncheck_pay($conn, $db)
                             // ==============================
 
                             // =======================================================================================================================================
-                            $query = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty , hncode )
-                            VALUES
-                            ( $_RowID, '$_ItemCode',NOW(),'$_departmentroomid', $Userid,1,1 ,'$_hn_record_id') ";
-                            $meQuery = $conn->prepare($query);
-                            $meQuery->execute();
+                            $query = "INSERT INTO itemstock_transaction_detail (
+                                            ItemStockID, 
+                                            ItemCode, 
+                                            CreateDate, 
+                                            departmentroomid, 
+                                            UserCode, 
+                                            IsStatus, 
+                                            Qty, 
+                                            hncode
+                                        ) VALUES (
+                                            :ItemStockID,
+                                            :ItemCode,
+                                            NOW(),
+                                            :departmentroomid,
+                                            :UserCode,
+                                            1,
+                                            1,
+                                            :hncode
+                                        )";
+                  
+                                $stmt = $conn->prepare($query);
+                                $stmt->execute([
+                                    ':ItemStockID' => $_RowID,
+                                    ':ItemCode' => $_ItemCode,
+                                    ':departmentroomid' => $_departmentroomid,
+                                    ':UserCode' => $Userid,
+                                    ':hncode' => $_hn_record_id
+                                ]);
+                  
+               
                             // =======================================================================================================================================
 
 
@@ -5968,7 +5993,7 @@ function show_detail_item_ByDocNo($conn, $db)
                 item.itemcode,
                 deproomdetail.ID ,
                 itemtype.TyeName 
-            ORDER BY item.itemname ASC ";
+            ORDER BY deproomdetail.ModifyTime DESC ";
 
     $meQuery = $conn->prepare($query);
     $meQuery->execute();
