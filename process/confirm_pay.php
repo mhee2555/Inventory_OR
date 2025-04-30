@@ -44,7 +44,8 @@ function check_hn($conn, $db)
                     doctor.Doctor_Name,
                    `procedure`.Procedure_TH,
                    IsConfirm_pay,
-                   userConfirm_pay
+                   userConfirm_pay,
+                   deproom.number_box
                 FROM
                     deproom 
                 INNER JOIN doctor ON doctor.ID = deproom.doctor

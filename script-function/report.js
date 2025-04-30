@@ -1,4 +1,8 @@
 $(function () {
+
+  session();
+
+
   var d = new Date();
   var month = d.getMonth() + 1;
   var day = d.getDate();
@@ -98,6 +102,10 @@ $(function () {
 
       $("#row_typemonth").show();
       $("#row_month").show();
+
+      $("#radio_year1").click();
+      $("#row_year").show();
+
     }
     if ($(this).val() == "3") {
       $("#row_typeday").hide();
@@ -336,3 +344,22 @@ $(function () {
   });
   
 });
+
+
+
+function session() {
+  $.ajax({
+    url: "process/session.php",
+    type: "POST",
+    success: function (result) {
+      var ObjData = JSON.parse(result);
+      departmentroomname = ObjData.departmentroomname;
+      UserName = ObjData.UserName;
+      deproom = ObjData.deproom;
+      RefDepID = ObjData.RefDepID;
+
+      $("#input_Deproom_Main").val(departmentroomname);
+      $("#input_Name_Main").val(UserName);
+    },
+  });
+}

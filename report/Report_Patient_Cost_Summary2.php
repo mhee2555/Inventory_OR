@@ -141,9 +141,9 @@ if ($type_date == 1) {
 if ($type_date == 2) {
 
     if ($checkmonth == 1) {
-        $text_date = "เดือน : " . $datetime->getTHmonthFromnum($month1);
+        $text_date = "เดือน : " . $datetime->getTHmonthFromnum($month1)." ปี " .$year1;
     } else {
-        $text_date = "เดือน : " . $datetime->getTHmonthFromnum($month1) . " ถึง " . $datetime->getTHmonthFromnum($month2);
+        $text_date = "เดือน : " . $datetime->getTHmonthFromnum($month1) . " ถึง " . $datetime->getTHmonthFromnum($month2)." ปี " .$year1;
     }
 }
 
@@ -162,22 +162,23 @@ if ($type_date == 1) {
     if ($checkday == 1) {
         $date1 = $date1[2] . '-' . $date1[1] . '-' . $date1[0];
 
-        $where_date = "WHERE DATE(hncode.CreateDate) = '$date1'  ";
+        $where_date = "WHERE DATE(hncode.DocDate) = '$date1'  ";
     } else {
         $date1 = $date1[2] . '-' . $date1[1] . '-' . $date1[0];
         $date2 = $date2[2] . '-' . $date2[1] . '-' . $date2[0];
 
-        $where_date = "WHERE DATE(hncode.CreateDate) BETWEEN '$date1' 	AND '$date2' ";
+        $where_date = "WHERE DATE(hncode.DocDate) BETWEEN '$date1' 	AND '$date2' ";
     }
 }
 
 if ($type_date == 2) {
+    $year1 = $year1-543;
 
     if ($checkmonth == 1) {
-        $where_date = "WHERE MONTH(hncode.CreateDate) = '$month1'  ";
+        $where_date = "WHERE MONTH(hncode.DocDate) = '$month1' AND YEAR(hncode.DocDate) = '$year1'   ";
 
     } else {
-        $where_date = "WHERE MONTH(hncode.CreateDate) BETWEEN '$month1' 	AND '$month2' ";
+        $where_date = "WHERE MONTH(hncode.DocDate) BETWEEN '$month1' 	AND '$month2' AND YEAR(hncode.DocDate) = '$year1'  ";
     }
 }
 
@@ -185,10 +186,10 @@ if ($type_date == 3) {
     $year1 = $year1-543;
     $year2 = $year2-543;
     if ($checkyear == 1) {
-        $where_date = "WHERE YEAR(hncode.CreateDate) = '$year1'  ";
+        $where_date = "WHERE YEAR(hncode.DocDate) = '$year1'  ";
 
     } else {
-        $where_date = "WHERE YEAR(hncode.CreateDate) BETWEEN '$year1' 	AND '$year2' ";
+        $where_date = "WHERE YEAR(hncode.DocDate) BETWEEN '$year1' 	AND '$year2' ";
     }
 }
 

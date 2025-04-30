@@ -5593,45 +5593,79 @@ function oncheck_pay($conn, $db)
                         // ==============================
 
                         $queryInsert1 = "INSERT INTO deproomdetailsub (
-                                            Deproomdetail_RowID,
-                                            ItemStockID,
-                                            dental_warehouse_id,
-                                            IsStatus,
-                                            IsCheckPay,
-                                            PayDate,
-                                            hn_record_id,
-                                            doctor,
-                                            `procedure`,
-                                             qty_weighing,
-                                             hn_record_id_borrow
-                                        )
-                                        VALUES
-                                        (
-                                            '$_ID', 
-                                            '$_RowID',
-                                            '$_departmentroomid',
-                                            1, 
-                                            1, 
-                                            NOW(), 
-                                            '$_hn_record_id', 
-                                            '$_doctor', 
-                                            '$_procedure',
-                                            1,
-                                            '$_hn_record_id_borrow'
-                                        ) ";
+                                                Deproomdetail_RowID,
+                                                ItemStockID,
+                                                dental_warehouse_id,
+                                                IsStatus,
+                                                IsCheckPay,
+                                                PayDate,
+                                                hn_record_id,
+                                                doctor,
+                                                `procedure`,
+                                                qty_weighing,
+                                                hn_record_id_borrow
+                                            )
+                                            VALUES (
+                                                :Deproomdetail_RowID,
+                                                :ItemStockID,
+                                                :dental_warehouse_id,
+                                                1,
+                                                1,
+                                                NOW(),
+                                                :hn_record_id,
+                                                :doctor,
+                                                :procedure,
+                                                1,
+                                                :hn_record_id_borrow
+                                            )";
+                            
+                            $stmt = $conn->prepare($queryInsert1);
+                            $stmt->execute([
+                                ':Deproomdetail_RowID' => $_ID,
+                                ':ItemStockID' => $_RowID,
+                                ':dental_warehouse_id' => $_departmentroomid,
+                                ':hn_record_id' => $_hn_record_id,
+                                ':doctor' => $_doctor,
+                                ':procedure' => $_procedure,
+                                ':hn_record_id_borrow' => $_hn_record_id_borrow
+                            ]);
 
 
-                        $queryInsert1 = $conn->prepare($queryInsert1);
-                        $queryInsert1->execute();
 
 
 
                         // =======================================================================================================================================
-                        $query = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty ,hncode )
-                            VALUES
-                            ( $_RowID, '$_ItemCode',NOW(),'$_departmentroomid', $Userid,1,1 ,'$_hn_record_id') ";
-                        $meQuery = $conn->prepare($query);
-                        $meQuery->execute();
+                        $query = "INSERT INTO itemstock_transaction_detail (
+                                            ItemStockID, 
+                                            ItemCode, 
+                                            CreateDate, 
+                                            departmentroomid, 
+                                            UserCode, 
+                                            IsStatus, 
+                                            Qty,
+                                            hncode
+                                        )
+                                        VALUES (
+                                            :ItemStockID,
+                                            :ItemCode,
+                                            NOW(),
+                                            :departmentroomid,
+                                            :UserCode,
+                                            1,
+                                            1,
+                                            :hncode
+                                        )";
+                            
+                            $stmt = $conn->prepare($query);
+                            $stmt->execute([
+                                ':ItemStockID'    => $_RowID,
+                                ':ItemCode'       => $_ItemCode,
+                                ':departmentroomid' => $_departmentroomid,
+                                ':UserCode'       => $Userid,
+                                ':hncode'         => $_hn_record_id
+                            ]);
+              
+           
                         // =======================================================================================================================================
 
 
@@ -5657,9 +5691,22 @@ function oncheck_pay($conn, $db)
 
 
 
-                        $query_updateHN = "UPDATE hncode SET IsStatus = 1  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.`procedure` = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$input_date_service' ";
-                        $query_updateHN = $conn->prepare($query_updateHN);
-                        $query_updateHN->execute();
+                        $query_updateHN = "UPDATE hncode 
+                                        SET IsStatus = 1  
+                                        WHERE HnCode = :hncode 
+                                            AND `procedure` = :procedure 
+                                            AND doctor = :doctor 
+                                            AND departmentroomid = :departmentroomid 
+                                            AND DocDate = :docdate";
+
+                        $stmt = $conn->prepare($query_updateHN);
+                        $stmt->execute([
+                            ':hncode' => $_hn_record_id,
+                            ':procedure' => $_procedure,
+                            ':doctor' => $_doctor,
+                            ':departmentroomid' => $_departmentroomid,
+                            ':docdate' => $input_date_service
+                        ]);                     
 
 
                         // echo $queryInsert2;
@@ -5777,24 +5824,34 @@ function oncheck_pay($conn, $db)
                                                     qty_weighing,
                                                     hn_record_id_borrow
                                                 )
-                                                VALUES
-                                                (
-                                                    '$_ID', 
-                                                    '$_RowID',
-                                                    '$_departmentroomid',
+                                                VALUES (
+                                                    :Deproomdetail_RowID, 
+                                                    :ItemStockID,
+                                                    :dental_warehouse_id,
                                                     1, 
                                                     1, 
                                                     NOW(), 
-                                                    '$_hn_record_id', 
-                                                    '$_doctor', 
-                                                    '$_procedure',
+                                                    :hn_record_id, 
+                                                    :doctor, 
+                                                    :procedure,
                                                     1,
-                                                    '$_hn_record_id_borrow'
-                                                ) ";
+                                                    :hn_record_id_borrow
+                                                )";
+                                
+                                $stmt = $conn->prepare($queryInsert1);
+                                $stmt->execute([
+                                    ':Deproomdetail_RowID' => $_ID,
+                                    ':ItemStockID' => $_RowID,
+                                    ':dental_warehouse_id' => $_departmentroomid,
+                                    ':hn_record_id' => $_hn_record_id,
+                                    ':doctor' => $_doctor,
+                                    ':procedure' => $_procedure,
+                                    ':hn_record_id_borrow' => $_hn_record_id_borrow
+                                ]);
 
 
-                            $queryInsert1 = $conn->prepare($queryInsert1);
-                            $queryInsert1->execute();
+                            // $queryInsert1 = $conn->prepare($queryInsert1);
+                            // $queryInsert1->execute();
                             // ==============================
 
                             // =======================================================================================================================================

@@ -27,7 +27,8 @@ function show_detail_borrow($conn,$db)
                         itemstock.UsageCode,
                         item.itemname,
                         deproomdetailsub.hn_record_id,
-                        deproomdetailsub.hn_record_id_borrow
+                        deproomdetailsub.hn_record_id_borrow,
+                        deproom.number_box
                     FROM
                         deproomdetailsub
                         INNER JOIN itemstock ON deproomdetailsub.ItemStockID = itemstock.RowID

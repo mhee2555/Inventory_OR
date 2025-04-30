@@ -131,9 +131,9 @@ if ($type_date == 1) {
 if ($type_date == 2) {
 
     if ($checkmonth == 1) {
-        $text_date = "เดือนที่เบิกอุปกรณ์ : " . $datetime->getTHmonthFromnum($month1);
+        $text_date = "เดือนที่เบิกอุปกรณ์ : " . $datetime->getTHmonthFromnum($month1) ."ปี " .$year1;
     } else {
-        $text_date = "เดือนที่เบิกอุปกรณ์ : " . $datetime->getTHmonthFromnum($month1) . " ถึง " . $datetime->getTHmonthFromnum($month2);
+        $text_date = "เดือนที่เบิกอุปกรณ์ : " . $datetime->getTHmonthFromnum($month1) . " ถึง " . $datetime->getTHmonthFromnum($month2) ."ปี " .$year1;
     }
 }
 if ($type_date == 3) {
@@ -239,7 +239,8 @@ $query = " SELECT
                 LEFT JOIN hncode ON hncode_detail.DocNo = hncode.DocNo 
             WHERE
                 log_cabinet.Rfid IS NOT NULL
-                $where_date  ";
+                $where_date 
+            ORDER BY log_cabinet.ModifyDate  ";
 
 $meQuery1 = $conn->prepare($query);
 $meQuery1->execute();
@@ -248,14 +249,14 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
     $pdf->SetFont('db_helvethaica_x', 'B', 18);
 
     $html .= '<tr nobr="true" style="font-size:15px;">';
-    $html .=   '<td width="6 %" align="center"> ' . (string)$count . '</td>';
-    $html .=   '<td width="16 %" align="center"> ' . $Result_Detail['itemcode2'] . '</td>';
-    $html .=   '<td width="30 %" align="left">' .   $Result_Detail['itemname'] . '</td>';
-    $html .=   '<td width="10 %" align="center">' . $Result_Detail['UsageCode'] . '</td>';
-    $html .=   '<td width="10 %" align="center">' . $Result_Detail['Issue_Name'] . '</td>';
-    $html .=   '<td width="10 %" align="center">' . $Result_Detail['ModifyDate'] . '</td>';
-    $html .=   '<td width="10 %" align="center">' . $Result_Detail['HnCode'] . '</td>';
-    $html .=   '<td width="10 %" align="center">' . $Result_Detail['STATUS'] . '</td>';
+    $html .=   '<td width="6 %" align="center" style="line-height:40px;vertical-align: middle;" > ' . (string)$count . '</td>';
+    $html .=   '<td width="16 %" align="center" style="line-height:40px;vertical-align: middle;"> ' . $Result_Detail['itemcode2'] . '</td>';
+    $html .=   '<td width="30 %" align="left" style="line-height:40px;vertical-align: middle;">' .   $Result_Detail['itemname'] . '</td>';
+    $html .=   '<td width="10 %" align="center" >' . $Result_Detail['UsageCode'] . '</td>';
+    $html .=   '<td width="10 %" align="center" >' . $Result_Detail['Issue_Name'] . '</td>';
+    $html .=   '<td width="10 %" align="center" >' . $Result_Detail['ModifyDate'] . '</td>';
+    $html .=   '<td width="10 %" align="center" >' . $Result_Detail['HnCode'] . '</td>';
+    $html .=   '<td width="10 %" align="center" >' . $Result_Detail['STATUS'] . '</td>';
     $html .=  '</tr>';
     $count++;
 }
@@ -297,9 +298,9 @@ if ($type_date == 1) {
 if ($type_date == 2) {
 
     if ($checkmonth == 1) {
-        $text_date = "เดือนที่เบิกอุปกรณ์ : " . $datetime->getTHmonthFromnum($month1);
+        $text_date = "เดือนที่เบิกอุปกรณ์ : " . $datetime->getTHmonthFromnum($month1)."ปี " .$year1;;
     } else {
-        $text_date = "เดือนที่เบิกอุปกรณ์ : " . $datetime->getTHmonthFromnum($month1) . " ถึง " . $datetime->getTHmonthFromnum($month2);
+        $text_date = "เดือนที่เบิกอุปกรณ์ : " . $datetime->getTHmonthFromnum($month1) . " ถึง " . $datetime->getTHmonthFromnum($month2)."ปี " .$year1;;
     }
 }
 
@@ -378,13 +379,13 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
     $pdf->SetFont('db_helvethaica_x', 'B', 18);
 
     $html .= '<tr nobr="true" style="font-size:15px;">';
-    $html .=   '<td width="6 %" align="center"> ' . (string)$count . '</td>';
-    $html .=   '<td width="16 %" align="center"> ' . $Result_Detail['itemcode2'] . '</td>';
-    $html .=   '<td width="30 %" align="left">' .   $Result_Detail['itemname'] . '</td>';
-    $html .=   '<td width="10 %" align="center">' . $Result_Detail['UsageCode'] . '</td>';
-    $html .=   '<td width="10 %" align="center">' . $Result_Detail['Issue_Name'] . '</td>';
-    $html .=   '<td width="20 %" align="center">' . $Result_Detail['ModifyDate'] . '</td>';
-    $html .=   '<td width="10 %" align="center">' . $Result_Detail['Qty'] . '</td>';
+    $html .=   '<td width="6 %" align="center" style="line-height:40px;vertical-align: middle;"> ' . (string)$count . '</td>';
+    $html .=   '<td width="16 %" align="center" style="line-height:40px;vertical-align: middle;"> ' . $Result_Detail['itemcode2'] . '</td>';
+    $html .=   '<td width="30 %" align="left" style="line-height:40px;vertical-align: middle;">' .   $Result_Detail['itemname'] . '</td>';
+    $html .=   '<td width="10 %" align="center" style="line-height:40px;vertical-align: middle;">' . $Result_Detail['UsageCode'] . '</td>';
+    $html .=   '<td width="10 %" align="center" style="line-height:40px;vertical-align: middle;">' . $Result_Detail['Issue_Name'] . '</td>';
+    $html .=   '<td width="20 %" align="center" style="line-height:40px;vertical-align: middle;">' . $Result_Detail['ModifyDate'] . '</td>';
+    $html .=   '<td width="10 %" align="center" style="line-height:40px;vertical-align: middle;">' . $Result_Detail['Qty'] . '</td>';
     $html .=  '</tr>';
     $count++;
 }

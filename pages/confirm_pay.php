@@ -216,7 +216,7 @@ $doc = $_GET['doc'];
                             }
 
                             if (value.hn_record_id == '') {
-                                value.hn_record_id = doc;
+                                value.hn_record_id = value.number_box;
                             }
                             if (value.IsConfirm_pay == 1) {
                                 $("#btn_save_item").attr('hidden',true);

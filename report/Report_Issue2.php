@@ -156,9 +156,9 @@ if ($type_date == 1) {
 if ($type_date == 2) {
 
     if ($checkmonth == 1) {
-        $text_date = "เดือน : " . $datetime->getTHmonthFromnum($month1);
+        $text_date = "เดือน : " . $datetime->getTHmonthFromnum($month1)." ปี " .$year1;
     } else {
-        $text_date = "เดือน : " . $datetime->getTHmonthFromnum($month1) . " ถึง " . $datetime->getTHmonthFromnum($month2);
+        $text_date = "เดือน : " . $datetime->getTHmonthFromnum($month1) . " ถึง " . $datetime->getTHmonthFromnum($month2)." ปี " .$year1;
     }
 }
 
@@ -187,12 +187,13 @@ if ($type_date == 1) {
 }
 
 if ($type_date == 2) {
+    $year1 = $year1-543;
 
     if ($checkmonth == 1) {
-        $where_date = "AND MONTH(deproom.serviceDate) = '$month1'  ";
+        $where_date = "AND MONTH(deproom.serviceDate) = '$month1' AND YEAR(deproom.serviceDate) = '$year1'  ";
 
     } else {
-        $where_date = "AND MONTH(deproom.serviceDate) BETWEEN '$month1' 	AND '$month2' ";
+        $where_date = "AND MONTH(deproom.serviceDate) BETWEEN '$month1' 	AND '$month2' AND YEAR(deproom.serviceDate) = '$year1' ";
     }
 }
 
@@ -399,11 +400,11 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
 
     if($Result_Detail['cnt_pay'] > 0){
         $html .= '<tr nobr="true" style="font-size:18px;height:30px;">';
-        $html .=   '<td width="12 %" align="center"> ' . $Result_Detail['itemcode2'] . '</td>';
-        $html .=   '<td width="30 %" align="center"> ' . $Result_Detail['itemcode'] . '</td>';
+        $html .=   '<td width="12 %" align="center" style="line-height:40px;vertical-align: middle;"> ' . $Result_Detail['itemcode2'] . '</td>';
+        $html .=   '<td width="30 %" align="center" style="line-height:40px;vertical-align: middle;"> ' . $Result_Detail['itemcode'] . '</td>';
         // $html .=   '<td width="36 %" align="center"> ' . $Result_Detail['itemcode'] . '</td>';
         $html .=   '<td width="50 %" align="left"  style="line-height:40px;vertical-align: middle;"> ' . $Result_Detail['itemname'] . '</td>';
-        $html .=   '<td width="10 %" align="center">' . $Result_Detail['cnt_pay'] . '</td>';
+        $html .=   '<td width="10 %" align="center" style="line-height:40px;vertical-align: middle;">' . $Result_Detail['cnt_pay'] . '</td>';
         $html .=  '</tr>';
         $count++;
     }

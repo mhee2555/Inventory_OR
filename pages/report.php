@@ -90,12 +90,12 @@
                         <div class="col-md-8">
                             <div class="form-check-inline">
                                 <label class="form-check-label" style="color:black;">
-                                    <input type="radio" class="form-check-input f18" name="radio_date" id="radio_year1" checked="">หนึ่งปี
+                                    <input type="radio" class="form-check-input f18" name="radio_year" id="radio_year1" checked="">หนึ่งปี
                                 </label>
                             </div>
                             <div class="form-check-inline">
                                 <label class="form-check-label" style="color:black;">
-                                    <input type="radio" class="form-check-input f18" name="radio_date" id="radio_year2">หลายปี
+                                    <input type="radio" class="form-check-input f18" name="radio_year" id="radio_year2">หลายปี
                                 </label>
                             </div>
                         </div>

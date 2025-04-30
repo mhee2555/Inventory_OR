@@ -223,22 +223,20 @@ function setActive_feeddata_hncode_detail(ID, DocNo,HnCode) {
 
   $("#btn_Tracking").attr("disabled", false);
 
-  $("#btn_Tracking").click(function () {
-    option = "?DocNo=" + $("#btn_Tracking").data("DocNo");
-    window.open("report/Report_Medical_Instrument_Tracking.php" + option, "_blank");
-  });
 
-  $("#btn_cost").click(function () {
-    option = "?DocNo=" + $("#btn_Tracking").data("DocNo");
-    window.open("report/Report_Patient_Cost_Summary.php" + option, "_blank");
-  });
-
-
-  
 
   // alert(DocNo);
   feeddata_hncode_detail(DocNo,HnCode);
 }
+$("#btn_Tracking").click(function () {
+  option = "?DocNo=" + $("#btn_Tracking").data("DocNo");
+  window.open("report/Report_Medical_Instrument_Tracking.php" + option, "_blank");
+});
+
+$("#btn_cost").click(function () {
+  option = "?DocNo=" + $("#btn_Tracking").data("DocNo");
+  window.open("report/Report_Patient_Cost_Summary.php" + option, "_blank");
+});
 
 $("#btn_excel_all").click(function () {
   option = "?select_SDate=" + $("#select_SDate").val()+"&select_EDate=" + $("#select_EDate").val();
