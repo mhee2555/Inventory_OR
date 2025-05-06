@@ -91,6 +91,11 @@ function show_detail_hn() {
 
           if (value.Procedure_TH == "button") {
             value.Procedure_TH = `<a class="text-primary" style="cursor:pointer;" onclick='showDetail_Procedure("${value.procedure}")'>หัตถการ</a>`;
+            var styleP = ``;
+            var titleP = ``;
+          }else{
+            var styleP = `style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 300px;" `;
+            var titleP = `title="${value.Procedure_TH}"`;
           }
           if (value.Doctor_Name == "button") {
             value.Doctor_Name = `<a class="text-primary" style="cursor:pointer;" onclick='showDetail_Doctor("${value.doctor}")'>แพทย์</a>`;
@@ -106,7 +111,7 @@ function show_detail_hn() {
             `<td class="text-left" >${value.HnCode}</td>` +
             `<td class="text-left">${value.departmentroomname}</td>` +
             `<td class="text-left">${value.Doctor_Name}</td>` +
-            `<td class="text-left" >${value.Procedure_TH}</td>` +
+            `<td class="text-left" ${styleP} ${titleP} >${value.Procedure_TH}</td>` +
             ` </tr>`;
         });
       } else {

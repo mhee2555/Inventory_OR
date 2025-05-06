@@ -79,7 +79,7 @@
 
                             <div class="row">
                                 <div class="col-md-12" style="text-align: end;">
-                                    <button class="btn" id="btn_wait_receive" style="color:#fff;background-color:#1570EF;font-size:20px;">ยืนยัน</button>
+                                    <button class="btn" id="btn_wait_receive" style="color:#fff;background-color:#643695;font-size:20px;">ยืนยัน</button>
 
                                 </div>
                             </div>
@@ -117,7 +117,7 @@
                             <div class="row">
                                 <div class="col-md-12" style="text-align: end;">
                                     <button class="btn btn-outline-secondary f18" id="btn_cancel" >ยกเลิก</button>
-                                    <button class="btn f18" id="btn_send" style="color:#fff;background-color:#1570EF;font-size:20px;">ส่งไป N Sterile</button>
+                                    <button class="btn f18" id="btn_send" style="color:#fff;background-color:#643695;font-size:20px;">ส่งไป N Sterile</button>
 
                                 </div>
                             </div>
@@ -202,7 +202,7 @@
             <!-- Modal Footer -->
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-secondary f18"  data-dismiss="modal" >ยกเลิก</button>
-                <button type="button" class="btn f18" style="color:#fff;background-color:#1570EF;" id="btn_save_damage"> บันทึก</button>
+                <button type="button" class="btn f18" style="color:#fff;background-color:#643695;" id="btn_save_damage"> บันทึก</button>
             </div>
         </div>
     </div>

@@ -24,7 +24,7 @@ $doc = $_GET['doc'];
             <div class="card">
                 <div class="card-body">
                     <div class="text-center">
-                        <button class="btn btn-lg mb-3 " style="width: 100%;background-color: #1570EF;color:#fff;">ยืนยัน!</button>
+                        <button class="btn btn-lg mb-3 " style="width: 100%;background-color: #643695;color:#fff;">ยืนยัน!</button>
 
                         <h2 style="color: black;">ยืนยัน การรับอุปกรณ์ !</h2>
 
@@ -41,7 +41,7 @@ $doc = $_GET['doc'];
                             </div>
 
                             <div class="mb-3">
-                                <button class="btn btn-lg mb-3 " style="width: 100%;background-color: #1570EF;color:#fff;" id="btn_save_item">ยืนยัน การรับอุปกรณ์ !</button>
+                                <button class="btn btn-lg mb-3 " style="width: 100%;background-color: #643695;color:#fff;" id="btn_save_item">ยืนยัน การรับอุปกรณ์ !</button>
                             </div>
 
                         </div>

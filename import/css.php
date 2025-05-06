@@ -33,19 +33,19 @@
         display: inline-block;
         padding: 8px 15px;
         /* เพิ่มระยะขอบ */
-        border: 2px solid #007bff;
+        border: 2px solid #5A3187;
         /* เส้นขอบสีฟ้า */
         border-radius: 8px;
         /* มุมโค้งมน */
         font-size: 16px;
         font-weight: bold;
-        color: #007bff;
-        background-color: #f8f9fa;
+        color: #5A3187;
+        background-color: #F5F0FA;
         /* สีพื้นหลัง */
     }
 
     .custom-label:hover {
-        background-color: #007bff;
+        background-color: #5A3187;
         color: white;
     }
 

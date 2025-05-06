@@ -71,7 +71,7 @@
 
                                 <div class="col-md-12 text-right">
                                     <button class="btn btn-danger" id="btn_Clear_doctor_deproom" style="color: #fff;font-size:20px;"> <i class="fa-solid fa-repeat"></i> รีเซ็ต</button>
-                                    <button class="btn" id="btn_Save_doctor_deproom" style="color: #fff;background: #1570EF;font-size:20px;"> <i class="fa-solid fa-arrow-down"></i> บันทึก</button>
+                                    <button class="btn" id="btn_Save_doctor_deproom" style="color: #fff;background: #643695;font-size:20px;"> <i class="fa-solid fa-arrow-down"></i> บันทึก</button>
                                 </div>
                             </div>
                         </div>
@@ -126,7 +126,7 @@
 
                                 <div class="col-md-12 text-right">
                                     <button class="btn btn-danger" id="btn_Clear_deproom_proceduce" style="color: #fff;font-size:20px;"> <i class="fa-solid fa-repeat"></i> รีเซ็ต</button>
-                                    <button class="btn" id="btn_Save_deproom_proceduce" style="color: #fff;background: #1570EF;font-size:20px;"> <i class="fa-solid fa-arrow-down"></i> บันทึก</button>
+                                    <button class="btn" id="btn_Save_deproom_proceduce" style="color: #fff;background: #643695;font-size:20px;"> <i class="fa-solid fa-arrow-down"></i> บันทึก</button>
                                 </div>
                             </div>
                         </div>

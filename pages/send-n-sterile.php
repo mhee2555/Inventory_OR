@@ -160,8 +160,8 @@
 
     <div class="row">
         <div class="col-md-12" style="text-align: end;">
-            <button class="btn" id="btn_create_sendsterile" style="color:#fff;background-color:#1570EF;font-size:20px;">ยืนยัน</button>
-            <button class="btn" id="btn_create_sendsterile_sud" hidden style="color:#fff;background-color:#1570EF;font-size:20px;">ยืนยัน</button>
+            <button class="btn" id="btn_create_sendsterile" style="color:#fff;background-color:#643695;font-size:20px;">ยืนยัน</button>
+            <button class="btn" id="btn_create_sendsterile_sud" hidden style="color:#fff;background-color:#643695;font-size:20px;">ยืนยัน</button>
         </div>
     </div>
 
@@ -222,7 +222,7 @@
                 <!-- Modal Footer -->
                 <div class="modal-footer">
                     <button type="button" class="btn" data-dismiss="modal" style="color:#fff;background-color:#ed1c24;font-size:20px;">ยกเลิก</button>
-                    <button type="button" class="btn" style="color:#fff;background-color:#1570EF;font-size:20px;" id="btn_send_sterile"> บันทึก</button>
+                    <button type="button" class="btn" style="color:#fff;background-color:#643695;font-size:20px;" id="btn_send_sterile"> บันทึก</button>
                 </div>
             </div>
         </div>
@@ -294,7 +294,7 @@
             <!-- Modal Footer -->
             <div class="modal-footer">
                 <button type="button" class="btn" data-dismiss="modal" style="color:#fff;background-color:#ed1c24;font-size:20px;">ยกเลิก</button>
-                <button type="button" class="btn" style="color:#fff;background-color:#1570EF;font-size:20px;" id="btn_save_damage"> บันทึก</button>
+                <button type="button" class="btn" style="color:#fff;background-color:#643695;font-size:20px;" id="btn_save_damage"> บันทึก</button>
             </div>
         </div>
     </div>
@@ -333,7 +333,7 @@
                 <!-- Modal Footer -->
                 <div class="modal-footer">
                     <button type="button" class="btn" data-dismiss="modal" style="color:#fff;background-color:#ed1c24;font-size:20px;">ยกเลิก</button>
-                    <button type="button" class="btn" style="color:#fff;background-color:#1570EF;font-size:20px;" id="btn_show_report">แสดง</button>
+                    <button type="button" class="btn" style="color:#fff;background-color:#643695;font-size:20px;" id="btn_show_report">แสดง</button>
                 </div>
             </div>
         </div>
@@ -373,7 +373,7 @@
                 <!-- Modal Footer -->
                 <div class="modal-footer">
                     <button type="button" class="btn" data-dismiss="modal" style="color:#fff;background-color:#ed1c24;font-size:20px;">ยกเลิก</button>
-                    <button type="button" class="btn" style="color:#fff;background-color:#1570EF;font-size:20px;" id="btn_show_excel">แสดง</button>
+                    <button type="button" class="btn" style="color:#fff;background-color:#643695;font-size:20px;" id="btn_show_excel">แสดง</button>
                 </div>
             </div>
         </div>

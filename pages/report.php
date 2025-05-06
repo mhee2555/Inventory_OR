@@ -30,7 +30,7 @@
         <div class="row mt-3">
 
 
-            <div class="col-md-7">
+            <div class="col-md-6">
 
                 <div class="row">
                     <div class="col-md-12 mt-3">
@@ -180,19 +180,22 @@
                 </div>
 
             </div>
-            <div class="col-md-5 mt-5 text-right ">
+
+
+
+            <div class="col-md-6 text-right ">
                         <div class="row">
-                            <div class="col-md-12 text-right">
-                                <button class="btn btn-light  f18 " id="btn_reset" style="border-color: black;width: 200px;line-height: 40px;"><i class="fa-solid fa-repeat"></i> รีเซ็ต</button>
+                            <div class="col-md-12 text-right mt-3">
+                                <button class="btn btn-outline-danger f18" id="btn_report" style="width: 200px;line-height: 40px;"><i class="fa-solid fa-file-pdf"></i> PDF</button>
                             </div>
                             <div class="col-md-12 text-right mt-3">
-                                <button class="btn btn-danger f18" id="btn_report" style="width: 200px;line-height: 40px;"><i class="fa-solid fa-file-pdf"></i> PDF</button>
-                            </div>
-                            <div class="col-md-12 text-right mt-3">
-                                <button class="btn btn-success f18 " style="width: 200px;line-height: 40px;"><i class="fa-solid fa-file-excel"></i> Excel</button>
+                                <button class="btn btn-outline-success f18" style="width: 200px;line-height: 40px;"><i class="fa-solid fa-file-excel"></i> Excel</button>
                             </div>
                         </div>
             </div>
         </div>
+    </div>
+    <div class="card-footer text-right">
+        <button class="btn btn-light  f18 " id="btn_reset" style="border-color: black;width: 200px;line-height: 40px;"><i class="fa-solid fa-repeat"></i> รีเซ็ต</button>
     </div>
 </div>

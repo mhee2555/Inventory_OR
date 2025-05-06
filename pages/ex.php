@@ -63,7 +63,7 @@
                 </div>
 
                 <div class="col-md-3 text-center">
-                    <button class="btn btn-block f18" id="btn_sendNSterile" style="background-color: #1570EF;color:#fff;">ส่งไป N-Sterile</button>
+                    <button class="btn btn-block f18" id="btn_sendNSterile" style="background-color: #643695;color:#fff;">ส่งไป N-Sterile</button>
                     <a href="pages/send-n-sterile.php" class="btn btn-primary" id="btn_send" hidden>cc</a>
 
                 </div>

@@ -177,12 +177,12 @@ if ($type_date == 1) {
     if ($checkday == 1) {
         $date1 = $date1[2] . '-' . $date1[1] . '-' . $date1[0];
 
-        $where_date = "AND DATE(deproom.serviceDate) = '$date1'  ";
+        $where_date = "AND DATE(deproomdetailsub.PayDate) = '$date1'  ";
     } else {
         $date1 = $date1[2] . '-' . $date1[1] . '-' . $date1[0];
         $date2 = $date2[2] . '-' . $date2[1] . '-' . $date2[0];
 
-        $where_date = "AND DATE(deproom.serviceDate) BETWEEN '$date1' 	AND '$date2' ";
+        $where_date = "AND DATE(deproomdetailsub.PayDate) BETWEEN '$date1' 	AND '$date2' ";
     }
 }
 
@@ -190,10 +190,10 @@ if ($type_date == 2) {
     $year1 = $year1-543;
 
     if ($checkmonth == 1) {
-        $where_date = "AND MONTH(deproom.serviceDate) = '$month1' AND YEAR(deproom.serviceDate) = '$year1'  ";
+        $where_date = "AND MONTH(deproomdetailsub.PayDate) = '$month1' AND YEAR(deproom.serviceDate) = '$year1'  ";
 
     } else {
-        $where_date = "AND MONTH(deproom.serviceDate) BETWEEN '$month1' 	AND '$month2' AND YEAR(deproom.serviceDate) = '$year1' ";
+        $where_date = "AND MONTH(deproomdetailsub.PayDate) BETWEEN '$month1' 	AND '$month2' AND YEAR(deproom.serviceDate) = '$year1' ";
     }
 }
 
@@ -204,10 +204,10 @@ if ($type_date == 3) {
 
 
     if ($checkyear == 1) {
-        $where_date = "AND YEAR(deproom.serviceDate) = '$year1'  ";
+        $where_date = "AND YEAR(deproomdetailsub.PayDate) = '$year1'  ";
 
     } else {
-        $where_date = "AND YEAR(deproom.serviceDate) BETWEEN '$year1' 	AND '$year2' ";
+        $where_date = "AND YEAR(deproomdetailsub.PayDate) BETWEEN '$year1' 	AND '$year2' ";
     }
 }
 

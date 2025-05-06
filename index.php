@@ -377,7 +377,7 @@ if (!isset($_SESSION['UserName'])) {
 
                 $("#conMain").html(res);
                 $("#li_main").addClass("active");
-                $("#li_main").css("background-color", "#5271ff");
+                $("#li_main").css("background-color", "#643695");
                 history.pushState({}, "Results for `Cats`", 'index.php?s=main');
                 document.title = "main";
                 loadScript('script-function/main.js');
@@ -394,7 +394,7 @@ if (!isset($_SESSION['UserName'])) {
 
                 $("#conMain").html(res);
                 $("#li_roomcheck").addClass("active");
-                $("#li_roomcheck").css("background-color", "#5271ff");
+                $("#li_roomcheck").css("background-color", "#643695");
                 history.pushState({}, "Results for `Cats`", 'index.php?s=roomcheck');
                 document.title = "roomcheck";
                 loadScript('script-function/roomcheck.js');
@@ -410,7 +410,7 @@ if (!isset($_SESSION['UserName'])) {
 
                 $("#conMain").html(res);
                 $("#li_pay_roomcheck").addClass("active");
-                $("#li_pay_roomcheck").css("background-color", "#5271ff");
+                $("#li_pay_roomcheck").css("background-color", "#643695");
                 history.pushState({}, "Results for `Cats`", 'index.php?s=pay_roomcheck');
                 document.title = "pay_roomcheck";
                 loadScript('script-function/pay_roomcheck.js');
@@ -425,7 +425,9 @@ if (!isset($_SESSION['UserName'])) {
             // http://10.11.9.54:8000/Login/Index?user=stock&pass=111
             // http://10.11.9.54:8000/ จริง
             // http://10.11.9.3:8003/ test
-            window.open(" http://10.11.9.3:8003/Login/Index?user=" + UserName_login + "&pass=" + Password, "_blank");
+            window.open(" http://192.168.2.101:8003/Login/Index?user="+UserName_login+"&pass="+Password, "_blank");
+
+            // window.open(" http://10.11.9.3:8003/Login/Index?user=" + UserName_login + "&pass=" + Password, "_blank");
 
 
             e.preventDefault();
@@ -473,7 +475,7 @@ if (!isset($_SESSION['UserName'])) {
 
                 $("#conMain").html(res);
                 $("#li_recieve_stock").addClass("active");
-                $("#li_recieve_stock").css("background-color", "#5271ff");
+                $("#li_recieve_stock").css("background-color", "#643695");
                 history.pushState({}, "Results for `Cats`", 'index.php?s=recieve_stock');
                 document.title = "recieve_stock";
                 loadScript('script-function/recieve_stock.js');
@@ -528,7 +530,7 @@ if (!isset($_SESSION['UserName'])) {
 
                 $("#conMain").html(res);
                 $("#li_create_request").addClass("active");
-                $("#li_create_request").css("background-color", "#5271ff");
+                $("#li_create_request").css("background-color", "#643695");
                 history.pushState({}, "Results for `Cats`", 'index.php?s=create_request');
                 document.title = "create_request";
                 loadScript('script-function/create_request.js');
@@ -579,7 +581,7 @@ if (!isset($_SESSION['UserName'])) {
 
                 $("#conMain").html(res);
                 $("#li_pay").addClass("active");
-                $("#li_pay").css("background-color", "#5271ff");
+                $("#li_pay").css("background-color", "#643695");
                 history.pushState({}, "Results for `Cats`", 'index.php?s=pay');
                 document.title = "pay";
                 loadScript('script-function/pay.js');
@@ -630,7 +632,7 @@ if (!isset($_SESSION['UserName'])) {
 
                 $("#conMain").html(res);
                 $("#li_receive_dirty").addClass("active");
-                $("#li_receive_dirty").css("background-color", "#5271ff");
+                $("#li_receive_dirty").css("background-color", "#643695");
                 history.pushState({}, "Results for `Cats`", 'index.php?s=receive_dirty');
                 document.title = "receive_dirty";
                 loadScript('script-function/receive_dirty.js');
@@ -679,7 +681,7 @@ if (!isset($_SESSION['UserName'])) {
 
                 $("#conMain").html(res);
                 $("#li_send-n-sterile").addClass("active");
-                $("#li_send-n-sterile").css("background-color", "#5271ff");
+                $("#li_send-n-sterile").css("background-color", "#643695");
                 history.pushState({}, "Results for `Cats`", 'index.php?s=send-n-sterile');
                 document.title = "send-n-sterile";
                 loadScript('script-function/send-n-sterile.js');
@@ -728,7 +730,7 @@ if (!isset($_SESSION['UserName'])) {
 
                 $("#conMain").html(res);
                 $("#li_register_item").addClass("active");
-                $("#li_register_item").css("background-color", "#5271ff");
+                $("#li_register_item").css("background-color", "#643695");
                 history.pushState({}, "Results for `Cats`", 'index.php?s=register_item');
                 document.title = "register_item";
                 loadScript('script-function/register_item.js');
@@ -777,7 +779,7 @@ if (!isset($_SESSION['UserName'])) {
 
                 $("#conMain").html(res);
                 $("#li_stock_item").addClass("active");
-                $("#li_stock_item").css("background-color", "#5271ff");
+                $("#li_stock_item").css("background-color", "#643695");
                 history.pushState({}, "Results for `Cats`", 'index.php?s=stock_item');
                 document.title = "stock_item";
                 loadScript('script-function/stock_item.js');
@@ -799,7 +801,7 @@ if (!isset($_SESSION['UserName'])) {
 
                 $("#conMain").html(res);
                 $("#li_surgery").addClass("active");
-                $("#li_surgery").css("background-color", "#5271ff");
+                $("#li_surgery").css("background-color", "#643695");
                 history.pushState({}, "Results for `Cats`", 'index.php?s=surgery');
                 document.title = "surgery";
                 loadScript('script-function/surgery.js');
@@ -849,7 +851,7 @@ if (!isset($_SESSION['UserName'])) {
 
                 $("#conMain").html(res);
                 $("#li_hn").addClass("active");
-                $("#li_hn").css("background-color", "#5271ff");
+                $("#li_hn").css("background-color", "#643695");
                 history.pushState({}, "Results for `Cats`", 'index.php?s=hn');
                 document.title = "hn";
                 loadScript('script-function/hn.js');
@@ -898,7 +900,7 @@ if (!isset($_SESSION['UserName'])) {
 
                 $("#conMain").html(res);
                 $("#li_setting").addClass("active");
-                $("#li_setting").css("background-color", "#5271ff");
+                $("#li_setting").css("background-color", "#643695");
                 history.pushState({}, "Results for `Cats`", 'index.php?s=setting');
                 document.title = "setting";
                 loadScript('script-function/setting.js');
@@ -947,7 +949,7 @@ if (!isset($_SESSION['UserName'])) {
 
                 $("#conMain").html(res);
                 $("#li_movement").addClass("active");
-                $("#li_movement").css("background-color", "#5271ff");
+                $("#li_movement").css("background-color", "#643695");
                 history.pushState({}, "Results for `Cats`", 'index.php?s=movement');
                 document.title = "movement";
                 loadScript('script-function/movement.js');
@@ -997,7 +999,7 @@ if (!isset($_SESSION['UserName'])) {
 
                 $("#conMain").html(res);
                 $("#li_adjuststock").addClass("active");
-                $("#li_adjuststock").css("background-color", "#5271ff");
+                $("#li_adjuststock").css("background-color", "#643695");
                 history.pushState({}, "Results for `Cats`", 'index.php?s=adjuststock');
                 document.title = "adjuststock";
                 loadScript('script-function/adjuststock.js');
@@ -1044,7 +1046,7 @@ if (!isset($_SESSION['UserName'])) {
 
                 $("#conMain").html(res);
                 $("#li_manage").addClass("active");
-                $("#li_manage").css("background-color", "#5271ff");
+                $("#li_manage").css("background-color", "#643695");
                 history.pushState({}, "Results for `Cats`", 'index.php?s=manage');
                 document.title = "manage";
                 loadScript('script-function/manage.js');
@@ -1091,7 +1093,7 @@ if (!isset($_SESSION['UserName'])) {
 
                 $("#conMain").html(res);
                 $("#li_report").addClass("active");
-                $("#li_report").css("background-color", "#5271ff");
+                $("#li_report").css("background-color", "#643695");
                 history.pushState({}, "Results for `Cats`", 'index.php?s=report');
                 document.title = "report";
                 loadScript('script-function/report.js');
@@ -1107,7 +1109,7 @@ if (!isset($_SESSION['UserName'])) {
 
                 $("#conMain").html(res);
                 $("#li_return-confirm").addClass("active");
-                $("#li_return-confirm").css("background-color", "#5271ff");
+                $("#li_return-confirm").css("background-color", "#643695");
                 history.pushState({}, "Results for `Cats`", 'index.php?s=return-confirm');
                 document.title = "return-confirm";
             });

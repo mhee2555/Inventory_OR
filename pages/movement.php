@@ -71,7 +71,7 @@
 
                 <div class="col-md-4" style="margin-top: 2.5rem !important;">
                     <button class="btn f18" style="color:#6f6f6f;">ล้างข้อมูล</button>
-                    <button class="btn f18" style="background-color: #1570EF;color:#fff;">บันทึก</button>
+                    <button class="btn f18" style="background-color: #643695;color:#fff;">บันทึก</button>
 
 
                 </div>

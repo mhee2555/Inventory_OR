@@ -75,11 +75,11 @@ $(function () {
   $("#return").hide();
 
   $("#radio_pay").css("color", "#bbbbb");
-  $("#radio_pay").css("background", "#EAECF0");
+  $("#radio_pay").css("background", "#EAE1F4");
 
   $("#radio_pay").click(function () {
     $("#radio_pay").css("color", "#bbbbb");
-    $("#radio_pay").css("background", "#EAECF0");
+    $("#radio_pay").css("background", "#EAE1F4");
 
     $("#radio_history_pay").css("color", "black");
     $("#radio_history_pay").css("background", "");
@@ -125,7 +125,7 @@ $(function () {
 
   $("#radio_pay_manual").click(function () {
     $("#radio_pay_manual").css("color", "#bbbbb");
-    $("#radio_pay_manual").css("background", "#EAECF0");
+    $("#radio_pay_manual").css("background", "#EAE1F4");
 
     $("#radio_history_pay").css("color", "black");
     $("#radio_history_pay").css("background", "");
@@ -216,7 +216,7 @@ $(function () {
 
   $("#radio_return_pay").click(function () {
     $("#radio_return_pay").css("color", "#bbbbb");
-    $("#radio_return_pay").css("background", "#EAECF0");
+    $("#radio_return_pay").css("background", "#EAE1F4");
     $("#radio_pay").css("color", "black");
     $("#radio_pay").css("background", "");
     $("#radio_history_pay").css("color", "black");
@@ -235,7 +235,7 @@ $(function () {
 
   $("#radio_history_pay").click(function () {
     $("#radio_history_pay").css("color", "#bbbbb");
-    $("#radio_history_pay").css("background", "#EAECF0");
+    $("#radio_history_pay").css("background", "#EAE1F4");
 
     $("#radio_pay").css("color", "black");
     $("#radio_pay").css("background", "");
@@ -316,7 +316,7 @@ $(function () {
 
   $("#radio_claim").click(function () {
     $("#radio_claim").css("color", "#bbbbb");
-    $("#radio_claim").css("background", "#EAECF0");
+    $("#radio_claim").css("background", "#EAE1F4");
 
     $("#radio_pay").css("color", "black");
     $("#radio_pay").css("background", "");
@@ -875,7 +875,7 @@ function show_detail_item_ByDocNo() {
                       
                       </td>
                       <td hidden class='text-center'><input type='text' class='form-control text-center f18' value="${value.cnt}" disabled id="qty_request_${value.itemcode}"></td>
-                      <td class='text-center'><input type='text' class='form-control text-center f18 loop_item_pay' value="${value.cnt_pay}"  data-itemcode='${value.itemcode}' disabled></td>
+                      <td class='text-center' style='background-color:#EEFBF9;'><input type='text' class='form-control text-center f18 loop_item_pay' value="${value.cnt_pay}"  data-itemcode='${value.itemcode}' disabled></td>
                       <td hidden class='text-center'><input type='text' class='form-control text-center f18 loop_item_balance' disabled value="${balance}" id="balance_request_${value.itemcode}"></td>
                    </tr>`;
         });
@@ -1531,7 +1531,7 @@ function show_detail_item_ByDocNo_manual() {
                       <td hidden class='text-center'><input type='text' class='form-control text-center f18' value="${
                         value.cnt
                       }" disabled id="qty_request_${value.itemcode}"></td>
-                      <td class='text-center'><input type='text' class='form-control text-center f18 loop_item_pay' value="${
+                      <td class='text-center' style='background-color:#EEFBF9;'><input type='text' class='form-control text-center f18 loop_item_pay' value="${
                         value.cnt_pay
                       }"  data-itemcode='${value.itemcode}' disabled></td>
                       <td hidden class='text-center'><input type='text' class='form-control text-center f18 loop_item_balance' disabled value="${balance}" id="balance_request_${
@@ -1607,7 +1607,7 @@ function show_detail_history() {
                       <td class='text-center'><button class='btn btn-outline-danger f18' onclick='cancel_item_byDocNo("${
                         value.DocNo
                       }")' >ยกเลิก</button></td>
-                      <td class='text-center'><button ${hidden} class='btn f18' style='background-color:#1570EF;color:#fff;' onclick='show_Report("${
+                      <td class='text-center'><button ${hidden} class='btn f18' style='background-color:#643695;color:#fff;' onclick='show_Report("${
             value.DocNo
           }")'>รายงาน</button></td>
                    </tr>`;

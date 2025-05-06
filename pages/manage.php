@@ -87,8 +87,8 @@
                                 </div>
                             </div>
                             <div class="col-md-12 mt-3 text-right">
-                                <button type="button" class="btn" id="btn_clearDoctor" style="font-size:20px;">ล้างข้อมูล</button>
-                                <button type="button" class="btn btn-primary" id="btn_saveDoctor" style="color: #fff;background-color: #1570EF;color:#fff;font-size:20px;">บันทึก</button>
+                                <button type="button" class="btn" id="btn_clearDoctor" style="border-color:gray;color:black;font-size:20px;">ล้างข้อมูล</button>
+                                <button type="button" class="btn btn-primary" id="btn_saveDoctor" style="color: #fff;background-color: #643695;color:#fff;font-size:20px;">บันทึก</button>
                             </div>
 
                         </div>
@@ -150,8 +150,8 @@
                                 </div>
                             </div>
                             <div class="col-md-12 mt-3 text-right">
-                                <button type="button" class="btn" id="btn_clearProcedure" style="font-size:20px;">ล้างข้อมูล</button>
-                                <button type="button" class="btn " id="btn_saveProcedure" style="color: #fff;background-color: #1570EF;color:#fff;font-size:20px;">บันทึก</button>
+                                <button type="button" class="btn" id="btn_clearProcedure" style="border-color:gray;color:black;font-size:20px;">ล้างข้อมูล</button>
+                                <button type="button" class="btn " id="btn_saveProcedure" style="color: #fff;background-color: #643695;color:#fff;font-size:20px;">บันทึก</button>
                             </div>
 
                         </div>
@@ -249,8 +249,8 @@
                             </div>
 
                             <div class="col-md-12 mt-3 text-right">
-                                <button type="button" class="btn" id="btn_clearDeproom" style="font-size:20px;">ล้างข้อมูล</button>
-                                <button type="button" class="btn " id="btn_saveDeproom" style="color: #fff;background-color: #1570EF;color:#fff;font-size:20px;">บันทึก</button>
+                                <button type="button" class="btn" id="btn_clearDeproom" style="border-color:gray;color:black;font-size:20px;">ล้างข้อมูล</button>
+                                <button type="button" class="btn " id="btn_saveDeproom" style="color: #fff;background-color: #643695;color:#fff;font-size:20px;">บันทึก</button>
                             </div>
 
                         </div>
@@ -356,8 +356,8 @@
                             </div>
 
                             <div class="col-md-12 mt-3 text-right">
-                                <button type="button" class="btn" id="btn_clearUser" style="font-size:20px;">ล้างข้อมูล</button>
-                                <button type="button" class="btn " id="btn_saveUser" style="color: #fff;background-color: #1570EF;color:#fff;font-size:20px;">บันทึก</button>
+                                <button type="button" class="btn" id="btn_clearUser" style="border-color:gray;color:black;font-size:20px;">ล้างข้อมูล</button>
+                                <button type="button" class="btn " id="btn_saveUser" style="color: #fff;background-color: #643695;color:#fff;font-size:20px;">บันทึก</button>
                             </div>
 
                         </div>
@@ -427,10 +427,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-12 text-right">
-                                        <button class="btn btn-danger" id="btn_Clear_doctor_deproom" style="color: #fff;font-size:20px;"> <i class="fa-solid fa-repeat"></i> รีเซ็ต</button>
-                                        <button class="btn" id="btn_Save_doctor_deproom" style="color: #fff;background: #1570EF;font-size:20px;"> <i class="fa-solid fa-arrow-down"></i> บันทึก</button>
-                                    </div>
+                       
                                 </div>
                             </div>
 
@@ -447,6 +444,10 @@
                             </div>
                         </div>
 
+                    </div>
+                    <div class="card-footer text-right">
+                        <button class="btn " id="btn_Clear_doctor_deproom" style="border-color:gray;color: black;font-size:20px;"> <i class="fa-solid fa-repeat"></i> รีเซ็ตข้อมูล</button>
+                        <button class="btn" id="btn_Save_doctor_deproom" style="color: #fff;background: #643695;font-size:20px;"> <i class="fa-solid fa-arrow-down"></i> บันทึก</button>
                     </div>
                 </div>
 
@@ -482,10 +483,6 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-12 text-right">
-                                        <button class="btn btn-danger" id="btn_Clear_deproom_proceduce" style="color: #fff;font-size:20px;"> <i class="fa-solid fa-repeat"></i> รีเซ็ต</button>
-                                        <button class="btn" id="btn_Save_deproom_proceduce" style="color: #fff;background: #1570EF;font-size:20px;"> <i class="fa-solid fa-arrow-down"></i> บันทึก</button>
-                                    </div>
                                 </div>
                             </div>
 
@@ -504,6 +501,12 @@
                         </div>
 
                     </div>
+
+                    <div class="card-footer text-right">
+                        <button class="btn" id="btn_Clear_deproom_proceduce" style="border-color:gray;color: black;font-size:20px;"> <i class="fa-solid fa-repeat"></i> รีเซ็ตข้อมูล</button>
+                        <button class="btn" id="btn_Save_deproom_proceduce" style="color: #fff;background: #643695;font-size:20px;"> <i class="fa-solid fa-arrow-down"></i> บันทึก</button>
+                    </div>
+
                 </div>
 
 
@@ -513,7 +516,7 @@
 
 
 
-            <div class="col-md-6">
+            <div class="col-md-6 mt-3">
 
                 <div class="card">
                     <div class="card-header f18 " style="color:black;">รายการที่บันทึก แพทย์&ห้องผ่าตัด</div>
@@ -546,7 +549,7 @@
 
             </div>
 
-            <div class="col-md-6">
+            <div class="col-md-6 mt-3">
 
                 <div class="card">
                     <div class="card-header f18 " style="color:black;">รายการที่บันทึก ห้องผ่าตัด&หัตถการ</div>

@@ -136,7 +136,7 @@
 
                     <div class="row">
                         <div class="col-md-12" style="text-align: end;">
-                            <button class="btn" id="btn_sendData" style="color:#fff;background-color:#1570EF;font-size:20px;">รับเข้าคลัง</button>
+                            <button class="btn" id="btn_sendData" style="color:#fff;background-color:#643695;font-size:20px;">รับเข้าคลัง</button>
                         </div>
                     </div>
 
@@ -230,7 +230,7 @@
                 <div class="col-md-12 text-right">
 
                 <div class="form-group">
-                        <button class="btn" style='background-color:#1570EF;color:#fff;'>พิมพ์รายงานค่าใช้จ่าย</button>
+                        <button class="btn" style='background-color:#643695;color:#fff;'>พิมพ์รายงานค่าใช้จ่าย</button>
                     </div>
                 </div>
                 <div class="col-md-12 mt-3">

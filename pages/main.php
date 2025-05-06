@@ -54,7 +54,7 @@
             </div>
           </div>
           <div class="col-md-12 text-left">
-            <a href="pages/ex.php" class="btn btn-primary" id="btn_ex" style="font-size: 25px;background-color:#1570EF;"> <label class="mb-0" id="go_ex">ไปยังหน้า อุปกรณ์หมดอายุ <i class="fa-solid fa-arrow-right-long" style="font-size: 15px;margin-left: 15px;"></i> </label> </a>
+            <a href="pages/ex.php" class="btn btn-primary" id="btn_ex" style="font-size: 25px;background-color:#643695;"> <label class="mb-0" id="go_ex">ไปยังหน้า อุปกรณ์หมดอายุ <i class="fa-solid fa-arrow-right-long" style="font-size: 15px;margin-left: 15px;"></i> </label> </a>
           </div>
         </div>
       </div>
@@ -73,7 +73,7 @@
             </div>
           </div>
           <div class="col-md-12 text-left">
-            <a href="pages/ex.php" class="btn btn-primary" id="btn_exsoon" style="font-size: 25px;background-color:#1570EF;"> <label class="mb-0" id="go_exsoon">ไปยังหน้า อุปกรณ์ใกล้หมดอายุ <i class="fa-solid fa-arrow-right-long" style="font-size: 15px;margin-left: 15px;"></i> </label> </a>
+            <a href="pages/ex.php" class="btn btn-primary" id="btn_exsoon" style="font-size: 25px;background-color:#643695;"> <label class="mb-0" id="go_exsoon">ไปยังหน้า อุปกรณ์ใกล้หมดอายุ <i class="fa-solid fa-arrow-right-long" style="font-size: 15px;margin-left: 15px;"></i> </label> </a>
           </div>
         </div>
       </div>
@@ -103,7 +103,7 @@
             <!-- <img src="assets/img_project/1_icon/fluent-emoji_bell.png" alt="" style="width:50px;"> -->
           </div>
           <div class="col-md-12 text-left">
-            <a href="pages/recieve_stock.php" class="btn btn-primary" id="btn_receive_stock" style="font-size: 25px;background-color:#1570EF;"> <label class="mb-0" id="go_receive_stock">ไปยังหน้า รับอุปกรณ์เข้าคลังหลักห้องผ่าตัด<i class="fa-solid fa-arrow-right-long" style="font-size: 15px;margin-left: 15px;"></i> </label> </a>
+            <a href="pages/recieve_stock.php" class="btn btn-primary" id="btn_receive_stock" style="font-size: 25px;background-color:#643695;"> <label class="mb-0" id="go_receive_stock">ไปยังหน้า รับอุปกรณ์เข้าคลังหลักห้องผ่าตัด<i class="fa-solid fa-arrow-right-long" style="font-size: 15px;margin-left: 15px;"></i> </label> </a>
           </div>
         </div>
       </div>
@@ -122,7 +122,7 @@
             </div>
           </div>
           <div class="col-md-12 text-left">
-            <a href="pages/use_deproom.php" class="btn btn-primary" id="btn_use_deproom" style="font-size: 25px;background-color:#1570EF;"> <label class="mb-0" id="go_use_deproom">ไปยังหน้า อุปกรณ์ในห้องผ่าตัด<i class="fa-solid fa-arrow-right-long" style="font-size: 15px;margin-left: 15px;"></i> </label> </a>
+            <a href="pages/use_deproom.php" class="btn btn-primary" id="btn_use_deproom" style="font-size: 25px;background-color:#643695;"> <label class="mb-0" id="go_use_deproom">ไปยังหน้า อุปกรณ์ในห้องผ่าตัด<i class="fa-solid fa-arrow-right-long" style="font-size: 15px;margin-left: 15px;"></i> </label> </a>
           </div>
         </div>
       </div>
@@ -140,7 +140,7 @@
             </div>
           </div>
           <div class="col-md-12 text-left">
-            <a href="pages/damaged.php" class="btn btn-primary" id="btn_damage" style="font-size: 25px;background-color:#1570EF;"> <label class="mb-0" id="go_damage">ไปยังหน้า แจ้งเตือนการบันทึกอุปกรณ์ชำรุด<i class="fa-solid fa-arrow-right-long" style="font-size: 15px;margin-left: 15px;"></i> </label> </a>
+            <a href="pages/damaged.php" class="btn btn-primary" id="btn_damage" style="font-size: 25px;background-color:#643695;"> <label class="mb-0" id="go_damage">ไปยังหน้า แจ้งเตือนการบันทึกอุปกรณ์ชำรุด<i class="fa-solid fa-arrow-right-long" style="font-size: 15px;margin-left: 15px;"></i> </label> </a>
           </div>
         </div>
       </div>
@@ -160,7 +160,7 @@
             </div>
           </div>
           <div class="col-md-12 text-left">
-            <a href="#" class="btn btn-primary" id="btn_exsoon" style="font-size: 25px;background-color:#1570EF;"> <label class="mb-0" id="go_exsoon">ไปยังหน้า ห้องผ่าตัดขอเบิกเพิ่ม<i class="fa-solid fa-arrow-right-long" style="font-size: 15px;margin-left: 15px;"></i> </label> </a>
+            <a href="#" class="btn btn-primary" id="btn_exsoon" style="font-size: 25px;background-color:#643695;"> <label class="mb-0" id="go_exsoon">ไปยังหน้า ห้องผ่าตัดขอเบิกเพิ่ม<i class="fa-solid fa-arrow-right-long" style="font-size: 15px;margin-left: 15px;"></i> </label> </a>
           </div>
         </div>
       </div>
@@ -185,7 +185,7 @@
             </ul>
           </div>
           <div class="col-md-12 text-left">
-            <a href="pages/nouse.php" class="btn btn-primary" id="btn_nouse" style="font-size: 25px;background-color:#1570EF;"> <label class="mb-0" id="go_nouse">ไปยังหน้า อุปกรณ์ที่ไม่ใช้กับคนไข้<i class="fa-solid fa-arrow-right-long" style="font-size: 15px;margin-left: 15px;"></i> </label> </a>
+            <a href="pages/nouse.php" class="btn btn-primary" id="btn_nouse" style="font-size: 25px;background-color:#643695;"> <label class="mb-0" id="go_nouse">ไปยังหน้า อุปกรณ์ที่ไม่ใช้กับคนไข้<i class="fa-solid fa-arrow-right-long" style="font-size: 15px;margin-left: 15px;"></i> </label> </a>
           </div>
         </div>
       </div>
@@ -203,7 +203,7 @@
             </div>
           </div>
           <div class="col-md-12 text-left">
-            <a href="pages/borrow.php" class="btn btn-primary" id="btn_borrow" style="font-size: 25px;background-color:#1570EF;"> <label class="mb-0" id="go_nouse">ไปยังหน้า แจ้งเตือนยืมของ<i class="fa-solid fa-arrow-right-long" style="font-size: 15px;margin-left: 15px;"></i> </label> </a>
+            <a href="pages/borrow.php" class="btn btn-primary" id="btn_borrow" style="font-size: 25px;background-color:#643695;"> <label class="mb-0" id="go_nouse">ไปยังหน้า แจ้งเตือนยืมของ<i class="fa-solid fa-arrow-right-long" style="font-size: 15px;margin-left: 15px;"></i> </label> </a>
           </div>
         </div>
       </div>

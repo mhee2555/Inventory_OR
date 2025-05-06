@@ -80,7 +80,7 @@
                 </div>
 
                 <div class="col-md-2" style="margin-top: 2rem !important;">
-                    <button class="btn btn-block f18" style="background-color: #1570EF;color:#fff;" id="btn_search_request"><i class="fa-solid fa-magnifying-glass"></i> ค้นหา</button>
+                    <button class="btn btn-block f18" style="background-color: #643695;color:#fff;" id="btn_search_request"><i class="fa-solid fa-magnifying-glass"></i> ค้นหา</button>
                 </div>
 
                 <div class="col-md-12 mt-3">
@@ -111,7 +111,7 @@
                 </div>
 
                 <div class="col-md-12 text-right mt-2">
-                    <button class="btn f18" style="background-color: #1570EF;color:#fff;" id="btn_confirm_request">ยืนยัน</button>
+                    <button class="btn f18" style="background-color: #643695;color:#fff;" id="btn_confirm_request">ยืนยัน</button>
                 </div>
             </div>
         </div>
@@ -212,7 +212,7 @@
                 </div>
                 <div class="col-md-12 text-right mt-2">
                     <button class="btn f18" id="btn_clear_request">ล้างข้อมูล</button>
-                    <button class="btn f18" style="background-color: #1570EF;color:#fff;" id="btn_confirm_send_request">ส่งข้อมูล</button>
+                    <button class="btn f18" style="background-color: #643695;color:#fff;" id="btn_confirm_send_request">ส่งข้อมูล</button>
                 </div>
             </div>
         </div>
@@ -254,7 +254,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-3">
+                <div class="col-md-2">
 
                     <div class="row">
                         <div class="col-md-12">
@@ -282,8 +282,14 @@
                     </div>
 
                 </div>
-                <div class="col-md-1">
-                    <button class="btn btn-success" style="margin-top: 1.9rem !important;" id="btn_show_report">EXCEL</button>
+                <div class="col-md-2">
+                            <div class="form-group ">
+                                <label style="color:black;font-weight: 600;">รายงาน SUDs</label>
+                                <br>
+                                <button class="btn  btn-block" style="border-color: gray;color:green;font-weight: bold;"  id="btn_show_report"><i class="fa-solid fa-file-excel"></i> EXCEL</button>
+                            </div>
+                    </div>
+                    
                 </div>
                 <div class="col-md-12 mt-3">
 

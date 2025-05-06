@@ -18,15 +18,26 @@
 <!-- <body style="background-image: url(assets/img/bg-77.png);background-size: cover;"> -->
 
 <body style="overflow-y: hidden;">
+
+
+
     <div class="wallpaper">
+
+
+
+
         <div class="d-flex pr-5">
             <div style="" id="div_login">
                 <div class="card-body">
                     <div class="row m-0 p-0">
+
+
                         <div class="col-12 mt-2">
                             <div class="p-3">
+
+
                                 <div class="text-center">
-                                    <h1 class="h1  mb-4" style="color:#1570EF;font-weight: bold;" id="headerX">ลงชื่อเข้าใช้บัญชีของคุณ</h1>
+                                    <h1 class="h1  mb-4" style="color:#101828;font-weight: bold;" id="headerX">ลงชื่อเข้าใช้บัญชีของคุณ</h1>
                                     <small class="h5" id="small1">ยินดีต้อนรับ! กรุณากรอกรายละเอียดของคุณ</small>
                                 </div>
                                 <div class="form-group">
@@ -53,7 +64,7 @@
                                     <label class="form-check-label" for="exampleCheck1">Remember me</label>
                                 </div>
 
-                                <button class="btn-login btn-block mt-2" id="btn_login" style="background-color: #1570EF !important;">เข้าสู่ระบบ</button>
+                                <button class="btn-login btn-block mt-2" id="btn_login" style="background-color: #643695 !important;">เข้าสู่ระบบ</button>
 
                                 <hr class="mt-3">
 

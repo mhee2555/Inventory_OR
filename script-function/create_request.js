@@ -50,11 +50,11 @@ $(function () {
   $("#history_create_request").hide();
 
   $("#radio_create_request").css("color", "#bbbbb");
-  $("#radio_create_request").css("background", "#EAECF0");
+  $("#radio_create_request").css("background", "#EAE1F4");
 
   $("#radio_create_request").click(function () {
     $("#radio_create_request").css("color", "#bbbbb");
-    $("#radio_create_request").css("background", "#EAECF0");
+    $("#radio_create_request").css("background", "#EAE1F4");
 
     $("#radio_history_create_request").css("color", "black");
     $("#radio_history_create_request").css("background", "");
@@ -65,7 +65,7 @@ $(function () {
 
   $("#radio_history_create_request").click(function () {
     $("#radio_history_create_request").css("color", "#bbbbb");
-    $("#radio_history_create_request").css("background", "#EAECF0");
+    $("#radio_history_create_request").css("background", "#EAE1F4");
 
     $("#radio_create_request").css("color", "black");
     $("#radio_create_request").css("background", "");
@@ -775,7 +775,7 @@ function show_detail_history() {
 
           if (value.cnt_id == null) {
             var edit_id = `<button class='btn btn-outline-dark f18' onclick='edit_item_byDocNo("${value.DocNo}","${value.hn_record_id}","${value.serviceDate}","${value.doctor_ID}","${value.procedure_ID}","${value.deproom_ID}","${value.Remark}","${value.doctor}","${value.procedure}","${value.departmentroomname}","edit","${value.serviceTime}")'><i class="fa-regular fa-pen-to-square"></i> แก้ไข</button>`;
-            var showreport = `<button class='btn f18' style='background-color:#1570EF;color:#fff;' onclick='show_Report("${value.DocNo }")'>รายงานขอเบิก</button>`;
+            var showreport = `<button class='btn f18' style='background-color:#643695;color:#fff;' onclick='show_Report("${value.DocNo }")'>รายงานขอเบิก</button>`;
           }else{
              var edit_id = ``;
              var showreport = `<button class='btn f18 btn-success' )'>ถูกสแกนจ่าย</button>`;

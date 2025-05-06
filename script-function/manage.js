@@ -12,11 +12,11 @@ function click_main() {
   $("#row_mapping").hide();
 
   $("#manage").css("color", "#bbbbb");
-  $("#manage").css("background", "#EAECF0");
+  $("#manage").css("background", "#E0D2EF");
 
   $("#manage").click(function () {
     $("#manage").css("color", "#bbbbb");
-    $("#manage").css("background", "#EAECF0");
+    $("#manage").css("background", "#E0D2EF");
 
     $("#mapping").css("color", "black");
     $("#mapping").css("background", "");
@@ -26,7 +26,7 @@ function click_main() {
 
   $("#mapping").click(function () {
     $("#mapping").css("color", "#bbbbb");
-    $("#mapping").css("background", "#EAECF0");
+    $("#mapping").css("background", "#E0D2EF");
 
     $("#manage").css("color", "black");
     $("#manage").css("background", "");
@@ -58,13 +58,13 @@ function click_menu() {
   $("#row_users").hide();
 
   $("#radio1").css("color", "#bbbbb");
-  $("#radio1").css("background", "#EAECF0");
+  $("#radio1").css("background", "#E0D2EF");
 
   feeddata_detailDoctor();
 
   $("#radio1").click(function () {
     $("#radio1").css("color", "#bbbbb");
-    $("#radio1").css("background", "#EAECF0");
+    $("#radio1").css("background", "#E0D2EF");
 
     $("#radio2").css("color", "black");
     $("#radio2").css("background", "");
@@ -83,7 +83,7 @@ function click_menu() {
 
   $("#radio2").click(function () {
     $("#radio2").css("color", "#bbbbb");
-    $("#radio2").css("background", "#EAECF0");
+    $("#radio2").css("background", "#E0D2EF");
 
     $("#radio1").css("color", "black");
     $("#radio1").css("background", "");
@@ -102,7 +102,7 @@ function click_menu() {
 
   $("#radio3").click(function () {
     $("#radio3").css("color", "#bbbbb");
-    $("#radio3").css("background", "#EAECF0");
+    $("#radio3").css("background", "#E0D2EF");
 
     $("#radio2").css("color", "black");
     $("#radio2").css("background", "");
@@ -122,7 +122,7 @@ function click_menu() {
 
   $("#radio4").click(function () {
     $("#radio4").css("color", "#bbbbb");
-    $("#radio4").css("background", "#EAECF0");
+    $("#radio4").css("background", "#E0D2EF");
 
     $("#radio2").css("color", "black");
     $("#radio2").css("background", "");
@@ -232,13 +232,14 @@ function feeddata_detailDoctor() {
           _tr += `<tr> 
                       <td class="text-center">${kay + 1}</td>
                       <td class="text-left">${value.Doctor_Name}</td>
-                      <td class="text-center"><label style='color:blue;font-weight:bold;cursor:pointer;' onclick='editDoctor("${
-                        value.ID
-                      }","${value.Doctor_Name}","${
-            value.IsCancel
-          }")'>แก้ไข</label> | <label style='color:red;font-weight:bold;cursor:pointer;' onclick='deleteDoctor(${
-            value.ID
-          })'>ลบ</label></td>
+                      <td class="text-center">
+                      
+
+                       <button class="btn btn-outline-dark f18" onclick='editDoctor("${value.ID}","${value.Doctor_Name}","${value.IsCancel}")'  > <i class="fa-regular fa-pen-to-square"></i> แก้ไข</button>
+                       <button  class="btn btn-outline-danger f18" onclick='deleteDoctor(${value.ID})'><i class="fa-solid fa-trash-can"></i></button> 
+          
+          
+          </td>
                        </tr>`;
         });
       }
@@ -401,7 +402,15 @@ function feeddata_detailProcedure() {
             `<tr> ` +
             `<td class="text-center">${kay + 1}</td>` +
             `<td class="text-left">${value.Procedure_TH}</td>` +
-            `<td class="text-center"> <label class="edit-btn"data-id="${value.ID}" data-name="${value.Procedure_TH}" data-active="${value.IsActive}" style="color:blue;font-weight:bold;cursor:pointer;">แก้ไข</label> | <label style='color:red;font-weight:bold;cursor:pointer;' onclick='deleteProcedure(${value.ID})'>ลบ</label></td>` +
+            `<td class="text-center">
+            
+                       <button class="btn btn-outline-dark f18 edit-btn" data-id="${value.ID}" data-name="${value.Procedure_TH}" data-active="${value.IsActive}" > <i class="fa-regular fa-pen-to-square"></i> แก้ไข</button>
+                       <button  class="btn btn-outline-danger f18" onclick='deleteProcedure(${value.ID})'><i class="fa-solid fa-trash-can"></i></button> 
+            
+            
+            
+            
+            </td>` +
             ` </tr>`;
         });
 
@@ -561,6 +570,7 @@ function editUser(
   Password,
   IsCancel
 ) {
+
   $("#input_empcodeUser").val(EmpCode);
   $("#input_nameUser").val(FirstName);
   $("#input_lastUser").val(LastName);
@@ -628,10 +638,12 @@ function feeddata_detailUser() {
         $.each(ObjData, function (kay, value) {
           if (value.IsCancel == "0") {
             value.IsCancel = "Active";
+            var bg = "style='background-color:#219E83;color:#fff;' ";
           } else {
             value.IsCancel = "InActive";
+            var bg = "style='background-color:#D92D20;color:#fff;' ";
           }
-
+          
           _tr += `<tr> 
                       <td class="text-center">${kay + 1}</td>
                       <td class="text-left">${value.EmpCode}</td>
@@ -639,16 +651,11 @@ function feeddata_detailUser() {
                       <td class="text-left">${value.LastName}</td>
                       <td class="text-left">${value.UserName}</td>
                       <td class="text-left">${value.Password}</td>
-                      <td class="text-left">${value.IsCancel}</td>
-                      <td class="text-center"><label style='color:blue;font-weight:bold;cursor:pointer;' onclick='editUser("${
-                        value.ID
-                      }","${value.EmpCode}","${value.FirstName}","${
-            value.LastName
-          }","${value.UserName}","${value.Password}","${
-            value.IsCancel
-          }")'>แก้ไข</label> | <label style='color:red;font-weight:bold;cursor:pointer;' onclick='deleteUser(${
-            value.ID
-          },"${value.EmpCode}")'>ลบ</label></td>
+                      <td class="text-left"><button class='btn' ${bg}>  ${value.IsCancel} </button></td>
+                      <td class="text-center">
+                      <button class="btn btn-outline-dark f18" onclick='editUser("${value.ID}","${value.EmpCode}","${value.FirstName}","${value.LastName }","${value.UserName}","${value.Password}","${ value.IsCancel}")'  > <i class="fa-regular fa-pen-to-square"></i> แก้ไข</button>
+                       <button  class="btn btn-outline-danger f18" onclick='deleteUser(${value.ID},"${value.EmpCode}")'><i class="fa-solid fa-trash-can"></i></button> 
+                      </td>
                        </tr>`;
         });
       }
@@ -862,15 +869,18 @@ function feeddata_detailDeproom() {
                       <td class="text-left">${value.departmentroomname_sub}</td>
                       <td class="text-center">${value.floor_id}</td>
                       <td class="text-center">${value.IsActive}</td>
-                      <td class="text-center"><label style='color:blue;font-weight:bold;cursor:pointer;' onclick='editDeproom("${
+
+                      <td class="text-center">
+                       <button class="btn btn-outline-dark f18" onclick='editDeproom("${
                         value.id
                       }","${value.departmentroomname}","${
             value.departmentroomname_EN
           }","${value.ID_floor}","${value.IsActive}","${
             value.departmentroomname_sub
-          }")'>แก้ไข</label> | <label style='color:red;font-weight:bold;cursor:pointer;' onclick='deleteDeproom(${
-            value.id
-          })'>ลบ</label></td>
+          }")'  > <i class="fa-regular fa-pen-to-square"></i> แก้ไข</button>
+                       <button  class="btn btn-outline-danger f18" onclick='deleteDeproom(${value.id})'><i class="fa-solid fa-trash-can"></i></button> 
+
+                      </td>
                        </tr>`;
         });
       }
@@ -1463,12 +1473,15 @@ function show_detail_doctor() {
             value.departmentroomname = `<a class="text-primary" style="cursor:pointer;" onclick='showDetail_deproom("${value.departmentroom_id}")'>ห้องผ่าตัด</a>`;
           }
 
+          
+           
+
           _tr +=
             `<tr > ` +
             `<td class="text-center">${value.Doctor_Name}</td>` +
             `<td class="text-center" >${value.departmentroomname}</td>` +
-            `<td class="text-center" > <button class='btn btn-danger' style='color: #fff;font-size:20px;' onclick='delete_doctor(${value.doctor_id})'>ลบ</button> </td>` +
-            `<td class="text-center"> <button class='btn' style='color: #fff;background: #1570EF;font-size:20px;' onclick='edit_doctor(${value.doctor_id})'>แก้ไข</button> </td>` +
+            `<td class="text-center" > <button class="btn btn-outline-dark f18"  onclick='edit_doctor(${value.doctor_id})'> <i class="fa-regular fa-pen-to-square"></i> แก้ไข</button> </td>` +
+            `<td class="text-center"> <button  class="btn btn-outline-danger f18" onclick='delete_doctor(${value.doctor_id})'><i class="fa-solid fa-trash-can"></i></button> </td>` +
             ` </tr>`;
         });
       } else {
@@ -1606,12 +1619,14 @@ function show_detail_deproom() {
             value.Procedure_TH = `<a class="text-primary" style="cursor:pointer;" onclick='showDetail_Procedure("${value.procedure_id}")'>หัตถการ</a>`;
           }
 
+
+
           _tr +=
             `<tr > ` +
             `<td class="text-center">${value.departmentroomname}</td>` +
             `<td class="text-center" >${value.Procedure_TH}</td>` +
-            `<td class="text-center" > <button class='btn btn-danger' style='color: #fff;font-size:20px;' onclick='delete_deproom(${value.departmentroom_id})'>ลบ</button> </td>` +
-            `<td class="text-center"> <button class='btn' style='color: #fff;background: #1570EF;font-size:20px;' onclick='edit_deproom(${value.departmentroom_id})'>แก้ไข</button> </td>` +
+            `<td class="text-center" > <button class="btn btn-outline-dark f18"  onclick='edit_deproom(${value.departmentroom_id})'> <i class="fa-regular fa-pen-to-square"></i> แก้ไข</button> </td>` +
+            `<td class="text-center"> <button  class="btn btn-outline-danger f18" onclick='delete_deproom(${value.departmentroom_id})'><i class="fa-solid fa-trash-can"></i></button> </td>` +
             ` </tr>`;
         });
       } else {

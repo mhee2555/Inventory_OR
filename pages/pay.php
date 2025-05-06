@@ -54,7 +54,7 @@
     <div class="row">
         <div class="col-md-6">
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-6">
                     <div class="form-group ">
                         <label style="color:black;font-weight: 600;">วันที่</label>
                         <div class="input-group">
@@ -66,7 +66,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-12">
+                <div class="col-md-6">
 
                     <div class="form-group ">
                         <label style="color:black;font-weight: 600;">ห้องผ่าตัด</label>
@@ -152,7 +152,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-4 mt-3">
-                                    <button id="btn_scan_RFid" class="btn btn-info " style="font-size: 13px;margin-top: 2rem !important;line-height: 25px;">จ่ายอุปกรณ์จากตู้ RFID & Weighing</button>
+                                    <button id="btn_scan_RFid" class="btn btn-block" style="color:#fff;background-color:#643695;font-size: 13px;margin-top: 2rem !important;line-height: 25px;">จ่ายอุปกรณ์จากตู้ RFID & Weighing</button>
                                 </div>
                             </div>
 
@@ -162,7 +162,7 @@
                                     <tr>
                                         <th scope="col" class="text-center" id="" style="width: 70%;">รายการ</th>
                                         <!-- <th scope="col" class="text-center" id="">ขอเบิก</th> -->
-                                        <th scope="col" class="text-center" id="">สแกนจ่าย</th>
+                                        <th scope="col" class="text-center" id="" style="background-color: #9AEAD8;">สแกนจ่าย</th>
                                         <!-- <th scope="col" class="text-center" id="">คงเหลือ</th> -->
                                     </tr>
                                 </thead>
@@ -295,13 +295,15 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-2">
-                                    <button id="btn_scan_RFid_manual" class="btn btn-info " style="font-size: 13px;margin-top: 2rem !important;line-height: 25px;">จ่ายอุปกรณ์จากตู้ RFID & Weighing</button>
+                                <div class="col-md-2 text-right">
+                                    <button id="btn_clear_manual" class="btn btn-block" style=" color:black; border-color:gray;font-size: 18px;margin-top: 2.1rem !important;line-height: 25px;"><i class="fa-solid fa-repeat"></i> รีเซ็ตข้อมูล</button>
                                 </div>
 
-                                <div class="col-md-2 text-right">
-                                    <button id="btn_clear_manual" class="btn btn-danger " style="font-size: 18px;margin-top: 2rem !important;line-height: 25px;"><i class="fa-solid fa-repeat"></i> เคลียร์ข้อมูล</button>
+                                <div class="col-md-2">
+                                    <button id="btn_scan_RFid_manual" class="btn  btn-block" style="color:#fff;background-color:#643695;font-size: 13px;margin-top: 2.1rem !important;line-height: 25px;">จ่ายอุปกรณ์จากตู้ RFID & Weighing</button>
                                 </div>
+
+
                             </div>
 
 
@@ -311,7 +313,7 @@
                                         <th scope="col" class="text-center" id="" style="width: 10%;">ลำดับ</th>
                                         <th scope="col" class="text-center" id="" style="width: 70%;">รายการ</th>
                                         <!-- <th scope="col" class="text-center" id="">ขอเบิก</th> -->
-                                        <th scope="col" class="text-center" id="" style="width: 10%;">สแกนจ่าย</th>
+                                        <th scope="col" class="text-center" id="" style="width: 10%;background-color: #9AEAD8;">สแกนจ่าย</th>
                                         <!-- <th scope="col" class="text-center" id="">คงเหลือ</th> -->
                                     </tr>
                                 </thead>
@@ -364,7 +366,7 @@
                     </table>
 
                     <div class="col-md-12 text-right mt-2">
-                        <button class="btn f18" style="background-color:#1570EF;color:#fff;" id="btn_send_return_data">ส่งข้อมูล</button>
+                        <button class="btn f18" style="background-color:#643695;color:#fff;" id="btn_send_return_data">ส่งข้อมูล</button>
                     </div>
                 </div>
             </div>
@@ -374,79 +376,67 @@
 </div>
 
 <div id="history_pay">
+
+    <div class="form-row align-items-end flex-wrap">
+        <!-- วันที่ -->
+        <div class="col-md-4">
+            <label class="font-weight-bold text-dark">วันที่</label>
+            <div class="form-row">
+                <div class="col">
+                    <div class="input-group">
+                        <input type="text" class="form-control datepicker-here f18" id="select_date_history_S" data-language='en' data-date-format='dd-mm-yyyy'>
+                        <div class="input-group-append">
+                            <div class="input-group-text bg-light"><i class="fa-regular fa-calendar-days"></i></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="input-group">
+                        <input type="text" class="form-control datepicker-here f18" id="select_date_history_L" data-language='en' data-date-format='dd-mm-yyyy'>
+                        <div class="input-group-append">
+                            <div class="input-group-text bg-light"><i class="fa-regular fa-calendar-days"></i></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ห้องผ่าตัด -->
+        <div class="col-md-2">
+            <label class="font-weight-bold text-dark">ห้องผ่าตัด</label>
+            <select class="form-control f18" id="select_deproom_history"></select>
+        </div>
+
+        <!-- แพทย์ -->
+        <div class="col-md-2">
+            <label class="font-weight-bold text-dark">แพทย์</label>
+            <select class="form-control f18" id="select_doctor_history"></select>
+        </div>
+
+        <!-- หัตถการ -->
+        <div class="col-md-2">
+            <label class="font-weight-bold text-dark">หัตถการ</label>
+            <select class="form-control f18" id="select_procedure_history"></select>
+        </div>
+
+        <!-- HN Code -->
+        <div class="col-md-1">
+            <label class="font-weight-bold text-dark">HN</label>
+            <input type="text" class="form-control f18" id="input_hn_history">
+        </div>
+
+        <!-- ปุ่ม Excel -->
+        <div class="col-md-1">
+            <label class="font-weight-bold text-dark">SUDs</label>
+            <button class="btn btn-outline-success btn-block" id="btn_show_report"><i class="fa-solid fa-file-excel"></i> EXCEL</button>
+        </div>
+
+
+    </div>
+
+
     <div class="row">
         <div class="col-md-12">
             <div class="row">
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label style="color:black;font-weight: 600;">วันที่</label>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="input-group">
-                                    <input type="text" class="form-control datepicker-here f18" id="select_date_history_S" data-language='en' data-date-format='dd-mm-yyyy'>
-                                    <div class="input-group-append">
-                                        <div class="input-group-text bg-light" style="font-size: 20px;font-weight: bold;"><i class="fa-regular fa-calendar-days"></i></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="input-group">
-                                    <input type="text" class="form-control datepicker-here f18" id="select_date_history_L" data-language='en' data-date-format='dd-mm-yyyy'>
-                                    <div class="input-group-append">
-                                        <div class="input-group-text bg-light" style="font-size: 20px;font-weight: bold;"><i class="fa-regular fa-calendar-days"></i></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-2">
-                    <div class="form-group row">
-                        <label style="color:black;font-weight: 600;">ห้องผ่าตัด</label>
-                        <select class="form-control f18" id="select_deproom_history"></select>
-                    </div>
-                </div>
-
-                <div class="col-md-3">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group ">
-                                <label style="color:black;font-weight: 600;">แพทย์</label>
-                                <select class="form-control f18" autocomplete="off" id="select_doctor_history"></select>
-                            </div>
-                        </div>
-                        <div class="col-md-12" style="display: ruby;" id="row_doctor_history">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-2">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group ">
-                                <label style="color:black;font-weight: 600;">หัตถการ</label>
-                                <select class="form-control f18" autocomplete="off" id="select_procedure_history"></select>
-                            </div>
-                        </div>
-                        <div class="col-md-12" style="display: ruby;" id="row_procedure_history">
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-1">
-                    <button class="btn btn-success" style="margin-top: 1.9rem !important;" id="btn_show_report">EXCEL</button>
-                </div>
-                <div class="col-md-2">
-
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group ">
-                                <label style="color:black;font-weight: 600;">HN Code</label>
-                                <input type="text" class="form-control f18" autocomplete="off" id="input_hn_history">
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 <div class="col-md-12 mt-3">
 
                     <div class="card">

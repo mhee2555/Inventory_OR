@@ -54,15 +54,15 @@ html {
 }
 
 .activeFont{
-  background-color:#D1E9FF !important;
-  border-color:#1570EF !important;
+  /* background-color:#D1E9FF !important; */
+  border-color:#643695 !important;
   width: 45px !important;
   line-height: 25px !important;
 }
 
 .activelang{
-  background-color:#D1E9FF!important;
-  border-color:#1570EF!important;
+  /* background-color:#D1E9FF!important; */
+  border-color:#643695!important;
   width: 100px!important;
  
 }
@@ -5225,8 +5225,8 @@ input[type="button"].btn-block {
 .page-item.active .page-link {
   z-index: 3;
   color: #fff;
-  background-color: #4e73df;
-  border-color: #4e73df;
+  background-color: #643695;
+  border-color: #643695;
 }
 
 .page-item.disabled .page-link {

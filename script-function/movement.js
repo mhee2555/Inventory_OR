@@ -422,7 +422,7 @@ function selection_departmentRoom() {
       tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#FEF0C7;border-bottom-color: #F79009;" class='text-center' rowspan="2" id="">จ่ายไปห้องผ่าตัด</th>`;
       // tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#D1FADF;border-bottom-color: #12B76A;" class='text-center' rowspan="2" id="">ส่ง CSSD</th>`;
       // tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#FEE4E2;border-bottom-color: #D92D20;" class='text-center' rowspan="2" id="">ชำรุด</th>`;
-      tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#EAECF0;border-bottom-color: #667085;" class='text-center' rowspan="2" id="">คงเหลือ</th>`;
+      tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#CDF4EC;border-bottom-color: #219E83;" class='text-center' rowspan="2" id="">คงเหลือ</th>`;
       // var tr = ``;
       if (!$.isEmptyObject(ObjData)) {
         $.each(ObjData["floor"], function (kay, value) {
@@ -612,7 +612,7 @@ function selection_departmentRoom_rfid() {
       tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#FEF0C7;border-bottom-color: #F79009;" class='text-center' rowspan="2" id="">จ่ายไปห้องผ่าตัด</th>`;
       // tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#D1FADF;border-bottom-color: #12B76A;" class='text-center' rowspan="2" id="">ส่ง CSSD</th>`;
       // tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#FEE4E2;border-bottom-color: #D92D20;" class='text-center' rowspan="2" id="">ชำรุด</th>`;
-      tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#EAECF0;border-bottom-color: #667085;" class='text-center' rowspan="2" id="">คงเหลือ</th>`;
+      tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#CDF4EC;border-bottom-color: #219E83;" class='text-center' rowspan="2" id="">คงเหลือ</th>`;
       // var tr = ``;
       if (!$.isEmptyObject(ObjData)) {
         $.each(ObjData["floor"], function (kay, value) {
@@ -769,7 +769,7 @@ function selection_departmentRoom_normal() {
       tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#FEF0C7;border-bottom-color: #F79009;" class='text-center' rowspan="2" id="">จ่ายไปห้องผ่าตัด</th>`;
       // tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#D1FADF;border-bottom-color: #12B76A;" class='text-center' rowspan="2" id="">ส่ง CSSD</th>`;
       // tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#FEE4E2;border-bottom-color: #D92D20;" class='text-center' rowspan="2" id="">ชำรุด</th>`;
-      tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#EAECF0;border-bottom-color: #667085;" class='text-center' rowspan="2" id="">คงเหลือ</th>`;
+      tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#CDF4EC;border-bottom-color: #219E83;" class='text-center' rowspan="2" id="">คงเหลือ</th>`;
       // var tr = ``;
       if (!$.isEmptyObject(ObjData)) {
         $.each(ObjData["floor"], function (kay, value) {
