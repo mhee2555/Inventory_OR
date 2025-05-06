@@ -36,10 +36,10 @@
 <div class="row mt-3">
     <div class=" col-md-12 col-lg-9  ">
         <div class="btn-group btn-group-toggle" role="group" aria-label="Basic example">
-            <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;" id="radio_pay">จ่ายอุปกรณ์</button>
-            <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;" id="radio_pay_manual">จ่ายอุปกรณ์ Manual</button>
-            <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;" id="radio_return_pay">สแกนอุปกรณ์คืนคลัง</button>
-            <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;" id="radio_history_pay">ประวัติการจ่ายอุปกรณ์</button>
+            <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;border-color: lightgray;" id="radio_pay">จ่ายอุปกรณ์</button>
+            <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;border-color: lightgray;" id="radio_pay_manual">จ่ายอุปกรณ์ Manual</button>
+            <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;border-color: lightgray;" id="radio_return_pay">สแกนอุปกรณ์คืนคลัง</button>
+            <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;border-color: lightgray;" id="radio_history_pay">ประวัติการจ่ายอุปกรณ์</button>
             <!-- <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;" id="radio_claim" hidden>เคลม</button> -->
         </div>
     </div>
@@ -426,8 +426,47 @@
 
         <!-- ปุ่ม Excel -->
         <div class="col-md-1">
-            <label class="font-weight-bold text-dark">SUDs</label>
+            <label class="font-weight-bold text-dark">Excel</label>
             <button class="btn btn-outline-success btn-block" id="btn_show_report"><i class="fa-solid fa-file-excel"></i> EXCEL</button>
+        </div>
+
+
+    </div>
+
+    <div class="form-row align-items-end flex-wrap">
+        <!-- วันที่ -->
+        <div class="col-md-4">
+
+        </div>
+        <!-- ห้องผ่าตัด -->
+        <div class="col-md-2">
+
+        </div>
+
+        <!-- แพทย์ -->
+        <div class="col-md-2">
+            <div class="row mt-2">
+                <div class="col-md-12" style="display: ruby;" id="row_doctor_history">
+                </div>
+            </div>
+        </div>
+
+        <!-- หัตถการ -->
+        <div class="col-md-2">
+            <div class="row mt-2">
+                <div class="col-md-12" style="display: ruby;" id="row_procedure_history">
+                </div>
+            </div>
+        </div>
+
+        <!-- HN Code -->
+        <div class="col-md-1">
+
+        </div>
+
+        <!-- ปุ่ม Excel -->
+        <div class="col-md-1">
+
         </div>
 
 

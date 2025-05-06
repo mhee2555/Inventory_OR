@@ -35,9 +35,9 @@
         <div class=" col-md-12 col-lg-9  ">
 
             <div class="btn-group btn-group-toggle" role="group" aria-label="Basic example">
-                <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;" id="radio_suds">ความเคลื่อนไหว RFID</button>
-                <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;" id="radio_sterile">ความเคลื่อนไหวตู้ Weighing</button>
-                <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;" id="radio_normal">ความเคลื่อนไหว อุปกรณ์ปกติ</button>
+                <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;border-color: lightgray;" id="radio_suds">ความเคลื่อนไหว RFID</button>
+                <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;border-color: lightgray;" id="radio_sterile">ความเคลื่อนไหวตู้ Weighing</button>
+                <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;border-color: lightgray;" id="radio_normal">ความเคลื่อนไหว อุปกรณ์ปกติ</button>
             </div>
         </div>
     </div>

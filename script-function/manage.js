@@ -856,11 +856,16 @@ function feeddata_detailDeproom() {
 
       if (!$.isEmptyObject(ObjData)) {
         $.each(ObjData, function (kay, value) {
+
+
           if (value.IsActive == "0") {
             value.IsActive = "InActive";
+            var bg = "style='background-color:#D92D20;color:#fff;' ";
           } else {
             value.IsActive = "Active";
+            var bg = "style='background-color:#219E83;color:#fff;' ";
           }
+
 
           _tr += `<tr> 
                       <td class="text-center">${kay + 1}</td>
@@ -868,7 +873,7 @@ function feeddata_detailDeproom() {
                       <td class="text-left">${value.departmentroomname_EN}</td>
                       <td class="text-left">${value.departmentroomname_sub}</td>
                       <td class="text-center">${value.floor_id}</td>
-                      <td class="text-center">${value.IsActive}</td>
+                      <td class="text-center"><button class='btn' ${bg}>  ${value.IsActive} </button></td>
 
                       <td class="text-center">
                        <button class="btn btn-outline-dark f18" onclick='editDeproom("${

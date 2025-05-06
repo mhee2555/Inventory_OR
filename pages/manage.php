@@ -31,8 +31,8 @@
 <div class="row mb-3 mt-4">
     <div class="col-md-6">
         <div class="btn-group btn-group-toggle" role="group" aria-label="Basic example">
-            <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;" id="manage">จัดการข้อมูลระบบ</button>
-            <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;" id="mapping">Data Mapping</button>
+            <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;border-color: lightgray;" id="manage">จัดการข้อมูลระบบ</button>
+            <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;border-color: lightgray;" id="mapping">Data Mapping</button>
         </div>
     </div>
 </div>
@@ -43,10 +43,10 @@
     <div class="row mb-3 mt-4">
         <div class="col-md-6">
             <div class="btn-group btn-group-toggle" role="group" aria-label="Basic example">
-                <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;" id="radio1">เพิ่มแพทย์</button>
-                <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;" id="radio2">เพิ่มหัตถการ</button>
-                <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;" id="radio3">เพิ่มห้องผ่าตัด</button>
-                <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;" id="radio4">เพิ่ม User</button>
+                <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;border-color: lightgray;" id="radio1">เพิ่มแพทย์</button>
+                <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;border-color: lightgray;" id="radio2">เพิ่มหัตถการ</button>
+                <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;border-color: lightgray;" id="radio3">เพิ่มห้องผ่าตัด</button>
+                <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;border-color: lightgray;" id="radio4">เพิ่ม User</button>
             </div>
         </div>
     </div>

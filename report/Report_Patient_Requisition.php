@@ -184,21 +184,21 @@ if ($type_date == 1) {
     if ($checkday == 1) {
         $date1 = $date1[2] . '-' . $date1[1] . '-' . $date1[0];
 
-        $where_date = "AND DATE(log_cabinet.ModifyDate) = '$date1'  ";
+        $where_date = "AND DATE(itemstock.CreateDate) = '$date1'  ";
     } else {
         $date1 = $date1[2] . '-' . $date1[1] . '-' . $date1[0];
         $date2 = $date2[2] . '-' . $date2[1] . '-' . $date2[0];
 
-        $where_date = "AND DATE(log_cabinet.ModifyDate) BETWEEN '$date1' 	AND '$date2' ";
+        $where_date = "AND DATE(itemstock.CreateDate) BETWEEN '$date1' 	AND '$date2' ";
     }
 }
 if ($type_date == 2) {
 
     if ($checkmonth == 1) {
-        $where_date = "AND MONTH(log_cabinet.ModifyDate) = '$month1'  ";
+        $where_date = "AND MONTH(itemstock.CreateDate) = '$month1'  ";
 
     } else {
-        $where_date = "AND MONTH(log_cabinet.ModifyDate) BETWEEN '$month1' 	AND '$month2' ";
+        $where_date = "AND MONTH(itemstock.CreateDate) BETWEEN '$month1' 	AND '$month2' ";
     }
 }
 
@@ -208,39 +208,67 @@ if ($type_date == 3) {
     $year2 = $year2-543;
 
     if ($checkyear == 1) {
-        $where_date = "AND YEAR(log_cabinet.ModifyDate) = '$year1'  ";
+        $where_date = "AND YEAR(itemstock.CreateDate) = '$year1'  ";
 
     } else {
-        $where_date = "AND YEAR(log_cabinet.ModifyDate) BETWEEN '$year1' 	AND '$year2' ";
+        $where_date = "AND YEAR(itemstock.CreateDate) BETWEEN '$year1' 	AND '$year2' ";
     }
 }
 
 
 $count = 1;
-$query = " SELECT
-                item.itemcode2,
-                item.itemname,
+
+$query = "SELECT
+                itemstock.CreateDate,
+                itemstock.ItemCode,
                 itemstock.UsageCode,
-                CONCAT( employee.FirstName, ' ', employee.LastName ) AS Issue_Name,
-                log_cabinet.ModifyDate,
-                hncode.HnCode,
-            CASE
+                item.itemname,
+                item.itemcode2,
+                stock_room_type.type_name,
+                itemstock.HNCode,
+                
+                CONCAT(employee.FirstName, +' ',employee.LastName) AS NAME ,
+                itemstock.LastCabinetModify,
+                CASE
+                    WHEN itemstock.HnCode IS NOT NULL THEN
+                    'ถูกยิงใช้กับคนไข้' ELSE 'ไม่ถูกยิงใช้กับคนไข้'  END AS STATUS 
+                FROM
+                itemstock
+                LEFT JOIN item ON itemstock.ItemCode = item.itemcode
+                LEFT JOIN user_cabinet ON itemstock.CabinetUserID = user_cabinet.User_ID
+                LEFT JOIN employee ON user_cabinet.User_ID = employee.id
+                left JOIN stock ON itemstock.StockID = stock.StockID
+                left JOIN stock_room ON stock.DrpSTID = stock_room.DepSTID
+                left JOIN stock_room_type ON stock_room.stkr_type_id = stock_room_type.stkr_type_id
+
+                WHERE
+                itemstock.StockID ='4'
+                $where_date  ";
+                
+// $query = " SELECT
+//                 item.itemcode2,
+//                 item.itemname,
+//                 itemstock.UsageCode,
+//                 CONCAT( employee.FirstName, ' ', employee.LastName ) AS Issue_Name,
+//                 log_cabinet.ModifyDate,
+//                 hncode.HnCode,
+//             CASE
                     
-                    WHEN hncode.HnCode IS NOT NULL THEN
-                    'ถูกยิงใช้กับคนไข้' ELSE 'ไม่ถูกยิงใช้กับคนไข้' 
-            END AS STATUS 
-            FROM
-                log_cabinet
-                INNER JOIN itemstock ON log_cabinet.Rfid = itemstock.RfidCode
-                INNER JOIN item ON itemstock.ItemCode = item.itemcode
-                INNER JOIN users ON log_cabinet.UserID = users.ID
-                INNER JOIN employee ON users.EmpCode = employee.EmpCode
-                LEFT JOIN hncode_detail ON itemstock.RowID = hncode_detail.ItemStockID
-                LEFT JOIN hncode ON hncode_detail.DocNo = hncode.DocNo 
-            WHERE
-                log_cabinet.Rfid IS NOT NULL
-                $where_date 
-            ORDER BY log_cabinet.ModifyDate  ";
+//                     WHEN hncode.HnCode IS NOT NULL THEN
+//                     'ถูกยิงใช้กับคนไข้' ELSE 'ไม่ถูกยิงใช้กับคนไข้' 
+//             END AS STATUS 
+//             FROM
+//                 log_cabinet
+//                 INNER JOIN itemstock ON log_cabinet.Rfid = itemstock.RfidCode
+//                 INNER JOIN item ON itemstock.ItemCode = item.itemcode
+//                 INNER JOIN users ON log_cabinet.UserID = users.ID
+//                 INNER JOIN employee ON users.EmpCode = employee.EmpCode
+//                 LEFT JOIN hncode_detail ON itemstock.RowID = hncode_detail.ItemStockID
+//                 LEFT JOIN hncode ON hncode_detail.DocNo = hncode.DocNo 
+//             WHERE
+//                 log_cabinet.Rfid IS NOT NULL
+//                 $where_date 
+//             ORDER BY log_cabinet.ModifyDate  ";
 
 $meQuery1 = $conn->prepare($query);
 $meQuery1->execute();
@@ -253,8 +281,8 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
     $html .=   '<td width="16 %" align="center" style="line-height:40px;vertical-align: middle;"> ' . $Result_Detail['itemcode2'] . '</td>';
     $html .=   '<td width="30 %" align="left" style="line-height:40px;vertical-align: middle;">' .   $Result_Detail['itemname'] . '</td>';
     $html .=   '<td width="10 %" align="center" >' . $Result_Detail['UsageCode'] . '</td>';
-    $html .=   '<td width="10 %" align="center" >' . $Result_Detail['Issue_Name'] . '</td>';
-    $html .=   '<td width="10 %" align="center" >' . $Result_Detail['ModifyDate'] . '</td>';
+    $html .=   '<td width="10 %" align="center" >' . $Result_Detail['NAME'] . '</td>';
+    $html .=   '<td width="10 %" align="center" >' . $Result_Detail['CreateDate'] . '</td>';
     $html .=   '<td width="10 %" align="center" >' . $Result_Detail['HnCode'] . '</td>';
     $html .=   '<td width="10 %" align="center" >' . $Result_Detail['STATUS'] . '</td>';
     $html .=  '</tr>';
@@ -341,36 +369,70 @@ if ($type_date == 1) {
     if ($checkday == 1) {
         $date1 = $date1[2] . '-' . $date1[1] . '-' . $date1[0];
 
-        $where_date = "AND DATE(log_cabinet.ModifyDate) = '$date1'  ";
+        $where_date = "AND DATE(itemslotincabinet_detail.ModifyDate) = '$date1'  ";
     } else {
         $date1 = $date1[2] . '-' . $date1[1] . '-' . $date1[0];
         $date2 = $date2[2] . '-' . $date2[1] . '-' . $date2[0];
 
-        $where_date = "AND DATE(log_cabinet.ModifyDate) BETWEEN '$date1' 	AND '$date2' ";
+        $where_date = "AND DATE(itemslotincabinet_detail.ModifyDate) BETWEEN '$date1' 	AND '$date2' ";
     }
 }
 if ($type_date == 2) {
 
     if ($checkmonth == 1) {
+        $where_date = "AND MONTH(itemslotincabinet_detail.ModifyDate) = '$month1'  ";
+
     } else {
+        $where_date = "AND MONTH(itemslotincabinet_detail.ModifyDate) BETWEEN '$month1' 	AND '$month2' ";
+    }
+}
+
+if ($type_date == 3) {
+
+    $year1 = $year1-543;
+    $year2 = $year2-543;
+
+    if ($checkyear == 1) {
+        $where_date = "AND YEAR(itemslotincabinet_detail.ModifyDate) = '$year1'  ";
+
+    } else {
+        $where_date = "AND YEAR(itemslotincabinet_detail.ModifyDate) BETWEEN '$year1' 	AND '$year2' ";
     }
 }
 
 $count = 1;
-$query = " SELECT
-                item.itemcode2,
+
+
+$query = "SELECT
+                itemslotincabinet_detail.itemcode,
                 item.itemname,
-                NULL AS UsageCode,
-                CONCAT(employee.FirstName, ' ', employee.LastName) AS Issue_Name,
-                log_cabinet.ModifyDate,
-                log_cabinet.Qty
+                itemslotincabinet_detail.Qty,
+                itemslotincabinet_detail.HnCode,
+                itemslotincabinet_detail.ModifyDate,
+                CONCAT( employee.FirstName, + ' ', employee.LastName ) AS NAME 
             FROM
-                log_cabinet
-                INNER JOIN item ON log_cabinet.itemcode = item.itemcode
-                INNER JOIN users ON log_cabinet.UserID = users.ID
-                INNER JOIN employee ON users.EmpCode = employee.EmpCode
-            WHERE   log_cabinet.Rfid IS NULL 
-                $where_date  ";
+                itemslotincabinet_detail
+                LEFT JOIN item ON itemslotincabinet_detail.itemcode = item.itemcode
+                LEFT JOIN user_cabinet ON itemslotincabinet_detail.UserID = user_cabinet.User_ID
+                LEFT JOIN users ON user_cabinet.User_ID = users.id
+                LEFT JOIN employee ON users.EmpCode = employee.EmpCode 
+            WHERE
+                Sel = '1'  $where_date ";
+// $query = " SELECT
+//                 item.itemcode2,
+//                 item.itemname,
+//                 NULL AS UsageCode,
+//                 CONCAT(employee.FirstName, ' ', employee.LastName) AS Issue_Name,
+//                 log_cabinet.ModifyDate,
+//                 log_cabinet.Qty
+//             FROM
+//                 log_cabinet
+//                 INNER JOIN item ON log_cabinet.itemcode = item.itemcode
+//                 INNER JOIN users ON log_cabinet.UserID = users.ID
+//                 INNER JOIN employee ON users.EmpCode = employee.EmpCode
+//             WHERE   log_cabinet.Rfid IS NULL 
+//                 $where_date  ";
+
 
 $meQuery1 = $conn->prepare($query);
 $meQuery1->execute();
@@ -380,10 +442,10 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
 
     $html .= '<tr nobr="true" style="font-size:15px;">';
     $html .=   '<td width="6 %" align="center" style="line-height:40px;vertical-align: middle;"> ' . (string)$count . '</td>';
-    $html .=   '<td width="16 %" align="center" style="line-height:40px;vertical-align: middle;"> ' . $Result_Detail['itemcode2'] . '</td>';
+    $html .=   '<td width="16 %" align="center" style="line-height:40px;vertical-align: middle;"> ' . $Result_Detail['itemcode'] . '</td>';
     $html .=   '<td width="30 %" align="left" style="line-height:40px;vertical-align: middle;">' .   $Result_Detail['itemname'] . '</td>';
-    $html .=   '<td width="10 %" align="center" style="line-height:40px;vertical-align: middle;">' . $Result_Detail['UsageCode'] . '</td>';
-    $html .=   '<td width="10 %" align="center" style="line-height:40px;vertical-align: middle;">' . $Result_Detail['Issue_Name'] . '</td>';
+    $html .=   '<td width="10 %" align="center" style="line-height:40px;vertical-align: middle;">' . $Result_Detail['itemcode'] . '</td>';
+    $html .=   '<td width="10 %" align="center" style="line-height:40px;vertical-align: middle;">' . $Result_Detail['NAME'] . '</td>';
     $html .=   '<td width="20 %" align="center" style="line-height:40px;vertical-align: middle;">' . $Result_Detail['ModifyDate'] . '</td>';
     $html .=   '<td width="10 %" align="center" style="line-height:40px;vertical-align: middle;">' . $Result_Detail['Qty'] . '</td>';
     $html .=  '</tr>';

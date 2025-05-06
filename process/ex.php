@@ -46,6 +46,7 @@ function feeddata($conn,$db)
 {
     $DepID = $_SESSION['DepID'];
     $GN_WarningExpiringSoonDay = $_POST['GN_WarningExpiringSoonDay'];
+    $check_ex = $_POST['check_ex'];
 
     $deproom = $_SESSION['deproom'];
     $RefDepID = $_SESSION['RefDepID'];
@@ -83,14 +84,9 @@ function feeddata($conn,$db)
                 WHERE
                     itemstock.IsCancel = 0
                     $wheredep
-                    AND (DATE(itemstock.ExpireDate) <= CURDATE() OR DATE(itemstock.ExpireDate) BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL $GN_WarningExpiringSoonDay DAY))
+                    AND ( DATE(itemstock.ExpireDate) <= CURDATE() OR DATE(itemstock.ExpireDate) BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL $GN_WarningExpiringSoonDay DAY) )
                 GROUP BY
-                    itemstock.ItemCode,
-                    DATE_FORMAT(itemstock.ExpireDate, '%d/%m/%Y'),
-                    DATE(itemstock.ExpireDate),
-                    item.itemname,
-                    itemstock.UsageCode,
-                    itemstock.RowID
+                    itemstock.UsageCode
                 ORDER BY
                     item.itemname, DATE_FORMAT(itemstock.ExpireDate, '%d/%m/%Y') ASC ";
     }else{
@@ -132,10 +128,24 @@ function feeddata($conn,$db)
 
 
 
+
     $meQuery = $conn->prepare($query);
     $meQuery->execute();
     while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
-        $return[] = $row;
+
+        if($check_ex == '1'){
+                $return[] = $row;
+        }
+        if($check_ex == '2'){
+            if($row['IsStatus'] == 'ใกล้หมดอายุ'){
+                $return[] = $row;
+            }
+        }
+        if($check_ex == '3'){
+            if($row['IsStatus'] == 'หมดอายุ'){
+                $return[] = $row;
+            }
+        }
     }
     echo json_encode($return);
     unset($conn);

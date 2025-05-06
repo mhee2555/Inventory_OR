@@ -65,7 +65,7 @@
                         <input type="text" class="form-control" id="input_type_search" hidden>
                         <div class="dropdown-menu" style="font-size: 18px !important;z-index: 9999;">
                             <a class="dropdown-item" href="#" id="a_hnxxx">เลข HN Number</a>
-                            <a class="dropdown-item" href="#" id="a_usage">รหัสอุปกรณ์ SUDs</a>
+                            <a class="dropdown-item" href="#" id="a_usage">รหัสอุปกรณ์</a>
                         </div>
                     </div>
                     <input type="text" id="input_search" class="form-control" aria-label="Text input with dropdown button" style="font-size: 25px !important;">

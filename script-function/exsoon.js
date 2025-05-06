@@ -243,7 +243,8 @@ $('#btn_send').on("click", function(e) {
         type: 'POST',
         data: {
             'FUNC_NAME': 'feeddata',
-            GN_WarningExpiringSoonDay: GN_WarningExpiringSoonDay
+            GN_WarningExpiringSoonDay: GN_WarningExpiringSoonDay,
+            check_ex: $("#check_ex").val()
         },
         success: function(result) {
 

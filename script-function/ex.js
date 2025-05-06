@@ -243,7 +243,9 @@ function feeddata() {
         type: 'POST',
         data: {
             'FUNC_NAME': 'feeddata',
-            GN_WarningExpiringSoonDay: GN_WarningExpiringSoonDay
+            GN_WarningExpiringSoonDay: GN_WarningExpiringSoonDay,
+            check_ex: $("#check_ex").val()
+
         },
         success: function(result) {
 
@@ -251,6 +253,8 @@ function feeddata() {
             if (!$.isEmptyObject(ObjData)) {
                 var _tr = ``;
                 var allpage = 0;
+                $("#table_data tbody").html("");
+
                 $.each(ObjData, function(kay, value) {
 
                     var color = "";

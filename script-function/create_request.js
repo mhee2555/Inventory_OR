@@ -195,7 +195,7 @@ $(function () {
 
 // create_Request
 
-function DeleteDoctor_history(selectedValue) {
+function DeleteDoctor(selectedValue) {
   var index = doctor_Array.indexOf(String(selectedValue));
   console.log(index);
 
@@ -225,7 +225,7 @@ function Deletprocedure_history(selectedValue) {
 }
 
 
-function DeleteDoctor(selectedValue) {
+function DeleteDoctor_history(selectedValue) {
   var index = doctor_history_Array.indexOf(String(selectedValue));
   console.log(index);
 

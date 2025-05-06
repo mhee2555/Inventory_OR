@@ -36,8 +36,8 @@
 <div class="row mt-3">
     <div class=" col-md-12 col-lg-9  ">
         <div class="btn-group btn-group-toggle" role="group" aria-label="Basic example">
-            <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;" id="radio_create_request">สร้างใบขอเบิกใช้อุปกรณ์กับคนไข้</button>
-            <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;" id="radio_history_create_request">ประวัติขอเบิกใช้อุปกรณ์กับคนไข้</button>
+            <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;border-color: lightgray;" id="radio_create_request">สร้างใบขอเบิกใช้อุปกรณ์กับคนไข้</button>
+            <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;border-color: lightgray;" id="radio_history_create_request">ประวัติขอเบิกใช้อุปกรณ์กับคนไข้</button>
         </div>
     </div>
 </div>
@@ -255,7 +255,6 @@
                 </div>
 
                 <div class="col-md-2">
-
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group ">
@@ -284,7 +283,7 @@
                 </div>
                 <div class="col-md-2">
                             <div class="form-group ">
-                                <label style="color:black;font-weight: 600;">รายงาน SUDs</label>
+                                <label style="color:black;font-weight: 600;">Excel</label>
                                 <br>
                                 <button class="btn  btn-block" style="border-color: gray;color:green;font-weight: bold;"  id="btn_show_report"><i class="fa-solid fa-file-excel"></i> EXCEL</button>
                             </div>
