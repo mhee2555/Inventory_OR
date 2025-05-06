@@ -117,7 +117,7 @@
                                     <button disabled class="btn btn-danger btn-block f18" style="margin-top: 2rem;" id="btn_edit_hn"><i class="fa-solid fa-pen-to-square"></i> แก้ไขข้อมูล</button>
                                 </div>
                                 <div class="col-md-4 mt-3">
-                                    <label style="color:black;font-weight: 600;">HN Code</label>
+                                    <label style="color:black;font-weight: 600;">เลขประจำตัวคนไข้</label>
                                     <input type='text' class='form-control f18' id="input_Hn_pay" disabled>
                                 </div>
                                 <div class="col-md-4 mt-3">
@@ -192,7 +192,7 @@
                                     <input type='text' class='form-control f18' id="input_box_pay_manual">
                                 </div>
                                 <div class="col-md-6">
-                                    <label style="color:black;font-weight: 600;">HN Code</label>
+                                    <label style="color:black;font-weight: 600;">เลขประจำตัวคนไข้</label>
                                     <input type='text' class='form-control f18' id="input_Hn_pay_manual">
                                 </div>
                                 <div class="col-md-4 mt-3">
@@ -418,7 +418,7 @@
             <select class="form-control f18" id="select_procedure_history"></select>
         </div>
 
-        <!-- HN Code -->
+        <!-- เลขประจำตัวคนไข้ -->
         <div class="col-md-1">
             <label class="font-weight-bold text-dark">HN</label>
             <input type="text" class="form-control f18" id="input_hn_history">
@@ -459,7 +459,7 @@
             </div>
         </div>
 
-        <!-- HN Code -->
+        <!-- เลขประจำตัวคนไข้ -->
         <div class="col-md-1">
 
         </div>
@@ -488,7 +488,7 @@
                                         <th scope="col" class="text-center" id="">วันที่จ่ายอุปกรณ์</th>
                                         <th scope="col" class="text-center" id="">วันที่รับบริการ</th>
                                         <th scope="col" class="text-center" id="">ผุ้ยืนยัน</th>
-                                        <th scope="col" class="text-center" id="">HN Code</th>
+                                        <th scope="col" class="text-center" id="">เลขประจำตัวคนไข้</th>
                                         <th scope="col" class="text-center" id="">แพทย์</th>
                                         <th scope="col" class="text-center" id="">หัตถการ</th>
                                         <th scope="col" class="text-center" id="">ห้องผ่าตัด</th>
@@ -643,7 +643,7 @@
                         <input type='text' class='form-control f18' id="input_box_pay_editHN">
                     </div>
                     <div class="col-md-4 mt-3">
-                        <label style="color:black;font-weight: 600;">HN Code</label>
+                        <label style="color:black;font-weight: 600;">เลขประจำตัวคนไข้</label>
                         <input type='text' class='form-control f18' id="input_Hn_pay_editHN">
                     </div>
                     <div class="col-md-4 mt-3">

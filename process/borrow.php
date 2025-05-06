@@ -31,11 +31,11 @@ function show_detail_borrow($conn,$db)
                         deproom.number_box
                     FROM
                         deproomdetailsub
-                        INNER JOIN itemstock ON deproomdetailsub.ItemStockID = itemstock.RowID
-                        INNER JOIN item ON itemstock.ItemCode = item.itemcode
-                        INNER JOIN departmentroom AS dep1 ON deproomdetailsub.dental_warehouse_id = dep1.id
-                        INNER JOIN deproomdetail ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID
-                        INNER JOIN deproom ON deproom.DocNo = deproomdetail.DocNo 
+                        LEFT JOIN itemstock ON deproomdetailsub.ItemStockID = itemstock.RowID
+                        LEFT JOIN item ON itemstock.ItemCode = item.itemcode
+                        LEFT JOIN departmentroom AS dep1 ON deproomdetailsub.dental_warehouse_id = dep1.id
+                        LEFT JOIN deproomdetail ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID
+                        LEFT JOIN deproom ON deproom.DocNo = deproomdetail.DocNo 
                     WHERE
                         deproomdetailsub.hn_record_id_borrow IS NOT NULL 
                         AND deproomdetailsub.hn_record_id_borrow != ''

@@ -3547,7 +3547,7 @@ function oncheck_Returnpay($conn, $db)
                         WHERE
                             deproomdetailsub.ItemStockID = '$_RowID' 
                             AND deproomdetail.DocNo = '$DocNo_pay'
-                            AND hncode_detail.ItemStockID = '$_RowID' ";
+                            AND hncode_detail.ItemStockID = '$_RowID' LIMIT 1";
             // echo $query_2;
             // exit;
             $meQuery_2 = $conn->prepare($query_2);
@@ -3577,13 +3577,13 @@ function oncheck_Returnpay($conn, $db)
                     AND ItemCode = '$_ItemCode' 
                     AND departmentroomid = '$_departmentroomid' 
                     AND  IsStatus = '1'
-                    AND DATE(CreateDate) = '$_ModifyDate' ";
+                    AND DATE(CreateDate) = '$_ModifyDate' LIMIT 1 ";
                 } else {
                     $query = "DELETE FROM itemstock_transaction_detail  WHERE ItemStockID = '$_RowID' 
                     AND ItemCode = '$_ItemCode' 
                     AND departmentroomid = '$_departmentroomid' 
                     AND  IsStatus = '1'
-                    AND CONVERT(DATE,CreateDate) = '$_ModifyDate' ";
+                    AND CONVERT(DATE,CreateDate) = '$_ModifyDate' LIMIT 1  ";
                 }
 
                 $meQuery = $conn->prepare($query);

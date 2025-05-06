@@ -126,7 +126,7 @@
                                 <input type="text" class="form-control" id="text_edit" placeholder="" hidden>
                                 <div class="col-md-4">
                                     <div class="form-group ">
-                                        <label style="color:black;font-weight: 600;">เลข HN Code</label>
+                                        <label style="color:black;font-weight: 600;">เลข เลขประจำตัวคนไข้</label>
                                         <div class="input-group">
                                             <input type="text" class="form-control f18 " id="input_hn_request" placeholder="" autocomplete="off">
                                         </div>
@@ -300,7 +300,7 @@
                                     <tr>
                                         <th scope="col" class="text-center" id="">ลำดับ</th>
                                         <th scope="col" class="text-center" id="">วันที่รับบริการ</th>
-                                        <th scope="col" class="text-center" id="">HN Code</th>
+                                        <th scope="col" class="text-center" id="">เลขประจำตัวคนไข้</th>
                                         <th scope="col" class="text-center" id="">แพทย์</th>
                                         <th scope="col" class="text-center" id="">หัตถการ</th>
                                         <th scope="col" class="text-center" id="">ห้องผ่าตัด</th>

@@ -374,15 +374,30 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
     // $params = $pdf->serializeTCPDFtagParameters(array(
     //     $Result_Detail['itemcode'], 'C39', '', '', 53, 9, 0.4, $style, 'N'  // เปลี่ยนจาก 8 เป็น 12
     // ));
-    $itemcode_upper = strtoupper($Result_Detail['itemcode2']);
+    // $itemcode_upper = strtoupper($Result_Detail['itemcode2']);
 
-    $itemcode = strtoupper(preg_replace('/[^A-Z0-9 \-.\$\/\+\%]/', '', $itemcode_upper));
+    // $itemcode = strtoupper(preg_replace('/[^A-Z0-9 \-.\$\/\+\%]/', '', $Result_Detail['itemcode2']));
 
-    $params = $pdf->serializeTCPDFtagParameters(array($itemcode, 'C39', '', '', 50, 10, 0.4, array('position' => 'S', 'border' => false, 'padding' => 0, 'fgcolor' => array(0, 0, 0), 'bgcolor' => array(255, 255, 255), 'text' => true, 'font' => 'helvetica', 'fontsize' => 8, 'stretchtext' => 1), 'N'));
+    $params = $pdf->serializeTCPDFtagParameters(array(
+        $Result_Detail['itemcode2'], 'C128', '', '', 50, 10, 0.4,
+        array(
+            'position' => 'S',
+            'border' => false,
+            'padding' => 0,
+            'fgcolor' => array(0,0,0),
+            'bgcolor' => array(255,255,255),
+            'text' => true,
+            'font' => 'thsarabunnew',  // ถ้าใช้ข้อความภาษาไทยประกอบ
+            'fontsize' => 10,
+            'stretchtext' => 1
+        ), 'N'
+    ));
+
+    // $params = $pdf->serializeTCPDFtagParameters(array($itemcode, 'C128', '', '', 50, 10, 0.4, array('position' => 'S', 'border' => false, 'padding' => 0, 'fgcolor' => array(0, 0, 0), 'bgcolor' => array(255, 255, 255), 'text' => true, 'font' => 'helvetica', 'fontsize' => 8, 'stretchtext' => 1), 'N'));
 
     if($Result_Detail['cnt_pay'] > 0){
         $html .= '<tr nobr="true" style="font-size:18px;height:30px;">';
-        $html .=   '<td width="12 %" align="center"> ' . $itemcode_upper . '</td>';
+        $html .=   '<td width="12 %" align="center"> ' . $Result_Detail['itemcode2'] . '</td>';
         $html .=   '<td width="30 %" align="center" style="vertical-align: bottom; padding: 0px;"><tcpdf method="write1DBarcode" params="' . $params . '" /></td>';
         // $html .=   '<td width="36 %" align="center"> ' . $Result_Detail['itemcode'] . '</td>';
         $html .=   '<td width="50 %" align="left"  style="line-height:40px;vertical-align: middle;"> ' . $Result_Detail['itemname'] . '</td>';

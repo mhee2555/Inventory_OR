@@ -275,9 +275,26 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
     if($Result_Detail['cnt'] != 0){
         $itemcode = "";
         if($Result_Detail['itemcode2'] != null){
-            $itemcode = strtoupper(preg_replace('/[^A-Z0-9 \-.\$\/\+\%]/', '', $Result_Detail['itemcode2']));
+            // $itemcode = strtoupper(preg_replace('/[^A-Z0-9 \-.\$\/\+\%]/', '', $Result_Detail['itemcode2']));
         }
-        $params = $pdf->serializeTCPDFtagParameters(array($itemcode, 'C39', '', '', 50, 10, 0.4, array('position' => 'S', 'border' => false, 'padding' => 0, 'fgcolor' => array(0, 0, 0), 'bgcolor' => array(255, 255, 255), 'text' => true, 'font' => 'helvetica', 'fontsize' => 8, 'stretchtext' => 1), 'N'));
+
+        $params = $pdf->serializeTCPDFtagParameters(array(
+            $Result_Detail['itemcode2'], 'C128', '', '', 50, 10, 0.4,
+            array(
+                'position' => 'S',
+                'border' => false,
+                'padding' => 0,
+                'fgcolor' => array(0,0,0),
+                'bgcolor' => array(255,255,255),
+                'text' => true,
+                'font' => 'thsarabunnew',  // ถ้าใช้ข้อความภาษาไทยประกอบ
+                'fontsize' => 10,
+                'stretchtext' => 1
+            ), 'N'
+        ));
+
+        
+        // $params = $pdf->serializeTCPDFtagParameters(array($itemcode, 'C39', '', '', 50, 10, 0.4, array('position' => 'S', 'border' => false, 'padding' => 0, 'fgcolor' => array(0, 0, 0), 'bgcolor' => array(255, 255, 255), 'text' => true, 'font' => 'helvetica', 'fontsize' => 8, 'stretchtext' => 1), 'N'));
     
         $html .= '<tr nobr="true" style="font-size:15px;">';
         $html .=   '<td width="8 %" align="center"> ' . $Result_Detail['itemcode2'] . '</td>';

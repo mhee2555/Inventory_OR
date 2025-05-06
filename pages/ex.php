@@ -82,7 +82,7 @@
             <thead class="table-active">
                 <tr>
                     <!-- <th scope="col" class="text-center" style="width: 20%;"></th> -->
-                    <th scope="col" style="width: 10%;" class="text-center" id="td_no">No.</th>
+                    <th scope="col" style="width: 10%;" class="text-center" id="td_no">ลำดับ</th>
                     <th scope="col" class="text-center" id="td_usage">รหัสอุปกรณ์</th>
                     <th scope="col" class="text-center" id="td_item">อุปกรณ์</th>
                     <th scope="col" class="text-center" id="td_ex">วันหมดอายุ</th>
@@ -106,7 +106,7 @@
         <table class="table table-hover table-sm " id="table_data2" hidden>
             <thead class="table-active">
                 <tr>
-                    <th scope="col" style="width: 10%;" class="text-center" id="td_no2">No.</th>
+                    <th scope="col" style="width: 10%;" class="text-center" id="td_no2">ลำดับ</th>
                     <th scope="col" class="text-center" id="td_usage2">รหัสอุปกรณ์</th>
                     <th scope="col" class="text-center" id="td_item2">อุปกรณ์</th>
                     <th scope="col" class="text-center" id="td_ex2">วันหมดอายุ</th>
