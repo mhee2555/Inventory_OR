@@ -4937,7 +4937,7 @@ function oncheck_pay($conn, $db)
 
     if ($check_barcode == 0) {
         if ($db == 1) {
-
+            
             $query_1 = "        SELECT
                                     itemstock.ItemCode,
                                     itemstock.Isdeproom,
@@ -5480,7 +5480,7 @@ function oncheck_pay($conn, $db)
                                     LEFT JOIN hncode_detail ON hncode_detail.DocNo = hncode.DocNo 
                                 WHERE
                                     deproomdetail.ItemCode = '$_ItemCode' 
-                                    AND hncode_detail.UsageCode = '$input_pay'
+                                    AND deproomdetailsub.ItemStockID = '$_RowID'
                                     ORDER BY deproomdetailsub.ID DESC
                                     LIMIT 1 ";
 
