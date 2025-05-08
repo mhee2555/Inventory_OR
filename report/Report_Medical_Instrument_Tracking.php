@@ -241,21 +241,21 @@ $DocNo = $_GET['DocNo'];
 // $pdf->Ln(8);
 
 
-$html = '<table cellspacing="0" cellpadding="2" border="1" >
-<thead><tr style="font-size:13px;">
-<th width="5 %" align="center">No</th>
-<th width="11 %" align="center">Usage Code</th>
-<th width="11 %"  align="center">QR Code</th>
-<th width="6 %" align="center">Type</th>
-<th width="8.5 %"  align="center">Lot No</th>
-<th width="8.5  %"  align="center">Exp No</th>
-<th width="8.5  %"  align="center">serial No</th>
-<th width="8.5  %"  align="center">จำนวน</th>
-<th width="9 %"  align="center">MFG</th>
-<th width="9 %"  align="center">EXP</th>
-<th width="15 %"  align="center">Item Name</th>
+$html = '<table border="1" cellpadding="4" cellspacing="0" align="center">
+<tr style="font-size:13px;">
+<th width="5 %" align="center" style="vertical-align: middle;">NO</th>
+<th width="11 %" align="center" style="vertical-align: middle;">Usage Code</th>
+<th width="11 %"  align="center" style="vertical-align: middle;">QR Code</th>
+<th width="6 %" align="center" style="vertical-align: middle;">Type</th>
+<th width="8.5 %"  align="center" style="vertical-align: middle;">Lot No</th>
+<th width="8.5  %"  align="center" style="vertical-align: middle;">Exp No</th>
+<th width="8.5  %"  align="center" style="vertical-align: middle;">serial No</th>
+<th width="8.5  %"  align="center" style="vertical-align: middle;">จำนวน</th>
+<th width="9 %"  align="center" style="vertical-align: middle;">MFG</th>
+<th width="9 %"  align="center" style="vertical-align: middle;">EXP</th>
+<th width="15 %"  align="center" style="vertical-align: middle;">Item Name</th>
 
-</tr> </thead>';
+</tr>';
 
 $count = 1;
 
@@ -359,19 +359,22 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
 
   
 
-    $html .= '<tr nobr="true" style="font-size:15px;">';
-    $html .=   '<td width="5%" align="center">' . htmlspecialchars($count) . '</td>';
-    $html .=   '<td width="11%" align="center">' . htmlspecialchars($usageCode) . '</td>';
-    $html .=   '<td width="11%" align="center"> <img src="' . $file . '"  />  </td>';
-    $html .=   '<td width="6%" align="center">' . htmlspecialchars($Result_Detail['TyeName']) . '</td>';
-    $html .=   '<td width="8.5%" align="center">' . htmlspecialchars($Result_Detail['lotNo']) . '</td>';
-    $html .=   '<td width="8.5%" align="center">' . htmlspecialchars($Result_Detail['ExpireDate']) . '</td>';
-    $html .=   '<td width="8.5%" align="center">' . htmlspecialchars($Result_Detail['serielNo']) . '</td>';
-    $html .=   '<td width="8.5%" align="center">' . htmlspecialchars($Result_Detail['Qty']) . '</td>';
-    $html .=   '<td width="9%" align="center">' . htmlspecialchars($Result_Detail['CreateDate']) . '</td>';
-    $html .=   '<td width="9%" align="center">' . htmlspecialchars($Result_Detail['expDate']) . '</td>';
-    $html .=   '<td width="15%" align="center">' . htmlspecialchars($itemname) . '</td>';
+    $html .= '<tr nobr="true" style="font-size:13px;"  >';
+    $html .=   '<td width="5%"  style="vertical-align: middle;height: 50px;">' . htmlspecialchars($count) . '</td>';
+    $html .=   '<td width="11%"  style="vertical-align: middle;">' . htmlspecialchars($usageCode) . '</td>';
+    $html .=   '<td width="11%" align="center" style="vertical-align: middle;"> <img src="' . $file . '"  />  </td>';
+    $html .=   '<td width="6%" align="center" style="vertical-align: middle;">' . htmlspecialchars($Result_Detail['TyeName']) . '</td>';
+    $html .=   '<td width="8.5%" align="center" style="vertical-align: middle;">' . htmlspecialchars($Result_Detail['lotNo']) . '</td>';
+    $html .=   '<td width="8.5%" align="center" style="vertical-align: middle;">' . htmlspecialchars($Result_Detail['ExpireDate']) . '</td>';
+    $html .=   '<td width="8.5%" align="center" style="vertical-align: middle;">' . htmlspecialchars($Result_Detail['serielNo']) . '</td>';
+    $html .=   '<td width="8.5%" align="center" style="vertical-align: middle;">' . htmlspecialchars($Result_Detail['Qty']) . '</td>';
+    $html .=   '<td width="9%" align="center" style="vertical-align: middle;">' . htmlspecialchars($Result_Detail['CreateDate']) . '</td>';
+    $html .=   '<td width="9%" align="center" style="vertical-align: middle;">' . htmlspecialchars($Result_Detail['expDate']) . '</td>';
+    $html .=   '<td width="15%" align="center" style="vertical-align: middle;">' . htmlspecialchars($itemname) . '</td>';
     $html .=  '</tr>';
+
+
+
 
     $count++;
 }
@@ -381,6 +384,9 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
 
 
 $html .= '</table>';
+
+
+
 $pdf->writeHTML($html, true, false, false, false, '');
 
 

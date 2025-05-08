@@ -62,7 +62,7 @@
 
                     <div class="form-group ">
                         <label for="" class=" col-form-label" style="color:black;font-weight: 600;">คลังหลัก</label>
-                         <select class="form-control select2" id=""></select>
+                        <select class="form-control select2" id=""></select>
                     </div>
 
 
@@ -95,11 +95,11 @@
                 </div>
                 <div class="col-md-6 mt-3">
                     <div class="card">
-                            <div class="card-header">
-                                <span id="itemCodeSUDs"></span>
-                                <br>
-                                <span id="itemNameSUDs" style="color: black;font-weight: 600;font-size: 25px;"></span>
-                            </div>
+                        <div class="card-header">
+                            <span id="itemCodeSUDs"></span>
+                            <br>
+                            <span id="itemNameSUDs" style="color: black;font-weight: 600;font-size: 25px;"></span>
+                        </div>
                         <div class="card-body">
                             <table class="table table-hover table-sm" id="table_item_suds2">
                                 <thead style="background-color: #cdd6ff;">
@@ -126,10 +126,10 @@
                                 <div class="col-md-6">
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <span style="color:black;">ชื่อเครื่องมือ :</span> <span style="color:black;" id="item_name"></span> 
+                                            <span style="color:black;">ชื่อเครื่องมือ :</span> <span style="color:black;" id="item_name"></span>
                                         </div>
                                         <div class="col-md-6">
-                                            <span style="color:black;">รหัสเครื่องมือ SUDs :</span> <span style="color:black;" id="item_suds"></span> 
+                                            <span style="color:black;">รหัสเครื่องมือ SUDs :</span> <span style="color:black;" id="item_suds"></span>
                                         </div>
                                     </div>
 
@@ -174,26 +174,18 @@
                         <input type="text" class="form-control  datepicker-here f18" id="select_date1_rfid" data-language='en' data-date-format='dd-mm-yyyy'>
                     </div>
                 </div>
-                <!-- <div class="col-md-3">
-                    <div class="form-group row">
-                        <div class="col-sm-10">
-                            <div class="input-group">
-                                <input type="text" class="form-control  datepicker-here f18" id="select_date2" data-language='en' data-date-format='dd-mm-yyyy'>
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
 
                 <div class="col-md-4">
-
                     <div class="form-group ">
                         <label for="" class="col-form-label " style="color:black;">ค้นหาชื่ออุปกรณ์</label>
-                            <input type="text" class="form-control  f18" id="input_search_rfid" autocomplete="off">
+                        <input type="text" class="form-control  f18" id="input_search_rfid" autocomplete="off">
                     </div>
-
-
-
                 </div>
+                <div class="col-md-5 text-right" style="margin-top: 40px;">
+                    <button class="btn btn-primary btn_upload_stock" style="margin-right: 10px;">อัพโหลดข้อมูล Stock</button>
+                    <button class="btn btn-success btn_manage_stock">จัดการข้อมูล Stock</button>
+                </div>
+
 
 
                 <div class="col-md-12 mt-3">
@@ -271,11 +263,15 @@
 
                     <div class="form-group ">
                         <label for="" class="col-form-label " style="color:black;">ค้นหาชื่ออุปกรณ์</label>
-                            <input type="text" class="form-control  f18" id="input_search" autocomplete="off">
+                        <input type="text" class="form-control  f18" id="input_search" autocomplete="off">
                     </div>
 
 
 
+                </div>
+                <div class="col-md-5 text-right" style="margin-top: 40px;">
+                    <button class="btn btn-primary btn_upload_stock" style="margin-right: 10px;">อัพโหลดข้อมูล Stock</button>
+                    <button class="btn btn-success btn_manage_stock">จัดการข้อมูล Stock</button>
                 </div>
 
 
@@ -354,12 +350,18 @@
 
                     <div class="form-group ">
                         <label for="" class="col-form-label " style="color:black;">ค้นหาชื่ออุปกรณ์</label>
-                            <input type="text" class="form-control  f18" id="input_search_normal" autocomplete="off">
+                        <input type="text" class="form-control  f18" id="input_search_normal" autocomplete="off">
                     </div>
 
 
 
                 </div>
+
+                <div class="col-md-5 text-right" style="margin-top: 40px;">
+                    <button class="btn btn-primary btn_upload_stock" style="margin-right: 10px;">อัพโหลดข้อมูล Stock</button>
+                    <button class="btn btn-success btn_manage_stock">จัดการข้อมูล Stock</button>
+                </div>
+
 
 
                 <div class="col-md-12 mt-3">
@@ -408,6 +410,84 @@
 
 
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="modal_upload_stock" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">อัพโหลดข้อมูล Stock</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <label for="" style="color:black;">ดาวน์โหลดไฟล์</label>
+                        <br>
+                        <button class="btn btn-success btn-block" onclick="window.location.href='report/phpexcel/Excel-Master.xlsx' ">Excel</button>
+                    </div>
+                </div>
+
+                <div class="row mt-2">
+                    <div class="col-md-12">
+                        <label style="color:black;">อัพโหลด</label>
+                        <br>
+                        <label class="btn btn-primary btn-block">
+                            อัพโหลด Excel <input type="file" id="excelFile" hidden accept=".xls,.xlsx">
+                        </label>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <input type="text" class="form-control" id="filename" disabled>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">ยกเลิก</button>
+                <button type="button" class="btn btn-primary" id="save_upload_stock">บันทึก</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="modal_manage_stockRFID" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">จัดการข้อมูล Stock</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="" style="color:black;">เลือกอุปกรณ์</label>
+                    <select class="form-control f18" id="item_manage_stockRFID"></select>
+                </div>
+                <div class="form-group">
+                    <label for="" style="color:black;">Stock Max</label>
+                    <input type="number" class="form-control f18" id="max_manage_stockRFID">
+                </div>
+                <div class="form-group">
+                    <label for="" style="color:black;">Stock Min</label>
+                    <input type="number" class="form-control f18" id="min_manage_stockRFID">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">ยกเลิก</button>
+                <button type="button" class="btn btn-primary" id="save_manage_stockRFID">บันทึก</button>
             </div>
         </div>
     </div>

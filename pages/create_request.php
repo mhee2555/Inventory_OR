@@ -126,7 +126,7 @@
                                 <input type="text" class="form-control" id="text_edit" placeholder="" hidden>
                                 <div class="col-md-4">
                                     <div class="form-group ">
-                                        <label style="color:black;font-weight: 600;">เลข เลขประจำตัวคนไข้</label>
+                                        <label style="color:black;font-weight: 600;">เลขประจำตัวคนไข้</label>
                                         <div class="input-group">
                                             <input type="text" class="form-control f18 " id="input_hn_request" placeholder="" autocomplete="off">
                                         </div>

@@ -215,12 +215,12 @@ $pdf->SetFont('db_helvethaica_x', 'B', 18);
 
 $html = '<table cellspacing="0" cellpadding="2" border="1" >
 <thead><tr style="font-size:18px;color:#fff;background-color:#663399;">
-<th width="8 %" align="center">Code</th>
+<th width="8 %" align="center">code</th>
 <th width="30 %" align="center">Barcode</th>
-<th width="32 %"  align="center">Name</th>
-<th width="10 %" align="center">Qty</th>
-<th width="10 %" align="center">Unit Price</th>
-<th width="10 %" align="center">Total Price</th>
+<th width="32 %"  align="center">ชื่อ</th>
+<th width="10 %" align="center">qty</th>
+<th width="10 %" align="center">Unit price</th>
+<th width="10 %" align="center">total piece</th>
 </tr> </thead>';
 
 
@@ -297,12 +297,12 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
         // $params = $pdf->serializeTCPDFtagParameters(array($itemcode, 'C39', '', '', 50, 10, 0.4, array('position' => 'S', 'border' => false, 'padding' => 0, 'fgcolor' => array(0, 0, 0), 'bgcolor' => array(255, 255, 255), 'text' => true, 'font' => 'helvetica', 'fontsize' => 8, 'stretchtext' => 1), 'N'));
     
         $html .= '<tr nobr="true" style="font-size:15px;">';
-        $html .=   '<td width="8 %" align="center"> ' . $Result_Detail['itemcode2'] . '</td>';
+        $html .=   '<td width="8 %" align="center" style="line-height:50px;"> ' . $Result_Detail['itemcode2'] . '</td>';
         $html .=   '<td width="30 %" align="center"> <tcpdf method="write1DBarcode" params="' . $params . '" /> </td>';
-        $html .=   '<td width="32 %" align="left">' . $Result_Detail['itemname'] . '</td>';
-        $html .=   '<td width="10 %" align="center">' . $Result_Detail['cnt'] . '</td>';
-        $html .=   '<td width="10 %" align="center">0.00</td>';
-        $html .=   '<td width="10 %" align="center">0.00</td>';
+        $html .=   '<td width="32 %" align="left" style="line-height:50px;">' . $Result_Detail['itemname'] . '</td>';
+        $html .=   '<td width="10 %" align="center" style="line-height:50px;">' . $Result_Detail['cnt'] . '</td>';
+        $html .=   '<td width="10 %" align="center" style="line-height:50px;">0.00</td>';
+        $html .=   '<td width="10 %" align="center" style="line-height:50px;">0.00</td>';
         $html .=  '</tr>';
         $count++;
     }

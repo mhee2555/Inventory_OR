@@ -25,6 +25,8 @@ if (!empty($_POST['FUNC_NAME'])) {
         set_proceduce($conn);
     } else if ($_POST['FUNC_NAME'] == 'set_users') {
         set_users($conn);
+    } else if ($_POST['FUNC_NAME'] == 'select_item') {
+        select_item($conn);
     }
 }
 
@@ -254,6 +256,26 @@ function select_sterileprocess($conn)
                     sterileprocess.SterileName
                 FROM
                     sterileprocess ";
+
+
+    $meQuery = $conn->prepare($query);
+    $meQuery->execute();
+    while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+        $return[] = $row;
+    }
+    echo json_encode($return);
+    unset($conn);
+    die;
+}
+
+function select_item($conn)
+{
+    $return = array();
+
+    $query = "SELECT item.itemcode,
+                    item.itemname
+              FROM 
+                    item  ";
 
 
     $meQuery = $conn->prepare($query);

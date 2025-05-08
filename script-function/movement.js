@@ -1,8 +1,16 @@
 var departmentroomname = "";
 var UserName = "";
 $(function () {
-  session();
 
+
+  $('#excelFile').on('change', function() {
+    var fileName = this.files[0]?.name || '';
+    $('#filename').val(fileName);
+  });
+
+
+  session();
+  select_item();
   $("#select_date1").val(set_date());
   $("#select_date1").datepicker({
     onSelect: function (date) {
@@ -33,7 +41,6 @@ $(function () {
     selection_item();
   });
 
-
   $("#input_search_rfid").keyup(function () {
     selection_item_rfid();
   });
@@ -42,18 +49,12 @@ $(function () {
     selection_item_normal();
   });
 
-
   $("#suds").hide();
   $("#sterile").hide();
   $("#normal").hide();
 
-  
-  
   $("#radio_suds").css("color", "#bbbbb");
-  $("#radio_suds").css(
-    "background",
-    "#EAECF0"
-  );
+  $("#radio_suds").css("background", "#EAECF0");
 
   // selection_itemSuds();
 
@@ -65,10 +66,7 @@ $(function () {
 
   $("#radio_suds").click(function () {
     $("#radio_suds").css("color", "#bbbbb");
-    $("#radio_suds").css(
-      "background",
-      "#EAECF0"
-    );
+    $("#radio_suds").css("background", "#EAECF0");
 
     $("#radio_sterile").css("color", "black");
     $("#radio_sterile").css("background", "");
@@ -79,15 +77,11 @@ $(function () {
     $("#sterile1").show();
     $("#sterile").hide();
     $("#normal").hide();
-
   });
 
   $("#radio_sterile").click(function () {
     $("#radio_sterile").css("color", "#bbbbb");
-    $("#radio_sterile").css(
-      "background",
-      "#EAECF0"
-    );
+    $("#radio_sterile").css("background", "#EAECF0");
 
     $("#radio_suds").css("color", "black");
     $("#radio_suds").css("background", "");
@@ -111,10 +105,7 @@ $(function () {
 
   $("#radio_normal").click(function () {
     $("#radio_normal").css("color", "#bbbbb");
-    $("#radio_normal").css(
-      "background",
-      "#EAECF0"
-    );
+    $("#radio_normal").css("background", "#EAECF0");
 
     $("#radio_suds").css("color", "black");
     $("#radio_suds").css("background", "");
@@ -223,8 +214,7 @@ function selection_itemSuds() {
   });
 }
 
-function showDetail_itemSuds(itemcode,itemname) {
-
+function showDetail_itemSuds(itemcode, itemname) {
   $("#itemCodeSUDs").text(itemcode);
   $("#itemNameSUDs").text(itemname);
 
@@ -243,32 +233,32 @@ function showDetail_itemSuds(itemcode,itemname) {
       var tr = ``;
       if (!$.isEmptyObject(ObjData)) {
         $.each(ObjData, function (kay, value) {
-          if(value.rack == null){
+          if (value.rack == null) {
             value.rack = "";
           }
-          if(value.row == null){
+          if (value.row == null) {
             value.row = "";
           }
-          if(value.IsCancel == '0'){
+          if (value.IsCancel == "0") {
             value.IsCancel = "อยู่ในคลัง";
-          }else if(value.IsCancel == '1'){
+          } else if (value.IsCancel == "1") {
             value.IsCancel = "In Active";
           }
 
           var btn = "btn btn-primary";
 
-          if(value.location == null){
+          if (value.location == null) {
             value.location = "";
           }
-          if(value.IsDeproom == '7'){
+          if (value.IsDeproom == "7") {
             value.departmentroomname = "Create Request";
             var btn = "btn btn-warning";
           }
-          if(value.IsDamage == '1' || value.IsDamage == '2'){
+          if (value.IsDamage == "1" || value.IsDamage == "2") {
             value.departmentroomname = "ชำรุด";
             var btn = "btn btn-danger";
           }
-          
+
           tr += `<tr>
                                 <td class='text-center'>${value.UsageCode}</td>
                                 <td class='text-center'> <button class="${btn}">${value.departmentroomname}</button></td>
@@ -352,7 +342,7 @@ function showDetail_itemSuds(itemcode,itemname) {
   });
 }
 
-function showDetailSub_itemSuds(itemname,UsageCode){
+function showDetailSub_itemSuds(itemname, UsageCode) {
   $("#item_name").text(itemname);
   $("#item_suds").text(UsageCode);
 
@@ -370,10 +360,10 @@ function showDetailSub_itemSuds(itemname,UsageCode){
       var tr = ``;
       if (!$.isEmptyObject(ObjData)) {
         $.each(ObjData, function (kay, value) {
-          if(value.SterileDate == null){
+          if (value.SterileDate == null) {
             value.SterileDate = "";
           }
-          if(value.ExpDate == null){
+          if (value.ExpDate == null) {
             value.ExpDate = "";
           }
 
@@ -423,6 +413,8 @@ function selection_departmentRoom() {
       // tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#D1FADF;border-bottom-color: #12B76A;" class='text-center' rowspan="2" id="">ส่ง CSSD</th>`;
       // tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#FEE4E2;border-bottom-color: #D92D20;" class='text-center' rowspan="2" id="">ชำรุด</th>`;
       tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#CDF4EC;border-bottom-color: #219E83;" class='text-center' rowspan="2" id="">คงเหลือ</th>`;
+      tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#91a7ff;border-bottom-color: #5677fc;" class='text-center' rowspan="2" id="">Max</th>`;
+      tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#4fc3f7;border-bottom-color: #03a9f4;" class='text-center' rowspan="2" id="">Min</th>`;
       // var tr = ``;
       if (!$.isEmptyObject(ObjData)) {
         $.each(ObjData["floor"], function (kay, value) {
@@ -470,25 +462,40 @@ function selection_item() {
       // var tr = ``;
       if (!$.isEmptyObject(ObjData)) {
         $.each(ObjData["item"], function (kay, value) {
-          var balance =
-            parseInt(value.Qty) -  (parseInt(value.cnt_pay) + parseInt(value.cnt_cssd));
+          // var balance =
+          //   parseInt(value.Qty) -
+          //   (parseInt(value.cnt_pay) + parseInt(value.cnt_cssd));
+
+
+            if(value.stock_max == null){
+              value.stock_max = 0;
+            }
+  
+            var color  ='';
+            if(value.calculated_balance < value.stock_min){
+               color  ='color:red;'
+            }
+            if(value.cnt < value.stock_balance){
+              value.cnt = value.stock_balance;
+            }
+
 
           tr += `<tr>f
                                   <td class='text-center' style="text-wrap: nowrap;">${
                                     kay + 1
                                   }</td>
-                                  <td style="text-wrap: nowrap;">${
+                                  <td style="text-wrap: nowrap;${color}" >${
                                     value.itemname
                                   }</td>
                                   <td class='text-center' style="text-wrap: nowrap;">${
-                                    value.Qty
+                                    value.cnt
                                   }</td>
                                   <td class='text-center' style="text-wrap: nowrap;background-color:#FFFAEB;">${
                                     value.cnt_pay
                                   }</td>
-                                  <td class='text-center' style="text-wrap: nowrap;background-color: #ECFDF3;">${
-                                    balance
-                                  }</td>`;
+                                  <td class='text-center' style="text-wrap: nowrap;background-color: #ECFDF3;">${value.calculated_balance}</td>
+                                  <td style="text-wrap: nowrap;background-color: #d0d9ff;"">${value.stock_max}</td>
+                                   <td style="text-wrap: nowrap;background-color: #b3e5fc;"">${value.stock_min}</td>`;
 
           var sumcount = 0;
           $.each(depRoom, function (keydep, valuedep) {
@@ -586,6 +593,162 @@ function set_date() {
 }
 
 
+function showLoading() {
+  $("body").loadingModal({
+    position: "auto",
+    text: "กำลังโหลด...",
+    color: "#fff",
+    opacity: "0.7",
+    backgroundColor: "rgb(0,0,0)",
+    animation: "threeBounce",
+  });
+}
+
+$(".btn_upload_stock").click(function () {
+  $("#modal_upload_stock").modal("toggle");
+});
+
+$("#save_upload_stock").click(function () {
+  Swal.fire({
+    title: "ยืนยัน",
+    text: "ยืนยัน! การอัพโหลด ?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "ยืนยัน",
+    cancelButtonText: "ยกเลิก",
+  }).then((result) => {
+    if (result.isConfirmed) {
+
+
+
+
+        var fileInput = $('#excelFile')[0];
+        var file = fileInput.files[0];
+    
+        if (!file) {
+          Swal.fire("ผิดพลาด", "กรุณาเลือกไฟล์ก่อน", "error");
+          return;
+        }
+        showLoading();
+    
+        var formData = new FormData();
+        formData.append('excelFile', file);
+
+
+        $.ajax({
+          url: 'process/upload_excel.php',
+          type: 'POST',
+          data: formData,
+          contentType: false,
+          processData: false,
+          success: function(response) {
+            // Swal.fire("สำเร็จ", "อัปโหลดเรียบร้อย", "success");
+
+            setTimeout(() => {
+              window.location.reload();
+              // $("body").loadingModal("destroy");
+            }, 500);
+            // หรือแสดงข้อความใน element แทน
+            // $('#message').html(response);
+          },
+          error: function() {
+            Swal.fire("ล้มเหลว", "เกิดข้อผิดพลาดระหว่างอัปโหลด", "error");
+          }
+        });
+
+
+
+    }
+  });
+});
+
+$(".btn_manage_stock").click(function () {
+  $("#modal_manage_stockRFID").modal("toggle");
+  $("#max_manage_stockRFID").val('');
+  $("#min_manage_stockRFID").val('');
+  $("#item_manage_stockRFID").val('');
+  setTimeout(() => {
+    
+    $("#item_manage_stockRFID").select2({
+      dropdownParent: $("#modal_manage_stockRFID"), // 👈 ต้องชี้ dropdownParent เป็น modal
+    });
+  }, 500);
+});
+
+$("#save_manage_stockRFID").click(function () {
+
+  if($("#item_manage_stockRFID").val() == ""){
+    Swal.fire("ล้มเหลว", "กรุณาเลือกรายการ", "error");
+    return;
+  }
+
+  if($("#max_manage_stockRFID").val() == "" || $("#min_manage_stockRFID").val() == ""){
+    Swal.fire("ล้มเหลว", "กรุณากรอก Max & Min", "error");
+    return;
+  }
+  Swal.fire({
+    title: "ยืนยัน",
+    text: "ยืนยัน! การบันทึก ?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "ยืนยัน",
+    cancelButtonText: "ยกเลิก",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      $.ajax({
+        url: "process/movement.php",
+        type: "POST",
+        data: {
+          FUNC_NAME: "onSavemanage_stockRFID",
+          item_manage_stockRFID: $("#item_manage_stockRFID").val(),
+          max_manage_stockRFID: $("#max_manage_stockRFID").val(),
+          min_manage_stockRFID: $("#min_manage_stockRFID").val(),
+        },
+        success: function (result) {
+          // selection_item_rfid();
+
+          window.location.reload();
+
+          // $("#modal_manage_stockRFID").modal("toggle");
+        },
+      });
+    }
+  });
+});
+
+
+function select_item(){
+
+  $.ajax({
+    url: "process/process_main/select_main.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "select_item",
+    },
+    success: function (result) {
+      var ObjData = JSON.parse(result);
+      console.log(ObjData);
+      var option = `<option value="" selected>กรุณาเลือกอุปกรณ์</option>`;
+      if (!$.isEmptyObject(ObjData)) {
+        $.each(ObjData, function (kay, value) {
+          option += `<option value="${value.itemcode}" >${value.itemname}</option>`;
+        });
+      } else {
+        option = `<option value="0">ไม่มีข้อมูล</option>`;
+      }
+      $("#item_manage_stockRFID").html(option);
+    },
+  });
+
+
+  
+  
+  
+}
 
 function selection_departmentRoom_rfid() {
   depRoom = [];
@@ -613,6 +776,8 @@ function selection_departmentRoom_rfid() {
       // tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#D1FADF;border-bottom-color: #12B76A;" class='text-center' rowspan="2" id="">ส่ง CSSD</th>`;
       // tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#FEE4E2;border-bottom-color: #D92D20;" class='text-center' rowspan="2" id="">ชำรุด</th>`;
       tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#CDF4EC;border-bottom-color: #219E83;" class='text-center' rowspan="2" id="">คงเหลือ</th>`;
+      tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#91a7ff;border-bottom-color: #5677fc;" class='text-center' rowspan="2" id="">Max</th>`;
+      tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#4fc3f7;border-bottom-color: #03a9f4;" class='text-center' rowspan="2" id="">Min</th>`;
       // var tr = ``;
       if (!$.isEmptyObject(ObjData)) {
         $.each(ObjData["floor"], function (kay, value) {
@@ -641,8 +806,6 @@ function selection_departmentRoom_rfid() {
   });
 }
 
-
-
 function selection_item_rfid() {
   $.ajax({
     url: "process/movement.php",
@@ -659,15 +822,30 @@ function selection_item_rfid() {
       console.log(ObjData);
       var tr = ``;
       // var tr = ``;
+
       if (!$.isEmptyObject(ObjData)) {
         $.each(ObjData["item"], function (kay, value) {
-          var balance =  parseInt(value.cnt) -  (parseInt(value.cnt_pay));
 
-          tr += `<tr>f
+
+          // var balance = parseInt(value.cnt) - parseInt(value.cnt_pay);
+
+          if(value.stock_max == null){
+            value.stock_max = 0;
+          }
+
+          var color  ='';
+          if(value.calculated_balance < value.stock_min){
+             color  ='color:red;'
+          }
+
+          if(value.cnt < value.stock_balance){
+            value.cnt = value.stock_balance;
+          }
+          tr += `<tr>
                                   <td class='text-center' style="text-wrap: nowrap;">${
                                     kay + 1
                                   }</td>
-                                  <td style="text-wrap: nowrap;">${
+                                  <td style="text-wrap: nowrap;${color}">${
                                     value.itemname
                                   }</td>
                                   <td class='text-center' style="text-wrap: nowrap;">${
@@ -676,9 +854,9 @@ function selection_item_rfid() {
                                   <td class='text-center' style="text-wrap: nowrap;background-color:#FFFAEB;">${
                                     value.cnt_pay
                                   }</td>
-                                     <td class='text-center' style="text-wrap: nowrap;background-color:#ECFDF3;">${
-                                    balance
-                                  }</td>`;
+                                     <td class='text-center' style="text-wrap: nowrap;background-color:#ECFDF3;">${value.calculated_balance}</td>
+                                  <td style="text-wrap: nowrap;background-color: #d0d9ff;"">${value.stock_max}</td>
+                                   <td style="text-wrap: nowrap;background-color: #b3e5fc;"">${value.stock_min}</td>`;
 
           var sumcount = 0;
           $.each(depRoom, function (keydep, valuedep) {
@@ -701,6 +879,7 @@ function selection_item_rfid() {
 
           tr += `</tr>`;
         });
+
       } else {
       }
 
@@ -743,7 +922,6 @@ function selection_item_rfid() {
   });
 }
 
-
 function selection_departmentRoom_normal() {
   depRoom = [];
   $.ajax({
@@ -770,6 +948,8 @@ function selection_departmentRoom_normal() {
       // tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#D1FADF;border-bottom-color: #12B76A;" class='text-center' rowspan="2" id="">ส่ง CSSD</th>`;
       // tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#FEE4E2;border-bottom-color: #D92D20;" class='text-center' rowspan="2" id="">ชำรุด</th>`;
       tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#CDF4EC;border-bottom-color: #219E83;" class='text-center' rowspan="2" id="">คงเหลือ</th>`;
+      tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#91a7ff;border-bottom-color: #5677fc;" class='text-center' rowspan="2" id="">Max</th>`;
+      tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#4fc3f7;border-bottom-color: #03a9f4;" class='text-center' rowspan="2" id="">Min</th>`;
       // var tr = ``;
       if (!$.isEmptyObject(ObjData)) {
         $.each(ObjData["floor"], function (kay, value) {
@@ -816,13 +996,26 @@ function selection_item_normal() {
       // var tr = ``;
       if (!$.isEmptyObject(ObjData)) {
         $.each(ObjData["item"], function (kay, value) {
-          var balance =  parseInt(value.cnt) -  (parseInt(value.cnt_pay));
 
+
+          if(value.stock_max == null){
+            value.stock_max = 0;
+          }
+
+          var color  ='';
+          if(value.calculated_balance < value.stock_min){
+             color  ='color:red;'
+          }
+
+          if(value.cnt < value.stock_balance){
+            value.cnt = value.stock_balance;
+          }
+          
           tr += `<tr>f
                                   <td class='text-center' style="text-wrap: nowrap;">${
                                     kay + 1
                                   }</td>
-                                  <td style="text-wrap: nowrap;">${
+                                  <td style="text-wrap: nowrap;${color}" >${
                                     value.itemname
                                   }</td>
                                   <td class='text-center' style="text-wrap: nowrap;">${
@@ -831,9 +1024,9 @@ function selection_item_normal() {
                                   <td class='text-center' style="text-wrap: nowrap;background-color:#FFFAEB;">${
                                     value.cnt_pay
                                   }</td>
-                                     <td class='text-center' style="text-wrap: nowrap;background-color:#ECFDF3;">${
-                                    balance
-                                  }</td>`;
+                                     <td class='text-center' style="text-wrap: nowrap;background-color:#ECFDF3;">${value.calculated_balance}</td>
+                                  <td style="text-wrap: nowrap;background-color: #d0d9ff;"">${value.stock_max}</td>
+                                   <td style="text-wrap: nowrap;background-color: #b3e5fc;"">${value.stock_min}</td>`;
 
           var sumcount = 0;
           $.each(depRoom, function (keydep, valuedep) {
@@ -860,8 +1053,6 @@ function selection_item_normal() {
       }
 
       $("#table_DepRoom_normal tbody").html(tr);
-
     },
   });
 }
-

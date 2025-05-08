@@ -22,9 +22,35 @@ if (!empty($_POST['FUNC_NAME'])) {
         selection_item_normal($conn, $db);
     } else if ($_POST['FUNC_NAME'] == 'selection_departmentRoom_normal') {
         selection_departmentRoom_normal($conn, $db);
+    } else if ($_POST['FUNC_NAME'] == 'onSavemanage_stockRFID') {
+        onSavemanage_stockRFID($conn, $db);
     }
 }
 
+function onSavemanage_stockRFID($conn, $db)
+{
+    $return = array();
+
+    $item_manage_stockRFID = $_POST['item_manage_stockRFID'];
+    $max_manage_stockRFID = $_POST['max_manage_stockRFID'];
+    $min_manage_stockRFID = $_POST['min_manage_stockRFID'];
+
+
+
+
+
+
+    $update = "UPDATE item SET stock_max = '$max_manage_stockRFID' , stock_min = '$min_manage_stockRFID' WHERE item.itemcode = '$item_manage_stockRFID' ";
+    $meQuery = $conn->prepare($update);
+    $meQuery->execute();
+
+
+
+
+    echo json_encode($return);
+    unset($conn);
+    die;
+}
 
 function selection_item_normal($conn, $db)
 {
@@ -44,29 +70,80 @@ function selection_item_normal($conn, $db)
     $_itemcode = array();
 
 
-
-
-
-
-
-
-    $Q1 = " SELECT
-                item.itemname,
-                item.itemcode,
-                COUNT( itemstock.RowID ) AS cnt,
-                ( SELECT COUNT( itemstock_transaction_detail.ID ) FROM itemstock_transaction_detail WHERE itemstock_transaction_detail.ItemCode = item.itemcode AND itemstock_transaction_detail.IsStatus = 1  )		AS cnt_pay ,
-                ( SELECT COUNT( itemstock_transaction_detail.ID ) FROM itemstock_transaction_detail WHERE itemstock_transaction_detail.ItemCode = item.itemcode AND itemstock_transaction_detail.IsStatus = 7  )		AS cnt_cssd ,
-                ( SELECT COUNT( itemstock.RowID ) FROM itemstock WHERE itemstock.ItemCode = item.itemcode AND  (itemstock.IsDamage  = 0	OR itemstock.IsDamage  IS NULL)  AND itemstock.Isdeproom != 1 AND itemstock.Isdeproom != 2 AND itemstock.Isdeproom != 3  AND itemstock.Isdeproom != 4  AND itemstock.Isdeproom != 5 AND itemstock.Isdeproom != 6 AND itemstock.Isdeproom != 7 AND itemstock.Isdeproom != 8 AND itemstock.Isdeproom != 9)		AS balance , 
-                ( SELECT COUNT( itemstock.RowID ) FROM itemstock WHERE itemstock.ItemCode = item.itemcode AND  ( itemstock.IsDamage = 1  OR  itemstock.IsDamage = 2 ) )		AS damage 
+    $Q1 = "SELECT
+                sub.itemname,
+                sub.itemcode,
+                sub.stock_max,
+                sub.stock_min,
+                sub.stock_balance,
+                ( sub.cnt - sub.cnt_pay ) AS calculated_balance,
+                sub.cnt,
+                sub.cnt_pay,
+                sub.cnt_cssd,
+                sub.balance,
+                sub.damage 
             FROM
-                itemstock
-                INNER JOIN item ON itemstock.ItemCode = item.itemcode 
-            WHERE
-                     ( item.itemname LIKE '%$input_search%' OR item.itemcode LIKE '%$input_search%' ) 
-                 AND item.SpecialID = '1'
-            GROUP BY
-                item.itemname,
-                item.itemcode  ";
+                (
+                SELECT
+                    item.itemname,
+                    item.itemcode,
+                    item.stock_max,
+                    item.stock_min,
+                    item.stock_balance,
+                    COUNT( itemstock.RowID ) AS cnt,
+                    ( SELECT COUNT( ID ) FROM itemstock_transaction_detail WHERE ItemCode = item.itemcode AND IsStatus = 1 ) AS cnt_pay,
+                    ( SELECT COUNT( ID ) FROM itemstock_transaction_detail WHERE ItemCode = item.itemcode AND IsStatus = 7 ) AS cnt_cssd,
+                    (
+                    SELECT
+                        COUNT( RowID ) 
+                    FROM
+                        itemstock 
+                    WHERE
+                        ItemCode = item.itemcode 
+                        AND ( IsDamage = 0 OR IsDamage IS NULL ) 
+                        AND Isdeproom NOT IN ( 1, 2, 3, 4, 5, 6, 7, 8, 9 ) 
+                    ) AS balance,
+                    ( SELECT COUNT( RowID ) FROM itemstock WHERE ItemCode = item.itemcode AND ( IsDamage = 1 OR IsDamage = 2 ) ) AS damage 
+                FROM
+                    itemstock
+                    INNER JOIN item ON itemstock.ItemCode = item.itemcode 
+                WHERE
+                        ( item.itemname LIKE '%$input_search%' OR item.itemcode LIKE '%$input_search%' ) 
+                   AND item.SpecialID = '1' 
+                GROUP BY
+                    item.itemname,
+                    item.itemcode,
+                    item.stock_max,
+                    item.stock_min,
+                    item.stock_balance 
+                ) AS sub 
+            ORDER BY
+            CASE
+                    
+                    WHEN ( sub.cnt - sub.cnt_pay ) < sub.stock_min THEN
+                    0 ELSE 1 
+                END,
+                sub.itemname; ";
+
+
+
+    // $Q1 = " SELECT
+    //             item.itemname,
+    //             item.itemcode,
+    //             COUNT( itemstock.RowID ) AS cnt,
+    //             ( SELECT COUNT( itemstock_transaction_detail.ID ) FROM itemstock_transaction_detail WHERE itemstock_transaction_detail.ItemCode = item.itemcode AND itemstock_transaction_detail.IsStatus = 1  )		AS cnt_pay ,
+    //             ( SELECT COUNT( itemstock_transaction_detail.ID ) FROM itemstock_transaction_detail WHERE itemstock_transaction_detail.ItemCode = item.itemcode AND itemstock_transaction_detail.IsStatus = 7  )		AS cnt_cssd ,
+    //             ( SELECT COUNT( itemstock.RowID ) FROM itemstock WHERE itemstock.ItemCode = item.itemcode AND  (itemstock.IsDamage  = 0	OR itemstock.IsDamage  IS NULL)  AND itemstock.Isdeproom != 1 AND itemstock.Isdeproom != 2 AND itemstock.Isdeproom != 3  AND itemstock.Isdeproom != 4  AND itemstock.Isdeproom != 5 AND itemstock.Isdeproom != 6 AND itemstock.Isdeproom != 7 AND itemstock.Isdeproom != 8 AND itemstock.Isdeproom != 9)		AS balance , 
+    //             ( SELECT COUNT( itemstock.RowID ) FROM itemstock WHERE itemstock.ItemCode = item.itemcode AND  ( itemstock.IsDamage = 1  OR  itemstock.IsDamage = 2 ) )		AS damage 
+    //         FROM
+    //             itemstock
+    //             INNER JOIN item ON itemstock.ItemCode = item.itemcode 
+    //         WHERE
+    //                  ( item.itemname LIKE '%$input_search%' OR item.itemcode LIKE '%$input_search%' ) 
+    //              AND item.SpecialID = '1'
+    //         GROUP BY
+    //             item.itemname,
+    //             item.itemcode  ";
 
 
     $meQuery1 = $conn->prepare($Q1);
@@ -307,25 +384,81 @@ function selection_item_rfid($conn, $db)
     // $meQuery_D2->execute();
 
 
-
-
-    $Q1 = " SELECT
-                item.itemname,
-                item.itemcode,
-                COUNT( itemstock.RowID ) AS cnt,
-                ( SELECT COUNT( itemstock_transaction_detail.ID ) FROM itemstock_transaction_detail WHERE itemstock_transaction_detail.ItemCode = item.itemcode AND itemstock_transaction_detail.IsStatus = 1  )		AS cnt_pay ,
-                ( SELECT COUNT( itemstock_transaction_detail.ID ) FROM itemstock_transaction_detail WHERE itemstock_transaction_detail.ItemCode = item.itemcode AND itemstock_transaction_detail.IsStatus = 7  )		AS cnt_cssd ,
-                ( SELECT COUNT( itemstock.RowID ) FROM itemstock WHERE itemstock.ItemCode = item.itemcode AND  (itemstock.IsDamage  = 0	OR itemstock.IsDamage  IS NULL)  AND itemstock.Isdeproom != 1 AND itemstock.Isdeproom != 2 AND itemstock.Isdeproom != 3  AND itemstock.Isdeproom != 4  AND itemstock.Isdeproom != 5 AND itemstock.Isdeproom != 6 AND itemstock.Isdeproom != 7 AND itemstock.Isdeproom != 8 AND itemstock.Isdeproom != 9)		AS balance , 
-                ( SELECT COUNT( itemstock.RowID ) FROM itemstock WHERE itemstock.ItemCode = item.itemcode AND  ( itemstock.IsDamage = 1  OR  itemstock.IsDamage = 2 ) )		AS damage 
+    $Q1 = "SELECT
+                sub.itemname,
+                sub.itemcode,
+                sub.stock_max,
+                sub.stock_min,
+                sub.stock_balance,
+                ( sub.cnt - sub.cnt_pay ) AS calculated_balance,
+                sub.cnt,
+                sub.cnt_pay,
+                sub.cnt_cssd,
+                sub.balance,
+                sub.damage 
             FROM
-                itemstock
-                INNER JOIN item ON itemstock.ItemCode = item.itemcode 
-            WHERE
-                     ( item.itemname LIKE '%$input_search%' OR item.itemcode LIKE '%$input_search%' ) 
-                 AND item.SpecialID = '0'
-            GROUP BY
-                item.itemname,
-                item.itemcode  ";
+                (
+                SELECT
+                    item.itemname,
+                    item.itemcode,
+                    item.stock_max,
+                    item.stock_min,
+                    item.stock_balance,
+                    COUNT( itemstock.RowID ) AS cnt,
+                    ( SELECT COUNT( ID ) FROM itemstock_transaction_detail WHERE ItemCode = item.itemcode AND IsStatus = 1 ) AS cnt_pay,
+                    ( SELECT COUNT( ID ) FROM itemstock_transaction_detail WHERE ItemCode = item.itemcode AND IsStatus = 7 ) AS cnt_cssd,
+                    (
+                    SELECT
+                        COUNT( RowID ) 
+                    FROM
+                        itemstock 
+                    WHERE
+                        ItemCode = item.itemcode 
+                        AND ( IsDamage = 0 OR IsDamage IS NULL ) 
+                        AND Isdeproom NOT IN ( 1, 2, 3, 4, 5, 6, 7, 8, 9 ) 
+                    ) AS balance,
+                    ( SELECT COUNT( RowID ) FROM itemstock WHERE ItemCode = item.itemcode AND ( IsDamage = 1 OR IsDamage = 2 ) ) AS damage 
+                FROM
+                    itemstock
+                    INNER JOIN item ON itemstock.ItemCode = item.itemcode 
+                WHERE
+                        ( item.itemname LIKE '%$input_search%' OR item.itemcode LIKE '%$input_search%' ) 
+                   AND item.SpecialID = '0' 
+                GROUP BY
+                    item.itemname,
+                    item.itemcode,
+                    item.stock_max,
+                    item.stock_min,
+                    item.stock_balance 
+                ) AS sub 
+            ORDER BY
+            CASE
+                    
+                    WHEN ( sub.cnt - sub.cnt_pay ) < sub.stock_min THEN
+                    0 ELSE 1 
+                END,
+                sub.itemname; ";
+
+    // $Q1 = " SELECT
+    //             item.itemname,
+    //             item.itemcode,
+    //             item.stock_max,
+    //             item.stock_min,
+    //             item.stock_balance,
+    //             COUNT( itemstock.RowID ) AS cnt,
+    //             ( SELECT COUNT( itemstock_transaction_detail.ID ) FROM itemstock_transaction_detail WHERE itemstock_transaction_detail.ItemCode = item.itemcode AND itemstock_transaction_detail.IsStatus = 1  )		AS cnt_pay ,
+    //             ( SELECT COUNT( itemstock_transaction_detail.ID ) FROM itemstock_transaction_detail WHERE itemstock_transaction_detail.ItemCode = item.itemcode AND itemstock_transaction_detail.IsStatus = 7  )		AS cnt_cssd ,
+    //             ( SELECT COUNT( itemstock.RowID ) FROM itemstock WHERE itemstock.ItemCode = item.itemcode AND  (itemstock.IsDamage  = 0	OR itemstock.IsDamage  IS NULL)  AND itemstock.Isdeproom != 1 AND itemstock.Isdeproom != 2 AND itemstock.Isdeproom != 3  AND itemstock.Isdeproom != 4  AND itemstock.Isdeproom != 5 AND itemstock.Isdeproom != 6 AND itemstock.Isdeproom != 7 AND itemstock.Isdeproom != 8 AND itemstock.Isdeproom != 9)		AS balance , 
+    //             ( SELECT COUNT( itemstock.RowID ) FROM itemstock WHERE itemstock.ItemCode = item.itemcode AND  ( itemstock.IsDamage = 1  OR  itemstock.IsDamage = 2 ) )		AS damage 
+    //         FROM
+    //             itemstock
+    //             INNER JOIN item ON itemstock.ItemCode = item.itemcode 
+    //         WHERE
+    //                  ( item.itemname LIKE '%$input_search%' OR item.itemcode LIKE '%$input_search%' ) 
+    //              AND item.SpecialID = '0'
+    //         GROUP BY
+    //             item.itemname,
+    //             item.itemcode  ";
 
 
     $meQuery1 = $conn->prepare($Q1);
@@ -623,20 +756,75 @@ function selection_item($conn, $db)
 
     $_itemcode = array();
 
-    $Q1 = " SELECT
-                item.itemname,
-                item.itemcode,
-                itemslotincabinet.Qty,
-                ( SELECT SUM( itemstock_transaction_detail.Qty ) FROM itemstock_transaction_detail WHERE itemstock_transaction_detail.ItemCode = item.itemcode AND itemstock_transaction_detail.IsStatus = 1 ) AS cnt_pay,
-                ( SELECT SUM( itemstock_transaction_detail.Qty ) FROM itemstock_transaction_detail WHERE itemstock_transaction_detail.ItemCode = item.itemcode AND itemstock_transaction_detail.IsStatus = 7 ) AS cnt_cssd
+    $Q1 = "SELECT
+                sub.itemname,
+                sub.itemcode,
+                sub.stock_max,
+                sub.stock_min,
+                sub.stock_balance,
+                ( sub.cnt - sub.cnt_pay ) AS calculated_balance,
+                sub.cnt,
+                sub.cnt_pay,
+                sub.cnt_cssd,
+                sub.balance,
+                sub.damage 
             FROM
-                itemslotincabinet
-                INNER JOIN item ON item.itemcode = itemslotincabinet.itemcode 
-            WHERE ( item.itemname LIKE '%$input_search%' OR item.itemcode LIKE '%$input_search%' )
-             AND item.SpecialID = '2'
-            GROUP BY
-                item.itemname,
-                item.itemcode  ";
+                (
+                SELECT
+                    item.itemname,
+                    item.itemcode,
+                    item.stock_max,
+                    item.stock_min,
+                    item.stock_balance,
+                    COUNT( itemstock.RowID ) AS cnt,
+                    ( SELECT COUNT( ID ) FROM itemstock_transaction_detail WHERE ItemCode = item.itemcode AND IsStatus = 1 ) AS cnt_pay,
+                    ( SELECT COUNT( ID ) FROM itemstock_transaction_detail WHERE ItemCode = item.itemcode AND IsStatus = 7 ) AS cnt_cssd,
+                    (
+                    SELECT
+                        COUNT( RowID ) 
+                    FROM
+                        itemstock 
+                    WHERE
+                        ItemCode = item.itemcode 
+                        AND ( IsDamage = 0 OR IsDamage IS NULL ) 
+                        AND Isdeproom NOT IN ( 1, 2, 3, 4, 5, 6, 7, 8, 9 ) 
+                    ) AS balance,
+                    ( SELECT COUNT( RowID ) FROM itemstock WHERE ItemCode = item.itemcode AND ( IsDamage = 1 OR IsDamage = 2 ) ) AS damage 
+                FROM
+                    itemstock
+                    INNER JOIN item ON itemstock.ItemCode = item.itemcode 
+                WHERE
+                        ( item.itemname LIKE '%$input_search%' OR item.itemcode LIKE '%$input_search%' ) 
+                   AND item.SpecialID = '2' 
+                GROUP BY
+                    item.itemname,
+                    item.itemcode,
+                    item.stock_max,
+                    item.stock_min,
+                    item.stock_balance 
+                ) AS sub 
+            ORDER BY
+            CASE
+                    
+                    WHEN ( sub.cnt - sub.cnt_pay ) < sub.stock_min THEN
+                    0 ELSE 1 
+                END,
+                sub.itemname; ";
+
+    // $Q1 = " SELECT
+    //             item.itemname,
+    //             item.itemcode,
+    //             itemslotincabinet.Qty,
+    //             ( SELECT SUM( itemstock_transaction_detail.Qty ) FROM itemstock_transaction_detail WHERE itemstock_transaction_detail.ItemCode = item.itemcode AND itemstock_transaction_detail.IsStatus = 1 ) AS cnt_pay,
+    //             ( SELECT SUM( itemstock_transaction_detail.Qty ) FROM itemstock_transaction_detail WHERE itemstock_transaction_detail.ItemCode = item.itemcode AND itemstock_transaction_detail.IsStatus = 7 ) AS cnt_cssd
+    //         FROM
+    //             itemslotincabinet
+    //             INNER JOIN item ON item.itemcode = itemslotincabinet.itemcode 
+    //         WHERE ( item.itemname LIKE '%$input_search%' OR item.itemcode LIKE '%$input_search%' )
+    //          AND item.SpecialID = '2'
+    //         GROUP BY
+    //             item.itemname,
+    //             item.itemcode  ";
 
 
     $meQuery1 = $conn->prepare($Q1);

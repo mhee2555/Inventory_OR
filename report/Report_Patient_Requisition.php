@@ -184,21 +184,21 @@ if ($type_date == 1) {
     if ($checkday == 1) {
         $date1 = $date1[2] . '-' . $date1[1] . '-' . $date1[0];
 
-        $where_date = "AND DATE(itemstock.CreateDate) = '$date1'  ";
+        $where_date = "AND DATE(itemstock.LastCabinetModify) = '$date1'  ";
     } else {
         $date1 = $date1[2] . '-' . $date1[1] . '-' . $date1[0];
         $date2 = $date2[2] . '-' . $date2[1] . '-' . $date2[0];
 
-        $where_date = "AND DATE(itemstock.CreateDate) BETWEEN '$date1' 	AND '$date2' ";
+        $where_date = "AND DATE(itemstock.LastCabinetModify) BETWEEN '$date1' 	AND '$date2' ";
     }
 }
 if ($type_date == 2) {
 
     if ($checkmonth == 1) {
-        $where_date = "AND MONTH(itemstock.CreateDate) = '$month1'  ";
+        $where_date = "AND MONTH(itemstock.LastCabinetModify) = '$month1'  ";
 
     } else {
-        $where_date = "AND MONTH(itemstock.CreateDate) BETWEEN '$month1' 	AND '$month2' ";
+        $where_date = "AND MONTH(itemstock.LastCabinetModify) BETWEEN '$month1' 	AND '$month2' ";
     }
 }
 
@@ -208,10 +208,10 @@ if ($type_date == 3) {
     $year2 = $year2-543;
 
     if ($checkyear == 1) {
-        $where_date = "AND YEAR(itemstock.CreateDate) = '$year1'  ";
+        $where_date = "AND YEAR(itemstock.LastCabinetModify) = '$year1'  ";
 
     } else {
-        $where_date = "AND YEAR(itemstock.CreateDate) BETWEEN '$year1' 	AND '$year2' ";
+        $where_date = "AND YEAR(itemstock.LastCabinetModify) BETWEEN '$year1' 	AND '$year2' ";
     }
 }
 
@@ -243,7 +243,8 @@ $query = "SELECT
 
                 WHERE
                 itemstock.StockID ='4'
-                $where_date  ";
+                $where_date 
+                GROUP BY item.itemname , itemstock.LastCabinetModify  ";
                 
 // $query = " SELECT
 //                 item.itemcode2,
@@ -417,7 +418,8 @@ $query = "SELECT
                 LEFT JOIN users ON user_cabinet.User_ID = users.id
                 LEFT JOIN employee ON users.EmpCode = employee.EmpCode 
             WHERE
-                Sel = '1'  $where_date ";
+                Sel = '1'  $where_date
+            GROUP BY item.itemname , itemslotincabinet_detail.ModifyDate ";
 // $query = " SELECT
 //                 item.itemcode2,
 //                 item.itemname,
