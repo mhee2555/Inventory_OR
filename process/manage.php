@@ -145,6 +145,24 @@ function saveUser($conn)
         $meQuery->execute();
         $meQuery2 = $conn->prepare($query2);
         $meQuery2->execute();
+
+
+        $queryE = " SELECT
+                        users.ID 
+                    FROM
+                        users
+                    WHERE users.EmpCode = '$input_empcodeUser' AND users.UserName = '$input_userName' AND users.Password = '$input_passWord' ";
+        $meQueryE = $conn->prepare($queryE);
+        $meQueryE->execute();
+        while ($rowE = $meQueryE->fetch(PDO::FETCH_ASSOC)) {
+            $_ID = $rowE['ID'];
+        }
+
+        $query3 = "INSERT INTO user_cabinet ( user_id ) 
+        VALUES             ('$_ID' ) ";
+        $meQuery3 = $conn->prepare($query3);
+        $meQuery3->execute();
+
     } else {
         $queryE = " SELECT
                         employee.ID 
@@ -306,7 +324,7 @@ function saveProcedure($conn)
 
     }
 
-    
+
 
     echo "insert success";
     unset($conn);
