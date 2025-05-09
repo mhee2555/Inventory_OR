@@ -382,7 +382,8 @@ function feeddata_waitReturn($conn, $db)
                     WHERE
                         itemstock.IsCross = 9
                     GROUP BY
-	                    item.itemname  ";
+	                    item.itemname  
+                    ORDER BY itemstock.ReturnDate DESC ";
 
 
 
@@ -573,7 +574,7 @@ function updateReturn($conn, $db)
 
     $UsageCode = $_POST['UsageCode'];
 
-    $update1 = "UPDATE itemstock SET  itemstock.IsCross = 9 WHERE itemstock.UsageCode = '$UsageCode' LIMIT 1 ";
+    $update1 = "UPDATE itemstock SET  itemstock.IsCross = 9 , itemstock.ReturnDate = NOW() WHERE itemstock.UsageCode = '$UsageCode' LIMIT 1 ";
 
     $meQuery1 = $conn->prepare($update1);
     $meQuery1->execute();

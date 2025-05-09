@@ -1060,26 +1060,35 @@ function oncheck_pay_manual(input_pay_manual) {
     $("#input_box_pay_manual").val() == ""
   ) {
     showDialogFailed("กรุณากรอก เลขที่กล่อง หรือ HN Code");
+    $("#input_pay_manual").val("");
     return;
   }
 
   if ($("#input_pay_manual").val() == "") {
     showDialogFailed("กรุณาเลือกรายการ");
+    $("#input_pay_manual").val("");
+
     return;
   }
 
   if (doctor_Array.length === 0) {
     showDialogFailed("กรุณาเลือกแพทย์");
+    $("#input_pay_manual").val("");
+
     return;
   }
 
   if ($("#select_deproom_manual").val() == "") {
     showDialogFailed("กรุณาเลือกห้องตรวจ");
+    $("#input_pay_manual").val("");
+
     return;
   }
 
   if (procedure_id_Array.length === 0) {
     showDialogFailed("กรุณาเลือกหัตถการ");
+    $("#input_pay_manual").val("");
+
     return;
   }
 
@@ -1134,6 +1143,9 @@ function oncheck_pay_manual(input_pay_manual) {
       $("#input_pay_manual").val("");
     },
   });
+
+  $("#input_pay_manual").val("");
+
 }
 
 function oncheck_pay(input_pay) {

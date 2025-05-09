@@ -70,6 +70,10 @@ function show_detail_borrow($conn,$db)
     $meQuery->execute();
     while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
 
+        if($row['hn_record_id'] == ''){
+            $row['hn_record_id'] = $row['number_box'];
+        }
+
         $return[] = $row;
     }
     echo json_encode($return);

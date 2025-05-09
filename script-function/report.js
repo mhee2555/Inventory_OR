@@ -93,6 +93,25 @@ $(function () {
       $("#row_month").hide();
       $("#row_typeyear").hide();
       $("#row_year").hide();
+
+      var d = new Date();
+      var month = d.getMonth() + 1;
+      var day = d.getDate();
+      var year = d.getFullYear();
+      var output =
+        (("" + day).length < 2 ? "0" : "") +
+        day +
+        "-" +
+        (("" + month).length < 2 ? "0" : "") +
+        month +
+        "-" +
+        year;
+    
+      $("#select_date1").val(output);
+      $("#select_date2").val(output);
+
+
+      $("#radio_date1").prop('checked',true).trigger('click');
     }
     if ($(this).val() == "2") {
       $("#row_typeday").hide();
@@ -106,6 +125,12 @@ $(function () {
       $("#radio_year1").click();
       $("#row_year").show();
 
+      $("#radio_month1").prop('checked',true).trigger('click');
+      $("#select_month1").val('1');
+      $("#select_month2").val('1');
+      $("#select_year1").val('2566');
+
+
     }
     if ($(this).val() == "3") {
       $("#row_typeday").hide();
@@ -115,6 +140,12 @@ $(function () {
 
       $("#row_typeyear").show();
       $("#row_year").show();
+
+      $("#radio_year1").prop('checked',true).trigger('click');
+
+      $("#select_year1").val('2566');
+      $("#select_year2").val('2566');
+
     }
   });
 
