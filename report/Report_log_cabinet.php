@@ -184,21 +184,21 @@ if ($type_date == 1) {
     if ($checkday == 1) {
         $date1 = $date1[2] . '-' . $date1[1] . '-' . $date1[0];
 
-        $where_date = "AND DATE(log_cabinet.ModifyDate) = '$date1'  ";
+        $where_date = "AND DATE(itemstock.LastCabinetModify) = '$date1'  ";
     } else {
         $date1 = $date1[2] . '-' . $date1[1] . '-' . $date1[0];
         $date2 = $date2[2] . '-' . $date2[1] . '-' . $date2[0];
 
-        $where_date = "AND DATE(log_cabinet.ModifyDate) BETWEEN '$date1' 	AND '$date2' ";
+        $where_date = "AND DATE(itemstock.LastCabinetModify) BETWEEN '$date1' 	AND '$date2' ";
     }
 }
 if ($type_date == 2) {
 
     if ($checkmonth == 1) {
-        $where_date = "AND MONTH(log_cabinet.ModifyDate) = '$month1'  ";
+        $where_date = "AND MONTH(itemstock.LastCabinetModify) = '$month1'  ";
 
     } else {
-        $where_date = "AND MONTH(log_cabinet.ModifyDate) BETWEEN '$month1' 	AND '$month2' ";
+        $where_date = "AND MONTH(itemstock.LastCabinetModify) BETWEEN '$month1' 	AND '$month2' ";
     }
 }
 
@@ -208,10 +208,10 @@ if ($type_date == 3) {
     $year2 = $year2-543;
 
     if ($checkyear == 1) {
-        $where_date = "AND YEAR(log_cabinet.ModifyDate) = '$year1'  ";
+        $where_date = "AND YEAR(itemstock.LastCabinetModify) = '$year1'  ";
 
     } else {
-        $where_date = "AND YEAR(log_cabinet.ModifyDate) BETWEEN '$year1' 	AND '$year2' ";
+        $where_date = "AND YEAR(itemstock.LastCabinetModify) BETWEEN '$year1' 	AND '$year2' ";
     }
 }
 
@@ -282,7 +282,7 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
     $html .=   '<td width="16 %" align="center" style="line-height:40px;vertical-align: middle;"> ' . $Result_Detail['itemcode2'] . '</td>';
     $html .=   '<td width="30 %" align="left" style="line-height:40px;vertical-align: middle;">' .   $Result_Detail['itemname'] . '</td>';
     $html .=   '<td width="10 %" align="center" >' . $Result_Detail['UsageCode'] . '</td>';
-    $html .=   '<td width="10 %" align="center" >' . $Result_Detail['Issue_Name'] . '</td>';
+    $html .=   '<td width="10 %" align="center" >' . $Result_Detail['NAME'] . '</td>';
     $html .=   '<td width="10 %" align="center" >' . $Result_Detail['ModifyDate'] . '</td>';
     $html .=   '<td width="10 %" align="center" >' . $Result_Detail['HnCode'] . '</td>';
     $html .=   '<td width="10 %" align="center" >' . $Result_Detail['STATUS'] . '</td>';
@@ -370,21 +370,21 @@ if ($type_date == 1) {
     if ($checkday == 1) {
         $date1 = $date1[2] . '-' . $date1[1] . '-' . $date1[0];
 
-        $where_date = "AND DATE(log_cabinet.ModifyDate) = '$date1'  ";
+        $where_date = "AND DATE(itemslotincabinet_detail.ModifyDate) = '$date1'  ";
     } else {
         $date1 = $date1[2] . '-' . $date1[1] . '-' . $date1[0];
         $date2 = $date2[2] . '-' . $date2[1] . '-' . $date2[0];
 
-        $where_date = "AND DATE(log_cabinet.ModifyDate) BETWEEN '$date1' 	AND '$date2' ";
+        $where_date = "AND DATE(itemslotincabinet_detail.ModifyDate) BETWEEN '$date1' 	AND '$date2' ";
     }
 }
 if ($type_date == 2) {
 
     if ($checkmonth == 1) {
-        $where_date = "AND MONTH(log_cabinet.ModifyDate) = '$month1'  ";
+        $where_date = "AND MONTH(itemslotincabinet_detail.ModifyDate) = '$month1'  ";
 
     } else {
-        $where_date = "AND MONTH(log_cabinet.ModifyDate) BETWEEN '$month1' 	AND '$month2' ";
+        $where_date = "AND MONTH(itemslotincabinet_detail.ModifyDate) BETWEEN '$month1' 	AND '$month2' ";
     }
 }
 
@@ -394,10 +394,10 @@ if ($type_date == 3) {
     $year2 = $year2-543;
 
     if ($checkyear == 1) {
-        $where_date = "AND YEAR(log_cabinet.ModifyDate) = '$year1'  ";
+        $where_date = "AND YEAR(itemslotincabinet_detail.ModifyDate) = '$year1'  ";
 
     } else {
-        $where_date = "AND YEAR(log_cabinet.ModifyDate) BETWEEN '$year1' 	AND '$year2' ";
+        $where_date = "AND YEAR(itemslotincabinet_detail.ModifyDate) BETWEEN '$year1' 	AND '$year2' ";
     }
 }
 
