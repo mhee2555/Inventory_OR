@@ -470,7 +470,9 @@ function selection_item() {
             if(value.stock_max == null){
               value.stock_max = 0;
             }
-  
+            if(value.stock_min == null){
+              value.stock_min = 0;
+            }
             var color  ='';
             if(value.calculated_balance < value.stock_min){
                color  ='color:red;'
@@ -494,8 +496,8 @@ function selection_item() {
                                     value.cnt_pay
                                   }</td>
                                   <td class='text-center' style="text-wrap: nowrap;background-color: #ECFDF3;">${value.calculated_balance}</td>
-                                  <td style="text-wrap: nowrap;background-color: #d0d9ff;"">${value.stock_max}</td>
-                                   <td style="text-wrap: nowrap;background-color: #b3e5fc;"">${value.stock_min}</td>`;
+                                  <td class='text-center' style="text-wrap: nowrap;background-color: #d0d9ff;"">${value.stock_max}</td>
+                                   <td class='text-center' style="text-wrap: nowrap;background-color: #b3e5fc;"">${value.stock_min}</td>`;
 
           var sumcount = 0;
           $.each(depRoom, function (keydep, valuedep) {
@@ -833,6 +835,9 @@ function selection_item_rfid() {
             value.stock_max = 0;
           }
 
+          if(value.stock_min == null){
+            value.stock_min = 0;
+          }
           var color  ='';
           if(value.calculated_balance < value.stock_min){
              color  ='color:red;'
@@ -855,8 +860,8 @@ function selection_item_rfid() {
                                     value.cnt_pay
                                   }</td>
                                      <td class='text-center' style="text-wrap: nowrap;background-color:#ECFDF3;">${value.calculated_balance}</td>
-                                  <td style="text-wrap: nowrap;background-color: #d0d9ff;"">${value.stock_max}</td>
-                                   <td style="text-wrap: nowrap;background-color: #b3e5fc;"">${value.stock_min}</td>`;
+                                  <td class='text-center' style="text-wrap: nowrap;background-color: #d0d9ff;"">${value.stock_max}</td>
+                                   <td class='text-center' style="text-wrap: nowrap;background-color: #b3e5fc;"">${value.stock_min}</td>`;
 
           var sumcount = 0;
           $.each(depRoom, function (keydep, valuedep) {
@@ -1001,7 +1006,9 @@ function selection_item_normal() {
           if(value.stock_max == null){
             value.stock_max = 0;
           }
-
+          if(value.stock_min == null){
+            value.stock_min = 0;
+          }
           var color  ='';
           if(value.calculated_balance < value.stock_min){
              color  ='color:red;'
@@ -1025,8 +1032,8 @@ function selection_item_normal() {
                                     value.cnt_pay
                                   }</td>
                                      <td class='text-center' style="text-wrap: nowrap;background-color:#ECFDF3;">${value.calculated_balance}</td>
-                                  <td style="text-wrap: nowrap;background-color: #d0d9ff;"">${value.stock_max}</td>
-                                   <td style="text-wrap: nowrap;background-color: #b3e5fc;"">${value.stock_min}</td>`;
+                                  <td class='text-center' style="text-wrap: nowrap;background-color: #d0d9ff;"">${value.stock_max}</td>
+                                   <td class='text-center' style="text-wrap: nowrap;background-color: #b3e5fc;"">${value.stock_min}</td>`;
 
           var sumcount = 0;
           $.each(depRoom, function (keydep, valuedep) {

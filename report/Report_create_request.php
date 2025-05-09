@@ -91,6 +91,7 @@ class MYPDF extends TCPDF
             while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
                 $_hn_record_id = $row['hn_record_id'];
                 $_serviceDate = $row['serviceDate'];
+                $_serviceTime = $row['serviceTime'];
                 $_Doctor_Name = $row['Doctor_Name'];
                 $_departmentroomname = $row['departmentroomname'];
                 $_Remark = $row['Remark'];
@@ -125,7 +126,7 @@ class MYPDF extends TCPDF
             $this->SetX(38);
             $this->Cell(50, 5,  "HN Code : ". $_hn_record_id, 0, 1, 'L');
             $this->SetX(38);
-            $this->Cell(50, 5,  "วันที่เข้ารับบริการ : ". $_serviceDate, 0, 1, 'L');
+            $this->Cell(50, 5,  "วันที่เข้ารับบริการ : ". $_serviceDate . ' ' . $_serviceTime, 0, 1, 'L');
             $this->SetX(38);
             $this->Cell(50, 5,  "แพทย์ : ". $_Doctor_Name, 0, 1, 'L');
             $this->SetX(38);
@@ -271,7 +272,7 @@ class MYPDF extends TCPDF
     
             $this->SetX(90);
     
-            $this->Cell(20, 1,   'วันและเวลา : ' . "", 0, 0, 'R');
+            $this->Cell(20, 1,   'วันและเวลาขอเบิก : ' . "", 0, 0, 'R');
             $this->Cell(15, 2,  "$_serviceDate", 0, 0, 'R');
             // $this->Cell(1, 9,  "         " . $Facdate . "  เวลา   " . $FacTime, 0, 0, 'L');
             // $this->Cell(90, 10,   'วันที่' . "", 0, 0, 'L');

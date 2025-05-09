@@ -247,6 +247,8 @@ $("#btn_cost").click(function () {
   if($("#btn_Tracking").data("DocNo") != undefined){
     option = "?DocNo=" + $("#btn_Tracking").data("DocNo");
     window.open("report/Report_Patient_Cost_Summary.php" + option, "_blank");
+  }else{
+    Swal.fire("ล้มเหลว", "กรุณาเลือกรายการ", "error");
   }
 
 });

@@ -205,9 +205,8 @@ $pdf->SetFont('db_helvethaica_x', 'B', 18);
 
 $html = '<table cellspacing="0" cellpadding="2" border="1" >
 <thead><tr style="font-size:18px;color:#fff;background-color:#663399;">
-<th width="8 %" align="center">Code</th>
-<th width="30 %" align="center">ItemCode</th>
-<th width="32 %"  align="center">Name</th>
+<th width="10 %" align="center">Code</th>
+<th width="60 %"  align="center">Name</th>
 <th width="10 %" align="center">Qty</th>
 <th width="10 %" align="center">Unit Price</th>
 <th width="10 %" align="center">Total Price</th>
@@ -265,9 +264,8 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
     if($Result_Detail['cnt'] != 0){
         $itemcode = "";
         $html .= '<tr nobr="true" style="font-size:15px;">';
-        $html .=   '<td width="8 %" align="center"> ' . $Result_Detail['itemcode2'] . '</td>';
-        $html .=   '<td width="30 %" align="center">' . $Result_Detail['itemcode'] . '</td>';
-        $html .=   '<td width="32 %" align="left">' . $Result_Detail['itemname'] . '</td>';
+        $html .=   '<td width="10 %" align="center"> ' . $Result_Detail['itemcode2'] . '</td>';
+        $html .=   '<td width="60 %" align="left">' . $Result_Detail['itemname'] . '</td>';
         $html .=   '<td width="10 %" align="center">' . $Result_Detail['cnt'] . '</td>';
         $html .=   '<td width="10 %" align="center">0.00</td>';
         $html .=   '<td width="10 %" align="center">0.00</td>';

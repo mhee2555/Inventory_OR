@@ -1127,6 +1127,12 @@ function oncheck_pay_manual(input_pay_manual) {
         return;
       }
 
+      if (ObjData.count_itemstock == 9) {
+        showDialogFailed("รหัสใช้งานหมดอายุไม่สามารถสแกนใช้งานได้");
+        $("#input_pay_manual").val("");
+        return;
+      }
+
       if (ObjData.input_docNo_deproom_manual == "") {
         showDialogFailed("QR Code ไม่ถูกต้องไม่พบรหัสนี้ในระบบ");
       } else {
@@ -1248,6 +1254,8 @@ function oncheck_pay(input_pay) {
           show_detail_item_ByDocNo();
         } else if (result == 3) {
           showDialogFailed("สแกนอุปกรณ์ซ้ำ");
+        } else if (result == 9) {
+          showDialogFailed("รหัสใช้งานหมดอายุไม่สามารถสแกนใช้งานได้");
         } else {
           var ObjData = JSON.parse(result);
           if (!$.isEmptyObject(ObjData)) {

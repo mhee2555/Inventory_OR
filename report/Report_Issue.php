@@ -107,7 +107,10 @@ class MYPDF extends TCPDF
                 'module_width' => 1, // width of a single module in points
                 'module_height' => 1 // height of a single module in points
             );
-            $url = 'http://10.11.9.54/Inventory_OR/pages/confirm_pay.php?doc=' . urlencode($DocNo); // หรือ link อะไรก็ได้
+            // $url = 'http://10.11.9.54/Inventory_OR/pages/confirm_pay.php?doc=' . urlencode($DocNo); // หรือ link อะไรก็ได้
+             $url = 'http://192.168.2.101:8080/Inventory_OR/pages/confirm_pay.php?doc=' . urlencode($DocNo); // หรือ link อะไรก็ได้
+
+            
             $this->write2DBarcode($url, 'QRCODE,L', $x, $y, 80, 30, $style, 'N');
     
     

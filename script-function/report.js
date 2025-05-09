@@ -375,6 +375,8 @@ $(function () {
         window.open("report/Report_Issue2.php" + option, "_blank");
       }
       
+    }else{
+      Swal.fire("ล้มเหลว", "กรุณาเลือกประเภท", "error");
     }
   });
 

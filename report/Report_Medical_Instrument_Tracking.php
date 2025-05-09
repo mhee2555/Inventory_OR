@@ -45,8 +45,9 @@ class MYPDF extends TCPDF
         if($db == 1){
             $query = " SELECT 
                             hncode.HnCode,
-                            DATE_FORMAT(hncode.ModifyDate, '%d/%m/%Y') AS date1,
-                            DATE_FORMAT(hncode.ModifyDate, '%H:%i') AS time1,
+                            hncode.number_box,
+                            DATE_FORMAT(deproom.serviceDate, '%d/%m/%Y') AS date1,
+                            DATE_FORMAT(deproom.serviceDate, '%H:%i') AS time1,
                             `procedure`.Procedure_EN AS Procedure_TH,
                             doctor.Doctor_Name_EN AS Doctor_Name,
                             departmentroom.departmentroomname_EN 
@@ -55,6 +56,7 @@ class MYPDF extends TCPDF
                             LEFT JOIN `procedure` ON hncode.`procedure` = `procedure`.ID
                             LEFT JOIN doctor ON hncode.doctor = doctor.ID
                             INNER JOIN departmentroom ON hncode.departmentroomid = departmentroom.id
+                            INNER JOIN deproom ON deproom.DocNo = hncode.DocNo_SS
                         WHERE 
                             hncode.DocNo = '$DocNo' ";
         }else{
@@ -76,7 +78,14 @@ class MYPDF extends TCPDF
         $meQuery1 = $conn->prepare($query);
         $meQuery1->execute();
         while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
+            
+            $number_box =   $Result_Detail['number_box'];
             $HnCode =   $Result_Detail['HnCode'];
+
+            if($HnCode == ""){
+                $HnCode = $number_box;
+            }
+
             $date1 =     $Result_Detail['date1'];
             $time1 =     $Result_Detail['time1'];
             $Procedure_TH =     $Result_Detail['Procedure_TH'];
@@ -244,11 +253,10 @@ $DocNo = $_GET['DocNo'];
 $html = '<table border="1" cellpadding="4" cellspacing="0" align="center">
 <tr style="font-size:13px;">
 <th width="5 %" align="center" style="vertical-align: middle;">NO</th>
-<th width="11 %" align="center" style="vertical-align: middle;">Usage Code</th>
+<th width="14 %" align="center" style="vertical-align: middle;">Usage Code</th>
 <th width="11 %"  align="center" style="vertical-align: middle;">QR Code</th>
-<th width="6 %" align="center" style="vertical-align: middle;">Type</th>
+<th width="11.5 %" align="center" style="vertical-align: middle;">Type</th>
 <th width="8.5 %"  align="center" style="vertical-align: middle;">Lot No</th>
-<th width="8.5  %"  align="center" style="vertical-align: middle;">Exp No</th>
 <th width="8.5  %"  align="center" style="vertical-align: middle;">serial No</th>
 <th width="8.5  %"  align="center" style="vertical-align: middle;">จำนวน</th>
 <th width="9 %"  align="center" style="vertical-align: middle;">MFG</th>
@@ -361,15 +369,14 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
 
     $html .= '<tr nobr="true" style="font-size:13px;"  >';
     $html .=   '<td width="5%"  style="vertical-align: middle;height: 50px;">' . htmlspecialchars($count) . '</td>';
-    $html .=   '<td width="11%"  style="vertical-align: middle;">' . htmlspecialchars($usageCode) . '</td>';
+    $html .=   '<td width="14%"  style="vertical-align: middle;">' . htmlspecialchars($usageCode) . '</td>';
     $html .=   '<td width="11%" align="center" style="vertical-align: middle;"> <img src="' . $file . '"  />  </td>';
-    $html .=   '<td width="6%" align="center" style="vertical-align: middle;">' . htmlspecialchars($Result_Detail['TyeName']) . '</td>';
+    $html .=   '<td width="11.5%" align="center" style="vertical-align: middle;">' . htmlspecialchars($Result_Detail['TyeName']) . '</td>';
     $html .=   '<td width="8.5%" align="center" style="vertical-align: middle;">' . htmlspecialchars($Result_Detail['lotNo']) . '</td>';
-    $html .=   '<td width="8.5%" align="center" style="vertical-align: middle;">' . htmlspecialchars($Result_Detail['ExpireDate']) . '</td>';
     $html .=   '<td width="8.5%" align="center" style="vertical-align: middle;">' . htmlspecialchars($Result_Detail['serielNo']) . '</td>';
     $html .=   '<td width="8.5%" align="center" style="vertical-align: middle;">' . htmlspecialchars($Result_Detail['Qty']) . '</td>';
     $html .=   '<td width="9%" align="center" style="vertical-align: middle;">' . htmlspecialchars($Result_Detail['CreateDate']) . '</td>';
-    $html .=   '<td width="9%" align="center" style="vertical-align: middle;">' . htmlspecialchars($Result_Detail['expDate']) . '</td>';
+    $html .=   '<td width="9%" align="center" style="vertical-align: middle;">' . htmlspecialchars($Result_Detail['ExpireDate']) . '</td>';
     $html .=   '<td width="15%" align="center" style="vertical-align: middle;">' . htmlspecialchars($itemname) . '</td>';
     $html .=  '</tr>';
 
