@@ -24,8 +24,42 @@ if (!empty($_POST['FUNC_NAME'])) {
         add_request_qty($conn,$db);
     }  else if ($_POST['FUNC_NAME'] == 'delete_request_qty') {
         delete_request_qty($conn,$db);
+    }  else if ($_POST['FUNC_NAME'] == 'check_routine') {
+        check_routine($conn,$db);
     }
 }
+
+function check_routine($conn,$db){
+    $return = array();
+    $select_deproom_request = $_POST['select_deproom_request'];
+    $procedure_id_Array = $_POST['procedure_id_Array'];
+    $doctor_Array = $_POST['doctor_Array'];
+
+    $procedure_id_Array = implode(",", $procedure_id_Array);
+    $doctor_Array = implode(",", $doctor_Array);
+
+    $select = "SELECT
+                    routine_detail.itemcode,
+                    routine_detail.qty 
+                FROM
+                    routine_detail
+                    INNER JOIN routine ON routine_detail.routine_id = routine.id 
+                WHERE
+                    routine.doctor = '$doctor_Array' 
+                    AND routine.proceduce = '$procedure_id_Array' 
+                    AND routine.departmentroomid = '$select_deproom_request' ";
+    $meQuery = $conn->prepare($select);
+    $meQuery->execute();
+    while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+        $return[] = $row;
+    }
+    echo json_encode($return);
+    unset($conn);
+    die;
+
+}
+
+
 
 function add_request_qty($conn,$db)
 {

@@ -159,7 +159,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-12" style="display: contents;" id="row_doctor">
+                                <div class="col-md-12" style="display: ruby;" id="row_doctor">
                                 </div>
 
                                 <div class="col-md-12">
@@ -177,17 +177,19 @@
                                 </div>
 
 
-                                <div class="col-md-12" style="display: contents;" id="row_procedure">
+                                <div class="col-md-12" style="display: ruby;" id="row_procedure">
                                 </div>
 
-                                <div class="col-md-12">
+                                <div class="col-md-6">
                                     <div class="form-group ">
                                         <label style="color:black;font-weight: 600;">หมายเหตุ</label>
                                         <input type="text" class="form-control f18" id="input_remark_request" placeholder="">
                                     </div>
                                 </div>
 
-
+                                <div class="col-md-6">
+                                    <button class="btn btn-block" style="background-color: #643695;color:#fff;margin-top: 2.2rem;" id="btn_routine">Routine</button>
+                                </div>
 
                             </div>
 

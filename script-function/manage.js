@@ -107,8 +107,8 @@ $("#select_doctor_routine").on("select2:select", function (e) {
     if (index == -1) {
       doctor_routine.push(selectedValue);
       var _row = "";
-      _row += `       <div  class='div_${selectedValue}  clear_doctor' onclick='DeleteDoctor_routine(${selectedValue})'>
-                          <label for="" class="custom-label">${selectedText}</label>
+      _row += `       <div  class='div_${selectedValue}  clear_doctor' >
+                          <label for="" class="custom-label" onclick='DeleteDoctor_routine(${selectedValue})'>${selectedText}</label>
                       </div> `;
 
       $("#row_doctor_routine").append(_row);
@@ -128,8 +128,8 @@ $("#select_procedure_routine").on("select2:select", function (e) {
     if (index == -1) {
       procedure_routine.push(selectedValue);
       var _row = "";
-      _row += `       <div  class='div_${selectedValue} clear_procedure' onclick='Deletprocedure_routine(${selectedValue})'>
-                          <label for="" class="custom-label">${selectedText}</label>
+      _row += `       <div  class='div_${selectedValue} clear_procedure' >
+                          <label for="" class="custom-label" onclick='Deletprocedure_routine(${selectedValue})'>${selectedText}</label>
                       </div> `;
 
       $("#row_procedure_routine").append(_row);
@@ -1976,7 +1976,7 @@ function show_detail_routine() {
                       <td>${value.Doctor_Name}</td>
                       <td>${value.departmentroomname}</td>
                       <td>${value.Procedure_TH}</td>
-                      <td class="text-center" > <button class="btn btn-outline-dark f18"  onclick='edit_routine(${value.id},${value.doctor_id},${value.procedure_id},${value.departmentroom_id})'> <i class="fa-regular fa-pen-to-square"></i> แก้ไข</button> </td>
+                      <td class="text-center" > <button class="btn btn-outline-dark f18"  onclick='edit_routine(${value.id},${value.departmentroom_id})'> <i class="fa-regular fa-pen-to-square"></i> แก้ไข</button> </td>
                       <td class="text-center"> <button  class="btn btn-outline-danger f18" onclick='delete_routine(${value.id})'><i class="fa-solid fa-trash-can"></i></button> </td>
                    </tr>`;
         });
@@ -2381,18 +2381,18 @@ function delete_routine(id) {
   });
 }
 
-function edit_routine(id,doctor_id,procedure_id,departmentroom_id) {
+function edit_routine(id,departmentroom_id) {
 
     $("#routine_id").val(id);
-
     
-  $("#select_doctor_routine").val(doctor_id).trigger("change");
+  // $("#select_doctor_routine").val(doctor_id).trigger("change");
   $("#select_deproom_routine").val(departmentroom_id).trigger("change");
-  $("#select_procedure_routine").val(procedure_id).trigger("change");
+  // $("#select_procedure_routine").val(procedure_id).trigger("change");
 
 
     setTimeout(() => {
       show_detail_request_byDocNo();      
+      select_edit_routine();
     }, 300);
   // $.ajax({
   //   url: "process/manage.php",
@@ -2409,6 +2409,50 @@ function edit_routine(id,doctor_id,procedure_id,departmentroom_id) {
   //     show_detail_routine();
   //   },
   // });
+}
+
+
+function select_edit_routine() {
+  $.ajax({
+    url: "process/manage.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "select_edit_routine",
+      routine_id: $("#routine_id").val()
+    },
+    success: function (result) {
+      var ObjData = JSON.parse(result);
+
+      $("#row_doctor_routine").html("");
+      doctor_routine = [];
+      $("#row_procedure_routine").html("");
+      procedure_routine = [];
+
+      if (!$.isEmptyObject(ObjData)) {
+        var _row = "";
+        var _row2 = "";
+        $.each(ObjData['doctor'], function (kay2, value2) {
+          doctor_routine.push(value2.doctor_id.toString());
+
+          _row += `       <div  class='div_${value2.doctor_id}  clear_doctor' >
+                            <label for="" class="custom-label" onclick='DeleteDoctor_routine(${value2.doctor_id})'>${value2.Doctor_Name}</label>
+                        </div> `;
+        });
+
+        $("#row_doctor_routine").append(_row);
+
+        $.each(ObjData['proceduce'], function (kay2, value2) {
+          procedure_routine.push(value2.procedure_id.toString());
+
+          _row2 += `       <div  class='div_${value2.procedure_id}  clear_doctor' >
+                            <label for="" class="custom-label" onclick='Deletprocedure_routine(${value2.procedure_id})'>${value2.Procedure_TH}</label>
+                        </div> `;
+        });
+
+        $("#row_procedure_routine").append(_row2);
+      }
+    },
+  });
 }
 
 // item

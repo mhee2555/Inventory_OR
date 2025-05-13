@@ -31,13 +31,74 @@ if (!empty($_POST['FUNC_NAME'])) {
         deleteDeproom($conn, $db);
     } else if ($_POST['FUNC_NAME'] == 'onconfirm_request') {
         onconfirm_request($conn, $db);
-    }  else if ($_POST['FUNC_NAME'] == 'show_detail_request_byDocNo') {
+    } else if ($_POST['FUNC_NAME'] == 'show_detail_request_byDocNo') {
         show_detail_request_byDocNo($conn, $db);
-    }  else if ($_POST['FUNC_NAME'] == 'show_detail_routine') {
+    } else if ($_POST['FUNC_NAME'] == 'show_detail_routine') {
         show_detail_routine($conn, $db);
-    }  else if ($_POST['FUNC_NAME'] == 'delete_routine') {
+    } else if ($_POST['FUNC_NAME'] == 'delete_routine') {
         delete_routine($conn, $db);
+    } else if ($_POST['FUNC_NAME'] == 'select_edit_routine') {
+        select_edit_routine($conn, $db);
     }
+}
+
+function select_edit_routine($conn)
+{
+    $id = $_POST['routine_id'];
+    $return = array();
+
+
+    $query = "SELECT
+                    routine.doctor
+                    -- doctor.Doctor_Name,
+                    -- doctor.ID AS doctor_id
+                FROM
+                    routine
+                    INNER JOIN doctor ON routine.doctor = doctor.ID
+                AND routine.id = $id ";
+    $meQuery = $conn->prepare($query);
+    $meQuery->execute();
+    while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+
+        $_doctor = $row['doctor'];
+
+        $query2 = "SELECT doctor.Doctor_Name , doctor.ID AS doctor_id FROM doctor WHERE doctor.ID IN ($_doctor) ";
+        $meQuery2 = $conn->prepare($query2);
+        $meQuery2->execute();
+        while ($row_doctor = $meQuery2->fetch(PDO::FETCH_ASSOC)) {
+            $return['doctor'][] = $row_doctor;
+        }
+
+    }
+
+    $query2 = "SELECT
+                routine.`proceduce`
+                -- `procedure`.Procedure_TH,
+                -- `procedure`.ID  AS procedure_id
+            FROM
+                routine
+                INNER JOIN `procedure` ON routine.proceduce = `procedure`.ID
+            AND routine.id = $id ";
+    $meQuery2 = $conn->prepare($query2);
+    $meQuery2->execute();
+    while ($row2 = $meQuery2->fetch(PDO::FETCH_ASSOC)) {
+
+        $_proceduce = $row2['proceduce'];
+
+
+        $query2 = "SELECT `procedure`.Procedure_TH , `procedure`.ID  AS procedure_id FROM `procedure` WHERE `procedure`.ID IN ($_proceduce) ";
+        $meQuery2 = $conn->prepare($query2);
+        $meQuery2->execute();
+        while ($row_proceduce = $meQuery2->fetch(PDO::FETCH_ASSOC)) {
+            $return['proceduce'][] = $row_proceduce;
+        }
+
+        
+    }
+
+    echo json_encode($return);
+    unset($conn);
+    die;
 }
 
 function delete_routine($conn)
@@ -57,7 +118,7 @@ function delete_routine($conn)
     die;
 }
 
-function show_detail_routine($conn,$db)
+function show_detail_routine($conn, $db)
 {
     $return = array();
     $query = "SELECT
@@ -82,7 +143,7 @@ function show_detail_routine($conn,$db)
     unset($conn);
     die;
 }
-function show_detail_request_byDocNo($conn,$db)
+function show_detail_request_byDocNo($conn, $db)
 {
     $return = array();
     $DepID = $_SESSION['DepID'];
@@ -208,8 +269,6 @@ function onconfirm_request($conn)
                 ':qty'        => $array_qty[$key]
             ]);
         }
-
-
     }
 
 

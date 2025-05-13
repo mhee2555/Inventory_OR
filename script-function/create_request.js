@@ -224,7 +224,6 @@ function Deletprocedure_history(selectedValue) {
   show_detail_history();
 }
 
-
 function DeleteDoctor_history(selectedValue) {
   var index = doctor_history_Array.indexOf(String(selectedValue));
   console.log(index);
@@ -250,6 +249,92 @@ function Deletprocedure(selectedValue) {
   console.log(procedure_id_Array);
   $(".div_" + selectedValue).attr("hidden", true);
 }
+
+$("#btn_routine").click(function () {
+
+
+  qty_array = [];
+  itemcode_array = [];
+
+  if ($("#input_hn_request").val() == "") {
+    showDialogFailed("กรุณากรอก HN Number");
+    return;
+  }
+
+  if ($("#select_date_request").val() == "") {
+    showDialogFailed("กรุณากรอก วันที่");
+    return;
+  }
+  if ($("#select_time_request").val() == "") {
+    showDialogFailed("กรุณากรอก เวลาเข้ารับบริการ");
+    return;
+  }
+
+  if (doctor_Array.length === 0) {
+    showDialogFailed("กรุณาเลือกแพทย์");
+    return;
+  }
+
+  if ($("#select_deproom_request").val() == "") {
+    showDialogFailed("กรุณาเลือกห้องตรวจ");
+    return;
+  }
+
+  if (procedure_id_Array.length === 0) {
+    showDialogFailed("กรุณาเลือกหัตถการ");
+    return;
+  }
+
+  $.ajax({
+    url: "process/create_request.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "check_routine",
+      procedure_id_Array: procedure_id_Array,
+      doctor_Array: doctor_Array,
+      select_deproom_request: $("#select_deproom_request").val(),
+    },
+    success: function (result) {
+      var ObjData = JSON.parse(result);
+      if (!$.isEmptyObject(ObjData)) {
+        $.each(ObjData, function (kay, value) {
+          itemcode_array.push(value.itemcode.toString());
+          qty_array.push(value.qty.toString());
+        });
+
+        $.ajax({
+          url: "process/create_request.php",
+          type: "POST",
+          data: {
+            FUNC_NAME: "onconfirm_request",
+            array_itemcode: itemcode_array,
+            array_qty: qty_array,
+            txt_docno_request: $("#txt_docno_request").val(),
+          },
+          success: function (result) {
+
+
+            array_itemcode = [];
+            array_qty = [];
+
+            
+            $("#btn_routine").attr('disabled',true);
+
+            var ObjData = JSON.parse(result);
+            console.log(ObjData);
+            $("#txt_docno_request").val(ObjData);
+            show_detail_item_request();
+            if (ObjData != "") {
+              setTimeout(() => {
+                show_detail_request_byDocNo();
+              }, 200);
+            }
+          },
+        });
+      }
+    },
+  });
+});
 
 $("#btn_search_request").click(function () {
   show_detail_item_request();
@@ -285,6 +370,9 @@ $("#btn_confirm_request").click(function () {
 });
 
 $("#btn_clear_request").click(function () {
+
+  $("#btn_routine").attr('disabled',false);
+
   $("#table_item_detail_request").DataTable().destroy();
   $("#table_item_detail_request tbody").empty();
   $("#txt_docno_request").text("");
@@ -294,6 +382,25 @@ $("#btn_clear_request").click(function () {
   $("#select_deproom_request").val("");
   $("#select_procedure_request").val("");
   $("#input_remark_request").val("");
+
+  $("#txt_docno_request").val("");
+
+
+  $(".clear_doctor").attr("hidden", true);
+  doctor_Array = [];
+
+  $("#select_deproom_request").val("");
+  $("#select2-select_deproom_request-container").text(
+    "กรุณาเลือกห้องผ่าตัด"
+  );
+
+  $("#select_procedure_request").val("");
+  $("#select2-select_procedure_request-container").text(
+    "กรุณาเลือกหัตถการ"
+  );
+  $(".clear_procedure").attr("hidden", true);
+  procedure_id_Array = [];
+
 });
 
 $("#input_hn_request").on("keydown", function (e) {
@@ -490,14 +597,11 @@ function onconfirm_request() {
       var ObjData = JSON.parse(result);
       console.log(ObjData);
       $("#txt_docno_request").val(ObjData);
-      // $(".loop_qty_request ").val("");
       show_detail_item_request();
       if (ObjData != "") {
         setTimeout(() => {
           show_detail_request_byDocNo();
         }, 200);
-        // $("#btn_cancel_request").attr("disabled", false);
-        // $("#btn_send_request").attr("disabled", false);
       }
     },
   });
@@ -775,12 +879,11 @@ function show_detail_history() {
 
           if (value.cnt_id == null) {
             var edit_id = `<button class='btn btn-outline-dark f18' onclick='edit_item_byDocNo("${value.DocNo}","${value.hn_record_id}","${value.serviceDate}","${value.doctor_ID}","${value.procedure_ID}","${value.deproom_ID}","${value.Remark}","${value.doctor}","${value.procedure}","${value.departmentroomname}","edit","${value.serviceTime}")'><i class="fa-regular fa-pen-to-square"></i> แก้ไข</button>`;
-            var showreport = `<button class='btn f18' style='background-color:#643695;color:#fff;' onclick='show_Report("${value.DocNo }")'>รายงานขอเบิก</button>`;
-          }else{
-             var edit_id = ``;
-             var showreport = `<button class='btn f18 btn-success' )'>ถูกสแกนจ่าย</button>`;
+            var showreport = `<button class='btn f18' style='background-color:#643695;color:#fff;' onclick='show_Report("${value.DocNo}")'>รายงานขอเบิก</button>`;
+          } else {
+            var edit_id = ``;
+            var showreport = `<button class='btn f18 btn-success' )'>ถูกสแกนจ่าย</button>`;
           }
-          
 
           _tr += `<tr>
                       <td class='text-center'>${kay + 1}</td>
