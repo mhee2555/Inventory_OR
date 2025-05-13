@@ -2,6 +2,9 @@ var procedure_id_Array = [];
 var doctor_Array = [];
 var deproom_Array = [];
 
+var procedure_routine = [];
+var doctor_routine = [];
+
 $(function () {
   click_main();
   click_menu();
@@ -10,6 +13,7 @@ $(function () {
 
 function click_main() {
   $("#row_mapping").hide();
+  $("#row_routine").hide();
 
   $("#manage").css("color", "#bbbbb");
   $("#manage").css("background", "#E0D2EF");
@@ -20,8 +24,11 @@ function click_main() {
 
     $("#mapping").css("color", "black");
     $("#mapping").css("background", "");
+    $("#routine").css("color", "black");
+    $("#routine").css("background", "");
     $("#row_manage").show();
     $("#row_mapping").hide();
+    $("#row_routine").hide();
   });
 
   $("#mapping").click(function () {
@@ -30,15 +37,23 @@ function click_main() {
 
     $("#manage").css("color", "black");
     $("#manage").css("background", "");
+    $("#routine").css("color", "black");
+    $("#routine").css("background", "");
     $("#row_manage").hide();
     $("#row_mapping").show();
+    $("#row_routine").hide();
 
     select_deproom();
     select_procedure();
     select_doctor();
 
-    $(".select2").select2();
+    $("#select_doctor_deproom").select2();
+    $("#select_deproom_proceduce").select2();
+    $("#select_deproom").select2();
+    $("#select_proceduce").select2();
 
+
+    
     show_detail_doctor();
     show_detail_deproom();
 
@@ -50,7 +65,80 @@ function click_main() {
     $("#row_procedure").html("");
     procedure_id_Array = [];
   });
+
+  $("#routine").click(function () {
+    $("#routine").css("color", "#bbbbb");
+    $("#routine").css("background", "#E0D2EF");
+
+    $("#manage").css("color", "black");
+    $("#manage").css("background", "");
+    $("#mapping").css("color", "black");
+    $("#mapping").css("background", "");
+
+    $("#row_routine").show();
+    $("#row_mapping").hide();
+    $("#row_manage").hide();
+
+    show_detail_routine();
+    show_detail_item();
+      select_type();
+      select_doctor();
+      select_deproom();
+      select_procedure();
+    setTimeout(() => {
+      $("#select_typeItem").select2();
+      $("#select_doctor_routine").select2();
+      $("#select_deproom_routine").select2();
+      $("#select_procedure_routine").select2();
+    }, 500);
+
+
+
+
+    
+  });
 }
+
+$("#select_doctor_routine").on("select2:select", function (e) {
+  var selectedValue = e.params.data.id; // ดึงค่า value
+  var selectedText = e.params.data.text; // ดึงค่า text
+  if (selectedValue != "") {
+    var index = doctor_routine.indexOf(selectedValue);
+    if (index == -1) {
+      doctor_routine.push(selectedValue);
+      var _row = "";
+      _row += `       <div  class='div_${selectedValue}  clear_doctor' onclick='DeleteDoctor_routine(${selectedValue})'>
+                          <label for="" class="custom-label">${selectedText}</label>
+                      </div> `;
+
+      $("#row_doctor_routine").append(_row);
+
+      $("#select_doctor_routine").val("").trigger("change");
+    }
+
+  }
+});
+
+
+$("#select_procedure_routine").on("select2:select", function (e) {
+  var selectedValue = e.params.data.id; // ดึงค่า value
+  var selectedText = e.params.data.text; // ดึงค่า text
+  if (selectedValue != "") {
+    var index = procedure_routine.indexOf(selectedValue);
+    if (index == -1) {
+      procedure_routine.push(selectedValue);
+      var _row = "";
+      _row += `       <div  class='div_${selectedValue} clear_procedure' onclick='Deletprocedure_routine(${selectedValue})'>
+                          <label for="" class="custom-label">${selectedText}</label>
+                      </div> `;
+
+      $("#row_procedure_routine").append(_row);
+
+      $("#select_procedure_routine").val("").trigger("change");
+    }
+
+  }
+});
 
 function click_menu() {
   $("#row_procedure_").hide();
@@ -235,8 +323,14 @@ function feeddata_detailDoctor() {
                       <td class="text-center">
                       
 
-                       <button class="btn btn-outline-dark f18" onclick='editDoctor("${value.ID}","${value.Doctor_Name}","${value.IsCancel}")'  > <i class="fa-regular fa-pen-to-square"></i> แก้ไข</button>
-                       <button  class="btn btn-outline-danger f18" onclick='deleteDoctor(${value.ID})'><i class="fa-solid fa-trash-can"></i></button> 
+                       <button class="btn btn-outline-dark f18" onclick='editDoctor("${
+                         value.ID
+                       }","${value.Doctor_Name}","${
+            value.IsCancel
+          }")'  > <i class="fa-regular fa-pen-to-square"></i> แก้ไข</button>
+                       <button  class="btn btn-outline-danger f18" onclick='deleteDoctor(${
+                         value.ID
+                       })'><i class="fa-solid fa-trash-can"></i></button> 
           
           
           </td>
@@ -422,12 +516,9 @@ function feeddata_detailProcedure() {
             editProcedure(id, name, isActive);
           });
         });
-
-
       }
 
       $("#table_detailProcedure tbody").html(_tr);
-
 
       $("#table_detailProcedure ").DataTable({
         language: {
@@ -484,19 +575,15 @@ function feeddata_detailProcedure() {
         );
       }
 
-      $("#table_detailProcedure").on("click", ".edit-btn", function() {
+      $("#table_detailProcedure").on("click", ".edit-btn", function () {
         const id = $(this).data("id");
         const name = $(this).data("name");
         const isActive = $(this).data("active");
         editProcedure(id, name, isActive);
       });
-
-
     },
   });
 }
-
-
 
 // ================================================
 
@@ -570,7 +657,6 @@ function editUser(
   Password,
   IsCancel
 ) {
-
   $("#input_empcodeUser").val(EmpCode);
   $("#input_nameUser").val(FirstName);
   $("#input_lastUser").val(LastName);
@@ -643,7 +729,7 @@ function feeddata_detailUser() {
             value.IsCancel = "InActive";
             var bg = "style='background-color:#D92D20;color:#fff;' ";
           }
-          
+
           _tr += `<tr> 
                       <td class="text-center">${kay + 1}</td>
                       <td class="text-left">${value.EmpCode}</td>
@@ -651,10 +737,22 @@ function feeddata_detailUser() {
                       <td class="text-left">${value.LastName}</td>
                       <td class="text-left">${value.UserName}</td>
                       <td class="text-left">${value.Password}</td>
-                      <td class="text-left"><button class='btn' ${bg}>  ${value.IsCancel} </button></td>
+                      <td class="text-left"><button class='btn' ${bg}>  ${
+            value.IsCancel
+          } </button></td>
                       <td class="text-center">
-                      <button class="btn btn-outline-dark f18" onclick='editUser("${value.ID}","${value.EmpCode}","${value.FirstName}","${value.LastName }","${value.UserName}","${value.Password}","${ value.IsCancel}")'  > <i class="fa-regular fa-pen-to-square"></i> แก้ไข</button>
-                       <button  class="btn btn-outline-danger f18" onclick='deleteUser(${value.ID},"${value.EmpCode}")'><i class="fa-solid fa-trash-can"></i></button> 
+                      <button class="btn btn-outline-dark f18" onclick='editUser("${
+                        value.ID
+                      }","${value.EmpCode}","${value.FirstName}","${
+            value.LastName
+          }","${value.UserName}","${value.Password}","${
+            value.IsCancel
+          }")'  > <i class="fa-regular fa-pen-to-square"></i> แก้ไข</button>
+                       <button  class="btn btn-outline-danger f18" onclick='deleteUser(${
+                         value.ID
+                       },"${
+            value.EmpCode
+          }")'><i class="fa-solid fa-trash-can"></i></button> 
                       </td>
                        </tr>`;
         });
@@ -856,8 +954,6 @@ function feeddata_detailDeproom() {
 
       if (!$.isEmptyObject(ObjData)) {
         $.each(ObjData, function (kay, value) {
-
-
           if (value.IsActive == "0") {
             value.IsActive = "InActive";
             var bg = "style='background-color:#D92D20;color:#fff;' ";
@@ -866,24 +962,27 @@ function feeddata_detailDeproom() {
             var bg = "style='background-color:#219E83;color:#fff;' ";
           }
 
-
           _tr += `<tr> 
                       <td class="text-center">${kay + 1}</td>
                       <td class="text-left">${value.departmentroomname}</td>
                       <td class="text-left">${value.departmentroomname_EN}</td>
                       <td class="text-left">${value.departmentroomname_sub}</td>
                       <td class="text-center">${value.floor_id}</td>
-                      <td class="text-center"><button class='btn' ${bg}>  ${value.IsActive} </button></td>
+                      <td class="text-center"><button class='btn' ${bg}>  ${
+            value.IsActive
+          } </button></td>
 
                       <td class="text-center">
                        <button class="btn btn-outline-dark f18" onclick='editDeproom("${
-                        value.id
-                      }","${value.departmentroomname}","${
+                         value.id
+                       }","${value.departmentroomname}","${
             value.departmentroomname_EN
           }","${value.ID_floor}","${value.IsActive}","${
             value.departmentroomname_sub
           }")'  > <i class="fa-regular fa-pen-to-square"></i> แก้ไข</button>
-                       <button  class="btn btn-outline-danger f18" onclick='deleteDeproom(${value.id})'><i class="fa-solid fa-trash-can"></i></button> 
+                       <button  class="btn btn-outline-danger f18" onclick='deleteDeproom(${
+                         value.id
+                       })'><i class="fa-solid fa-trash-can"></i></button> 
 
                       </td>
                        </tr>`;
@@ -1478,9 +1577,6 @@ function show_detail_doctor() {
             value.departmentroomname = `<a class="text-primary" style="cursor:pointer;" onclick='showDetail_deproom("${value.departmentroom_id}")'>ห้องผ่าตัด</a>`;
           }
 
-          
-           
-
           _tr +=
             `<tr > ` +
             `<td class="text-center">${value.Doctor_Name}</td>` +
@@ -1624,8 +1720,6 @@ function show_detail_deproom() {
             value.Procedure_TH = `<a class="text-primary" style="cursor:pointer;" onclick='showDetail_Procedure("${value.procedure_id}")'>หัตถการ</a>`;
           }
 
-
-
           _tr +=
             `<tr > ` +
             `<td class="text-center">${value.departmentroomname}</td>` +
@@ -1752,6 +1846,29 @@ function showDetail_Procedure(procedure) {
 }
 
 //////////////////////////////////////////////////////////////// select
+
+function select_type() {
+  $.ajax({
+    url: "process/process_main/select_main.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "select_type",
+    },
+    success: function (result) {
+      var ObjData = JSON.parse(result);
+      console.log(ObjData);
+      var option = `<option value="" selected>เลือกทั้งหมด</option>`;
+      if (!$.isEmptyObject(ObjData)) {
+        $.each(ObjData, function (kay, value) {
+          option += `<option value="${value.ID}" >${value.TyeName}</option>`;
+        });
+      } else {
+        option = `<option value="0">ไม่มีข้อมูล</option>`;
+      }
+      $("#select_typeItem").html(option);
+    },
+  });
+}
 function select_deproom() {
   $.ajax({
     url: "process/process_main/select_main.php",
@@ -1772,6 +1889,7 @@ function select_deproom() {
       }
       $("#select_deproom_proceduce").html(option);
       $("#select_deproom").html(option);
+      $("#select_deproom_routine").html(option);
     },
   });
 }
@@ -1794,6 +1912,7 @@ function select_doctor() {
         option = `<option value="0">ไม่มีข้อมูล</option>`;
       }
       $("#select_doctor_deproom").html(option);
+      $("#select_doctor_routine").html(option);
     },
   });
 }
@@ -1816,6 +1935,7 @@ function select_procedure() {
         option = `<option value="0">ไม่มีข้อมูล</option>`;
       }
       $("#select_proceduce").html(option);
+      $("#select_procedure_routine").html(option);
     },
   });
 }
@@ -1835,3 +1955,460 @@ function settext(key) {
 //     timer: 1000,
 //   });
 // }
+
+// item
+
+function show_detail_routine() {
+  $.ajax({
+    url: "process/manage.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "show_detail_routine",
+    },
+    success: function (result) {
+      var _tr = "";
+      $("#table_detail_routine").DataTable().destroy();
+      var ObjData = JSON.parse(result);
+      if (!$.isEmptyObject(ObjData)) {
+        $.each(ObjData, function (kay, value) {
+          _tr += `<tr>
+                      <td class='text-center' >${kay + 1}</td>
+                      <td>${value.Doctor_Name}</td>
+                      <td>${value.departmentroomname}</td>
+                      <td>${value.Procedure_TH}</td>
+                      <td class="text-center" > <button class="btn btn-outline-dark f18"  onclick='edit_routine(${value.id},${value.doctor_id},${value.procedure_id},${value.departmentroom_id})'> <i class="fa-regular fa-pen-to-square"></i> แก้ไข</button> </td>
+                      <td class="text-center"> <button  class="btn btn-outline-danger f18" onclick='delete_routine(${value.id})'><i class="fa-solid fa-trash-can"></i></button> </td>
+                   </tr>`;
+        });
+      }
+
+      $("#table_detail_routine tbody").html(_tr);
+      $("#table_detail_routine").DataTable({
+        language: {
+          emptyTable: settext("dataTables_empty"),
+          paginate: {
+            next: settext("table_itemStock_next"),
+            previous: settext("table_itemStock_previous"),
+          },
+          search: settext("btn_Search"),
+          info:
+            settext("dataTables_Showing") +
+            " _START_ " +
+            settext("dataTables_to") +
+            " _END_ " +
+            settext("dataTables_of") +
+            " _TOTAL_ " +
+            settext("dataTables_entries") +
+            " ",
+        },
+        columnDefs: [
+          {
+            width: "10%",
+            targets: 0,
+          },
+          {
+            width: "20%",
+            targets: 1,
+          },
+          {
+            width: "20%",
+            targets: 2,
+          },
+          {
+            width: "30%",
+            targets: 3,
+          },
+          {
+            width: "10%",
+            targets: 4,
+          },
+          {
+            width: "10%",
+            targets: 5,
+          },
+        ],
+        info: false,
+        scrollX: false,
+        scrollCollapse: false,
+        visible: false,
+        searching: false,
+        lengthChange: false,
+        fixedHeader: false,
+        ordering: false,
+      });
+      $("th").removeClass("sorting_asc");
+      if (_tr == "") {
+        $(".dataTables_info").text(
+          settext("dataTables_Showing") +
+            " 0 " +
+            settext("dataTables_to") +
+            " 0 " +
+            settext("dataTables_of") +
+            " 0 " +
+            settext("dataTables_entries") +
+            ""
+        );
+      }
+
+      $(".numonly").on("input", function () {
+        this.value = this.value.replace(/[^0-9]/g, ""); //<-- replace all other than given set of values
+      });
+    },
+  });
+}
+
+function show_detail_item() {
+  $.ajax({
+    url: "process/create_request.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "show_detail_item_request",
+      input_search_request: $("#input_search_request").val(),
+      select_typeItem: $("#select_typeItem").val(),
+    },
+    success: function (result) {
+      var _tr = "";
+      $("#table_detail_item").DataTable().destroy();
+      var ObjData = JSON.parse(result);
+      if (!$.isEmptyObject(ObjData)) {
+        $.each(ObjData, function (kay, value) {
+          _tr += `<tr>
+                      <td class='text-center' >${kay + 1}</td>
+                      <td>${value.Item_name}</td>
+                      <td class='text-center'>${value.TyeName}</td>
+                      <td class='text-center'><input type='text' class='numonly form-control loop_qty_request text-center' data-itemcode="${
+                        value.itemcode
+                      }"></td>
+                   </tr>`;
+        });
+      }
+
+      $("#table_detail_item tbody").html(_tr);
+      $("#table_detail_item").DataTable({
+        language: {
+          emptyTable: settext("dataTables_empty"),
+          paginate: {
+            next: settext("table_itemStock_next"),
+            previous: settext("table_itemStock_previous"),
+          },
+          search: settext("btn_Search"),
+          info:
+            settext("dataTables_Showing") +
+            " _START_ " +
+            settext("dataTables_to") +
+            " _END_ " +
+            settext("dataTables_of") +
+            " _TOTAL_ " +
+            settext("dataTables_entries") +
+            " ",
+        },
+        columnDefs: [
+          {
+            width: "10%",
+            targets: 0,
+          },
+          {
+            width: "40%",
+            targets: 1,
+          },
+          {
+            width: "20%",
+            targets: 2,
+          },
+          {
+            width: "10%",
+            targets: 3,
+          },
+        ],
+        info: false,
+        scrollX: false,
+        scrollCollapse: false,
+        visible: false,
+        searching: false,
+        lengthChange: false,
+        fixedHeader: false,
+        ordering: false,
+      });
+      $("th").removeClass("sorting_asc");
+      if (_tr == "") {
+        $(".dataTables_info").text(
+          settext("dataTables_Showing") +
+            " 0 " +
+            settext("dataTables_to") +
+            " 0 " +
+            settext("dataTables_of") +
+            " 0 " +
+            settext("dataTables_entries") +
+            ""
+        );
+      }
+
+      $(".numonly").on("input", function () {
+        this.value = this.value.replace(/[^0-9]/g, ""); //<-- replace all other than given set of values
+      });
+    },
+  });
+}
+
+$("#select_typeItem").change(function () {
+  show_detail_item();
+});
+
+$("#btn_confirm_request").click(function () {
+  var count_qty_request = 0;
+  $(".loop_qty_request").each(function (key, value) {
+    if ($(this).val() == "") {
+    } else {
+      count_qty_request++;
+    }
+  });
+
+  if (doctor_routine.length === 0) {
+    showDialogFailed("กรุณาเลือกแพทย์");
+    return;
+  }
+  if ($("#select_deproom_routine").val() == "") {
+    showDialogFailed("กรุณาเลือกห้องผ่าตัด");
+    return;
+  }
+  if (procedure_routine.length === 0) {
+    showDialogFailed("กรุณาเลือกหัตถการ");
+    return;
+  }
+
+  if (count_qty_request == 0) {
+    showDialogFailed("กรุณากรอกจำนวน");
+    return;
+  }
+
+  Swal.fire({
+    title: "ยืนยัน",
+    text: "ยืนยัน การเพิ่มรายการ",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "ยืนยัน",
+    cancelButtonText: "ยกเลิก",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      onconfirm_request();
+    }
+  });
+});
+
+function onconfirm_request() {
+  qty_array = [];
+  itemcode_array = [];
+
+  $("#table_detail_item")
+    .DataTable()
+    .rows()
+    .every(function () {
+      let inputValue = $(this.node()).find("input.loop_qty_request").val();
+      if (inputValue != "" && inputValue != "0") {
+        qty_array.push(inputValue);
+        itemcode_array.push(
+          $(this.node()).find("input.loop_qty_request").data("itemcode")
+        );
+      }
+    });
+
+  $.ajax({
+    url: "process/manage.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "onconfirm_request",
+      array_itemcode: itemcode_array,
+      array_qty: qty_array,
+      select_deproom_routine: $("#select_deproom_routine").val(),
+      procedure_routine: procedure_routine,
+      doctor_routine: doctor_routine,
+      routine_id : $("#routine_id").val()
+    },
+    success: function (result) {
+      var ObjData = JSON.parse(result);
+      console.log(ObjData);
+      $("#routine_id").val(ObjData);
+      show_detail_item();
+      setTimeout(() => {
+        show_detail_request_byDocNo();
+        show_detail_routine();
+      }, 200);
+
+    },
+  });
+}
+
+function show_detail_request_byDocNo() {
+  $.ajax({
+    url: "process/manage.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "show_detail_request_byDocNo",
+      routine_id: $("#routine_id").val(),
+    },
+    success: function (result) {
+      var _tr = "";
+      $("#table_item_detail_request").DataTable().destroy();
+      var ObjData = JSON.parse(result);
+      if (!$.isEmptyObject(ObjData)) {
+        $.each(ObjData, function (kay, value) {
+          _tr += `<tr>
+                      <td class='text-center'>${kay + 1}</td>
+                      <td>${value.itemname}</td>
+                      <td class='text-center'>${value.TyeName}</td>
+                      <td class='text-center'><input type="text" class="form-control text-center qty_loop" id="qty_item_${
+                        value.ID
+                      }" data-id='${value.ID}' value='${value.cnt}'> </td>
+                      <td class='text-center'>
+                      <img src="assets/img_project/1_icon/ic_trash-1.png" style='width:30%;cursor:pointer;' onclick='delete_request_byItem(${
+                        value.ID
+                      })'>
+                      </td>
+                   </tr>`;
+        });
+      }
+
+      $("#table_item_detail_request tbody").html(_tr);
+      $("#table_item_detail_request").DataTable({
+        language: {
+          emptyTable: settext("dataTables_empty"),
+          paginate: {
+            next: settext("table_itemStock_next"),
+            previous: settext("table_itemStock_previous"),
+          },
+          search: settext("btn_Search"),
+          info:
+            settext("dataTables_Showing") +
+            " _START_ " +
+            settext("dataTables_to") +
+            " _END_ " +
+            settext("dataTables_of") +
+            " _TOTAL_ " +
+            settext("dataTables_entries") +
+            " ",
+        },
+        columnDefs: [
+          {
+            width: "10%",
+            targets: 0,
+          },
+          {
+            width: "45%",
+            targets: 1,
+          },
+          {
+            width: "25%",
+            targets: 2,
+          },
+          {
+            width: "10%",
+            targets: 3,
+          },
+          {
+            width: "20%",
+            targets: 4,
+          },
+        ],
+        info: false,
+        scrollX: false,
+        scrollCollapse: false,
+        visible: false,
+        searching: false,
+        lengthChange: false,
+        fixedHeader: false,
+        ordering: false,
+      });
+      $("th").removeClass("sorting_asc");
+      if (_tr == "") {
+        $(".dataTables_info").text(
+          settext("dataTables_Showing") +
+            " 0 " +
+            settext("dataTables_to") +
+            " 0 " +
+            settext("dataTables_of") +
+            " 0 " +
+            settext("dataTables_entries") +
+            ""
+        );
+      }
+    },
+  });
+}
+
+function Deletprocedure_routine(selectedValue) {
+  var index = procedure_routine.indexOf(String(selectedValue));
+  console.log(index);
+
+  if (index !== -1) {
+    procedure_routine.splice(index, 1);
+  }
+
+  console.log(procedure_routine);
+  $(".div_" + selectedValue).attr("hidden", true);
+
+}
+
+function DeleteDoctor_routine(selectedValue) {
+  var index = doctor_routine.indexOf(String(selectedValue));
+  console.log(index);
+
+  if (index !== -1) {
+    doctor_routine.splice(index, 1);
+  }
+
+  console.log(doctor_routine);
+  $(".div_" + selectedValue).attr("hidden", true);
+
+}
+
+function delete_routine(id) {
+  $.ajax({
+    url: "process/manage.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "delete_routine",
+      id: id,
+    },
+    success: function (result) {
+      // var ObjData = JSON.parse(result);
+      console.log(result);
+      $("#routine_id").val("");
+      showDialogSuccess("ลบสำเร็จ");
+      show_detail_routine();
+    },
+  });
+}
+
+function edit_routine(id,doctor_id,procedure_id,departmentroom_id) {
+
+    $("#routine_id").val(id);
+
+    
+  $("#select_doctor_routine").val(doctor_id).trigger("change");
+  $("#select_deproom_routine").val(departmentroom_id).trigger("change");
+  $("#select_procedure_routine").val(procedure_id).trigger("change");
+
+
+    setTimeout(() => {
+      show_detail_request_byDocNo();      
+    }, 300);
+  // $.ajax({
+  //   url: "process/manage.php",
+  //   type: "POST",
+  //   data: {
+  //     FUNC_NAME: "edit_routine",
+  //     id: id,
+  //   },
+  //   success: function (result) {
+  //     // var ObjData = JSON.parse(result);
+  //     console.log(result);
+
+  //     showDialogSuccess("ลบสำเร็จ");
+  //     show_detail_routine();
+  //   },
+  // });
+}
+
+// item

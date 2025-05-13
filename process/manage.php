@@ -29,8 +29,195 @@ if (!empty($_POST['FUNC_NAME'])) {
         saveDeproom($conn, $db);
     } else if ($_POST['FUNC_NAME'] == 'deleteDeproom') {
         deleteDeproom($conn, $db);
+    } else if ($_POST['FUNC_NAME'] == 'onconfirm_request') {
+        onconfirm_request($conn, $db);
+    }  else if ($_POST['FUNC_NAME'] == 'show_detail_request_byDocNo') {
+        show_detail_request_byDocNo($conn, $db);
+    }  else if ($_POST['FUNC_NAME'] == 'show_detail_routine') {
+        show_detail_routine($conn, $db);
+    }  else if ($_POST['FUNC_NAME'] == 'delete_routine') {
+        delete_routine($conn, $db);
     }
 }
+
+function delete_routine($conn)
+{
+    $id = $_POST['id'];
+
+
+    $query1 = "DELETE FROM routine WHERE id = '$id' ";
+    $query2 = "DELETE FROM routine_detail WHERE routine_id = '$id' ";
+
+    $meQuery1 = $conn->prepare($query1);
+    $meQuery1->execute();
+    $meQuery2 = $conn->prepare($query2);
+    $meQuery2->execute();
+    echo "delete success";
+    unset($conn);
+    die;
+}
+
+function show_detail_routine($conn,$db)
+{
+    $return = array();
+    $query = "SELECT
+                    routine.id,
+                    doctor.Doctor_Name,
+                    `procedure`.Procedure_TH,
+                    departmentroom.departmentroomname ,
+                    doctor.ID AS doctor_id,
+                    `procedure`.ID  AS procedure_id,
+                    departmentroom.id  AS departmentroom_id
+                FROM
+                    routine
+                    INNER JOIN doctor ON routine.doctor = doctor.ID
+                    INNER JOIN `procedure` ON routine.proceduce = `procedure`.ID
+                    INNER JOIN departmentroom ON routine.departmentroomid = departmentroom.id  ";
+    $meQuery = $conn->prepare($query);
+    $meQuery->execute();
+    while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+        $return[] = $row;
+    }
+    echo json_encode($return);
+    unset($conn);
+    die;
+}
+function show_detail_request_byDocNo($conn,$db)
+{
+    $return = array();
+    $DepID = $_SESSION['DepID'];
+    $routine_id = $_POST['routine_id'];
+
+    $query = "SELECT
+                item.itemname ,
+                item.itemcode ,
+                routine_detail.id ,
+                SUM(routine_detail.qty) AS cnt ,
+                itemtype.TyeName
+            FROM
+                routine
+                INNER JOIN routine_detail ON routine.id = routine_detail.routine_id
+                INNER JOIN item ON routine_detail.itemcode = item.itemcode 
+                INNER JOIN itemtype ON itemtype.ID = item.itemtypeID
+            WHERE
+                routine.id = '$routine_id' 
+            GROUP BY
+                item.itemname,
+                item.itemcode,
+                routine_detail.id ,
+                itemtype.TyeName
+            ORDER BY item.itemname ASC ";
+
+
+    $meQuery = $conn->prepare($query);
+    $meQuery->execute();
+    while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+        $return[] = $row;
+    }
+    echo json_encode($return);
+    unset($conn);
+    die;
+}
+
+function onconfirm_request($conn)
+{
+    $return = array();
+    $select_deproom_routine = $_POST['select_deproom_routine'];
+    $procedure_routine = $_POST['procedure_routine'];
+    $doctor_routine = $_POST['doctor_routine'];
+    $array_itemcode = $_POST['array_itemcode'];
+    $array_qty = $_POST['array_qty'];
+    $routine_id = $_POST['routine_id'];
+
+    $doctor_routine = implode(",", $doctor_routine);
+    $procedure_routine = implode(",", $procedure_routine);
+
+
+    if ($routine_id == "") {
+        $sql = "INSERT INTO routine 
+                        (doctor, proceduce, departmentroomid, createAt )
+                    VALUES 
+                        (:doctor, :proceduce, :departmentroomid, NOW() )";
+
+        $stmt = $conn->prepare($sql);
+
+        $stmt->execute([
+            ':doctor'      => $doctor_routine,
+            ':proceduce'   => $procedure_routine,
+            ':departmentroomid' => $select_deproom_routine
+        ]);
+
+        $sql = "       SELECT routine.id 
+                                FROM routine 
+                                WHERE 
+                                    routine.doctor IN( :doctor ) AND 
+                                    routine.proceduce IN( :proceduce ) AND 
+                                    routine.departmentroomid = :departmentroomid 
+                                LIMIT 1";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->execute([
+            ':doctor'           => $doctor_routine,
+            ':proceduce'        => $procedure_routine,
+            ':departmentroomid' => $select_deproom_routine
+        ]);
+
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $_id = $row['id'];
+        }
+    } else {
+        $_id = $routine_id;
+    }
+
+
+    foreach ($array_itemcode as $key => $value) {
+
+        $_cntcheck = 0;
+        $queryCheck = "SELECT COUNT( routine_detail.itemcode ) AS cntcheck 
+                        FROM
+                            routine_detail 
+                        WHERE
+                            routine_detail.routine_id = '$_id' 
+                            AND routine_detail.itemcode = '$value' ";
+
+
+        $meQuery = $conn->prepare($queryCheck);
+        $meQuery->execute();
+        while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+            $_cntcheck = $row['cntcheck'];
+        }
+
+        if ($_cntcheck > 0) {
+            $queryUpdate = "UPDATE routine_detail 
+                            SET qty = (qty +  $array_qty[$key]) 
+                            WHERE
+                                routine_detail.routine_id = '$_id' 
+                                AND itemcode = '$value'  ";
+            $meQueryUpdate = $conn->prepare($queryUpdate);
+            $meQueryUpdate->execute();
+        } else {
+
+            $queryInsert = "INSERT INTO routine_detail (routine_id, itemcode, qty)
+            VALUES (:routine_id, :itemcode, :qty)";
+
+            $meQueryInsert = $conn->prepare($queryInsert);
+
+            $meQueryInsert->execute([
+                ':routine_id' => $_id,
+                ':itemcode'   => $value,
+                ':qty'        => $array_qty[$key]
+            ]);
+        }
+
+
+    }
+
+
+    echo json_encode($_id);
+    unset($conn);
+    die;
+}
+
 function deleteDeproom($conn)
 {
     $id = $_POST['id'];
@@ -162,7 +349,6 @@ function saveUser($conn)
         VALUES             ('$_ID' ) ";
         $meQuery3 = $conn->prepare($query3);
         $meQuery3->execute();
-
     } else {
         $queryE = " SELECT
                         employee.ID 

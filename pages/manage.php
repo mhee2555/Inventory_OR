@@ -33,6 +33,7 @@
         <div class="btn-group btn-group-toggle" role="group" aria-label="Basic example">
             <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;border-color: lightgray;" id="manage">จัดการข้อมูลระบบ</button>
             <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;border-color: lightgray;" id="mapping">Data Mapping</button>
+            <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;border-color: lightgray;" id="routine">จัดการ routine</button>
         </div>
     </div>
 </div>
@@ -427,7 +428,7 @@
                                         </div>
                                     </div>
 
-                       
+
                                 </div>
                             </div>
 
@@ -588,6 +589,142 @@
 
 
 
+</div>
+
+<div id="row_routine">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group ">
+                                <label style="color:black;font-weight: 600;">ประเภทอุปกรณ์</label>
+                                <div class="input-group">
+                                    <select name="" id="select_typeItem" class="form-control f18">
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group ">
+                                <label style="color:black;font-weight: 600;">ชื่ออุปกรณ์</label>
+                                <input type="text" class="form-control f18" placeholder="พิมพ์ชื่อค้นหา หรือรหัสอุปกรณ์" id="input_search_request">
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+
+                    <table class="table table-hover table-sm" id="table_detail_item">
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col" id="td_number" class="text-center" class="text-center">ลำดับ</th>
+                                <th scope="col" style="width: 20%;" class="text-center">รายการ</th>
+                                <th scope="col" style="width: 20%;" class="text-center">ลักษณะการใช้งาน</th>
+                                <th scope="col" style="width: 20%;" class="text-center">จำนวน</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer">
+                    <div class="col-md-12 text-right mt-2">
+                        <button class="btn f18" style="background-color: #643695;color:#fff;" id="btn_confirm_request">ยืนยัน</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+
+                        <input type="text" id="routine_id" hidden>
+                        <div class="col-md-4">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group ">
+                                        <label style="color:black;font-weight: 600;">แพทย์</label>
+                                        <select name="" id="select_doctor_routine" class="form-control f18"></select>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div style="display: contents;" id="row_doctor_routine"></div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group ">
+                                <label style="color:black;font-weight: 600;">ห้องผ่าตัด</label>
+                                <select name="" id="select_deproom_routine" class="form-control f18">
+                                </select>
+                            </div>
+                        </div>
+
+
+
+                        <div class="col-md-4">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group ">
+                                        <label style="color:black;font-weight: 600;">หัตถการ</label>
+                                        <select name="" id="select_procedure_routine" class="form-control f18"></select>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div  style="display: contents;" id="row_procedure_routine"></div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+
+
+
+                    <table class="table table-hover table-sm" id="table_item_detail_request">
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col" class="text-center" id="">ลำดับ</th>
+                                <th scope="col" class="text-center" id="">รายการ</th>
+                                <th scope="col" class="text-center" id="">ลักษณะการใช้งาน</th>
+                                <th scope="col" class="text-center" id="">จำนวน</th>
+                                <th scope="col" class="text-center" id="">ลบ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 mt-3">
+            <table class="table table-hover table-sm" id="table_detail_routine">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col" id="" class="text-center" class="text-center">ลำดับ</th>
+                        <th scope="col" style="width: 20%;" id="" class="text-center" class="text-center">ชื่อแพทย์</th>
+                        <th scope="col" style="width: 20%;" class="text-center">ห้องผ่าตัด</th>
+                        <th scope="col" style="width: 20%;" class="text-center">หัตถการ</th>
+                        <th scope="col" style="width: 5%;" class="text-center">#</th>
+                        <th scope="col" style="width: 5%;" class="text-center">#</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
 
