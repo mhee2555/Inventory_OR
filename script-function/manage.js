@@ -92,80 +92,80 @@ function click_main() {
   });
 }
 
-$("#select_doctor_routine").on("select2:select", function (e) {
-  var selectedValue = e.params.data.id; // ดึงค่า value
-  var selectedText = e.params.data.text; // ดึงค่า text
-  if (selectedValue != "") {
-    var index = doctor_routine.indexOf(selectedValue);
-    if (index == -1) {
+// $("#select_doctor_routine").on("select2:select", function (e) {
+//   var selectedValue = e.params.data.id; // ดึงค่า value
+//   var selectedText = e.params.data.text; // ดึงค่า text
+//   if (selectedValue != "") {
+//     var index = doctor_routine.indexOf(selectedValue);
+//     if (index == -1) {
 
     
 
-      doctor_routine.push(selectedValue);
-      var _row = "";
-      _row += `       <div  class='div_${selectedValue}  clear_doctor' >
-                          <label for="" class="custom-label" onclick='DeleteDoctor_routine(${selectedValue})'>${selectedText}</label>
-                      </div> `;
+//       doctor_routine.push(selectedValue);
+//       var _row = "";
+//       _row += `       <div  class='div_${selectedValue}  clear_doctor' >
+//                           <label for="" class="custom-label" onclick='DeleteDoctor_routine(${selectedValue})'>${selectedText}</label>
+//                       </div> `;
 
-      $("#row_doctor_routine").append(_row);
+//       $("#row_doctor_routine").append(_row);
 
-      $("#select_doctor_routine").val("").trigger("change");
+//       $("#select_doctor_routine").val("").trigger("change");
 
-      if($("#routine_id").val() != "" && doctor_routine.length > 0 ){
-        $.ajax({
-          url: "process/manage.php",
-          type: "POST",
-          data: {
-            FUNC_NAME: "save_doctor_routine",
-            doctor_routine: doctor_routine,
-            routine_id: $("#routine_id").val(),
-          },
-          success: function (result) {
+//       if($("#routine_id").val() != "" && doctor_routine.length > 0 ){
+//         $.ajax({
+//           url: "process/manage.php",
+//           type: "POST",
+//           data: {
+//             FUNC_NAME: "save_doctor_routine",
+//             doctor_routine: doctor_routine,
+//             routine_id: $("#routine_id").val(),
+//           },
+//           success: function (result) {
 
-          },
-        });
-      }
-
-
-    }
-  }
-});
-
-$("#select_procedure_routine").on("select2:select", function (e) {
-  var selectedValue = e.params.data.id; // ดึงค่า value
-  var selectedText = e.params.data.text; // ดึงค่า text
-  if (selectedValue != "") {
-    var index = procedure_routine.indexOf(selectedValue);
-    if (index == -1) {
-      procedure_routine.push(selectedValue);
-      var _row = "";
-      _row += `       <div  class='div_${selectedValue} clear_procedure' >
-                          <label for="" class="custom-label" onclick='Deletprocedure_routine(${selectedValue})'>${selectedText}</label>
-                      </div> `;
-
-      $("#row_procedure_routine").append(_row);
-
-      $("#select_procedure_routine").val("").trigger("change");
-
-      if($("#routine_id").val() != "" && procedure_routine.length > 0 ){
-        $.ajax({
-          url: "process/manage.php",
-          type: "POST",
-          data: {
-            FUNC_NAME: "save_procedure_routine",
-            procedure_routine: procedure_routine,
-            routine_id: $("#routine_id").val(),
-          },
-          success: function (result) {
-
-          },
-        });
-      }
+//           },
+//         });
+//       }
 
 
-    }
-  }
-});
+//     }
+//   }
+// });
+
+// $("#select_procedure_routine").on("select2:select", function (e) {
+//   var selectedValue = e.params.data.id; // ดึงค่า value
+//   var selectedText = e.params.data.text; // ดึงค่า text
+//   if (selectedValue != "") {
+//     var index = procedure_routine.indexOf(selectedValue);
+//     if (index == -1) {
+//       procedure_routine.push(selectedValue);
+//       var _row = "";
+//       _row += `       <div  class='div_${selectedValue} clear_procedure' >
+//                           <label for="" class="custom-label" onclick='Deletprocedure_routine(${selectedValue})'>${selectedText}</label>
+//                       </div> `;
+
+//       $("#row_procedure_routine").append(_row);
+
+//       $("#select_procedure_routine").val("").trigger("change");
+
+//       if($("#routine_id").val() != "" && procedure_routine.length > 0 ){
+//         $.ajax({
+//           url: "process/manage.php",
+//           type: "POST",
+//           data: {
+//             FUNC_NAME: "save_procedure_routine",
+//             procedure_routine: procedure_routine,
+//             routine_id: $("#routine_id").val(),
+//           },
+//           success: function (result) {
+
+//           },
+//         });
+//       }
+
+
+//     }
+//   }
+// });
 
 function click_menu() {
   $("#row_procedure_").hide();
@@ -2003,11 +2003,7 @@ function show_detail_routine() {
                       <td>${value.Doctor_Name}</td>
                       <td>${value.departmentroomname}</td>
                       <td>${value.Procedure_TH}</td>
-                      <td class="text-center" > <button class="btn btn-outline-dark f18"  onclick='edit_routine(${
-                        value.id
-                      },${
-            value.departmentroom_id
-          })'> <i class="fa-regular fa-pen-to-square"></i> แก้ไข</button> </td>
+                      <td class="text-center" > <button class="btn btn-outline-dark f18"  onclick='edit_routine(${value.id },${value.departmentroom_id},${value.doctor_id},${value.procedure_id})'> <i class="fa-regular fa-pen-to-square"></i> แก้ไข</button> </td>
                       <td class="text-center"> <button  class="btn btn-outline-danger f18" onclick='delete_routine(${
                         value.id
                       })'><i class="fa-solid fa-trash-can"></i></button> </td>
@@ -2187,20 +2183,26 @@ function show_detail_item() {
 $("#btn_clear_routine").click(function () {
 
 
-  $("#table_item_detail_request").DataTable().destroy();
-  $("#table_item_detail_request tbody").empty();
-
-  $("#select_doctor_routine").val('').trigger("change");
-  $("#select_deproom_routine").val('').trigger("change");
-  $("#select_procedure_routine").val('').trigger("change");
-
   $("#routine_id").val('');
 
 
-  $("#row_doctor_routine").html("");
-  doctor_routine = [];
-  $("#row_procedure_routine").html("");
-  procedure_routine = [];
+  $("#table_item_detail_request").DataTable().destroy();
+  $("#table_item_detail_request tbody").empty();
+
+
+  setTimeout(() => {
+    $("#select_doctor_routine").val('').trigger("change");
+    $("#select_deproom_routine").val('').trigger("change");
+    $("#select_procedure_routine").val('').trigger("change");
+  }, 500);
+
+
+
+
+  // $("#row_doctor_routine").html("");
+  // doctor_routine = [];
+  // $("#row_procedure_routine").html("");
+  // procedure_routine = [];
 
   show_detail_routine();
 });
@@ -2219,7 +2221,7 @@ $("#btn_confirm_request").click(function () {
     }
   });
 
-  if (doctor_routine.length === 0) {
+  if ($("#select_doctor_routine").val() == "") {
     showDialogFailed("กรุณาเลือกแพทย์");
     return;
   }
@@ -2227,7 +2229,7 @@ $("#btn_confirm_request").click(function () {
     showDialogFailed("กรุณาเลือกห้องผ่าตัด");
     return;
   }
-  if (procedure_routine.length === 0) {
+  if ($("#select_procedure_routine").val() == "") {
     showDialogFailed("กรุณาเลือกหัตถการ");
     return;
   }
@@ -2252,6 +2254,49 @@ $("#btn_confirm_request").click(function () {
     }
   });
 });
+
+
+
+
+$("#select_procedure_routine").change(function () {
+  if($("#routine_id").val() != ""  ){
+    $.ajax({
+      url: "process/manage.php",
+      type: "POST",
+      data: {
+        FUNC_NAME: "save_procedure_routine",
+        procedure_routine: $("#select_procedure_routine").val(),
+        routine_id: $("#routine_id").val(),
+      },
+      success: function (result) {
+
+      },
+    });
+  }
+});
+
+
+$("#select_doctor_routine").change(function () {
+  if($("#routine_id").val() != "" ){
+    $.ajax({
+      url: "process/manage.php",
+      type: "POST",
+      data: {
+        FUNC_NAME: "save_doctor_routine",
+        doctor_routine: $("#select_doctor_routine").val(),
+        routine_id: $("#routine_id").val(),
+      },
+      success: function (result) {
+  
+      },
+    });
+  }
+});
+
+
+
+
+
 
 function onconfirm_request() {
   qty_array = [];
@@ -2278,8 +2323,8 @@ function onconfirm_request() {
       array_itemcode: itemcode_array,
       array_qty: qty_array,
       select_deproom_routine: $("#select_deproom_routine").val(),
-      procedure_routine: procedure_routine,
-      doctor_routine: doctor_routine,
+      procedure_routine: $("#select_procedure_routine").val(),
+      doctor_routine: $("#select_doctor_routine").val(),
       routine_id: $("#routine_id").val(),
     },
     success: function (result) {
@@ -2425,63 +2470,63 @@ function delete_request_byItem(ID) {
   });
 }
 
-function Deletprocedure_routine(selectedValue) {
-  var index = procedure_routine.indexOf(String(selectedValue));
-  console.log(index);
+// function Deletprocedure_routine(selectedValue) {
+//   var index = procedure_routine.indexOf(String(selectedValue));
+//   console.log(index);
 
-  if (index !== -1) {
-    procedure_routine.splice(index, 1);
-  }
+//   if (index !== -1) {
+//     procedure_routine.splice(index, 1);
+//   }
 
-  console.log(procedure_routine);
-  $(".div_" + selectedValue).attr("hidden", true);
+//   console.log(procedure_routine);
+//   $(".div_" + selectedValue).attr("hidden", true);
 
-  if($("#routine_id").val() != "" && procedure_routine.length > 0 ){
-    $.ajax({
-      url: "process/manage.php",
-      type: "POST",
-      data: {
-        FUNC_NAME: "save_procedure_routine",
-        procedure_routine: procedure_routine,
-        routine_id: $("#routine_id").val(),
-      },
-      success: function (result) {
+//   if($("#routine_id").val() != "" && procedure_routine.length > 0 ){
+//     $.ajax({
+//       url: "process/manage.php",
+//       type: "POST",
+//       data: {
+//         FUNC_NAME: "save_procedure_routine",
+//         procedure_routine: procedure_routine,
+//         routine_id: $("#routine_id").val(),
+//       },
+//       success: function (result) {
 
-      },
-    });
-  }
+//       },
+//     });
+//   }
 
-}
+// }
 
-function DeleteDoctor_routine(selectedValue) {
-  var index = doctor_routine.indexOf(String(selectedValue));
-  console.log(index);
+// function DeleteDoctor_routine(selectedValue) {
+//   var index = doctor_routine.indexOf(String(selectedValue));
+//   console.log(index);
 
-  if (index !== -1) {
-    doctor_routine.splice(index, 1);
-  }
+//   if (index !== -1) {
+//     doctor_routine.splice(index, 1);
+//   }
 
-  console.log(doctor_routine);
-  $(".div_" + selectedValue).attr("hidden", true);
-
-
-  if($("#routine_id").val() != "" && doctor_routine.length > 0 ){
-    $.ajax({
-      url: "process/manage.php",
-      type: "POST",
-      data: {
-        FUNC_NAME: "save_doctor_routine",
-        doctor_routine: doctor_routine,
-        routine_id: $("#routine_id").val(),
-      },
-      success: function (result) {
-
-      },
-    });
-  }
+//   console.log(doctor_routine);
+//   $(".div_" + selectedValue).attr("hidden", true);
 
 
-}
+//   if($("#routine_id").val() != "" && doctor_routine.length > 0 ){
+//     $.ajax({
+//       url: "process/manage.php",
+//       type: "POST",
+//       data: {
+//         FUNC_NAME: "save_doctor_routine",
+//         doctor_routine: doctor_routine,
+//         routine_id: $("#routine_id").val(),
+//       },
+//       success: function (result) {
+
+//       },
+//     });
+//   }
+
+
+// }
 
 function delete_routine(id) {
 
@@ -2518,16 +2563,16 @@ function delete_routine(id) {
 
 }
 
-function edit_routine(id, departmentroom_id) {
+function edit_routine(id, departmentroom_id,doctor_id,procedure_id) {
   $("#routine_id").val(id);
 
-  // $("#select_doctor_routine").val(doctor_id).trigger("change");
+  $("#select_doctor_routine").val(doctor_id).trigger("change");
   $("#select_deproom_routine").val(departmentroom_id).trigger("change");
-  // $("#select_procedure_routine").val(procedure_id).trigger("change");
+  $("#select_procedure_routine").val(procedure_id).trigger("change");
 
   setTimeout(() => {
     show_detail_request_byDocNo();
-    select_edit_routine();
+    // select_edit_routine();
   }, 300);
   // $.ajax({
   //   url: "process/manage.php",
@@ -2546,47 +2591,47 @@ function edit_routine(id, departmentroom_id) {
   // });
 }
 
-function select_edit_routine() {
-  $.ajax({
-    url: "process/manage.php",
-    type: "POST",
-    data: {
-      FUNC_NAME: "select_edit_routine",
-      routine_id: $("#routine_id").val(),
-    },
-    success: function (result) {
-      var ObjData = JSON.parse(result);
+// function select_edit_routine() {
+//   $.ajax({
+//     url: "process/manage.php",
+//     type: "POST",
+//     data: {
+//       FUNC_NAME: "select_edit_routine",
+//       routine_id: $("#routine_id").val(),
+//     },
+//     success: function (result) {
+//       var ObjData = JSON.parse(result);
 
-      $("#row_doctor_routine").html("");
-      doctor_routine = [];
-      $("#row_procedure_routine").html("");
-      procedure_routine = [];
+//       $("#row_doctor_routine").html("");
+//       doctor_routine = [];
+//       $("#row_procedure_routine").html("");
+//       procedure_routine = [];
 
-      if (!$.isEmptyObject(ObjData)) {
-        var _row = "";
-        var _row2 = "";
-        $.each(ObjData["doctor"], function (kay2, value2) {
-          doctor_routine.push(value2.doctor_id.toString());
+//       if (!$.isEmptyObject(ObjData)) {
+//         var _row = "";
+//         var _row2 = "";
+//         $.each(ObjData["doctor"], function (kay2, value2) {
+//           doctor_routine.push(value2.doctor_id.toString());
 
-          _row += `       <div  class='div_${value2.doctor_id}  clear_doctor' >
-                            <label for="" class="custom-label" onclick='DeleteDoctor_routine(${value2.doctor_id})'>${value2.Doctor_Name}</label>
-                        </div> `;
-        });
+//           _row += `       <div  class='div_${value2.doctor_id}  clear_doctor' >
+//                             <label for="" class="custom-label" onclick='DeleteDoctor_routine(${value2.doctor_id})'>${value2.Doctor_Name}</label>
+//                         </div> `;
+//         });
 
-        $("#row_doctor_routine").append(_row);
+//         $("#row_doctor_routine").append(_row);
 
-        $.each(ObjData["proceduce"], function (kay2, value2) {
-          procedure_routine.push(value2.procedure_id.toString());
+//         $.each(ObjData["proceduce"], function (kay2, value2) {
+//           procedure_routine.push(value2.procedure_id.toString());
 
-          _row2 += `       <div  class='div_${value2.procedure_id}  clear_doctor' >
-                            <label for="" class="custom-label" onclick='Deletprocedure_routine(${value2.procedure_id})'>${value2.Procedure_TH}</label>
-                        </div> `;
-        });
+//           _row2 += `       <div  class='div_${value2.procedure_id}  clear_doctor' >
+//                             <label for="" class="custom-label" onclick='Deletprocedure_routine(${value2.procedure_id})'>${value2.Procedure_TH}</label>
+//                         </div> `;
+//         });
 
-        $("#row_procedure_routine").append(_row2);
-      }
-    },
-  });
-}
+//         $("#row_procedure_routine").append(_row2);
+//       }
+//     },
+//   });
+// }
 
 // item

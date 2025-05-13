@@ -65,7 +65,6 @@ function save_procedure_routine($conn)
 {
     $routine_id = $_POST['routine_id'];
     $procedure_routine = $_POST['procedure_routine'];
-    $procedure_routine = implode(",", $procedure_routine);
 
     $query1 = "UPDATE routine SET `proceduce` = '$procedure_routine'   WHERE id = '$routine_id' ";
 
@@ -80,7 +79,6 @@ function save_doctor_routine($conn)
 {
     $routine_id = $_POST['routine_id'];
     $doctor_routine = $_POST['doctor_routine'];
-    $doctor_routine = implode(",", $doctor_routine);
 
     $query1 = "UPDATE routine SET doctor = '$doctor_routine'   WHERE id = '$routine_id' ";
 
@@ -239,8 +237,7 @@ function onconfirm_request($conn)
     $array_qty = $_POST['array_qty'];
     $routine_id = $_POST['routine_id'];
 
-    $doctor_routine = implode(",", $doctor_routine);
-    $procedure_routine = implode(",", $procedure_routine);
+
 
 
     if ($routine_id == "") {
