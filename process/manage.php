@@ -39,7 +39,56 @@ if (!empty($_POST['FUNC_NAME'])) {
         delete_routine($conn, $db);
     } else if ($_POST['FUNC_NAME'] == 'select_edit_routine') {
         select_edit_routine($conn, $db);
+    } else if ($_POST['FUNC_NAME'] == 'save_doctor_routine') {
+        save_doctor_routine($conn, $db);
+    } else if ($_POST['FUNC_NAME'] == 'save_procedure_routine') {
+        save_procedure_routine($conn, $db);
+    } else if ($_POST['FUNC_NAME'] == 'delete_request_byItem') {
+        delete_request_byItem($conn, $db);
     }
+}
+
+function delete_request_byItem($conn)
+{
+    $return = array();
+    $ID = $_POST['ID'];
+
+    $sql2 = " DELETE FROM routine_detail WHERE id = '$ID' ";
+    $meQuery2 = $conn->prepare($sql2);
+    $meQuery2->execute();
+    echo json_encode($return);
+    unset($conn);
+    die;
+}
+
+function save_procedure_routine($conn)
+{
+    $routine_id = $_POST['routine_id'];
+    $procedure_routine = $_POST['procedure_routine'];
+    $procedure_routine = implode(",", $procedure_routine);
+
+    $query1 = "UPDATE routine SET `proceduce` = '$procedure_routine'   WHERE id = '$routine_id' ";
+
+    $meQuery1 = $conn->prepare($query1);
+    $meQuery1->execute();
+
+    unset($conn);
+    die;
+}
+
+function save_doctor_routine($conn)
+{
+    $routine_id = $_POST['routine_id'];
+    $doctor_routine = $_POST['doctor_routine'];
+    $doctor_routine = implode(",", $doctor_routine);
+
+    $query1 = "UPDATE routine SET doctor = '$doctor_routine'   WHERE id = '$routine_id' ";
+
+    $meQuery1 = $conn->prepare($query1);
+    $meQuery1->execute();
+
+    unset($conn);
+    die;
 }
 
 function select_edit_routine($conn)
@@ -198,7 +247,7 @@ function onconfirm_request($conn)
         $sql = "INSERT INTO routine 
                         (doctor, proceduce, departmentroomid, createAt )
                     VALUES 
-                        (:doctor, :proceduce, :departmentroomid, NOW() )";
+                        (:doctor, :proceduce, :departmentroomid, NOW())";
 
         $stmt = $conn->prepare($sql);
 

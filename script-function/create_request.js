@@ -331,6 +331,8 @@ $("#btn_routine").click(function () {
             }
           },
         });
+      }else{
+      showDialogFailed("ไม่พบ Routine");
       }
     },
   });

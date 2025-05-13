@@ -705,6 +705,11 @@
                         <tbody>
                         </tbody>
                     </table>
+
+                    <div class="col-md-12 text-right mt-2">
+                    <button class="btn f18" id="btn_clear_routine">ล้างข้อมูล</button>
+                </div>
+
                 </div>
             </div>
         </div>
