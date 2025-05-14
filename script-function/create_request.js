@@ -822,6 +822,9 @@ function onconfirm_send_request() {
         $("#txt_docno_request").val("");
         $("#input_hn_request").val("");
         $("#select_date_request").val("");
+
+        $("#btn_routine").attr('disabled',false);
+
         // $("#select_time_request").val("");
         $("#select_time_request").val(currentTime);
 

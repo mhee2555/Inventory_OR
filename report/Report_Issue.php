@@ -228,7 +228,7 @@ while ($row_select = $meQuery_select->fetch(PDO::FETCH_ASSOC)) {
 }
 
 
-$pdf->Cell(40, 5,  "เลข HN Code : " . $_hn_record_id, 0, 0, 'L');
+$pdf->Cell(60, 5,  "เลข HN Code : " . $_hn_record_id, 0, 0, 'L');
 $pdf->Cell(50, 5,  "ชื่อ : - " , 0, 1, 'C');
 
 $pdf->Cell(130, 5,  "วันที่เข้ารับบริการ : " . $_serviceDate, 0, 1, 'L');

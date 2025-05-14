@@ -170,6 +170,13 @@ function delete_routine($conn)
 function show_detail_routine($conn, $db)
 {
     $return = array();
+    $input_search_routine = $_POST['input_search_routine'];
+
+    $where = '';
+    if($input_search_routine != ""){
+        $where = " WHERE doctor.Doctor_Name LIKE '%$input_search_routine%' OR  `procedure`.Procedure_TH LIKE '%$input_search_routine%' OR  departmentroom.departmentroomname LIKE '%$input_search_routine%'  ";
+    }
+    
     $query = "SELECT
                     routine.id,
                     doctor.Doctor_Name,
@@ -182,7 +189,8 @@ function show_detail_routine($conn, $db)
                     routine
                     INNER JOIN doctor ON routine.doctor = doctor.ID
                     INNER JOIN `procedure` ON routine.proceduce = `procedure`.ID
-                    INNER JOIN departmentroom ON routine.departmentroomid = departmentroom.id  ";
+                    INNER JOIN departmentroom ON routine.departmentroomid = departmentroom.id
+                    $where  ";
     $meQuery = $conn->prepare($query);
     $meQuery->execute();
     while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
@@ -201,12 +209,7 @@ function show_detail_request_byDocNo_change($conn, $db){
     $select_doctor_routine = $_POST['select_doctor_routine'];
 
     $query = "SELECT
-                item.itemname ,
-                item.itemcode ,
-                routine_detail.id ,
-                SUM(routine_detail.qty) AS cnt ,
-                itemtype.TyeName,
-                routine.id as routine_ID
+                SUM(routine_detail.qty) AS cnt 
             FROM
                 routine
                 INNER JOIN routine_detail ON routine.id = routine_detail.routine_id

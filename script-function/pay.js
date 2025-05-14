@@ -1603,9 +1603,9 @@ function show_detail_history() {
           }
 
           if (value.cnt_pay > 0) {
-            var hidden = "";
+            var hidden = `<button ${hidden} class='btn f18' style='background-color:#643695;color:#fff;' onclick='show_Report("${value.DocNo }")'>รายงาน</button>`;
           } else {
-            var hidden = "hidden";
+            var hidden = "รอดำเนินการ";
           }
 
           if (value.hn_record_id == "") {
@@ -1627,9 +1627,7 @@ function show_detail_history() {
                       <td class='text-center'><button class='btn btn-outline-danger f18' onclick='cancel_item_byDocNo("${
                         value.DocNo
                       }")' >ยกเลิก</button></td>
-                      <td class='text-center'><button ${hidden} class='btn f18' style='background-color:#643695;color:#fff;' onclick='show_Report("${
-            value.DocNo
-          }")'>รายงาน</button></td>
+                      <td class='text-center'>${hidden}</td>
                    </tr>`;
         });
       }

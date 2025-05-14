@@ -78,9 +78,8 @@ class MYPDF extends TCPDF
 
 
 
-
             $image_file = "images/logo1.png";
-            $this->Image($image_file, 10, 5, 10, 15, 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);
+            $this->Image($image_file, 10, 10, 15, 25, 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);
         }
     }
     // Page footer
@@ -398,11 +397,10 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
 
 
     if($Result_Detail['cnt_pay'] > 0){
-        $html .= '<tr nobr="true" style="font-size:18px;height:30px;">';
-        $html .=   '<td width="12 %" align="center" style="line-height:40px;vertical-align: middle;"> ' . $Result_Detail['itemcode2'] . '</td>';
-        // $html .=   '<td width="36 %" align="center"> ' . $Result_Detail['itemcode'] . '</td>';
-        $html .=   '<td width="80 %" align="left"  style="line-height:40px;vertical-align: middle;"> ' . $Result_Detail['itemname'] . '</td>';
-        $html .=   '<td width="10 %" align="center" style="line-height:40px;vertical-align: middle;">' . $Result_Detail['cnt_pay'] . '</td>';
+        $html .= '<tr nobr="true" style="font-size:15px;">';
+        $html .=   '<td width="12 %" align="center" > ' . $Result_Detail['itemcode2'] . '</td>';
+        $html .=   '<td width="80 %" align="left" > ' . $Result_Detail['itemname'] . '</td>';
+        $html .=   '<td width="10 %" align="center">' . $Result_Detail['cnt_pay'] . '</td>';
         $html .=  '</tr>';
         $count++;
     }

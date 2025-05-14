@@ -273,9 +273,10 @@ function select_item($conn)
     $return = array();
 
     $query = "SELECT item.itemcode,
-                    item.itemname
+                     item.itemname
               FROM 
-                    item  ";
+                    item  
+            ORDER BY item.itemname ASC ";
 
 
     $meQuery = $conn->prepare($query);

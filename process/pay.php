@@ -432,7 +432,7 @@ function onReturnData($conn, $db)
                             deproomdetailsub.ID ,
                             hncode_detail.ID AS hndetail_ID,
 	                        deproomdetail.ItemCode,
-	                        DATE(deproomdetailsub.PayDate) AS ModifyDate
+	                        DATE(deproom.serviceDate) AS ModifyDate
                         FROM
                             deproom
                             INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
@@ -1205,7 +1205,7 @@ function oncheck_pay_manual($conn, $db)
             // =======================================================================================================================================
             $query = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty ,hncode)
                                         VALUES
-                                        ( '0', '$_itemcode',NOW(),'$_departmentroomid', $Userid,1,1,'$_hn_record_id') ";
+                                        ( '0', '$_itemcode','$input_date_service_manual','$_departmentroomid', $Userid,1,1,'$_hn_record_id') ";
             $meQuery = $conn->prepare($query);
             $meQuery->execute();
             // =======================================================================================================================================
@@ -1300,7 +1300,7 @@ function oncheck_pay_manual($conn, $db)
 
                 $query = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty,hncode )
                                         VALUES
-                                        ( '0', '$_itemcode',NOW(),'$_departmentroomid', $Userid,1,1,'$_hn_record_id') ";
+                                        ( '0', '$_itemcode','$input_date_service_manual','$_departmentroomid', $Userid,1,1,'$_hn_record_id') ";
                 $meQuery = $conn->prepare($query);
                 $meQuery->execute();
 
@@ -1511,7 +1511,7 @@ function oncheck_pay_manual($conn, $db)
                         // =======================================================================================================================================
                         $query = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty ,hncode )
                                     VALUES
-                                    ( $_RowID, '$_ItemCode',NOW(),'$_departmentroomid', $Userid,1,1 ,'$_hn_record_id') ";
+                                    ( $_RowID, '$_ItemCode','$input_date_service_manual','$_departmentroomid', $Userid,1,1 ,'$_hn_record_id') ";
                         $meQuery = $conn->prepare($query);
                         $meQuery->execute();
                         // =======================================================================================================================================
@@ -1718,7 +1718,7 @@ function oncheck_pay_manual($conn, $db)
                             // =======================================================================================================================================
                             $query = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty , hncode )
                                     VALUES
-                                    ( $_RowID, '$_ItemCode',NOW(),'$_departmentroomid', $Userid,1,1 ,'$_hn_record_id') ";
+                                    ( $_RowID, '$_ItemCode','$input_date_service_manual','$_departmentroomid', $Userid,1,1 ,'$_hn_record_id') ";
                             $meQuery = $conn->prepare($query);
                             $meQuery->execute();
                             // =======================================================================================================================================
@@ -1786,20 +1786,21 @@ function oncheck_pay_manual($conn, $db)
     
     
                 if ($_Isdeproom == 1) {
-    
+
+
                     $query_old = "SELECT
                                         deproomdetailsub.ID,
                                         deproomdetail.ID AS detailID,
                                         hncode_detail.ID AS hndetail_ID,
                                         deproomdetail.ItemCode,
-                                        COUNT( deproomdetailsub.ID ) AS deproom_qty,
-                                        COUNT(hncode_detail.ID ) AS hncode_qty,
-                                        deproom.hn_record_id ,
+                                        deproomdetail.Qty AS deproom_qty,
+                                        hncode_detail.Qty AS hncode_qty ,
+                                        deproom.hn_record_id,
+                                        DATE(deproom.serviceDate) AS serviceDate ,
                                         deproom.Ref_departmentroomid ,
-                                        DATE(deproomdetailsub.PayDate )  AS ModifyDate,
-                                        deproom.number_box ,
+                                        DATE(deproom.serviceDate)  AS ModifyDate,
                                         deproomdetailsub.PayDate,
-                                        NOW() AS datecheck,
+                                        deproom.number_box,
                                         deproom.DocNo
                                     FROM
                                         deproom
@@ -1809,11 +1810,39 @@ function oncheck_pay_manual($conn, $db)
                                         LEFT JOIN hncode_detail ON hncode_detail.DocNo = hncode.DocNo 
                                     WHERE
                                         deproomdetail.ItemCode = '$_ItemCode' 
-                                        AND hncode_detail.UsageCode = '$input_pay_manual' 
-    
-                                    ORDER BY
-                                        deproomdetailsub.ID DESC 
+                                        AND deproomdetailsub.ItemStockID = '$_RowID'
+                                        AND hncode_detail.ItemStockID = '$_RowID' 
+                                        ORDER BY deproomdetailsub.ID DESC
                                         LIMIT 1 ";
+                    // echo $query_old;
+                    // exit;
+                    // $query_old = "SELECT
+                    //                     deproomdetailsub.ID,
+                    //                     deproomdetail.ID AS detailID,
+                    //                     hncode_detail.ID AS hndetail_ID,
+                    //                     deproomdetail.ItemCode,
+                    //                     COUNT( deproomdetailsub.ID ) AS deproom_qty,
+                    //                     COUNT(hncode_detail.ID ) AS hncode_qty,
+                    //                     deproom.hn_record_id ,
+                    //                     deproom.Ref_departmentroomid ,
+                    //                     DATE(deproom.serviceDate )  AS ModifyDate,
+                    //                     deproom.number_box ,
+                    //                     deproomdetailsub.PayDate,
+                    //                     NOW() AS datecheck,
+                    //                     deproom.DocNo
+                    //                 FROM
+                    //                     deproom
+                    //                     LEFT JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
+                    //                     LEFT JOIN deproomdetailsub ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID
+                    //                     LEFT JOIN hncode ON hncode.DocNo_SS = deproom.DocNo
+                    //                     LEFT JOIN hncode_detail ON hncode_detail.DocNo = hncode.DocNo 
+                    //                 WHERE
+                    //                     deproomdetail.ItemCode = '$_ItemCode' 
+                    //                     AND hncode_detail.UsageCode = '$input_pay_manual' 
+    
+                    //                 ORDER BY
+                    //                     deproomdetailsub.ID DESC 
+                    //                     LIMIT 1 ";
     
     
     
@@ -1830,14 +1859,17 @@ function oncheck_pay_manual($conn, $db)
                         $_Ref_departmentroomid = $row_old['Ref_departmentroomid'];
                         $_ModifyDate = $row_old['ModifyDate'];
                         $_number_box = $row_old['number_box'];
-    
+                        
+                        if($_hn_record_id_borrow == ""){
+                            $_hn_record_id_borrow = $_number_box;
+                        }
                         $_PayDate = $row_old['PayDate'];
-                        $_datecheck = $row_old['datecheck'];
+                        // $_datecheck = $row_old['datecheck'];
     
                     }
 
                     if($input_docNo_deproom_manual != $_DocNo){
-                        if ($input_Hn_pay_manual != $_hn_record_id_borrow  || $input_box_pay_manual != $_number_box || $_PayDate != $_datecheck) {
+                        // if ($input_Hn_pay_manual != $_hn_record_id_borrow  || $input_box_pay_manual != $_number_box || $_PayDate != $_datecheck) {
     
                             // =======================================================================================================================================
         
@@ -1969,7 +2001,7 @@ function oncheck_pay_manual($conn, $db)
                                 // =======================================================================================================================================
                                 $query = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty ,hncode )
                                         VALUES
-                                        ( $_RowID, '$_ItemCode',NOW(),'$_departmentroomid', $Userid,1,1 ,'$_hn_record_id') ";
+                                        ( $_RowID, '$_ItemCode','$input_date_service_manual','$_departmentroomid', $Userid,1,1 ,'$_hn_record_id') ";
                                 $meQuery = $conn->prepare($query);
                                 $meQuery->execute();
                                 // =======================================================================================================================================
@@ -2105,7 +2137,7 @@ function oncheck_pay_manual($conn, $db)
                                     // =======================================================================================================================================
                                     $query = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty , hncode )
                                         VALUES
-                                        ( $_RowID, '$_ItemCode',NOW(),'$_departmentroomid', $Userid,1,1 ,'$_hn_record_id') ";
+                                        ( $_RowID, '$_ItemCode','$input_date_service_manual','$_departmentroomid', $Userid,1,1 ,'$_hn_record_id') ";
                                     $meQuery = $conn->prepare($query);
                                     $meQuery->execute();
                                     // =======================================================================================================================================
@@ -2157,9 +2189,10 @@ function oncheck_pay_manual($conn, $db)
                             $updatePay = "UPDATE deproom SET UserPay = $Userid WHERE deproom.DocNo = '$input_docNo_deproom_manual' ";
                             $meQueryPay = $conn->prepare($updatePay);
                             $meQueryPay->execute();
-                        }else{
-                            $count_itemstock = 3;
-                        }
+                        // }
+                        // else{
+                        //     $count_itemstock = 3;
+                        // }
                     }else{
                         $count_itemstock = 3;
                     }
@@ -2364,7 +2397,7 @@ function oncheck_Returnpay_manual($conn, $db)
                                 deproomdetailsub.ID ,
                                 hncode_detail.ID AS hndetail_ID,
                                 deproomdetail.ItemCode,
-                                DATE(deproomdetailsub.PayDate)  AS ModifyDate
+                                DATE(deproom.serviceDate)  AS ModifyDate
                             FROM
                                 deproom
                                 INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
@@ -2691,7 +2724,7 @@ function oncheck_pay_rfid_manual($conn, $db)
                     // =======================================================================================================================================
                     $query = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty ,hncode)
                         VALUES
-                        ( $_RowID, '$_ItemCode',NOW(),'$_departmentroomid', $Userid,1,1,'$_hn_record_id') ";
+                        ( $_RowID, '$_ItemCode','$input_date_service_manual','$_departmentroomid', $Userid,1,1,'$_hn_record_id') ";
                     $meQuery = $conn->prepare($query);
                     $meQuery->execute();
                     // =======================================================================================================================================
@@ -2917,7 +2950,7 @@ function oncheck_pay_rfid_manual($conn, $db)
                         // =======================================================================================================================================
                         $query = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty ,hncode)
                         VALUES
-                        ( $_RowID, '$_ItemCode',NOW(),'$_departmentroomid', $Userid,1,1,'$_hn_record_id') ";
+                        ( $_RowID, '$_ItemCode','$input_date_service_manual','$_departmentroomid', $Userid,1,1,'$_hn_record_id') ";
                         $meQuery = $conn->prepare($query);
                         $meQuery->execute();
                         // =======================================================================================================================================
@@ -3204,7 +3237,7 @@ function oncheck_pay_weighing_manual($conn, $db)
                 // =======================================================================================================================================
                 $query = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty ,hncode)
                         VALUES
-                        ( '0', '$_ItemCode',NOW(),'$_departmentroomid', $Userid,1,'$_Qty','$_hn_record_id') ";
+                        ( '0', '$_ItemCode','$input_date_service_manual','$_departmentroomid', $Userid,1,'$_Qty','$_hn_record_id') ";
                 $meQuery = $conn->prepare($query);
                 $meQuery->execute();
                 // =======================================================================================================================================
@@ -3426,7 +3459,7 @@ function oncheck_pay_weighing_manual($conn, $db)
                     // =======================================================================================================================================
                     $query = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty,hncode )
                         VALUES
-                        ( '0', '$_ItemCode',NOW(),'$_departmentroomid', $Userid,1,'$_Qty','$_hn_record_id') ";
+                        ( '0', '$_ItemCode','$input_date_service_manual','$_departmentroomid', $Userid,1,'$_Qty','$_hn_record_id') ";
                     $meQuery = $conn->prepare($query);
                     $meQuery->execute();
                     // =======================================================================================================================================
@@ -3566,7 +3599,7 @@ function oncheck_Returnpay($conn, $db)
                             deproomdetailsub.ID ,
                             hncode_detail.ID AS hndetail_ID,
 	                        deproomdetail.ItemCode,
-                            DATE(deproomdetailsub.PayDate)  AS ModifyDate
+                            DATE(deproom.serviceDate)  AS ModifyDate
                         FROM
                             deproom
                             INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
@@ -3889,7 +3922,7 @@ function oncheck_pay_rfid($conn, $db)
                     // =======================================================================================================================================
                     $query = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty ,hncode)
                         VALUES
-                        ( $_RowID, '$_ItemCode',NOW(),'$_departmentroomid', $Userid,1,1,'$_hn_record_id') ";
+                        ( $_RowID, '$_ItemCode','$input_date_service','$_departmentroomid', $Userid,1,1,'$_hn_record_id') ";
                     $meQuery = $conn->prepare($query);
                     $meQuery->execute();
                     // =======================================================================================================================================
@@ -4115,7 +4148,7 @@ function oncheck_pay_rfid($conn, $db)
                         // =======================================================================================================================================
                         $query = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty ,hncode)
                         VALUES
-                        ( $_RowID, '$_ItemCode',NOW(),'$_departmentroomid', $Userid,1,1,'$_hn_record_id') ";
+                        ( $_RowID, '$_ItemCode','$input_date_service','$_departmentroomid', $Userid,1,1,'$_hn_record_id') ";
                         $meQuery = $conn->prepare($query);
                         $meQuery->execute();
                         // =======================================================================================================================================
@@ -4396,7 +4429,7 @@ function oncheck_pay_weighing($conn, $db)
                 // =======================================================================================================================================
                 $query = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty ,hncode)
                         VALUES
-                        ( '0', '$_ItemCode',NOW(),'$_departmentroomid', $Userid,1,'$_Qty','$_hn_record_id') ";
+                        ( '0', '$_ItemCode','$input_date_service','$_departmentroomid', $Userid,1,'$_Qty','$_hn_record_id') ";
                 $meQuery = $conn->prepare($query);
                 $meQuery->execute();
                 // =======================================================================================================================================
@@ -4619,7 +4652,7 @@ function oncheck_pay_weighing($conn, $db)
                     // =======================================================================================================================================
                     $query = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty,hncode )
                         VALUES
-                        ( '0', '$_ItemCode',NOW(),'$_departmentroomid', $Userid,1,'$_Qty','$_hn_record_id') ";
+                        ( '0', '$_ItemCode','$input_date_service','$_departmentroomid', $Userid,1,'$_Qty','$_hn_record_id') ";
                     $meQuery = $conn->prepare($query);
                     $meQuery->execute();
                     // =======================================================================================================================================
@@ -4827,7 +4860,7 @@ function oncheck_pay($conn, $db)
             // =======================================================================================================================================
             $query = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty ,hncode)
                                         VALUES
-                                        ( '0', '$_itemcode',NOW(),'$_departmentroomid', $Userid,1,1,'$_hn_record_id') ";
+                                        ( '0', '$_itemcode','$input_date_service','$_departmentroomid', $Userid,1,1,'$_hn_record_id') ";
             $meQuery = $conn->prepare($query);
             $meQuery->execute();
             // =======================================================================================================================================
@@ -4931,7 +4964,7 @@ function oncheck_pay($conn, $db)
 
                 $query = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty,hncode )
                                         VALUES
-                                        ( '0', '$_itemcode',NOW(),'$_departmentroomid', $Userid,1,1,'$_hn_record_id') ";
+                                        ( '0', '$_itemcode','$input_date_service','$_departmentroomid', $Userid,1,1,'$_hn_record_id') ";
                 $meQuery = $conn->prepare($query);
                 $meQuery->execute();
 
@@ -5198,7 +5231,7 @@ function oncheck_pay($conn, $db)
                         // =======================================================================================================================================
                         $query = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty ,hncode )
                             VALUES
-                            ( $_RowID, '$_ItemCode',NOW(),'$_departmentroomid', $Userid,1,1 ,'$_hn_record_id') ";
+                            ( $_RowID, '$_ItemCode','$input_date_service','$_departmentroomid', $Userid,1,1 ,'$_hn_record_id') ";
                         $meQuery = $conn->prepare($query);
                         $meQuery->execute();
                         // =======================================================================================================================================
@@ -5420,7 +5453,7 @@ function oncheck_pay($conn, $db)
                             // =======================================================================================================================================
                             $query = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty , hncode )
                             VALUES
-                            ( $_RowID, '$_ItemCode',NOW(),'$_departmentroomid', $Userid,1,1 ,'$_hn_record_id') ";
+                            ( $_RowID, '$_ItemCode','$input_date_service','$_departmentroomid', $Userid,1,1 ,'$_hn_record_id') ";
                             $meQuery = $conn->prepare($query);
                             $meQuery->execute();
                             // =======================================================================================================================================
@@ -5503,7 +5536,7 @@ function oncheck_pay($conn, $db)
                                         deproom.hn_record_id,
                                         DATE(deproom.serviceDate) AS serviceDate ,
                                         deproom.Ref_departmentroomid ,
-                                        DATE(deproomdetailsub.PayDate)  AS ModifyDate,
+                                        DATE(deproom.serviceDate)  AS ModifyDate,
                                         deproom.number_box,
                                         deproom.DocNo
                                     FROM
@@ -5519,7 +5552,7 @@ function oncheck_pay($conn, $db)
                                         ORDER BY deproomdetailsub.ID DESC
                                         LIMIT 1 ";
 
-            
+                    
                     $meQuery_old = $conn->prepare($query_old);
                     $meQuery_old->execute();
                     while ($row_old = $meQuery_old->fetch(PDO::FETCH_ASSOC)) {
@@ -5533,6 +5566,11 @@ function oncheck_pay($conn, $db)
                         $_ModifyDate = $row_old['ModifyDate'];
                         $__Ref_departmentroomid = $row_old['Ref_departmentroomid'];
                         $_number_box = $row_old['number_box'];
+
+                        if($_hn_record_id_borrow == ""){
+                            $_hn_record_id_borrow = $_number_box;
+                        }
+                        
                     }
 
                     
@@ -5729,7 +5767,7 @@ function oncheck_pay($conn, $db)
                                             VALUES (
                                                 :ItemStockID,
                                                 :ItemCode,
-                                                NOW(),
+                                                :serviceDate,
                                                 :departmentroomid,
                                                 :UserCode,
                                                 1,
@@ -5741,12 +5779,12 @@ function oncheck_pay($conn, $db)
                                 $stmt->execute([
                                     ':ItemStockID'    => $_RowID,
                                     ':ItemCode'       => $_ItemCode,
+                                    ':serviceDate'         => $input_date_service,
                                     ':departmentroomid' => $_departmentroomid,
                                     ':UserCode'       => $Userid,
                                     ':hncode'         => $_hn_record_id
                                 ]);
                 
-            
                             // =======================================================================================================================================
 
 
@@ -5948,7 +5986,7 @@ function oncheck_pay($conn, $db)
                                             ) VALUES (
                                                 :ItemStockID,
                                                 :ItemCode,
-                                                NOW(),
+                                                :serviceDate,
                                                 :departmentroomid,
                                                 :UserCode,
                                                 1,
@@ -5960,6 +5998,7 @@ function oncheck_pay($conn, $db)
                                     $stmt->execute([
                                         ':ItemStockID' => $_RowID,
                                         ':ItemCode' => $_ItemCode,
+                                        ':serviceDate' => $input_date_service,
                                         ':departmentroomid' => $_departmentroomid,
                                         ':UserCode' => $Userid,
                                         ':hncode' => $_hn_record_id

@@ -194,11 +194,13 @@ if ($type_date == 1) {
 }
 if ($type_date == 2) {
 
+    $year1 = $year1-543;
+
     if ($checkmonth == 1) {
-        $where_date = "AND MONTH(log_cabinet.ModifyDate) = '$month1'  ";
+        $where_date = "AND MONTH(log_cabinet.ModifyDate) = '$month1' AND YEAR(log_cabinet.ModifyDate) = '$year1'  ";
 
     } else {
-        $where_date = "AND MONTH(log_cabinet.ModifyDate) BETWEEN '$month1' 	AND '$month2' ";
+        $where_date = "AND MONTH(log_cabinet.ModifyDate) BETWEEN '$month1' 	AND '$month2' AND YEAR(log_cabinet.ModifyDate) = '$year1' ";
     }
 }
 

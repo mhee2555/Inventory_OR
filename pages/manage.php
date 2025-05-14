@@ -680,7 +680,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-12">
-                                    <div  style="display: contents;" id="row_procedure_routine"></div>
+                                    <div style="display: contents;" id="row_procedure_routine"></div>
                                 </div>
                             </div>
 
@@ -707,27 +707,41 @@
                     </table>
 
                     <div class="col-md-12 text-right mt-2">
-                    <button class="btn f18" id="btn_clear_routine">ล้างข้อมูล</button>
-                </div>
+                        <button class="btn f18 btn-danger" id="btn_clear_routine">ล้างข้อมูล</button>
+                    </div>
 
                 </div>
             </div>
         </div>
         <div class="col-md-12 mt-3">
-            <table class="table table-hover table-sm" id="table_detail_routine">
-                <thead class="thead-light">
-                    <tr>
-                        <th scope="col" id="" class="text-center" class="text-center">ลำดับ</th>
-                        <th scope="col" style="width: 20%;" id="" class="text-center" class="text-center">ชื่อแพทย์</th>
-                        <th scope="col" style="width: 20%;" class="text-center">ห้องผ่าตัด</th>
-                        <th scope="col" style="width: 20%;" class="text-center">หัตถการ</th>
-                        <th scope="col" style="width: 5%;" class="text-center">แก้ไข</th>
-                        <th scope="col" style="width: 5%;" class="text-center">ลบ</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group ">
+                        <label style="color:black;font-weight: 600;">ค้นหา</label>
+                        <input type="text" class="form-control f18" placeholder="แพทย์ / ห้องผ่าตัด / หัตถการ" id="input_search_routine">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table table-hover table-sm" id="table_detail_routine">
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col" id="" class="text-center" class="text-center">ลำดับ</th>
+                                <th scope="col" style="width: 20%;" id="" class="text-center" class="text-center">ชื่อแพทย์</th>
+                                <th scope="col" style="width: 20%;" class="text-center">ห้องผ่าตัด</th>
+                                <th scope="col" style="width: 20%;" class="text-center">หัตถการ</th>
+                                <th scope="col" style="width: 5%;" class="text-center">แก้ไข</th>
+                                <th scope="col" style="width: 5%;" class="text-center">ลบ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>

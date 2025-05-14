@@ -117,6 +117,7 @@ $query = "SELECT
 								DATE_FORMAT(deproom.serviceDate, '%d/%m/%Y') AS CreateDate,
                 TIME(deproom.serviceDate) AS CreateTime,
                 hncode.HnCode,
+                hncode.number_box,
                 hncode.DocNo,
                 departmentroom.departmentroomname,
                 hncode.`procedure`,
@@ -137,6 +138,7 @@ $meQuery->execute();
 while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
     $_name1 = $row['name_1'];
     $_HnCode = $row['HnCode'];
+    $_number_box = $row['number_box'];
     $_procedure = $row['procedure'];
     $_doctor = $row['doctor'];
     $_departmentroomname = $row['departmentroomname'];
@@ -146,7 +148,7 @@ while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
     $_CreateTime = $row['CreateTime'];
 
     if($_HnCode == ""){
-        $_HnCode = $DocNo;
+        $_HnCode = $_number_box;
     }
 
 

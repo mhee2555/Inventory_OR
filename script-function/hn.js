@@ -238,6 +238,8 @@ $("#btn_Tracking").click(function () {
   if($("#btn_Tracking").data("DocNo") != undefined){
     option = "?DocNo=" + $("#btn_Tracking").data("DocNo");
     window.open("report/Report_Medical_Instrument_Tracking.php" + option, "_blank");
+  }else{
+    Swal.fire("ล้มเหลว", "กรุณาเลือกรายการ", "error");
   }
 
 });
