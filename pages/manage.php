@@ -721,8 +721,8 @@
                         <th scope="col" style="width: 20%;" id="" class="text-center" class="text-center">ชื่อแพทย์</th>
                         <th scope="col" style="width: 20%;" class="text-center">ห้องผ่าตัด</th>
                         <th scope="col" style="width: 20%;" class="text-center">หัตถการ</th>
-                        <th scope="col" style="width: 5%;" class="text-center">#</th>
-                        <th scope="col" style="width: 5%;" class="text-center">#</th>
+                        <th scope="col" style="width: 5%;" class="text-center">แก้ไข</th>
+                        <th scope="col" style="width: 5%;" class="text-center">ลบ</th>
                     </tr>
                 </thead>
                 <tbody>

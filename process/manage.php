@@ -45,6 +45,8 @@ if (!empty($_POST['FUNC_NAME'])) {
         save_procedure_routine($conn, $db);
     } else if ($_POST['FUNC_NAME'] == 'delete_request_byItem') {
         delete_request_byItem($conn, $db);
+    } else if ($_POST['FUNC_NAME'] == 'show_detail_request_byDocNo_change') {
+        show_detail_request_byDocNo_change($conn, $db);
     }
 }
 
@@ -181,6 +183,47 @@ function show_detail_routine($conn, $db)
                     INNER JOIN doctor ON routine.doctor = doctor.ID
                     INNER JOIN `procedure` ON routine.proceduce = `procedure`.ID
                     INNER JOIN departmentroom ON routine.departmentroomid = departmentroom.id  ";
+    $meQuery = $conn->prepare($query);
+    $meQuery->execute();
+    while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+        $return[] = $row;
+    }
+    echo json_encode($return);
+    unset($conn);
+    die;
+}
+
+function show_detail_request_byDocNo_change($conn, $db){
+    $return = array();
+    $DepID = $_SESSION['DepID'];
+    $select_deproom_routine = $_POST['select_deproom_routine'];
+    $select_procedure_routine = $_POST['select_procedure_routine'];
+    $select_doctor_routine = $_POST['select_doctor_routine'];
+
+    $query = "SELECT
+                item.itemname ,
+                item.itemcode ,
+                routine_detail.id ,
+                SUM(routine_detail.qty) AS cnt ,
+                itemtype.TyeName,
+                routine.id as routine_ID
+            FROM
+                routine
+                INNER JOIN routine_detail ON routine.id = routine_detail.routine_id
+                INNER JOIN item ON routine_detail.itemcode = item.itemcode 
+                INNER JOIN itemtype ON itemtype.ID = item.itemtypeID
+            WHERE
+                routine.doctor = '$select_doctor_routine' 
+            AND routine.proceduce = '$select_procedure_routine'
+            AND routine.departmentroomid = '$select_deproom_routine'
+            GROUP BY
+                item.itemname,
+                item.itemcode,
+                routine_detail.id ,
+                itemtype.TyeName
+            ORDER BY item.itemname ASC ";
+
+
     $meQuery = $conn->prepare($query);
     $meQuery->execute();
     while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {

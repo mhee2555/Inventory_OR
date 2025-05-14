@@ -2272,6 +2272,8 @@ $("#select_procedure_routine").change(function () {
 
       },
     });
+  }else{
+    show_detail_request_byDocNo_change();
   }
 });
 
@@ -2290,6 +2292,8 @@ $("#select_doctor_routine").change(function () {
   
       },
     });
+  }else{
+    show_detail_request_byDocNo_change();
   }
 });
 
@@ -2336,6 +2340,110 @@ function onconfirm_request() {
         show_detail_request_byDocNo();
         show_detail_routine();
       }, 200);
+    },
+  });
+}
+
+
+function show_detail_request_byDocNo_change() {
+  $.ajax({
+    url: "process/manage.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "show_detail_request_byDocNo_change",
+      select_deproom_routine: $("#select_deproom_routine").val(),
+      select_procedure_routine: $("#select_procedure_routine").val(),
+      select_doctor_routine: $("#select_doctor_routine").val(),
+    },
+    success: function (result) {
+      var _tr = "";
+      $("#table_item_detail_request").DataTable().destroy();
+      var ObjData = JSON.parse(result);
+      if (!$.isEmptyObject(ObjData)) {
+        $.each(ObjData, function (kay, value) {
+
+          $("#routine_id").val(value.routine_ID);
+
+
+          _tr += `<tr>
+                      <td class='text-center'>${kay + 1}</td>
+                      <td>${value.itemname}</td>
+                      <td class='text-center'>${value.TyeName}</td>
+                      <td class='text-center'><input type="text" class="form-control text-center qty_loop" id="qty_item_${
+                        value.id
+                      }" data-id='${value.id}' value='${value.cnt}'> </td>
+                      <td class='text-center'>
+                      <img src="assets/img_project/1_icon/ic_trash-1.png" style='width:30%;cursor:pointer;' onclick='delete_request_byItem(${
+                        value.id
+                      })'>
+                      </td>
+                   </tr>`;
+        });
+      }
+
+      $("#table_item_detail_request tbody").html(_tr);
+      $("#table_item_detail_request").DataTable({
+        language: {
+          emptyTable: settext("dataTables_empty"),
+          paginate: {
+            next: settext("table_itemStock_next"),
+            previous: settext("table_itemStock_previous"),
+          },
+          search: settext("btn_Search"),
+          info:
+            settext("dataTables_Showing") +
+            " _START_ " +
+            settext("dataTables_to") +
+            " _END_ " +
+            settext("dataTables_of") +
+            " _TOTAL_ " +
+            settext("dataTables_entries") +
+            " ",
+        },
+        columnDefs: [
+          {
+            width: "10%",
+            targets: 0,
+          },
+          {
+            width: "45%",
+            targets: 1,
+          },
+          {
+            width: "25%",
+            targets: 2,
+          },
+          {
+            width: "10%",
+            targets: 3,
+          },
+          {
+            width: "20%",
+            targets: 4,
+          },
+        ],
+        info: false,
+        scrollX: false,
+        scrollCollapse: false,
+        visible: false,
+        searching: false,
+        lengthChange: false,
+        fixedHeader: false,
+        ordering: false,
+      });
+      $("th").removeClass("sorting_asc");
+      if (_tr == "") {
+        $(".dataTables_info").text(
+          settext("dataTables_Showing") +
+            " 0 " +
+            settext("dataTables_to") +
+            " 0 " +
+            settext("dataTables_of") +
+            " 0 " +
+            settext("dataTables_entries") +
+            ""
+        );
+      }
     },
   });
 }
