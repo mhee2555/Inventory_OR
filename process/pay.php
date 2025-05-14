@@ -1569,13 +1569,13 @@ function oncheck_pay_manual($conn, $db)
                     if ($count_new_item  == 0) {
     
                         if ($db == 1) {
-                            $queryInsert = "INSERT INTO deproomdetail ( DocNo, ItemCode, Qty, IsStatus, PayDate, IsCancel, ModifyUser, ModifyTime )
+                            $queryInsert = "INSERT INTO deproomdetail ( DocNo, ItemCode, Qty, IsStatus, PayDate, IsCancel, ModifyUser, ModifyTime ,Ismanual)
                                             VALUES
-                                                ( '$input_docNo_deproom_manual', '$_ItemCode', '1', 0,NOW(), 0, '$Userid',NOW() )";
+                                                ( '$input_docNo_deproom_manual', '$_ItemCode', '1', 0,NOW(), 0, '$Userid',NOW() ,1)";
                         } else {
-                            $queryInsert = "INSERT INTO deproomdetail ( DocNo, ItemCode, Qty, IsStatus, PayDate, IsCancel, ModifyUser, ModifyTime )
+                            $queryInsert = "INSERT INTO deproomdetail ( DocNo, ItemCode, Qty, IsStatus, PayDate, IsCancel, ModifyUser, ModifyTime  ,Ismanual)
                                             VALUES
-                                                ( '$input_docNo_deproom_manual', '$_ItemCode', '1', 0, GETDATE(), 0, '$Userid',GETDATE())";
+                                                ( '$input_docNo_deproom_manual', '$_ItemCode', '1', 0, GETDATE(), 0, '$Userid',GETDATE(),1)";
                         }
     
     
@@ -2045,9 +2045,9 @@ function oncheck_pay_manual($conn, $db)
         
                             if ($count_new_item  == 0) {
         
-                                $queryInsert = "INSERT INTO deproomdetail ( DocNo, ItemCode, Qty, IsStatus, PayDate, IsCancel, ModifyUser, ModifyTime )
+                                $queryInsert = "INSERT INTO deproomdetail ( DocNo, ItemCode, Qty, IsStatus, PayDate, IsCancel, ModifyUser, ModifyTime ,Ismanual)
                                                 VALUES
-                                                    ( '$input_docNo_deproom_manual', '$_ItemCode', '1', 0,NOW(), 0, '$Userid',NOW() )";
+                                                    ( '$input_docNo_deproom_manual', '$_ItemCode', '1', 0,NOW(), 0, '$Userid',NOW() ,1)";
         
         
         
@@ -6106,7 +6106,8 @@ function show_detail_item_ByDocNo($conn, $db)
                 IFNULL((
 				SELECT SUM(deproomdetailsub.qty_weighing) FROM deproomdetailsub WHERE deproomdetailsub.Deproomdetail_RowID = deproomdetail.ID
 				),0) AS cnt_pay,
-                itemtype.TyeName
+                itemtype.TyeName,
+                deproomdetail.Ismanual
             FROM
                 deproom
                 INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
@@ -6246,7 +6247,8 @@ function show_detail_deproom_pay($conn, $db)
                             deproom.doctor AS doctorHN,
                             deproom.`procedure` AS procedureHN,
                             deproom.number_box,
-                            deproom.IsConfirm_pay
+                            deproom.IsConfirm_pay,
+	                        SUM( deproomdetail.IsManual ) AS IsManual
                         FROM
                             deproom
                         LEFT JOIN
@@ -6333,27 +6335,27 @@ function show_detail_deproom_pay($conn, $db)
             $DocNo_ = $row_sub['DocNo'];
 
             $check_q = 0;
-            // $querych = "SELECT
-            //                 deproomdetail.ID,
-            //                 SUM( deproomdetail.Qty ) AS cnt,
-            //                 IFNULL(( SELECT SUM( deproomdetailsub.qty_weighing ) FROM deproomdetailsub WHERE deproomdetailsub.Deproomdetail_RowID = deproomdetail.ID ), 0 ) AS cnt_pay 
-            //             FROM
-            //                 deproom
-            //                 INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo 
-            //             WHERE
-            //                 deproom.DocNo = '$DocNo_' 
-            //                 AND deproom.IsCancel = 0 
-            //                 AND deproomdetail.IsCancel = 0 
-            //             GROUP BY
-            //                 deproomdetail.ID  ";
-            // $meQuerych = $conn->prepare($querych);
-            // $meQuerych->execute();
-            // while ($rowch = $meQuerych->fetch(PDO::FETCH_ASSOC)) {
+            $querych = "SELECT
+                            deproomdetail.ID,
+                            SUM( deproomdetail.Qty ) AS cnt,
+                            IFNULL(( SELECT SUM( deproomdetailsub.qty_weighing ) FROM deproomdetailsub WHERE deproomdetailsub.Deproomdetail_RowID = deproomdetail.ID ), 0 ) AS cnt_pay 
+                        FROM
+                            deproom
+                            INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo 
+                        WHERE
+                            deproom.DocNo = '$DocNo_' 
+                            AND deproom.IsCancel = 0 
+                            AND deproomdetail.IsCancel = 0 
+                        GROUP BY
+                            deproomdetail.ID  ";
+            $meQuerych = $conn->prepare($querych);
+            $meQuerych->execute();
+            while ($rowch = $meQuerych->fetch(PDO::FETCH_ASSOC)) {
 
-            //     if ($rowch['cnt_pay'] < $rowch['cnt']) {
-            //         $check_q++;
-            //     }
-            // }
+                if ($rowch['cnt_pay'] < $rowch['cnt']) {
+                    $check_q++;
+                }
+            }
 
             if ($check_q == 0) {
                 $row_sub['cnt_detail'] = 'ครบ';

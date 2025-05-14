@@ -161,9 +161,9 @@
                                 <thead style="background-color: #cdd6ff;">
                                     <tr>
                                         <th scope="col" class="text-center" id="" style="width: 70%;">รายการ</th>
-                                        <!-- <th scope="col" class="text-center" id="">ขอเบิก</th> -->
+                                        <th scope="col" class="text-center" id="">ขอเบิก</th>
                                         <th scope="col" class="text-center" id="" style="background-color: #9AEAD8;">สแกนจ่าย</th>
-                                        <!-- <th scope="col" class="text-center" id="">คงเหลือ</th> -->
+                                        <th scope="col" class="text-center" id="">คงเหลือ</th>
                                     </tr>
                                 </thead>
                                 <tbody>

@@ -678,6 +678,17 @@ function show_detail_deproom_pay() {
               var sty = ``;
             }
 
+            if (value2.IsManual > 0) {
+              var btn_ = ``;
+            } else {
+              if(value2.cnt_detail == 'ครบ'){
+                var btn_ = `<label class='btn btn-success' id='textstatus_${value2.DocNo}'>${value2.cnt_detail}</label>`;
+              }else{
+                var btn_ = `<label class='btn btn-danger'>${value2.cnt_detail}</label>`;
+              }
+            }
+            
+
             _tr += `<tr class='tr_${value.id} all111' ${sty}>
                           <td class='text-center'>
                             <div class="form-check">
@@ -699,9 +710,9 @@ function show_detail_deproom_pay() {
                           <td>
                             <div class="row">
                               <div class="col-md-3 text-left"> ${tttt}</div>
-                              <div class="col-md-5 text-center">${value2.Procedure_TH}</div>
-                              <div class="col-md-4 text-center">${value2.Doctor_Name}</div>
-
+                              <div class="col-md-4 text-center">${value2.Procedure_TH}</div>
+                              <div class="col-md-3 text-center">${value2.Doctor_Name}</div>
+                              <div class="col-md-2 text-center">${btn_}</div>
                             </div>
                           
                            </td>
@@ -854,56 +865,76 @@ function show_detail_item_ByDocNo() {
             balance = "+" + balance;
           }
 
-          var typename = "";
-          if (value.TyeName == "SUDs") {
-            typename = "danger";
+
+          if(value.Ismanual == 1){
+            value.cnt = 0;
+            balance = 0;
           }
-          if (value.TyeName == "OR Implant") {
-            typename = "primary";
-          }
-          if (value.TyeName == "Sterile") {
-            typename = "success";
-          }
+
           _tr += `<tr>
                       <td>
 
                                   <div class="d-flex align-items-center">
                                     <span class="mr-2">${value.itemname}</span>
-                                    <button class="btn btn-outline-${typename} btn-sm" disabled>${value.TyeName}</button>
+                                    <button class=" btn-sm" disabled>${value.TyeName}</button>
                                   </div>
 
                       
                       </td>
-                      <td hidden class='text-center'><input type='text' class='form-control text-center f18' value="${value.cnt}" disabled id="qty_request_${value.itemcode}"></td>
-                      <td class='text-center' style='background-color:#EEFBF9;'><input type='text' class='form-control text-center f18 loop_item_pay' value="${value.cnt_pay}"  data-itemcode='${value.itemcode}' disabled></td>
-                      <td hidden class='text-center'><input type='text' class='form-control text-center f18 loop_item_balance' disabled value="${balance}" id="balance_request_${value.itemcode}"></td>
+                      <td  class='text-center'><input type='text' class='form-control text-center f18' value="${value.cnt}" disabled id="qty_request_${value.itemcode}"></td>
+                      <td class='text-center' style='background-color:#EEFBF9;'><input type='text' class='form-control text-center f18 loop_item_pay' value="${value.cnt_pay}" data-manual='${value.Ismanual}'  data-itemcode='${value.itemcode}' disabled></td>
+                      <td  class='text-center'><input type='text' class='form-control text-center f18 loop_item_balance' disabled value="${balance}" id="balance_request_${value.itemcode}"></td>
                    </tr>`;
         });
       }
 
       $("#table_deproom_DocNo_pay tbody").html(_tr);
 
-      var check_q = 0;
-      $(".loop_item_pay").each(function (key_, value_) {
-        var qP = parseInt($(this).val());
-        if (qP < $("#qty_request_" + $(this).data("itemcode")).val()) {
-          check_q++;
-        }
-      });
 
-      if (check_q == 0) {
-        $("#text_balance_" + $("#input_Hn_pay").data("docno")).text("ครบ");
-        $("#text_balance_" + $("#input_Hn_pay").data("docno")).css(
-          "color",
-          "#00bf63"
-        );
-      } else {
-        $("#text_balance_" + $("#input_Hn_pay").data("docno")).text("ค้าง");
-        $("#text_balance_" + $("#input_Hn_pay").data("docno")).css(
-          "color",
-          "#ed1c24"
-        );
-      }
+      setTimeout(() => {
+        var check_q = 0;
+        $(".loop_item_pay").each(function (key_, value_) {
+          var qP = parseInt($(this).val());
+          // alert(qP);
+          if (qP < $("#qty_request_" + $(this).data("itemcode")).val()) {
+            check_q++;
+          }
+        });
+  
+        if (check_q == 0) {
+          $("#textstatus_" + $("#input_Hn_pay").data("docno")).text("ครบ");
+          $("#textstatus_" + $("#input_Hn_pay").data("docno")).removeClass('btn-danger');
+          $("#textstatus_" + $("#input_Hn_pay").data("docno")).addClass('btn-success');
+        } else {
+          $("#textstatus_" + $("#input_Hn_pay").data("docno")).text("ค้าง");
+          $("#textstatus_" + $("#input_Hn_pay").data("docno")).addClass('btn-danger');
+          $("#textstatus_" + $("#input_Hn_pay").data("docno")).removeClass('btn-success');
+        }
+      }, 500);
+
+
+
+      // var check_q = 0;
+      // $(".loop_item_pay").each(function (key_, value_) {
+      //   var qP = parseInt($(this).val());
+      //   if (qP < $("#qty_request_" + $(this).data("itemcode")).val()) {
+      //     check_q++;
+      //   }
+      // });
+
+      // if (check_q == 0) {
+      //   $("#text_balance_" + $("#input_Hn_pay").data("docno")).text("ครบ");
+      //   $("#text_balance_" + $("#input_Hn_pay").data("docno")).css(
+      //     "color",
+      //     "#00bf63"
+      //   );
+      // } else {
+      //   $("#text_balance_" + $("#input_Hn_pay").data("docno")).text("ค้าง");
+      //   $("#text_balance_" + $("#input_Hn_pay").data("docno")).css(
+      //     "color",
+      //     "#ed1c24"
+      //   );
+      // }
     },
   });
 }
@@ -1262,25 +1293,50 @@ function oncheck_pay(input_pay) {
             $.each(ObjData, function (key, value) {
               $(".loop_item_pay").each(function (key_, value_) {
                 if ($(this).data("itemcode") == value.ItemCode) {
-                  var _QtyRequest = $("#qty_request_" + value.ItemCode).val();
-                  var _Qty = $(this).val();
 
-                  if (_QtyRequest == _Qty) {
-                    // $("#qty_request_" + value.ItemCode).val(parseInt(_Qty) + 1);
+                  if($(this).data("manual") == 1){
+                    var _Qty = $(this).val();
+                    $(this).val(parseInt(_Qty) + 1);
+                  }else{
+                    var _Qty = $(this).val();
+                    $(this).val(parseInt(_Qty) + 1);
+
+                     _Qty = parseInt(_Qty) + 1
+
+                    var _QtyRequest = $("#qty_request_" + value.ItemCode).val();
+                    if( parseInt(_Qty ) > parseInt(_QtyRequest) ){
+                        var balance = parseInt(_Qty ) - parseInt(_QtyRequest);
+                        balance = "+" + balance;
+                    }else{
+                        var balance = parseInt(_QtyRequest) - parseInt(_Qty );
+                    }
+
+                    $("#balance_request_" + value.ItemCode).val(balance);
+
+                    console.log(balance);
+
                   }
-                  $(this).val(parseInt(_Qty) + 1);
 
-                  var _QtyRequest_2 = $("#qty_request_" + value.ItemCode).val();
-                  var _Qty_2 = $(this).val();
+                    
 
-                  var balance2 = parseInt(_QtyRequest_2) - parseInt(_Qty_2);
-                  if (balance2 < 0) {
-                    // balance2 = 0;
-                    balance2 = parseInt(_Qty_2) - parseInt(_QtyRequest_2);
-                    balance2 = "+" + balance2;
-                  }
 
-                  $("#balance_request_" + value.ItemCode).val(balance2);
+                  // var _QtyRequest = $("#qty_request_" + value.ItemCode).val();
+                  // var _Qty = $(this).val();
+
+                  // if (_QtyRequest == _Qty) {
+                  // }
+                  // $(this).val(parseInt(_Qty) + 1);
+
+                  // var _QtyRequest_2 = $("#qty_request_" + value.ItemCode).val();
+                  // var _Qty_2 = $(this).val();
+
+                  // var balance2 = parseInt(_QtyRequest_2) - parseInt(_Qty_2);
+                  // if (balance2 < 0) {
+                  //   balance2 = parseInt(_Qty_2) - parseInt(_QtyRequest_2);
+                  //   balance2 = "+" + balance2;
+                  // }
+
+                  // $("#balance_request_" + value.ItemCode).val(balance2);
                 }
               });
 
@@ -1294,21 +1350,13 @@ function oncheck_pay(input_pay) {
               });
 
               if (check_q == 0) {
-                $("#text_balance_" + $("#input_Hn_pay").data("docno")).text(
-                  "ครบ"
-                );
-                $("#text_balance_" + $("#input_Hn_pay").data("docno")).css(
-                  "color",
-                  "#00bf63"
-                );
+                $("#textstatus_" + $("#input_Hn_pay").data("docno")).text("ครบ");
+                $("#textstatus_" + $("#input_Hn_pay").data("docno")).removeClass('btn-danger');
+                $("#textstatus_" + $("#input_Hn_pay").data("docno")).addClass('btn-success');
               } else {
-                $("#text_balance_" + $("#input_Hn_pay").data("docno")).text(
-                  "ค้าง"
-                );
-                $("#text_balance_" + $("#input_Hn_pay").data("docno")).css(
-                  "color",
-                  "#ed1c24"
-                );
+                $("#textstatus_" + $("#input_Hn_pay").data("docno")).text("ค้าง");
+                $("#textstatus_" + $("#input_Hn_pay").data("docno")).addClass('btn-danger');
+                $("#textstatus_" + $("#input_Hn_pay").data("docno")).removeClass('btn-success');
               }
             });
           }
@@ -1425,53 +1473,99 @@ function oncheck_Returnpay(input_returnpay) {
           $.each(ObjData, function (key, value) {
             $(".loop_item_pay").each(function (key_, value_) {
               if ($(this).data("itemcode") == value.ItemCode) {
-                var _Qty = $(this).val();
-                // alert(_Qty);
-                $(this).val(parseInt(_Qty) - 1);
 
-                var _QtyRequest_2 = $("#qty_request_" + value.ItemCode).val();
-                var _Qty_2 = $(this).val();
 
-                // var balance2 = parseInt(_QtyRequest_2) - parseInt(_Qty_2);
-                // if (balance2 < 0) {
-                //   balance2 = 0;
-                // }
-                var balance2 = parseInt(_QtyRequest_2) - parseInt(_Qty_2);
-                if (balance2 < 0) {
-                  // balance2 = 0;
-                  balance2 = parseInt(_Qty_2) - parseInt(_QtyRequest_2);
-                  balance2 = "+" + balance2;
+                if($(this).data("manual") == 1){
+                  var _Qty = $(this).val();
+                  $(this).val(parseInt(_Qty) - 1);
+                }else{
+                  var _Qty = $(this).val();
+                  $(this).val(parseInt(_Qty) - 1);
+
+                   _Qty = parseInt(_Qty) - 1
+
+                  var _QtyRequest = $("#qty_request_" + value.ItemCode).val();
+                  if( parseInt(_Qty ) > parseInt(_QtyRequest) ){
+                      var balance = parseInt(_Qty ) - parseInt(_QtyRequest);
+                      balance = "+" + balance;
+                  }else{
+                      var balance = parseInt(_QtyRequest) - parseInt(_Qty );
+                  }
+
+                  $("#balance_request_" + value.ItemCode).val(balance);
+
+                  console.log(balance);
+
                 }
 
-                $("#balance_request_" + value.ItemCode).val(balance2);
+
+                // var _Qty = $(this).val();
+                // // alert(_Qty);
+                // $(this).val(parseInt(_Qty) - 1);
+
+                // var _QtyRequest_2 = $("#qty_request_" + value.ItemCode).val();
+                // var _Qty_2 = $(this).val();
+
+                // // var balance2 = parseInt(_QtyRequest_2) - parseInt(_Qty_2);
+                // // if (balance2 < 0) {
+                // //   balance2 = 0;
+                // // }
+                // var balance2 = parseInt(_QtyRequest_2) - parseInt(_Qty_2);
+                // if (balance2 < 0) {
+                //   // balance2 = 0;
+                //   balance2 = parseInt(_Qty_2) - parseInt(_QtyRequest_2);
+                //   balance2 = "+" + balance2;
+                // }
+
+                // $("#balance_request_" + value.ItemCode).val(balance2);
               }
             });
 
             var check_q = 0;
-            $(".loop_item_balance").each(function (key_, value_) {
-              var qB = parseInt($(this).val());
-              if (qB > 0) {
+            $(".loop_item_pay").each(function (key_, value_) {
+              var qP = parseInt($(this).val());
+              // alert(qP);
+              if (qP < $("#qty_request_" + $(this).data("itemcode")).val()) {
                 check_q++;
               }
             });
 
             if (check_q == 0) {
-              $("#text_balance_" + $("#input_Hn_pay").data("docno")).text(
-                "ครบ"
-              );
-              $("#text_balance_" + $("#input_Hn_pay").data("docno")).css(
-                "color",
-                "#00bf63"
-              );
+              $("#textstatus_" + $("#input_Hn_pay").data("docno")).text("ครบ");
+              $("#textstatus_" + $("#input_Hn_pay").data("docno")).removeClass('btn-danger');
+              $("#textstatus_" + $("#input_Hn_pay").data("docno")).addClass('btn-success');
             } else {
-              $("#text_balance_" + $("#input_Hn_pay").data("docno")).text(
-                "ค้าง"
-              );
-              $("#text_balance_" + $("#input_Hn_pay").data("docno")).css(
-                "color",
-                "#ed1c24"
-              );
+              $("#textstatus_" + $("#input_Hn_pay").data("docno")).text("ค้าง");
+              $("#textstatus_" + $("#input_Hn_pay").data("docno")).addClass('btn-danger');
+              $("#textstatus_" + $("#input_Hn_pay").data("docno")).removeClass('btn-success');
             }
+
+
+            // var check_q = 0;
+            // $(".loop_item_balance").each(function (key_, value_) {
+            //   var qB = parseInt($(this).val());
+            //   if (qB > 0) {
+            //     check_q++;
+            //   }
+            // });
+
+            // if (check_q == 0) {
+            //   $("#text_balance_" + $("#input_Hn_pay").data("docno")).text(
+            //     "ครบ"
+            //   );
+            //   $("#text_balance_" + $("#input_Hn_pay").data("docno")).css(
+            //     "color",
+            //     "#00bf63"
+            //   );
+            // } else {
+            //   $("#text_balance_" + $("#input_Hn_pay").data("docno")).text(
+            //     "ค้าง"
+            //   );
+            //   $("#text_balance_" + $("#input_Hn_pay").data("docno")).css(
+            //     "color",
+            //     "#ed1c24"
+            //   );
+            // }
           });
         }
       }
