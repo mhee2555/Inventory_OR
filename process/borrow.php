@@ -26,7 +26,7 @@ function show_detail_borrow($conn,$db)
                         deproomdetailsub.ID,
                         itemstock.UsageCode,
                         item.itemname,
-                        deproomdetailsub.hn_record_id,
+                        deproom.hn_record_id,
                         deproomdetailsub.hn_record_id_borrow,
                         deproom.number_box
                     FROM
@@ -39,6 +39,7 @@ function show_detail_borrow($conn,$db)
                     WHERE
                         deproomdetailsub.hn_record_id_borrow IS NOT NULL 
                         AND deproomdetailsub.hn_record_id_borrow != ''
+                    ORDER BY  deproomdetailsub.ID DESC
 
     $wheredep ";
     }else{

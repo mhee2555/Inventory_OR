@@ -150,6 +150,7 @@ $(function () {
 
     $("#select_deproom_manual").change(function () {
       set_proceduce($("#select_deproom_manual").val());
+      set_doctor($("#select_deproom_manual").val());
     });
     setTimeout(() => {
       $("#select_doctor_manual").on("select2:select", function (e) {
@@ -166,11 +167,14 @@ $(function () {
 
             $("#row_doctor").append(_row);
 
-            $("#select_doctor_manual").val("").trigger("change");
 
-            set_deproom();
+            if($("#select_deproom_manual").val() == ""){
+              set_deproom();
+            }
           }
         }
+        $("#select_doctor_manual").val("").trigger("change");
+
       });
 
       $("#select_procedure_manual").on("select2:select", function (e) {
@@ -187,9 +191,14 @@ $(function () {
 
             $("#row_procedure").append(_row);
 
-            $("#select_procedure_manual").val("").trigger("change");
+            if($("#select_deproom_manual").val() == ""){
+              set_deproom_proceduce();
+            }
+
           }
         }
+        $("#select_procedure_manual").val("").trigger("change");
+
       });
     }, 500);
 
@@ -679,13 +688,20 @@ function show_detail_deproom_pay() {
             }
 
             if (value2.IsManual > 0) {
-              var btn_ = ``;
+              var txt = "manual";
+              var btn_ = `<label class=' btn btn-block' style='background-color:#673ab7;color:#fff;'>${txt}</label>`;
             } else {
               if(value2.cnt_detail == 'ครบ'){
-                var btn_ = `<label class='btn btn-success' id='textstatus_${value2.DocNo}'>${value2.cnt_detail}</label>`;
+                var txt = "จ่ายแล้วทั้งหมด";
+                var btn_ = `<label class='btn btn-success btn-block' id='textstatus_${value2.DocNo}'>${txt}</label>`;
+              }else if(value2.cnt_detail == 'บางส่วน'){
+                var txt = "จ่ายแล้วบางส่วน";
+                var btn_ = `<label class='btn btn-primary btn-block' id='textstatus_${value2.DocNo}'>${txt}</label>`;
               }else{
-                var btn_ = `<label class='btn btn-danger'>${value2.cnt_detail}</label>`;
+                var txt = "รอดำเนินการ";
+                var btn_ = `<label class='btn btn-danger btn-block'  id='textstatus_${value2.DocNo}'>${txt}</label>`;
               }
+
             }
             
 
@@ -709,10 +725,10 @@ function show_detail_deproom_pay() {
                           </td>
                           <td>
                             <div class="row">
-                              <div class="col-md-3 text-left"> ${tttt}</div>
-                              <div class="col-md-4 text-center">${value2.Procedure_TH}</div>
+                              <div class="col-md-2 text-left"> ${tttt}</div>
+                              <div class="col-md-4 text-left">${value2.Procedure_TH}</div>
                               <div class="col-md-3 text-center">${value2.Doctor_Name}</div>
-                              <div class="col-md-2 text-center">${btn_}</div>
+                              <div class="col-md-3 text-center">${btn_}</div>
                             </div>
                           
                            </td>
@@ -881,7 +897,7 @@ function show_detail_item_ByDocNo() {
 
                       
                       </td>
-                      <td  class='text-center'><input type='text' class='form-control text-center f18' value="${value.cnt}" disabled id="qty_request_${value.itemcode}"></td>
+                      <td  class='text-center' ><input type='text' class='form-control text-center f18' value="${value.cnt}" disabled id="qty_request_${value.itemcode}"></td>
                       <td class='text-center' style='background-color:#EEFBF9;'><input type='text' class='form-control text-center f18 loop_item_pay' value="${value.cnt_pay}" data-manual='${value.Ismanual}'  data-itemcode='${value.itemcode}' disabled></td>
                       <td  class='text-center'><input type='text' class='form-control text-center f18 loop_item_balance' disabled value="${balance}" id="balance_request_${value.itemcode}"></td>
                    </tr>`;
@@ -893,23 +909,55 @@ function show_detail_item_ByDocNo() {
 
       setTimeout(() => {
         var check_q = 0;
+        var check_all = 0;
+        var hasRows = false; 
+
         $(".loop_item_pay").each(function (key_, value_) {
+          hasRows = true;
           var qP = parseInt($(this).val());
           // alert(qP);
           if (qP < $("#qty_request_" + $(this).data("itemcode")).val()) {
+
+
             check_q++;
           }
+          if(qP > 0){
+            check_all = 1;
+          }
         });
-  
-        if (check_q == 0) {
-          $("#textstatus_" + $("#input_Hn_pay").data("docno")).text("ครบ");
-          $("#textstatus_" + $("#input_Hn_pay").data("docno")).removeClass('btn-danger');
-          $("#textstatus_" + $("#input_Hn_pay").data("docno")).addClass('btn-success');
-        } else {
-          $("#textstatus_" + $("#input_Hn_pay").data("docno")).text("ค้าง");
+
+        if (hasRows == false ) {
+          console.log('111');
+          $("#textstatus_" + $("#input_Hn_pay").data("docno")).text("รอดำเนินการ");
           $("#textstatus_" + $("#input_Hn_pay").data("docno")).addClass('btn-danger');
           $("#textstatus_" + $("#input_Hn_pay").data("docno")).removeClass('btn-success');
+          $("#textstatus_" + $("#input_Hn_pay").data("docno")).removeClass('btn-primary');
+        }else{
+          if (check_q == 0) {
+            console.log('222');
+            $("#textstatus_" + $("#input_Hn_pay").data("docno")).text("จ่ายแล้วทั้งหมด");
+            $("#textstatus_" + $("#input_Hn_pay").data("docno")).removeClass('btn-danger');
+            $("#textstatus_" + $("#input_Hn_pay").data("docno")).removeClass('btn-primary');
+            $("#textstatus_" + $("#input_Hn_pay").data("docno")).addClass('btn-success');
+          } else {
+            if(check_all == 1){
+              console.log('333');
+              $("#textstatus_" + $("#input_Hn_pay").data("docno")).text("จ่ายแล้วบางส่วน");
+              $("#textstatus_" + $("#input_Hn_pay").data("docno")).addClass('btn-primary');
+              $("#textstatus_" + $("#input_Hn_pay").data("docno")).removeClass('btn-success');
+              $("#textstatus_" + $("#input_Hn_pay").data("docno")).removeClass('btn-danger');
+            }else{
+              console.log('444');
+              $("#textstatus_" + $("#input_Hn_pay").data("docno")).text("รอดำเนินการ");
+              $("#textstatus_" + $("#input_Hn_pay").data("docno")).addClass('btn-danger');
+              $("#textstatus_" + $("#input_Hn_pay").data("docno")).removeClass('btn-success');
+              $("#textstatus_" + $("#input_Hn_pay").data("docno")).removeClass('btn-primary');
+            }
+  
+          }
         }
+  
+
       }, 500);
 
 
@@ -1339,24 +1387,45 @@ function oncheck_pay(input_pay) {
                   // $("#balance_request_" + value.ItemCode).val(balance2);
                 }
               });
-
               var check_q = 0;
+              var check_all = 0;
               $(".loop_item_pay").each(function (key_, value_) {
                 var qP = parseInt($(this).val());
                 // alert(qP);
                 if (qP < $("#qty_request_" + $(this).data("itemcode")).val()) {
                   check_q++;
                 }
+                if(qP > 0){
+                  check_all = 1;
+                }
               });
-
+        
               if (check_q == 0) {
-                $("#textstatus_" + $("#input_Hn_pay").data("docno")).text("ครบ");
+                $("#textstatus_" + $("#input_Hn_pay").data("docno")).text("จ่ายแล้วทั้งหมด");
                 $("#textstatus_" + $("#input_Hn_pay").data("docno")).removeClass('btn-danger');
+                $("#textstatus_" + $("#input_Hn_pay").data("docno")).removeClass('btn-primary');
                 $("#textstatus_" + $("#input_Hn_pay").data("docno")).addClass('btn-success');
               } else {
-                $("#textstatus_" + $("#input_Hn_pay").data("docno")).text("ค้าง");
-                $("#textstatus_" + $("#input_Hn_pay").data("docno")).addClass('btn-danger');
-                $("#textstatus_" + $("#input_Hn_pay").data("docno")).removeClass('btn-success');
+                if(check_all == 1){
+                  $("#textstatus_" + $("#input_Hn_pay").data("docno")).text("จ่ายแล้วบางส่วน");
+                  $("#textstatus_" + $("#input_Hn_pay").data("docno")).addClass('btn-primary');
+                  $("#textstatus_" + $("#input_Hn_pay").data("docno")).removeClass('btn-success');
+                  $("#textstatus_" + $("#input_Hn_pay").data("docno")).removeClass('btn-danger');
+
+                  console.log('11111');
+                }else{
+
+                  console.log('00000');
+
+                  $("#textstatus_" + $("#input_Hn_pay").data("docno")).text("รอดำเนินการ");
+                  $("#textstatus_" + $("#input_Hn_pay").data("docno")).addClass('btn-danger');
+                  $("#textstatus_" + $("#input_Hn_pay").data("docno")).removeClass('btn-success');
+                  $("#textstatus_" + $("#input_Hn_pay").data("docno")).removeClass('btn-primary');
+                }
+
+
+                
+                
               }
             });
           }
@@ -1522,22 +1591,36 @@ function oncheck_Returnpay(input_returnpay) {
             });
 
             var check_q = 0;
+            var check_all = 0;
             $(".loop_item_pay").each(function (key_, value_) {
               var qP = parseInt($(this).val());
               // alert(qP);
               if (qP < $("#qty_request_" + $(this).data("itemcode")).val()) {
                 check_q++;
               }
+              if(qP > 0){
+                check_all = 1;
+              }
             });
-
+      
             if (check_q == 0) {
-              $("#textstatus_" + $("#input_Hn_pay").data("docno")).text("ครบ");
+              $("#textstatus_" + $("#input_Hn_pay").data("docno")).text("จ่ายแล้วทั้งหมด");
               $("#textstatus_" + $("#input_Hn_pay").data("docno")).removeClass('btn-danger');
+              $("#textstatus_" + $("#input_Hn_pay").data("docno")).removeClass('btn-primary');
               $("#textstatus_" + $("#input_Hn_pay").data("docno")).addClass('btn-success');
             } else {
-              $("#textstatus_" + $("#input_Hn_pay").data("docno")).text("ค้าง");
-              $("#textstatus_" + $("#input_Hn_pay").data("docno")).addClass('btn-danger');
-              $("#textstatus_" + $("#input_Hn_pay").data("docno")).removeClass('btn-success');
+              if(check_all == 1){
+                $("#textstatus_" + $("#input_Hn_pay").data("docno")).text("จ่ายแล้วบางส่วน");
+                $("#textstatus_" + $("#input_Hn_pay").data("docno")).addClass('btn-primary');
+                $("#textstatus_" + $("#input_Hn_pay").data("docno")).removeClass('btn-success');
+                $("#textstatus_" + $("#input_Hn_pay").data("docno")).removeClass('btn-danger');
+              }else{
+                $("#textstatus_" + $("#input_Hn_pay").data("docno")).text("รอดำเนินการ");
+                $("#textstatus_" + $("#input_Hn_pay").data("docno")).addClass('btn-danger');
+                $("#textstatus_" + $("#input_Hn_pay").data("docno")).removeClass('btn-success');
+                $("#textstatus_" + $("#input_Hn_pay").data("docno")).removeClass('btn-primary');
+              }
+    
             }
 
 
@@ -1699,7 +1782,7 @@ function show_detail_history() {
           if (value.cnt_pay > 0) {
             var hidden = `<button ${hidden} class='btn f18' style='background-color:#643695;color:#fff;' onclick='show_Report("${value.DocNo }")'>รายงาน</button>`;
           } else {
-            var hidden = "รอดำเนินการ";
+            var hidden = `<button ${hidden} class='btn f18 btn-primary' style='color:#fff;'>รอดำเนินการ</button>`;
           }
 
           if (value.hn_record_id == "") {
@@ -2332,6 +2415,54 @@ function set_deproom2() {
         option = `<option value="0">ไม่มีข้อมูล</option>`;
       }
       $("#select_deproom_editHN").html(option);
+    },
+  });
+}
+
+function set_deproom_proceduce() {
+  $.ajax({
+    url: "process/process_main/select_main.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "set_deproom_proceduce",
+      procedure_id_Array: procedure_id_Array,
+    },
+    success: function (result) {
+      var ObjData = JSON.parse(result);
+      console.log(ObjData);
+      var option = `<option value="" selected>กรุณาเลือกห้องผ่าตัด</option>`;
+      if (!$.isEmptyObject(ObjData)) {
+        $.each(ObjData, function (kay, value) {
+          option += `<option value="${value.id}" >${value.departmentroomname}</option>`;
+        });
+      } else {
+        option = `<option value="0">ไม่มีข้อมูล</option>`;
+      }
+      $("#select_deproom_manual").html(option);
+    },
+  });
+}
+
+function set_doctor(select_deproom_request) {
+  $.ajax({
+    url: "process/process_main/select_main.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "set_doctor",
+      select_deproom_request: select_deproom_request,
+    },
+    success: function (result) {
+      var ObjData = JSON.parse(result);
+      console.log(ObjData);
+      var option = `<option value="" selected>กรุณาเลือกแพทย์</option>`;
+      if (!$.isEmptyObject(ObjData)) {
+        $.each(ObjData, function (kay, value) {
+          option += `<option value="${value.ID}" >${value.Doctor_Name}</option>`;
+        });
+      } else {
+        option = `<option value="0">ไม่มีข้อมูล</option>`;
+      }
+      $("#select_doctor_manual").html(option);
     },
   });
 }

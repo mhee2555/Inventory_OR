@@ -137,6 +137,7 @@ $(function () {
 
   $("#select_deproom_request").change(function () {
     set_proceduce($("#select_deproom_request").val());
+    set_doctor($("#select_deproom_request").val());
   });
   $("#select_deproom_history").change(function () {
     show_detail_history();
@@ -166,8 +167,13 @@ $(function () {
 
         $("#row_procedure").append(_row);
 
-        $("#select_procedure_request").val("").trigger("change");
+
+        if($("#select_deproom_request").val() == ""){
+          set_deproom_proceduce();
+        }
       }
+      $("#select_procedure_request").val("").trigger("change");
+
     }
   });
 
@@ -185,12 +191,17 @@ $(function () {
 
         $("#row_doctor").append(_row);
 
-        $("#select_doctor_request").val("").trigger("change");
 
-        set_deproom();
+        if($("#select_deproom_request").val() == ""){
+          set_deproom();
+        }
       }
+      $("#select_doctor_request").val("").trigger("change");
     }
   });
+
+
+  
 });
 
 // create_Request
@@ -250,6 +261,17 @@ function Deletprocedure(selectedValue) {
   $(".div_" + selectedValue).attr("hidden", true);
 }
 
+function showLoading() {
+  $("body").loadingModal({
+    position: "auto",
+    text: "กำลังโหลด...",
+    color: "#fff",
+    opacity: "0.7",
+    backgroundColor: "rgb(0,0,0)",
+    animation: "threeBounce",
+  });
+}
+
 $("#btn_routine").click(function () {
 
 
@@ -284,7 +306,7 @@ $("#btn_routine").click(function () {
     showDialogFailed("กรุณาเลือกหัตถการ");
     return;
   }
-
+  $("#btn_routine").attr('disabled',true);
   $.ajax({
     url: "process/create_request.php",
     type: "POST",
@@ -297,6 +319,10 @@ $("#btn_routine").click(function () {
     success: function (result) {
       var ObjData = JSON.parse(result);
       if (!$.isEmptyObject(ObjData)) {
+
+        showLoading();
+
+
         $.each(ObjData, function (kay, value) {
           itemcode_array.push(value.itemcode.toString());
           qty_array.push(value.qty.toString());
@@ -314,10 +340,11 @@ $("#btn_routine").click(function () {
           success: function (result) {
 
 
+
             array_itemcode = [];
             array_qty = [];
 
-            
+            $("body").loadingModal("destroy");
             $("#btn_routine").attr('disabled',true);
 
             var ObjData = JSON.parse(result);
@@ -333,6 +360,7 @@ $("#btn_routine").click(function () {
         });
       }else{
       showDialogFailed("ไม่พบ Routine");
+      $("#btn_routine").attr('disabled',false);
       }
     },
   });
@@ -448,6 +476,15 @@ $("#btn_confirm_send_request").click(function () {
     showDialogFailed("กรุณาเลือกหัตถการ");
     return;
   }
+
+  let table = $('#table_item_detail_request').DataTable(); // อ้างอิง DataTable instance
+  let rowCount = table.rows({ filter: 'applied' }).count(); // นับแถวที่ยังแสดงอยู่ (ไม่ถูก filter)
+
+  if (rowCount === 0) {
+    showDialogFailed("กรุณาเพิ่มออุปกรณ์");
+    return;
+  }
+
 
   Swal.fire({
     title: "ยืนยัน",
@@ -1110,6 +1147,23 @@ function edit_item_byDocNo(
   text_edit,
   serviceTime
 ) {
+
+
+  $(".clear_doctor").attr("hidden", true);
+  doctor_Array = [];
+
+  $("#select_deproom_request").val("");
+  $("#select2-select_deproom_request-container").text(
+    "กรุณาเลือกห้องผ่าตัด"
+  );
+
+  $("#select_procedure_request").val("");
+  $("#select2-select_procedure_request-container").text(
+    "กรุณาเลือกหัตถการ"
+  );
+  $(".clear_procedure").attr("hidden", true);
+  procedure_id_Array = [];
+
   $("#radio_create_request").click();
 
   $("#txt_docno_request").val(DocNo);
@@ -1138,7 +1192,7 @@ function edit_item_byDocNo(
       if (!$.isEmptyObject(ObjData)) {
         var _row = "";
         $.each(ObjData, function (kay, value) {
-          doctor_Array.push(value.ID);
+          doctor_Array.push(value.ID.toString());
           _row += `       <div  class='div_${value.ID} pl-3 clear_doctor' onclick='DeleteDoctor(${value.ID})'>
                               <label for="" class="custom-label">${value.Doctor_Name}</label>
                           </div> `;
@@ -1160,7 +1214,7 @@ function edit_item_byDocNo(
       if (!$.isEmptyObject(ObjData)) {
         var _row = "";
         $.each(ObjData, function (kay, value) {
-          procedure_id_Array.push(value.ID);
+          procedure_id_Array.push(value.ID.toString());
 
           _row += `       <div  class='div_${value.ID} pl-3 clear_doctor' onclick='DeleteDoctor(${value.ID})'>
                               <label for="" class="custom-label">${value.Procedure_TH}</label>
@@ -1203,6 +1257,53 @@ function set_proceduce(select_deproom_request) {
         option = `<option value="0">ไม่มีข้อมูล</option>`;
       }
       $("#select_procedure_request").html(option);
+    },
+  });
+}
+
+function set_doctor(select_deproom_request) {
+  $.ajax({
+    url: "process/process_main/select_main.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "set_doctor",
+      select_deproom_request: select_deproom_request,
+    },
+    success: function (result) {
+      var ObjData = JSON.parse(result);
+      console.log(ObjData);
+      var option = `<option value="" selected>กรุณาเลือกแพทย์</option>`;
+      if (!$.isEmptyObject(ObjData)) {
+        $.each(ObjData, function (kay, value) {
+          option += `<option value="${value.ID}" >${value.Doctor_Name}</option>`;
+        });
+      } else {
+        option = `<option value="0">ไม่มีข้อมูล</option>`;
+      }
+      $("#select_doctor_request").html(option);
+    },
+  });
+}
+function set_deproom_proceduce() {
+  $.ajax({
+    url: "process/process_main/select_main.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "set_deproom_proceduce",
+      procedure_id_Array: procedure_id_Array,
+    },
+    success: function (result) {
+      var ObjData = JSON.parse(result);
+      console.log(ObjData);
+      var option = `<option value="" selected>กรุณาเลือกห้องผ่าตัด</option>`;
+      if (!$.isEmptyObject(ObjData)) {
+        $.each(ObjData, function (kay, value) {
+          option += `<option value="${value.id}" >${value.departmentroomname}</option>`;
+        });
+      } else {
+        option = `<option value="0">ไม่มีข้อมูล</option>`;
+      }
+      $("#select_deproom_request").html(option);
     },
   });
 }

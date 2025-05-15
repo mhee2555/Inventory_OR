@@ -880,7 +880,8 @@ function show_detail_history($conn, $db)
                         $whereP
                         $whereR
                         $whereHN
-                    GROUP BY deproom.DocNo ";
+                    GROUP BY deproom.DocNo
+                    ORDER BY deproom.ModifyDate DESC ";
     } else {
 
         $whereD = "";
@@ -6335,6 +6336,10 @@ function show_detail_deproom_pay($conn, $db)
             $DocNo_ = $row_sub['DocNo'];
 
             $check_q = 0;
+            $check_all = 0;
+            $check_data = 0;
+
+            $hasRows = false; // ตัวแปรสำหรับเช็คว่ามีข้อมูลหรือไม่
             $querych = "SELECT
                             deproomdetail.ID,
                             SUM( deproomdetail.Qty ) AS cnt,
@@ -6352,16 +6357,37 @@ function show_detail_deproom_pay($conn, $db)
             $meQuerych->execute();
             while ($rowch = $meQuerych->fetch(PDO::FETCH_ASSOC)) {
 
+                $hasRows = true;
+
                 if ($rowch['cnt_pay'] < $rowch['cnt']) {
                     $check_q++;
                 }
+
+                if($rowch['cnt_pay'] > 0){
+                    $check_all = 1000;
+                }
             }
 
-            if ($check_q == 0) {
-                $row_sub['cnt_detail'] = 'ครบ';
-            } else {
-                $row_sub['cnt_detail'] = 'ค้าง';
+
+            if (!$hasRows) {
+                $check_data = 1;
             }
+            if($check_data == 1){
+                $row_sub['cnt_detail'] = 'ค้าง';
+            }else{
+                if ($check_q == 0) {
+                    $row_sub['cnt_detail'] = 'ครบ';
+                } else {
+                    if($check_all == 1000){
+                        $row_sub['cnt_detail'] = 'บางส่วน';
+                    }else{
+                        $row_sub['cnt_detail'] = 'ค้าง';
+                    }
+                }
+    
+      
+            }
+
 
 
             $return[$_id][] = $row_sub;

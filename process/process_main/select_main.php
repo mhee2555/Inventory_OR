@@ -27,6 +27,10 @@ if (!empty($_POST['FUNC_NAME'])) {
         set_users($conn);
     } else if ($_POST['FUNC_NAME'] == 'select_item') {
         select_item($conn);
+    } else if ($_POST['FUNC_NAME'] == 'set_doctor') {
+        set_doctor($conn);
+    } else if ($_POST['FUNC_NAME'] == 'set_deproom_proceduce') {
+        set_deproom_proceduce($conn);
     }
 }
 
@@ -58,6 +62,74 @@ function set_users($conn)
     die;
 }
 
+
+function set_doctor($conn)
+{
+    $return = array();
+
+
+
+    $select_deproom_request = $_POST['select_deproom_request'];
+
+    if ($select_deproom_request != "") {
+        $doctor_ids = "";
+        $count_doctor = 0;
+        $select = " SELECT GROUP_CONCAT(doctor_id SEPARATOR ', ') AS doctor_ids FROM mapping_doctor WHERE mapping_doctor.departmentroom_id IN( $select_deproom_request )  ";
+        $meQuery_select = $conn->prepare($select);
+        $meQuery_select->execute();
+
+        $doctor_ids = $meQuery_select->fetchColumn();
+
+        if ($doctor_ids) {
+
+            $query = " SELECT
+                                ID,
+                                Doctor_Name 
+                            FROM
+                                `doctor` 
+                            WHERE `doctor`.ID IN ($doctor_ids)
+                            AND `doctor`.IsActive = 1
+                            ORDER BY
+                                Doctor_Name ASC  ";
+        } else {
+            $query = " SELECT
+                                ID,
+                                Doctor_Name 
+                            FROM
+                                `doctor` 
+                            WHERE `doctor`.IsActive = 1
+                            ORDER BY
+                                Doctor_Name ASC  ";
+        }
+    } else {
+        $query = " SELECT
+                        ID,
+                        Doctor_Name 
+                    FROM
+                        `doctor` 
+                    WHERE `doctor`.IsActive = 1
+                    ORDER BY
+                        Doctor_Name ASC  ";
+    }
+
+
+
+
+
+
+
+
+
+    $meQuery = $conn->prepare($query);
+    $meQuery->execute();
+    while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+        $return[] = $row;
+    }
+    echo json_encode($return);
+    unset($conn);
+    die;
+}
+
 function set_proceduce($conn)
 {
     $return = array();
@@ -74,6 +146,8 @@ function set_proceduce($conn)
         $meQuery_select->execute();
 
         $procedure_ids = $meQuery_select->fetchColumn();
+
+ 
 
         if ($procedure_ids) {
 
@@ -102,8 +176,7 @@ function set_proceduce($conn)
                         Procedure_TH 
                     FROM
                         `procedure` 
-                    WHERE `procedure`.ID IN ('')
-                    AND `procedure`.IsActive = 1
+                    WHERE `procedure`.IsActive = 1
                     ORDER BY
                         Procedure_TH ASC  ";
     }
@@ -126,11 +199,73 @@ function set_proceduce($conn)
     die;
 }
 
+function set_deproom_proceduce($conn)
+{
+    $return = array();
+
+    $procedure_id_Array = "''";
+    if (isset($_POST['procedure_id_Array'])) {
+        $procedure_id_Array = $_POST['procedure_id_Array'];
+        $procedure_id_Array = implode(",", $procedure_id_Array);
+    }
+
+
+
+    $departmentroom_ids = "";
+    $count_doctor = 0;
+    $select = " SELECT GROUP_CONCAT(departmentroom_id SEPARATOR ', ') AS departmentroom_ids FROM mapping_departmentroom WHERE mapping_departmentroom.procedure_id IN( $procedure_id_Array )  ";
+
+   
+    $meQuery_select = $conn->prepare($select);
+    $meQuery_select->execute();
+
+
+
+    if($procedure_id_Array != "''"){
+        $departmentroom_ids = $meQuery_select->fetchColumn();
+    }
+
+    if ($departmentroom_ids) {
+        $query = "SELECT
+                        departmentroom.id,
+                        departmentroom.departmentroomname 
+                    FROM
+                        departmentroom
+                    WHERE departmentroom.id IN ($departmentroom_ids)
+                    AND  departmentroom.IsActive = 1
+                    ORDER BY departmentroomname ";
+    } else {
+        $query = "SELECT
+                            departmentroom.id,
+                            departmentroom.departmentroomname 
+                        FROM
+                            departmentroom
+                        WHERE departmentroom.IsMainroom = 0
+                        AND  departmentroom.IsActive = 1
+                        ORDER BY departmentroomname ";
+    }
+
+
+
+
+
+
+
+
+    $meQuery = $conn->prepare($query);
+    $meQuery->execute();
+    while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+        $return[] = $row;
+    }
+    echo json_encode($return);
+    unset($conn);
+    die;
+}
 function set_deproom($conn)
 {
     $return = array();
 
-    $doctor_Array = " ''  ";
+    $doctor_Array = "''";
     if (isset($_POST['doctor_Array'])) {
         $doctor_Array = $_POST['doctor_Array'];
         $doctor_Array = implode(",", $doctor_Array);
@@ -142,11 +277,15 @@ function set_deproom($conn)
     $count_doctor = 0;
     $select = " SELECT GROUP_CONCAT(departmentroom_id SEPARATOR ', ') AS departmentroom_ids FROM mapping_doctor WHERE mapping_doctor.doctor_id IN( $doctor_Array )  ";
 
+   
     $meQuery_select = $conn->prepare($select);
     $meQuery_select->execute();
 
 
-    $departmentroom_ids = $meQuery_select->fetchColumn();
+
+    if($doctor_Array != "''"){
+        $departmentroom_ids = $meQuery_select->fetchColumn();
+    }
 
     if ($departmentroom_ids) {
         $query = "SELECT
