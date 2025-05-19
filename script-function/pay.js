@@ -35,6 +35,13 @@ $(function () {
     onSelect: function (date) {},
   });
 
+  $("#select_date_history_return").val(output);
+  $("#select_date_history_return").datepicker({
+    onSelect: function (date) {
+      feeddata_history_Return();
+    },
+  });
+
   $("#select_date_pay").val(output);
   $("#select_date_pay").datepicker({
     onSelect: function (date) {
@@ -238,9 +245,48 @@ $(function () {
     $("#return").show();
     $("#pay_manual").hide();
 
+
+    
+    $("#row_history_return").hide();
+
+    $("#radio_return").css("color", "#bbbbb");
+    $("#radio_return").css("background", "#EAE1F4");
+
     feeddata_waitReturn();
     // feeddataClaim();
   });
+
+
+  $("#radio_return").click(function () {
+    $("#radio_return").css("color", "#bbbbb");
+    $("#radio_return").css("background", "#EAE1F4");
+    $("#radio_history_return").css("color", "black");
+    $("#radio_history_return").css("background", "");
+    
+
+    $("#row_return").show();
+    $("#row_history_return").hide();
+
+    feeddata_waitReturn();
+    // feeddataClaim();
+  });
+
+  $("#radio_history_return").click(function () {
+    $("#radio_history_return").css("color", "#bbbbb");
+    $("#radio_history_return").css("background", "#EAE1F4");
+    $("#radio_return").css("color", "black");
+    $("#radio_return").css("background", "");
+    
+    $("#row_return").hide();
+    $("#row_history_return").show();
+
+    feeddata_history_Return();
+    // feeddata_waitReturn();
+    // feeddataClaim();
+  });
+
+
+
 
   $("#radio_history_pay").click(function () {
     $("#radio_history_pay").css("color", "#bbbbb");
@@ -616,7 +662,11 @@ function DeleteDoctor(selectedValue) {
   console.log(doctor_Array);
   $(".div_" + selectedValue).attr("hidden", true);
 
-  set_deproom();
+    set_deproom();
+    select_doctor();
+    select_procedure();
+    $(".clear_procedure").attr("hidden", true);
+    procedure_id_Array = [];
   show_detail_history();
 }
 
@@ -882,7 +932,7 @@ function show_detail_item_ByDocNo() {
           }
 
 
-          if(value.Ismanual == 1){
+          if(value.Ismanual == 1 || value.IsRequest == 1 ){
             value.cnt = 0;
             balance = 0;
           }
@@ -898,7 +948,7 @@ function show_detail_item_ByDocNo() {
                       
                       </td>
                       <td  class='text-center' ><input type='text' class='form-control text-center f18' value="${value.cnt}" disabled id="qty_request_${value.itemcode}"></td>
-                      <td class='text-center' style='background-color:#EEFBF9;'><input type='text' class='form-control text-center f18 loop_item_pay' value="${value.cnt_pay}" data-manual='${value.Ismanual}'  data-itemcode='${value.itemcode}' disabled></td>
+                      <td class='text-center' style='background-color:#EEFBF9;'><input type='text' class='form-control text-center f18 loop_item_pay' value="${value.cnt_pay}" data-request='${value.IsRequest}'  data-manual='${value.Ismanual}'   data-itemcode='${value.itemcode}' disabled></td>
                       <td  class='text-center'><input type='text' class='form-control text-center f18 loop_item_balance' disabled value="${balance}" id="balance_request_${value.itemcode}"></td>
                    </tr>`;
         });
@@ -1359,7 +1409,13 @@ function oncheck_pay(input_pay) {
                         var balance = parseInt(_QtyRequest) - parseInt(_Qty );
                     }
 
-                    $("#balance_request_" + value.ItemCode).val(balance);
+              
+               
+              
+                if ($(this).data("request") == '0' && $(this).data("manual") == '0') {
+                      $("#balance_request_" + value.ItemCode).val(balance);
+                }
+                    
 
                     console.log(balance);
 
@@ -1561,7 +1617,11 @@ function oncheck_Returnpay(input_returnpay) {
                       var balance = parseInt(_QtyRequest) - parseInt(_Qty );
                   }
 
-                  $("#balance_request_" + value.ItemCode).val(balance);
+
+                  if ($(this).data("request") == '0' && $(this).data("manual") == '0') {
+                      $("#balance_request_" + value.ItemCode).val(balance);
+                  }
+                    
 
                   console.log(balance);
 
@@ -2131,6 +2191,43 @@ $("#input_scan_return").keypress(function (e) {
     });
   }
 });
+
+
+$("#input_search_history_return").keyup(function (e) {
+  feeddata_history_Return();
+});
+function feeddata_history_Return() {
+  $.ajax({
+    url: "process/pay.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "feeddata_history_Return",
+      input_search_history_return: $("#input_search_history_return").val(),
+      select_date_history_return: $("#select_date_history_return").val(),
+    },
+    success: function (result) {
+      // $("#table_item_claim").DataTable().destroy();
+      $("#table_history_return tbody").html("");
+      var ObjData = JSON.parse(result);
+      if (!$.isEmptyObject(ObjData)) {
+        var _tr = ``;
+        var allpage = 0;
+        $.each(ObjData, function (kay, value) {
+            _tr +=
+              `<tr> ` +
+              `<td class="text-center">${kay + 1}</td>` +
+              `<td class="text-center">${value.UsageCode}</td>` +
+              `<td class="text-center">${value.itemname}</td>` +
+              `<td class="text-left">${value.FirstName}</td>` +
+              `<td class="text-center">${value.hncode}</td>` +
+              ` </tr>`;
+        });
+
+        $("#table_history_return tbody").html(_tr);
+      }
+    },
+  });
+}
 
 function feeddata_waitReturn() {
   $.ajax({

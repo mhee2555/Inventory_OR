@@ -26,6 +26,8 @@ if (!empty($_POST['FUNC_NAME'])) {
         delete_request_qty($conn,$db);
     }  else if ($_POST['FUNC_NAME'] == 'check_routine') {
         check_routine($conn,$db);
+    }  else if ($_POST['FUNC_NAME'] == 'update_isCancel') {
+        update_isCancel($conn,$db);
     }
 }
 
@@ -90,6 +92,18 @@ function delete_request_qty($conn,$db)
     die;
 }
 
+function update_isCancel($conn,$db)
+{
+    $return = array();
+    $DocNo = $_POST['DocNo'];
+
+    $sql2 = "UPDATE deproomdetail SET IsCancel = 0 WHERE DocNo = '$DocNo' ";
+    $meQuery2 = $conn->prepare($sql2);
+    $meQuery2->execute();
+    echo json_encode($return);
+    unset($conn);
+    die;
+}
 
 
 function delete_request_byItem($conn,$db)
@@ -97,7 +111,8 @@ function delete_request_byItem($conn,$db)
     $return = array();
     $ID = $_POST['ID'];
 
-    $sql2 = " DELETE FROM deproomdetail WHERE ID = '$ID' ";
+    $sql2 = "UPDATE deproomdetail SET IsCancel = 1 WHERE ID = '$ID' ";
+    // $sql2 = " DELETE FROM deproomdetail WHERE ID = '$ID' ";
     $meQuery2 = $conn->prepare($sql2);
     $meQuery2->execute();
     echo json_encode($return);
@@ -152,6 +167,10 @@ function onconfirm_send_request($conn,$db)
     // $id_Array = $_POST['id_Array'];
     // $id_Array = $_POST['id_Array'];
 
+
+    $sql_x = " DELETE FROM deproomdetail WHERE DocNo = '$txt_docno_request' AND IsCancel = 1 ";
+    $meQuery_x = $conn->prepare($sql_x);
+    $meQuery_x->execute();
 
     foreach ($id_Array as $key => $value) {
         $update = "UPDATE deproomdetail SET Qty = '$qty_Array[$key]' WHERE ID = '$value' ";
@@ -309,6 +328,9 @@ function show_detail_item_request($conn,$db)
     unset($conn);
     die;
 }
+
+
+
 
 function show_detail_request_byDocNo($conn,$db)
 {

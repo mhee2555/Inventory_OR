@@ -357,8 +357,7 @@ $html = '<table cellspacing="0" cellpadding="2" border="1" >
 <th width="6 %" align="center">ลำดับ</th>
 <th width="16 %" align="center">รหัสอุปกรณ์</th>
 <th width="30 %"  align="center">อุปกรณ์</th>
-<th width="10 %" align="center">รหัสใช้งาน</th>
-<th width="10 %" align="center">ผู้เบิก</th>
+<th width="20 %" align="center">ผู้เบิก</th>
 <th width="20 %" align="center">วันที่/เวลา เบิก</th>
 <th width="10 %" align="center">Qty</th>
 </tr> </thead>';
@@ -448,8 +447,7 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
     $html .=   '<td width="6 %" align="center" style="line-height:40px;vertical-align: middle;"> ' . (string)$count . '</td>';
     $html .=   '<td width="16 %" align="center" style="line-height:40px;vertical-align: middle;"> ' . $Result_Detail['itemcode2'] . '</td>';
     $html .=   '<td width="30 %" align="left" style="line-height:40px;vertical-align: middle;">' .   $Result_Detail['itemname'] . '</td>';
-    $html .=   '<td width="10 %" align="center" style="line-height:40px;vertical-align: middle;">' . $Result_Detail['itemcode'] . '</td>';
-    $html .=   '<td width="10 %" align="center" style="line-height:40px;vertical-align: middle;">' . $Result_Detail['Issue_Name'] . '</td>';
+    $html .=   '<td width="20 %" align="center" style="line-height:40px;vertical-align: middle;">' . $Result_Detail['Issue_Name'] . '</td>';
     $html .=   '<td width="20 %" align="center" style="line-height:40px;vertical-align: middle;">' . $Result_Detail['ModifyDate'] . '</td>';
     $html .=   '<td width="10 %" align="center" style="line-height:40px;vertical-align: middle;">' . $Result_Detail['Qty'] . '</td>';
     $html .=  '</tr>';

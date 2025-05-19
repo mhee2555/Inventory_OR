@@ -217,7 +217,13 @@ function DeleteDoctor(selectedValue) {
   console.log(doctor_Array);
   $(".div_" + selectedValue).attr("hidden", true);
 
-  set_deproom();
+  // if($("#select_deproom_request").val() == ""){
+    set_deproom();
+    select_doctor();
+    select_procedure();
+    $(".clear_procedure").attr("hidden", true);
+    procedure_id_Array = [];
+  // }
   show_detail_history();
 }
 
@@ -246,7 +252,9 @@ function DeleteDoctor_history(selectedValue) {
   console.log(doctor_history_Array);
   $(".div_" + selectedValue).attr("hidden", true);
 
-  set_deproom();
+  if($("#select_deproom_request").val() == ""){
+    set_deproom_proceduce();
+  }
 }
 
 function Deletprocedure(selectedValue) {
@@ -413,6 +421,18 @@ $("#btn_clear_request").click(function () {
   $("#select_procedure_request").val("");
   $("#input_remark_request").val("");
 
+
+      var now = new Date();
+  var hours = String(now.getHours()).padStart(2, "0");
+  var minutes = String(now.getMinutes()).padStart(2, "0");
+  var currentTime = hours + ":" + minutes;
+  $("#select_time_request").val(currentTime);
+
+
+  $("#select_date_request").val("");
+
+  
+
   $("#txt_docno_request").val("");
 
 
@@ -430,6 +450,13 @@ $("#btn_clear_request").click(function () {
   );
   $(".clear_procedure").attr("hidden", true);
   procedure_id_Array = [];
+
+
+
+
+    select_deproom();
+    select_procedure();
+    select_doctor();
 
 });
 
@@ -660,7 +687,7 @@ function show_detail_request_byDocNo() {
       var ObjData = JSON.parse(result);
       if (!$.isEmptyObject(ObjData)) {
         $.each(ObjData, function (kay, value) {
-          _tr += `<tr>
+          _tr += `<tr tr_${value.ID}>
                       <td class='text-center'>${kay + 1}</td>
                       <td>${value.itemname}</td>
                       <td class='text-center'>${value.TyeName}</td>
@@ -668,9 +695,7 @@ function show_detail_request_byDocNo() {
                         value.ID
                       }" data-id='${value.ID}' value='${value.cnt}'> </td>
                       <td class='text-center'>
-                      <img src="assets/img_project/1_icon/ic_trash-1.png" style='width:30%;cursor:pointer;' onclick='delete_request_byItem(${
-                        value.ID
-                      })'>
+                      <img src="assets/img_project/1_icon/ic_trash-1.png" style='width:30%;cursor:pointer;' onclick='delete_request_byItem(${value.ID})'>
                       </td>
                    </tr>`;
         });
@@ -1223,6 +1248,18 @@ function edit_item_byDocNo(
 
         $("#row_procedure").append(_row);
       }
+    },
+  });
+
+    $.ajax({
+    url: "process/create_request.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "update_isCancel",
+      DocNo: DocNo,
+    },
+    success: function (result) {
+      var ObjData = JSON.parse(result);
     },
   });
 

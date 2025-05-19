@@ -68,6 +68,8 @@ if (!empty($_POST['FUNC_NAME'])) {
         show_detail_item_ByDocNo_manual($conn, $db);
     } else if ($_POST['FUNC_NAME'] == 'save_edit_hn') {
         save_edit_hn($conn, $db);
+    } else if ($_POST['FUNC_NAME'] == 'feeddata_history_Return') {
+        feeddata_history_Return($conn, $db);
     }
 }
 
@@ -364,6 +366,47 @@ function checkClaimReturn($conn, $db)
     die;
 }
 
+function feeddata_history_Return($conn, $db)
+{
+    $input_search_history_return = $_POST['input_search_history_return'];
+    $select_date_history_return = $_POST['select_date_history_return'];
+
+
+
+    $select_date_history_return = explode("-", $select_date_history_return);
+    $select_date_history_return = $select_date_history_return[2] . '-' . $select_date_history_return[1] . '-' . $select_date_history_return[0];
+
+
+    $return = [];
+
+    $query = " SELECT
+                    item.itemname,
+                    itemstock.UsageCode,
+                    employee.FirstName,
+                    log_return.hncode,
+	                log_return.createAt  
+                FROM
+                    log_return
+                    INNER JOIN itemstock ON log_return.itemstockID = itemstock.RowID
+                    INNER JOIN item ON itemstock.ItemCode = item.itemcode
+                    INNER JOIN users ON log_return.userID = users.ID
+                    INNER JOIN employee ON users.EmpCode = employee.EmpCode 
+                WHERE  item.itemname LIKE '%$input_search_history_return%' 
+                AND DATE(log_return.createAt) = '$select_date_history_return' 
+                ORDER BY log_return.createAt DESC ";
+
+
+
+
+    $meQuery = $conn->prepare($query);
+    $meQuery->execute();
+    while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+        $return[] = $row;
+    }
+    echo json_encode($return);
+    unset($conn);
+    die;
+}
 
 function feeddata_waitReturn($conn, $db)
 {
@@ -403,6 +446,10 @@ function feeddata_waitReturn($conn, $db)
 function onReturnData($conn, $db)
 {
 
+
+    $Userid = $_SESSION['Userid'];
+
+    
     $query_1 = " SELECT
                     itemstock.ItemCode,
                     itemstock.Isdeproom,
@@ -432,7 +479,9 @@ function onReturnData($conn, $db)
                             deproomdetailsub.ID ,
                             hncode_detail.ID AS hndetail_ID,
 	                        deproomdetail.ItemCode,
-	                        DATE(deproom.serviceDate) AS ModifyDate
+	                        DATE(deproom.serviceDate) AS ModifyDate,
+	                        deproom.number_box,
+	                        deproom.hn_record_id
                         FROM
                             deproom
                             INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
@@ -455,6 +504,13 @@ function onReturnData($conn, $db)
                 $_hndetail_ID = $row_2['hndetail_ID'];
                 $_ModifyDate = $row_2['ModifyDate'];
 
+                $_hn_record_id = $row_2['hn_record_id'];
+                $_number_box = $row_2['number_box'];
+
+                if($_hn_record_id == ""){
+                    $_hn_record_id = $_number_box;
+                }
+
                 // ==============================
                 // $queryD1 = "DELETE FROM deproomdetailsub WHERE ID =  '$_ID' ";
                 // $meQueryD1 = $conn->prepare($queryD1);
@@ -465,6 +521,17 @@ function onReturnData($conn, $db)
                 $meQueryD2->execute();
                 // ==============================
 
+
+                $insert_log = "INSERT INTO log_return (itemstockID, hncode, userID, createAt) 
+                            VALUES (:itemstockID, :hncode, :userID, NOW())";
+
+                $meQuery_log = $conn->prepare($insert_log);
+
+                $meQuery_log->bindParam(':itemstockID', $_RowID);
+                $meQuery_log->bindParam(':hncode', $_hn_record_id);
+                $meQuery_log->bindParam(':userID', $Userid);
+
+                $meQuery_log->execute();
                 // =======================================================================================================================================
 
                 if ($db == 1) {
@@ -5291,13 +5358,13 @@ function oncheck_pay($conn, $db)
                     if ($count_new_item  == 0) {
 
                         if ($db == 1) {
-                            $queryInsert = "INSERT INTO deproomdetail ( DocNo, ItemCode, Qty, IsStatus, PayDate, IsCancel, ModifyUser, ModifyTime )
+                            $queryInsert = "INSERT INTO deproomdetail ( DocNo, ItemCode, Qty, IsStatus, PayDate, IsCancel, ModifyUser, ModifyTime , IsRequest )
                             VALUES
-                                ( '$DocNo_pay', '$_ItemCode', '1', 0,NOW(), 0, '$Userid',NOW() )";
+                                ( '$DocNo_pay', '$_ItemCode', '1', 0,NOW(), 0, '$Userid',NOW() , 1)";
                         } else {
-                            $queryInsert = "INSERT INTO deproomdetail ( DocNo, ItemCode, Qty, IsStatus, PayDate, IsCancel, ModifyUser, ModifyTime )
+                            $queryInsert = "INSERT INTO deproomdetail ( DocNo, ItemCode, Qty, IsStatus, PayDate, IsCancel, ModifyUser, ModifyTime, IsRequest )
                             VALUES
-                                ( '$DocNo_pay', '$_ItemCode', '1', 0, GETDATE(), 0, '$Userid',GETDATE())";
+                                ( '$DocNo_pay', '$_ItemCode', '1', 0, GETDATE(), 0, '$Userid',GETDATE() , 1)";
                         }
 
 
@@ -5632,17 +5699,17 @@ function oncheck_pay($conn, $db)
 
 
                         if ($deproom_qty == 1) {
-                            $update_old_detail = "DELETE FROM deproomdetail WHERE ID =  '$detailID' ";
-                            $meQuery_old_detail = $conn->prepare($update_old_detail);
-                            $meQuery_old_detail->execute();
+                            // $update_old_detail = "DELETE FROM deproomdetail WHERE ID =  '$detailID' ";
+                            // $meQuery_old_detail = $conn->prepare($update_old_detail);
+                            // $meQuery_old_detail->execute();
 
                             $update_old_sub = "DELETE FROM deproomdetailsub WHERE deproomdetailsub.ID =  '$deproomdetailsub_id'    ";
                             $meQuery_old_sub = $conn->prepare($update_old_sub);
                             $meQuery_old_sub->execute();
                         } else {
-                            $update_old_detail = "UPDATE deproomdetail SET Qty = Qty-1 WHERE  deproomdetail.ID = '$detailID' ";
-                            $meQuery_old_detail = $conn->prepare($update_old_detail);
-                            $meQuery_old_detail->execute();
+                            // $update_old_detail = "UPDATE deproomdetail SET Qty = Qty-1 WHERE  deproomdetail.ID = '$detailID' ";
+                            // $meQuery_old_detail = $conn->prepare($update_old_detail);
+                            // $meQuery_old_detail->execute();
 
                             $update_old_sub = "DELETE FROM deproomdetailsub WHERE deproomdetailsub.ID =  '$deproomdetailsub_id'   ";
                             $meQuery_old_sub = $conn->prepare($update_old_sub);
@@ -5844,13 +5911,13 @@ function oncheck_pay($conn, $db)
 
 
                             if ($db == 1) {
-                                $queryInsert = "INSERT INTO deproomdetail ( DocNo, ItemCode, Qty, IsStatus, PayDate, IsCancel, ModifyUser, ModifyTime )
+                                $queryInsert = "INSERT INTO deproomdetail ( DocNo, ItemCode, Qty, IsStatus, PayDate, IsCancel, ModifyUser, ModifyTime , IsRequest )
                                     VALUES
-                                        ( '$DocNo_pay', '$_ItemCode', '1', 0,NOW(), 0, '$Userid',NOW() )";
+                                        ( '$DocNo_pay', '$_ItemCode', '1', 0,NOW(), 0, '$Userid',NOW() ,1)";
                             } else {
-                                $queryInsert = "INSERT INTO deproomdetail ( DocNo, ItemCode, Qty, IsStatus, PayDate, IsCancel, ModifyUser, ModifyTime )
+                                $queryInsert = "INSERT INTO deproomdetail ( DocNo, ItemCode, Qty, IsStatus, PayDate, IsCancel, ModifyUser, ModifyTime , IsRequest)
                                     VALUES
-                                        ( '$DocNo_pay', '$_ItemCode', '1', 0, GETDATE(), 0, '$Userid',GETDATE())";
+                                        ( '$DocNo_pay', '$_ItemCode', '1', 0, GETDATE(), 0, '$Userid',GETDATE(),1)";
                             }
                             $meQueryInsert = $conn->prepare($queryInsert);
                             $meQueryInsert->execute();
@@ -6108,7 +6175,8 @@ function show_detail_item_ByDocNo($conn, $db)
 				SELECT SUM(deproomdetailsub.qty_weighing) FROM deproomdetailsub WHERE deproomdetailsub.Deproomdetail_RowID = deproomdetail.ID
 				),0) AS cnt_pay,
                 itemtype.TyeName,
-                deproomdetail.Ismanual
+                deproomdetail.Ismanual,
+                deproomdetail.IsRequest
             FROM
                 deproom
                 INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
@@ -6249,7 +6317,8 @@ function show_detail_deproom_pay($conn, $db)
                             deproom.`procedure` AS procedureHN,
                             deproom.number_box,
                             deproom.IsConfirm_pay,
-	                        SUM( deproomdetail.IsManual ) AS IsManual
+                            SUM(CASE WHEN deproomdetail.IsManual = 1 THEN 1 ELSE 0 END) AS IsManual ,
+                            SUM(CASE WHEN deproomdetail.IsRequest = 1 THEN 1 ELSE 0 END) AS IsRequest 
                         FROM
                             deproom
                         LEFT JOIN

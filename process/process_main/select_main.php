@@ -74,11 +74,14 @@ function set_doctor($conn)
     if ($select_deproom_request != "") {
         $doctor_ids = "";
         $count_doctor = 0;
-        $select = " SELECT GROUP_CONCAT(doctor_id SEPARATOR ', ') AS doctor_ids FROM mapping_doctor WHERE mapping_doctor.departmentroom_id IN( $select_deproom_request )  ";
+        $select = " SELECT GROUP_CONCAT(doctor_id SEPARATOR ', ') AS doctor_ids FROM mapping_doctor WHERE mapping_doctor.departmentroom_id LIKE '%$select_deproom_request%'  ";
         $meQuery_select = $conn->prepare($select);
         $meQuery_select->execute();
 
+
+
         $doctor_ids = $meQuery_select->fetchColumn();
+
 
         if ($doctor_ids) {
 
@@ -114,8 +117,7 @@ function set_doctor($conn)
 
 
 
-
-
+     
 
 
 

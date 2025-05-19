@@ -330,8 +330,19 @@
 </div>
 
 <div id="return">
-    <div class="row">
-        <div class="col-md-12">
+
+    <div class="row mt-3">
+        <div class=" col-md-12 col-lg-9  ">
+            <div class="btn-group btn-group-toggle" role="group" aria-label="Basic example">
+                <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;border-color: lightgray;" id="radio_return">สแกนคืนอุปกรณ์</button>
+                <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;border-color: lightgray;" id="radio_history_return">ประวัติสแกนคืนอุปกรณ์</button>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row mt-3">
+        <div class="col-md-12" id="row_return">
             <div class="card">
                 <div class="card-body">
 
@@ -368,6 +379,43 @@
                     <div class="col-md-12 text-right mt-2">
                         <button class="btn f18" style="background-color:#643695;color:#fff;" id="btn_send_return_data">ส่งข้อมูล</button>
                     </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12" id="row_history_return">
+            <div class="card">
+                <div class="card-body">
+
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group ">
+                                <label for="" style="color:black;font-weight: 600;">ค้นหา</label>
+                                <input type="text" class="form-control f18" id="input_search_history_return" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group ">
+                                <label for="" style="color:black;font-weight: 600;">วันที่</label>
+                                <input type="text" class="form-control datepicker-here f18" id="select_date_history_return" autocomplete="off" data-language="en" data-date-format="dd-mm-yyyy">
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <table class="table table-hover table-sm" id="table_history_return">
+                        <thead style="background-color: #cdd6ff;">
+                            <tr>
+                                <th scope="col" class="text-center" id="">ลำดับ</th>
+                                <th scope="col" class="text-center" id="">รหัสอุปกรณ์</th>
+                                <th scope="col" class="text-center" id="">อุปกรณ์</th>
+                                <th scope="col" class="text-center" id="">ผู้คืน</th>
+                                <th scope="col" class="text-center" id="">HN</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+
                 </div>
             </div>
         </div>
