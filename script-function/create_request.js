@@ -192,9 +192,9 @@ $(function () {
         $("#row_doctor").append(_row);
 
 
-        if($("#select_deproom_request").val() == ""){
+        // if($("#select_deproom_request").val() == ""){
           set_deproom();
-        }
+        // }
       }
       $("#select_doctor_request").val("").trigger("change");
     }
@@ -221,7 +221,11 @@ function DeleteDoctor(selectedValue) {
     set_deproom();
     select_doctor();
     select_procedure();
+
     $(".clear_procedure").attr("hidden", true);
+
+
+    $("#btn_routine").attr("disabled", false);
     procedure_id_Array = [];
   // }
   show_detail_history();
@@ -265,6 +269,8 @@ function Deletprocedure(selectedValue) {
     procedure_id_Array.splice(index, 1);
   }
 
+
+    $("#btn_routine").attr("disabled", false);
   console.log(procedure_id_Array);
   $(".div_" + selectedValue).attr("hidden", true);
 }
@@ -323,13 +329,13 @@ $("#btn_routine").click(function () {
       procedure_id_Array: procedure_id_Array,
       doctor_Array: doctor_Array,
       select_deproom_request: $("#select_deproom_request").val(),
+      txt_docno_request: $("#txt_docno_request").val(),
     },
     success: function (result) {
       var ObjData = JSON.parse(result);
       if (!$.isEmptyObject(ObjData)) {
 
         showLoading();
-
 
         $.each(ObjData, function (kay, value) {
           itemcode_array.push(value.itemcode.toString());
@@ -460,13 +466,13 @@ $("#btn_clear_request").click(function () {
 
 });
 
-$("#input_hn_request").on("keydown", function (e) {
+$("#input_hn_request").on("keyup", function (e) {
   if (e.keyCode == 32) {
     $("#input_hn_request").val("");
   }
 });
 
-$("#input_search_request").on("keydown", function (e) {
+$("#input_search_request").on("keyup", function (e) {
   show_detail_item_request();
 });
 
@@ -691,9 +697,7 @@ function show_detail_request_byDocNo() {
                       <td class='text-center'>${kay + 1}</td>
                       <td>${value.itemname}</td>
                       <td class='text-center'>${value.TyeName}</td>
-                      <td class='text-center'><input type="text" class="form-control text-center qty_loop" id="qty_item_${
-                        value.ID
-                      }" data-id='${value.ID}' value='${value.cnt}'> </td>
+                      <td class='text-center'><input type="number" onkeyup="updateDetail_qty(${value.ID})" class="form-control text-center qty_loop" id="qty_item_${value.ID}" data-id='${value.ID}' value='${value.cnt}'> </td>
                       <td class='text-center'>
                       <img src="assets/img_project/1_icon/ic_trash-1.png" style='width:30%;cursor:pointer;' onclick='delete_request_byItem(${value.ID})'>
                       </td>
@@ -766,6 +770,23 @@ function show_detail_request_byDocNo() {
       }
     },
   });
+}
+
+
+
+function updateDetail_qty(ID) {
+  $("#qty_item_" + ID).val();
+    $.ajax({
+    url: "process/create_request.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "updateDetail_qty",
+      ID: ID,
+      qty: $("#qty_item_" + ID).val(),
+    },
+    success: function (result) {},
+  });
+
 }
 
 function add_request_qty(ID) {

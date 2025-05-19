@@ -28,6 +28,8 @@ if (!empty($_POST['FUNC_NAME'])) {
         check_routine($conn,$db);
     }  else if ($_POST['FUNC_NAME'] == 'update_isCancel') {
         update_isCancel($conn,$db);
+    }  else if ($_POST['FUNC_NAME'] == 'updateDetail_qty') {
+        updateDetail_qty($conn,$db);
     }
 }
 
@@ -36,6 +38,7 @@ function check_routine($conn,$db){
     $select_deproom_request = $_POST['select_deproom_request'];
     $procedure_id_Array = $_POST['procedure_id_Array'];
     $doctor_Array = $_POST['doctor_Array'];
+    $txt_docno_request = $_POST['txt_docno_request'];
 
     $procedure_id_Array = implode(",", $procedure_id_Array);
     $doctor_Array = implode(",", $doctor_Array);
@@ -54,6 +57,10 @@ function check_routine($conn,$db){
     $meQuery->execute();
     while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
         $return[] = $row;
+
+        $delete = "DELETE FROM deproomdetail WHERE DocNo = '$txt_docno_request' ";
+        $meQuerydelete = $conn->prepare($delete);
+        $meQuerydelete->execute();
     }
     echo json_encode($return);
     unset($conn);
@@ -62,6 +69,19 @@ function check_routine($conn,$db){
 }
 
 
+function updateDetail_qty($conn,$db)
+{
+    $return = array();
+    $ID = $_POST['ID'];
+    $qty = $_POST['qty'];
+
+    $sql2 = " UPDATE deproomdetail SET Qty = $qty  WHERE ID = '$ID' ";
+    $meQuery2 = $conn->prepare($sql2);
+    $meQuery2->execute();
+    echo json_encode($return);
+    unset($conn);
+    die;
+}
 
 function add_request_qty($conn,$db)
 {
@@ -237,7 +257,7 @@ function onconfirm_request($conn,$db)
     foreach ($array_itemcode as $key => $value) {
 
         $_cntcheck = 0;
-        $queryCheck = "SELECT COUNT( deproomdetail.ItemCode ) AS cntcheck 
+        $queryCheck = "SELECT COUNT( deproomdetail.ItemCode ) AS cntcheck  , IsCancel
                         FROM
                             deproomdetail 
                         WHERE
@@ -249,14 +269,25 @@ function onconfirm_request($conn,$db)
         $meQuery->execute();
         while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
             $_cntcheck = $row['cntcheck'];
+            $_IsCancel = $row['IsCancel'];
         }
 
         if ($_cntcheck > 0) {
-            $queryUpdate = "UPDATE deproomdetail 
-                            SET Qty = (Qty +  $array_qty[$key]) 
-                            WHERE
-                                DocNo = '$txt_docno_request' 
-                                AND ItemCode = '$value'  ";
+
+            if($_IsCancel == 0){
+                $queryUpdate = "UPDATE deproomdetail 
+                SET Qty = (Qty +  $array_qty[$key])
+                WHERE
+                    DocNo = '$txt_docno_request' 
+                    AND ItemCode = '$value'  ";
+            }else{
+                $queryUpdate = "UPDATE deproomdetail 
+                SET Qty = $array_qty[$key] , IsCancel = 0
+                WHERE
+                    DocNo = '$txt_docno_request' 
+                    AND ItemCode = '$value'  ";
+            }
+
             $meQueryUpdate = $conn->prepare($queryUpdate);
             $meQueryUpdate->execute();
         } else {
