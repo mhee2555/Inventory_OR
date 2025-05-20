@@ -33,3 +33,4 @@ var en = {
     lang_text_confirmSendData : 'Confirm! Send Data ?',
 
 }
+

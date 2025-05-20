@@ -309,6 +309,21 @@ function onconfirm_request($conn,$db)
         }
 
 
+        $insert_log = "INSERT INTO log_activity_users (itemCode, qty, isStatus, DocNo, userID, createAt) 
+                        VALUES (:itemCode, :qty, :isStatus, :DocNo, :Userid, NOW())";
+
+        $meQuery_log = $conn->prepare($insert_log);
+
+        $meQuery_log->bindParam(':itemCode', $value);
+        $meQuery_log->bindParam(':qty', $array_qty[$key]);
+        $meQuery_log->bindValue(':isStatus', 1, PDO::PARAM_INT);
+        $meQuery_log->bindParam(':DocNo', $txt_docno_request);
+        $meQuery_log->bindParam(':Userid', $Userid);
+
+
+        $meQuery_log->execute();
+
+
         $count++;
     }
 

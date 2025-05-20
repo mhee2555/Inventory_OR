@@ -269,6 +269,7 @@
                         text = "ผู้ใช้หรือรหัสผ่านผิด";
                         showDialogFailed(text);
 
+                        $("#input_Scan").val("");
                         $("#input_UserName").val("");
                         $("#input_PassWord").val("");
 

@@ -6,6 +6,8 @@ var doctor_Array = [];
 var procedure_id_history_Array = [];
 var doctor_history_Array = [];
 
+
+
 $(function () {
   var now = new Date();
   var hours = String(now.getHours()).padStart(2, "0");
@@ -1680,3 +1682,11 @@ function set_date() {
 
   return output;
 }
+
+    function settext(key) {
+        if (localStorage.lang == "en") {
+            return en[key];
+        } else {
+            return th[key];
+        }
+    }

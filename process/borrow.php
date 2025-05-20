@@ -5,23 +5,33 @@ require '../connect/connect.php';
 
 if (!empty($_POST['FUNC_NAME'])) {
     if ($_POST['FUNC_NAME'] == 'show_detail_borrow') {
-        show_detail_borrow($conn,$db);
+        show_detail_borrow($conn, $db);
     }
 }
 
-function show_detail_borrow($conn,$db)
+function show_detail_borrow($conn, $db)
 {
     $return = [];
 
     $deproom = $_SESSION['deproom'];
     $RefDepID = $_SESSION['RefDepID'];
-    
+
     $wheredep = "";
     if ($RefDepID  == '36DEN') {
         $wheredep = "AND deproomdetailsub.dental_warehouse_id = '$deproom' ";
     }
 
-    if($db == 1){
+    $select_Sdate = $_POST['select_Sdate'];
+    $select_Edate = $_POST['select_Edate'];
+
+    $select_Sdate = explode("-", $select_Sdate);
+    $select_Sdate = $select_Sdate[2] . '-' . $select_Sdate[1] . '-' . $select_Sdate[0];
+
+    $select_Edate = explode("-", $select_Edate);
+    $select_Edate = $select_Edate[2] . '-' . $select_Edate[1] . '-' . $select_Edate[0];
+
+
+    if ($db == 1) {
         $query = "SELECT
                         deproomdetailsub.ID,
                         itemstock.UsageCode,
@@ -39,10 +49,11 @@ function show_detail_borrow($conn,$db)
                     WHERE
                         deproomdetailsub.hn_record_id_borrow IS NOT NULL 
                         AND deproomdetailsub.hn_record_id_borrow != ''
+                        AND DATE(deproomdetailsub.PayDate) BETWEEN '$select_Sdate' AND '$select_Edate'
                     ORDER BY  deproomdetailsub.ID DESC
 
     $wheredep ";
-    }else{
+    } else {
         $query = "SELECT
                 deproomdetailsub.ID,
                 itemstock.UsageCode,
@@ -71,7 +82,7 @@ function show_detail_borrow($conn,$db)
     $meQuery->execute();
     while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
 
-        if($row['hn_record_id'] == ''){
+        if ($row['hn_record_id'] == '') {
             $row['hn_record_id'] = $row['number_box'];
         }
 

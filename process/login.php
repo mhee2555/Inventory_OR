@@ -121,6 +121,18 @@ function LoginUser($conn, $db)
 
         $return[] = $row;
         $count++;
+
+        
+        $insert_log = "INSERT INTO log_activity_users (itemCode, itemstockID ,qty, isStatus, DocNo, userID, createAt) 
+                        VALUES ('', '', 0, :isStatus, '', :Userid, NOW())";
+
+        $meQuery_log = $conn->prepare($insert_log);
+
+        $meQuery_log->bindValue(':isStatus', 99, PDO::PARAM_INT);
+        $meQuery_log->bindParam(':Userid', $row['ID']);
+
+
+        $meQuery_log->execute();
     }
 
 

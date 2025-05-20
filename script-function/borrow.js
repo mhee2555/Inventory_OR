@@ -2,6 +2,33 @@ var departmentroomname = "";
 var UserName = "";
 
 $(function () {
+  var d = new Date();
+  var month = d.getMonth() + 1;
+  var day = d.getDate();
+  var year = d.getFullYear();
+  var output =
+    (("" + day).length < 2 ? "0" : "") +
+    day +
+    "-" +
+    (("" + month).length < 2 ? "0" : "") +
+    month +
+    "-" +
+    year;
+
+  $("#select_Sdate").val(output);
+  $("#select_Sdate").datepicker({
+    onSelect: function (date) {
+      show_detail_borrow();
+    },
+  });
+
+  $("#select_Edate").val(output);
+  $("#select_Edate").datepicker({
+    onSelect: function (date) {
+      show_detail_borrow();
+    },
+  });
+
   session();
   show_detail_borrow();
 });
@@ -12,6 +39,8 @@ function show_detail_borrow() {
     type: "POST",
     data: {
       FUNC_NAME: "show_detail_borrow",
+      select_Sdate: $("#select_Sdate").val(),
+      select_Edate: $("#select_Edate").val(),
     },
     success: function (result) {
       var _tr = "";
@@ -19,13 +48,13 @@ function show_detail_borrow() {
       var ObjData = JSON.parse(result);
       if (!$.isEmptyObject(ObjData)) {
         $.each(ObjData, function (kay, value) {
-
-
           _tr += `<tr>
                         <td class='text-center'>${kay + 1}</td>
                         <td class='text-center'>${value.UsageCode}</td>
                         <td class='text-left'>${value.itemname}</td>
-                        <td class='text-center'>${value.hn_record_id_borrow}</td>
+                        <td class='text-center'>${
+                          value.hn_record_id_borrow
+                        }</td>
                         <td class='text-center'>${value.hn_record_id}</td>
                      </tr>`;
         });
@@ -70,7 +99,7 @@ function show_detail_borrow() {
           {
             width: "10%",
             targets: 4,
-          }
+          },
         ],
         info: false,
         scrollX: false,
@@ -82,7 +111,6 @@ function show_detail_borrow() {
         ordering: false,
       });
       $("th").removeClass("sorting_asc");
-
     },
   });
 }

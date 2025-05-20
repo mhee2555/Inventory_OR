@@ -2217,9 +2217,9 @@ function feeddata_history_Return() {
               `<tr> ` +
               `<td class="text-center">${kay + 1}</td>` +
               `<td class="text-center">${value.UsageCode}</td>` +
-              `<td class="text-center">${value.itemname}</td>` +
+              `<td class="text-left">${value.itemname}</td>` +
               `<td class="text-left">${value.FirstName}</td>` +
-              `<td class="text-center">${value.hncode}</td>` +
+              `<td class="text-center">${value.hn_record_id}</td>` +
               ` </tr>`;
         });
 

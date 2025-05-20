@@ -350,7 +350,7 @@ function feeddata_hncode_detail(DocNo,HnCode) {
 
               var label = `<label>${value.UsageCode}</label>`;
             }else{
-              var label = `<label style='color:blue;cursor:pointer;' onclick='open_LotNo(${value.serielNo},"${value.lotNo}","${value.ExpireDate}")' >${value.UsageCode}</label>`;
+              var label = `<label style='color:blue;cursor:pointer;' onclick='open_LotNo("${value.serielNo}","${value.lotNo}","${value.ExpireDate}")' >${value.UsageCode}</label>`;
             }
             
             if(value.Qty > 0){
@@ -427,11 +427,11 @@ function feeddata_hncode_detail(DocNo,HnCode) {
 
 function open_LotNo(serielNo,lotNo,ExpireDate){
   $("#modal_lotno").modal('toggle');
-  if(lotNo == 'null'){
-    lotNo = "";
+  if(lotNo == 'null' || lotNo == ''){
+    lotNo = "ไม่มีข้อมูล";
   }
-  if(serielNo == 'null'){
-    serielNo = "";
+  if(serielNo == 'null' || serielNo == ''){
+    serielNo = "ไม่มีข้อมูล";
   }
   $("#lot_no").val(lotNo);
   $("#seriel_no").val(serielNo);

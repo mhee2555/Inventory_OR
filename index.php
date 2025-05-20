@@ -226,6 +226,113 @@ if (!isset($_SESSION['UserName'])) {
     <?php include_once('assets/lang/' . $page . '.js'); ?>
 
     $(function() {
+        var page = '<?php echo $page; ?>';
+
+
+        var Lang = '<?php echo $Lang; ?>';
+        var Userid = '<?php echo $Userid; ?>';
+        var display = '<?php echo $display; ?>';
+        var font = '<?php echo $font; ?>';
+
+
+        $("#lang-thai").click(function() {
+            localStorage.setItem('lang', 'th');
+
+
+            $("#lang-change").text('ภาษาไทย');
+
+            // $(".clearlang").removeClass('activelang');
+            // $("#lang-thai").addClass('activelang');
+
+
+            $.ajax({
+                url: "process/main.php",
+                type: 'POST',
+                data: {
+                    'FUNC_NAME': 'onUpdateLang',
+                    'Lang': 'th',
+                    'Userid': Userid,
+                },
+                success: function(result) {
+
+                }
+            });
+
+
+            // renderlang();
+
+            setTimeout(() => {
+                location.reload();
+            }, 500);
+
+
+
+
+        });
+
+        $("#lang-eng").click(function() {
+
+            $("#lang-change").text('english');
+
+
+            localStorage.setItem('lang', 'en');
+
+            $.ajax({
+                url: "process/main.php",
+                type: 'POST',
+                data: {
+                    'FUNC_NAME': 'onUpdateLang',
+                    'Lang': 'en',
+                    'Userid': Userid,
+                },
+                success: function(result) {}
+            });
+
+            // $(".clearlang").removeClass('activelang');
+            // $("#lang-eng").addClass('activelang');
+
+            // renderlang();
+
+            setTimeout(() => {
+                location.reload();
+            }, 500);
+
+        });
+
+        if (Lang == 'en') {
+            localStorage.setItem('lang', 'en');
+        }
+        if (Lang == 'th') {
+            localStorage.setItem('lang', 'th');
+        }
+
+
+        if (localStorage.lang == 'th') {
+            // $("#lang-thai").addClass('activelang');
+            $("#lang-change").text('ภาษาไทย');
+            $('title').text('ทันตกรรม');
+
+            var lang_text_confirm = 'ยืนยัน'
+            var lang_text_confirmLogout = 'ยืนยัน! การออกจากระบบ!'
+            var lang_text_cancel = 'ยกเลิก'
+        }
+        if (localStorage.lang == 'en') {
+
+            var lang_text_confirm = 'ยืนยัน!'
+            $("#lang-change").text('english');
+            // $("#lang-eng").addClass('activelang');
+            $('title').text('Dental');
+            var lang_text_confirm = 'Confirm'
+            var lang_text_confirmLogout = 'Confirm! Log out?'
+            var lang_text_cancel = 'Cancel'
+        }
+
+
+        renderlang();
+
+
+
+
         let isRefreshed = sessionStorage.getItem("isRefreshed");
 
 
@@ -321,6 +428,24 @@ if (!isset($_SESSION['UserName'])) {
                 history.pushState({}, "Results for `Cats`", 'index.php?s=borrow');
                 document.title = "borrow";
                 loadScript('script-function/borrow.js');
+
+            });
+
+        }
+        if (page == 'ex') {
+
+
+            var link = 'pages/ex.php';
+
+            $.get(link, function(res) {
+
+                $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
+                $("#menu1").css('color', '#667085');
+
+                $("#conMain").html(res);
+                history.pushState({}, "Results for `Cats`", 'index.php?s=ex');
+                document.title = "ex";
+                loadScript('script-function/ex.js');
 
             });
 
@@ -1214,106 +1339,7 @@ if (!isset($_SESSION['UserName'])) {
                 // window.location.assign("login.php");
             }
         }
-        var Lang = '<?php echo $Lang; ?>';
-        var Userid = '<?php echo $Userid; ?>';
-        var display = '<?php echo $display; ?>';
-        var font = '<?php echo $font; ?>';
 
-
-        $("#lang-thai").click(function() {
-            localStorage.setItem('lang', 'th');
-
-
-            $("#lang-change").text('ภาษาไทย');
-
-            // $(".clearlang").removeClass('activelang');
-            // $("#lang-thai").addClass('activelang');
-
-
-            $.ajax({
-                url: "process/main.php",
-                type: 'POST',
-                data: {
-                    'FUNC_NAME': 'onUpdateLang',
-                    'Lang': 'th',
-                    'Userid': Userid,
-                },
-                success: function(result) {
-
-                }
-            });
-
-
-            // renderlang();
-
-            setTimeout(() => {
-                location.reload();
-            }, 500);
-
-
-
-
-        });
-
-        $("#lang-eng").click(function() {
-
-            $("#lang-change").text('english');
-
-
-            localStorage.setItem('lang', 'en');
-
-            $.ajax({
-                url: "process/main.php",
-                type: 'POST',
-                data: {
-                    'FUNC_NAME': 'onUpdateLang',
-                    'Lang': 'en',
-                    'Userid': Userid,
-                },
-                success: function(result) {}
-            });
-
-            // $(".clearlang").removeClass('activelang');
-            // $("#lang-eng").addClass('activelang');
-
-            // renderlang();
-
-            setTimeout(() => {
-                location.reload();
-            }, 500);
-
-        });
-
-        if (Lang == 'en') {
-            localStorage.setItem('lang', 'en');
-        }
-        if (Lang == 'th') {
-            localStorage.setItem('lang', 'th');
-        }
-
-
-        if (localStorage.lang == 'th') {
-            // $("#lang-thai").addClass('activelang');
-            $("#lang-change").text('ภาษาไทย');
-            $('title').text('ทันตกรรม');
-
-            var lang_text_confirm = 'ยืนยัน'
-            var lang_text_confirmLogout = 'ยืนยัน! การออกจากระบบ!'
-            var lang_text_cancel = 'ยกเลิก'
-        }
-        if (localStorage.lang == 'en') {
-
-            var lang_text_confirm = 'ยืนยัน!'
-            $("#lang-change").text('english');
-            // $("#lang-eng").addClass('activelang');
-            $('title').text('Dental');
-            var lang_text_confirm = 'Confirm'
-            var lang_text_confirmLogout = 'Confirm! Log out?'
-            var lang_text_cancel = 'Cancel'
-        }
-
-
-        renderlang();
 
         // ====================================================
 

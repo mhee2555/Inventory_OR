@@ -280,6 +280,7 @@ function show_detail_hn($conn, $db)
                     COALESCE(doctor.Doctor_Name, '-') AS Doctor_Name,
                     COALESCE(`procedure`.Procedure_TH, '-') AS Procedure_TH,
                     hncode.doctor ,
+                    hncode.number_box ,
                     hncode.`procedure`
                 FROM
                     hncode
@@ -331,6 +332,11 @@ function show_detail_hn($conn, $db)
     $meQuery->execute();
     while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
 
+        if($row['HnCode'] == ''){
+            $row['HnCode'] = $row['number_box'];
+        }
+
+        
         if (str_contains($row['procedure'], ',')) {
             $row['Procedure_TH'] = 'button';
         }

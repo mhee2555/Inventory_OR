@@ -103,18 +103,5 @@
             </tbody>
         </table>
 
-        <table class="table table-hover table-sm " id="table_data2" hidden>
-            <thead class="table-active">
-                <tr>
-                    <th scope="col" style="width: 10%;" class="text-center" id="td_no2">ลำดับ</th>
-                    <th scope="col" class="text-center" id="td_usage2">รหัสอุปกรณ์</th>
-                    <th scope="col" class="text-center" id="td_item2">อุปกรณ์</th>
-                    <th scope="col" class="text-center" id="td_ex2">วันหมดอายุ</th>
-                    <th scope="col" class="text-center" id="td_qty2">จำนวน</th>
-                </tr>
-            </thead>
-            <tbody>
 
-            </tbody>
-        </table>
     </div>

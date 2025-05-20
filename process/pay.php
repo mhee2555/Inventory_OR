@@ -382,15 +382,18 @@ function feeddata_history_Return($conn, $db)
     $query = " SELECT
                     item.itemname,
                     itemstock.UsageCode,
-                    employee.FirstName,
-                    log_return.hncode,
-	                log_return.createAt  
+                    CONCAT(employee.FirstName , ' ' , employee.LastName) AS FirstName,
+                    log_return.DocNo,
+	                log_return.createAt  ,
+	                deproom.hn_record_id  ,
+	                deproom.number_box  
                 FROM
                     log_return
                     INNER JOIN itemstock ON log_return.itemstockID = itemstock.RowID
                     INNER JOIN item ON itemstock.ItemCode = item.itemcode
                     INNER JOIN users ON log_return.userID = users.ID
                     INNER JOIN employee ON users.EmpCode = employee.EmpCode 
+                    INNER JOIN deproom ON deproom.DocNo = log_return.DocNo 
                 WHERE  item.itemname LIKE '%$input_search_history_return%' 
                 AND DATE(log_return.createAt) = '$select_date_history_return' 
                 ORDER BY log_return.createAt DESC ";
@@ -401,6 +404,9 @@ function feeddata_history_Return($conn, $db)
     $meQuery = $conn->prepare($query);
     $meQuery->execute();
     while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+        if( $row['hn_record_id'] == ''){
+            $row['hn_record_id'] = $row['number_box'];
+        }
         $return[] = $row;
     }
     echo json_encode($return);
@@ -479,6 +485,7 @@ function onReturnData($conn, $db)
                             deproomdetailsub.ID ,
                             hncode_detail.ID AS hndetail_ID,
 	                        deproomdetail.ItemCode,
+	                        deproomdetail.DocNo,
 	                        DATE(deproom.serviceDate) AS ModifyDate,
 	                        deproom.number_box,
 	                        deproom.hn_record_id
@@ -503,6 +510,7 @@ function onReturnData($conn, $db)
                 $_ID = $row_2['ID'];
                 $_hndetail_ID = $row_2['hndetail_ID'];
                 $_ModifyDate = $row_2['ModifyDate'];
+                $_DocNo = $row_2['DocNo'];
 
                 $_hn_record_id = $row_2['hn_record_id'];
                 $_number_box = $row_2['number_box'];
@@ -522,13 +530,13 @@ function onReturnData($conn, $db)
                 // ==============================
 
 
-                $insert_log = "INSERT INTO log_return (itemstockID, hncode, userID, createAt) 
-                            VALUES (:itemstockID, :hncode, :userID, NOW())";
+                $insert_log = "INSERT INTO log_return (itemstockID, DocNo, userID, createAt) 
+                            VALUES (:itemstockID, :DocNo, :userID, NOW())";
 
                 $meQuery_log = $conn->prepare($insert_log);
 
                 $meQuery_log->bindParam(':itemstockID', $_RowID);
-                $meQuery_log->bindParam(':hncode', $_hn_record_id);
+                $meQuery_log->bindParam(':DocNo', $_DocNo);
                 $meQuery_log->bindParam(':userID', $Userid);
 
                 $meQuery_log->execute();
@@ -547,6 +555,20 @@ function onReturnData($conn, $db)
                     AND  IsStatus = '1'
                     AND CONVERT(DATE,CreateDate) = '$_ModifyDate' ";
                 }
+
+                            $insert_log = "INSERT INTO log_activity_users (itemCode , itemstockID , qty, isStatus, DocNo, userID, createAt) 
+                            VALUES (:itemCode, :itemstockID, 1, :isStatus, :DocNo, :Userid, NOW())";
+
+                            $meQuery_log = $conn->prepare($insert_log);
+
+                            $meQuery_log->bindParam(':itemCode', $_ItemCode);
+                            $meQuery_log->bindParam(':itemstockID', $_RowID);
+                            $meQuery_log->bindValue(':isStatus', 6, PDO::PARAM_INT);
+                            $meQuery_log->bindParam(':DocNo', $_DocNo);
+                            $meQuery_log->bindParam(':Userid', $Userid);
+
+
+                            $meQuery_log->execute();
 
                 $meQuery = $conn->prepare($query);
                 $meQuery->execute();
@@ -1850,6 +1872,23 @@ function oncheck_pay_manual($conn, $db)
                     $updatePay = "UPDATE deproom SET UserPay = $Userid WHERE deproom.DocNo = '$input_docNo_deproom_manual' ";
                     $meQueryPay = $conn->prepare($updatePay);
                     $meQueryPay->execute();
+
+
+                                    $insert_log = "INSERT INTO log_activity_users (itemCode , itemstockID , qty, isStatus, DocNo, userID, createAt) 
+                                    VALUES (:itemCode, :itemstockID, 1, :isStatus, :DocNo, :Userid, NOW())";
+
+                            $meQuery_log = $conn->prepare($insert_log);
+
+                            $meQuery_log->bindParam(':itemCode', $_ItemCode);
+                            $meQuery_log->bindParam(':itemstockID', $_RowID);
+                            $meQuery_log->bindValue(':isStatus', 4, PDO::PARAM_INT);
+                            $meQuery_log->bindParam(':DocNo', $input_docNo_deproom_manual);
+                            $meQuery_log->bindParam(':Userid', $Userid);
+
+
+                            $meQuery_log->execute();
+
+
                 }
     
     
@@ -2261,6 +2300,21 @@ function oncheck_pay_manual($conn, $db)
                         // else{
                         //     $count_itemstock = 3;
                         // }
+
+                            $insert_log = "INSERT INTO log_activity_users (itemCode , itemstockID , qty, isStatus, DocNo, userID, createAt) 
+                            VALUES (:itemCode, :itemstockID, 1, :isStatus, :DocNo, :Userid, NOW())";
+
+                            $meQuery_log = $conn->prepare($insert_log);
+
+                            $meQuery_log->bindParam(':itemCode', $_ItemCode);
+                            $meQuery_log->bindParam(':itemstockID', $_RowID);
+                            $meQuery_log->bindValue(':isStatus', 4, PDO::PARAM_INT);
+                            $meQuery_log->bindParam(':DocNo', $input_docNo_deproom_manual);
+                            $meQuery_log->bindParam(':Userid', $Userid);
+
+
+                            $meQuery_log->execute();
+
                     }else{
                         $count_itemstock = 3;
                     }
@@ -2530,6 +2584,21 @@ function oncheck_Returnpay_manual($conn, $db)
                     // ==============================
                     $count_itemstock++;
                 }
+
+                            $insert_log = "INSERT INTO log_activity_users (itemCode , itemstockID , qty, isStatus, DocNo, userID, createAt) 
+                            VALUES (:itemCode, :itemstockID, 1, :isStatus, :DocNo, :Userid, NOW())";
+
+                            $meQuery_log = $conn->prepare($insert_log);
+
+                            $meQuery_log->bindParam(':itemCode', $_ItemCode);
+                            $meQuery_log->bindParam(':itemstockID', $_RowID);
+                            $meQuery_log->bindValue(':isStatus', 5, PDO::PARAM_INT);
+                            $meQuery_log->bindParam(':DocNo', $input_docNo_deproom_manual);
+                            $meQuery_log->bindParam(':Userid', $Userid);
+
+
+                            $meQuery_log->execute();
+
             }else if($_Isdeproom == 0){
                 $count_itemstock = 2;
             }
@@ -3731,6 +3800,22 @@ function oncheck_Returnpay($conn, $db)
                 $meQueryUpdate->execute();
                 // ==============================
                 $count_itemstock++;
+
+
+                            $insert_log = "INSERT INTO log_activity_users (itemCode , itemstockID , qty, isStatus, DocNo, userID, createAt) 
+                            VALUES (:itemCode, :itemstockID, 1, :isStatus, :DocNo, :Userid, NOW())";
+
+                            $meQuery_log = $conn->prepare($insert_log);
+
+                            $meQuery_log->bindParam(':itemCode', $_ItemCode);
+                            $meQuery_log->bindParam(':itemstockID', $_RowID);
+                            $meQuery_log->bindValue(':isStatus', 3, PDO::PARAM_INT);
+                            $meQuery_log->bindParam(':DocNo', $DocNo_pay);
+                            $meQuery_log->bindParam(':Userid', $Userid);
+
+
+                            $meQuery_log->execute();
+
             }
         }else if($_Isdeproom == 0){
             $count_itemstock = 2;
@@ -5574,6 +5659,20 @@ function oncheck_pay($conn, $db)
 
                             $count_new_item++;
 
+                                    $insert_log = "INSERT INTO log_activity_users (itemCode , itemstockID , qty, isStatus, DocNo, userID, createAt) 
+                                    VALUES (:itemCode, :itemstockID, 1, :isStatus, :DocNo, :Userid, NOW())";
+
+                            $meQuery_log = $conn->prepare($insert_log);
+
+                            $meQuery_log->bindParam(':itemCode', $_ItemCode);
+                            $meQuery_log->bindParam(':itemstockID', $_RowID);
+                            $meQuery_log->bindValue(':isStatus', 2, PDO::PARAM_INT);
+                            $meQuery_log->bindParam(':DocNo', $DocNo_pay);
+                            $meQuery_log->bindParam(':Userid', $Userid);
+
+
+                            $meQuery_log->execute();
+
 
 
                             $count_itemstock = 2;
@@ -5582,6 +5681,20 @@ function oncheck_pay($conn, $db)
                             die;
                         }
                     }
+
+                            $insert_log = "INSERT INTO log_activity_users (itemCode , itemstockID , qty, isStatus, DocNo, userID, createAt) 
+                                            VALUES (:itemCode, :itemstockID, 1, :isStatus, :DocNo, :Userid, NOW())";
+
+                            $meQuery_log = $conn->prepare($insert_log);
+
+                            $meQuery_log->bindParam(':itemCode', $_ItemCode);
+                            $meQuery_log->bindParam(':itemstockID', $_RowID);
+                            $meQuery_log->bindValue(':isStatus', 2, PDO::PARAM_INT);
+                            $meQuery_log->bindParam(':DocNo', $DocNo_pay);
+                            $meQuery_log->bindParam(':Userid', $Userid);
+
+
+                            $meQuery_log->execute();
 
 
                     $updatePay = "UPDATE deproom SET UserPay = $Userid WHERE deproom.DocNo = '$DocNo_pay' ";
@@ -5644,7 +5757,7 @@ function oncheck_pay($conn, $db)
                     
                     if ($DocNo_pay != $DocNo_borrow  ) {
 
-                    // if ($hncode != $_hn_record_id_borrow || $input_box_pay != $_number_box ) {
+                        // if ($hncode != $_hn_record_id_borrow || $input_box_pay != $_number_box ) {
 
                         $checkqty = "SELECT
                                             SUM( deproomdetail.Qty ) AS deproom_qty ,
@@ -6113,6 +6226,19 @@ function oncheck_pay($conn, $db)
                                 $count_new_item++;
 
 
+                                $insert_log = "INSERT INTO log_activity_users (itemCode , itemstockID , qty, isStatus, DocNo, userID, createAt) 
+                                       VALUES (:itemCode, :itemstockID, 1, :isStatus, :DocNo, :Userid, NOW())";
+
+                                $meQuery_log = $conn->prepare($insert_log);
+
+                                $meQuery_log->bindParam(':itemCode', $_ItemCode);
+                                $meQuery_log->bindParam(':itemstockID', $_RowID);
+                                $meQuery_log->bindValue(':isStatus', 2, PDO::PARAM_INT);
+                                $meQuery_log->bindParam(':DocNo', $DocNo_pay);
+                                $meQuery_log->bindParam(':Userid', $Userid);
+
+
+                                $meQuery_log->execute();
 
                                 $count_itemstock = 2;
                                 echo json_encode($count_itemstock);
@@ -6120,6 +6246,24 @@ function oncheck_pay($conn, $db)
                                 die;
                             }
                         }
+
+                        $insert_log = "INSERT INTO log_activity_users (itemCode , itemstockID , qty, isStatus, DocNo, userID, createAt) 
+                                VALUES (:itemCode, :itemstockID, 1, :isStatus, :DocNo, :Userid, NOW())";
+
+                        $meQuery_log = $conn->prepare($insert_log);
+
+                        $meQuery_log->bindParam(':itemCode', $_ItemCode);
+                        $meQuery_log->bindParam(':itemstockID', $_RowID);
+                        $meQuery_log->bindValue(':isStatus', 2, PDO::PARAM_INT);
+                        $meQuery_log->bindParam(':DocNo', $DocNo_pay);
+                        $meQuery_log->bindParam(':Userid', $Userid);
+
+
+                        $meQuery_log->execute();
+
+
+
+
                     } else {
                         $count_itemstock = 3;
                         echo json_encode($count_itemstock);
@@ -6137,6 +6281,14 @@ function oncheck_pay($conn, $db)
 
 
                 }
+
+
+
+
+
+
+
+
             }else{
 
                 $count_itemstock = 9;

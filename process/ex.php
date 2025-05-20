@@ -126,7 +126,7 @@ function feeddata($conn,$db)
                 item.itemname,  FORMAT ( itemstock.ExpireDate, 'dd/MM/yyyy' ) ASC";
     }
 
-
+    // echo $query;
 
 
     $meQuery = $conn->prepare($query);
@@ -135,17 +135,19 @@ function feeddata($conn,$db)
 
         if($check_ex == '1'){
                 $return[] = $row;
-        }
-        if($check_ex == '2'){
+        }else{
             if($row['IsStatus'] == 'ใกล้หมดอายุ'){
                 $return[] = $row;
-            }
-        }
-        if($check_ex == '3'){
-            if($row['IsStatus'] == 'หมดอายุ'){
+            }else if($row['IsStatus'] == 'หมดอายุ'){
                 $return[] = $row;
             }
         }
+        // if($check_ex == '2'){
+
+        // }
+        // if($check_ex == '3'){
+
+        // }
     }
     echo json_encode($return);
     unset($conn);

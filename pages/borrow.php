@@ -31,6 +31,32 @@
 
 
 <div class="row">
+
+    <div class="col-md-3">
+        <div class="form-group ">
+            <label style="color:black;font-weight: 600;">วันที่</label>
+            <div class="input-group">
+                <input type="text" class="form-control datepicker-here f18" id="select_Sdate" data-language="en" data-date-format="dd-mm-yyyy">
+                <div class="input-group-append">
+                    <div class="input-group-text bg-light" style="font-size: 20px;font-weight: bold;"><i class="fa-regular fa-calendar-days"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="form-group ">
+            <label style="color:black;font-weight: 600;">วันที่</label>
+            <div class="input-group">
+                <input type="text" class="form-control datepicker-here f18" id="select_Edate" data-language="en" data-date-format="dd-mm-yyyy">
+                <div class="input-group-append">
+                    <div class="input-group-text bg-light" style="font-size: 20px;font-weight: bold;"><i class="fa-regular fa-calendar-days"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <div class="col-md-12">
         <div class="card">
             <div class="card-header" style="color:black;font-size:25px;">

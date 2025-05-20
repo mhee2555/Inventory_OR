@@ -89,7 +89,14 @@ function click_main() {
       $("#select_deproom_routine").select2();
       $("#select_procedure_routine").select2();
     }, 500);
+
+        $("#routine_id").val("");
+
+      $('#table_item_detail_request').DataTable().destroy();
+      $("#table_item_detail_request tbody").html("");
   });
+
+
 
     $("#select_doctor_routine").on("select2:select", function (e) {
       if($("#select_doctor_routine").val() == "" ){

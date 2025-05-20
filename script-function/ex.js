@@ -13,7 +13,6 @@ $(function() {
     $("#radio_tab1").css('background', '');
     
     $("#table_data").attr('hidden', false);
-    $("#table_data2").attr('hidden', true);
     $("#check_ex").val('3');
 
     setTimeout(() => {
@@ -32,7 +31,6 @@ $("#radio_tab1").click(function() {
     $("#radio_tab3").css('color', 'black');
     $("#radio_tab3").css('background', '');
     $("#table_data").attr('hidden', false);
-    $("#table_data2").attr('hidden', true);
     $("#check_ex").val('1');
     feeddata();
 
@@ -47,7 +45,6 @@ $("#radio_tab2").click(function() {
     $("#radio_tab3").css('color', 'black');
     $("#radio_tab3").css('background', '');
     $("#table_data").attr('hidden', false);
-    $("#table_data2").attr('hidden', true);
     $("#check_ex").val('2');
     feeddata();
 
@@ -63,9 +60,9 @@ $("#radio_tab3").click(function() {
     $("#radio_tab1").css('background', '');
 
     $("#table_data").attr('hidden', false);
-    $("#table_data2").attr('hidden', true);
     $("#check_ex").val('3');
-    feeddata();
+
+      feeddata();
 
 });
 
@@ -234,10 +231,10 @@ $('#btn_send').on("click", function(e) {
 function feeddata() {
 
 
-    $('#table_data').DataTable().destroy();
-    $('#table_data2').DataTable().destroy();
-    $("#table_data tbody").html("");
-    $("#table_data2 tbody").html("");
+    // $('#table_data').DataTable().destroy();
+    // $('#table_data2').DataTable().destroy();
+    // $("#table_data tbody").html("");
+    // $("#table_data2 tbody").html("");
     $.ajax({
         url: "process/ex.php",
         type: 'POST',
@@ -253,7 +250,9 @@ function feeddata() {
             if (!$.isEmptyObject(ObjData)) {
                 var _tr = ``;
                 var allpage = 0;
+                $('#table_data').DataTable().destroy();
                 $("#table_data tbody").html("");
+                 var number_ex = 1;
 
                 $.each(ObjData, function(kay, value) {
 
@@ -266,23 +265,25 @@ function feeddata() {
 
 
 
-
+                    console.log($("#check_ex").val());
 
                     if ($("#check_ex").val() == '1') {
 
                         if (value.IsStatus == 'ใกล้หมดอายุ') {
-                            value.IsStatus = settext("exsoon");
+                            value.IsStatus = 'ใกล้หมดอายุ';
                         } else if (value.IsStatus == 'หมดอายุ') {
-                            value.IsStatus = settext("ex");
+                            value.IsStatus = 'หมดอายุ';
                         }
                         _tr += `<tr> ` +
-                            `<td class="text-center"><label >${kay + 1}</label></td>` +
+                            `<td class="text-center"><label >${number_ex}</label></td>` +
                             `<td class="text-center"><label >${value.UsageCode}</label></td>` +
                             `<td class="text-left"><label >${value.itemname}</label></td>` +
                             `<td class="text-center"><label >${value.ExpireDate}</label</td>` +
                             `<td class="text-center"><label >${value.Qty}</label</td>` +
                             `<td class="text-center"><label ><button class='${color}' disabled>${value.IsStatus}</button></label</td>` +
                             ` </tr>`
+
+                                number_ex++;
                     }
                     if ($("#check_ex").val() == '2') {
 
@@ -290,7 +291,7 @@ function feeddata() {
 
                             value.IsStatus = settext("exsoon");
                             _tr += `<tr> ` +
-                                `<td class="text-center"><label >${kay + 1}</label></td>` +
+                                `<td class="text-center"><label >${number_ex}</label></td>` +
                                 `<td class="text-center"><label >${value.UsageCode}</label></td>` +
                                 `<td class="text-left"><label >${value.itemname}</label></td>` +
                                 `<td class="text-center"><label >${value.ExpireDate}</label</td>` +
@@ -298,22 +299,28 @@ function feeddata() {
                                 `<td class="text-center"><label > <button class='${color}' disabled>${value.IsStatus}</button></label</td>` +
                                 ` </tr>`
 
+
+                                number_ex++;
+
                         }
                     }
                     if ($("#check_ex").val() == '3') {
                         if (value.IsStatus == 'หมดอายุ') {
 
+
                             value.IsStatus = settext("ex");
                             var disabled = "disabled";
                             _tr += `<tr id='tr_${value.UsageCode}'> ` +
                                 // `<td class="text-center"><input ${disabled} value="${value.UsageCode}"  type="checkbox"    data-itemstockid="${value.RowID}"    class="form-check-input checkAllSub_${kay}  checkAllSub checkAllSubxx_${value.UsageCode}" id="checkAllSub_${value.UsageCode}"   style="width: 25px;height: 20px;"></td>` +
-                                `<td class="text-center"><label >${kay + 1}</label></td>` +
+                                `<td class="text-center"><label >${number_ex}</label></td>` +
                                 `<td class="text-center"><label >${value.UsageCode}</label></td>` +
                                 `<td class="text-left"><label >${value.itemname}</label></td>` +
                                 `<td class="text-center"><label >${value.ExpireDate}</label</td>` +
                                 `<td class="text-center"><label >${value.Qty}</label</td>` +
                                 `<td class="text-center"><label >  <button class='${color}' disabled>${value.IsStatus}</button> </label</td>` +
                                 ` </tr>`
+
+                                number_ex++;
 
                         }
                     }
