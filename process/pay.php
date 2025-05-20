@@ -6412,7 +6412,8 @@ function show_detail_deproom_pay($conn, $db)
             $querych = "SELECT
                             deproomdetail.ID,
                             SUM( deproomdetail.Qty ) AS cnt,
-                            IFNULL(( SELECT SUM( deproomdetailsub.qty_weighing ) FROM deproomdetailsub WHERE deproomdetailsub.Deproomdetail_RowID = deproomdetail.ID ), 0 ) AS cnt_pay 
+                            IFNULL(( SELECT SUM( deproomdetailsub.qty_weighing ) FROM deproomdetailsub WHERE deproomdetailsub.Deproomdetail_RowID = deproomdetail.ID ), 0 ) AS cnt_pay,
+                            deproomdetail.IsRequest 
                         FROM
                             deproom
                             INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo 
@@ -6427,6 +6428,10 @@ function show_detail_deproom_pay($conn, $db)
             while ($rowch = $meQuerych->fetch(PDO::FETCH_ASSOC)) {
 
                 $hasRows = true;
+
+                if($rowch['IsRequest'] == 1){
+                    $rowch['cnt'] = 0;
+                }
 
                 if ($rowch['cnt_pay'] < $rowch['cnt']) {
                     $check_q++;

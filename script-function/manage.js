@@ -90,6 +90,33 @@ function click_main() {
       $("#select_procedure_routine").select2();
     }, 500);
   });
+
+    $("#select_doctor_routine").on("select2:select", function (e) {
+      if($("#select_doctor_routine").val() == "" ){
+        select_deproom();
+      }else{
+      set_deproom();
+      }
+  });
+  //   $("#select_procedure_routine").on("select2:select", function (e) {
+  //     if($("#select_procedure_routine").val() == "" ){
+  //       select_deproom();
+  //     }else{
+  //      set_deproom_proceduce();
+  //     }
+  // });
+
+
+    $("#select_deproom_routine").on("select2:select", function (e) {
+      if($("#select_deproom_routine").val() == "" ){
+        select_procedure();
+      }else{
+       set_proceduce();
+      }
+  });
+
+
+
 }
 
 // $("#select_doctor_routine").on("select2:select", function (e) {
@@ -98,8 +125,6 @@ function click_main() {
 //   if (selectedValue != "") {
 //     var index = doctor_routine.indexOf(selectedValue);
 //     if (index == -1) {
-
-    
 
 //       doctor_routine.push(selectedValue);
 //       var _row = "";
@@ -125,7 +150,6 @@ function click_main() {
 //           },
 //         });
 //       }
-
 
 //     }
 //   }
@@ -161,7 +185,6 @@ function click_main() {
 //           },
 //         });
 //       }
-
 
 //     }
 //   }
@@ -1989,7 +2012,6 @@ $("#input_search_routine").keyup(function () {
   show_detail_routine();
 });
 
-
 function show_detail_routine() {
   $.ajax({
     url: "process/manage.php",
@@ -2009,7 +2031,11 @@ function show_detail_routine() {
                       <td>${value.Doctor_Name}</td>
                       <td>${value.departmentroomname}</td>
                       <td>${value.Procedure_TH}</td>
-                      <td class="text-center" > <button class="btn btn-outline-dark f18"  onclick='edit_routine(${value.id },${value.departmentroom_id},${value.doctor_id},${value.procedure_id})'> <i class="fa-regular fa-pen-to-square"></i> แก้ไข</button> </td>
+                      <td class="text-center" > <button class="btn btn-outline-dark f18"  onclick='edit_routine(${
+                        value.id
+                      },${value.departmentroom_id},${value.doctor_id},${
+            value.procedure_id
+          })'> <i class="fa-regular fa-pen-to-square"></i> แก้ไข</button> </td>
                       <td class="text-center"> <button  class="btn btn-outline-danger f18" onclick='delete_routine(${
                         value.id
                       })'><i class="fa-solid fa-trash-can"></i></button> </td>
@@ -2185,27 +2211,19 @@ function show_detail_item() {
   });
 }
 
-
 $("#btn_clear_routine").click(function () {
-
-
-  $("#routine_id").val('');
+  $("#routine_id").val("");
 
   show_detail_item();
-
 
   $("#table_item_detail_request").DataTable().destroy();
   $("#table_item_detail_request tbody").empty();
 
-
   setTimeout(() => {
-    $("#select_doctor_routine").val('').trigger("change");
-    $("#select_deproom_routine").val('').trigger("change");
-    $("#select_procedure_routine").val('').trigger("change");
+    $("#select_doctor_routine").val("").trigger("change");
+    $("#select_deproom_routine").val("").trigger("change");
+    $("#select_procedure_routine").val("").trigger("change");
   }, 500);
-
-
-
 
   // $("#row_doctor_routine").html("");
   // doctor_routine = [];
@@ -2214,7 +2232,6 @@ $("#btn_clear_routine").click(function () {
 
   show_detail_routine();
 });
-
 
 $("#select_typeItem").change(function () {
   show_detail_item();
@@ -2267,10 +2284,8 @@ $("#input_search_request").keyup(function () {
   show_detail_item();
 });
 
-
-
 $("#select_procedure_routine").change(function () {
-  if($("#routine_id").val() != ""  ){
+  if ($("#routine_id").val() != "") {
     $.ajax({
       url: "process/manage.php",
       type: "POST",
@@ -2279,18 +2294,15 @@ $("#select_procedure_routine").change(function () {
         procedure_routine: $("#select_procedure_routine").val(),
         routine_id: $("#routine_id").val(),
       },
-      success: function (result) {
-
-      },
+      success: function (result) {},
     });
-  }else{
+  } else {
     show_detail_request_byDocNo_change();
   }
 });
 
-
 $("#select_doctor_routine").change(function () {
-  if($("#routine_id").val() != "" ){
+  if ($("#routine_id").val() != "") {
     $.ajax({
       url: "process/manage.php",
       type: "POST",
@@ -2299,19 +2311,12 @@ $("#select_doctor_routine").change(function () {
         doctor_routine: $("#select_doctor_routine").val(),
         routine_id: $("#routine_id").val(),
       },
-      success: function (result) {
-  
-      },
+      success: function (result) {},
     });
-  }else{
+  } else {
     show_detail_request_byDocNo_change();
   }
 });
-
-
-
-
-
 
 function onconfirm_request() {
   qty_array = [];
@@ -2355,7 +2360,6 @@ function onconfirm_request() {
   });
 }
 
-
 function show_detail_request_byDocNo_change() {
   $.ajax({
     url: "process/manage.php",
@@ -2374,13 +2378,11 @@ function show_detail_request_byDocNo_change() {
         $.each(ObjData, function (kay, value) {
           Swal.fire("ผิดพลาด", "มีการบันทึก Master Routine นี้แล้ว", "error");
 
-          $("#select_doctor_routine").val('').trigger("change");
-          $("#select_deproom_routine").val('').trigger("change");
-          $("#select_procedure_routine").val('').trigger("change");
+          $("#select_doctor_routine").val("").trigger("change");
+          $("#select_deproom_routine").val("").trigger("change");
+          $("#select_procedure_routine").val("").trigger("change");
         });
       }
-
-
     },
   });
 }
@@ -2554,7 +2556,6 @@ function delete_request_byItem(ID) {
 //   console.log(doctor_routine);
 //   $(".div_" + selectedValue).attr("hidden", true);
 
-
 //   if($("#routine_id").val() != "" && doctor_routine.length > 0 ){
 //     $.ajax({
 //       url: "process/manage.php",
@@ -2570,11 +2571,140 @@ function delete_request_byItem(ID) {
 //     });
 //   }
 
-
 // }
 
-function delete_routine(id) {
+// set_deproom();
 
+
+
+//   function set_proceduce() {
+//   $.ajax({
+//     url: "process/process_main/select_main.php",
+//     type: "POST",
+//     data: {
+//       FUNC_NAME: "set_proceduce",
+//       select_deproom_request: $("#select_deproom_routine").val(),
+//     },
+//     success: function (result) {
+//       var ObjData = JSON.parse(result);
+//       console.log(ObjData);
+//       var option = `<option value="" selected>กรุณาเลือกหัตถการ</option>`;
+//       if (!$.isEmptyObject(ObjData)) {
+//         $.each(ObjData, function (kay, value) {
+//           option += `<option value="${value.ID}" >${value.Procedure_TH}</option>`;
+//         });
+//       } else {
+//         option = `<option value="0">ไม่มีข้อมูล</option>`;
+//       }
+//       $("#select_procedure_routine").html(option);
+//     },
+//   });
+// }
+
+// function set_doctor() {
+//   $.ajax({
+//     url: "process/process_main/select_main.php",
+//     type: "POST",
+//     data: {
+//       FUNC_NAME: "set_doctor",
+//       select_deproom_request: $("#select_deproom_routine").val(),
+//     },
+//     success: function (result) {
+//       var ObjData = JSON.parse(result);
+//       console.log(ObjData);
+//       var option = `<option value="" selected>กรุณาเลือกแพทย์</option>`;
+//       if (!$.isEmptyObject(ObjData)) {
+//         $.each(ObjData, function (kay, value) {
+//           option += `<option value="${value.ID}" >${value.Doctor_Name}</option>`;
+//         });
+//       } else {
+//         option = `<option value="0">ไม่มีข้อมูล</option>`;
+//       }
+//       $("#select_doctor_routine").html(option);
+//     },
+//   });
+// }
+
+function set_deproom_proceduce() {
+  var procedure_xx = [];
+  procedure_xx.push($("#select_procedure_routine").val().toString());
+
+  $.ajax({
+    url: "process/process_main/select_main.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "set_deproom_proceduce",
+      procedure_id_Array: procedure_xx,
+    },
+    success: function (result) {
+      var ObjData = JSON.parse(result);
+      console.log(ObjData);
+      var option = `<option value="" selected>กรุณาเลือกห้องผ่าตัด</option>`;
+      if (!$.isEmptyObject(ObjData)) {
+        $.each(ObjData, function (kay, value) {
+          option += `<option value="${value.id}" >${value.departmentroomname}</option>`;
+        });
+      } else {
+        option = `<option value="0">ไม่มีข้อมูล</option>`;
+      }
+      $("#select_deproom_routine").html(option);
+    },
+  });
+}
+
+
+function set_proceduce() {
+  $.ajax({
+    url: "process/process_main/select_main.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "set_proceduce",
+      select_deproom_request: $("#select_deproom_routine").val(),
+    },
+    success: function (result) {
+      var ObjData = JSON.parse(result);
+      console.log(ObjData);
+      var option = `<option value="" selected>กรุณาเลือกหัตถการ</option>`;
+      if (!$.isEmptyObject(ObjData)) {
+        $.each(ObjData, function (kay, value) {
+          option += `<option value="${value.ID}" >${value.Procedure_TH}</option>`;
+        });
+      } else {
+        option = `<option value="0">ไม่มีข้อมูล</option>`;
+      }
+      $("#select_procedure_routine").html(option);
+    },
+  });
+}
+
+function set_deproom() {
+
+  var doctor_Array_xx = [];
+  doctor_Array_xx.push($("#select_doctor_routine").val().toString());
+  $.ajax({
+    url: "process/process_main/select_main.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "set_deproom",
+      doctor_Array: doctor_Array_xx,
+    },
+    success: function (result) {
+      var ObjData = JSON.parse(result);
+      console.log(ObjData);
+      var option = `<option value="" selected>กรุณาเลือกห้องผ่าตัด</option>`;
+      if (!$.isEmptyObject(ObjData)) {
+        $.each(ObjData, function (kay, value) {
+          option += `<option value="${value.id}" >${value.departmentroomname}</option>`;
+        });
+      } else {
+        option = `<option value="0">ไม่มีข้อมูล</option>`;
+      }
+      $("#select_deproom_routine").html(option);
+    },
+  });
+}
+
+function delete_routine(id) {
   Swal.fire({
     title: "ยืนยัน",
     text: "ยืนยัน การลบ Routine",
@@ -2603,12 +2733,9 @@ function delete_routine(id) {
       });
     }
   });
-
-
-
 }
 
-function edit_routine(id, departmentroom_id,doctor_id,procedure_id) {
+function edit_routine(id, departmentroom_id, doctor_id, procedure_id) {
   $("#routine_id").val(id);
 
   $("#select_doctor_routine").val(doctor_id).trigger("change");

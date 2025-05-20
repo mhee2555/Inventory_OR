@@ -428,7 +428,7 @@ $("#btn_clear_request").click(function () {
   $("#input_remark_request").val("");
 
 
-      var now = new Date();
+  var now = new Date();
   var hours = String(now.getHours()).padStart(2, "0");
   var minutes = String(now.getMinutes()).padStart(2, "0");
   var currentTime = hours + ":" + minutes;
