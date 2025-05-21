@@ -105,8 +105,8 @@ function selection_item_normal($conn, $db)
                     ) AS balance,
                     ( SELECT COUNT( RowID ) FROM itemstock WHERE ItemCode = item.itemcode AND ( IsDamage = 1 OR IsDamage = 2 ) ) AS damage 
                 FROM
-                    itemstock
-                    INNER JOIN item ON itemstock.ItemCode = item.itemcode 
+                    item
+                    LEFT JOIN itemstock ON itemstock.ItemCode = item.itemcode 
                 WHERE
                         ( item.itemname LIKE '%$input_search%' OR item.itemcode LIKE '%$input_search%' ) 
                    AND item.SpecialID = '1' 
@@ -125,6 +125,7 @@ function selection_item_normal($conn, $db)
                 END,
                 sub.itemname; ";
 
+    // echo $Q1 ;
 
 
     // $Q1 = " SELECT
@@ -419,8 +420,8 @@ function selection_item_rfid($conn, $db)
                     ) AS balance,
                     ( SELECT COUNT( RowID ) FROM itemstock WHERE ItemCode = item.itemcode AND ( IsDamage = 1 OR IsDamage = 2 ) ) AS damage 
                 FROM
-                    itemstock
-                    INNER JOIN item ON itemstock.ItemCode = item.itemcode 
+                    item
+                    LEFT JOIN itemstock ON itemstock.ItemCode = item.itemcode 
                 WHERE
                         ( item.itemname LIKE '%$input_search%' OR item.itemcode LIKE '%$input_search%' ) 
                    AND item.SpecialID = '0' 
@@ -791,8 +792,8 @@ function selection_item($conn, $db)
                     ) AS balance,
                     ( SELECT COUNT( RowID ) FROM itemstock WHERE ItemCode = item.itemcode AND ( IsDamage = 1 OR IsDamage = 2 ) ) AS damage 
                 FROM
-                    itemstock
-                    INNER JOIN item ON itemstock.ItemCode = item.itemcode 
+                    item
+                    LEFT JOIN itemstock ON itemstock.ItemCode = item.itemcode  
                 WHERE
                         ( item.itemname LIKE '%$input_search%' OR item.itemcode LIKE '%$input_search%' ) 
                    AND item.SpecialID = '2' 

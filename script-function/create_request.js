@@ -6,8 +6,6 @@ var doctor_Array = [];
 var procedure_id_history_Array = [];
 var doctor_history_Array = [];
 
-
-
 $(function () {
   var now = new Date();
   var hours = String(now.getHours()).padStart(2, "0");
@@ -169,13 +167,11 @@ $(function () {
 
         $("#row_procedure").append(_row);
 
-
-        if($("#select_deproom_request").val() == ""){
+        if ($("#select_deproom_request").val() == "") {
           set_deproom_proceduce();
         }
       }
       $("#select_procedure_request").val("").trigger("change");
-
     }
   });
 
@@ -193,17 +189,13 @@ $(function () {
 
         $("#row_doctor").append(_row);
 
-
         // if($("#select_deproom_request").val() == ""){
-          set_deproom();
+        set_deproom();
         // }
       }
       $("#select_doctor_request").val("").trigger("change");
     }
   });
-
-
-  
 });
 
 // create_Request
@@ -220,15 +212,14 @@ function DeleteDoctor(selectedValue) {
   $(".div_" + selectedValue).attr("hidden", true);
 
   // if($("#select_deproom_request").val() == ""){
-    set_deproom();
-    select_doctor();
-    select_procedure();
+  set_deproom();
+  select_doctor();
+  select_procedure();
 
-    $(".clear_procedure").attr("hidden", true);
+  $(".clear_procedure").attr("hidden", true);
 
-
-    $("#btn_routine").attr("disabled", false);
-    procedure_id_Array = [];
+  $("#btn_routine").attr("disabled", false);
+  procedure_id_Array = [];
   // }
   show_detail_history();
 }
@@ -258,7 +249,7 @@ function DeleteDoctor_history(selectedValue) {
   console.log(doctor_history_Array);
   $(".div_" + selectedValue).attr("hidden", true);
 
-  if($("#select_deproom_request").val() == ""){
+  if ($("#select_deproom_request").val() == "") {
     set_deproom_proceduce();
   }
 }
@@ -271,8 +262,7 @@ function Deletprocedure(selectedValue) {
     procedure_id_Array.splice(index, 1);
   }
 
-
-    $("#btn_routine").attr("disabled", false);
+  $("#btn_routine").attr("disabled", false);
   console.log(procedure_id_Array);
   $(".div_" + selectedValue).attr("hidden", true);
 }
@@ -289,8 +279,6 @@ function showLoading() {
 }
 
 $("#btn_routine").click(function () {
-
-
   qty_array = [];
   itemcode_array = [];
 
@@ -322,7 +310,7 @@ $("#btn_routine").click(function () {
     showDialogFailed("กรุณาเลือกหัตถการ");
     return;
   }
-  $("#btn_routine").attr('disabled',true);
+  $("#btn_routine").attr("disabled", true);
   $.ajax({
     url: "process/create_request.php",
     type: "POST",
@@ -336,7 +324,6 @@ $("#btn_routine").click(function () {
     success: function (result) {
       var ObjData = JSON.parse(result);
       if (!$.isEmptyObject(ObjData)) {
-
         showLoading();
 
         $.each(ObjData, function (kay, value) {
@@ -354,14 +341,11 @@ $("#btn_routine").click(function () {
             txt_docno_request: $("#txt_docno_request").val(),
           },
           success: function (result) {
-
-
-
             array_itemcode = [];
             array_qty = [];
 
             $("body").loadingModal("destroy");
-            $("#btn_routine").attr('disabled',true);
+            $("#btn_routine").attr("disabled", true);
 
             var ObjData = JSON.parse(result);
             console.log(ObjData);
@@ -374,9 +358,9 @@ $("#btn_routine").click(function () {
             }
           },
         });
-      }else{
-      showDialogFailed("ไม่พบ Routine");
-      $("#btn_routine").attr('disabled',false);
+      } else {
+        showDialogFailed("ไม่พบ Routine");
+        $("#btn_routine").attr("disabled", false);
       }
     },
   });
@@ -416,8 +400,7 @@ $("#btn_confirm_request").click(function () {
 });
 
 $("#btn_clear_request").click(function () {
-
-  $("#btn_routine").attr('disabled',false);
+  $("#btn_routine").attr("disabled", false);
 
   $("#table_item_detail_request").DataTable().destroy();
   $("#table_item_detail_request tbody").empty();
@@ -429,43 +412,30 @@ $("#btn_clear_request").click(function () {
   $("#select_procedure_request").val("");
   $("#input_remark_request").val("");
 
-
   var now = new Date();
   var hours = String(now.getHours()).padStart(2, "0");
   var minutes = String(now.getMinutes()).padStart(2, "0");
   var currentTime = hours + ":" + minutes;
   $("#select_time_request").val(currentTime);
 
-
   $("#select_date_request").val("");
 
-  
-
   $("#txt_docno_request").val("");
-
 
   $(".clear_doctor").attr("hidden", true);
   doctor_Array = [];
 
   $("#select_deproom_request").val("");
-  $("#select2-select_deproom_request-container").text(
-    "กรุณาเลือกห้องผ่าตัด"
-  );
+  $("#select2-select_deproom_request-container").text("กรุณาเลือกห้องผ่าตัด");
 
   $("#select_procedure_request").val("");
-  $("#select2-select_procedure_request-container").text(
-    "กรุณาเลือกหัตถการ"
-  );
+  $("#select2-select_procedure_request-container").text("กรุณาเลือกหัตถการ");
   $(".clear_procedure").attr("hidden", true);
   procedure_id_Array = [];
 
-
-
-
-    select_deproom();
-    select_procedure();
-    select_doctor();
-
+  select_deproom();
+  select_procedure();
+  select_doctor();
 });
 
 $("#input_hn_request").on("keyup", function (e) {
@@ -512,14 +482,13 @@ $("#btn_confirm_send_request").click(function () {
     return;
   }
 
-  let table = $('#table_item_detail_request').DataTable(); // อ้างอิง DataTable instance
-  let rowCount = table.rows({ filter: 'applied' }).count(); // นับแถวที่ยังแสดงอยู่ (ไม่ถูก filter)
+  let table = $("#table_item_detail_request").DataTable(); // อ้างอิง DataTable instance
+  let rowCount = table.rows({ filter: "applied" }).count(); // นับแถวที่ยังแสดงอยู่ (ไม่ถูก filter)
 
   if (rowCount === 0) {
     showDialogFailed("กรุณาเพิ่มออุปกรณ์");
     return;
   }
-
 
   Swal.fire({
     title: "ยืนยัน",
@@ -699,9 +668,15 @@ function show_detail_request_byDocNo() {
                       <td class='text-center'>${kay + 1}</td>
                       <td>${value.itemname}</td>
                       <td class='text-center'>${value.TyeName}</td>
-                      <td class='text-center'><input type="number" onkeyup="updateDetail_qty(${value.ID})" class="form-control text-center qty_loop" id="qty_item_${value.ID}" data-id='${value.ID}' value='${value.cnt}'> </td>
+                      <td class='text-center'><input type="number" onkeyup="updateDetail_qty(${
+                        value.ID
+                      })" class="form-control text-center qty_loop numonly" id="qty_item_${
+            value.ID
+          }" data-id='${value.ID}' value='${value.cnt}'> </td>
                       <td class='text-center'>
-                      <img src="assets/img_project/1_icon/ic_trash-1.png" style='width:30%;cursor:pointer;' onclick='delete_request_byItem(${value.ID})'>
+                      <img src="assets/img_project/1_icon/ic_trash-1.png" style='width:30%;cursor:pointer;' onclick='delete_request_byItem(${
+                        value.ID
+                      })'>
                       </td>
                    </tr>`;
         });
@@ -770,15 +745,17 @@ function show_detail_request_byDocNo() {
             ""
         );
       }
+
+      $(".numonly").on("input", function () {
+        this.value = this.value.replace(/[^0-9-]/g, ""); //<-- replace all other than given set of values
+      });
     },
   });
 }
 
-
-
 function updateDetail_qty(ID) {
   $("#qty_item_" + ID).val();
-    $.ajax({
+  $.ajax({
     url: "process/create_request.php",
     type: "POST",
     data: {
@@ -788,7 +765,6 @@ function updateDetail_qty(ID) {
     },
     success: function (result) {},
   });
-
 }
 
 function add_request_qty(ID) {
@@ -908,7 +884,7 @@ function onconfirm_send_request() {
         $("#input_hn_request").val("");
         $("#select_date_request").val("");
 
-        $("#btn_routine").attr('disabled',false);
+        $("#btn_routine").attr("disabled", false);
 
         // $("#select_time_request").val("");
         $("#select_time_request").val(currentTime);
@@ -1195,20 +1171,14 @@ function edit_item_byDocNo(
   text_edit,
   serviceTime
 ) {
-
-
   $(".clear_doctor").attr("hidden", true);
   doctor_Array = [];
 
   $("#select_deproom_request").val("");
-  $("#select2-select_deproom_request-container").text(
-    "กรุณาเลือกห้องผ่าตัด"
-  );
+  $("#select2-select_deproom_request-container").text("กรุณาเลือกห้องผ่าตัด");
 
   $("#select_procedure_request").val("");
-  $("#select2-select_procedure_request-container").text(
-    "กรุณาเลือกหัตถการ"
-  );
+  $("#select2-select_procedure_request-container").text("กรุณาเลือกหัตถการ");
   $(".clear_procedure").attr("hidden", true);
   procedure_id_Array = [];
 
@@ -1274,7 +1244,7 @@ function edit_item_byDocNo(
     },
   });
 
-    $.ajax({
+  $.ajax({
     url: "process/create_request.php",
     type: "POST",
     data: {
@@ -1683,10 +1653,10 @@ function set_date() {
   return output;
 }
 
-    function settext(key) {
-        if (localStorage.lang == "en") {
-            return en[key];
-        } else {
-            return th[key];
-        }
-    }
+function settext(key) {
+  if (localStorage.lang == "en") {
+    return en[key];
+  } else {
+    return th[key];
+  }
+}

@@ -231,6 +231,7 @@ $count = 1;
 $query = " SELECT
                 item.itemname,
                 item.itemcode2,
+                item.SalePrice,
                 hncode_detail.ID,
                 SUM( hncode_detail.Qty ) AS cnt,
                 itemtype.TyeName 
@@ -303,8 +304,8 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
         $html .=   '<td width="30 %" align="center"> <tcpdf method="write1DBarcode" params="' . $params . '" /> </td>';
         $html .=   '<td width="32 %" align="left" style="line-height:50px;">' . $Result_Detail['itemname'] . '</td>';
         $html .=   '<td width="6 %" align="center" style="line-height:50px;">' . $Result_Detail['cnt'] . '</td>';
-        $html .=   '<td width="10 %" align="center" style="line-height:50px;">0.00</td>';
-        $html .=   '<td width="10 %" align="center" style="line-height:50px;">0.00</td>';
+        $html .=   '<td width="10 %" align="center" style="line-height:50px;">' . number_format($Result_Detail['SalePrice'],2) . '</td>';
+        $html .=   '<td width="10 %" align="center" style="line-height:50px;">' . number_format( ($Result_Detail['SalePrice'] * $Result_Detail['cnt']) ,2) . '</td>';
         $html .=  '</tr>';
         $count++;
     }
