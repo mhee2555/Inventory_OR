@@ -563,7 +563,7 @@ function onReturnData($conn, $db)
 
                             $meQuery_log->bindParam(':itemCode', $_ItemCode);
                             $meQuery_log->bindParam(':itemstockID', $_RowID);
-                            $meQuery_log->bindValue(':isStatus', 6, PDO::PARAM_INT);
+                            $meQuery_log->bindValue(':isStatus', 8, PDO::PARAM_INT);
                             $meQuery_log->bindParam(':DocNo', $_DocNo);
                             $meQuery_log->bindParam(':Userid', $Userid);
 
@@ -791,7 +791,21 @@ function cancel_item_byDocNo($conn, $db)
 {
     $return = array();
     $txt_docno_request = $_POST['txt_docno_request'];
+    $Userid = $_SESSION['Userid'];
 
+
+        $insert_log = "INSERT INTO log_activity_users (itemCode, qty, isStatus, DocNo, userID, createAt) 
+                        VALUES ('', :qty, :isStatus, :DocNo, :Userid, NOW())";
+
+        $meQuery_log = $conn->prepare($insert_log);
+
+        $meQuery_log->bindValue(':qty', 0 , PDO::PARAM_INT);
+        $meQuery_log->bindValue(':isStatus', 9, PDO::PARAM_INT);
+        $meQuery_log->bindParam(':DocNo', $txt_docno_request);
+        $meQuery_log->bindParam(':Userid', $Userid);
+
+
+        $meQuery_log->execute();
 
     if ($db == 1) {
         $sql1 = " UPDATE deproom SET IsCancel = 1 , ModifyDate = NOW()  WHERE DocNo = '$txt_docno_request' ";
@@ -1881,7 +1895,7 @@ function oncheck_pay_manual($conn, $db)
 
                             $meQuery_log->bindParam(':itemCode', $_ItemCode);
                             $meQuery_log->bindParam(':itemstockID', $_RowID);
-                            $meQuery_log->bindValue(':isStatus', 4, PDO::PARAM_INT);
+                            $meQuery_log->bindValue(':isStatus', 6, PDO::PARAM_INT);
                             $meQuery_log->bindParam(':DocNo', $input_docNo_deproom_manual);
                             $meQuery_log->bindParam(':Userid', $Userid);
 
@@ -2308,7 +2322,7 @@ function oncheck_pay_manual($conn, $db)
 
                             $meQuery_log->bindParam(':itemCode', $_ItemCode);
                             $meQuery_log->bindParam(':itemstockID', $_RowID);
-                            $meQuery_log->bindValue(':isStatus', 4, PDO::PARAM_INT);
+                            $meQuery_log->bindValue(':isStatus', 6, PDO::PARAM_INT);
                             $meQuery_log->bindParam(':DocNo', $input_docNo_deproom_manual);
                             $meQuery_log->bindParam(':Userid', $Userid);
 
@@ -2592,7 +2606,7 @@ function oncheck_Returnpay_manual($conn, $db)
 
                             $meQuery_log->bindParam(':itemCode', $_ItemCode);
                             $meQuery_log->bindParam(':itemstockID', $_RowID);
-                            $meQuery_log->bindValue(':isStatus', 5, PDO::PARAM_INT);
+                            $meQuery_log->bindValue(':isStatus', 7, PDO::PARAM_INT);
                             $meQuery_log->bindParam(':DocNo', $input_docNo_deproom_manual);
                             $meQuery_log->bindParam(':Userid', $Userid);
 
@@ -3809,7 +3823,7 @@ function oncheck_Returnpay($conn, $db)
 
                             $meQuery_log->bindParam(':itemCode', $_ItemCode);
                             $meQuery_log->bindParam(':itemstockID', $_RowID);
-                            $meQuery_log->bindValue(':isStatus', 3, PDO::PARAM_INT);
+                            $meQuery_log->bindValue(':isStatus', 5, PDO::PARAM_INT);
                             $meQuery_log->bindParam(':DocNo', $DocNo_pay);
                             $meQuery_log->bindParam(':Userid', $Userid);
 
@@ -5666,7 +5680,7 @@ function oncheck_pay($conn, $db)
 
                             $meQuery_log->bindParam(':itemCode', $_ItemCode);
                             $meQuery_log->bindParam(':itemstockID', $_RowID);
-                            $meQuery_log->bindValue(':isStatus', 2, PDO::PARAM_INT);
+                            $meQuery_log->bindValue(':isStatus', 4, PDO::PARAM_INT);
                             $meQuery_log->bindParam(':DocNo', $DocNo_pay);
                             $meQuery_log->bindParam(':Userid', $Userid);
 
@@ -5689,7 +5703,7 @@ function oncheck_pay($conn, $db)
 
                             $meQuery_log->bindParam(':itemCode', $_ItemCode);
                             $meQuery_log->bindParam(':itemstockID', $_RowID);
-                            $meQuery_log->bindValue(':isStatus', 2, PDO::PARAM_INT);
+                            $meQuery_log->bindValue(':isStatus', 4, PDO::PARAM_INT);
                             $meQuery_log->bindParam(':DocNo', $DocNo_pay);
                             $meQuery_log->bindParam(':Userid', $Userid);
 
@@ -6233,7 +6247,7 @@ function oncheck_pay($conn, $db)
 
                                 $meQuery_log->bindParam(':itemCode', $_ItemCode);
                                 $meQuery_log->bindParam(':itemstockID', $_RowID);
-                                $meQuery_log->bindValue(':isStatus', 2, PDO::PARAM_INT);
+                                $meQuery_log->bindValue(':isStatus', 4, PDO::PARAM_INT);
                                 $meQuery_log->bindParam(':DocNo', $DocNo_pay);
                                 $meQuery_log->bindParam(':Userid', $Userid);
 
@@ -6254,7 +6268,7 @@ function oncheck_pay($conn, $db)
 
                         $meQuery_log->bindParam(':itemCode', $_ItemCode);
                         $meQuery_log->bindParam(':itemstockID', $_RowID);
-                        $meQuery_log->bindValue(':isStatus', 2, PDO::PARAM_INT);
+                        $meQuery_log->bindValue(':isStatus', 4, PDO::PARAM_INT);
                         $meQuery_log->bindParam(':DocNo', $DocNo_pay);
                         $meQuery_log->bindParam(':Userid', $Userid);
 

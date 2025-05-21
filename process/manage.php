@@ -393,22 +393,43 @@ function saveDeproom($conn)
 
     $IsAdmin = 0;
 
+    $count_id = 0;
+
+        if ($input_IDDeproom == "") {
+            $check_d = "    SELECT id 
+                            FROM   departmentroom 
+                            WHERE departmentroomname_sub = '$input_DeproomName_sub' ";
+                        $meQuery_d = $conn->prepare($check_d);
+                        $meQuery_d->execute();
+                        while ($row_d = $meQuery_d->fetch(PDO::FETCH_ASSOC)) {
+                            $count_id ++;
+                        }
+        }
 
 
-    if ($input_IDDeproom == "") {
-        $query = "INSERT INTO departmentroom ( departmentroomname ,  floor_id ,  IsActive  ,  departmentroomname_EN ,  IsMainroom , departmentroomname_sub  ) 
-        VALUES             ('$input_DeproomNameTH'  , '$input_DeproomFloor'  , $IsActive , '$input_DeproomNameEN'  , 0 , '$input_DeproomName_sub') ";
-    } else {
-        $query = "UPDATE departmentroom SET   departmentroomname = '$input_DeproomNameTH' , floor_id = $input_DeproomFloor , IsActive = $IsActive , departmentroomname_EN = '$input_DeproomNameEN' , departmentroomname_sub = '$input_DeproomName_sub'
-                  WHERE id = '$input_IDDeproom'  ";
+
+    if($count_id == 0){
+        if ($input_IDDeproom == "") {
+            $query = "INSERT INTO departmentroom ( departmentroomname ,  floor_id ,  IsActive  ,  departmentroomname_EN ,  IsMainroom , departmentroomname_sub  ) 
+            VALUES             ('$input_DeproomNameTH'  , '$input_DeproomFloor'  , $IsActive , '$input_DeproomNameEN'  , 0 , '$input_DeproomName_sub') ";
+        } else {
+            $query = "UPDATE departmentroom SET   departmentroomname = '$input_DeproomNameTH' , floor_id = $input_DeproomFloor , IsActive = $IsActive , departmentroomname_EN = '$input_DeproomNameEN' , departmentroomname_sub = '$input_DeproomName_sub'
+                    WHERE id = '$input_IDDeproom'  ";
+        }
+        $meQuery = $conn->prepare($query);
+        $meQuery->execute();
+
+        echo "insert success";
+        unset($conn);
+        die;
+    }else{
+        echo "xxxx";
+        unset($conn);
+        die;
     }
 
-    $meQuery = $conn->prepare($query);
-    $meQuery->execute();
 
-    echo "insert success";
-    unset($conn);
-    die;
+
 }
 
 
@@ -469,66 +490,91 @@ function saveUser($conn)
 
     $IsAdmin = 0;
 
-
-
+    $count_id = 0;
     if ($input_IDUser == "") {
-        $query = "INSERT INTO users ( EmpCode ,  UserName ,  Password ,  IsCancel , DeptID , display ) 
-        VALUES             ('$input_empcodeUser'  , '$input_userName'  , '$input_passWord'  , $IsCancel ,1  ,3 ) ";
 
-        $query2 = "INSERT INTO employee ( EmpCode ,  FirstName ,  LastName   , DepID ,IsAdmin) 
-        VALUES             ('$input_empcodeUser'  , '$input_nameUser' , '$input_lastUser',1,1) ";
-
-
-        $meQuery = $conn->prepare($query);
-        $meQuery->execute();
-        $meQuery2 = $conn->prepare($query2);
-        $meQuery2->execute();
-
-
-        $queryE = " SELECT
-                        users.ID 
-                    FROM
-                        users
-                    WHERE users.EmpCode = '$input_empcodeUser' AND users.UserName = '$input_userName' AND users.Password = '$input_passWord' ";
-        $meQueryE = $conn->prepare($queryE);
-        $meQueryE->execute();
-        while ($rowE = $meQueryE->fetch(PDO::FETCH_ASSOC)) {
-            $_ID = $rowE['ID'];
+        $check_d = "    SELECT ID
+                        FROM   users 
+                        WHERE UserName = '$input_userName' ";
+        $meQuery_d = $conn->prepare($check_d);
+        $meQuery_d->execute();
+        while ($row_d = $meQuery_d->fetch(PDO::FETCH_ASSOC)) {
+            $count_id = 2;
         }
-
-        $query3 = "INSERT INTO user_cabinet ( user_id ) 
-        VALUES             ('$_ID' ) ";
-        $meQuery3 = $conn->prepare($query3);
-        $meQuery3->execute();
-    } else {
-        $queryE = " SELECT
-                        employee.ID 
-                    FROM
-                        users
-                        INNER JOIN employee ON users.EmpCode = employee.EmpCode
-                    WHERE users.ID = '$input_IDUser' ";
-        $meQueryE = $conn->prepare($queryE);
-        $meQueryE->execute();
-        while ($rowE = $meQueryE->fetch(PDO::FETCH_ASSOC)) {
-            $emID = $rowE['ID'];
+        $check_d = "    SELECT ID
+                        FROM   users 
+                        WHERE EmpCode = '$input_empcodeUser' ";
+        $meQuery_d = $conn->prepare($check_d);
+        $meQuery_d->execute();
+        while ($row_d = $meQuery_d->fetch(PDO::FETCH_ASSOC)) {
+            $count_id = 1;
         }
+    }
 
-        $query = "UPDATE users SET  EmpCode = '$input_empcodeUser' , UserName = '$input_userName' , Password = '$input_passWord' , IsCancel = $IsCancel 
-                  WHERE ID = '$input_IDUser'  ";
+    if($count_id == 0 ){
+        if ($input_IDUser == "") {
+            $query = "INSERT INTO users ( EmpCode ,  UserName ,  Password ,  IsCancel , DeptID , display ) 
+            VALUES             ('$input_empcodeUser'  , '$input_userName'  , '$input_passWord'  , $IsCancel ,1  ,3 ) ";
 
-        $query2 = "UPDATE employee SET IsAdmin = $IsAdmin , EmpCode = '$input_empcodeUser' , FirstName = '$input_nameUser' , LastName = '$input_lastUser'
-        WHERE ID = '$emID'  ";
+            $query2 = "INSERT INTO employee ( EmpCode ,  FirstName ,  LastName   , DepID ,IsAdmin) 
+            VALUES             ('$input_empcodeUser'  , '$input_nameUser' , '$input_lastUser',1,1) ";
 
-        $meQuery = $conn->prepare($query);
-        $meQuery->execute();
-        $meQuery2 = $conn->prepare($query2);
-        $meQuery2->execute();
+
+            $meQuery = $conn->prepare($query);
+            $meQuery->execute();
+            $meQuery2 = $conn->prepare($query2);
+            $meQuery2->execute();
+
+
+            $queryE = " SELECT
+                            users.ID 
+                        FROM
+                            users
+                        WHERE users.EmpCode = '$input_empcodeUser' AND users.UserName = '$input_userName' AND users.Password = '$input_passWord' ";
+            $meQueryE = $conn->prepare($queryE);
+            $meQueryE->execute();
+            while ($rowE = $meQueryE->fetch(PDO::FETCH_ASSOC)) {
+                $_ID = $rowE['ID'];
+            }
+
+            $query3 = "INSERT INTO user_cabinet ( user_id ) 
+            VALUES             ('$_ID' ) ";
+            $meQuery3 = $conn->prepare($query3);
+            $meQuery3->execute();
+        } else {
+            $queryE = " SELECT
+                            employee.ID 
+                        FROM
+                            users
+                            INNER JOIN employee ON users.EmpCode = employee.EmpCode
+                        WHERE users.ID = '$input_IDUser' ";
+            $meQueryE = $conn->prepare($queryE);
+            $meQueryE->execute();
+            while ($rowE = $meQueryE->fetch(PDO::FETCH_ASSOC)) {
+                $emID = $rowE['ID'];
+            }
+
+            $query = "UPDATE users SET  EmpCode = '$input_empcodeUser' , UserName = '$input_userName' , Password = '$input_passWord' , IsCancel = $IsCancel 
+                    WHERE ID = '$input_IDUser'  ";
+
+            $query2 = "UPDATE employee SET IsAdmin = $IsAdmin , EmpCode = '$input_empcodeUser' , FirstName = '$input_nameUser' , LastName = '$input_lastUser'
+            WHERE ID = '$emID'  ";
+
+            $meQuery = $conn->prepare($query);
+            $meQuery->execute();
+            $meQuery2 = $conn->prepare($query2);
+            $meQuery2->execute();
+        }
+        echo "insert success";
+        unset($conn);
+        die;
+    }else{
+        echo $count_id;
+        unset($conn);
+        die;
     }
 
 
-    echo "insert success";
-    unset($conn);
-    die;
 }
 
 function feeddata_detailUser($conn, $db)
@@ -579,20 +625,43 @@ function saveDoctor($conn)
     $IsActive = $_POST['IsActive'];
 
 
+    $count_id = 0;
     if ($input_IDdoctor == "") {
-        $query = "INSERT INTO `doctor` ( Doctor_Name , IsCancel) 
-        VALUES             ('$input_doctorth' , $IsActive ) ";
-    } else {
-        $query = "UPDATE `doctor` SET Doctor_Name = '$input_doctorth' , IsCancel = $IsActive WHERE ID = '$input_IDdoctor'  ";
+        $check_d = "    SELECT ID
+                        FROM   doctor 
+                        WHERE Doctor_Name = '$input_doctorth' ";
+        $meQuery_d = $conn->prepare($check_d);
+        $meQuery_d->execute();
+        while ($row_d = $meQuery_d->fetch(PDO::FETCH_ASSOC)) {
+            $count_id ++;
+        }
+    }
+    
+    if($count_id == 0){
+        if ($input_IDdoctor == "") {
+            $query = "INSERT INTO `doctor` ( Doctor_Name , IsCancel) 
+            VALUES             ('$input_doctorth' , $IsActive ) ";
+        } else {
+            $query = "UPDATE `doctor` SET Doctor_Name = '$input_doctorth' , IsCancel = $IsActive WHERE ID = '$input_IDdoctor'  ";
+        }
+
+
+
+        $meQuery = $conn->prepare($query);
+        $meQuery->execute();
+
+        echo "insert success";
+        unset($conn);
+        die;
+    }else{
+        echo "xxxx";
+        unset($conn);
+        die;
     }
 
 
 
-    $meQuery = $conn->prepare($query);
-    $meQuery->execute();
-    echo "insert success";
-    unset($conn);
-    die;
+
 }
 
 function feeddata_detailDoctor($conn, $db)
@@ -636,36 +705,41 @@ function saveProcedure($conn)
     $IsActive = $_POST['IsActive'];
 
 
+
+    $count_id = 0;
     if ($input_IDProcedure == "") {
+        $check_d = "    SELECT ID
+                        FROM   `procedure` 
+                        WHERE Procedure_TH = '$input_Procedure' ";
+        $meQuery_d = $conn->prepare($check_d);
+        $meQuery_d->execute();
+        while ($row_d = $meQuery_d->fetch(PDO::FETCH_ASSOC)) {
+            $count_id ++;
+        }
+    }
 
 
-        $stmt = $conn->prepare("INSERT INTO `procedure` (Procedure_TH, Procedure_EN, IsActive) VALUES (?, ?, ?)");
-        $stmt->execute([$input_Procedure, $input_Procedure, $IsActive]);
-
-        // $stmt = $conn->prepare("INSERT INTO `procedure` (Procedure_TH, Procedure_EN, IsActive) VALUES (?, ?, ?)");
-        // $stmt->bind_param("sss", $input_Procedure, $input_Procedure, $IsActive);
-        // $stmt->execute();
-
-
-        // $query = "INSERT INTO `procedure` ( Procedure_TH , Procedure_EN, IsActive ) 
-        // VALUES             ('$input_Procedure'  , '$input_Procedure' , '$IsActive' ) ";
-
-        // $meQuery = $conn->prepare($query);
-        // $meQuery->execute();
-    } else {
-
-        $stmt = $conn->prepare("UPDATE `procedure` SET Procedure_TH = ?, Procedure_EN = ?, IsActive = ? WHERE ID = ?");
-        $stmt->execute([$input_Procedure, $input_Procedure, $IsActive, $input_IDProcedure]);
-        // $query = "UPDATE `procedure` SET Procedure_TH = '$input_Procedure' , IsActive = '$IsActive'  WHERE ID = '$input_IDProcedure'  ";
-
-
+    if($count_id == 0){
+        if ($input_IDProcedure == "") {
+            $stmt = $conn->prepare("INSERT INTO `procedure` (Procedure_TH, Procedure_EN, IsActive) VALUES (?, ?, ?)");
+            $stmt->execute([$input_Procedure, $input_Procedure, $IsActive]);
+        } else {
+            $stmt = $conn->prepare("UPDATE `procedure` SET Procedure_TH = ?, Procedure_EN = ?, IsActive = ? WHERE ID = ?");
+            $stmt->execute([$input_Procedure, $input_Procedure, $IsActive, $input_IDProcedure]);
+        }
+        echo "insert success";
+        unset($conn);
+        die;
+    }else{
+        echo "xxxx";
+        unset($conn);
+        die;
     }
 
 
 
-    echo "insert success";
-    unset($conn);
-    die;
+
+
 }
 
 function feeddata_detailProcedure($conn, $db)

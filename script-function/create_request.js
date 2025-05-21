@@ -668,9 +668,7 @@ function show_detail_request_byDocNo() {
                       <td class='text-center'>${kay + 1}</td>
                       <td>${value.itemname}</td>
                       <td class='text-center'>${value.TyeName}</td>
-                      <td class='text-center'><input type="number" onkeyup="updateDetail_qty(${
-                        value.ID
-                      })" class="form-control text-center qty_loop numonly" id="qty_item_${
+                      <td class='text-center'><input type="number" onblur="updateDetail_qty(${value.ID},'${value.itemcode}')" class="form-control text-center qty_loop numonly" id="qty_item_${
             value.ID
           }" data-id='${value.ID}' value='${value.cnt}'> </td>
                       <td class='text-center'>
@@ -753,7 +751,8 @@ function show_detail_request_byDocNo() {
   });
 }
 
-function updateDetail_qty(ID) {
+function updateDetail_qty(ID,itemcode) {
+
   $("#qty_item_" + ID).val();
   $.ajax({
     url: "process/create_request.php",
@@ -761,6 +760,8 @@ function updateDetail_qty(ID) {
     data: {
       FUNC_NAME: "updateDetail_qty",
       ID: ID,
+      itemcode: itemcode,
+      txt_docno_request: $("#txt_docno_request").val(),
       qty: $("#qty_item_" + ID).val(),
     },
     success: function (result) {},

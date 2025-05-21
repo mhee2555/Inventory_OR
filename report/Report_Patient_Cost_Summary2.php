@@ -215,6 +215,7 @@ $html = '<table cellspacing="0" cellpadding="2" border="1" >
 
 
 $count = 1;
+$sum_all = 0;
 $query = " SELECT
                 item.itemname,
                 item.itemcode,
@@ -272,6 +273,8 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
         $html .=   '<td width="10 %" align="center">' . number_format( ($Result_Detail['SalePrice'] * $Result_Detail['cnt']) ,2) . '</td>';
         $html .=  '</tr>';
         $count++;
+
+        $sum_all += $Result_Detail['SalePrice'] * $Result_Detail['cnt'];
     }
 
 
@@ -279,7 +282,7 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
 
 $html .= '<tr nobr="true" style="font-size:15px;">';
 $html .=   '<td width="90 %" align="center" rowspan="5">Grand Total</td>';
-$html .=   '<td width="10 %" align="center">0.00</td>';
+$html .=   '<td width="10 %" align="center">' . number_format($sum_all,2) . '</td>';
 $html .=  '</tr>';
 
 

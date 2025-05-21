@@ -74,10 +74,34 @@ function updateDetail_qty($conn,$db)
     $return = array();
     $ID = $_POST['ID'];
     $qty = $_POST['qty'];
+    $txt_docno_request = $_POST['txt_docno_request'];
+    $itemcode = $_POST['itemcode'];
+
+
+    
+    
+    $Userid = $_SESSION['Userid'];
 
     $sql2 = " UPDATE deproomdetail SET Qty = $qty  WHERE ID = '$ID' ";
     $meQuery2 = $conn->prepare($sql2);
     $meQuery2->execute();
+
+
+        $insert_log = "INSERT INTO log_activity_users (itemCode, qty, isStatus, DocNo, userID, createAt) 
+                        VALUES (:itemCode, :qty, :isStatus, :DocNo, :Userid, NOW())";
+
+        $meQuery_log = $conn->prepare($insert_log);
+
+        $meQuery_log->bindParam(':itemCode', $itemcode);
+        $meQuery_log->bindParam(':qty', $qty);
+        $meQuery_log->bindValue(':isStatus', 1, PDO::PARAM_INT);
+        $meQuery_log->bindParam(':DocNo', $txt_docno_request);
+        $meQuery_log->bindParam(':Userid', $Userid);
+
+
+        $meQuery_log->execute();
+
+
     echo json_encode($return);
     unset($conn);
     die;
@@ -116,10 +140,26 @@ function update_isCancel($conn,$db)
 {
     $return = array();
     $DocNo = $_POST['DocNo'];
+    $Userid = $_SESSION['Userid'];
 
     $sql2 = "UPDATE deproomdetail SET IsCancel = 0 WHERE DocNo = '$DocNo' ";
     $meQuery2 = $conn->prepare($sql2);
     $meQuery2->execute();
+
+        $insert_log = "INSERT INTO log_activity_users (itemCode, qty, isStatus, DocNo, userID, createAt) 
+                        VALUES ('', :qty, :isStatus, :DocNo, :Userid, NOW())";
+
+        $meQuery_log = $conn->prepare($insert_log);
+
+        $meQuery_log->bindValue(':qty', 0 , PDO::PARAM_INT);
+        $meQuery_log->bindValue(':isStatus', 3, PDO::PARAM_INT);
+        $meQuery_log->bindParam(':DocNo', $DocNo);
+        $meQuery_log->bindParam(':Userid', $Userid);
+
+
+        $meQuery_log->execute();
+
+
     echo json_encode($return);
     unset($conn);
     die;
@@ -175,6 +215,25 @@ function onconfirm_send_request($conn,$db)
     $text_edit = $_POST['text_edit'];
     $qty_Array = $_POST['qty_Array'];
     $id_Array = $_POST['id_Array'];
+    $Userid = $_SESSION['Userid'];
+
+
+
+
+        $insert_log = "INSERT INTO log_activity_users (itemCode, qty, isStatus, DocNo, userID, createAt) 
+                        VALUES ('', :qty, :isStatus, :DocNo, :Userid, NOW())";
+
+        $meQuery_log = $conn->prepare($insert_log);
+
+        $meQuery_log->bindValue(':qty', 0 , PDO::PARAM_INT);
+        $meQuery_log->bindValue(':isStatus', 2, PDO::PARAM_INT);
+        $meQuery_log->bindParam(':DocNo', $txt_docno_request);
+        $meQuery_log->bindParam(':Userid', $Userid);
+
+
+        $meQuery_log->execute();
+
+
 
 
     // $select_doctor_request = implode(",", $select_doctor_request);

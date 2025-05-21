@@ -309,9 +309,15 @@ function saveDoctor() {
       IsActive: IsActive,
     },
     success: function (result) {
+
+      if( result == 'xxxx'){
+        showDialogFailed("ชื่อแพทย์ซ้ำ");
+      }else{
       showDialogSuccess(result);
       feeddata_detailDoctor();
       showDialogSuccess("บันทึกสำเร็จ");
+      }
+
       $("#input_doctorth").val("");
       $("#input_IDdoctor").val("");
     },
@@ -481,9 +487,16 @@ function saveProcedure() {
       IsActive: IsActive,
     },
     success: function (result) {
-      showDialogSuccess(result);
-      feeddata_detailProcedure();
-      showDialogSuccess("บันทึกสำเร็จ");
+
+      if( result == 'xxxx'){
+        showDialogFailed("ชื่อหัตถการซ้ำ");
+      }else{
+        showDialogSuccess(result);
+        feeddata_detailProcedure();
+        showDialogSuccess("บันทึกสำเร็จ");
+      }
+
+
       $("#input_Procedure").val("");
       $("#input_IDProcedure").val("");
     },
@@ -693,9 +706,17 @@ function saveUser() {
       IsCancel: IsCancel,
     },
     success: function (result) {
-      showDialogSuccess(result);
-      feeddata_detailUser();
-      showDialogSuccess("บันทึกสำเร็จ");
+
+      if( result == '1'){
+        showDialogFailed("รหัสพนักงานซ้ำ");
+      }else if( result == '2'){
+        showDialogFailed("UserNameซ้ำ");
+      }else{
+        showDialogSuccess(result);
+        feeddata_detailUser();
+        showDialogSuccess("บันทึกสำเร็จ");
+      }
+
       $("#input_empcodeUser").val("");
       $("#input_nameUser").val("");
       $("#input_lastUser").val("");
@@ -931,9 +952,15 @@ function saveDeproom() {
       IsActive: IsActive,
     },
     success: function (result) {
-      showDialogSuccess(result);
-      feeddata_detailDeproom();
-      showDialogSuccess("บันทึกสำเร็จ");
+
+      if( result == 'xxxx'){
+        showDialogFailed("ตัวย่อซ้ำ");
+      }else{
+        showDialogSuccess(result);
+        feeddata_detailDeproom();
+        showDialogSuccess("บันทึกสำเร็จ");
+      }
+
       $("#input_DeproomNameTH").val("");
       $("#input_DeproomNameEN").val("");
       $("#input_DeproomName_sub").val("");

@@ -124,7 +124,7 @@ function LoginUser($conn, $db)
 
         
         $insert_log = "INSERT INTO log_activity_users (itemCode, itemstockID ,qty, isStatus, DocNo, userID, createAt) 
-                        VALUES ('', '', 0, :isStatus, '', :Userid, NOW())";
+                        VALUES ('', 0, 0, :isStatus, '', :Userid, NOW())";
 
         $meQuery_log = $conn->prepare($insert_log);
 
@@ -133,6 +133,8 @@ function LoginUser($conn, $db)
 
 
         $meQuery_log->execute();
+
+        
     }
 
 
