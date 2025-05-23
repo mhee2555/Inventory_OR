@@ -31,9 +31,31 @@ if (!empty($_POST['FUNC_NAME'])) {
         set_doctor($conn);
     } else if ($_POST['FUNC_NAME'] == 'set_deproom_proceduce') {
         set_deproom_proceduce($conn);
+    } else if ($_POST['FUNC_NAME'] == 'select_permission') {
+        select_permission($conn);
     }
 }
 
+function select_permission($conn)
+{
+    $return = array();
+
+
+    $query = " SELECT
+                    permission.PmID,
+                    permission.Permission 
+                FROM
+                    permission ";
+
+    $meQuery = $conn->prepare($query);
+    $meQuery->execute();
+    while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+        $return[] = $row;
+    }
+    echo json_encode($return);
+    unset($conn);
+    die;
+}
 function set_users($conn)
 {
     $return = array();

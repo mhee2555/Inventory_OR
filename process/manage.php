@@ -485,6 +485,7 @@ function saveUser($conn)
     $input_lastUser = $_POST['input_lastUser'];
     $input_userName = $_POST['input_userName'];
     $input_passWord = $_POST['input_passWord'];
+    $select_permission = $_POST['select_permission'];
     $IsCancel = $_POST['IsCancel'];
     $input_IDUser = $_POST['input_IDUser'];
 
@@ -513,8 +514,8 @@ function saveUser($conn)
 
     if($count_id == 0 ){
         if ($input_IDUser == "") {
-            $query = "INSERT INTO users ( EmpCode ,  UserName ,  Password ,  IsCancel , DeptID , display ) 
-            VALUES             ('$input_empcodeUser'  , '$input_userName'  , '$input_passWord'  , $IsCancel ,1  ,3 ) ";
+            $query = "INSERT INTO users ( EmpCode ,  UserName ,  Password ,  IsCancel , DeptID , display , permission) 
+            VALUES             ('$input_empcodeUser'  , '$input_userName'  , '$input_passWord'  , $IsCancel ,1  ,3 , '$select_permission') ";
 
             $query2 = "INSERT INTO employee ( EmpCode ,  FirstName ,  LastName   , DepID ,IsAdmin) 
             VALUES             ('$input_empcodeUser'  , '$input_nameUser' , '$input_lastUser',1,1) ";
@@ -554,7 +555,7 @@ function saveUser($conn)
                 $emID = $rowE['ID'];
             }
 
-            $query = "UPDATE users SET  EmpCode = '$input_empcodeUser' , UserName = '$input_userName' , Password = '$input_passWord' , IsCancel = $IsCancel 
+            $query = "UPDATE users SET  EmpCode = '$input_empcodeUser' , UserName = '$input_userName' , Password = '$input_passWord' , IsCancel = $IsCancel , permission = '$select_permission'
                     WHERE ID = '$input_IDUser'  ";
 
             $query2 = "UPDATE employee SET IsAdmin = $IsAdmin , EmpCode = '$input_empcodeUser' , FirstName = '$input_nameUser' , LastName = '$input_lastUser'
@@ -590,7 +591,8 @@ function feeddata_detailUser($conn, $db)
                     users.UserName,
                     users.Password,
                     users.IsCancel,
-                    users.DeptID 
+                    users.DeptID ,
+                    users.permission
                 FROM
                     users
                     INNER JOIN employee ON users.EmpCode = employee.EmpCode   ";

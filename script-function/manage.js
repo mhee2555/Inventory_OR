@@ -280,6 +280,8 @@ function click_menu() {
     $("#row_procedure_").hide();
     $("#row_deproom_").hide();
     $("#row_users").show();
+
+    select_permission();
     feeddata_detailUser();
   });
 }
@@ -702,6 +704,7 @@ function saveUser() {
       input_lastUser: $("#input_lastUser").val(),
       input_userName: $("#input_userName").val(),
       input_passWord: $("#input_passWord").val(),
+      select_permission: $("#select_permission").val(),
       input_IDUser: $("#input_IDUser").val(),
       IsCancel: IsCancel,
     },
@@ -733,13 +736,15 @@ function editUser(
   LastName,
   UserName,
   Password,
-  IsCancel
+  IsCancel,
+  permission
 ) {
   $("#input_empcodeUser").val(EmpCode);
   $("#input_nameUser").val(FirstName);
   $("#input_lastUser").val(LastName);
   $("#input_userName").val(UserName);
   $("#input_passWord").val(Password);
+  $("#select_permission").val(permission);
   $("#input_IDUser").val(ID);
 
   if (IsCancel == "Active") {
@@ -783,6 +788,7 @@ $("#btn_clearUser").click(function () {
   $("#input_lastUser").val("");
   $("#input_userName").val("");
   $("#input_passWord").val("");
+  $("#select_permission").val('');
   $("#input_IDUser").val("");
 });
 function feeddata_detailUser() {
@@ -821,11 +827,7 @@ function feeddata_detailUser() {
                       <td class="text-center">
                       <button class="btn btn-outline-dark f18" onclick='editUser("${
                         value.ID
-                      }","${value.EmpCode}","${value.FirstName}","${
-            value.LastName
-          }","${value.UserName}","${value.Password}","${
-            value.IsCancel
-          }")'  > <i class="fa-regular fa-pen-to-square"></i> แก้ไข</button>
+                      }","${value.EmpCode}","${value.FirstName}","${ value.LastName}","${value.UserName}","${value.Password}","${value.IsCancel}","${value.permission}")'  > <i class="fa-regular fa-pen-to-square"></i> แก้ไข</button>
                        <button  class="btn btn-outline-danger f18" onclick='deleteUser(${
                          value.ID
                        },"${
@@ -2024,6 +2026,30 @@ function select_procedure() {
     },
   });
 }
+
+function select_permission() {
+  $.ajax({
+    url: "process/process_main/select_main.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "select_permission",
+    },
+    success: function (result) {
+      var ObjData = JSON.parse(result);
+      console.log(ObjData);
+      var option = `<option value="" selected>กรุณาเลือกสิทธิ์</option>`;
+      if (!$.isEmptyObject(ObjData)) {
+        $.each(ObjData, function (kay, value) {
+          option += `<option value="${value.PmID}" >${value.Permission}</option>`;
+        });
+      } else {
+        option = `<option value="0">ไม่มีข้อมูล</option>`;
+      }
+      $("#select_permission").html(option);
+    },
+  });
+}
+
 function settext(key) {
   if (localStorage.lang == "en") {
     return en[key];

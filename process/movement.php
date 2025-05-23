@@ -123,6 +123,7 @@ function selection_item_normal($conn, $db)
                     WHEN ( sub.cnt - sub.cnt_pay ) < sub.stock_min THEN
                     0 ELSE 1 
                 END,
+                sub.cnt DESC ,
                 sub.itemname; ";
 
     // echo $Q1 ;
@@ -438,6 +439,7 @@ function selection_item_rfid($conn, $db)
                     WHEN ( sub.cnt - sub.cnt_pay ) < sub.stock_min THEN
                     0 ELSE 1 
                 END,
+                sub.cnt DESC ,
                 sub.itemname; ";
 
     // $Q1 = " SELECT
@@ -810,6 +812,7 @@ function selection_item($conn, $db)
                     WHEN ( sub.cnt - sub.cnt_pay ) < sub.stock_min THEN
                     0 ELSE 1 
                 END,
+                sub.cnt DESC,
                 sub.itemname; ";
 
     // $Q1 = " SELECT

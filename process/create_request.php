@@ -399,6 +399,7 @@ function show_detail_item_request($conn,$db)
     $return = array();
     $input_Search = $_POST['input_search_request'];
     $select_typeItem = $_POST['select_typeItem'];
+    $permission = $_SESSION['permission'];
 
     $wheretype = "";
     if($select_typeItem != ""){
@@ -411,17 +412,20 @@ function show_detail_item_request($conn,$db)
                     itemtype.TyeName
                 FROM
                     item
-                INNER JOIN itemtype ON itemtype.ID = item.itemtypeID
+                LEFT JOIN itemtype ON itemtype.ID = item.itemtypeID
                 WHERE
                     item.IsNormal = 1 
                     AND item.IsCancel = 0 
                     AND ( item.itemcode LIKE '%$input_Search%'  OR item.itemname LIKE '%$input_Search%' )
+                    AND item.warehouseID = $permission
                     $wheretype
                 GROUP BY
                     item.ItemCode,
                     item.itemname,
                     itemtype.TyeName
                 ORDER BY item.itemname ASC  ";
+
+             
 
 
     $meQuery = $conn->prepare($query);
