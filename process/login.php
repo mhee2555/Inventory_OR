@@ -81,6 +81,8 @@ function LoginUser($conn, $db)
                 users.UserName AS UserName_login,
                 users.Password,
                 users.time_out,
+                users.permission,
+                permission.Permission,
                 users.B_ID,
                 users.Lang,
                 users.display,
@@ -94,6 +96,7 @@ function LoginUser($conn, $db)
             FROM
                 users
                 LEFT JOIN employee ON users.EmpCode = employee.EmpCode
+                LEFT JOIN permission ON permission.PmID = users.permission
                 LEFT JOIN department ON department.ID = employee.DepID 
              $where  AND users.IsCancel = 0  ";
 
@@ -116,7 +119,10 @@ function LoginUser($conn, $db)
         $_SESSION['IsAdmin'] = $row['IsAdmin'];
         $_SESSION['EmpCode'] = $row['EmpCode'];
         $_SESSION['time_out'] = $row['time_out'];
+        $_SESSION['permission'] = $row['permission'];
+        $_SESSION['Permission_name'] = $row['Permission'];
 
+        
         $IsAdmin = $row['IsAdmin'];
 
         $return[] = $row;

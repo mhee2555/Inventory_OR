@@ -12,8 +12,8 @@ if (!isset($_GET['s'])) {
 }
 $UserName_login = $_SESSION['UserName_login'];
 $Password = $_SESSION['Password'];
-
 $UserName = $_SESSION['UserName'];
+$permission = $_SESSION['permission'];
 $deproom = $_SESSION['deproom'];
 $RefDepID = $_SESSION['RefDepID'];
 $departmentroomname = $_SESSION['departmentroomname'];
@@ -226,6 +226,44 @@ if (!isset($_SESSION['UserName'])) {
     <?php include_once('assets/lang/' . $page . '.js'); ?>
 
     $(function() {
+
+        var permission = '<?php echo $permission; ?>';
+
+        // ==
+            if(permission == 1){
+                $("#li_recieve_stock").attr('hidden',false);
+            }
+            if(permission == 2){
+                $("#li_recieve_stock").attr('hidden',false);
+            }
+            if(permission == 3){
+                $("#li_recieve_stock").attr('hidden',true);
+                $("#li_create_request").attr('hidden',false);
+                $("#li_pay").attr('hidden',false);
+                $("#li_hn").attr('hidden',false);
+                $("#li_movement").attr('hidden',false);
+                $("#li_manage").attr('hidden',true);
+                $("#li_report").attr('hidden',true);
+            }
+            if(permission == 4){
+                $("#li_recieve_stock").attr('hidden',true);
+                $("#li_create_request").attr('hidden',false);
+                $("#li_pay").attr('hidden',false);
+                $("#li_hn").attr('hidden',false);
+                $("#li_movement").attr('hidden',false);
+                $("#li_manage").attr('hidden',true);
+                $("#li_report").attr('hidden',true);
+            }
+            if(permission == 5){
+                $("#li_recieve_stock").attr('hidden',false);
+                $("#li_create_request").attr('hidden',false);
+                $("#li_pay").attr('hidden',false);
+                $("#li_hn").attr('hidden',false);
+                $("#li_movement").attr('hidden',false);
+                $("#li_manage").attr('hidden',false);
+                $("#li_report").attr('hidden',false);
+            }
+        // ==
         var page = '<?php echo $page; ?>';
 
 

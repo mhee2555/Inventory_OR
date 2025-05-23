@@ -14,6 +14,7 @@
     $return['font'][] = $_SESSION['font'];
     $return['display'][] = $_SESSION['display'];
     $return['EmpCode'][] = $_SESSION['EmpCode'];
+    $return['Permission_name'][] = $_SESSION['Permission_name'];
 
 
     echo json_encode($return);

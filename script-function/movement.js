@@ -570,8 +570,9 @@ function session() {
       var ObjData = JSON.parse(result);
       departmentroomname = ObjData.departmentroomname;
       UserName = ObjData.UserName;
+      Permission_name = ObjData.Permission_name;
 
-      $("#input_Deproom_Main").val(departmentroomname);
+      $("#input_Deproom_Main").val(Permission_name);
       $("#input_Name_Main").val(UserName);
     },
   });
