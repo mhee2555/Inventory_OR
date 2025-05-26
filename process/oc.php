@@ -19,11 +19,17 @@ function show_detail_oc($conn, $db)
     $return = array();
     $select_typeItem = $_POST['select_typeItem'];
     $input_search_request = $_POST['input_search_request'];
-
     $wheretype = "";
     if($select_typeItem != ""){
         $wheretype = " AND itemtype.ID = '$select_typeItem' ";
     }
+
+    $permission = $_SESSION['permission'];
+    $wherepermission = "";
+    if($permission != '5'){
+        $wherepermission = " AND item.warehouseID = $permission ";
+    }
+
 
     $query = "SELECT
                 item.itemname,
@@ -49,6 +55,7 @@ function show_detail_oc($conn, $db)
                 WHERE
                     ( item.itemcode LIKE '%$input_search_request%'  OR item.itemname LIKE '%$input_search_request%' OR itemstock.UsageCode LIKE '%$input_search_request%' )
                     AND itemstock.IsTracking = 1
+                    $wherepermission
                     $wheretype
                 GROUP BY itemstock.UsageCode ";
 
@@ -96,6 +103,10 @@ function show_detail_itemstock($conn, $db)
     $itemcode = $_POST['itemcode'];
     $input_search_lot_detail = $_POST['input_search_lot_detail'];
 
+    $where = "";
+    if($itemcode != ""){
+        $where = " AND  itemstock.ItemCode = '$itemcode' AND itemstock.lotNo = '$lotNo'  ";
+    }
 
 
     $query = "SELECT
@@ -118,9 +129,8 @@ function show_detail_itemstock($conn, $db)
                     LEFT JOIN deproomdetail ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID
                     LEFT JOIN deproom ON deproom.DocNo = deproomdetail.DocNo
                 WHERE
-                    itemstock.ItemCode = '$itemcode' 
-                    AND itemstock.lotNo = '$lotNo' 
-                    AND ( item.itemcode LIKE '%$input_search_lot_detail%'  OR item.itemname LIKE '%$input_search_lot_detail%' )
+                     ( itemstock.UsageCode LIKE '%$input_search_lot_detail%'  OR item.itemname LIKE '%$input_search_lot_detail%' )
+                    $where
                 GROUP BY itemstock.UsageCode ";
 
 

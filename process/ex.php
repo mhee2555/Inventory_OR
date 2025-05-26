@@ -56,6 +56,13 @@ function feeddata($conn,$db)
     }else{
         $wheredep = "AND  itemstock.IsDeproom = 0 ";
     }
+    $permission = $_SESSION['permission'];
+
+    $wherepermission = "";
+    if($permission != '5'){
+        $wherepermission = " AND item.warehouseID = $permission ";
+    }
+
 
     $return = [];
 
@@ -85,6 +92,7 @@ function feeddata($conn,$db)
                     itemstock.IsCancel = 0
                     $wheredep
                     AND ( DATE(itemstock.ExpireDate) <= CURDATE() OR DATE(itemstock.ExpireDate) BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL $GN_WarningExpiringSoonDay DAY) )
+                    $wherepermission
                 GROUP BY
                     itemstock.UsageCode
                 ORDER BY
@@ -116,6 +124,7 @@ function feeddata($conn,$db)
                 $wheredep
                 AND (  CONVERT ( DATE, itemstock.ExpireDate )  <= FORMAT ( GETDATE( ), 'yyyy/MM/dd' )
                 OR  CONVERT ( DATE, itemstock.ExpireDate ) BETWEEN CONVERT ( DATE, GETDATE( ) )  AND DATEADD( DAY,  $GN_WarningExpiringSoonDay, CONVERT ( DATE, GETDATE( ) ) ) )
+                $wherepermission
                 GROUP BY 	itemstock.ItemCode,
                     FORMAT ( itemstock.ExpireDate, 'dd/MM/yyyy' ),
                     CONVERT ( DATE, itemstock.ExpireDate ),

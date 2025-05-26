@@ -69,12 +69,20 @@ function onUpdateDisplay($conn,$db)
 function selection_oc($conn,$db)
 {
 
+    $permission = $_SESSION['permission'];
+    $wherepermission = "";
+    if($permission != '5'){
+        $wherepermission = " AND item.warehouseID = $permission ";
+    }
+
     $return = [];
     $query = " SELECT COUNT(itemstock.IsTracking) AS c 
                 FROM
                     itemstock
+                INNER JOIN item ON item.itemcode = itemstock.ItemCode
                 WHERE
-                    itemstock.IsTracking = 1  ";
+                    itemstock.IsTracking = 1 
+                    $wherepermission  ";
     $meQuery = $conn->prepare($query);
     $meQuery->execute();
     while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
@@ -111,6 +119,12 @@ function selection_ExSoon($conn,$db)
     $deproom = $_SESSION['deproom'];
     $RefDepID = $_SESSION['RefDepID'];
 
+    $permission = $_SESSION['permission'];
+    $wherepermission = "";
+    if($permission != '5'){
+        $wherepermission = " AND item.warehouseID = $permission ";
+    }
+
     
     $wheredep = "";
     if ($RefDepID  == '36DEN') {
@@ -124,22 +138,24 @@ function selection_ExSoon($conn,$db)
                         COUNT( DISTINCT itemstock.UsageCode ) AS c 
                     FROM
                         itemstock 
+                    INNER JOIN item ON item.itemcode = itemstock.ItemCode
                     WHERE
                         itemstock.IsCancel = 0 
                         AND itemstock.Isdeproom = 0 
                         AND DATE( itemstock.ExpireDate ) BETWEEN CURDATE() 
                         AND DATE_ADD( CURDATE(), INTERVAL $GN_WarningExpiringSoonDay DAY ) 
-                        AND DATE( itemstock.ExpireDate ) != CURDATE() $wheredep  ";
+                        AND DATE( itemstock.ExpireDate ) != CURDATE() $wheredep $wherepermission ";
     }else{
         $query = "SELECT COUNT(DISTINCT itemstock.UsageCode ) AS c 
         FROM
             itemstock 
+        INNER JOIN item ON item.itemcode = itemstock.ItemCode
         WHERE
                 itemstock.IsCancel = 0 
                 AND itemstock.Isdeproom = 0
             AND CONVERT ( DATE, itemstock.ExpireDate ) BETWEEN CONVERT ( DATE, GETDATE( ) ) 
             AND DATEADD( DAY, $GN_WarningExpiringSoonDay, CONVERT ( DATE, GETDATE( ) ) ) 
-            AND CONVERT ( DATE, itemstock.ExpireDate ) != CONVERT ( DATE, GETDATE( ) ) $wheredep ";
+            AND CONVERT ( DATE, itemstock.ExpireDate ) != CONVERT ( DATE, GETDATE( ) ) $wheredep $wherepermission ";
     }
 
 
@@ -159,7 +175,11 @@ function selection_Ex($conn,$db)
     $DepID = $_SESSION['DepID'];
     $deproom = $_SESSION['deproom'];
     $RefDepID = $_SESSION['RefDepID'];
-
+    $permission = $_SESSION['permission'];
+    $wherepermission = "";
+    if($permission != '5'){
+        $wherepermission = " AND item.warehouseID = $permission ";
+    }
     
     $wheredep = "";
     if ($RefDepID  == '36DEN') {
@@ -175,17 +195,19 @@ function selection_Ex($conn,$db)
                         COUNT( DISTINCT itemstock.UsageCode ) AS c 
                     FROM
                         itemstock 
+                    INNER JOIN item ON item.itemcode = itemstock.ItemCode
                     WHERE
                         itemstock.IsCancel = 0 
-                        AND DATE_FORMAT( itemstock.ExpireDate, '%Y-%m-%d' ) <= DATE_FORMAT( NOW(), '%Y-%m-%d' ) $wheredep ";
+                        AND DATE_FORMAT( itemstock.ExpireDate, '%Y-%m-%d' ) <= DATE_FORMAT( NOW(), '%Y-%m-%d' ) $wheredep $wherepermission ";
     }else{
         $query = "SELECT COUNT(DISTINCT itemstock.UsageCode ) AS c 
                      
         FROM
             itemstock 
+        INNER JOIN item ON item.itemcode = itemstock.ItemCode
         WHERE
              itemstock.IsCancel = 0 
-            AND FORMAT ( itemstock.ExpireDate, 'yyyy-MM-dd' ) <= FORMAT ( GETDATE( ), 'yyyy-MM-dd' ) $wheredep  ";
+            AND FORMAT ( itemstock.ExpireDate, 'yyyy-MM-dd' ) <= FORMAT ( GETDATE( ), 'yyyy-MM-dd' ) $wheredep $wherepermission  ";
     }
 
 
@@ -313,12 +335,23 @@ function selection_itemborrow($conn,$db)
         $wheredep = "AND dental_warehouse_id = '$deproom' ";
     }
 
-    $query = "SELECT COUNT( deproomdetailsub.ID ) AS ccc 
+    $permission = $_SESSION['permission'];
+    $wherepermission = "";
+    if($permission != '5'){
+        $wherepermission = " AND item.warehouseID = $permission ";
+    }
+
+
+    $query = "SELECT
+                    COUNT( deproomdetailsub.ID ) AS ccc 
                 FROM
-                    deproomdetailsub 
+                    deproomdetailsub
+                    INNER JOIN itemstock ON deproomdetailsub.ItemStockID = itemstock.RowID
+                    INNER JOIN item ON itemstock.ItemCode = item.itemcode 
                 WHERE
-                    deproomdetailsub.hn_record_id_borrow IS NOT NULL  
-                    AND deproomdetailsub.hn_record_id_borrow != ''
+                    deproomdetailsub.hn_record_id_borrow IS NOT NULL 
+                    AND deproomdetailsub.hn_record_id_borrow <> '' 
+                    $wherepermission
                     $wheredep  ";
     $meQuery = $conn->prepare($query);
     $meQuery->execute();

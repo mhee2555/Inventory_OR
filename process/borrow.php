@@ -31,6 +31,14 @@ function show_detail_borrow($conn, $db)
     $select_Edate = $select_Edate[2] . '-' . $select_Edate[1] . '-' . $select_Edate[0];
 
 
+    $permission = $_SESSION['permission'];
+
+    $wherepermission = "";
+    if($permission != '5'){
+        $wherepermission = " AND item.warehouseID = $permission ";
+    }
+
+
     if ($db == 1) {
         $query = "SELECT
                         deproomdetailsub.ID,
@@ -50,6 +58,7 @@ function show_detail_borrow($conn, $db)
                         deproomdetailsub.hn_record_id_borrow IS NOT NULL 
                         AND deproomdetailsub.hn_record_id_borrow != ''
                         AND DATE(deproomdetailsub.PayDate) BETWEEN '$select_Sdate' AND '$select_Edate'
+                        $wherepermission
                     ORDER BY  deproomdetailsub.ID DESC
 
     $wheredep ";
@@ -75,6 +84,7 @@ function show_detail_borrow($conn, $db)
             WHERE
                 deproomdetailsub.dental_warehouse_id_borrow IS NOT NULL 
                 AND NOT deproomdetailsub.dental_warehouse_id_borrow = 99
+                $wherepermission
                 $wheredep  ";
     }
 
