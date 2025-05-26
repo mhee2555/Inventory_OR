@@ -14,6 +14,7 @@ $(function () {
   selection_receive_stock();
   selection_Ex();
   selection_use_deproom();
+  selection_oc();
 
   
   setTimeout(() => {
@@ -84,6 +85,30 @@ function selection_ExSoon() {
     },
   });
 }
+
+function selection_oc() {
+  $.ajax({
+    url: "process/main.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "selection_oc",
+    },
+    success: function(result) {
+      var ObjData = JSON.parse(result);
+      console.log(ObjData);
+      if (!$.isEmptyObject(ObjData)) {
+        var c = 0 ;
+        $.each(ObjData, function(key, value) {
+          $("#text_oc").text(value.c);
+        });
+
+
+      }
+    },
+  });
+}
+
+
 
 function selection_use_deproom() {
   $.ajax({
@@ -226,6 +251,28 @@ $('#btn_nouse').on("click", function(e) {
       loadScript('script-function/nouse.js');
   });
 })
+
+$('#btn_oc').on("click", function(e) {
+
+  e.preventDefault();
+  var link = this.href;
+  $.get(link, function(res) {
+
+      $(".nav-item").removeClass("active");
+      $(".nav-item").css("background-color", "");
+
+      $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
+      $("#menu1").css('color', '#667085');
+
+      $("#conMain").html(res);
+      history.pushState({}, "Results for `Cats`", 'index.php?s=oc');
+      document.title = "oc";
+
+      
+      loadScript('script-function/oc.js');
+  });
+})
+
 
 $('#btn_borrow').on("click", function(e) {
 

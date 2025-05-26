@@ -489,6 +489,24 @@ if (!isset($_SESSION['UserName'])) {
 
         }
 
+        if (page == 'oc') {
+
+            var link = 'pages/oc.php';
+
+            $.get(link, function(res) {
+
+                $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
+                $("#menu1").css('color', '#667085');
+
+                $("#conMain").html(res);
+                history.pushState({}, "Results for `Cats`", 'index.php?s=oc');
+                document.title = "oc";
+                loadScript('script-function/oc.js');
+
+            });
+
+        }
+
         setTimeout(() => {
             $('#a_' + page).click();
         }, 300);

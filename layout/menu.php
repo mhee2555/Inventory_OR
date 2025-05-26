@@ -31,7 +31,7 @@
 
                 <?php if ($RefDepID == "36DEN") { ?>
 
-                    <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_surgery" >
+                    <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_surgery" hidden>
                         <a class="collapse-item" href="pages/surgery.php" style="color: black;font-size: 16px;" id="a_surgery">
                             <img id="ic_operation_room" style="width: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;">
                             <label style="font-size: 20px;color: white;" class="color_menu" id="menu15">ห้องผ่าตัด</label>
@@ -39,7 +39,6 @@
                     </li>
                 <?php } ?>
 
-                <?php if ($RefDepID == "10106103") { ?>
 
 
 
@@ -152,7 +151,6 @@
                     
                     <hr class="sidebar-divider d-none d-md-block">
 
-                <?php } ?>
 
 
 

@@ -26,6 +26,8 @@ if (!empty($_POST['FUNC_NAME'])) {
         onUpdateDisplay($conn,$db);
     } else if ($_POST['FUNC_NAME'] == 'onUpdateLang') {
         onUpdateLang($conn,$db);
+    } else if ($_POST['FUNC_NAME'] == 'selection_oc') {
+        selection_oc($conn,$db);
     }
 }
 
@@ -58,6 +60,26 @@ function onUpdateDisplay($conn,$db)
     $meQuery->execute();
 
     $_SESSION['display'] = $display;
+    echo json_encode($return);
+    unset($conn);
+    die;
+}
+
+
+function selection_oc($conn,$db)
+{
+
+    $return = [];
+    $query = " SELECT COUNT(itemstock.IsTracking) AS c 
+                FROM
+                    itemstock
+                WHERE
+                    itemstock.IsTracking = 1  ";
+    $meQuery = $conn->prepare($query);
+    $meQuery->execute();
+    while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+        $return[] = $row;
+    }
     echo json_encode($return);
     unset($conn);
     die;

@@ -406,6 +406,11 @@ function show_detail_item_request($conn,$db)
         $wheretype = " AND itemtype.ID = '$select_typeItem' ";
     }
 
+    $wherepermission = "";
+    if($permission != '5'){
+        $wherepermission = " AND item.warehouseID = $permission ";
+    }
+
     $query = "SELECT
                     item.itemcode,
                     item.itemname AS Item_name ,
@@ -417,7 +422,7 @@ function show_detail_item_request($conn,$db)
                     item.IsNormal = 1 
                     AND item.IsCancel = 0 
                     AND ( item.itemcode LIKE '%$input_Search%'  OR item.itemname LIKE '%$input_Search%' )
-                    AND item.warehouseID = $permission
+                    $wherepermission
                     $wheretype
                 GROUP BY
                     item.ItemCode,
