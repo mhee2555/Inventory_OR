@@ -379,8 +379,9 @@ function session() {
       UserName = ObjData.UserName;
       deproom = ObjData.deproom;
       RefDepID = ObjData.RefDepID;
+      Permission_name = ObjData.Permission_name;
 
-      $("#input_Deproom_Main").val(departmentroomname);
+      $("#input_Deproom_Main").val(Permission_name);
       $("#input_Name_Main").val(UserName);
     },
   });

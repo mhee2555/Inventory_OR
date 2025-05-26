@@ -114,6 +114,7 @@
                         <a class="dropdown-item" href="#" id="btn_excel_all" style="color: green;">Excel All</a>
                         <a class="dropdown-item" href="#" id="btn_cost" style="color: #643695;">สรุปค่าใช้จ่าย</a>
                         <a class="dropdown-item" href="#" id="btn_Tracking" style="color: #643695;">Medical Instrument Tracking</a>
+                        <a class="dropdown-item" href="#" id="btn_use">สรุปการใช้อุปกรณ์กับคนไข้</a>
                     </div>
                 </div>
 

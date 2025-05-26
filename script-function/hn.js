@@ -233,6 +233,20 @@ function setActive_feeddata_hncode_detail(ID, DocNo,HnCode) {
   // alert(DocNo);
   feeddata_hncode_detail(DocNo,HnCode);
 }
+
+
+$("#btn_use").click(function () {
+  
+  if($("#btn_Tracking").data("DocNo") != undefined){
+    option = "?DocNo=" + $("#btn_Tracking").data("DocNo");
+    window.open("report/Report_use.php" + option, "_blank");
+  }else{
+    Swal.fire("ล้มเหลว", "กรุณาเลือกรายการ", "error");
+  }
+
+});
+
+
 $("#btn_Tracking").click(function () {
   
   if($("#btn_Tracking").data("DocNo") != undefined){

@@ -407,22 +407,23 @@ function xxx2(IDGroup) {
     };
     document.head.appendChild(script);
   }
-  function session() {
-    $.ajax({
-      url: "process/session.php",
-      type: "POST",
-      success: function (result) {
-        var ObjData = JSON.parse(result);
-        departmentroomname = ObjData.departmentroomname;
-        UserName = ObjData.UserName;
-        deproom = ObjData.deproom;
-        RefDepID = ObjData.RefDepID;
+function session() {
+  $.ajax({
+    url: "process/session.php",
+    type: "POST",
+    success: function (result) {
+      var ObjData = JSON.parse(result);
+      departmentroomname = ObjData.departmentroomname;
+      UserName = ObjData.UserName;
+      deproom = ObjData.deproom;
+      RefDepID = ObjData.RefDepID;
+      Permission_name = ObjData.Permission_name;
 
-        $("#input_Deproom_Main").val(departmentroomname);
-        $("#input_Name_Main").val(UserName);
-      },
-    });
-  }
+      $("#input_Deproom_Main").val(Permission_name);
+      $("#input_Name_Main").val(UserName);
+    },
+  });
+}
   function showDialogFailed(text) {
     Swal.fire({
       title: settext("alert_fail"),
