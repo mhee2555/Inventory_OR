@@ -255,6 +255,7 @@ $query = " SELECT
                 CONCAT( employee.FirstName, ' ', employee.LastName ) AS Issue_Name,
                 log_cabinet.ModifyDate,
                 hncode.HnCode,
+                users.ID AS users_ID,
             CASE
                     
                     WHEN hncode.HnCode IS NOT NULL THEN
@@ -279,17 +280,21 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
 
     $pdf->SetFont('db_helvethaica_x', 'B', 18);
 
-    $html .= '<tr nobr="true" style="font-size:15px;">';
-    $html .=   '<td width="6 %" align="center" style="line-height:40px;vertical-align: middle;" > ' . (string)$count . '</td>';
-    $html .=   '<td width="16 %" align="center" style="line-height:40px;vertical-align: middle;"> ' . $Result_Detail['itemcode2'] . '</td>';
-    $html .=   '<td width="30 %" align="left" style="line-height:40px;vertical-align: middle;">' .   $Result_Detail['itemname'] . '</td>';
-    $html .=   '<td width="10 %" align="center" >' . $Result_Detail['UsageCode'] . '</td>';
-    $html .=   '<td width="10 %" align="center" >' . $Result_Detail['Issue_Name'] . '</td>';
-    $html .=   '<td width="10 %" align="center" >' . $Result_Detail['ModifyDate'] . '</td>';
-    $html .=   '<td width="10 %" align="center" >' . $Result_Detail['HnCode'] . '</td>';
-    $html .=   '<td width="10 %" align="center" >' . $Result_Detail['STATUS'] . '</td>';
-    $html .=  '</tr>';
-    $count++;
+    if($Result_Detail['users_ID'] != '250' && $Result_Detail['users_ID'] != '251' && $Result_Detail['users_ID'] != '177')
+    {
+        $html .= '<tr nobr="true" style="font-size:15px;">';
+        $html .=   '<td width="6 %" align="center" style="line-height:40px;vertical-align: middle;" > ' . (string)$count . '</td>';
+        $html .=   '<td width="16 %" align="center" style="line-height:40px;vertical-align: middle;"> ' . $Result_Detail['itemcode2'] . '</td>';
+        $html .=   '<td width="30 %" align="left" style="line-height:40px;vertical-align: middle;">' .   $Result_Detail['itemname'] . '</td>';
+        $html .=   '<td width="10 %" align="center" >' . $Result_Detail['UsageCode'] . '</td>';
+        $html .=   '<td width="10 %" align="center" >' . $Result_Detail['Issue_Name'] . '</td>';
+        $html .=   '<td width="10 %" align="center" >' . $Result_Detail['ModifyDate'] . '</td>';
+        $html .=   '<td width="10 %" align="center" >' . $Result_Detail['HnCode'] . '</td>';
+        $html .=   '<td width="10 %" align="center" >' . $Result_Detail['STATUS'] . '</td>';
+        $html .=  '</tr>';
+        $count++;
+    }
+
 }
 
 
@@ -424,6 +429,7 @@ $count = 1;
 $query = " SELECT
                 item.itemcode2,
                 item.itemname,
+                users.ID AS users_ID,
                 NULL AS UsageCode,
                 CONCAT(employee.FirstName, ' ', employee.LastName) AS Issue_Name,
                 log_cabinet.ModifyDate,
@@ -443,14 +449,18 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
 
     $pdf->SetFont('db_helvethaica_x', 'B', 18);
 
-    $html .= '<tr nobr="true" style="font-size:15px;">';
-    $html .=   '<td width="6 %" align="center" style="line-height:40px;vertical-align: middle;"> ' . (string)$count . '</td>';
-    $html .=   '<td width="16 %" align="center" style="line-height:40px;vertical-align: middle;"> ' . $Result_Detail['itemcode2'] . '</td>';
-    $html .=   '<td width="30 %" align="left" style="line-height:40px;vertical-align: middle;">' .   $Result_Detail['itemname'] . '</td>';
-    $html .=   '<td width="20 %" align="center" style="line-height:40px;vertical-align: middle;">' . $Result_Detail['Issue_Name'] . '</td>';
-    $html .=   '<td width="20 %" align="center" style="line-height:40px;vertical-align: middle;">' . $Result_Detail['ModifyDate'] . '</td>';
-    $html .=   '<td width="10 %" align="center" style="line-height:40px;vertical-align: middle;">' . $Result_Detail['Qty'] . '</td>';
-    $html .=  '</tr>';
+    if($Result_Detail['users_ID'] != '250' && $Result_Detail['users_ID'] != '251' && $Result_Detail['users_ID'] != '177')
+    {
+        $html .= '<tr nobr="true" style="font-size:15px;">';
+        $html .=   '<td width="6 %" align="center" style="line-height:40px;vertical-align: middle;"> ' . (string)$count . '</td>';
+        $html .=   '<td width="16 %" align="center" style="line-height:40px;vertical-align: middle;"> ' . $Result_Detail['itemcode2'] . '</td>';
+        $html .=   '<td width="30 %" align="left" style="line-height:40px;vertical-align: middle;">' .   $Result_Detail['itemname'] . '</td>';
+        $html .=   '<td width="20 %" align="center" style="line-height:40px;vertical-align: middle;">' . $Result_Detail['Issue_Name'] . '</td>';
+        $html .=   '<td width="20 %" align="center" style="line-height:40px;vertical-align: middle;">' . $Result_Detail['ModifyDate'] . '</td>';
+        $html .=   '<td width="10 %" align="center" style="line-height:40px;vertical-align: middle;">' . $Result_Detail['Qty'] . '</td>';
+        $html .=  '</tr>';
+    }
+
     $count++;
 }
 

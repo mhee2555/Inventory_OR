@@ -239,27 +239,19 @@ $sum_all33 = 0;
 $sum_all44 = 0;
 
 $query = " SELECT
+                hncode.DocNo_SS,
                 item.itemname,
+                item.itemcode,
                 item.itemcode2,
                 item.SalePrice,
-                hncode_detail.ID,
-                SUM( hncode_detail.Qty ) AS cnt,
-                (
-                SELECT
-                    COUNT( log_return.id ) 
-                FROM
-                    log_return
-                    INNER JOIN itemstock ON log_return.itemstockID = itemstock.RowID
-                    INNER JOIN item ON itemstock.ItemCode = item.itemcode 
-                WHERE
-                        log_return.DocNo = hncode.DocNo_SS 
-                    AND item.itemcode = item.itemcode 
-                )  AS cnt_return
+                COUNT( deproomdetailsub.ID ) AS cnt 
             FROM
                 hncode
-                LEFT JOIN hncode_detail ON hncode_detail.DocNo = hncode.DocNo
-                LEFT JOIN itemstock ON itemstock.RowID = hncode_detail.ItemStockID
-                LEFT JOIN item ON itemstock.ItemCode = item.itemcode 
+                INNER JOIN deproom ON hncode.DocNo_SS = deproom.DocNo
+                INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
+                INNER JOIN deproomdetailsub ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID 
+                LEFT JOIN itemstock ON itemstock.RowID = deproomdetailsub.ItemStockID
+                LEFT JOIN item ON itemstock.ItemCode = item.itemcode
             WHERE
                 hncode.DocNo = '$DocNo' 
             GROUP BY
@@ -273,23 +265,40 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
     
     $pdf->SetFont('db_helvethaica_x', 'B', 18);
 
-
+        $itemcode = $Result_Detail['itemcode'];
+        $DocNo_SS = $Result_Detail['DocNo_SS'];
 
     if($Result_Detail['cnt'] != 0){
-    
+
+        $return = " SELECT
+                        COUNT( log_return.id ) AS cnt_return
+                    FROM
+                        log_return
+                        INNER JOIN itemstock ON log_return.itemstockID = itemstock.RowID
+                        INNER JOIN item ON itemstock.ItemCode = item.itemcode 
+                    WHERE
+                            log_return.DocNo = '$DocNo_SS' 
+                        AND item.itemcode = '$itemcode'  ";
+        $meQuery_return = $conn->prepare($return);
+        $meQuery_return->execute();
+        while ($Result_return = $meQuery_return->fetch(PDO::FETCH_ASSOC)) {
+            $cnt_return = $Result_return['cnt_return'];
+        }
+
+
         $html .= '<tr nobr="true" style="font-size:15px;">';
         $html .=   '<td width="15 %" align="center" style="line-height:50px;"> ' . $Result_Detail['itemcode2'] . '</td>';
         $html .=   '<td width="25 %" align="left" style="line-height:50px;"> ' . $Result_Detail['itemname'] . '</td>';
         $html .=   '<td width="15 %" align="center" style="line-height:50px;">' . $Result_Detail['cnt'] . '</td>';
-        $html .=   '<td width="15 %" align="center" style="line-height:50px;">' . $Result_Detail['cnt_return'] . '</td>';
-        $html .=   '<td width="15 %" align="center" style="line-height:50px;">' . number_format( ($Result_Detail['cnt'] - $Result_Detail['cnt_return']) ,2) . '</td>';
+        $html .=   '<td width="15 %" align="center" style="line-height:50px;">' . $cnt_return . '</td>';
+        $html .=   '<td width="15 %" align="center" style="line-height:50px;">' . number_format( ($Result_Detail['cnt'] - $cnt_return)) . '</td>';
         $html .=   '<td width="15 %" align="center" style="line-height:50px;">' . number_format( ($Result_Detail['SalePrice'] * $Result_Detail['cnt']) ,2) . '</td>';
         $html .=  '</tr>';
         $count++;
 
         $sum_all1 += $Result_Detail['cnt'];
-        $sum_all2 += $Result_Detail['cnt_return'] ;
-        $sum_all3 += ($Result_Detail['cnt'] - $Result_Detail['cnt_return']);
+        $sum_all2 += $cnt_return;
+        $sum_all3 += ($Result_Detail['cnt'] - $cnt_return);
         $sum_all4 += $Result_Detail['SalePrice'] * $Result_Detail['cnt'];
 
 
@@ -306,17 +315,17 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
 
 $html .= '<tr nobr="true" style="font-size:15px;">';
 $html .=   '<td width="40 %" align="center" colspan="2">Grand Total</td>';
-$html .=   '<td width="15 %" align="center">' . number_format($sum_all1,2) . '</td>';
-$html .=   '<td width="15 %" align="center">' . number_format($sum_all2,2) . '</td>';
-$html .=   '<td width="15 %" align="center">' . number_format($sum_all3,2) . '</td>';
+$html .=   '<td width="15 %" align="center">' . number_format($sum_all1) . '</td>';
+$html .=   '<td width="15 %" align="center">' . number_format($sum_all2) . '</td>';
+$html .=   '<td width="15 %" align="center">' . number_format($sum_all3) . '</td>';
 $html .=   '<td width="15 %" align="center">' . number_format($sum_all4,2) . '</td>';
 $html .=  '</tr>';
 
 $html .= '<tr nobr="true" style="font-size:15px;">';
 $html .=   '<td width="40 %" align="center" colspan="2">Utilization use rate</td>';
-$html .=   '<td width="15 %" align="center">' . number_format($sum_all11,2) . '%</td>';
-$html .=   '<td width="15 %" align="center">' . number_format($sum_all22,2) . '%</td>';
-$html .=   '<td width="15 %" align="center">' . number_format($sum_all33,2) . '%</td>';
+$html .=   '<td width="15 %" align="center">' . number_format($sum_all11) . '%</td>';
+$html .=   '<td width="15 %" align="center">' . number_format($sum_all22) . '%</td>';
+$html .=   '<td width="15 %" align="center">' . number_format($sum_all33) . '%</td>';
 $html .=   '<td width="15 %" align="center"></td>';
 $html .=  '</tr>';
 

@@ -230,39 +230,42 @@ if (!isset($_SESSION['UserName'])) {
         var permission = '<?php echo $permission; ?>';
 
         // ==
-            if(permission == 1){
-                $("#li_recieve_stock").attr('hidden',false);
-            }
-            if(permission == 2){
-                $("#li_recieve_stock").attr('hidden',false);
-            }
-            if(permission == 3){
-                $("#li_recieve_stock").attr('hidden',true);
-                $("#li_create_request").attr('hidden',false);
-                $("#li_pay").attr('hidden',false);
-                $("#li_hn").attr('hidden',false);
-                $("#li_movement").attr('hidden',false);
-                $("#li_manage").attr('hidden',true);
-                $("#li_report").attr('hidden',true);
-            }
-            if(permission == 4){
-                $("#li_recieve_stock").attr('hidden',true);
-                $("#li_create_request").attr('hidden',false);
-                $("#li_pay").attr('hidden',false);
-                $("#li_hn").attr('hidden',false);
-                $("#li_movement").attr('hidden',false);
-                $("#li_manage").attr('hidden',true);
-                $("#li_report").attr('hidden',true);
-            }
-            if(permission == 5){
-                $("#li_recieve_stock").attr('hidden',false);
-                $("#li_create_request").attr('hidden',false);
-                $("#li_pay").attr('hidden',false);
-                $("#li_hn").attr('hidden',false);
-                $("#li_movement").attr('hidden',false);
-                $("#li_manage").attr('hidden',false);
-                $("#li_report").attr('hidden',false);
-            }
+        if (permission == 1) {
+            $("#li_recieve_stock").attr('hidden', false);
+        }
+        if (permission == 2) {
+            $("#li_recieve_stock").attr('hidden', false);
+        }
+        if (permission == 3) {
+            $("#li_recieve_stock").attr('hidden', true);
+            $("#li_create_request").attr('hidden', false);
+            $("#li_request_item").attr('hidden', false);
+            $("#li_pay").attr('hidden', false);
+            $("#li_hn").attr('hidden', false);
+            $("#li_movement").attr('hidden', false);
+            $("#li_manage").attr('hidden', true);
+            $("#li_report").attr('hidden', true);
+        }
+        if (permission == 4) {
+            $("#li_recieve_stock").attr('hidden', true);
+            $("#li_create_request").attr('hidden', false);
+            $("#li_request_item").attr('hidden', false);
+            $("#li_pay").attr('hidden', false);
+            $("#li_hn").attr('hidden', false);
+            $("#li_movement").attr('hidden', false);
+            $("#li_manage").attr('hidden', true);
+            $("#li_report").attr('hidden', true);
+        }
+        if (permission == 5) {
+            $("#li_recieve_stock").attr('hidden', false);
+            $("#li_create_request").attr('hidden', false);
+            $("#li_request_item").attr('hidden', false);
+            $("#li_pay").attr('hidden', false);
+            $("#li_hn").attr('hidden', false);
+            $("#li_movement").attr('hidden', false);
+            $("#li_manage").attr('hidden', false);
+            $("#li_report").attr('hidden', false);
+        }
         // ==
         var page = '<?php echo $page; ?>';
 
@@ -536,6 +539,7 @@ if (!isset($_SESSION['UserName'])) {
                     $("#menu14").css('color', '#667085');
 
 
+                    $("#ic_request_item").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
                     $("#ic_turnon_offdisplay_3").attr("src", "assets/img_project/2_icon/ic_report.png");
                     $("#ic_operation_room").attr("src", "assets/img_project/2_icon/ic_operation_room.png");
                     $("#ic_setup_equipment_rooms").attr("src", "assets/img_project/2_icon/ic_receiveinventory.png");
@@ -606,7 +610,7 @@ if (!isset($_SESSION['UserName'])) {
             // http://10.11.9.54:8000/Login/Index?user=stock&pass=111
             // http://10.11.9.54:8000/ จริง
             // http://10.11.9.3:8003/ test
-            window.open(" http://192.168.2.101:8003/Login/Index?user="+UserName_login+"&pass="+Password, "_blank");
+            window.open(" http://192.168.2.101:8003/Login/Index?user=" + UserName_login + "&pass=" + Password, "_blank");
 
             // window.open(" http://10.11.9.3:8003/Login/Index?user=" + UserName_login + "&pass=" + Password, "_blank");
 
@@ -636,8 +640,10 @@ if (!isset($_SESSION['UserName'])) {
                     $("#menu12").css('color', '#667085');
                     $("#menu13").css('color', '#667085');
                     $("#menu14").css('color', '#667085');
+                    $("#menu15").css('color', '#667085');
 
 
+                    $("#ic_request_item").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
                     $("#ic_turnon_offdisplay_3").attr("src", "assets/img_project/2_icon/ic_report.png");
                     $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
                     $("#ic_create_equipment_request").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
@@ -690,8 +696,10 @@ if (!isset($_SESSION['UserName'])) {
                 $("#menu12").css('color', '#667085');
                 $("#menu13").css('color', '#667085');
                 $("#menu14").css('color', '#667085');
+                $("#menu15").css('color', '#667085');
 
 
+                $("#ic_request_item").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
                 $("#ic_turnon_offdisplay_3").attr("src", "assets/img_project/2_icon/ic_report.png");
                 $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
                 $("#ic_setup_equipment_rooms").attr("src", "assets/img_project/2_icon/ic_receiveinventory.png");
@@ -715,6 +723,62 @@ if (!isset($_SESSION['UserName'])) {
                 history.pushState({}, "Results for `Cats`", 'index.php?s=create_request');
                 document.title = "create_request";
                 loadScript('script-function/create_request.js');
+            });
+        })
+        $('#a_request_item').on("click", function(e) {
+            e.preventDefault();
+
+            var link = 'pages/request_item.php';
+
+            // var link = this.href;
+            $.get(link, function(res) {
+
+                $(".nav-item").removeClass("active");
+                $(".nav-item").css("background-color", "");
+
+                $("#ic_request_item").attr("src", "assets/img_project/3_icon/ic_create_equipment_request.png");
+                $("#menu15").css('color', 'white');
+
+
+                $("#menu1").css('color', '#667085');
+                $("#menu2").css('color', '#667085');
+                $("#menu3").css('color', '#667085');
+                $("#menu4").css('color', '#667085');
+                $("#menu5").css('color', '#667085');
+                $("#menu6").css('color', '#667085');
+                $("#menu7").css('color', '#667085');
+                $("#menu8").css('color', '#667085');
+                $("#menu9").css('color', '#667085');
+                $("#menu10").css('color', '#667085');
+                $("#menu11").css('color', '#667085');
+                $("#menu12").css('color', '#667085');
+                $("#menu13").css('color', '#667085');
+                $("#menu14").css('color', '#667085');
+
+                $("#ic_create_equipment_request").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
+                $("#ic_turnon_offdisplay_3").attr("src", "assets/img_project/2_icon/ic_report.png");
+                $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
+                $("#ic_setup_equipment_rooms").attr("src", "assets/img_project/2_icon/ic_receiveinventory.png");
+                $("#ic_dispense_equipment").attr("src", "assets/img_project/2_icon/ic_dispense_equipment.png");
+                $("#ic_receive_contaminated_equipment").attr("src", "assets/img_project/2_icon/ic_receive_contaminated_equipment.png");
+                $("#ic_send_nsterile").attr("src", "assets/img_project/2_icon/ic_send_nsterile.png");
+                $("#ic_register_equipment").attr("src", "assets/img_project/2_icon/ic_register_equipment.png");
+                $("#ic_inventory_tools").attr("src", "assets/img_project/2_icon/ic_inventory_tools.png");
+                $("#ic_search_hndata").attr("src", "assets/img_project/2_icon/ic_search_hndata.png");
+                $("#ic_turnon_offdisplay").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
+                $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
+                $("#ic_movement").attr("src", "assets/img_project/2_icon/ic_movement.png");
+                $("#ic_adjust_stock").attr("src", "assets/img_project/2_icon/ic_adjust_stock.png");
+                $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
+
+
+
+                $("#conMain").html(res);
+                $("#li_request_item").addClass("active");
+                $("#li_request_item").css("background-color", "#643695");
+                history.pushState({}, "Results for `Cats`", 'index.php?s=request_item');
+                document.title = "request_item";
+                loadScript('script-function/request_item.js');
             });
         })
         $('#a_pay').on("click", function(e) {
@@ -742,8 +806,9 @@ if (!isset($_SESSION['UserName'])) {
                 $("#menu12").css('color', '#667085');
                 $("#menu13").css('color', '#667085');
                 $("#menu14").css('color', '#667085');
+                $("#menu15").css('color', '#667085');
 
-
+                $("#ic_request_item").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
                 $("#ic_turnon_offdisplay_3").attr("src", "assets/img_project/2_icon/ic_report.png");
                 $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
                 $("#ic_create_equipment_request").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
@@ -794,6 +859,7 @@ if (!isset($_SESSION['UserName'])) {
                 $("#menu12").css('color', '#667085');
                 $("#menu13").css('color', '#667085');
                 $("#menu14").css('color', '#667085');
+                $("#menu15").css('color', '#667085');
 
 
                 $("#ic_turnon_offdisplay_3").attr("src", "assets/img_project/2_icon/ic_report.png");
@@ -844,6 +910,7 @@ if (!isset($_SESSION['UserName'])) {
                 $("#menu12").css('color', '#667085');
                 $("#menu13").css('color', '#667085');
                 $("#menu14").css('color', '#667085');
+                $("#menu15").css('color', '#667085');
 
 
                 $("#ic_turnon_offdisplay_3").attr("src", "assets/img_project/2_icon/ic_report.png");
@@ -893,6 +960,7 @@ if (!isset($_SESSION['UserName'])) {
                 $("#menu12").css('color', '#667085');
                 $("#menu13").css('color', '#667085');
                 $("#menu14").css('color', '#667085');
+                $("#menu15").css('color', '#667085');
 
 
                 $("#ic_turnon_offdisplay_3").attr("src", "assets/img_project/2_icon/ic_report.png");
@@ -942,6 +1010,7 @@ if (!isset($_SESSION['UserName'])) {
                 $("#menu12").css('color', '#667085');
                 $("#menu13").css('color', '#667085');
                 $("#menu14").css('color', '#667085');
+                $("#menu15").css('color', '#667085');
 
 
                 $("#ic_turnon_offdisplay_3").attr("src", "assets/img_project/2_icon/ic_report.png");
@@ -1013,8 +1082,9 @@ if (!isset($_SESSION['UserName'])) {
                 $("#menu12").css('color', '#667085');
                 $("#menu13").css('color', '#667085');
                 $("#menu14").css('color', '#667085');
+                $("#menu15").css('color', '#667085');
 
-
+                $("#ic_request_item").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
                 $("#ic_turnon_offdisplay_3").attr("src", "assets/img_project/2_icon/ic_report.png");
                 $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
                 $("#ic_inventory_tools").attr("src", "assets/img_project/2_icon/ic_inventory_tools.png");
@@ -1063,8 +1133,9 @@ if (!isset($_SESSION['UserName'])) {
                 $("#menu12").css('color', '#667085');
                 $("#menu13").css('color', '#667085');
                 $("#menu14").css('color', '#667085');
+                $("#menu15").css('color', '#667085');
 
-
+                $("#ic_request_item").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
                 $("#ic_turnon_offdisplay_3").attr("src", "assets/img_project/2_icon/ic_report.png");
                 $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
                 $("#ic_search_hndata").attr("src", "assets/img_project/2_icon/ic_search_hndata.png");
@@ -1112,8 +1183,9 @@ if (!isset($_SESSION['UserName'])) {
                 $("#menu12").css('color', '#667085');
                 $("#menu13").css('color', '#667085');
                 $("#menu14").css('color', '#667085');
+                $("#menu15").css('color', '#667085');
 
-
+                $("#ic_request_item").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
                 $("#ic_turnon_offdisplay_3").attr("src", "assets/img_project/2_icon/ic_report.png");
                 $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
                 $("#ic_turnon_offdisplay").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
@@ -1161,6 +1233,7 @@ if (!isset($_SESSION['UserName'])) {
                 $("#menu11").css('color', '#667085');
                 $("#menu13").css('color', '#667085');
                 $("#menu14").css('color', '#667085');
+                $("#menu15").css('color', '#667085');
 
 
                 $("#ic_turnon_offdisplay_3").attr("src", "assets/img_project/2_icon/ic_report.png");
@@ -1211,7 +1284,9 @@ if (!isset($_SESSION['UserName'])) {
                 $("#menu10").css('color', '#667085');
                 $("#menu11").css('color', '#667085');
                 $("#menu14").css('color', '#667085');
+                $("#menu15").css('color', '#667085');
 
+                $("#ic_request_item").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
                 $("#ic_movement").attr("src", "assets/img_project/2_icon/ic_movement.png");
                 $("#ic_turnon_offdisplay").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
                 $("#ic_turnon_offdisplay_3").attr("src", "assets/img_project/2_icon/ic_report.png");
@@ -1258,7 +1333,10 @@ if (!isset($_SESSION['UserName'])) {
                 $("#menu10").css('color', '#667085');
                 $("#menu11").css('color', '#667085');
                 $("#menu13").css('color', '#667085');
+                $("#menu15").css('color', '#667085');
 
+
+                $("#ic_request_item").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
                 $("#ic_movement").attr("src", "assets/img_project/2_icon/ic_movement.png");
                 $("#ic_turnon_offdisplay").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
                 $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
