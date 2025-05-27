@@ -283,13 +283,14 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
         $html .=   '<td width="15 %" align="center" style="line-height:50px;">' . $Result_Detail['cnt'] . '</td>';
         $html .=   '<td width="15 %" align="center" style="line-height:50px;">' . $Result_Detail['cnt_return'] . '</td>';
         $html .=   '<td width="15 %" align="center" style="line-height:50px;">' . number_format( ($Result_Detail['cnt'] - $Result_Detail['cnt_return']) ,2) . '</td>';
-        $html .=   '<td width="15 %" align="center" style="line-height:50px;">0.00</td>';
+        $html .=   '<td width="15 %" align="center" style="line-height:50px;">' . number_format( ($Result_Detail['SalePrice'] * $Result_Detail['cnt']) ,2) . '</td>';
         $html .=  '</tr>';
         $count++;
 
         $sum_all1 += $Result_Detail['cnt'];
         $sum_all2 += $Result_Detail['cnt_return'] ;
         $sum_all3 += ($Result_Detail['cnt'] - $Result_Detail['cnt_return']);
+        $sum_all4 += $Result_Detail['SalePrice'] * $Result_Detail['cnt'];
 
 
 
@@ -308,7 +309,7 @@ $html .=   '<td width="40 %" align="center" colspan="2">Grand Total</td>';
 $html .=   '<td width="15 %" align="center">' . number_format($sum_all1,2) . '</td>';
 $html .=   '<td width="15 %" align="center">' . number_format($sum_all2,2) . '</td>';
 $html .=   '<td width="15 %" align="center">' . number_format($sum_all3,2) . '</td>';
-$html .=   '<td width="15 %" align="center">0.00</td>';
+$html .=   '<td width="15 %" align="center">' . number_format($sum_all4,2) . '</td>';
 $html .=  '</tr>';
 
 $html .= '<tr nobr="true" style="font-size:15px;">';
@@ -316,7 +317,7 @@ $html .=   '<td width="40 %" align="center" colspan="2">Utilization use rate</td
 $html .=   '<td width="15 %" align="center">' . number_format($sum_all11,2) . '%</td>';
 $html .=   '<td width="15 %" align="center">' . number_format($sum_all22,2) . '%</td>';
 $html .=   '<td width="15 %" align="center">' . number_format($sum_all33,2) . '%</td>';
-$html .=   '<td width="15 %" align="center">0.00</td>';
+$html .=   '<td width="15 %" align="center"></td>';
 $html .=  '</tr>';
 
 
