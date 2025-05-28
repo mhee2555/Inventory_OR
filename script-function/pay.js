@@ -1193,6 +1193,12 @@ function oncheck_pay_manual(input_pay_manual) {
     return;
   }
 
+    if ($("#input_date_service_manual").val() == "") {
+    showDialogFailed("กรุณาเลือกวันที่");
+    $("#input_pay_manual").val("");
+    return;
+    }
+
   if ($("#input_pay_manual").val() == "") {
     showDialogFailed("กรุณาเลือกรายการ");
     $("#input_pay_manual").val("");
@@ -1220,6 +1226,16 @@ function oncheck_pay_manual(input_pay_manual) {
 
     return;
   }
+
+  if ($("#select_deproom_manual").val() == "") {
+    showDialogFailed("กรุณาเลือกห้องตรวจ");
+    $("#input_pay_manual").val("");
+
+    return;
+  }
+
+
+
 
   $.ajax({
     url: "process/pay.php",

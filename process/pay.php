@@ -930,7 +930,7 @@ function show_detail_history($conn, $db)
 
     $whereHN = "";
     if (isset($input_hn_history)) {
-        $whereHN = "  AND deproom.hn_record_id LIKE '%$input_hn_history%'  ";
+        $whereHN = "  AND  ( deproom.hn_record_id LIKE '%$input_hn_history%' OR deproom.number_box LIKE '%$input_hn_history%' )  ";
     }
 
 

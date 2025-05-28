@@ -25,7 +25,7 @@ function feeddata_hncode($conn, $db)
 
     $where = "";
     if ($input_type_search == 1) {
-        $where = "AND hncode.HnCode LIKE '%$input_search%' ";
+        $where = "AND  ( hncode.HnCode LIKE '%$input_search%' OR hncode.number_box LIKE '%$input_search%' ) ";
     } else {
         $where = "AND itemstock.UsageCode LIKE '%$input_search%' ";
     }
@@ -264,7 +264,7 @@ function show_detail_hn($conn, $db)
 
     $where = "";
     if ($input_type_search == 1) {
-        $where = "AND hncode.HnCode LIKE '%$input_search%' ";
+        $where = " AND  ( hncode.HnCode LIKE '%$input_search%' OR hncode.number_box LIKE '%$input_search%' ) ";
     } else {
         $where = "AND itemstock.UsageCode LIKE '%$input_search%' ";
     }
