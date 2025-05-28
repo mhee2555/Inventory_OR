@@ -287,19 +287,19 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
 
 
         $html .= '<tr nobr="true" style="font-size:15px;">';
-        $html .=   '<td width="15 %" align="center" style="line-height:50px;"> ' . $Result_Detail['itemcode2'] . '</td>';
-        $html .=   '<td width="25 %" align="left" style="line-height:50px;"> ' . $Result_Detail['itemname'] . '</td>';
-        $html .=   '<td width="15 %" align="center" style="line-height:50px;">' . $Result_Detail['cnt'] . '</td>';
-        $html .=   '<td width="15 %" align="center" style="line-height:50px;">' . $cnt_return . '</td>';
-        $html .=   '<td width="15 %" align="center" style="line-height:50px;">' . number_format( ($Result_Detail['cnt'] - $cnt_return)) . '</td>';
-        $html .=   '<td width="15 %" align="center" style="line-height:50px;">' . number_format( ($Result_Detail['SalePrice'] * $Result_Detail['cnt']) ,2) . '</td>';
+        $html .=   '<td width="15 %" align="center" > ' . $Result_Detail['itemcode2'] . '</td>';
+        $html .=   '<td width="25 %" align="left" > ' . $Result_Detail['itemname'] . '</td>';
+        $html .=   '<td width="15 %" align="center" >' . $Result_Detail['cnt'] . '</td>';
+        $html .=   '<td width="15 %" align="center" >' . $cnt_return . '</td>';
+        $html .=   '<td width="15 %" align="center" >' . number_format( ($Result_Detail['cnt'] - $cnt_return)) . '</td>';
+        $html .=   '<td width="15 %" align="center" >' . number_format( ($Result_Detail['SalePrice'] * ($Result_Detail['cnt'] - $cnt_return)) ,2) . '</td>';
         $html .=  '</tr>';
         $count++;
 
         $sum_all1 += $Result_Detail['cnt'];
         $sum_all2 += $cnt_return;
         $sum_all3 += ($Result_Detail['cnt'] - $cnt_return);
-        $sum_all4 += $Result_Detail['SalePrice'] * $Result_Detail['cnt'];
+        $sum_all4 += $Result_Detail['SalePrice'] * ($Result_Detail['cnt'] - $cnt_return);
 
 
 

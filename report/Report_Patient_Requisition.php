@@ -280,7 +280,7 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
 
     $pdf->SetFont('db_helvethaica_x', 'B', 18);
 
-    if($Result_Detail['users_ID'] != '250' && $Result_Detail['users_ID'] != '251' && $Result_Detail['users_ID'] != '177')
+    if($Result_Detail['users_ID'] != '251'  && $Result_Detail['users_ID'] != '177')
     {
         $html .= '<tr nobr="true" style="font-size:15px;">';
         $html .=   '<td width="6 %" align="center" style="line-height:40px;vertical-align: middle;" > ' . (string)$count . '</td>';
@@ -449,7 +449,7 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
 
     $pdf->SetFont('db_helvethaica_x', 'B', 18);
 
-    if($Result_Detail['users_ID'] != '250' && $Result_Detail['users_ID'] != '251' && $Result_Detail['users_ID'] != '177')
+    if($Result_Detail['users_ID'] != '251'  && $Result_Detail['users_ID'] != '177')
     {
         $html .= '<tr nobr="true" style="font-size:15px;">';
         $html .=   '<td width="6 %" align="center" style="line-height:40px;vertical-align: middle;"> ' . (string)$count . '</td>';
