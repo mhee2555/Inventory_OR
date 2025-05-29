@@ -13,9 +13,202 @@ if (!empty($_POST['FUNC_NAME'])) {
         show_detail_request_byDocNo($conn,$db);
     }else if ($_POST['FUNC_NAME'] == 'onconfirm_send_request') {
         onconfirm_send_request($conn,$db);
+    }else if ($_POST['FUNC_NAME'] == 'show_detail_receive') {
+        show_detail_receive($conn,$db);
+    }else if ($_POST['FUNC_NAME'] == 'show_detail_item_ByDocNo') {
+        show_detail_item_ByDocNo($conn,$db);
+    }else if ($_POST['FUNC_NAME'] == 'onconfirm_RQ') {
+        onconfirm_RQ($conn,$db);
+    }else if ($_POST['FUNC_NAME'] == 'show_detail_history') {
+        show_detail_history($conn,$db);
+    }else if ($_POST['FUNC_NAME'] == 'showdetail') {
+        showdetail($conn,$db);
     }
 }
 
+function showdetail($conn,$db){
+    $return = array();
+    $docnort = $_POST['RtDocNo'];
+    $docnorq = $_POST['RqDocNo'];
+
+    $Q1 = " SELECT
+                item.itemcode,
+                item.itemname,
+                insertrfid_detail.QrCode
+            FROM
+                insertrfid
+                INNER JOIN insertrfid_detail ON insertrfid.DocNo = insertrfid_detail.DocNo
+                INNER JOIN item ON insertrfid_detail.ItemCode = item.itemcode 
+            WHERE
+                    insertrfid.RqDocNo = '$docnorq' 
+                AND insertrfid.RtDocNo = '$docnort' ";
+
+    $meQ1 = $conn->prepare($Q1);
+    $meQ1->execute();
+    while ($rowQ1 = $meQ1->fetch(PDO::FETCH_ASSOC)) {
+        $return[] = $rowQ1;
+    }
+
+    echo json_encode($return);
+    unset($conn);
+    die;
+
+}
+
+function show_detail_history($conn,$db){
+    $return = array();
+    $select_date1_search = $_POST['select_date1_search'];
+    $select_date2_search = $_POST['select_date2_search'];
+
+    $select_date1_search = explode("-", $select_date1_search);
+    $select_date1_search = $select_date1_search[2] . '-' . $select_date1_search[1] . '-' . $select_date1_search[0];
+
+    $select_date2_search = explode("-", $select_date2_search);
+    $select_date2_search = $select_date2_search[2] . '-' . $select_date2_search[1] . '-' . $select_date2_search[0];
+
+    $Q1 = " SELECT
+                insertrfid.RqDocNo,
+                insertrfid.RtDocNo,
+                insertrfid.StatusDocNo,
+                DATE( insertrfid.Createdate ) AS Createdate,
+                TIME( insertrfid.Createdate ) AS Createtime 
+            FROM
+                insertrfid 
+            WHERE
+                insertrfid.RqDocNo <> '' 
+                AND DATE( insertrfid.Createdate ) BETWEEN '$select_date1_search' AND '$select_date2_search' 
+            GROUP BY
+                insertrfid.RtDocNo  ";
+
+    $meQ1 = $conn->prepare($Q1);
+    $meQ1->execute();
+    while ($rowQ1 = $meQ1->fetch(PDO::FETCH_ASSOC)) {
+        $return[] = $rowQ1;
+    }
+
+    echo json_encode($return);
+    unset($conn);
+    die;
+
+}
+
+function onconfirm_RQ($conn,$db){
+    $return = array();
+    $docnort = $_POST['docnort'];
+    $docnorq = $_POST['docnorq'];
+
+    $Q1 = " UPDATE insertrfid SET insertrfid.StatusDocNo = 2 WHERE insertrfid.RqDocNo = '$docnorq'   AND insertrfid.RtDocNo = '$docnort'   ";
+    $meQ1 = $conn->prepare($Q1);
+    $meQ1->execute();
+
+    echo json_encode($return);
+    unset($conn);
+    die;
+}
+
+function show_detail_item_ByDocNo($conn,$db){
+    $return = array();
+    $docnort = $_POST['docnort'];
+    $docnorq = $_POST['docnorq'];
+
+    $Q1 = " SELECT
+                item.itemcode,
+                item.itemname,
+                COUNT( insertrfid_detail.ID ) AS cnt
+            FROM
+                insertrfid
+                INNER JOIN insertrfid_detail ON insertrfid.DocNo = insertrfid_detail.DocNo
+                INNER JOIN item ON insertrfid_detail.ItemCode = item.itemcode 
+            WHERE
+                    insertrfid.RqDocNo = '$docnorq' 
+                AND insertrfid.RtDocNo = '$docnort'
+            GROUP BY
+                insertrfid_detail.ItemCode ";
+
+    $meQ1 = $conn->prepare($Q1);
+    $meQ1->execute();
+    while ($rowQ1 = $meQ1->fetch(PDO::FETCH_ASSOC)) {
+        $return['item'][] = $rowQ1;
+        $_itemcode = $rowQ1['itemcode'];
+
+
+        $Q2 = " SELECT
+                    insertrfid_detail.QrCode 
+                FROM
+                    insertrfid
+                    INNER JOIN insertrfid_detail ON insertrfid.DocNo = insertrfid_detail.DocNo 
+                WHERE
+                    insertrfid.RqDocNo = '$docnorq' 
+                    AND insertrfid.RtDocNo = '$docnort' 
+                    AND insertrfid_detail.ItemCode = '$_itemcode' ";
+
+        $meQ2 = $conn->prepare($Q2);
+        $meQ2->execute();
+        while ($rowQ2 = $meQ2->fetch(PDO::FETCH_ASSOC)) {
+            $return[$_itemcode][] = $rowQ2;
+        }
+                    
+    }
+
+    echo json_encode($return);
+    unset($conn);
+    die;
+
+}
+
+function show_detail_receive($conn,$db){
+    $return = array();
+    $select_date1_rq = $_POST['select_date1_rq'];
+    $select_date2_rq = $_POST['select_date2_rq'];
+
+    $select_date1_rq = explode("-", $select_date1_rq);
+    $select_date1_rq = $select_date1_rq[2] . '-' . $select_date1_rq[1] . '-' . $select_date1_rq[0];
+
+    $select_date2_rq = explode("-", $select_date2_rq);
+    $select_date2_rq = $select_date2_rq[2] . '-' . $select_date2_rq[1] . '-' . $select_date2_rq[0];
+
+    $Q1 = " SELECT
+                insertrfid.RqDocNo ,
+                insertrfid.StatusDocNo 
+            FROM
+                insertrfid 
+            WHERE
+                insertrfid.RqDocNo != '' 
+                AND DATE(insertrfid.Createdate) BETWEEN  '$select_date1_rq' AND '$select_date2_rq'
+            GROUP BY
+                insertrfid.RqDocNo ";
+
+    $meQ1 = $conn->prepare($Q1);
+    $meQ1->execute();
+    while ($rowQ1 = $meQ1->fetch(PDO::FETCH_ASSOC)) {
+        $return['rq'][] = $rowQ1;
+        $_RqDocNo = $rowQ1['RqDocNo'];
+
+
+        $Q2 = " SELECT
+                    insertrfid.RtDocNo ,
+                    insertrfid.StatusDocNo,
+                    COUNT(DISTINCT insertrfid_detail.ItemCode) AS cnt
+                FROM
+                    insertrfid 
+                INNER JOIN insertrfid_detail ON insertrfid.DocNo = insertrfid_detail.DocNo
+                WHERE
+                    insertrfid.RqDocNo = '$_RqDocNo'
+                GROUP BY insertrfid.DocNo ";
+
+        $meQ2 = $conn->prepare($Q2);
+        $meQ2->execute();
+        while ($rowQ2 = $meQ2->fetch(PDO::FETCH_ASSOC)) {
+            $return[$_RqDocNo][] = $rowQ2;
+        }
+                    
+    }
+
+    echo json_encode($return);
+    unset($conn);
+    die;
+
+}
 
 function onconfirm_send_request($conn,$db)
 {

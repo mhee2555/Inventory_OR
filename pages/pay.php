@@ -40,7 +40,6 @@
             <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;border-color: lightgray;" id="radio_pay_manual">จ่ายอุปกรณ์ Manual</button>
             <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;border-color: lightgray;" id="radio_return_pay">สแกนอุปกรณ์คืนคลัง</button>
             <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;border-color: lightgray;" id="radio_history_pay">ประวัติการจ่ายอุปกรณ์</button>
-            <!-- <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;" id="radio_claim" hidden>เคลม</button> -->
         </div>
     </div>
 </div>

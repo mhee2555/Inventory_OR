@@ -245,6 +245,14 @@ $(function () {
     $("#return").show();
     $("#pay_manual").hide();
 
+    $("#row_return").show();
+    $("#row_history_return").hide();
+
+    $("#radio_return").css("color", "#bbbbb");
+    $("#radio_return").css("background", "#EAE1F4");
+
+    $("#radio_history_return").css("color", "black");
+    $("#radio_history_return").css("background", "");
 
     
     $("#row_history_return").hide();

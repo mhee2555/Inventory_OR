@@ -112,13 +112,162 @@
 </div>
 
 <div id="row_receive">
+    <div class="row mt-3">
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group ">
+                        <div class="input-group">
+                            <input type="text" class="form-control datepicker-here f18" id="select_date1_rq" data-language='en' data-date-format='dd-mm-yyyy'>
+                            <div class="input-group-append">
+                                <div class="input-group-text bg-light" style="font-size: 20px;font-weight: bold;"><i class="fa-regular fa-calendar-days"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
+                <div class="col-md-6">
+                    <div class="form-group ">
+                        <div class="input-group">
+                            <input type="text" class="form-control datepicker-here f18" id="select_date2_rq" data-language='en' data-date-format='dd-mm-yyyy'>
+                            <div class="input-group-append">
+                                <div class="input-group-text bg-light" style="font-size: 20px;font-weight: bold;"><i class="fa-regular fa-calendar-days"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+
+
+                            <table class="table table-hover table-sm" id="table_rq2">
+                                <thead style="background-color: #cdd6ff;">
+                                    <tr>
+                                        <th scope="col" class="text-left" style="width:5%;"></th>
+                                        <th scope="col" class="text-left" style="width:50%;">เลขเอกสารขอเบิกอุปกรณ์</th>
+                                        <th scope="col" class="text-center" style="width:10%;">สถานะ</th>
+                                        <th scope="col" class="text-center" style="width:10%;"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+      
+
+
+
+
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="row " style="margin-top: 3.3rem !important;">
+                <div class="col-md-12">
+                            <table class="table table-hover table-sm" id="table_detail_rq">
+                                <thead style="background-color: #cdd6ff;">
+                                    <tr>
+                                        <th scope="col" class="text-center" id="" style="width:5%;"></th>
+                                        <th scope="col" class="text-center" id="" >รหัสอุปกรณ์</th>
+                                        <th scope="col" class="text-center" id="" >อุปกรณ์</th>
+                                        <th scope="col" class="text-center" id="" >จำนวน</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                </div>
+
+                <div class="col-md-12 text-right mt-2">
+                    <button class="btn f18" style="background-color: #643695;color:#fff;" id="btn_confirm_RQ">ยืนยัน</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
 </div>
 
 <div id="row_history">
+    <div class="row mt-3">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group ">
+                        <div class="input-group">
+                            <input type="text" class="form-control datepicker-here f18" id="select_date1_search" data-language='en' data-date-format='dd-mm-yyyy'>
+                            <div class="input-group-append">
+                                <div class="input-group-text bg-light" style="font-size: 20px;font-weight: bold;"><i class="fa-regular fa-calendar-days"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
+                <div class="col-md-3">
+                    <div class="form-group ">
+                        <div class="input-group">
+                            <input type="text" class="form-control datepicker-here f18" id="select_date2_search" data-language='en' data-date-format='dd-mm-yyyy'>
+                            <div class="input-group-append">
+                                <div class="input-group-text bg-light" style="font-size: 20px;font-weight: bold;"><i class="fa-regular fa-calendar-days"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+
+
+                            <table class="table table-hover table-sm" id="table_history">
+                                <thead style="background-color: #cdd6ff;">
+                                    <tr>
+                                        <th scope="col" class="text-center" >เลขที่เอกสาร RQ</th>
+                                        <th scope="col" class="text-center" >เลขที่เอกสาร RT</th>
+                                        <th scope="col" class="text-center" >วันที่</th>
+                                        <th scope="col" class="text-center">เวลา</th>
+                                        <th scope="col" class="text-center">แสดงรายละเอียด</th>
+                                        <th scope="col" class="text-center">รายงาน</th>
+                                        <th scope="col" class="text-center">สถานะ</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+      
+
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
+
+<div class="modal fade" id="myModal_detail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-hover table-sm" id="table_detail">
+                    <thead style="background-color: #cdd6ff;">
+                        <tr>
+                            <th scope="col" class="text-center" id="">ลำดับ</th>
+                            <th scope="col" class="text-center" id="">รหัสอุปกรณ์</th>
+                            <th scope="col" class="text-center" id="">อุปกรณ์</th>
+                            <th scope="col" class="text-center" id="">QrCode</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 

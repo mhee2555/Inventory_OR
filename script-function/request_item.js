@@ -1,12 +1,48 @@
 $(function () {
+  var d = new Date();
+  var month = d.getMonth() + 1;
+  var day = d.getDate();
+  var year = d.getFullYear();
+  var output =
+    (("" + day).length < 2 ? "0" : "") +
+    day +
+    "-" +
+    (("" + month).length < 2 ? "0" : "") +
+    month +
+    "-" +
+    year;
+  $("#select_date1_rq").val(output);
+  $("#select_date1_rq").datepicker({
+    onSelect: function (date) {
+      show_detail_receive();
+    },
+  });
+  $("#select_date2_rq").val(output);
+  $("#select_date2_rq").datepicker({
+    onSelect: function (date) {
+      show_detail_receive();
+    },
+  });
+
+  $("#select_date1_search").val(output);
+  $("#select_date1_search").datepicker({
+    onSelect: function (date) {
+      show_detail_history();
+    },
+  });
+
+  $("#select_date2_search").val(output);
+  $("#select_date2_search").datepicker({
+    onSelect: function (date) {
+      show_detail_history();
+    },
+  });
 
   select_type();
   set_menu();
   session();
   show_detail_item_request();
 });
-
-
 
 $("#select_typeItem_request").change(function () {
   show_detail_item_request();
@@ -17,24 +53,19 @@ $("#input_search_request").on("keyup", function (e) {
 });
 
 $("#btn_clear_request").click(function () {
-
   $("#table_rq").DataTable().destroy();
   $("#table_rq tbody").empty();
   $("#input_docnoRQ").val("");
 
-
-
   select_type();
   show_detail_item_request();
 });
-
 
 $("#btn_confirm_send_request").click(function () {
   if ($("#input_docnoRQ").val() == "") {
     showDialogFailed("กรุณากรอก เพิ่มรายการ");
     return;
   }
-
 
   let table = $("#table_rq").DataTable(); // อ้างอิง DataTable instance
   let rowCount = table.rows({ filter: "applied" }).count(); // นับแถวที่ยังแสดงอยู่ (ไม่ถูก filter)
@@ -61,14 +92,12 @@ $("#btn_confirm_send_request").click(function () {
 });
 
 function onconfirm_send_request() {
-
-
   $.ajax({
     url: "process/request_item.php",
     type: "POST",
     data: {
       FUNC_NAME: "onconfirm_send_request",
-      txt_docno_request: $("#input_docnoRQ").val()
+      txt_docno_request: $("#input_docnoRQ").val(),
     },
     success: function (result) {
       var ObjData = JSON.parse(result);
@@ -77,14 +106,12 @@ function onconfirm_send_request() {
       showDialogSuccess("บันทึกสำเร็จ");
 
       setTimeout(() => {
-                $("#table_rq").DataTable().destroy();
-                $("#table_rq tbody").empty();
-                $("#input_docnoRQ").val("");
+        $("#table_rq").DataTable().destroy();
+        $("#table_rq tbody").empty();
+        $("#input_docnoRQ").val("");
 
-
-
-                select_type();
-                show_detail_item_request();
+        select_type();
+        show_detail_item_request();
       }, 300);
     },
   });
@@ -105,13 +132,12 @@ function show_detail_item_request() {
       var ObjData = JSON.parse(result);
       if (!$.isEmptyObject(ObjData)) {
         $.each(ObjData, function (kay, value) {
-
-            var color = "";
-            var input_cnt = "";
-            if(value.cnt < value.stock_min){
-                 color = "style='color:red;' ";
-                 input_cnt = `<input tyle='text' class='text-center form-control numonly loop_qty_request' data-itemcode="${value.itemcode }" >`;
-            }
+          var color = "";
+          var input_cnt = "";
+          if (value.cnt < value.stock_min) {
+            color = "style='color:red;' ";
+            input_cnt = `<input tyle='text' class='text-center form-control numonly loop_qty_request' data-itemcode="${value.itemcode}" >`;
+          }
           _tr += `<tr>
                       <td class='text-center'>${value.itemcode}</td>
                       <td class='text-left'>${value.Item_name}</td>
@@ -132,7 +158,14 @@ function show_detail_item_request() {
           },
           search: settext("btn_Search"),
           info:
-            settext("dataTables_Showing") +" _START_ " +settext("dataTables_to") +" _END_ " +settext("dataTables_of") +" _TOTAL_ " +settext("dataTables_entries") +" ",
+            settext("dataTables_Showing") +
+            " _START_ " +
+            settext("dataTables_to") +
+            " _END_ " +
+            settext("dataTables_of") +
+            " _TOTAL_ " +
+            settext("dataTables_entries") +
+            " ",
         },
         columnDefs: [
           {
@@ -308,7 +341,7 @@ function show_detail_request_byDocNo() {
           {
             width: "20%",
             targets: 2,
-          }
+          },
         ],
         info: false,
         scrollX: false,
@@ -341,14 +374,11 @@ function show_detail_request_byDocNo() {
 }
 
 function set_menu() {
-
-
   $("#radio_request").css("color", "#bbbbb");
   $("#radio_request").css("background", "#EAE1F4");
 
   $("#row_receive").hide();
   $("#row_history").hide();
-
 
   $("#radio_request").click(function () {
     $("#radio_request").css("color", "#bbbbb");
@@ -376,6 +406,8 @@ function set_menu() {
     $("#row_request").hide();
     $("#row_receive").show();
     $("#row_history").hide();
+
+    show_detail_receive();
   });
 
   $("#radio_history").click(function () {
@@ -390,8 +422,9 @@ function set_menu() {
     $("#row_request").hide();
     $("#row_receive").hide();
     $("#row_history").show();
-  });
 
+    show_detail_history();
+  });
 }
 
 function select_type() {
@@ -440,8 +473,297 @@ function session() {
 
 
 
+function show_detail_history() {
+  $.ajax({
+    url: "process/request_item.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "show_detail_history",
+      select_date1_search: $("#select_date1_search").val(),
+      select_date2_search: $("#select_date2_search").val(),
+    },
+    success: function (result) {
+      var _tr = "";
+      // $("#table_deproom_pay").DataTable().destroy();
+      $("#table_history tbody").html("");
+      var ObjData = JSON.parse(result);
+      if (!$.isEmptyObject(ObjData)) {
+        $.each(ObjData, function (kay, value) {
 
-// 
+               if(value.StatusDocNo =='2'){
+                var txt = "<label style='color:lightgreen;'>Complete</label>";
+              }else{
+                var txt = "<label style='color:#643695;'>Waiting</label>";
+              }
+
+          _tr += `<tr>
+                      <td class="f18 text-center">${value.RqDocNo}</td>
+                      <td class="f18 text-center">${value.RtDocNo}</td>
+                      <td class="f18 text-center">${value.Createdate}</td>
+                      <td class="f18 text-center">${value.Createtime}</td>
+                      <td class="f18 text-center"><button class='btn btn-primary' onclick='showdetail("${value.RqDocNo}","${value.RtDocNo}")'>แสดงรายละเอียด</button></td>
+                      <td class="f18 text-center"></td>
+                      <td class="f18 text-center">${txt}</td>
+                   </tr>`;
+
+        });
+      }
+
+      $("#table_history tbody").html(_tr);
+
+
+    },
+  });
+}
+
+function showdetail(RqDocNo,RtDocNo) {
+
+  $("#myModal_detail").modal("toggle");
+  $.ajax({
+    url: "process/request_item.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "showdetail",
+      RqDocNo: RqDocNo,
+      RtDocNo: RtDocNo,
+    },
+    success: function (result) {
+      var _tr = "";
+      // $("#table_deproom_pay").DataTable().destroy();
+      $("#table_detail tbody").html("");
+      var ObjData = JSON.parse(result);
+      if (!$.isEmptyObject(ObjData)) {
+        $.each(ObjData, function (kay, value) {
+
+          _tr += `<tr>
+                      <td class="f18 text-center">${kay+1}</td>
+                      <td class="f18 text-center">${value.itemcode}</td>
+                      <td class="f18 text-left">${value.itemname}</td>
+                      <td class="f18 text-center">${value.QrCode}</td>
+                   </tr>`;
+
+        });
+      }
+
+      $("#table_detail tbody").html(_tr);
+
+
+    },
+  });
+}
+
+
+function show_detail_receive() {
+  $.ajax({
+    url: "process/request_item.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "show_detail_receive",
+      select_date1_rq: $("#select_date1_rq").val(),
+      select_date2_rq: $("#select_date2_rq").val(),
+    },
+    success: function (result) {
+      var _tr = "";
+      // $("#table_deproom_pay").DataTable().destroy();
+      $("#table_rq2 tbody").html("");
+      var ObjData = JSON.parse(result);
+      if (!$.isEmptyObject(ObjData)) {
+        $.each(ObjData["rq"], function (kay, value) {
+          _tr += `<tr id='trbg_${value.RqDocNo}'>
+                      <td class="f24 text-left">
+                      
+                      <i class="fa-solid fa-chevron-up" style='font-size:20px;cursor:pointer;' id='open_${value.RqDocNo}' value='0' onclick='open_receive_sub("${value.RqDocNo}")'></i>
+                      
+                      </td>
+                      <td class="f24 text-left">${value.RqDocNo}</td>
+                      <td class="f24 text-left"></td>
+                      <td class="f24 text-left"></td>
+                   </tr>`;
+          $.each(ObjData[value.RqDocNo], function (kay2, value2) {
+
+              if(value2.StatusDocNo =='2'){
+                var txt = "Complete";
+                var bg_g = "style='background-color: lightgreen;'";
+              }else{
+                var txt = "Waiting";
+                var bg_g = "";
+              }
+            _tr += `<tr class='tr_${value.RqDocNo} all111' ${bg_g}>
+                       <td class="f24 text-center">
+
+                               <input 
+                                style="width: 20px;height: 20px;"
+                                class="form-check-input position-static clear_checkbox"
+                                type="checkbox"
+                                id="checkbox_${value2.RtDocNo}"
+                                data-docnort="${value2.RtDocNo}"
+                                data-docnorq="${value.RqDocNo}"
+                                data-status="${value2.StatusDocNo}"  >
+                       
+                       
+                       
+                       </td>
+                       <td class="f24 text-center">${value2.RtDocNo}</td>
+                       <td class="f24 text-left">${txt}</td>
+                       <td class="f24 text-center">${value2.cnt}</td>
+                    </tr>`;
+          });
+        });
+      }
+
+      $("#table_rq2 tbody").html(_tr);
+      $(".all111").hide();
+
+      $(".clear_checkbox").on("click", function () {
+        const el = $(this);
+        oncheck_show_byDocNo(el.data("docnort"), el.data("docnorq"), el.data("status"));
+      });
+    },
+  });
+}
+
+function oncheck_show_byDocNo(docnort, docnorq , status) {
+
+  if(status == '2'){
+    $("#btn_confirm_RQ").attr('disabled',true);
+  }else{
+    $("#btn_confirm_RQ").attr('disabled',false);
+  }
+  $(".clear_checkbox").prop("checked", false);
+  $("#checkbox_" + docnort).prop("checked", true);
+
+  $("#btn_confirm_RQ").data("docnort", docnort);
+  $("#btn_confirm_RQ").data("docnorq", docnorq);
+
+  show_detail_item_ByDocNo(docnort, docnorq);
+}
+
+function show_detail_item_ByDocNo(docnort, docnorq) {
+  $.ajax({
+    url: "process/request_item.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "show_detail_item_ByDocNo",
+      docnort: docnort,
+      docnorq: docnorq,
+    },
+    success: function (result) {
+      var _tr = "";
+      $("#table_detail_rq tbody").html("");
+      var ObjData = JSON.parse(result);
+      if (!$.isEmptyObject(ObjData)) {
+        $.each(ObjData["item"], function (kay, value) {
+          _tr += `<tr id='trbg_${value.itemcode}'>
+                      <td class="f24 text-left">
+                      <i class="fa-solid fa-chevron-up" style='font-size:20px;cursor:pointer;' id='open_${value.itemcode}' value='0' onclick='open_item_sub("${value.itemcode}")'></i>
+                      </td>
+                      <td class="f24 text-center">${value.itemcode}</td>
+                      <td class="f24 text-left">${value.itemname}</td>
+                      <td class="f24 text-center">${value.cnt}</td>
+                   </tr>`;
+          $.each(ObjData[value.itemcode], function (kay2, value2) {
+            _tr += `<tr class='tr_${value.itemcode} all222'>
+                       <td class="f24 text-center"></td>
+                       <td class="f24 text-center"></td>
+                       <td class="f24 text-center">${value2.QrCode}</td>
+                       <td class="f24 text-center"></td>
+                    </tr>`;
+          });
+        });
+      }
+
+      $("#table_detail_rq tbody").html(_tr);
+      $(".all222").hide();
+    },
+  });
+}
+
+$("#btn_confirm_RQ").click(function () {
+  if ($("#table_detail_rq tbody tr").length == 0) {
+    showDialogFailed("กรุณาเลือกเอกสาร");
+    return;
+  }
+  Swal.fire({
+    title: "ยืนยัน",
+    text: "ยืนยัน การบันทึก",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "ยืนยัน",
+    cancelButtonText: "ยกเลิก",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      onconfirm_RQ();
+    }
+  });
+});
+
+function onconfirm_RQ() {
+  $.ajax({
+    url: "process/request_item.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "onconfirm_RQ",
+      docnort: $("#btn_confirm_RQ").data("docnort"),
+      docnorq: $("#btn_confirm_RQ").data("docnorq"),
+    },
+    success: function (result) {
+
+          $("#table_detail_rq tbody").html("");
+          show_detail_receive();
+          showDialogSuccess("บันทึกสำเร็จ");
+
+
+    },
+  });
+}
+
+function open_item_sub(itemcode) {
+  if ($("#open_" + itemcode).val() == 1) {
+    $("#open_" + itemcode).val(0);
+    $("#open_" + itemcode).animate({ rotate: "0deg", scale: "1.25" }, 500);
+
+    $(".tr_" + itemcode).hide(300);
+
+    $("#trbg_" + itemcode).css("background-color", "");
+
+    // $(".tr_"+id).attr('hidden',true);
+  } else {
+    $("#open_" + itemcode).val(1);
+    $("#open_" + itemcode).animate({ rotate: "180deg", scale: "1.25" }, 500);
+
+    $(".tr_" + itemcode).show(500);
+
+    $("#trbg_" + itemcode).css("background-color", "#EFF8FF");
+  }
+}
+
+function open_receive_sub(RqDocNo) {
+  if ($("#open_" + RqDocNo).val() == 1) {
+    $("#open_" + RqDocNo).val(0);
+    $("#open_" + RqDocNo).animate({ rotate: "0deg", scale: "1.25" }, 500);
+
+    $(".tr_" + RqDocNo).hide(300);
+
+    $("#trbg_" + RqDocNo).css("background-color", "");
+
+    // $(".tr_"+id).attr('hidden',true);
+  } else {
+    $("#open_" + RqDocNo).val(1);
+    $("#open_" + RqDocNo).animate({ rotate: "180deg", scale: "1.25" }, 500);
+
+    $(".tr_" + RqDocNo).show(500);
+
+    $("#trbg_" + RqDocNo).css("background-color", "#EFF8FF");
+
+    console.log($("#trbg_" + RqDocNo).length); // ควรได้ค่าเป็น 1
+
+    // $(".tr_"+id).attr('hidden',false);
+  }
+}
+
+//
 
 function showDialogFailed(text) {
   Swal.fire({
