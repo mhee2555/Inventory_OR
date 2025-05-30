@@ -8,20 +8,16 @@ function createDocNo($conn, $S_UserId, $db,$IsManual)
         $query = " SELECT
                         CONCAT(
                             'RQ',
-                            SUBSTRING( YEAR ( CURDATE()), 3, 2 ),
+                            YEAR (
+                            CURDATE()),
                             LPAD( MONTH ( CURDATE()), 2, '0' ),
                             '-',
-                            LPAD( COALESCE ( MAX( CAST( SUBSTRING( DocNo, 8, 5 ) AS UNSIGNED )), 0 ) + 1, 5, '0' ) 
+                            LPAD( COALESCE ( MAX( CAST( SUBSTRING( DocNo, 10, 5 ) AS UNSIGNED )), 0 ) + 1, 5, '0' ) 
                         ) AS DocNo 
                     FROM
                         request 
                     WHERE
-                        DocNo LIKE CONCAT(
-                            'RQ',
-                            SUBSTRING( YEAR ( CURDATE()), 3, 2 ),
-                            LPAD( MONTH ( CURDATE()), 2, '0' ),
-                        '%' 
-                        ) ";
+                        DocNo LIKE CONCAT( 'RQ', YEAR ( CURDATE()), LPAD( MONTH ( CURDATE()), 2, '0' ), '%' )  ";
     } else {
         $query = "SELECT TOP
                         1 CONCAT (
