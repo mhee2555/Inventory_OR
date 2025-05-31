@@ -61,6 +61,10 @@ $(function () {
   });
 });
 
+  $("#select_type").change(function () {
+    show_detail_daily();
+  });
+
 function show_detail_refrain() {
   $.ajax({
     url: "process/hn_daily.php",
@@ -161,6 +165,7 @@ function show_detail_daily() {
     data: {
       FUNC_NAME: "show_detail_daily",
       select_date1_search1: $("#select_date1_search1").val(),
+      select_type: $("#select_type").val(),
     },
     success: function (result) {
       var _tr = "";
@@ -177,10 +182,10 @@ function show_detail_daily() {
           }
 
           var x  ="";
-          if (value.isStatus == "0" || value.isStatus == "1" ) {
+          if (value.isStatus == "0" || value.isStatus == "1" || value.isStatus == "2") {
             var txt = `<a  href="#" style='font-weight: bold;color:#643695;' onclick='update_create_request(${value.ID})'>รอดำเนินการ</a>`;
           }
-          if ( value.isStatus == "2") {
+          if ( value.isStatus == "3") {
             var txt = `<a  href="#" style='font-weight: bold;color:#1cc88a;' )'>ดำเนินการเรียบร้อย</a>`;
             x  ="hidden";
           }

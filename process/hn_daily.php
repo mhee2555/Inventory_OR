@@ -101,8 +101,15 @@ function show_detail_daily($conn, $db)
     $select_date1_search = explode("-", $select_date1_search1);
     $select_date1_search = $select_date1_search[2] . '-' . $select_date1_search[1] . '-' . $select_date1_search[0];
 
+    $select_type = $_POST['select_type'];
 
-
+    $where_t = "";
+    if($select_type == 1){
+        $where_t = " AND  ( set_hn.isStatus = 0 OR set_hn.isStatus = 1 OR set_hn.isStatus = 2 )";
+    }
+    if($select_type == 2){
+        $where_t = " AND set_hn.isStatus = 3 ";
+    }
 
     $Q1 = " SELECT
                 set_hn.ID,
@@ -124,7 +131,9 @@ function show_detail_daily($conn, $db)
                 INNER JOIN departmentroom ON set_hn.departmentroomid = departmentroom.id 
                 AND DATE( set_hn.createAt ) = '$select_date1_search'
                 AND NOT set_hn.isStatus = 9
-                AND  set_hn.isCancel = 0 ";
+                AND  set_hn.isCancel = 0
+                $where_t
+            ORDER BY set_hn.isStatus ASC";
 
     $meQ1 = $conn->prepare($Q1);
     $meQ1->execute();

@@ -60,11 +60,11 @@ function set_hn($conn, $db)
     while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
         $return[] = $row;
 
-        // $ID = $row['ID'];
+        $ID = $row['ID'];
 
-        // $Q2 = "UPDATE set_hn SET isStatus = 2 WHERE set_hn.ID = $ID ";
-        // $meQuery2 = $conn->prepare($Q2);
-        // $meQuery2->execute();
+        $Q2 = "UPDATE set_hn SET isStatus = 2 WHERE set_hn.ID = $ID ";
+        $meQuery2 = $conn->prepare($Q2);
+        $meQuery2->execute();
     }
 
 
@@ -261,7 +261,7 @@ function onconfirm_send_request($conn, $db)
 
 
     if ($input_set_hn_ID_request != '') {
-        $Q2 = "UPDATE set_hn SET isStatus = 2 WHERE set_hn.ID = $input_set_hn_ID_request ";
+        $Q2 = "UPDATE set_hn SET isStatus = 3 WHERE set_hn.ID = $input_set_hn_ID_request ";
         $meQuery2 = $conn->prepare($Q2);
         $meQuery2->execute();    
     }

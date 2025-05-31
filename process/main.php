@@ -78,7 +78,7 @@ function selection_hn($conn,$db)
                 FROM
                     set_hn
                 WHERE
-                   ( set_hn.isStatus = 0 OR set_hn.isStatus = 1 )
+                   ( set_hn.isStatus = 0 OR set_hn.isStatus = 1 OR set_hn.isStatus = 2 )
                 AND  set_hn.isCancel = 0 ";
     $meQuery = $conn->prepare($query);
     $meQuery->execute();

@@ -107,7 +107,7 @@ function show_detail_history() {
           }
 
           var hidden = "";
-          if (value.isStatus == "1" || value.isStatus == "2") {
+          if (value.isStatus == "1" || value.isStatus == "2" || value.isStatus == "3") {
             var hidden = "hidden";
           }
 

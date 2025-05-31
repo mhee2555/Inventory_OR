@@ -1278,6 +1278,8 @@ function edit_item_byDocNo(
 
   $("#radio_create_request").click();
 
+
+  $("#input_set_hn_ID_request").val("");
   $("#txt_docno_request").val(DocNo);
   $("#input_hn_request").val(hn_record_id);
   $("#select_date_request").val(serviceDate);

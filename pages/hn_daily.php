@@ -44,7 +44,15 @@
     <div class="row">
         <div class="col-md-3"></div>
         <div class="col-md-3"></div>
-        <div class="col-md-3"></div>
+        <div class="col-md-3">
+            <div class="form-group ">
+                    <select class="form-control f18" id="select_type">
+                        <option value="">เลือกทั้งหมด</option>
+                        <option value="1">รอดำเนินการ</option>
+                        <option value="2">ดำเนินการเรียบร้อย</option>
+                    </select>
+            </div>
+        </div>
 
         <div class="col-md-3">
             <div class="form-group ">
