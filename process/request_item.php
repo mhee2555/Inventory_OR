@@ -96,8 +96,9 @@ function onconfirm_RQ($conn,$db){
     $return = array();
     $docnort = $_POST['docnort'];
     $docnorq = $_POST['docnorq'];
+    $Userid = $_SESSION['Userid'];
 
-    $Q1 = " UPDATE insertrfid SET insertrfid.StatusDocNo = 2 WHERE insertrfid.RqDocNo = '$docnorq'   AND insertrfid.RtDocNo = '$docnort'   ";
+    $Q1 = " UPDATE insertrfid SET insertrfid.StatusDocNo = 2 , insertrfid.userID = $Userid WHERE insertrfid.RqDocNo = '$docnorq'   AND insertrfid.RtDocNo = '$docnort'   ";
     $meQ1 = $conn->prepare($Q1);
     $meQ1->execute();
 

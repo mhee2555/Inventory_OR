@@ -30,7 +30,46 @@ if (!empty($_POST['FUNC_NAME'])) {
         update_isCancel($conn,$db);
     }  else if ($_POST['FUNC_NAME'] == 'updateDetail_qty') {
         updateDetail_qty($conn,$db);
+    }  else if ($_POST['FUNC_NAME'] == 'set_hn') {
+        set_hn($conn,$db);
     }
+}
+
+function set_hn($conn,$db){
+
+    $return = array();
+    $Q1 = "SELECT
+                set_hn.ID,
+                set_hn.hncode,
+                DATE_FORMAT( set_hn.serviceDate, '%d-%m-%Y' ) AS serviceDate,
+                DATE_FORMAT( set_hn.serviceDate, '%H:%i' ) AS serviceTime,
+                set_hn.doctor,
+                set_hn.departmentroomid,
+                set_hn.`procedure`,
+                set_hn.remark,
+                set_hn.isStatus,
+                set_hn.userID,
+                set_hn.isCancel,
+                set_hn.createAt 
+            FROM
+                set_hn 
+            WHERE set_hn.isStatus = 1 ";
+    $meQuery = $conn->prepare($Q1);
+    $meQuery->execute();
+    while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+        $return[] = $row;
+
+        $ID = $row['ID'];
+
+        $Q2 = "UPDATE set_hn SET isStatus = 2 WHERE set_hn.ID = $ID ";
+        $meQuery2 = $conn->prepare($Q2);
+        $meQuery2->execute();
+    }
+
+
+    echo json_encode($return);
+    unset($conn);
+    die;
 }
 
 function check_routine($conn,$db){

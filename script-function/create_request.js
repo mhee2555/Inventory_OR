@@ -196,7 +196,94 @@ $(function () {
       $("#select_doctor_request").val("").trigger("change");
     }
   });
+
+    set_hn();
 });
+
+function set_hn() {
+  $.ajax({
+    url: "process/create_request.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "set_hn",
+    },
+    success: function (result) {
+      var ObjData = JSON.parse(result);
+      if (!$.isEmptyObject(ObjData)) {
+        $.each(ObjData, function (kay, value) {
+          $(".clear_doctor").attr("hidden", true);
+          doctor_Array = [];
+
+          $("#select_deproom_request").val("");
+          $("#select2-select_deproom_request-container").text(
+            "กรุณาเลือกห้องผ่าตัด"
+          );
+
+          $("#select_procedure_request").val("");
+          $("#select2-select_procedure_request-container").text(
+            "กรุณาเลือกหัตถการ"
+          );
+          $(".clear_procedure").attr("hidden", true);
+          procedure_id_Array = [];
+
+          $("#radio_create_request").click();
+
+          $("#input_hn_request").val(value.hncode);
+          $("#select_date_request").val(value.serviceDate);
+          $("#select_time_request").val(value.serviceTime);
+          $("#select_deproom_request").val(value.departmentroomid).trigger("change");
+
+
+          $.ajax({
+            url: "process/pay.php",
+            type: "POST",
+            data: {
+              FUNC_NAME: "showDetail_Doctor",
+              doctor: value.doctor,
+            },
+            success: function (result) {
+              var ObjData = JSON.parse(result);
+              if (!$.isEmptyObject(ObjData)) {
+                var _row = "";
+                $.each(ObjData, function (kay, value) {
+                  doctor_Array.push(value.ID.toString());
+                  _row += `       <div  class='div_${value.ID} pl-3 clear_doctor' onclick='DeleteDoctor(${value.ID})'>
+                              <label for="" class="custom-label">${value.Doctor_Name}</label>
+                          </div> `;
+                });
+                $("#row_doctor").append(_row);
+              }
+            },
+          });
+
+          $.ajax({
+            url: "process/pay.php",
+            type: "POST",
+            data: {
+              FUNC_NAME: "showDetail_Procedure",
+              procedure: value.procedure,
+            },
+            success: function (result) {
+              var ObjData = JSON.parse(result);
+              if (!$.isEmptyObject(ObjData)) {
+                var _row = "";
+                $.each(ObjData, function (kay, value) {
+                  procedure_id_Array.push(value.ID.toString());
+
+                  _row += `       <div  class='div_${value.ID} pl-3 clear_doctor' onclick='DeleteDoctor(${value.ID})'>
+                              <label for="" class="custom-label">${value.Procedure_TH}</label>
+                          </div> `;
+                });
+
+                $("#row_procedure").append(_row);
+              }
+            },
+          });
+        });
+      }
+    },
+  });
+}
 
 // create_Request
 
@@ -529,7 +616,9 @@ function show_detail_item_request() {
                       <td class='text-center' >${kay + 1}</td>
                       <td>${value.Item_name}</td>
                       <td class='text-center'>${value.TyeName}</td>
-                      <td class='text-center'><input type='text' class='numonly form-control loop_qty_request text-center' data-itemcode="${value.itemcode }"></td>
+                      <td class='text-center'><input type='text' class='numonly form-control loop_qty_request text-center' data-itemcode="${
+                        value.itemcode
+                      }"></td>
                    </tr>`;
         });
       }
@@ -666,7 +755,11 @@ function show_detail_request_byDocNo() {
                       <td class='text-center'>${kay + 1}</td>
                       <td>${value.itemname}</td>
                       <td class='text-center'>${value.TyeName}</td>
-                      <td class='text-center'><input type="number" onblur="updateDetail_qty(${value.ID},'${value.itemcode}')" class="form-control text-center qty_loop numonly" id="qty_item_${
+                      <td class='text-center'><input type="number" onblur="updateDetail_qty(${
+                        value.ID
+                      },'${
+            value.itemcode
+          }')" class="form-control text-center qty_loop numonly" id="qty_item_${
             value.ID
           }" data-id='${value.ID}' value='${value.cnt}'> </td>
                       <td class='text-center'>
@@ -749,8 +842,7 @@ function show_detail_request_byDocNo() {
   });
 }
 
-function updateDetail_qty(ID,itemcode) {
-
+function updateDetail_qty(ID, itemcode) {
   $("#qty_item_" + ID).val();
   $.ajax({
     url: "process/create_request.php",
@@ -1469,7 +1561,6 @@ function session() {
       RefDepID = ObjData.RefDepID;
       Permission_name = ObjData.Permission_name;
 
-      
       $("#input_Deproom_Main").val(Permission_name);
       $("#input_Name_Main").val(UserName);
     },

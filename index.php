@@ -513,6 +513,24 @@ if (!isset($_SESSION['UserName'])) {
 
         }
 
+        if (page == 'hn_daily') {
+
+            var link = 'pages/hn_daily.php';
+
+            $.get(link, function(res) {
+
+                $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
+                $("#menu1").css('color', '#667085');
+
+                $("#conMain").html(res);
+                history.pushState({}, "Results for `Cats`", 'index.php?s=hn_daily');
+                document.title = "oc";
+                loadScript('script-function/hn_daily.js');
+
+            });
+
+        }
+
         setTimeout(() => {
             $('#a_' + page).click();
         }, 300);
@@ -1582,6 +1600,8 @@ if (!isset($_SESSION['UserName'])) {
             $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
             $("#ic_setup_equipment_rooms").attr("src", "assets/img_project/2_icon/ic_receiveinventory.png");
             $("#ic_create_equipment_request").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
+            $("#ic_request_item").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
+            $("#ic_set_hn").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
             $("#ic_dispense_equipment").attr("src", "assets/img_project/2_icon/ic_dispense_equipment.png");
             $("#ic_receive_contaminated_equipment").attr("src", "assets/img_project/2_icon/ic_receive_contaminated_equipment.png");
             $("#ic_send_nsterile").attr("src", "assets/img_project/2_icon/ic_send_nsterile.png");
@@ -1623,6 +1643,8 @@ if (!isset($_SESSION['UserName'])) {
             $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
             $("#ic_setup_equipment_rooms").attr("src", "assets/img_project/2_icon/ic_receiveinventory.png");
             $("#ic_create_equipment_request").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
+            $("#ic_request_item").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
+            $("#ic_set_hn").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
             $("#ic_dispense_equipment").attr("src", "assets/img_project/2_icon/ic_dispense_equipment.png");
             $("#ic_receive_contaminated_equipment").attr("src", "assets/img_project/2_icon/ic_receive_contaminated_equipment.png");
             $("#ic_send_nsterile").attr("src", "assets/img_project/2_icon/ic_send_nsterile.png");
@@ -1665,6 +1687,8 @@ if (!isset($_SESSION['UserName'])) {
             $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
             $("#ic_setup_equipment_rooms").attr("src", "assets/img_project/2_icon/ic_receiveinventory.png");
             $("#ic_create_equipment_request").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
+            $("#ic_request_item").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
+            $("#ic_set_hn").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
             $("#ic_dispense_equipment").attr("src", "assets/img_project/2_icon/ic_dispense_equipment.png");
             $("#ic_receive_contaminated_equipment").attr("src", "assets/img_project/2_icon/ic_receive_contaminated_equipment.png");
             $("#ic_send_nsterile").attr("src", "assets/img_project/2_icon/ic_send_nsterile.png");
@@ -1705,6 +1729,8 @@ if (!isset($_SESSION['UserName'])) {
             $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
             $("#ic_setup_equipment_rooms").attr("src", "assets/img_project/2_icon/ic_receiveinventory.png");
             $("#ic_create_equipment_request").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
+            $("#ic_request_item").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
+            $("#ic_set_hn").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
             $("#ic_dispense_equipment").attr("src", "assets/img_project/2_icon/ic_dispense_equipment.png");
             $("#ic_receive_contaminated_equipment").attr("src", "assets/img_project/2_icon/ic_receive_contaminated_equipment.png");
             $("#ic_send_nsterile").attr("src", "assets/img_project/2_icon/ic_send_nsterile.png");
@@ -1733,6 +1759,8 @@ if (!isset($_SESSION['UserName'])) {
             $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
             $("#ic_setup_equipment_rooms").attr("src", "assets/img_project/2_icon/ic_receiveinventory.png");
             $("#ic_create_equipment_request").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
+            $("#ic_request_item").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
+            $("#ic_set_hn").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
             $("#ic_dispense_equipment").attr("src", "assets/img_project/2_icon/ic_dispense_equipment.png");
             $("#ic_receive_contaminated_equipment").attr("src", "assets/img_project/2_icon/ic_receive_contaminated_equipment.png");
             $("#ic_send_nsterile").attr("src", "assets/img_project/2_icon/ic_send_nsterile.png");
@@ -1761,10 +1789,11 @@ if (!isset($_SESSION['UserName'])) {
 
 
             $("#ic_operation_room").attr("src", "assets/img_project/2_icon/ic_operation_room.png");
-
             $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
             $("#ic_setup_equipment_rooms").attr("src", "assets/img_project/2_icon/ic_receiveinventory.png");
             $("#ic_create_equipment_request").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
+            $("#ic_request_item").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
+            $("#ic_set_hn").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
             $("#ic_dispense_equipment").attr("src", "assets/img_project/2_icon/ic_dispense_equipment.png");
             $("#ic_receive_contaminated_equipment").attr("src", "assets/img_project/2_icon/ic_receive_contaminated_equipment.png");
             $("#ic_send_nsterile").attr("src", "assets/img_project/2_icon/ic_send_nsterile.png");

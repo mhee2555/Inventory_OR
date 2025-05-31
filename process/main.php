@@ -28,6 +28,8 @@ if (!empty($_POST['FUNC_NAME'])) {
         onUpdateLang($conn,$db);
     } else if ($_POST['FUNC_NAME'] == 'selection_oc') {
         selection_oc($conn,$db);
+    } else if ($_POST['FUNC_NAME'] == 'selection_hn') {
+        selection_hn($conn,$db);
     }
 }
 
@@ -65,6 +67,28 @@ function onUpdateDisplay($conn,$db)
     die;
 }
 
+
+function selection_hn($conn,$db)
+{
+
+
+
+    $return = [];
+    $query = " SELECT COUNT(set_hn.ID) AS c 
+                FROM
+                    set_hn
+                WHERE
+                    set_hn.isStatus = 0 
+                AND  set_hn.isCancel = 0 ";
+    $meQuery = $conn->prepare($query);
+    $meQuery->execute();
+    while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+        $return[] = $row;
+    }
+    echo json_encode($return);
+    unset($conn);
+    die;
+}
 
 function selection_oc($conn,$db)
 {

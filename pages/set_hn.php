@@ -34,10 +34,6 @@
 <hr>
 
 <div id="set_hn">
-
-</div>
-
-<div id="history">
     <div class="row">
         <div class="col-md-12">
             <div class="row">
@@ -49,11 +45,18 @@
                                 <div class="col-md-4">
                                     <label style="color:black;font-weight: 600;">เลขประจำตัวคนไข้</label>
                                     <input type='text' class='form-control f18' id="input_Hn_pay_manual">
+                                    <input type='text' class='form-control f18' id="input_Hn_ID" hidden>
                                 </div>
                                 <div class="col-md-4 ">
+
                                     <div class="form-group ">
                                         <label style="color:black;font-weight: 600;">วันที่รับบริการ</label>
-                                        <input type="text" class="form-control datepicker-here f18" id="input_date_service_manual" data-language='en' data-date-format='dd-mm-yyyy'>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control datepicker-here f18" id="input_date_service_manual" data-language='en' data-date-format='dd-mm-yyyy'>
+                                            <div class="input-group-append">
+                                                <div class="input-group-text bg-light" style="font-size: 20px;font-weight: bold;"><i class="fa-regular fa-calendar-days"></i></div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-md-4 ">
@@ -118,7 +121,7 @@
                                 </div>
 
                                 <div class="col-md-2">
-                                    <button id="btn_scan_RFid_manual" class="btn  btn-block" style="color:#fff;background-color:#643695;font-size: 18px;margin-top: 2.1rem !important;line-height: 25px;">บันทึก</button>
+                                    <button id="btn_save_hn_manual" class="btn  btn-block" style="color:#fff;background-color:#643695;font-size: 18px;margin-top: 2.1rem !important;line-height: 25px;">บันทึก</button>
                                 </div>
 
                             </div>
@@ -127,6 +130,115 @@
                     </div>
                 </div>
 
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="history">
+
+    <div class="row mt-3">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group ">
+                        <div class="input-group">
+                            <input type="text" class="form-control datepicker-here f18" id="select_date1_search" data-language='en' data-date-format='dd-mm-yyyy'>
+                            <div class="input-group-append">
+                                <div class="input-group-text bg-light" style="font-size: 20px;font-weight: bold;"><i class="fa-regular fa-calendar-days"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="form-group ">
+                        <div class="input-group">
+                            <input type="text" class="form-control datepicker-here f18" id="select_date2_search" data-language='en' data-date-format='dd-mm-yyyy'>
+                            <div class="input-group-append">
+                                <div class="input-group-text bg-light" style="font-size: 20px;font-weight: bold;"><i class="fa-regular fa-calendar-days"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+
+
+                    <table class="table table-hover table-sm" id="table_history">
+                        <thead style="background-color: #cdd6ff;">
+                            <tr>
+                                <th scope="col" class="text-center">ลำดับ</th>
+                                <th scope="col" class="text-center">เลขที่ประจำตัวคนไข้</th>
+                                <th scope="col" class="text-center">วัน/เวลารับบริการ</th>
+                                <th scope="col" class="text-center">แพทย์</th>
+                                <th scope="col" class="text-center">ห้องผ่าตัด</th>
+                                <th scope="col" class="text-center">หัตถการ</th>
+                                <th scope="col" class="text-center">#</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+
+
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<div class="modal fade" id="myModal_Procedure" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">หัตถการ</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-hover table-sm" id="table_detail_Procedure">
+                    <thead style="background-color: #cdd6ff;">
+                        <tr>
+                            <th scope="col" class="text-center" id="">ลำดับ</th>
+                            <th scope="col" class="text-center" id="">หัตถการ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModal_Doctor" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">แพทย์</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-hover table-sm" id="table_detail_Doctor">
+                    <thead style="background-color: #cdd6ff;">
+                        <tr>
+                            <th scope="col" class="text-center" id="">ลำดับ</th>
+                            <th scope="col" class="text-center" id="">แพทย์</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

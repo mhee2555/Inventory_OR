@@ -210,7 +210,7 @@
     </div>
   </div>
 
-   <div class="col-sm-12 col-md-12 col-lg-6 mt-3" id="row_oc" >
+  <div class="col-sm-12 col-md-12 col-lg-6 mt-3" id="row_oc">
     <div class="card text-center">
       <div class="card-body">
         <div class="row g-0">
@@ -222,6 +222,24 @@
           </div>
           <div class="col-md-12 text-left">
             <a href="pages/oc.php" class="btn btn-primary" id="btn_oc" style="font-size: 25px;background-color:#643695;"> <label class="mb-0">ไปยังหน้า ติดตามอุปกรณ์<i class="fa-solid fa-arrow-right-long" style="font-size: 15px;margin-left: 15px;"></i> </label> </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-12 col-md-12 col-lg-6 mt-3" id="row_hn">
+    <div class="card text-center">
+      <div class="card-body">
+        <div class="row g-0">
+          <div class="col-md-8 text-left">
+            <h2 class="card-title text-dark font-weight-bold f24" id="">แจ้งเตือนคนไข้</h2>
+            <div class="card-text"> <label style="font-size: 70px;color:#101828;line-height: 55px;" id="text_hn">0</label>
+              <label class="f24" style="color:black;" class="label_hn"> เอกสาร </label>
+            </div>
+          </div>
+          <div class="col-md-12 text-left">
+            <a href="pages/hn_daily.php" class="btn btn-primary" id="btn_hn" style="font-size: 25px;background-color:#643695;"> <label class="mb-0">ไปยังหน้า แจ้งเตือนคนไข้<i class="fa-solid fa-arrow-right-long" style="font-size: 15px;margin-left: 15px;"></i> </label> </a>
           </div>
         </div>
       </div>
