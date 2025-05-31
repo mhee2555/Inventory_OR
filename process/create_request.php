@@ -7,35 +7,36 @@ require '../process/Createhncode.php';
 
 if (!empty($_POST['FUNC_NAME'])) {
     if ($_POST['FUNC_NAME'] == 'show_detail_item_request') {
-        show_detail_item_request($conn,$db);
+        show_detail_item_request($conn, $db);
     } else if ($_POST['FUNC_NAME'] == 'onconfirm_request') {
-        onconfirm_request($conn,$db);
-    }  else if ($_POST['FUNC_NAME'] == 'show_detail_request_byDocNo') {
-        show_detail_request_byDocNo($conn,$db);
-    }  else if ($_POST['FUNC_NAME'] == 'onconfirm_send_request') {
-        onconfirm_send_request($conn,$db);
-    }  else if ($_POST['FUNC_NAME'] == 'show_detail_history') {
-        show_detail_history($conn,$db);
-    }  else if ($_POST['FUNC_NAME'] == 'cancel_item_byDocNo') {
-        cancel_item_byDocNo($conn,$db);
-    }  else if ($_POST['FUNC_NAME'] == 'delete_request_byItem') {
-        delete_request_byItem($conn,$db);
-    }  else if ($_POST['FUNC_NAME'] == 'add_request_qty') {
-        add_request_qty($conn,$db);
-    }  else if ($_POST['FUNC_NAME'] == 'delete_request_qty') {
-        delete_request_qty($conn,$db);
-    }  else if ($_POST['FUNC_NAME'] == 'check_routine') {
-        check_routine($conn,$db);
-    }  else if ($_POST['FUNC_NAME'] == 'update_isCancel') {
-        update_isCancel($conn,$db);
-    }  else if ($_POST['FUNC_NAME'] == 'updateDetail_qty') {
-        updateDetail_qty($conn,$db);
-    }  else if ($_POST['FUNC_NAME'] == 'set_hn') {
-        set_hn($conn,$db);
+        onconfirm_request($conn, $db);
+    } else if ($_POST['FUNC_NAME'] == 'show_detail_request_byDocNo') {
+        show_detail_request_byDocNo($conn, $db);
+    } else if ($_POST['FUNC_NAME'] == 'onconfirm_send_request') {
+        onconfirm_send_request($conn, $db);
+    } else if ($_POST['FUNC_NAME'] == 'show_detail_history') {
+        show_detail_history($conn, $db);
+    } else if ($_POST['FUNC_NAME'] == 'cancel_item_byDocNo') {
+        cancel_item_byDocNo($conn, $db);
+    } else if ($_POST['FUNC_NAME'] == 'delete_request_byItem') {
+        delete_request_byItem($conn, $db);
+    } else if ($_POST['FUNC_NAME'] == 'add_request_qty') {
+        add_request_qty($conn, $db);
+    } else if ($_POST['FUNC_NAME'] == 'delete_request_qty') {
+        delete_request_qty($conn, $db);
+    } else if ($_POST['FUNC_NAME'] == 'check_routine') {
+        check_routine($conn, $db);
+    } else if ($_POST['FUNC_NAME'] == 'update_isCancel') {
+        update_isCancel($conn, $db);
+    } else if ($_POST['FUNC_NAME'] == 'updateDetail_qty') {
+        updateDetail_qty($conn, $db);
+    } else if ($_POST['FUNC_NAME'] == 'set_hn') {
+        set_hn($conn, $db);
     }
 }
 
-function set_hn($conn,$db){
+function set_hn($conn, $db)
+{
 
     $return = array();
     $Q1 = "SELECT
@@ -59,11 +60,11 @@ function set_hn($conn,$db){
     while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
         $return[] = $row;
 
-        $ID = $row['ID'];
+        // $ID = $row['ID'];
 
-        $Q2 = "UPDATE set_hn SET isStatus = 2 WHERE set_hn.ID = $ID ";
-        $meQuery2 = $conn->prepare($Q2);
-        $meQuery2->execute();
+        // $Q2 = "UPDATE set_hn SET isStatus = 2 WHERE set_hn.ID = $ID ";
+        // $meQuery2 = $conn->prepare($Q2);
+        // $meQuery2->execute();
     }
 
 
@@ -72,7 +73,8 @@ function set_hn($conn,$db){
     die;
 }
 
-function check_routine($conn,$db){
+function check_routine($conn, $db)
+{
     $return = array();
     $select_deproom_request = $_POST['select_deproom_request'];
     $procedure_id_Array = $_POST['procedure_id_Array'];
@@ -104,11 +106,10 @@ function check_routine($conn,$db){
     echo json_encode($return);
     unset($conn);
     die;
-
 }
 
 
-function updateDetail_qty($conn,$db)
+function updateDetail_qty($conn, $db)
 {
     $return = array();
     $ID = $_POST['ID'];
@@ -117,8 +118,8 @@ function updateDetail_qty($conn,$db)
     $itemcode = $_POST['itemcode'];
 
 
-    
-    
+
+
     $Userid = $_SESSION['Userid'];
 
     $sql2 = " UPDATE deproomdetail SET Qty = $qty  WHERE ID = '$ID' ";
@@ -126,19 +127,19 @@ function updateDetail_qty($conn,$db)
     $meQuery2->execute();
 
 
-        $insert_log = "INSERT INTO log_activity_users (itemCode, qty, isStatus, DocNo, userID, createAt) 
+    $insert_log = "INSERT INTO log_activity_users (itemCode, qty, isStatus, DocNo, userID, createAt) 
                         VALUES (:itemCode, :qty, :isStatus, :DocNo, :Userid, NOW())";
 
-        $meQuery_log = $conn->prepare($insert_log);
+    $meQuery_log = $conn->prepare($insert_log);
 
-        $meQuery_log->bindParam(':itemCode', $itemcode);
-        $meQuery_log->bindParam(':qty', $qty);
-        $meQuery_log->bindValue(':isStatus', 1, PDO::PARAM_INT);
-        $meQuery_log->bindParam(':DocNo', $txt_docno_request);
-        $meQuery_log->bindParam(':Userid', $Userid);
+    $meQuery_log->bindParam(':itemCode', $itemcode);
+    $meQuery_log->bindParam(':qty', $qty);
+    $meQuery_log->bindValue(':isStatus', 1, PDO::PARAM_INT);
+    $meQuery_log->bindParam(':DocNo', $txt_docno_request);
+    $meQuery_log->bindParam(':Userid', $Userid);
 
 
-        $meQuery_log->execute();
+    $meQuery_log->execute();
 
 
     echo json_encode($return);
@@ -146,7 +147,7 @@ function updateDetail_qty($conn,$db)
     die;
 }
 
-function add_request_qty($conn,$db)
+function add_request_qty($conn, $db)
 {
     $return = array();
     $ID = $_POST['ID'];
@@ -161,7 +162,7 @@ function add_request_qty($conn,$db)
 }
 
 
-function delete_request_qty($conn,$db)
+function delete_request_qty($conn, $db)
 {
     $return = array();
     $ID = $_POST['ID'];
@@ -175,7 +176,7 @@ function delete_request_qty($conn,$db)
     die;
 }
 
-function update_isCancel($conn,$db)
+function update_isCancel($conn, $db)
 {
     $return = array();
     $DocNo = $_POST['DocNo'];
@@ -185,18 +186,18 @@ function update_isCancel($conn,$db)
     $meQuery2 = $conn->prepare($sql2);
     $meQuery2->execute();
 
-        $insert_log = "INSERT INTO log_activity_users (itemCode, qty, isStatus, DocNo, userID, createAt) 
+    $insert_log = "INSERT INTO log_activity_users (itemCode, qty, isStatus, DocNo, userID, createAt) 
                         VALUES ('', :qty, :isStatus, :DocNo, :Userid, NOW())";
 
-        $meQuery_log = $conn->prepare($insert_log);
+    $meQuery_log = $conn->prepare($insert_log);
 
-        $meQuery_log->bindValue(':qty', 0 , PDO::PARAM_INT);
-        $meQuery_log->bindValue(':isStatus', 3, PDO::PARAM_INT);
-        $meQuery_log->bindParam(':DocNo', $DocNo);
-        $meQuery_log->bindParam(':Userid', $Userid);
+    $meQuery_log->bindValue(':qty', 0, PDO::PARAM_INT);
+    $meQuery_log->bindValue(':isStatus', 3, PDO::PARAM_INT);
+    $meQuery_log->bindParam(':DocNo', $DocNo);
+    $meQuery_log->bindParam(':Userid', $Userid);
 
 
-        $meQuery_log->execute();
+    $meQuery_log->execute();
 
 
     echo json_encode($return);
@@ -205,7 +206,7 @@ function update_isCancel($conn,$db)
 }
 
 
-function delete_request_byItem($conn,$db)
+function delete_request_byItem($conn, $db)
 {
     $return = array();
     $ID = $_POST['ID'];
@@ -219,14 +220,14 @@ function delete_request_byItem($conn,$db)
     die;
 }
 
-function cancel_item_byDocNo($conn,$db)
+function cancel_item_byDocNo($conn, $db)
 {
     $return = array();
     $txt_docno_request = $_POST['txt_docno_request'];
 
-    if($db == 1){
+    if ($db == 1) {
         $sql1 = " UPDATE deproom SET IsCancel = 1 , ModifyDate = NOW()  WHERE DocNo = '$txt_docno_request' ";
-    }else{
+    } else {
         $sql1 = " UPDATE deproom SET IsCancel = 1 , ModifyDate = GETDATE()  WHERE DocNo = '$txt_docno_request' ";
     }
     $sql2 = " DELETE FROM deproomdetail WHERE DocNo = '$txt_docno_request' ";
@@ -240,7 +241,7 @@ function cancel_item_byDocNo($conn,$db)
 }
 
 
-function onconfirm_send_request($conn,$db)
+function onconfirm_send_request($conn, $db)
 {
     $return = array();
     $txt_docno_request = $_POST['txt_docno_request'];
@@ -255,22 +256,32 @@ function onconfirm_send_request($conn,$db)
     $qty_Array = $_POST['qty_Array'];
     $id_Array = $_POST['id_Array'];
     $Userid = $_SESSION['Userid'];
+    $input_set_hn_ID_request = $_POST['input_set_hn_ID_request'];
+
+
+
+    if ($input_set_hn_ID_request != '') {
+        $Q2 = "UPDATE set_hn SET isStatus = 2 WHERE set_hn.ID = $input_set_hn_ID_request ";
+        $meQuery2 = $conn->prepare($Q2);
+        $meQuery2->execute();    
+    }
 
 
 
 
-        $insert_log = "INSERT INTO log_activity_users (itemCode, qty, isStatus, DocNo, userID, createAt) 
+
+    $insert_log = "INSERT INTO log_activity_users (itemCode, qty, isStatus, DocNo, userID, createAt) 
                         VALUES ('', :qty, :isStatus, :DocNo, :Userid, NOW())";
 
-        $meQuery_log = $conn->prepare($insert_log);
+    $meQuery_log = $conn->prepare($insert_log);
 
-        $meQuery_log->bindValue(':qty', 0 , PDO::PARAM_INT);
-        $meQuery_log->bindValue(':isStatus', 2, PDO::PARAM_INT);
-        $meQuery_log->bindParam(':DocNo', $txt_docno_request);
-        $meQuery_log->bindParam(':Userid', $Userid);
+    $meQuery_log->bindValue(':qty', 0, PDO::PARAM_INT);
+    $meQuery_log->bindValue(':isStatus', 2, PDO::PARAM_INT);
+    $meQuery_log->bindParam(':DocNo', $txt_docno_request);
+    $meQuery_log->bindParam(':Userid', $Userid);
 
 
-        $meQuery_log->execute();
+    $meQuery_log->execute();
 
 
 
@@ -296,7 +307,7 @@ function onconfirm_send_request($conn,$db)
         $meQueryU->execute();
     }
 
-    
+
 
     $select_date_request = explode("-", $select_date_request);
     $select_date_request = $select_date_request[2] . '-' . $select_date_request[1] . '-' . $select_date_request[0];
@@ -304,17 +315,17 @@ function onconfirm_send_request($conn,$db)
     $Userid = $_SESSION['Userid'];
     $DepID = $_SESSION['DepID'];
 
-    if($text_edit != 'edit'){
-        createhncodeDocNo($conn, $Userid, $DepID, $input_hn_request, $select_deproom_request,0, $select_procedure_request, $select_doctor_request, 'สร้างจากเมนูขอเบิกอุปกรณ์' , $txt_docno_request,$db , $select_date_request,'');
+    if ($text_edit != 'edit') {
+        createhncodeDocNo($conn, $Userid, $DepID, $input_hn_request, $select_deproom_request, 0, $select_procedure_request, $select_doctor_request, 'สร้างจากเมนูขอเบิกอุปกรณ์', $txt_docno_request, $db, $select_date_request, '');
     }
 
 
-    if($db ==1){
+    if ($db == 1) {
         $sql_ = " UPDATE hncode SET DocDate  = '$select_date_request $select_time_request' WHERE DocNo_SS = '$txt_docno_request' ";
-       
-       
+
+
         $sql1 = " UPDATE deproom SET IsStatus = 1 , serviceDate = '$select_date_request $select_time_request' , Remark = '$input_remark_request' , hn_record_id = '$input_hn_request' , doctor = '$select_doctor_request' , `procedure` = '$select_procedure_request' , Ref_departmentroomid = '$select_deproom_request' WHERE DocNo = '$txt_docno_request' AND IsCancel = 0 ";
-    }else{
+    } else {
         $sql1 = " UPDATE deproom SET IsStatus = 1 , serviceDate = '$select_date_request $select_time_request' , Remark = '$input_remark_request' , hn_record_id = '$input_hn_request' , doctor = '$select_doctor_request' , [procedure] = '$select_procedure_request' , Ref_departmentroomid = '$select_deproom_request' WHERE DocNo = '$txt_docno_request' AND IsCancel = 0 ";
     }
 
@@ -329,9 +340,9 @@ function onconfirm_send_request($conn,$db)
     unset($conn);
     die;
 }
- 
 
-function onconfirm_request($conn,$db)
+
+function onconfirm_request($conn, $db)
 {
     $return = array();
     $txt_docno_request = $_POST['txt_docno_request'];
@@ -344,12 +355,12 @@ function onconfirm_request($conn,$db)
     $deproom = $_SESSION['deproom'];
 
 
-    
+
 
     $count = 0;
     if ($txt_docno_request == "") {
         $remark = "สร้างจาก ขอเบิกอุปกรณ์ ";
-        $txt_docno_request = createDocNo($conn, $Userid , $DepID , $deproom , $remark ,0 , 0 , 0 , 0, '', '', '', '',$db,0);
+        $txt_docno_request = createDocNo($conn, $Userid, $DepID, $deproom, $remark, 0, 0, 0, 0, '', '', '', '', $db, 0);
     }
 
     foreach ($array_itemcode as $key => $value) {
@@ -372,13 +383,13 @@ function onconfirm_request($conn,$db)
 
         if ($_cntcheck > 0) {
 
-            if($_IsCancel == 0){
+            if ($_IsCancel == 0) {
                 $queryUpdate = "UPDATE deproomdetail 
                 SET Qty = (Qty +  $array_qty[$key])
                 WHERE
                     DocNo = '$txt_docno_request' 
                     AND ItemCode = '$value'  ";
-            }else{
+            } else {
                 $queryUpdate = "UPDATE deproomdetail 
                 SET Qty = $array_qty[$key] , IsCancel = 0
                 WHERE
@@ -390,11 +401,11 @@ function onconfirm_request($conn,$db)
             $meQueryUpdate->execute();
         } else {
 
-            if($db == 1){
+            if ($db == 1) {
                 $queryInsert = "INSERT INTO deproomdetail ( DocNo, ItemCode, Qty, IsStatus, PayDate, IsCancel, ModifyUser, ModifyTime , IsStart  , IsQtyStart  )
                 VALUES
                     ( '$txt_docno_request', '$value', '$array_qty[$key]', 0, NOW(), 0, '$Userid',NOW() , 1 , $array_qty[$key])";
-            }else{
+            } else {
                 $queryInsert = "INSERT INTO deproomdetail ( DocNo, ItemCode, Qty, IsStatus, PayDate, IsCancel, ModifyUser, ModifyTime , IsStart  , IsQtyStart  )
                 VALUES
                     ( '$txt_docno_request', '$value', '$array_qty[$key]', 0, GETDATE(), 0, '$Userid',GETDATE() , 1 , $array_qty[$key])";
@@ -433,7 +444,7 @@ function onconfirm_request($conn,$db)
 
 
 
-function show_detail_item_request($conn,$db)
+function show_detail_item_request($conn, $db)
 {
     $return = array();
     $input_Search = $_POST['input_search_request'];
@@ -441,12 +452,12 @@ function show_detail_item_request($conn,$db)
     $permission = $_SESSION['permission'];
 
     $wheretype = "";
-    if($select_typeItem != ""){
+    if ($select_typeItem != "") {
         $wheretype = " AND itemtype.ID = '$select_typeItem' ";
     }
 
     $wherepermission = "";
-    if($permission != '5'){
+    if ($permission != '5') {
         $wherepermission = " AND item.warehouseID = $permission ";
     }
 
@@ -469,7 +480,7 @@ function show_detail_item_request($conn,$db)
                     itemtype.TyeName
                 ORDER BY item.itemname ASC  ";
 
-             
+
 
 
     $meQuery = $conn->prepare($query);
@@ -485,7 +496,7 @@ function show_detail_item_request($conn,$db)
 
 
 
-function show_detail_request_byDocNo($conn,$db)
+function show_detail_request_byDocNo($conn, $db)
 {
     $return = array();
     $DepID = $_SESSION['DepID'];
@@ -524,7 +535,7 @@ function show_detail_request_byDocNo($conn,$db)
     die;
 }
 
-function show_detail_history($conn,$db)
+function show_detail_history($conn, $db)
 {
     $return = array();
     $DepID = $_SESSION['DepID'];
@@ -559,10 +570,10 @@ function show_detail_history($conn,$db)
         $whereD = "  AND deproom.`doctor` LIKE '%$select_doctor_history%'  ";
     }
 
-    if($db == 1){
+    if ($db == 1) {
 
         $whereR = "";
-        if($select_deproom_history != ""){
+        if ($select_deproom_history != "") {
             $whereR = " AND deproom.Ref_departmentroomid = '$select_deproom_history' ";
         }
 
@@ -600,18 +611,18 @@ function show_detail_history($conn,$db)
                         deproom.DocNo 
                     ORDER BY
                         deproom.ID DESC ";
-    }else{
+    } else {
 
         $whereD = "";
-        if($select_doctor_history != ""){
+        if ($select_doctor_history != "") {
             $whereD = " AND deproom.doctor = '$select_doctor_history'";
         }
         $whereP = "";
-        if($select_procedure_history != ""){
+        if ($select_procedure_history != "") {
             $whereP = " AND deproom.[procedure] = '$select_procedure_history' ";
         }
         $whereR = "";
-        if($select_deproom_history != ""){
+        if ($select_deproom_history != "") {
             $whereR = " AND deproom.Ref_departmentroomid = '$select_deproom_history' ";
         }
 
@@ -661,6 +672,3 @@ function show_detail_history($conn,$db)
     unset($conn);
     die;
 }
-
-
-

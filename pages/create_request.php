@@ -129,6 +129,7 @@
                                         <label style="color:black;font-weight: 600;">เลขประจำตัวคนไข้</label>
                                         <div class="input-group">
                                             <input type="text" class="form-control f18 " id="input_hn_request" placeholder="" autocomplete="off">
+                                            <input type="text" class="form-control f18 " id="input_set_hn_ID_request" placeholder="" autocomplete="off" hidden>
                                         </div>
                                     </div>
                                 </div>

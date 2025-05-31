@@ -228,10 +228,12 @@ function set_hn() {
 
           $("#radio_create_request").click();
 
+          $("#input_set_hn_ID_request").val(value.ID);
           $("#input_hn_request").val(value.hncode);
           $("#select_date_request").val(value.serviceDate);
           $("#select_time_request").val(value.serviceTime);
           $("#select_deproom_request").val(value.departmentroomid).trigger("change");
+          $("#input_remark_request").val(value.remark);
 
 
           $.ajax({
@@ -946,6 +948,7 @@ function onconfirm_send_request() {
     data: {
       FUNC_NAME: "onconfirm_send_request",
       txt_docno_request: $("#txt_docno_request").val(),
+      input_set_hn_ID_request: $("#input_set_hn_ID_request").val(),
       select_deproom_request: $("#select_deproom_request").val(),
       input_hn_request: $("#input_hn_request").val(),
       select_doctor_request: doctor_Array,

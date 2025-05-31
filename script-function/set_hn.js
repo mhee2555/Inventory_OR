@@ -111,7 +111,6 @@ function show_detail_history() {
             var hidden = "hidden";
           }
 
-          
           _tr += `<tr>
                       <td class="f18 text-center">${kay + 1}</td>
                       <td class="f18 text-center">${value.hncode}</td>
@@ -123,7 +122,9 @@ function show_detail_history() {
                         value.departmentroomname
                       }</td>
                       <td class="f18 text-center">${value.Procedure_TH}</td>
-                      <td class="f18 text-center"><button ${hidden} class='btn btn-primary' onclick='showdetail("${value.ID}","${value.hncode}","${value.serviceDate}","${value.serviceTime}","${
+                      <td class="f18 text-center"><button ${hidden} class='btn btn-primary' onclick='showdetail("${
+            value.ID
+          }","${value.hncode}","${value.serviceDate}","${value.serviceTime}","${
             value.doctor
           }","${value.procedure}","${value.departmentroomid}","${
             value.remark
@@ -165,7 +166,6 @@ function showdetail(
   $("#input_time_service_manual").val(serviceTime);
   $("#select_deproom_manual").val(departmentroomid).trigger("change");
   $("#input_remark_manual").val(remark);
-
 
   $.ajax({
     url: "process/pay.php",
@@ -300,6 +300,23 @@ $("#btn_clear_manual").click(function () {
 });
 
 $("#btn_save_hn_manual").click(function () {
+  if ($("#input_Hn_pay_manual").val() == "") {
+    showDialogFailed("กรุณากรอก เลขประจำตัวคนไข้");
+    return;
+  }
+  if (doctor_Array.length === 0) {
+    showDialogFailed("กรุณาเลือกแพทย์");
+    return;
+  }
+  if ($("#select_deproom_manual").val() == "") {
+    showDialogFailed("กรุณาเลือกห้องตรวจ");
+    return;
+  }
+  if (procedure_id_Array.length === 0) {
+    showDialogFailed("กรุณาเลือกหัตถการ");
+    return;
+  }
+
   Swal.fire({
     title: "ยืนยัน",
     text: "ยืนยัน! การบันทึก HN ?",
@@ -604,4 +621,20 @@ function showDetail_Procedure(procedure) {
       }
     },
   });
+}
+
+function showDialogFailed(text) {
+  Swal.fire({
+    title: settext("alert_fail"),
+    text: text,
+    icon: "error",
+  });
+}
+
+function settext(key) {
+  if (localStorage.lang == "en") {
+    return en[key];
+  } else {
+    return th[key];
+  }
 }
