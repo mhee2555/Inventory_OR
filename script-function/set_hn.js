@@ -304,6 +304,10 @@ $("#btn_save_hn_manual").click(function () {
     showDialogFailed("กรุณากรอก เลขประจำตัวคนไข้");
     return;
   }
+  if ($("#input_date_service_manual").val() == "") {
+    showDialogFailed("กรุณากรอก วันที่");
+    return;
+  }
   if (doctor_Array.length === 0) {
     showDialogFailed("กรุณาเลือกแพทย์");
     return;
