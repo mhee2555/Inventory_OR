@@ -36,6 +36,7 @@
         <div class="btn-group btn-group-toggle" role="group" aria-label="Basic example">
             <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;border-color: lightgray;" id="radio_daily">คนไข้ประจำวัน</button>
             <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;border-color: lightgray;" id="radio_refrain">งด</button>
+            <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;border-color: lightgray;" id="radio_his">ยืนยันการส่งค่าใช้จ่าย (HIS)</button>
         </div>
     </div>
 </div>
@@ -46,11 +47,11 @@
         <div class="col-md-3"></div>
         <div class="col-md-3">
             <div class="form-group ">
-                    <select class="form-control f18" id="select_type">
-                        <option value="">เลือกทั้งหมด</option>
-                        <option value="1">รอดำเนินการ</option>
-                        <option value="2">ดำเนินการเรียบร้อย</option>
-                    </select>
+                <select class="form-control f18" id="select_type">
+                    <option value="">เลือกทั้งหมด</option>
+                    <option value="1">รอดำเนินการ</option>
+                    <option value="2">ดำเนินการเรียบร้อย</option>
+                </select>
             </div>
         </div>
 
@@ -121,6 +122,80 @@
             </table>
         </div>
     </div>
+</div>
+
+<div id="row_his">
+    <div class="row">
+        <div class="col-md-7">
+            <div class="row ">
+                <div class="col-md-6  mt-3">
+                    <label for="" id="lang_text_date2" style="font-weight: 600;color:black;">วันที่</label>
+
+                    <div class="input-group">
+                        <input type="text" style="font-size:20px;" class="form-control datepicker-here" id="select_his_Date" data-language='en' data-date-format='dd-mm-yyyy' autocomplete="off">
+                        <div class="input-group-append">
+                            <div class="input-group-text bg-light" style="font-size: 20px;font-weight: bold;"><i class="fa-regular fa-calendar-days"></i></div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-md-12 col-lg-12 mt-3">
+
+                    <table class="table table-hover table-sm " id="table_his_docno">
+                        <thead class="table-active sticky-top">
+                            <tr>
+                                <th scope="col" class="text-center" id="">วันที่</th>
+                                <th scope="col" class="text-center" id="">HN Number</th>
+                                <th scope="col" class="text-center" id="">แพทย์</th>
+                                <th scope="col" class="text-center" id="">หัตถการ</th>
+                                <th scope="col" class="text-center" id="">สถานะ</th>
+                                <th scope="col" class="text-center" id="">#</th>
+                            </tr>
+
+                        </thead>
+                        <tbody style="line-height: 40px;">
+
+                        </tbody>
+                    </table>
+
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5" style="margin-top: 3.1rem !important;">
+            <div class="row ">
+                <div class="col-md-6 text-left">
+                    <button class="btn btn-success" id="btn_send_pay" disabled>ยืนยันการส่งค่าใข้จ่าย (HIS)</button>
+                </div>
+                <div class="col-md-6 text-right">
+                    <span for="" class="f18" style="color:black;font-weight: bold;">ราคารวม</span>
+                    <span for="" style="color:black;font-weight: bold;font-size:35px;" id="price_xx">0.00</span>
+                    <span for="" class="f18" style="color:black;font-weight: bold;">บาท</span>
+                </div>
+
+                <div class="col-md-12 col-lg-12 mt-2">
+                    <div class="row">
+                        <div class="col-md-12 " id="div_detailleft1">
+                            <table class="table table-hover table-sm " id="table_detail_his">
+                                <thead class="table-active sticky-top">
+                                    <tr>
+                                        <th scope="col" class="text-center" id="">ประเภท</th>
+                                        <th scope="col" class="text-center" id="">รหัสอุปกรณ์</th>
+                                        <th scope="col" class="text-center" id="">อุปกรณ์</th>
+                                        <th scope="col" class="text-center" id="" style='width: 15%;'>จำนวน</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 

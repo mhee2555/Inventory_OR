@@ -11,7 +11,56 @@ if (!empty($_POST['FUNC_NAME'])) {
         feeddata_hncode_detail($conn, $db);
     } else  if ($_POST['FUNC_NAME'] == 'feeddata_hncode') {
         feeddata_hncode($conn, $db);
+    } else  if ($_POST['FUNC_NAME'] == 'onHIS') {
+        onHIS($conn, $db);
     }
+}
+
+function onHIS($conn, $db)
+{
+    $return = array();
+    $DocNo = $_POST['DocNo'];
+
+    $Q1 = "INSERT INTO his ( DocNo, DocDate, HnCode, UserCode, IsStatus, IsCancel, `procedure`, doctor, departmentroomid, number_box ) SELECT
+                DocNo,
+                DocDate,
+                HnCode,
+                UserCode,
+                0,
+                IsCancel,
+                `procedure`,
+                doctor,
+                departmentroomid,
+                number_box 
+            FROM
+                hncode 
+            WHERE
+                hncode.DocNo = '$DocNo' ";
+
+    $Q2 = "INSERT INTO his_detail ( DocNo , Qty , ItemCode ) 
+                SELECT
+                    DocNo,
+                    SUM( hncode_detail.Qty ),
+                    itemstock.ItemCode 
+                FROM
+                    hncode_detail
+                    INNER JOIN itemstock ON hncode_detail.ItemStockID = itemstock.RowID 
+                WHERE
+                    hncode_detail.DocNo = '$DocNo' 
+                    AND hncode_detail.IsStatus != 99 
+                    AND hncode_detail.Qty > 0 
+                GROUP BY
+                    itemstock.ItemCode  ";
+
+    $meQuery1 = $conn->prepare($Q1);
+    $meQuery1->execute();
+
+    $meQuery2 = $conn->prepare($Q2);
+    $meQuery2->execute();
+
+    echo json_encode($return);
+    unset($conn);
+    die;
 }
 
 function feeddata_hncode($conn, $db)
@@ -134,38 +183,38 @@ function feeddata_hncode_detail($conn, $db)
     // } 
 
 
-            // $D = "DELETE 
-            //         FROM
-            //             hncode_detail 
-            //         WHERE
-            //             hncode_detail.DocNo = '$DocNo' 
-            //             AND hncode_detail.ItemStockID NOT IN (
-            //             SELECT
-            //                 itemstock.RowID 
-            //             FROM
-            //                 itemstock 
-            //             WHERE
-            //                 itemstock.Isdeproom = '1' 
-            //             AND itemstock.HNCode = '$HnCode' 
-            //             )
-            //             AND hncode_detail.ItemCode IS NULL  ";
+    // $D = "DELETE 
+    //         FROM
+    //             hncode_detail 
+    //         WHERE
+    //             hncode_detail.DocNo = '$DocNo' 
+    //             AND hncode_detail.ItemStockID NOT IN (
+    //             SELECT
+    //                 itemstock.RowID 
+    //             FROM
+    //                 itemstock 
+    //             WHERE
+    //                 itemstock.Isdeproom = '1' 
+    //             AND itemstock.HNCode = '$HnCode' 
+    //             )
+    //             AND hncode_detail.ItemCode IS NULL  ";
 
-            // $meQuery_D = $conn->prepare($D);
-            // $meQuery_D->execute();
+    // $meQuery_D = $conn->prepare($D);
+    // $meQuery_D->execute();
 
-            // $D2 = "DELETE 
-            // FROM
-            //     itemstock_transaction_detail 
-            // WHERE
-            //     itemstock_transaction_detail.ItemStockID NOT IN (
-            //     SELECT
-            //         itemstock.RowID 
-            //     FROM
-            //         itemstock 
-            //     WHERE
-            //         itemstock.Isdeproom = '1' 
-            //     AND itemstock.HNCode = '$HnCode' 
-            //     )  ";
+    // $D2 = "DELETE 
+    // FROM
+    //     itemstock_transaction_detail 
+    // WHERE
+    //     itemstock_transaction_detail.ItemStockID NOT IN (
+    //     SELECT
+    //         itemstock.RowID 
+    //     FROM
+    //         itemstock 
+    //     WHERE
+    //         itemstock.Isdeproom = '1' 
+    //     AND itemstock.HNCode = '$HnCode' 
+    //     )  ";
 
     // $meQuery_D2 = $conn->prepare($D2);
     // $meQuery_D2->execute();
@@ -272,6 +321,7 @@ function show_detail_hn($conn, $db)
 
     if ($db == 1) {
         $query = "SELECT
+                    his.ID AS his_ID,
                     hncode.ID,
                     DATE_FORMAT(hncode.DocDate, '%d-%m-%Y') AS DocDate,
                     hncode.HnCode,
@@ -286,6 +336,8 @@ function show_detail_hn($conn, $db)
                     hncode
                 INNER JOIN
                     departmentroom ON departmentroom.id = hncode.departmentroomid
+                LEFT JOIN
+                    his ON his.DocNo = hncode.DocNo
                 LEFT JOIN
                     doctor ON doctor.ID = hncode.doctor
                 LEFT JOIN
@@ -332,18 +384,18 @@ function show_detail_hn($conn, $db)
     $meQuery->execute();
     while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
 
-        if($row['HnCode'] == ''){
+        if ($row['HnCode'] == '') {
             $row['HnCode'] = $row['number_box'];
         }
 
-        
+
         if (str_contains($row['procedure'], ',')) {
             $row['Procedure_TH'] = 'button';
         }
         if (str_contains($row['doctor'], ',')) {
             $row['Doctor_Name'] = 'button';
         }
-        
+
         $return[] = $row;
     }
     echo json_encode($return);

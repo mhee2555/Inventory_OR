@@ -1,9 +1,8 @@
 $(function () {
-
-
   session();
 
   $("#row_refrain").hide();
+  $("#row_his").hide();
   $("#radio_daily").css("color", "#bbbbb");
   $("#radio_daily").css("background", "#EAE1F4");
 
@@ -34,6 +33,13 @@ $(function () {
     },
   });
 
+  $("#select_his_Date").val(output);
+  $("#select_his_Date").datepicker({
+    onSelect: function (date) {
+      show_detail_his_docno();
+    },
+  });
+
   show_detail_daily();
   $("#radio_daily").click(function () {
     $("#radio_daily").css("color", "#bbbbb");
@@ -41,9 +47,12 @@ $(function () {
 
     $("#radio_refrain").css("color", "black");
     $("#radio_refrain").css("background", "");
+    $("#radio_his").css("color", "black");
+    $("#radio_his").css("background", "");
 
     $("#row_daily").show();
     $("#row_refrain").hide();
+    $("#row_his").hide();
     show_detail_daily();
   });
 
@@ -53,17 +62,216 @@ $(function () {
 
     $("#radio_daily").css("color", "black");
     $("#radio_daily").css("background", "");
+    $("#radio_his").css("color", "black");
+    $("#radio_his").css("background", "");
 
     $("#row_refrain").show();
     $("#row_daily").hide();
+    $("#row_his").hide();
 
     show_detail_refrain();
   });
+
+  $("#radio_his").click(function () {
+    $("#radio_his").css("color", "#bbbbb");
+    $("#radio_his").css("background", "#EAE1F4");
+
+    $("#radio_daily").css("color", "black");
+    $("#radio_daily").css("background", "");
+    $("#radio_refrain").css("color", "black");
+    $("#radio_refrain").css("background", "");
+
+    $("#row_refrain").hide();
+    $("#row_daily").hide();
+    $("#row_his").show();
+
+    show_detail_his_docno();
+    // show_detail_refrain();
+  });
+
+  set_his();
 });
 
-  $("#select_type").change(function () {
-    show_detail_daily();
+function set_his() {
+  $.ajax({
+    url: "process/hn_daily.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "set_his",
+    },
+    success: function (result) {
+      var ObjData = JSON.parse(result);
+      if (!$.isEmptyObject(ObjData)) {
+        $("#radio_his").css("color", "#bbbbb");
+        $("#radio_his").css("background", "#EAE1F4");
+
+        $("#radio_daily").css("color", "black");
+        $("#radio_daily").css("background", "");
+        $("#radio_refrain").css("color", "black");
+        $("#radio_refrain").css("background", "");
+
+        $("#row_refrain").hide();
+        $("#row_daily").hide();
+        $("#row_his").show();
+
+        show_detail_his_docno();
+      }
+    },
   });
+}
+
+$("#btn_send_pay").click(function () {
+  Swal.fire({
+    title: "ยืนยัน",
+    text: "ยืนยัน! การส่งค่าใช้จ่าย(HIS)  ?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "ยืนยัน",
+    cancelButtonText: "ยกเลิก",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      $.ajax({
+        url: "process/hn_daily.php",
+        type: "POST",
+        data: {
+          FUNC_NAME: "onUPDATE_his",
+          ID: $("#btn_send_pay").data('id'),
+        },
+        success: function (result) {
+
+          show_detail_his_docno();
+          $("#table_detail_his tbody").html("");
+        $("#btn_send_pay").attr('disabled',true);
+        },
+      });
+    }
+  });
+});
+
+$("#select_type").change(function () {
+  show_detail_daily();
+});
+
+function show_detail_his_docno() {
+  $.ajax({
+    url: "process/hn_daily.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "show_detail_his_docno",
+      select_his_Date: $("#select_his_Date").val(),
+    },
+    success: function (result) {
+      var _tr = "";
+      // $("#table_deproom_pay").DataTable().destroy();
+      $("#table_his_docno tbody").html("");
+      var ObjData = JSON.parse(result);
+      if (!$.isEmptyObject(ObjData)) {
+        $.each(ObjData, function (kay, value) {
+          if (value.Procedure_TH == "button") {
+            value.Procedure_TH = `<a class="text-primary" style="cursor:pointer;" onclick='showDetail_Procedure("${value.procedure}")'>หัตถการ</a>`;
+            var styleP = ``;
+            var titleP = ``;
+          } else {
+            var styleP = `style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 150px;" `;
+            var titleP = `title="${value.Procedure_TH}"`;
+          }
+          if (value.Doctor_Name == "button") {
+            value.Doctor_Name = `<a class="text-primary" style="cursor:pointer;" onclick='showDetail_Doctor("${value.doctor}")'>แพทย์</a>`;
+          }
+
+          var txt = "";
+          if (value.IsStatus == "1") {
+            txt = `<label style="color:#643695;font-weight:bold;">รอดำเนินการ</label>`;
+          }
+          if (value.IsStatus == "2") {
+            txt = `<label style="color:#1cc88a;font-weight:bold;">ส่งค่าใช้จ่ายเรียบร้อย</label>`;
+          }
+
+          _tr += `<tr>
+                      <td class="f18 text-center">${value.createAt}</td>
+                      <td class="f18 text-center">${value.HnCode}</td>
+                      <td class="f18 text-center">${value.Doctor_Name}</td>
+                      <td class="f18 text-center" ${styleP} ${titleP}>${value.Procedure_TH}</td>
+                      <td class="f18 text-center">${txt}</td>
+                      <td class="f18 text-center"><a  href="#" style='font-weight: bold;color:#e74a3b;' onclick='show_detail_his(${value.ID},${value.IsStatus})'>แก้ไข</a></td>
+                   </tr>`;
+        });
+      }
+
+      $("#table_his_docno tbody").html(_tr);
+    },
+  });
+}
+
+function show_detail_his(ID,IsStatus) {
+
+  if(IsStatus == 1){
+    $("#btn_send_pay").attr('disabled',false);
+    $("#btn_send_pay").data('id',ID);
+  }else{
+    $("#btn_send_pay").attr('disabled',true);
+
+  }
+
+  $.ajax({
+    url: "process/hn_daily.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "show_detail_his",
+      ID: ID,
+    },
+    success: function (result) {
+      var _tr = "";
+        var QQ = 0;
+      // $("#table_deproom_pay").DataTable().destroy();
+      $("#table_detail_his tbody").html("");
+      var ObjData = JSON.parse(result);
+      if (!$.isEmptyObject(ObjData)) {
+
+        $.each(ObjData, function (kay, value) {
+
+          
+          var dis = '';
+          if (value.IsStatus == "2") {
+            dis = `disabled`;
+          }
+
+          QQ  = QQ + parseFloat((parseInt(value.Qty) * parseInt(value.SalePrice)));
+          _tr += `<tr>
+                      <td class="f18 text-center" title="${value.TyeName}" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 150px;" >${value.TyeName}</td>
+                      <td class="f18 text-center">${value.itemcode2}</td>
+                      <td class="f18 text-center">${value.itemname}</td>
+                      <td class="f18 text-center"> <input id="qty_item_${value.ID}" ${dis} onblur="updateDetail_qty(${value.ID},'${value.itemcode}')"  class=' numonly form-control' value='${value.Qty}' style='text-align: center;' ></td>
+                   </tr>`;
+        });
+      }
+
+      $("#price_xx").text(parseFloat(QQ));
+      $("#table_detail_his tbody").html(_tr);
+
+      $(".numonly").on("input", function () {
+        this.value = this.value.replace(/[^0-9-]/g, ""); //<-- replace all other than given set of values
+      });
+    },
+  });
+}
+
+function updateDetail_qty(ID, itemcode) {
+  $("#qty_item_" + ID).val();
+  $.ajax({
+    url: "process/hn_daily.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "updateDetail_qty",
+      ID: ID,
+      itemcode: itemcode,
+      qty: $("#qty_item_" + ID).val(),
+    },
+    success: function (result) {},
+  });
+}
 
 function show_detail_refrain() {
   $.ajax({
@@ -181,13 +389,17 @@ function show_detail_daily() {
             value.Doctor_Name = `<a class="text-primary" style="cursor:pointer;" onclick='showDetail_Doctor("${value.doctor}")'>แพทย์</a>`;
           }
 
-          var x  ="";
-          if (value.isStatus == "0" || value.isStatus == "1" || value.isStatus == "2") {
+          var x = "";
+          if (
+            value.isStatus == "0" ||
+            value.isStatus == "1" ||
+            value.isStatus == "2"
+          ) {
             var txt = `<a  href="#" style='font-weight: bold;color:#643695;' onclick='update_create_request(${value.ID})'>รอดำเนินการ</a>`;
           }
-          if ( value.isStatus == "3") {
+          if (value.isStatus == "3") {
             var txt = `<a  href="#" style='font-weight: bold;color:#1cc88a;' )'>ดำเนินการเรียบร้อย</a>`;
-            x  ="hidden";
+            x = "hidden";
           }
           _tr += `<tr>
                       <td class="f18 text-center">${value.hncode}</td>
@@ -226,22 +438,28 @@ function update_create_request(ID) {
           ID: ID,
         },
         success: function (result) {
-            var link = "pages/create_request.php";
-            $.get(link, function (res) {
-              $(".nav-item").removeClass("active");
-              $(".nav-item").css("background-color", "");
+          var link = "pages/create_request.php";
+          $.get(link, function (res) {
+            $(".nav-item").removeClass("active");
+            $(".nav-item").css("background-color", "");
 
-              $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
-              $("#menu1").css("color", "#667085");
+            $("#ic_mainpage").attr(
+              "src",
+              "assets/img_project/2_icon/ic_mainpage.png"
+            );
+            $("#menu1").css("color", "#667085");
 
-              $("#conMain").html(res);
-              history.pushState({}, "Results for `Cats`", "index.php?s=create_request");
-              document.title = "create_request";
+            $("#conMain").html(res);
+            history.pushState(
+              {},
+              "Results for `Cats`",
+              "index.php?s=create_request"
+            );
+            document.title = "create_request";
 
-              loadScript("script-function/create_request.js");
-              loadScript('assets/lang/create_request.js');
-              
-            });
+            loadScript("script-function/create_request.js");
+            loadScript("assets/lang/create_request.js");
+          });
         },
       });
     }
@@ -249,11 +467,11 @@ function update_create_request(ID) {
 }
 
 function loadScript(url) {
-  const script = document.createElement('script');
+  const script = document.createElement("script");
   script.src = url;
-  script.type = 'text/javascript';
-  script.onload = function() {
-      // console.log('Script loaded and ready');
+  script.type = "text/javascript";
+  script.onload = function () {
+    // console.log('Script loaded and ready');
   };
   document.head.appendChild(script);
 }

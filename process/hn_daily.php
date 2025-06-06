@@ -17,8 +17,188 @@ if (!empty($_POST['FUNC_NAME'])) {
         update_cancel($conn, $db);
     }else if ($_POST['FUNC_NAME'] == 'update_create_request') {
         update_create_request($conn, $db);
+    }else if ($_POST['FUNC_NAME'] == 'set_his') {
+        set_his($conn, $db);
+    }else if ($_POST['FUNC_NAME'] == 'show_detail_his_docno') {
+        show_detail_his_docno($conn, $db);
+    }else if ($_POST['FUNC_NAME'] == 'show_detail_his') {
+        show_detail_his($conn, $db);
+    }else if ($_POST['FUNC_NAME'] == 'updateDetail_qty') {
+        updateDetail_qty($conn, $db);
+    }else if ($_POST['FUNC_NAME'] == 'onUPDATE_his') {
+        onUPDATE_his($conn, $db);
     }
 }
+
+function onUPDATE_his($conn, $db)
+{
+    $return = array();
+    $ID = $_POST['ID'];
+
+
+
+    $sql2 = " UPDATE his SET IsStatus = 2  WHERE ID = '$ID' ";
+    $meQuery2 = $conn->prepare($sql2);
+    $meQuery2->execute();
+
+
+
+
+
+    echo json_encode($return);
+    unset($conn);
+    die;
+}
+function updateDetail_qty($conn, $db)
+{
+    $return = array();
+    $ID = $_POST['ID'];
+    $qty = $_POST['qty'];
+    $itemcode = $_POST['itemcode'];
+
+
+
+
+    $Userid = $_SESSION['Userid'];
+
+    $sql2 = " UPDATE his_detail SET Qty = $qty  WHERE ID = '$ID' ";
+    $meQuery2 = $conn->prepare($sql2);
+    $meQuery2->execute();
+
+
+
+
+
+    echo json_encode($return);
+    unset($conn);
+    die;
+}
+
+function show_detail_his($conn, $db)
+{
+    $return = array();
+    $ID = $_POST['ID'];
+
+    $Q1 = " SELECT
+                itemtype.TyeName,
+                item.itemcode2,
+                item.itemname,
+                item.itemcode,
+                his_detail.Qty,
+                his_detail.ID,
+	            item.SalePrice,
+                his.IsStatus
+            FROM
+                his
+                LEFT JOIN his_detail ON his.DocNo = his_detail.DocNo
+                LEFT JOIN item ON his_detail.ItemCode = item.itemcode
+                LEFT JOIN itemtype ON itemtype.ID = item.itemtypeID
+            WHERE
+                his.ID = '$ID'   ";
+
+    $meQ1 = $conn->prepare($Q1);
+    $meQ1->execute();
+    while ($rowQ1 = $meQ1->fetch(PDO::FETCH_ASSOC)) {
+        $return[] = $rowQ1;
+    }
+
+    echo json_encode($return);
+    unset($conn);
+    die;
+
+
+    echo json_encode($return);
+    unset($conn);
+    die;
+}
+
+function show_detail_his_docno($conn, $db)
+{
+    $return = array();
+    $select_his_Date = $_POST['select_his_Date'];
+
+    $select_his_Date = explode("-", $select_his_Date);
+    $select_his_Date = $select_his_Date[2] . '-' . $select_his_Date[1] . '-' . $select_his_Date[0];
+
+
+
+
+    $Q1 = " SELECT
+                his.ID,
+                his.IsStatus,
+                his.HnCode,
+                DATE_FORMAT( his.createAt, '%d-%m-%Y' ) AS createAt,
+                his.createAt,
+                his.doctor,
+                his.departmentroomid,
+                his.`procedure`,
+                doctor.Doctor_Name,
+                IFNULL( `procedure`.Procedure_TH, '' ) AS Procedure_TH,
+                departmentroom.departmentroomname
+            FROM
+                his
+                INNER JOIN doctor ON doctor.ID = his.doctor
+                LEFT JOIN `procedure` ON his.`procedure` = `procedure`.ID
+                INNER JOIN departmentroom ON his.departmentroomid = departmentroom.id 
+                AND DATE( his.createAt ) = '$select_his_Date'
+                AND  ( his.isStatus = 1 OR his.isStatus = 2 ) ";
+
+    $meQ1 = $conn->prepare($Q1);
+    $meQ1->execute();
+    while ($rowQ1 = $meQ1->fetch(PDO::FETCH_ASSOC)) {
+
+        if (str_contains($rowQ1['procedure'], ',')) {
+            $rowQ1['Procedure_TH'] = 'button';
+        }
+        if (str_contains($rowQ1['doctor'], ',')) {
+            $rowQ1['Doctor_Name'] = 'button';
+        }
+
+
+        $return[] = $rowQ1;
+
+
+    }
+
+    echo json_encode($return);
+    unset($conn);
+    die;
+
+
+    echo json_encode($return);
+    unset($conn);
+    die;
+}
+
+function set_his($conn, $db)
+{
+
+    $return = array();
+    $Q1 = "SELECT
+                his.ID 
+            FROM
+                his 
+            WHERE
+                his.IsStatus = 0 ";
+    $meQuery = $conn->prepare($Q1);
+    $meQuery->execute();
+    while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+        $return[] = $row;
+
+        $ID = $row['ID'];
+
+        $Q2 = "UPDATE his SET isStatus = 1 WHERE his.ID = $ID ";
+        $meQuery2 = $conn->prepare($Q2);
+        $meQuery2->execute();
+    }
+
+
+    echo json_encode($return);
+    unset($conn);
+    die;
+}
+
+
 
 function update_create_request($conn, $db)
 {

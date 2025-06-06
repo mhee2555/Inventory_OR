@@ -2,8 +2,6 @@ var departmentroomname = "";
 var UserName = "";
 
 $(function () {
-
-
   var d = new Date();
   var month = d.getMonth() + 1;
   var day = d.getDate();
@@ -16,7 +14,6 @@ $(function () {
     month +
     "-" +
     year;
-
 
   session();
   $("#select_SDate").val(output);
@@ -34,11 +31,8 @@ $(function () {
 
   $("#input_type_search").val(1);
 
-
   $("#input_search").keypress(function (e) {
     if (e.which == 13) {
-
-
       show_detail_hn();
 
       // feeddata_hncode($(this).val().trim());
@@ -48,26 +42,20 @@ $(function () {
     }
   });
 
-
-
   setTimeout(() => {
     show_detail_hn();
   }, 500);
 });
 
+$("#a_hnxxx").click(function () {
+  $("#btn_input").text("เลข HN Number");
+  $("#input_type_search").val(1);
+});
 
-
-
-
-  $("#a_hnxxx").click(function () {
-    $("#btn_input").text("เลข HN Number");
-    $("#input_type_search").val(1);
-  });
-
-  $("#a_usage").click(function () {
-    $("#btn_input").text("รหัสอุปกรณ์");
-    $("#input_type_search").val(2);
-  });
+$("#a_usage").click(function () {
+  $("#btn_input").text("รหัสอุปกรณ์");
+  $("#input_type_search").val(2);
+});
 
 function show_detail_hn() {
   $.ajax({
@@ -87,13 +75,11 @@ function show_detail_hn() {
       var _tr = ``;
       if (!$.isEmptyObject(ObjData)) {
         $.each(ObjData, function (kay, value) {
-
-
           if (value.Procedure_TH == "button") {
             value.Procedure_TH = `<a class="text-primary" style="cursor:pointer;" onclick='showDetail_Procedure("${value.procedure}")'>หัตถการ</a>`;
             var styleP = ``;
             var titleP = ``;
-          }else{
+          } else {
             var styleP = `style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 300px;" `;
             var titleP = `title="${value.Procedure_TH}"`;
           }
@@ -101,11 +87,8 @@ function show_detail_hn() {
             value.Doctor_Name = `<a class="text-primary" style="cursor:pointer;" onclick='showDetail_Doctor("${value.doctor}")'>แพทย์</a>`;
           }
 
-
-
-
           _tr +=
-            `<tr class="color" onclick='setActive_feeddata_hncode_detail(${value.ID},"${value.DocNo}","${value.HnCode}")' id="tr_${value.ID}"> ` +
+            `<tr class="color" onclick='setActive_feeddata_hncode_detail(${value.ID},"${value.DocNo}","${value.HnCode}","${value.his_ID}")' id="tr_${value.ID}"> ` +
             `<td class="text-center">${kay + 1}</td>` +
             `<td class="text-center" >${value.DocDate}</td>` +
             `<td class="text-left" >${value.HnCode}</td>` +
@@ -220,7 +203,7 @@ function feeddata_hncode(input_search) {
   });
 }
 
-function setActive_feeddata_hncode_detail(ID, DocNo,HnCode) {
+function setActive_feeddata_hncode_detail(ID, DocNo, HnCode,his_ID) {
   $(".color").css("background-color", "");
   $("#tr_" + ID).css("background-color", "#FEE4E2");
 
@@ -228,52 +211,111 @@ function setActive_feeddata_hncode_detail(ID, DocNo,HnCode) {
 
   $("#btn_Tracking").attr("disabled", false);
 
-
+  if(his_ID == 'null'){
+    $("#btn_send_pay").attr("disabled", false);
+  }else{
+    $("#btn_send_pay").attr("disabled", true);
+  }
 
   // alert(DocNo);
-  feeddata_hncode_detail(DocNo,HnCode);
+  feeddata_hncode_detail(DocNo, HnCode);
 }
+$("#btn_send_pay").click(function () {
+  Swal.fire({
+    title: "ยืนยัน",
+    text: "ยืนยัน! การส่งค่าใช้จ่าย(HIS)  ?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "ยืนยัน",
+    cancelButtonText: "ยกเลิก",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      $.ajax({
+        url: "process/hn.php",
+        type: "POST",
+        data: {
+          FUNC_NAME: "onHIS",
+          DocNo: $("#btn_Tracking").data("DocNo"),
+        },
+        success: function (result) {
 
+            var link = "pages/hn_daily.php";
+            $.get(link, function (res) {
+              $(".nav-item").removeClass("active");
+              $(".nav-item").css("background-color", "");
 
-$("#btn_use").click(function () {
-  
-  if($("#btn_Tracking").data("DocNo") != undefined){
-    option = "?DocNo=" + $("#btn_Tracking").data("DocNo");
-    window.open("report/Report_use.php" + option, "_blank");
-  }else{
-    Swal.fire("ล้มเหลว", "กรุณาเลือกรายการ", "error");
-  }
+              $("#ic_search_hndata").attr("src", "assets/img_project/2_icon/ic_search_hndata.png");
+              $("#menu9").css("color", "#667085");
 
+              $("#conMain").html(res);
+              history.pushState({}, "Results for `Cats`", "index.php?s=hn_daily");
+              document.title = "hn_daily";
+
+              loadScript("script-function/hn_daily.js");
+              loadScript('assets/lang/hn_daily.js');
+              
+            });
+            
+          // feeddata_waitReturn();
+        },
+      });
+    }
+  });
 });
 
+function loadScript(url) {
+  const script = document.createElement("script");
+  script.src = url;
+  script.type = "text/javascript";
+  script.onload = function () {
+    // console.log('Script loaded and ready');
+  };
+  document.head.appendChild(script);
+}
 
-$("#btn_Tracking").click(function () {
-  
-  if($("#btn_Tracking").data("DocNo") != undefined){
+$("#btn_use").click(function () {
+  if ($("#btn_Tracking").data("DocNo") != undefined) {
     option = "?DocNo=" + $("#btn_Tracking").data("DocNo");
-    window.open("report/Report_Medical_Instrument_Tracking.php" + option, "_blank");
-  }else{
+    window.open("report/Report_use.php" + option, "_blank");
+  } else {
     Swal.fire("ล้มเหลว", "กรุณาเลือกรายการ", "error");
   }
+});
 
+$("#btn_Tracking").click(function () {
+  if ($("#btn_Tracking").data("DocNo") != undefined) {
+    option = "?DocNo=" + $("#btn_Tracking").data("DocNo");
+    window.open(
+      "report/Report_Medical_Instrument_Tracking.php" + option,
+      "_blank"
+    );
+  } else {
+    Swal.fire("ล้มเหลว", "กรุณาเลือกรายการ", "error");
+  }
 });
 
 $("#btn_cost").click(function () {
-  
-  if($("#btn_Tracking").data("DocNo") != undefined){
+  if ($("#btn_Tracking").data("DocNo") != undefined) {
     option = "?DocNo=" + $("#btn_Tracking").data("DocNo");
     window.open("report/Report_Patient_Cost_Summary.php" + option, "_blank");
-  }else{
+  } else {
     Swal.fire("ล้มเหลว", "กรุณาเลือกรายการ", "error");
   }
-
 });
 
 $("#btn_excel_all").click(function () {
-  option = "?select_SDate=" + $("#select_SDate").val()+"&select_EDate=" + $("#select_EDate").val();
-  window.open("report/phpexcel/Report_Medical_Instrument_Tracking.php" + option, "_blank");
+  option =
+    "?select_SDate=" +
+    $("#select_SDate").val() +
+    "&select_EDate=" +
+    $("#select_EDate").val();
+  window.open(
+    "report/phpexcel/Report_Medical_Instrument_Tracking.php" + option,
+    "_blank"
+  );
 });
-
 
 function showDetail_Doctor(doctor) {
   $("#myModal_Doctor").modal("toggle");
@@ -334,15 +376,14 @@ function showDetail_Procedure(procedure) {
   });
 }
 
-
-function feeddata_hncode_detail(DocNo,HnCode) {
+function feeddata_hncode_detail(DocNo, HnCode) {
   $.ajax({
     url: "process/hn.php",
     type: "POST",
     data: {
       FUNC_NAME: "feeddata_hncode_detail",
       DocNo: DocNo,
-      HnCode:HnCode,
+      HnCode: HnCode,
       input_type_search: $("#input_type_search").val(),
     },
     success: function (result) {
@@ -351,24 +392,23 @@ function feeddata_hncode_detail(DocNo,HnCode) {
       var _tr = ``;
       if (!$.isEmptyObject(ObjData)) {
         $.each(ObjData, function (kay, value) {
+          var user_count = "";
+          if (value.TyeName == null) {
+            value.TyeName = value.TyeName2;
+          }
+          if (value.itemname == null) {
+            value.itemname = value.itemname2;
+          }
+          if (value.UsageCode == null) {
+            value.UsageCode = value.itemcode2;
 
-            var user_count = "";
-            if(value.TyeName == null){
-              value.TyeName = value.TyeName2;
-            }
-            if(value.itemname == null){
-              value.itemname = value.itemname2;
-            }
-            if(value.UsageCode == null){
-              value.UsageCode = value.itemcode2;
+            var label = `<label>${value.UsageCode}</label>`;
+          } else {
+            var label = `<label style='color:blue;cursor:pointer;' onclick='open_LotNo("${value.serielNo}","${value.lotNo}","${value.ExpireDate}")' >${value.UsageCode}</label>`;
+          }
 
-              var label = `<label>${value.UsageCode}</label>`;
-            }else{
-              var label = `<label style='color:blue;cursor:pointer;' onclick='open_LotNo("${value.serielNo}","${value.lotNo}","${value.ExpireDate}")' >${value.UsageCode}</label>`;
-            }
-            
-            if(value.Qty > 0){
-              _tr +=
+          if (value.Qty > 0) {
+            _tr +=
               `<tr id='tdDetail_${value.ID}'> ` +
               `<td class="text-center">${kay + 1}</td>` +
               `<td class="text-center">
@@ -379,9 +419,7 @@ function feeddata_hncode_detail(DocNo,HnCode) {
               `<td class="text-left">${value.itemname}</td>` +
               `<td class="text-center">${value.Qty}</td>` +
               ` </tr>`;
-            }
-
-
+          }
         });
       }
       $("#table_detail_sub tbody").html(_tr);
@@ -422,7 +460,7 @@ function feeddata_hncode_detail(DocNo,HnCode) {
           {
             width: "10%",
             targets: 4,
-          }
+          },
         ],
         info: false,
         scrollX: false,
@@ -439,12 +477,12 @@ function feeddata_hncode_detail(DocNo,HnCode) {
   });
 }
 
-function open_LotNo(serielNo,lotNo,ExpireDate){
-  $("#modal_lotno").modal('toggle');
-  if(lotNo == 'null' || lotNo == ''){
+function open_LotNo(serielNo, lotNo, ExpireDate) {
+  $("#modal_lotno").modal("toggle");
+  if (lotNo == "null" || lotNo == "") {
     lotNo = "ไม่มีข้อมูล";
   }
-  if(serielNo == 'null' || serielNo == ''){
+  if (serielNo == "null" || serielNo == "") {
     serielNo = "ไม่มีข้อมูล";
   }
   $("#lot_no").val(lotNo);
