@@ -124,7 +124,8 @@ $query = "SELECT
                 hncode.doctor,
                 doctor.Doctor_Name,
                 doctor.Doctor_Code ,
-                hncode.DocNo_SS
+                hncode.DocNo_SS,
+                deproom.Remark
             FROM
                 hncode
                 LEFT JOIN users AS user1 ON hncode.UserCode = user1.ID
@@ -148,6 +149,7 @@ while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
     $_CreateDate = $row['CreateDate'];
     $_CreateTime = $row['CreateTime'];
     $_DocNo_SS = $row['DocNo_SS'];
+    $_Remark = $row['Remark'];
 
     if($_HnCode == ""){
         $_HnCode = $_number_box;
@@ -211,6 +213,7 @@ if ($checkloopDoctor == 'loop') {
     $pdf->Cell(50, 5,  "1. " . $_Doctor_Name, 0, 1, 'L');
 }
 
+$pdf->Cell(130, 5,   "หมายเหตุ : " . $_Remark, 0, 1, 'L');
 
 
 $pdf->Ln(5);

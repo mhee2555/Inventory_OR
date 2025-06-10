@@ -233,38 +233,36 @@ function show_detail_lot(itemcode) {
 }
 
 function set_tracking(lotNo, itemcode) {
-
   Swal.fire({
-  title: "ยืนยัน",
-  text: "ยืนยัน การติดตามอุปกรณ์",
-  icon: "warning",
-  input: "text", // เพิ่ม input
-  inputPlaceholder: "กรอกหมายเหตุ",
-  showCancelButton: true,
-  confirmButtonColor: "#3085d6",
-  cancelButtonColor: "#d33",
-  confirmButtonText: "ยืนยัน",
-  cancelButtonText: "ยกเลิก",
-}).then((result) => {
-  if (result.isConfirmed) {
-    let userInput = result.value; // ค่าที่ผู้ใช้กรอกมา
+    title: "ยืนยัน",
+    text: "ยืนยัน การติดตามอุปกรณ์",
+    icon: "warning",
+    input: "text", // เพิ่ม input
+    inputPlaceholder: "กรอกหมายเหตุ",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "ยืนยัน",
+    cancelButtonText: "ยกเลิก",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      let userInput = result.value; // ค่าที่ผู้ใช้กรอกมา
 
-    $.ajax({
-      url: "process/oc.php",
-      type: "POST",
-      data: {
-        FUNC_NAME: "set_tracking",
-        lotNo: lotNo,
-        itemcode: itemcode,
-        remark: userInput, // ส่งค่าที่กรอกไปด้วย
-      },
-      success: function (result) {
-        showDialogSuccess("บันทึกสำเร็จ");
-      },
-    });
-  }
-});
-
+      $.ajax({
+        url: "process/oc.php",
+        type: "POST",
+        data: {
+          FUNC_NAME: "set_tracking",
+          lotNo: lotNo,
+          itemcode: itemcode,
+          remark: userInput, // ส่งค่าที่กรอกไปด้วย
+        },
+        success: function (result) {
+          showDialogSuccess("บันทึกสำเร็จ");
+        },
+      });
+    }
+  });
 
   // Swal.fire({
   //   title: "ยืนยัน",
@@ -278,8 +276,6 @@ function set_tracking(lotNo, itemcode) {
   // }).then((result) => {
   //   if (result.isConfirmed) {
 
-
-
   //     $.ajax({
   //       url: "process/oc.php",
   //       type: "POST",
@@ -292,8 +288,6 @@ function set_tracking(lotNo, itemcode) {
   //         showDialogSuccess("บันทึกสำเร็จ");
   //       },
   //     });
-
-
 
   //   }
   // });
@@ -311,9 +305,15 @@ function set_detail_lot_itemstock(lotNo, ItemCode) {
   }, 500);
 }
 
-$("#input_search_lot_detail").on("keyup", function () {
-  show_detail_itemstock();
+$("#input_search_lot_detail").on("keyup", function (event) {
+  if (event.key === "Enter") {
+    show_detail_itemstock();
+  }
 });
+
+// $("#input_search_lot_detail").on("keyup", function () {
+//   show_detail_itemstock();
+// });
 
 function show_detail_itemstock() {
   $.ajax({
@@ -323,7 +323,7 @@ function show_detail_itemstock() {
       FUNC_NAME: "show_detail_itemstock",
       lotNo: $("#input_lot_detail").val(),
       itemcode: $("#input_lot_itemcode_detail").val(),
-      input_search_lot_detail: $("#input_search_lot_detail").val(),
+      input_search_lot_detail: $("#input_search_lot_detail").val().trim(),
     },
     success: function (result) {
       var _tr = "";
@@ -347,7 +347,14 @@ function show_detail_itemstock() {
             status =
               "<labe style='color:red;font-weight:bold;'>หมดอายุ</label>";
           }
-          _tr += `<tr >
+
+          var color = '';
+          if($("#input_search_lot_detail").val().trim() == value.UsageCode){
+            color = `style='background-color:#e74a3b;'`;
+          }
+
+
+          _tr += `<tr ${color}>
                       <td class='text-center'>${value.itemname}</td>
                       <td class='text-center'>${value.serielNo}</td>
                       <td class='text-center'>${value.lotNo}</td>
@@ -425,6 +432,8 @@ function show_detail_itemstock() {
             ""
         );
       }
+
+      $("#input_search_lot_detail").val("");
       $(".numonly").on("input", function () {
         this.value = this.value.replace(/[^0-9]/g, ""); //<-- replace all other than given set of values
       });
@@ -438,7 +447,6 @@ function set_detail_lot(itemcode) {
 
   show_detail_lot(itemcode);
 }
-
 
 $("#select_typeItem").change(function () {
   show_detail_oc();

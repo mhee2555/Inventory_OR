@@ -1,4 +1,18 @@
 $(function () {
+  $("#checkbox_filter").change(function () {
+    show_detail_daily();
+
+    // if ($(this).is(":checked")) {
+    //   // ถ้า checkbox ถูกเลือก
+    //   console.log("เช็คแล้ว");
+    //   $("#select_type").prop("disabled", false); // หรือจะให้ enable select
+    // } else {
+    //   // ถ้า checkbox ไม่ถูกเลือก
+    //   console.log("ยังไม่เช็ค");
+    //   $("#select_type").prop("disabled", true); // หรือจะ disable select
+    // }
+  });
+
   session();
 
   $("#row_refrain").hide();
@@ -137,13 +151,12 @@ $("#btn_send_pay").click(function () {
         type: "POST",
         data: {
           FUNC_NAME: "onUPDATE_his",
-          ID: $("#btn_send_pay").data('id'),
+          ID: $("#btn_send_pay").data("id"),
         },
         success: function (result) {
-
           show_detail_his_docno();
           $("#table_detail_his tbody").html("");
-        $("#btn_send_pay").attr('disabled',true);
+          $("#btn_send_pay").attr("disabled", true);
         },
       });
     }
@@ -182,20 +195,22 @@ function show_detail_his_docno() {
           }
 
           var txt = "";
+          var hid = "";
           if (value.IsStatus == "1") {
             txt = `<label style="color:#643695;font-weight:bold;">รอดำเนินการ</label>`;
+            var hid = "hidden";
           }
           if (value.IsStatus == "2") {
             txt = `<label style="color:#1cc88a;font-weight:bold;">ส่งค่าใช้จ่ายเรียบร้อย</label>`;
           }
 
-          _tr += `<tr>
+          _tr += `<tr class='color' id="tr_${value.ID}"  onclick='setActive_his(${value.ID},"${value.IsStatus}")'>
                       <td class="f18 text-center">${value.createAt}</td>
                       <td class="f18 text-center">${value.HnCode}</td>
                       <td class="f18 text-center">${value.Doctor_Name}</td>
                       <td class="f18 text-center" ${styleP} ${titleP}>${value.Procedure_TH}</td>
                       <td class="f18 text-center">${txt}</td>
-                      <td class="f18 text-center"><a  href="#" style='font-weight: bold;color:#e74a3b;' onclick='show_detail_his(${value.ID},${value.IsStatus})'>แก้ไข</a></td>
+                      <td class="f18 text-center"><a href="#" ${hid} style='font-weight: bold;color:#e74a3b;' onclick='edit_his(${value.ID},${value.IsStatus})'>แก้ไข</a></td>
                    </tr>`;
         });
       }
@@ -205,16 +220,39 @@ function show_detail_his_docno() {
   });
 }
 
-function show_detail_his(ID,IsStatus) {
+function setActive_his(ID, IsStatus) {
+  $(".color").css("background-color", "");
+  $("#tr_" + ID).css("background-color", "#FEE4E2");
 
-  if(IsStatus == 1){
-    $("#btn_send_pay").attr('disabled',false);
-    $("#btn_send_pay").data('id',ID);
-  }else{
-    $("#btn_send_pay").attr('disabled',true);
-
+  if (IsStatus == 1) {
+    $("#btn_send_pay").attr("disabled", false);
+    $("#btn_send_pay").data("id", ID);
+  } else {
+    $("#btn_send_pay").attr("disabled", true);
   }
 
+  show_detail_his(ID, IsStatus);
+}
+
+function edit_his(ID, IsStatus) {
+  show_detail_his(ID, IsStatus);
+
+  setTimeout(() => {
+    $("#btn_send_pay").attr("disabled", false);
+    $("#btn_send_pay").data("id", ID);
+
+    $(".unlock_qty").attr("disabled", false);
+  }, 500);
+
+  // if(IsStatus == 1){
+
+  // }else{
+  //   $("#btn_send_pay").attr('disabled',true);
+
+  // }
+}
+
+function show_detail_his(ID, IsStatus) {
   $.ajax({
     url: "process/hn_daily.php",
     type: "POST",
@@ -224,26 +262,23 @@ function show_detail_his(ID,IsStatus) {
     },
     success: function (result) {
       var _tr = "";
-        var QQ = 0;
+      var QQ = 0;
       // $("#table_deproom_pay").DataTable().destroy();
       $("#table_detail_his tbody").html("");
       var ObjData = JSON.parse(result);
       if (!$.isEmptyObject(ObjData)) {
-
         $.each(ObjData, function (kay, value) {
-
-          
-          var dis = '';
+          var dis = "";
           if (value.IsStatus == "2") {
             dis = `disabled`;
           }
 
-          QQ  = QQ + parseFloat((parseInt(value.Qty) * parseInt(value.SalePrice)));
+          QQ = QQ + parseFloat(parseInt(value.Qty) * parseInt(value.SalePrice));
           _tr += `<tr>
                       <td class="f18 text-center" title="${value.TyeName}" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 150px;" >${value.TyeName}</td>
                       <td class="f18 text-center">${value.itemcode2}</td>
                       <td class="f18 text-center">${value.itemname}</td>
-                      <td class="f18 text-center"> <input id="qty_item_${value.ID}" ${dis} onblur="updateDetail_qty(${value.ID},'${value.itemcode}')"  class=' numonly form-control' value='${value.Qty}' style='text-align: center;' ></td>
+                      <td class="f18 text-center"> <input id="qty_item_${value.ID}" ${dis} onblur="updateDetail_qty(${value.ID},'${value.itemcode}')"  class=' unlock_qty numonly form-control' value='${value.Qty}' style='text-align: center;' ></td>
                    </tr>`;
         });
       }
@@ -367,6 +402,13 @@ function update_daily(ID) {
 }
 
 function show_detail_daily() {
+
+  if ($('#checkbox_filter').is(":checked")) {
+    var check_Box = 1;
+  } else {
+    var check_Box = 0;
+  }
+
   $.ajax({
     url: "process/hn_daily.php",
     type: "POST",
@@ -374,6 +416,7 @@ function show_detail_daily() {
       FUNC_NAME: "show_detail_daily",
       select_date1_search1: $("#select_date1_search1").val(),
       select_type: $("#select_type").val(),
+      check_Box: check_Box,
     },
     success: function (result) {
       var _tr = "";

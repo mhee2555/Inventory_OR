@@ -43,15 +43,22 @@
 
 <div id="row_daily">
     <div class="row">
-        <div class="col-md-3"></div>
-        <div class="col-md-3"></div>
-        <div class="col-md-3">
-            <div class="form-group ">
-                <select class="form-control f18" id="select_type">
-                    <option value="">เลือกทั้งหมด</option>
-                    <option value="1">รอดำเนินการ</option>
-                    <option value="2">ดำเนินการเรียบร้อย</option>
-                </select>
+        <div class="col-md-9">
+            <div class="d-flex justify-content-end align-items-center">
+                <!-- Checkbox -->
+                <div class="form-check mr-2">
+                    <input type="checkbox" class="form-check-input" id="checkbox_filter" style="width: 25px;height: 25px;">
+                    <label class="form-check-label f18 ml-2 mt-1" for="checkbox_filter" style="color:black;font-weight:bold;">แสดงเอกสารคงค้าง</label>
+                </div>
+
+                <!-- Select -->
+                <div class="form-group mb-0">
+                    <select class="form-control f18" id="select_type" style="min-width: 330px;">
+                        <option value="">เลือกทั้งหมด</option>
+                        <option value="1">รอดำเนินการ</option>
+                        <option value="2">ดำเนินการเรียบร้อย</option>
+                    </select>
+                </div>
             </div>
         </div>
 

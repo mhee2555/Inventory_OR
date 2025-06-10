@@ -1042,7 +1042,7 @@ function show_detail_history() {
             var showreport = `<button class='btn f18' style='background-color:#643695;color:#fff;' onclick='show_Report("${value.DocNo}")'>รายงานขอเบิก</button>`;
           } else {
             var edit_id = ``;
-            var showreport = `<button class='btn f18 btn-success' )'>ถูกสแกนจ่าย</button>`;
+            var showreport = `<button class='btn f18 btn-success' onclick='show_Report("${value.DocNo}")')'>ถูกสแกนจ่าย</button>`;
           }
 
           _tr += `<tr>

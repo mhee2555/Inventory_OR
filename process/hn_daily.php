@@ -7,25 +7,25 @@ require '../connect/connect.php';
 if (!empty($_POST['FUNC_NAME'])) {
     if ($_POST['FUNC_NAME'] == 'show_detail_daily') {
         show_detail_daily($conn, $db);
-    }else if ($_POST['FUNC_NAME'] == 'update_refrain') {
+    } else if ($_POST['FUNC_NAME'] == 'update_refrain') {
         update_refrain($conn, $db);
-    }else if ($_POST['FUNC_NAME'] == 'show_detail_refrain') {
+    } else if ($_POST['FUNC_NAME'] == 'show_detail_refrain') {
         show_detail_refrain($conn, $db);
-    }else if ($_POST['FUNC_NAME'] == 'update_daily') {
+    } else if ($_POST['FUNC_NAME'] == 'update_daily') {
         update_daily($conn, $db);
-    }else if ($_POST['FUNC_NAME'] == 'update_cancel') {
+    } else if ($_POST['FUNC_NAME'] == 'update_cancel') {
         update_cancel($conn, $db);
-    }else if ($_POST['FUNC_NAME'] == 'update_create_request') {
+    } else if ($_POST['FUNC_NAME'] == 'update_create_request') {
         update_create_request($conn, $db);
-    }else if ($_POST['FUNC_NAME'] == 'set_his') {
+    } else if ($_POST['FUNC_NAME'] == 'set_his') {
         set_his($conn, $db);
-    }else if ($_POST['FUNC_NAME'] == 'show_detail_his_docno') {
+    } else if ($_POST['FUNC_NAME'] == 'show_detail_his_docno') {
         show_detail_his_docno($conn, $db);
-    }else if ($_POST['FUNC_NAME'] == 'show_detail_his') {
+    } else if ($_POST['FUNC_NAME'] == 'show_detail_his') {
         show_detail_his($conn, $db);
-    }else if ($_POST['FUNC_NAME'] == 'updateDetail_qty') {
+    } else if ($_POST['FUNC_NAME'] == 'updateDetail_qty') {
         updateDetail_qty($conn, $db);
-    }else if ($_POST['FUNC_NAME'] == 'onUPDATE_his') {
+    } else if ($_POST['FUNC_NAME'] == 'onUPDATE_his') {
         onUPDATE_his($conn, $db);
     }
 }
@@ -127,6 +127,7 @@ function show_detail_his_docno($conn, $db)
                 his.ID,
                 his.IsStatus,
                 his.HnCode,
+                his.number_box,
                 DATE_FORMAT( his.createAt, '%d-%m-%Y' ) AS createAt,
                 his.createAt,
                 his.doctor,
@@ -147,6 +148,12 @@ function show_detail_his_docno($conn, $db)
     $meQ1->execute();
     while ($rowQ1 = $meQ1->fetch(PDO::FETCH_ASSOC)) {
 
+        $_HnCode = $rowQ1['HnCode'];
+        if ($_HnCode == "") {
+            $rowQ1['HnCode'] = $rowQ1['number_box'];
+        }
+
+
         if (str_contains($rowQ1['procedure'], ',')) {
             $rowQ1['Procedure_TH'] = 'button';
         }
@@ -156,8 +163,6 @@ function show_detail_his_docno($conn, $db)
 
 
         $return[] = $rowQ1;
-
-
     }
 
     echo json_encode($return);
@@ -214,8 +219,6 @@ function update_create_request($conn, $db)
     echo json_encode($return);
     unset($conn);
     die;
-
-
 }
 
 function update_cancel($conn, $db)
@@ -232,8 +235,6 @@ function update_cancel($conn, $db)
     echo json_encode($return);
     unset($conn);
     die;
-
-
 }
 
 
@@ -251,8 +252,6 @@ function update_daily($conn, $db)
     echo json_encode($return);
     unset($conn);
     die;
-
-
 }
 
 function update_refrain($conn, $db)
@@ -269,14 +268,13 @@ function update_refrain($conn, $db)
     echo json_encode($return);
     unset($conn);
     die;
-
-
 }
 
 function show_detail_daily($conn, $db)
 {
     $return = array();
     $select_date1_search1 = $_POST['select_date1_search1'];
+    $check_Box = $_POST['check_Box'];
 
     $select_date1_search = explode("-", $select_date1_search1);
     $select_date1_search = $select_date1_search[2] . '-' . $select_date1_search[1] . '-' . $select_date1_search[0];
@@ -284,11 +282,17 @@ function show_detail_daily($conn, $db)
     $select_type = $_POST['select_type'];
 
     $where_t = "";
-    if($select_type == 1){
+    if ($select_type == 1) {
         $where_t = " AND  ( set_hn.isStatus = 0 OR set_hn.isStatus = 1 OR set_hn.isStatus = 2 )";
     }
-    if($select_type == 2){
+    if ($select_type == 2) {
         $where_t = " AND set_hn.isStatus = 3 ";
+    }
+
+
+    $whereD = "";
+    if($check_Box == 0){
+        $whereD = " AND DATE( set_hn.createAt ) = '$select_date1_search' ";
     }
 
     $Q1 = " SELECT
@@ -309,7 +313,7 @@ function show_detail_daily($conn, $db)
                 INNER JOIN doctor ON doctor.ID = set_hn.doctor
                 LEFT JOIN `procedure` ON set_hn.`procedure` = `procedure`.ID
                 INNER JOIN departmentroom ON set_hn.departmentroomid = departmentroom.id 
-                AND DATE( set_hn.createAt ) = '$select_date1_search'
+                $whereD
                 AND NOT set_hn.isStatus = 9
                 AND  set_hn.isCancel = 0
                 $where_t
@@ -328,8 +332,6 @@ function show_detail_daily($conn, $db)
 
 
         $return[] = $rowQ1;
-
-
     }
 
     echo json_encode($return);
@@ -388,8 +390,6 @@ function show_detail_refrain($conn, $db)
 
 
         $return[] = $rowQ1;
-
-
     }
 
     echo json_encode($return);

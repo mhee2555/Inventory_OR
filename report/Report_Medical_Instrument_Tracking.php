@@ -50,7 +50,8 @@ class MYPDF extends TCPDF
                             DATE_FORMAT(deproom.serviceDate, '%H:%i') AS time1,
                             `procedure`.Procedure_EN AS Procedure_TH,
                             doctor.Doctor_Name_EN AS Doctor_Name,
-                            departmentroom.departmentroomname_EN 
+                            departmentroom.departmentroomname_EN ,
+                            deproom.Remark
                         FROM 
                             hncode
                             LEFT JOIN `procedure` ON hncode.`procedure` = `procedure`.ID
@@ -85,7 +86,7 @@ class MYPDF extends TCPDF
             if($HnCode == ""){
                 $HnCode = $number_box;
             }
-
+            $_Remark =   $Result_Detail['Remark'];
             $date1 =     $Result_Detail['date1'];
             $time1 =     $Result_Detail['time1'];
             $Procedure_TH =     $Result_Detail['Procedure_TH'];
@@ -133,6 +134,8 @@ class MYPDF extends TCPDF
         $this->Cell(25, 0,  "Room : " . $departmentroomname_EN, 0, 1, 'L');
         $this->SetX(57);
         $this->Cell(50, 0,  "Side Effect : - ", 0, 1, 'L');
+        $this->SetX(57);
+        $this->Cell(50, 0,  "หมายเหตุ : " . $_Remark, 0, 1, 'L');
         //   $this->Cell(54, 8,  "Medical Instrument Tracking", 1, 1, 'C');
 
 

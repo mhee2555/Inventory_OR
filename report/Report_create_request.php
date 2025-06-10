@@ -104,7 +104,7 @@ class MYPDF extends TCPDF
                 //   }
             }
     
-    
+        if ($this->page == 1) {
             $this->Ln(9);
     
     
@@ -150,6 +150,16 @@ class MYPDF extends TCPDF
             $image_file = "images/logo1.png";
             $this->Image($image_file, 12, 25, 15, 18, 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);
 
+                        $this->Ln(23);
+            $this->SetFillColor(255, 255, 255);
+            $this->SetFont('db_helvethaica_x', 'b', 12);
+            $this->MultiCell(138, 9,  "    หัตถการ : " . $_Procedure_TH, 1, 1, 'L');
+            
+            $this->Ln(1);
+        }
+    
+
+
 
             // $this->Cell(138, 8, 'รายงานขอเบิกใช้อุปกรณ์กับคนไข้', 1, 1, 'C');
     
@@ -169,12 +179,7 @@ class MYPDF extends TCPDF
             // $this->Cell(30, 11,  "  หมายเหตุ", 1, 0, 'L');
             // $this->Cell(108, 11, "    ".$_Remark, 1, 1, 'L');
     
-            $this->Ln(23);
-            $this->SetFillColor(255, 255, 255);
-            $this->SetFont('db_helvethaica_x', 'b', 12);
-            $this->MultiCell(138, 9,  "    หัตถการ : " . $_Procedure_TH, 1, 1, 'L');
-            
-            $this->Ln(1);
+
 
 
         if ($this->page == 1) {
@@ -311,11 +316,13 @@ $pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
 // set default monospaced font
 $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
 // set margins
-$pdf->SetMargins(5,58, 5);
+// $pdf->SetMargins(5,58, 5);
+$pdf->SetMargins(5, PDF_MARGIN_TOP, 5);
+
 $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
 $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
 // set auto page breaks
-$pdf->SetAutoPageBreak(TRUE, 20);
+$pdf->SetAutoPageBreak(TRUE, 25);
 // set image scale factor
 $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 // ------------------------------------------------------------------------------
@@ -330,23 +337,25 @@ $pdf->AddPage('P', 'A5');
 $pdf->SetFont('db_helvethaica_x', 'B', 18);
 $DocNo = $_GET['DocNo'];
 // $pdf->Ln(85);
+  $pdf->Ln(32);
 
 
 $html = '    
-    <table cellspacing="0" cellpadding="2" border="1" >
-    <thead><tr style="font-size:16px;line-height:35px;">
-    <th width="10 %" align="center">ลำดับ</th>
-    <th width="50 %" align="center">รายการ</th>
-    <th width="20 %"  align="center">ประเภท</th>
-    <th width="20 %" align="center">จำนวน</th></thead>
+    <table cellspacing="0" cellpadding="1" border="1" >
+    <thead><tr style="font-size:13px;">
+    <th width="15 %" align="center">Code</th>
+    <th width="70 %" align="center">Description</th>
+    <th width="15 %" align="center">เบิก</th></thead>
     </tr>';
 
-
+$count = 1;
+$currentType = "";
 
 $count = 1;
 $query = "SELECT
                 item.itemname ,
                 item.itemcode ,
+                item.itemcode2 ,
                 deproomdetail.ID ,
                 SUM(deproomdetail.IsQtyStart) AS cnt ,
                 itemtype.TyeName
@@ -367,22 +376,71 @@ $query = "SELECT
                 itemtype.TyeName
                 ORDER BY item.itemname ASC ";
 
-
 $meQuery1 = $conn->prepare($query);
 $meQuery1->execute();
+
 while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
+    $itemName = $Result_Detail['itemname'];
+    $itemType = $Result_Detail['TyeName'];
+    $itemCount = $Result_Detail['cnt'];
+    $itemcode2 = $Result_Detail['itemcode2'];
 
-    $pdf->SetFont('db_helvethaica_x', 'B', 18);
+    // ถ้าเปลี่ยนประเภท ให้ใส่หัวกลุ่ม
+    if ($currentType != $itemType) {
+        $currentType = $itemType;
+        $html .= '<tr style="font-weight:bold;font-size:13px;" align="center">
+                    <td colspan="3" >' . htmlspecialchars($itemType, ENT_QUOTES, 'UTF-8') . '</td>
+                  </tr>';
+    }
 
-    $html .= '<tr nobr="true" style="font-size:14px;line-height:30px;">';
-    $html .=   '<td width="10 %" align="center"> ' . $count . '</td>';
-    $html .=   '<td width="50 %" align="left"> ' . "      " . $Result_Detail['itemname'] . '</td>';
-    $html .=   '<td width="20 %" align="center">' . $Result_Detail['TyeName'] . '</td>';
-    $html .=   '<td width="20 %" align="center">' . $Result_Detail['cnt'] . '</td>';
-    $html .=  '</tr>';
+    $html .= '<tr style="font-size:13px;">
+                <td width="15 %" align="center">' . htmlspecialchars($itemcode2, ENT_QUOTES, 'UTF-8') . '</td>
+                <td width="70 %">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . htmlspecialchars($itemName, ENT_QUOTES, 'UTF-8') . '</td>
+                <td width="15 %" align="center">' . $itemCount . '</td>
+              </tr>';
     $count++;
-
 }
+
+// $count = 1;
+// $query = "SELECT
+//                 item.itemname ,
+//                 item.itemcode ,
+//                 deproomdetail.ID ,
+//                 SUM(deproomdetail.IsQtyStart) AS cnt ,
+//                 itemtype.TyeName
+//                 FROM
+//                 deproom
+//                 INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
+//                 INNER JOIN item ON deproomdetail.ItemCode = item.itemcode 
+//                 INNER JOIN itemtype ON itemtype.ID = item.itemtypeID
+//                 WHERE
+//                 deproom.DocNo = '$DocNo' 
+//                 AND deproom.IsCancel = 0 
+//                 AND deproomdetail.IsCancel = 0 
+//                 -- AND deproomdetail.IsStart = 1
+//                 GROUP BY
+//                 item.itemname,
+//                 item.itemcode,
+//                 deproomdetail.ID ,
+//                 itemtype.TyeName
+//                 ORDER BY item.itemname ASC ";
+
+
+// $meQuery1 = $conn->prepare($query);
+// $meQuery1->execute();
+// while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
+
+//     $pdf->SetFont('db_helvethaica_x', 'B', 18);
+
+//     $html .= '<tr nobr="true" style="font-size:14px;line-height:30px;">';
+//     $html .=   '<td width="10 %" align="center"> ' . $count . '</td>';
+//     $html .=   '<td width="50 %" align="left"> ' . "      " . $Result_Detail['itemname'] . '</td>';
+//     $html .=   '<td width="20 %" align="center">' . $Result_Detail['TyeName'] . '</td>';
+//     $html .=   '<td width="20 %" align="center">' . $Result_Detail['cnt'] . '</td>';
+//     $html .=  '</tr>';
+//     $count++;
+
+// }
 
 
 

@@ -20,13 +20,13 @@ function show_detail_oc($conn, $db)
     $select_typeItem = $_POST['select_typeItem'];
     $input_search_request = $_POST['input_search_request'];
     $wheretype = "";
-    if($select_typeItem != ""){
+    if ($select_typeItem != "") {
         $wheretype = " AND itemtype.ID = '$select_typeItem' ";
     }
 
     $permission = $_SESSION['permission'];
     $wherepermission = "";
-    if($permission != '5'){
+    if ($permission != '5') {
         $wherepermission = " AND item.warehouseID = $permission ";
     }
 
@@ -103,9 +103,26 @@ function show_detail_itemstock($conn, $db)
     $itemcode = $_POST['itemcode'];
     $input_search_lot_detail = $_POST['input_search_lot_detail'];
 
+
     $where = "";
-    if($itemcode != ""){
-        $where = " AND  itemstock.ItemCode = '$itemcode' AND itemstock.lotNo = '$lotNo'  ";
+    $whereUsage = "";
+    if ($input_search_lot_detail != "") {
+        $select_lot = "SELECT itemstock.ItemCode , itemstock.lotNo FROM itemstock WHERE itemstock.UsageCode = '$input_search_lot_detail' ";
+        $meQuery_lot = $conn->prepare($select_lot);
+        $meQuery_lot->execute();
+        while ($row_lot = $meQuery_lot->fetch(PDO::FETCH_ASSOC)) {
+                $_ItemCode = $row_lot['ItemCode'];
+                $_lotNo = $row_lot['lotNo'];
+        }
+
+        $whereUsage = " AND  itemstock.ItemCode = '$_ItemCode' AND itemstock.lotNo = '$_lotNo'  ";
+
+
+
+    }else{
+        if ($itemcode != "") {
+            $where = " AND  itemstock.ItemCode = '$itemcode' AND itemstock.lotNo = '$lotNo'  ";
+        }
     }
 
 
@@ -129,8 +146,9 @@ function show_detail_itemstock($conn, $db)
                     LEFT JOIN deproomdetail ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID
                     LEFT JOIN deproom ON deproom.DocNo = deproomdetail.DocNo
                 WHERE
-                     ( itemstock.UsageCode LIKE '%$input_search_lot_detail%'  OR item.itemname LIKE '%$input_search_lot_detail%' )
+                    itemstock.UsageCode != ''
                     $where
+                    $whereUsage
                 GROUP BY itemstock.UsageCode ";
 
 
