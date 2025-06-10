@@ -334,8 +334,11 @@ function show_detail_itemstock() {
         $.each(ObjData, function (kay, value) {
           var txt = "";
           var status = "";
-          if (value.IsDeproom == "1") {
+
+          if (value.hn_record_id != null) {
             txt = value.hn_record_id;
+          }
+          if (value.IsDeproom == "1") {
             status =
               "<label style='color:green;font-weight:bold;'>ถูกใช้งาน</label>";
           }

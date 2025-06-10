@@ -292,9 +292,11 @@ function show_detail_daily($conn, $db)
 
     $whereD = "";
     if($check_Box == 0){
-        $whereD = " AND DATE( set_hn.createAt ) = '$select_date1_search' ";
+        $whereD = " AND DATE( set_hn.createAt ) = '$select_date1_search'  ";
     }
-
+    if($check_Box == 1){
+        $whereD = " AND  ( set_hn.isStatus = 0 OR set_hn.isStatus = 1 OR set_hn.isStatus = 2 ) ";
+    }
     $Q1 = " SELECT
                 set_hn.ID,
                 set_hn.isStatus,
