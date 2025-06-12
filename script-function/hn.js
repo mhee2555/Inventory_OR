@@ -1,5 +1,6 @@
 var departmentroomname = "";
 var UserName = "";
+var Userid = "";
 
 $(function () {
   var d = new Date();
@@ -286,7 +287,9 @@ $("#btn_use").click(function () {
 
 $("#btn_Tracking").click(function () {
   if ($("#btn_Tracking").data("DocNo") != undefined) {
-    option = "?DocNo=" + $("#btn_Tracking").data("DocNo");
+
+    
+    option = "?DocNo=" + $("#btn_Tracking").data("DocNo")
     window.open(
       "report/Report_Medical_Instrument_Tracking.php" + option,
       "_blank"
@@ -307,10 +310,7 @@ $("#btn_cost").click(function () {
 
 $("#btn_excel_all").click(function () {
   option =
-    "?select_SDate=" +
-    $("#select_SDate").val() +
-    "&select_EDate=" +
-    $("#select_EDate").val();
+    "?select_SDate=" +$("#select_SDate").val() +"&select_EDate=" +$("#select_EDate").val()+"&Userid=" + Userid;
   window.open(
     "report/phpexcel/Report_Medical_Instrument_Tracking.php" + option,
     "_blank"
@@ -501,6 +501,7 @@ function session() {
       deproom = ObjData.deproom;
       RefDepID = ObjData.RefDepID;
       Permission_name = ObjData.Permission_name;
+      Userid = ObjData.Userid;
 
       $("#input_Deproom_Main").val(Permission_name);
       $("#input_Name_Main").val(UserName);

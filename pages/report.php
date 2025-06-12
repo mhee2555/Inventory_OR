@@ -41,9 +41,10 @@
                             <option value="3">รายงานใช้อุปกรณ์</option>
                             <option value="5">สรุปค่าใช้จ่าย OR</option>
                             <option value="6">รายงานจ่ายอุปกรณ์</option>
+                            <option value="7">รายงานสต๊อกคงเหลือในคลัง</option>
                         </select>
                     </div>
-                    <div class="col-md-12 mt-3">
+                    <div class="col-md-12 mt-3" id="row_typedate">
                         <label for="" style="font-weight: 600;color:black;" class="f18">ประเภทรายงาน</label>
                         <select class="form-control f18" id="select_type_date">
                             <option value="">ประเภทรายงาน</option>
@@ -188,7 +189,7 @@
                                 <button class="btn btn-outline-danger f18" id="btn_report" style="width: 200px;line-height: 40px;"><i class="fa-solid fa-file-pdf"></i> PDF</button>
                             </div>
                             <div class="col-md-12 text-right mt-3">
-                                <button class="btn btn-outline-success f18" style="width: 200px;line-height: 40px;"><i class="fa-solid fa-file-excel"></i> Excel</button>
+                                <button class="btn btn-outline-success f18"  id="btn_excel" style="width: 200px;line-height: 40px;"><i class="fa-solid fa-file-excel"></i> Excel</button>
                             </div>
                         </div>
             </div>

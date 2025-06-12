@@ -1,7 +1,7 @@
+var Userid = "";
+
 $(function () {
-
   session();
-
 
   var d = new Date();
   var month = d.getMonth() + 1;
@@ -106,12 +106,11 @@ $(function () {
         month +
         "-" +
         year;
-    
+
       $("#select_date1").val(output);
       $("#select_date2").val(output);
 
-
-      $("#radio_date1").prop('checked',true).trigger('click');
+      $("#radio_date1").prop("checked", true).trigger("click");
     }
     if ($(this).val() == "2") {
       $("#row_typeday").hide();
@@ -125,12 +124,10 @@ $(function () {
       $("#radio_year1").click();
       $("#row_year").show();
 
-      $("#radio_month1").prop('checked',true).trigger('click');
-      $("#select_month1").val('1');
-      $("#select_month2").val('1');
-      $("#select_year1").val('2566');
-
-
+      $("#radio_month1").prop("checked", true).trigger("click");
+      $("#select_month1").val("1");
+      $("#select_month2").val("1");
+      $("#select_year1").val("2566");
     }
     if ($(this).val() == "3") {
       $("#row_typeday").hide();
@@ -141,16 +138,21 @@ $(function () {
       $("#row_typeyear").show();
       $("#row_year").show();
 
-      $("#radio_year1").prop('checked',true).trigger('click');
+      $("#radio_year1").prop("checked", true).trigger("click");
 
-      $("#select_year1").val('2566');
-      $("#select_year2").val('2566');
-
+      $("#select_year1").val("2566");
+      $("#select_year2").val("2566");
     }
   });
 
   $("#select_report").change(function (e) {
-      $("#select_type_date").val("").change();
+    $("#select_type_date").val("").change();
+
+    if ($(this).val() == 7) {
+      $("#row_typedate").hide();
+    } else {
+      $("#row_typedate").show();
+    }
   });
   $("#btn_report").click(function (e) {
     if ($("#select_type_date").val() != "") {
@@ -332,7 +334,10 @@ $(function () {
           "&checkyear=" +
           checkyear;
 
-        window.open("report/Report_Patient_Cost_Summary2.php" + option, "_blank");
+        window.open(
+          "report/Report_Patient_Cost_Summary2.php" + option,
+          "_blank"
+        );
       }
       if ($("#select_report").val() == 6) {
         if ($("#radio_date1").is(":checked")) {
@@ -374,21 +379,260 @@ $(function () {
 
         window.open("report/Report_Issue2.php" + option, "_blank");
       }
-      
-    }else{
-      Swal.fire("ล้มเหลว", "กรุณาเลือกประเภท", "error");
+    } else {
+      if ($("#select_report").val() == 7) {
+        window.open("report/Report_stock.php", "_blank");
+      } else {
+        Swal.fire("ล้มเหลว", "กรุณาเลือกประเภท", "error");
+      }
     }
   });
 
+  $("#btn_excel").click(function (e) {
+    if ($("#select_type_date").val() != "") {
+      if ($("#select_report").val() == 1) {
+        if ($("#radio_date1").is(":checked")) {
+          var checkday = 1;
+        } else {
+          var checkday = 2;
+        }
+        if ($("#radio_month1").is(":checked")) {
+          var checkmonth = 1;
+        } else {
+          var checkmonth = 2;
+        }
+        if ($("#radio_year1").is(":checked")) {
+          var checkyear = 1;
+        } else {
+          var checkyear = 2;
+        }
+        var option =
+          "?type_date=" +
+          $("#select_type_date").val() +
+          "&date1=" +
+          $("#select_date1").val() +
+          "&date2=" +
+          $("#select_date2").val() +
+          "&month1=" +
+          $("#select_month1").val() +
+          "&month2=" +
+          $("#select_month2").val() +
+          "&year1=" +
+          $("#select_year1").val() +
+          "&year2=" +
+          $("#select_year2").val() +
+          "&checkday=" +
+          checkday +
+          "&checkmonth=" +
+          checkmonth +
+          "&checkyear=" +
+          checkyear;
+
+        window.open("report/Report_Replenishment.php" + option, "_blank");
+      }
+      if ($("#select_report").val() == 2) {
+        if ($("#radio_date1").is(":checked")) {
+          var checkday = 1;
+        } else {
+          var checkday = 2;
+        }
+        if ($("#radio_month1").is(":checked")) {
+          var checkmonth = 1;
+        } else {
+          var checkmonth = 2;
+        }
+        if ($("#radio_year1").is(":checked")) {
+          var checkyear = 1;
+        } else {
+          var checkyear = 2;
+        }
+        var option =
+          "?type_date=" +
+          $("#select_type_date").val() +
+          "&date1=" +
+          $("#select_date1").val() +
+          "&date2=" +
+          $("#select_date2").val() +
+          "&month1=" +
+          $("#select_month1").val() +
+          "&month2=" +
+          $("#select_month2").val() +
+          "&year1=" +
+          $("#select_year1").val() +
+          "&year2=" +
+          $("#select_year2").val() +
+          "&checkday=" +
+          checkday +
+          "&checkmonth=" +
+          checkmonth +
+          "&checkyear=" +
+          checkyear;
+
+        window.open(
+          "report/phpexcel/Report_Patient_Requisition.php" + option+"&Userid=" + Userid,
+          "_blank"
+        );
+      }
+      if ($("#select_report").val() == 3) {
+        if ($("#radio_date1").is(":checked")) {
+          var checkday = 1;
+        } else {
+          var checkday = 2;
+        }
+        if ($("#radio_month1").is(":checked")) {
+          var checkmonth = 1;
+        } else {
+          var checkmonth = 2;
+        }
+
+        var option =
+          "?type_date=" +
+          $("#select_type_date").val() +
+          "&date1=" +
+          $("#select_date1").val() +
+          "&date2=" +
+          $("#select_date2").val() +
+          "&month1=" +
+          $("#select_month1").val() +
+          "&month2=" +
+          $("#select_month2").val() +
+          "&checkday=" +
+          checkday +
+          "&checkmonth=" +
+          checkmonth;
+
+        window.open("report/Report_Issue.php" + option, "_blank");
+      }
+      if ($("#select_report").val() == 4) {
+        if ($("#radio_date1").is(":checked")) {
+          var checkday = 1;
+        } else {
+          var checkday = 2;
+        }
+        if ($("#radio_month1").is(":checked")) {
+          var checkmonth = 1;
+        } else {
+          var checkmonth = 2;
+        }
+
+        var option =
+          "?type_date=" +
+          $("#select_type_date").val() +
+          "&date1=" +
+          $("#select_date1").val() +
+          "&date2=" +
+          $("#select_date2").val() +
+          "&month1=" +
+          $("#select_month1").val() +
+          "&month2=" +
+          $("#select_month2").val() +
+          "&checkday=" +
+          checkday +
+          "&checkmonth=" +
+          checkmonth;
+
+        window.open(
+          "report/phpexcel/Report_Cabinet_Issue.php" + option+"&Userid=" + Userid,
+          "_blank"
+        );
+      }
+      if ($("#select_report").val() == 5) {
+        if ($("#radio_date1").is(":checked")) {
+          var checkday = 1;
+        } else {
+          var checkday = 2;
+        }
+        if ($("#radio_month1").is(":checked")) {
+          var checkmonth = 1;
+        } else {
+          var checkmonth = 2;
+        }
+        if ($("#radio_year1").is(":checked")) {
+          var checkyear = 1;
+        } else {
+          var checkyear = 2;
+        }
+        var option =
+          "?type_date=" +
+          $("#select_type_date").val() +
+          "&date1=" +
+          $("#select_date1").val() +
+          "&date2=" +
+          $("#select_date2").val() +
+          "&month1=" +
+          $("#select_month1").val() +
+          "&month2=" +
+          $("#select_month2").val() +
+          "&year1=" +
+          $("#select_year1").val() +
+          "&year2=" +
+          $("#select_year2").val() +
+          "&checkday=" +
+          checkday +
+          "&checkmonth=" +
+          checkmonth +
+          "&checkyear=" +
+          checkyear;
+
+        window.open(
+          "report/phpexcel/Report_Patient_Cost_Summary2.php" + option+"&Userid=" + Userid,
+          "_blank"
+        );
+      }
+      if ($("#select_report").val() == 6) {
+        if ($("#radio_date1").is(":checked")) {
+          var checkday = 1;
+        } else {
+          var checkday = 2;
+        }
+        if ($("#radio_month1").is(":checked")) {
+          var checkmonth = 1;
+        } else {
+          var checkmonth = 2;
+        }
+        if ($("#radio_year1").is(":checked")) {
+          var checkyear = 1;
+        } else {
+          var checkyear = 2;
+        }
+        var option =
+          "?type_date=" +
+          $("#select_type_date").val() +
+          "&date1=" +
+          $("#select_date1").val() +
+          "&date2=" +
+          $("#select_date2").val() +
+          "&month1=" +
+          $("#select_month1").val() +
+          "&month2=" +
+          $("#select_month2").val() +
+          "&year1=" +
+          $("#select_year1").val() +
+          "&year2=" +
+          $("#select_year2").val() +
+          "&checkday=" +
+          checkday +
+          "&checkmonth=" +
+          checkmonth +
+          "&checkyear=" +
+          checkyear;
+
+        window.open("report/Report_Issue2.php" + option, "_blank");
+      }
+    } else {
+      if ($("#select_report").val() == 7) {
+        window.open("report/phpexcel/Report_stock.php"+"?Userid=" + Userid, "_blank");
+      } else {
+        Swal.fire("ล้มเหลว", "กรุณาเลือกประเภท", "error");
+      }
+    }
+  });
 
   $("#btn_reset").click(function (e) {
     $("#select_type_date").val("").change();
     $("#select_report").val(1);
   });
-  
 });
-
-
 
 function session() {
   $.ajax({
@@ -401,6 +645,8 @@ function session() {
       deproom = ObjData.deproom;
       RefDepID = ObjData.RefDepID;
       Permission_name = ObjData.Permission_name;
+      Userid = ObjData.Userid;
+
 
       $("#input_Deproom_Main").val(Permission_name);
       $("#input_Name_Main").val(UserName);

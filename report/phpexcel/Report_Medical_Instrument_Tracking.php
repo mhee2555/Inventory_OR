@@ -9,6 +9,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
 
 // สร้างไฟล์ Excel
 $spreadsheet = new Spreadsheet();
@@ -36,12 +37,25 @@ $sheet->mergeCells('E4:K5'); // วันที่พิมพ์
 // $sheet->mergeCells('B4:C4'); // เวลา
 
 
-
 // --- ใส่ข้อมูล ---
+// $Userid = $_SESSION['Userid'];
+$Userid = $_GET['Userid'];
 
+$_FirstName = "";
+$user = "SELECT
+	employee.FirstName 
+FROM
+	users
+	INNER JOIN employee ON users.EmpCode = employee.EmpCode
+WHERE users.ID = '$Userid' ";
+$meQuery_user = $conn->prepare($user);
+$meQuery_user->execute();
+while ($row_user = $meQuery_user->fetch(PDO::FETCH_ASSOC)) {
+    $_FirstName = $row_user['FirstName'];
+}
 
-$sheet->setCellValue('E1', 'พิมพ์โดย poseMA');
-$sheet->setCellValue('E4', 'วันที่พิมพ์ '.date('d/m/Y'). ' ' .date('H:i:s'));
+$sheet->setCellValue('E1', 'พิมพ์โดย '. $_FirstName);
+$sheet->setCellValue('E4', 'วันที่พิมพ์ ' . date('d/m/Y') . ' ' . date('H:i:s'));
 $sheet->getStyle('E1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
 $sheet->getStyle('E4')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
 $sheet->getCell('E1')->getStyle()->getFont()->setBold(true);
@@ -50,16 +64,14 @@ $sheet->getCell('E4')->getStyle()->getFont()->setBold(true);
 
 // --- หัวตาราง ---
 $sheet->setCellValue('A6', 'ลำดับ');
-$sheet->setCellValue('B6', 'รหัสคลังอุปกรณ์ (คลัง Surgical)');
-$sheet->setCellValue('C6', 'รายการ');
-$sheet->setCellValue('D6', 'Lot No');
-$sheet->setCellValue('E6', 'Serial No');
-$sheet->setCellValue('F6', 'Exp Lot');
-$sheet->setCellValue('G6', 'Qty');
-$sheet->setCellValue('H6', 'RefPO');
-$sheet->setCellValue('I6', 'วันที่จ่าย');
-$sheet->setCellValue('J6', 'HN Code');
-$sheet->setCellValue('K6', 'จ่ายให้แผนก');
+$sheet->setCellValue('B6', 'วันที่');
+$sheet->setCellValue('C6', 'HN Number');
+$sheet->setCellValue('D6', 'ห้องผ่าตัด');
+$sheet->setCellValue('E6', 'แพทย์');
+$sheet->setCellValue('F6', 'หัตถการ');
+$sheet->setCellValue('G6', 'ประเภท');
+$sheet->setCellValue('H6', 'รหัสรายการ');
+$sheet->setCellValue('I6', 'อุปกรณ์');
 
 
 $sheet->getColumnDimension('A')->setAutoSize(true);
@@ -71,8 +83,6 @@ $sheet->getColumnDimension('F')->setAutoSize(true);
 $sheet->getColumnDimension('G')->setAutoSize(true);
 $sheet->getColumnDimension('H')->setAutoSize(true);
 $sheet->getColumnDimension('I')->setAutoSize(true);
-$sheet->getColumnDimension('J')->setAutoSize(true);
-$sheet->getColumnDimension('K')->setAutoSize(true);
 
 $select_date_history_s = $_GET['select_SDate'];
 $select_date_history_l = $_GET['select_EDate'];
@@ -86,29 +96,18 @@ $select_date_history_l = $select_date_history_l[2] . '-' . $select_date_history_
 
 $dataArray = [];
 
-if($db == 1){
+// if ($db == 1) {
 
-    $query = "SELECT
-                    hncode.ID,
-                    item.itemname,
-                    item.LimitUse,
+$query = " SELECT
+                    DATE_FORMAT( hncode.DocDate, '%d-%m-%Y' ) AS DocDate,
+                    hncode.HnCode,
+                    hncode.number_box,
+                    departmentroom.departmentroomname,
+                    ( SELECT GROUP_CONCAT( doctor.Doctor_Name SEPARATOR ' / ' ) AS Doctor_Name FROM doctor WHERE doctor.ID IN ( hncode.doctor ) ) AS Doctor_Name,
+                    ( SELECT GROUP_CONCAT( `procedure`.Procedure_TH SEPARATOR ' / ' ) AS Procedures FROM `procedure` WHERE `procedure`.ID IN ( hncode.`procedure` ) ) AS Procedures,
                     itemtype.TyeName,
                     itemstock.UsageCode,
-                    item.itemcode,
-                    hncode.DocNo,
-                    DATE_FORMAT( itemstock.ExpireDate, '%d-%m-%Y' ) AS ExpireDate,
-                    DATE_FORMAT( itemstock.expDate, '%d-%m-%Y' ) AS expDate,
-                    DATE_FORMAT( hncode.DocDate, '%d-%m-%Y' ) AS DocDate,
-                    DATE_FORMAT( itemstock.CreateDate, '%d-%m-%Y' ) AS CreateDate,
-                    DATE_FORMAT(hncode.ModifyDate, '%d/%m/%Y') AS date1,
-                    hncode.HnCode,
-                    hncode_detail.LastSterileDetailID,
-                    departmentroom.departmentroomname,
-                    hncode_detail.Qty,
-                    item2.itemname AS itemname2,
-                    item2.itemcode AS itemcode2,
-                    itemstock.serielNo,
-                    itemstock.lotNo 
+                    item.itemname 
                 FROM
                     hncode
                     LEFT JOIN departmentroom ON departmentroom.id = hncode.departmentroomid
@@ -118,128 +117,108 @@ if($db == 1){
                     LEFT JOIN itemtype ON itemtype.ID = item.itemtypeID
                     LEFT JOIN item AS item2 ON item2.ItemCode = hncode_detail.ItemCode 
                 WHERE
-                    DATE(hncode.DocDate) BETWEEN '$select_date_history_s' AND '$select_date_history_l'
+                    DATE( hncode.DocDate ) BETWEEN '$select_date_history_s' AND '$select_date_history_l'
                     AND hncode.IsStatus = 1 
                     AND hncode.IsCancel = 0 
                     AND hncode_detail.IsStatus != 99 
                 ORDER BY
-                    hncode.ID ASC ";
-    // $query = "SELECT
-    //                 hncode.ID,
-    //                 item.itemname,
-    //                 itemstock.UsageCode,
-    //                 item.itemcode2 AS itemcode,
-    //                 DATE_FORMAT(itemstock.ExpireDate, '%d-%m-%Y') AS expDate,
-    //                 DATE_FORMAT(itemstock.CreateDate, '%d-%m-%Y') AS CreateDate,
-    //                 hncode.DocNo,
-    //                 hncode.HnCode,
-    //                 hncode_detail.Qty,
-    //                 departmentroom.departmentroomname,
-    //                 itemtype.TyeName,
-    //                 item.LimitUse,
-    //                 sudslog.UsedCount,
-    //                 itemstock.lotNo,
-    //                 itemstock.serielNo,
-    //                 `procedure`.Procedure_EN AS Procedure_TH,
-    //                 DATE_FORMAT(hncode.ModifyDate, '%d/%m/%Y') AS date1,
-    //                 doctor.Doctor_Name
-    //             FROM
-    //                 hncode
-    //             INNER JOIN
-    //                 departmentroom ON departmentroom.id = hncode.departmentroomid
-    //             INNER JOIN
-    //                 hncode_detail ON hncode.DocNo = hncode_detail.DocNo
-    //             INNER JOIN
-    //                 itemstock ON hncode_detail.ItemStockID = itemstock.RowID
-    //             INNER JOIN
-    //                 item ON itemstock.ItemCode = item.itemcode
-    //             INNER JOIN
-    //                 itemtype ON item.itemtypeID = itemtype.ID
-    //             LEFT JOIN
-    //                 sudslog ON sudslog.UniCode = itemstock.UsageCode
-    //             LEFT JOIN
-    //                 `procedure` ON hncode.`procedure` = `procedure`.ID
-    //             LEFT JOIN
-    //                 doctor ON doctor.ID = hncode.doctor
-    //             WHERE
-    //                 DATE(hncode.DocDate) BETWEEN '$select_date_history_s' AND '$select_date_history_l'
-    //                 AND hncode.IsStatus = 1
-    //                 AND hncode.IsCancel = 0
-    //             ORDER BY
-    //                 hncode.ID ASC ";
-}else{
-    $query = " SELECT
-                    hncode.ID,
-                    item.itemname,
-                    itemstock.UsageCode,
-                    item.itemcode,
-                    FORMAT ( itemstock.expDate, 'dd-MM-yyyy' ) AS expDate ,
-                    FORMAT ( itemstock.CreateDate, 'dd-MM-yyyy' ) AS CreateDate ,
-                    hncode.HnCode,
-                    hncode_detail.LastSterileDetailID,
-                    departmentroom.departmentroomname,
-                    itemtype.TyeName,
-                    item.LimitUse,
-                    sudslog.UsedCount,
-                    itemstock.lotNo,
-                    itemstock.serielNo,
-                    [procedure].Procedure_EN AS Procedure_TH,
-                    FORMAT(hncode.ModifyDate , 'dd/MM/yyyy') AS date1,
-                    doctor.Doctor_Name
-                FROM
-                    hncode
-                    INNER JOIN departmentroom ON departmentroom.id = hncode.departmentroomid
-                    INNER JOIN hncode_detail ON hncode.DocNo = hncode_detail.DocNo
-                    INNER JOIN itemstock ON hncode_detail.ItemStockID = itemstock.RowID
-                    INNER JOIN item ON itemstock.ItemCode = item.itemcode 
-                    INNER JOIN itemtype ON item.itemtypeID = itemtype.ID
-                    LEFT JOIN sudslog ON sudslog.UniCode = itemstock.UsageCode 
-                    LEFT JOIN [procedure] ON hncode.[procedure] = [procedure].ID
-                    LEFT JOIN  doctor ON doctor.ID = hncode.doctor
-                WHERE
-                    CONVERT(DATE,hncode.DocDate)  BETWEEN  '$select_date_history_s'  AND '$select_date_history_l' 
-                    AND hncode.IsStatus = 1
-                    AND hncode.IsCancel = 0  
-                ORDER BY
                     hncode.ID ASC  ";
+
+// } else {
+//     $query = " SELECT
+//                     hncode.ID,
+//                     item.itemname,
+//                     itemstock.UsageCode,
+//                     item.itemcode,
+//                     FORMAT ( itemstock.expDate, 'dd-MM-yyyy' ) AS expDate ,
+//                     FORMAT ( itemstock.CreateDate, 'dd-MM-yyyy' ) AS CreateDate ,
+//                     hncode.HnCode,
+//                     hncode_detail.LastSterileDetailID,
+//                     departmentroom.departmentroomname,
+//                     itemtype.TyeName,
+//                     item.LimitUse,
+//                     sudslog.UsedCount,
+//                     itemstock.lotNo,
+//                     itemstock.serielNo,
+//                     [procedure].Procedure_EN AS Procedure_TH,
+//                     FORMAT(hncode.ModifyDate , 'dd/MM/yyyy') AS date1,
+//                     doctor.Doctor_Name
+//                 FROM
+//                     hncode
+//                     INNER JOIN departmentroom ON departmentroom.id = hncode.departmentroomid
+//                     INNER JOIN hncode_detail ON hncode.DocNo = hncode_detail.DocNo
+//                     INNER JOIN itemstock ON hncode_detail.ItemStockID = itemstock.RowID
+//                     INNER JOIN item ON itemstock.ItemCode = item.itemcode 
+//                     INNER JOIN itemtype ON item.itemtypeID = itemtype.ID
+//                     LEFT JOIN sudslog ON sudslog.UniCode = itemstock.UsageCode 
+//                     LEFT JOIN [procedure] ON hncode.[procedure] = [procedure].ID
+//                     LEFT JOIN  doctor ON doctor.ID = hncode.doctor
+//                 WHERE
+//                     CONVERT(DATE,hncode.DocDate)  BETWEEN  '$select_date_history_s'  AND '$select_date_history_l' 
+//                     AND hncode.IsStatus = 1
+//                     AND hncode.IsCancel = 0  
+//                 ORDER BY
+//                     hncode.ID ASC  ";
+// }
+
+
+$meQuery = $conn->prepare($query);
+$meQuery->execute();
+while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+
+    if ($row['HnCode'] == '') {
+        $row['HnCode'] = $row['number_box'];
+    }
+
+    $dataArray[] = [
+        'DocDate'              => $row['DocDate'],
+        'HnCode'               => $row['HnCode'],
+        'departmentroomname'   => $row['departmentroomname'],
+        'Doctor_Name'          => $row['Doctor_Name'],
+        'Procedures'           => $row['Procedures'],
+        'TyeName'              => $row['TyeName'],
+        'UsageCode'            => $row['UsageCode'],
+        'itemname'             => $row['itemname']
+    ];
+}
+
+
+$rowIndex = 7;
+$count_cnt = 1;
+
+foreach ($dataArray as $item) {
+    $sheet->setCellValue('A' . $rowIndex, (string)$count_cnt);
+    $sheet->setCellValue('B' . $rowIndex, (string)$item['DocDate']);
+    $sheet->setCellValue('C' . $rowIndex, (string)$item['HnCode']);
+    $sheet->setCellValue('D' . $rowIndex, (string)$item['departmentroomname']);
+    $sheet->setCellValue('E' . $rowIndex, (string)$item['Doctor_Name']);
+    $sheet->setCellValue('F' . $rowIndex, (string)$item['Procedures']);
+    $sheet->setCellValue('G' . $rowIndex, (string)$item['TyeName']);
+    $sheet->setCellValue('H' . $rowIndex, (string)$item['UsageCode']);
+    $sheet->setCellValue('I' . $rowIndex, (string)$item['itemname']);
+    $sheet->getRowDimension($rowIndex)->setRowHeight(30);
+    $rowIndex++;
+    $count_cnt++;
 }
 
 
 
 
+$sheet->getStyle('A6:I6')->applyFromArray([
+    'fill' => [
+        'fillType' => Fill::FILL_SOLID,
+        'startColor' => [
+            'argb' => 'FF643695'  // สีพื้นหลังในรูปแบบ ARGB (เช่น ม่วงอ่อน)
+        ],
+    ],
+    'font' => [
+        'color' => [
+            'argb' => 'FFFFFFFF' // สีตัวหนังสือ: สีขาว
+        ],
+    ],
+]);
 
-    $meQuery = $conn->prepare($query);
-    $meQuery->execute();
-    while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
-
-        if($row['UsageCode'] == null){
-            $row['UsageCode'] = $row['itemcode2'];
-            $row['itemname'] = $row['itemname2'];
-        }
-
-        $dataArray[] = [$row['UsageCode'], $row['itemname'], $row['lotNo'], $row['serielNo'], $row['ExpireDate'], $row['Qty'], $row['DocNo'], $row['date1'], $row['HnCode'], $row['departmentroomname']];
-    }
-    
-    
-    $row = 7;
-    $count_cnt = 1;
-    foreach ($dataArray as $item) {
-        $sheet->setCellValue('A' . $row, (string)$count_cnt);
-        $sheet->setCellValue('B' . $row, (string)$item[0]);
-        $sheet->setCellValue('C' . $row, (string)$item[1]);
-        $sheet->setCellValue('D' . $row, (string)$item[2]);
-        $sheet->setCellValue('E' . $row, (string)$item[3]);
-        $sheet->setCellValue('F' . $row, (string)$item[4]);
-        $sheet->setCellValue('G' . $row, (string)$item[5]);
-        $sheet->setCellValue('H' . $row, (string)$item[6]);
-        $sheet->setCellValue('I' . $row, (string)$item[7]);
-        $sheet->setCellValue('J' . $row, (string)$item[8]);
-        $sheet->setCellValue('K' . $row, (string)$item[9]);
-        $row++;
-        $count_cnt++;
-    }
-
-$sheet->getStyle('A6:K6')->getFont()->setSize(14)->setBold(true); // หัวตาราง
+$sheet->getStyle('A6:I6')->getFont()->setSize(14)->setBold(true); // หัวตาราง
 
 
 // --- จัดรูปแบบตาราง ---
@@ -267,11 +246,11 @@ $styleArray_Center = [
     ],
 ];
 
-$sheet->getStyle('A6:K6')->applyFromArray($styleArray);
-$sheet->getStyle('A6:K' . ($row - 1))->applyFromArray($styleArray);
+$sheet->getStyle('A6:I6')->applyFromArray($styleArray);
+$sheet->getStyle('A6:I' . ($rowIndex - 1))->applyFromArray($styleArray);
 // $sheet->getStyle('A6:K' . ($row - 1))->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-$sheet->getStyle('C7:C' . ($row - 1))->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
-$sheet->getStyle('A7:A' . ($row - 1))->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
+$sheet->getStyle('C7:C' . ($rowIndex - 1))->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
+$sheet->getStyle('A7:A' . ($rowIndex - 1))->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
 
 // $sheet->getStyle('A7:A' . ($row - 1))->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
 // $sheet->getStyle('B7:B' . ($row - 1))->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
