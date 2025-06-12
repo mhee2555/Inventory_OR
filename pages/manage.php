@@ -307,10 +307,32 @@
                                 <input type="text" class="form-control" id="input_passWord" autocomplete="off" placeholder="Password">
                             </div>
                             <div class="col-md-12 mt-3">
-                                <select  class="form-control" id="select_permission"></select>
+                                <select class="form-control" id="select_permission"></select>
                             </div>
                             <div class="col-md-12 mt-3" hidden>
                                 <input type="text" class="form-control" id="input_IDUser" autocomplete="off">
+                            </div>
+                            <div class="col-md-12 mt-3">
+
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label for="" style="color:black;" id="radio_admin">สิทธิ์</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="form-check-inline">
+                                            <label class="form-check-label" style="color:black;">
+                                                <input type="radio" class="form-check-input" name="radio_admin" id="radio_admin1" checked>Admin
+                                            </label>
+                                        </div>
+                                        <div class="form-check-inline">
+                                            <label class="form-check-label" style="color:black;">
+                                                <input type="radio" class="form-check-input" name="radio_admin" id="radio_admin2">User
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+
                             </div>
                             <div class="col-md-12 mt-3">
 

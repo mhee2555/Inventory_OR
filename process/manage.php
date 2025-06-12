@@ -488,6 +488,7 @@ function saveUser($conn)
     $select_permission = $_POST['select_permission'];
     $IsCancel = $_POST['IsCancel'];
     $input_IDUser = $_POST['input_IDUser'];
+    $IsAdmin_new = $_POST['IsAdmin'];
 
     $IsAdmin = 0;
 
@@ -514,11 +515,11 @@ function saveUser($conn)
 
     if($count_id == 0 ){
         if ($input_IDUser == "") {
-            $query = "INSERT INTO users ( EmpCode ,  UserName ,  Password ,  IsCancel , DeptID , display , permission) 
-            VALUES             ('$input_empcodeUser'  , '$input_userName'  , '$input_passWord'  , $IsCancel ,1  ,3 , '$select_permission') ";
+            $query = "INSERT INTO users ( EmpCode ,  UserName ,  Password ,  IsCancel , DeptID , display , permission, IsAdmin) 
+            VALUES             ('$input_empcodeUser'  , '$input_userName'  , '$input_passWord'  , $IsCancel ,1  ,3 , '$select_permission', '$IsAdmin_new') ";
 
             $query2 = "INSERT INTO employee ( EmpCode ,  FirstName ,  LastName   , DepID ,IsAdmin) 
-            VALUES             ('$input_empcodeUser'  , '$input_nameUser' , '$input_lastUser',1,1) ";
+            VALUES             ('$input_empcodeUser'  , '$input_nameUser' , '$input_lastUser',1,'$IsAdmin_new') ";
 
 
             $meQuery = $conn->prepare($query);
@@ -555,10 +556,10 @@ function saveUser($conn)
                 $emID = $rowE['ID'];
             }
 
-            $query = "UPDATE users SET  EmpCode = '$input_empcodeUser' , UserName = '$input_userName' , Password = '$input_passWord' , IsCancel = $IsCancel , permission = '$select_permission'
+            $query = "UPDATE users SET IsAdmin = $IsAdmin_new ,  EmpCode = '$input_empcodeUser' , UserName = '$input_userName' , Password = '$input_passWord' , IsCancel = $IsCancel , permission = '$select_permission'
                     WHERE ID = '$input_IDUser'  ";
 
-            $query2 = "UPDATE employee SET IsAdmin = $IsAdmin , EmpCode = '$input_empcodeUser' , FirstName = '$input_nameUser' , LastName = '$input_lastUser'
+            $query2 = "UPDATE employee SET IsAdmin = $IsAdmin_new , EmpCode = '$input_empcodeUser' , FirstName = '$input_nameUser' , LastName = '$input_lastUser'
             WHERE ID = '$emID'  ";
 
             $meQuery = $conn->prepare($query);
@@ -592,7 +593,8 @@ function feeddata_detailUser($conn, $db)
                     users.Password,
                     users.IsCancel,
                     users.DeptID ,
-                    users.permission
+                    users.permission,
+                    users.IsAdmin
                 FROM
                     users
                     INNER JOIN employee ON users.EmpCode = employee.EmpCode   ";

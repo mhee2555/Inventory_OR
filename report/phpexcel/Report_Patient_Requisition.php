@@ -84,20 +84,20 @@ if ($type_date == 3) {
 // --- ใส่โลโก้ ---
 
 
-$sheet->mergeCells('A1:A5');
+// $sheet->mergeCells('A1:A5');
 $drawing = new Drawing();
 $drawing->setName('Logo');
 $drawing->setPath('logo.png'); // เปลี่ยนเป็นไฟล์โลโก้ของคุณ
 $drawing->setCoordinates('A1');
-$drawing->setOffsetX(20);
-$drawing->setOffsetY(15);
+$drawing->setOffsetX(40);
+$drawing->setOffsetY(25);
 $drawing->setHeight(80);
 $drawing->setWorksheet($sheet);
 
 
 // --- ผสานเซลล์ ---
-$sheet->mergeCells('D1:E3'); // พิมพ์โดย poseMA
-$sheet->mergeCells('D4:E5'); // วันที่พิมพ์
+    // $sheet->mergeCells('D1:E3'); // พิมพ์โดย poseMA
+    // $sheet->mergeCells('D4:E5'); // วันที่พิมพ์
 // $sheet->mergeCells('B4:C4'); // เวลา
 // $sheet->mergeCells('A7:B7'); // หัวข้อ "SUDs"
 
@@ -105,10 +105,10 @@ $sheet->mergeCells('D4:E5'); // วันที่พิมพ์
 
 
 
-$sheet->setCellValue('D1', 'พิมพ์โดย '  . $_FirstName );
-$sheet->setCellValue('D4', 'วันที่พิมพ์ ' . date('d/m/Y') . ' ' . date('H:i:s'));
-$sheet->getStyle('D1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
-$sheet->getStyle('D4')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+$sheet->setCellValue('H4', 'พิมพ์โดย '  . $_FirstName );
+$sheet->setCellValue('H5', 'วันที่พิมพ์ ' . date('d/m/Y') . ' ' . date('H:i:s'));
+$sheet->getStyle('H4')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+$sheet->getStyle('H5')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
 
 
 

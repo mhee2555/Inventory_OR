@@ -30,7 +30,6 @@
 
 
                 <?php if ($RefDepID == "36DEN") { ?>
-
                     <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_surgery" hidden>
                         <a class="collapse-item" href="pages/surgery.php" style="color: black;font-size: 16px;" id="a_surgery">
                             <img id="ic_operation_room" style="width: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;">
@@ -154,7 +153,12 @@
                         </a>
                     </li>
                     
-
+                    <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_permission"  >
+                        <a class="collapse-item" href="pages/permission.php" style="color: black;font-size: 16px;" id="a_permission">
+                            <img id="ic_permission" style="width: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;">
+                            <label style="font-size: 17px;color: #667085;" class="" id="menu17">กำหนดสิทธิการเข้าถึง</label>
+                        </a>
+                    </li>
 
 
 

@@ -17,21 +17,21 @@ $sheet->setTitle("create_request");
 // --- ใส่โลโก้ ---
 
 
-$sheet->mergeCells('A1:A5');
+// $sheet->mergeCells('A1:A5');
 $drawing = new Drawing();
 $drawing->setName('Logo');
 $drawing->setPath('logo.png'); // เปลี่ยนเป็นไฟล์โลโก้ของคุณ
 $drawing->setCoordinates('A1');
-$drawing->setOffsetX(50);
-$drawing->setOffsetY(10);
+$drawing->setOffsetX(40);
+$drawing->setOffsetY(25);
 $drawing->setHeight(80);
 $drawing->setWorksheet($sheet);
 
 
 
 // --- ผสานเซลล์ ---
-$sheet->mergeCells('B1:C3'); // พิมพ์โดย poseMA
-$sheet->mergeCells('B4:C5'); // วันที่พิมพ์
+// $sheet->mergeCells('B1:C3'); // พิมพ์โดย poseMA
+// $sheet->mergeCells('B4:C5'); // วันที่พิมพ์
 // $sheet->mergeCells('B4:C4'); // เวลา
 
 
@@ -39,10 +39,10 @@ $sheet->mergeCells('B4:C5'); // วันที่พิมพ์
 // --- ใส่ข้อมูล ---
 
 
-$sheet->setCellValue('B1', 'พิมพ์โดย poseMA');
-$sheet->setCellValue('B4', 'วันที่พิมพ์ '.date('d/m/Y'). ' ' .date('H:i:s'));
-$sheet->getStyle('B1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
-$sheet->getStyle('B4')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+$sheet->setCellValue('I3', 'พิมพ์โดย poseMA');
+$sheet->setCellValue('I4', 'วันที่พิมพ์ '.date('d/m/Y'). ' ' .date('H:i:s'));
+$sheet->getStyle('I3')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+$sheet->getStyle('I4')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
 
 
 

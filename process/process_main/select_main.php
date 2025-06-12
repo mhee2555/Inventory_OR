@@ -33,9 +33,33 @@ if (!empty($_POST['FUNC_NAME'])) {
         set_deproom_proceduce($conn);
     } else if ($_POST['FUNC_NAME'] == 'select_permission') {
         select_permission($conn);
+    } else if ($_POST['FUNC_NAME'] == 'select_config_menu') {
+        select_config_menu($conn);
     }
 }
 
+function select_config_menu($conn)
+{
+    $return = array();
+    $selectedID = $_POST['selectedID'];
+
+
+    $query = " SELECT
+                    * 
+                FROM
+                    config_menu 
+                WHERE
+                    config_menu.userID = '$selectedID' ";
+
+    $meQuery = $conn->prepare($query);
+    $meQuery->execute();
+    while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+        $return[] = $row;
+    }
+    echo json_encode($return);
+    unset($conn);
+    die;
+}
 function select_permission($conn)
 {
     $return = array();
@@ -67,12 +91,15 @@ function set_users($conn)
                     employee.FirstName,
                     employee.LastName,
                     users.UserName,
-                    users.Password,
+                    users.`PASSWORD`,
                     users.IsCancel,
-                    users.DeptID 
+                    users.DeptID,
+                    permission.Permission,
+                    users.IsAdmin
                 FROM
                     users
-                    INNER JOIN employee ON users.EmpCode = employee.EmpCode   ";
+                    INNER JOIN employee ON users.EmpCode = employee.EmpCode
+                    INNER JOIN permission ON users.permission = permission.PmID  ";
 
     $meQuery = $conn->prepare($query);
     $meQuery->execute();

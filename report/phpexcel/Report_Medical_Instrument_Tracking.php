@@ -19,7 +19,7 @@ $sheet->setTitle("HNCODE");
 // --- ใส่โลโก้ ---
 
 
-$sheet->mergeCells('A1:D5');
+// $sheet->mergeCells('A1:D5');
 $drawing = new Drawing();
 $drawing->setName('Logo');
 $drawing->setPath('logo.png'); // เปลี่ยนเป็นไฟล์โลโก้ของคุณ
@@ -32,8 +32,8 @@ $drawing->setWorksheet($sheet);
 
 
 // --- ผสานเซลล์ ---
-$sheet->mergeCells('E1:K3'); // พิมพ์โดย poseMA
-$sheet->mergeCells('E4:K5'); // วันที่พิมพ์
+// $sheet->mergeCells('E1:K3'); // พิมพ์โดย poseMA
+// $sheet->mergeCells('E4:K5'); // วันที่พิมพ์
 // $sheet->mergeCells('B4:C4'); // เวลา
 
 
@@ -54,12 +54,12 @@ while ($row_user = $meQuery_user->fetch(PDO::FETCH_ASSOC)) {
     $_FirstName = $row_user['FirstName'];
 }
 
-$sheet->setCellValue('E1', 'พิมพ์โดย '. $_FirstName);
-$sheet->setCellValue('E4', 'วันที่พิมพ์ ' . date('d/m/Y') . ' ' . date('H:i:s'));
-$sheet->getStyle('E1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
-$sheet->getStyle('E4')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
-$sheet->getCell('E1')->getStyle()->getFont()->setBold(true);
-$sheet->getCell('E4')->getStyle()->getFont()->setBold(true);
+$sheet->setCellValue('I3', 'พิมพ์โดย '. $_FirstName);
+$sheet->setCellValue('I4', 'วันที่พิมพ์ ' . date('d/m/Y') . ' ' . date('H:i:s'));
+$sheet->getStyle('I3')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+$sheet->getStyle('I4')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+$sheet->getCell('I3')->getStyle()->getFont()->setBold(true);
+$sheet->getCell('I4')->getStyle()->getFont()->setBold(true);
 
 
 // --- หัวตาราง ---

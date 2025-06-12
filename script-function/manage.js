@@ -90,20 +90,18 @@ function click_main() {
       $("#select_procedure_routine").select2();
     }, 500);
 
-        $("#routine_id").val("");
+    $("#routine_id").val("");
 
-      $('#table_item_detail_request').DataTable().destroy();
-      $("#table_item_detail_request tbody").html("");
+    $("#table_item_detail_request").DataTable().destroy();
+    $("#table_item_detail_request tbody").html("");
   });
 
-
-
-    $("#select_doctor_routine").on("select2:select", function (e) {
-      if($("#select_doctor_routine").val() == "" ){
-        select_deproom();
-      }else{
+  $("#select_doctor_routine").on("select2:select", function (e) {
+    if ($("#select_doctor_routine").val() == "") {
+      select_deproom();
+    } else {
       set_deproom();
-      }
+    }
   });
   //   $("#select_procedure_routine").on("select2:select", function (e) {
   //     if($("#select_procedure_routine").val() == "" ){
@@ -113,17 +111,13 @@ function click_main() {
   //     }
   // });
 
-
-    $("#select_deproom_routine").on("select2:select", function (e) {
-      if($("#select_deproom_routine").val() == "" ){
-        select_procedure();
-      }else{
-       set_proceduce();
-      }
+  $("#select_deproom_routine").on("select2:select", function (e) {
+    if ($("#select_deproom_routine").val() == "") {
+      select_procedure();
+    } else {
+      set_proceduce();
+    }
   });
-
-
-
 }
 
 // $("#select_doctor_routine").on("select2:select", function (e) {
@@ -311,13 +305,12 @@ function saveDoctor() {
       IsActive: IsActive,
     },
     success: function (result) {
-
-      if( result == 'xxxx'){
+      if (result == "xxxx") {
         showDialogFailed("ชื่อแพทย์ซ้ำ");
-      }else{
-      showDialogSuccess(result);
-      feeddata_detailDoctor();
-      showDialogSuccess("บันทึกสำเร็จ");
+      } else {
+        showDialogSuccess(result);
+        feeddata_detailDoctor();
+        showDialogSuccess("บันทึกสำเร็จ");
       }
 
       $("#input_doctorth").val("");
@@ -489,15 +482,13 @@ function saveProcedure() {
       IsActive: IsActive,
     },
     success: function (result) {
-
-      if( result == 'xxxx'){
+      if (result == "xxxx") {
         showDialogFailed("ชื่อหัตถการซ้ำ");
-      }else{
+      } else {
         showDialogSuccess(result);
         feeddata_detailProcedure();
         showDialogSuccess("บันทึกสำเร็จ");
       }
-
 
       $("#input_Procedure").val("");
       $("#input_IDProcedure").val("");
@@ -693,7 +684,11 @@ function saveUser() {
   } else {
     var IsCancel = 1;
   }
-
+  if ($("#radio_admin1").is(":checked")) {
+    var IsAdmin = 1;
+  } else {
+    var IsAdmin = 0;
+  }
   $.ajax({
     url: "process/manage.php",
     type: "POST",
@@ -705,16 +700,16 @@ function saveUser() {
       input_userName: $("#input_userName").val(),
       input_passWord: $("#input_passWord").val(),
       select_permission: $("#select_permission").val(),
+      IsAdmin: IsAdmin,
       input_IDUser: $("#input_IDUser").val(),
       IsCancel: IsCancel,
     },
     success: function (result) {
-
-      if( result == '1'){
+      if (result == "1") {
         showDialogFailed("รหัสพนักงานซ้ำ");
-      }else if( result == '2'){
+      } else if (result == "2") {
         showDialogFailed("UserNameซ้ำ");
-      }else{
+      } else {
         showDialogSuccess(result);
         feeddata_detailUser();
         showDialogSuccess("บันทึกสำเร็จ");
@@ -737,7 +732,8 @@ function editUser(
   UserName,
   Password,
   IsCancel,
-  permission
+  permission,
+  IsAdmin
 ) {
   $("#input_empcodeUser").val(EmpCode);
   $("#input_nameUser").val(FirstName);
@@ -751,6 +747,11 @@ function editUser(
     $("#radio_statusUser1").prop("checked", true);
   } else {
     $("#radio_statusUser2").prop("checked", true);
+  }
+  if (IsAdmin == "1") {
+    $("#radio_admin1").prop("checked", true);
+  } else {
+    $("#radio_admin2").prop("checked", true);
   }
 }
 
@@ -788,7 +789,7 @@ $("#btn_clearUser").click(function () {
   $("#input_lastUser").val("");
   $("#input_userName").val("");
   $("#input_passWord").val("");
-  $("#select_permission").val('');
+  $("#select_permission").val("");
   $("#input_IDUser").val("");
 });
 function feeddata_detailUser() {
@@ -827,7 +828,13 @@ function feeddata_detailUser() {
                       <td class="text-center">
                       <button class="btn btn-outline-dark f18" onclick='editUser("${
                         value.ID
-                      }","${value.EmpCode}","${value.FirstName}","${ value.LastName}","${value.UserName}","${value.Password}","${value.IsCancel}","${value.permission}")'  > <i class="fa-regular fa-pen-to-square"></i> แก้ไข</button>
+                      }","${value.EmpCode}","${value.FirstName}","${
+            value.LastName
+          }","${value.UserName}","${value.Password}","${value.IsCancel}","${
+            value.permission
+          }","${
+            value.IsAdmin
+          }")'  > <i class="fa-regular fa-pen-to-square"></i> แก้ไข</button>
                        <button  class="btn btn-outline-danger f18" onclick='deleteUser(${
                          value.ID
                        },"${
@@ -954,10 +961,9 @@ function saveDeproom() {
       IsActive: IsActive,
     },
     success: function (result) {
-
-      if( result == 'xxxx'){
+      if (result == "xxxx") {
         showDialogFailed("ตัวย่อซ้ำ");
-      }else{
+      } else {
         showDialogSuccess(result);
         feeddata_detailDeproom();
         showDialogSuccess("บันทึกสำเร็จ");
@@ -2037,7 +2043,7 @@ function select_permission() {
     success: function (result) {
       var ObjData = JSON.parse(result);
       console.log(ObjData);
-      var option = `<option value="" selected>กรุณาเลือกสิทธิ์</option>`;
+      var option = `<option value="" selected>กรุณาเลือกสังกัด</option>`;
       if (!$.isEmptyObject(ObjData)) {
         $.each(ObjData, function (kay, value) {
           option += `<option value="${value.PmID}" >${value.Permission}</option>`;
@@ -2636,8 +2642,6 @@ function delete_request_byItem(ID) {
 
 // set_deproom();
 
-
-
 //   function set_proceduce() {
 //   $.ajax({
 //     url: "process/process_main/select_main.php",
@@ -2713,7 +2717,6 @@ function set_deproom_proceduce() {
   });
 }
 
-
 function set_proceduce() {
   $.ajax({
     url: "process/process_main/select_main.php",
@@ -2739,7 +2742,6 @@ function set_proceduce() {
 }
 
 function set_deproom() {
-
   var doctor_Array_xx = [];
   doctor_Array_xx.push($("#select_doctor_routine").val().toString());
   $.ajax({
