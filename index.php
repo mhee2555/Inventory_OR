@@ -672,8 +672,11 @@ if (!isset($_SESSION['UserName'])) {
                     $("#menu13").css('color', '#667085');
                     $("#menu14").css('color', '#667085');
                     $("#menu15").css('color', '#667085');
+                    $("#menu16").css('color', '#667085');
+                    $("#menu17").css('color', '#667085');
 
-
+                    $("#ic_permission").attr("src", "assets/img_project/2_icon/permission.png");
+                    $("#ic_set_hn").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
                     $("#ic_request_item").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
                     $("#ic_turnon_offdisplay_3").attr("src", "assets/img_project/2_icon/ic_report.png");
                     $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
@@ -730,8 +733,6 @@ if (!isset($_SESSION['UserName'])) {
                 $("#menu15").css('color', '#667085');
                 $("#menu16").css('color', '#667085');
                 $("#menu17").css('color', '#667085');
-
-
 
                 $("#ic_permission").attr("src", "assets/img_project/2_icon/permission.png");
                 $("#ic_set_hn").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");

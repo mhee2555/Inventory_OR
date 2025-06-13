@@ -14,7 +14,7 @@ use PhpOffice\PhpSpreadsheet\Style\Fill;
 $spreadsheet = new Spreadsheet();
 $sheet = $spreadsheet->getActiveSheet();
 
-$sheet->setTitle("RFID");
+$sheet->setTitle("สรุปค่าใช้จ่าย");
 
 $type_date = $_GET['type_date'];
 $date1 = $_GET['date1'];
@@ -221,6 +221,7 @@ $sheet->getStyle('A8')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENT
 $sheet->getStyle('B8:E' . ($rowIndex - 1))->applyFromArray($styleArray_Center);
 
 $sheet->getStyle('A8')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+$sheet->getStyle('B9:B' . ($rowIndex - 1))->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
 
 
 

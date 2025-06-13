@@ -107,7 +107,11 @@ function show_detail_history() {
           }
 
           var hidden = "";
-          if (value.isStatus == "1" || value.isStatus == "2" || value.isStatus == "3") {
+          if (
+            value.isStatus == "1" ||
+            value.isStatus == "2" ||
+            value.isStatus == "3"
+          ) {
             var hidden = "hidden";
           }
 
@@ -385,6 +389,43 @@ $("#btn_save_hn_manual").click(function () {
     }
   });
 });
+
+function DeleteDoctor(selectedValue) {
+  var index = doctor_Array.indexOf(String(selectedValue));
+  console.log(index);
+
+  if (index !== -1) {
+    doctor_Array.splice(index, 1);
+  }
+
+  console.log(doctor_Array);
+  $(".div_" + selectedValue).attr("hidden", true);
+
+  // if($("#select_deproom_request").val() == ""){
+  set_deproom();
+  select_doctor();
+  select_procedure();
+
+  $(".clear_procedure").attr("hidden", true);
+
+  $("#btn_routine").attr("disabled", false);
+  procedure_id_Array = [];
+  // }
+  show_detail_history();
+}
+
+function Deletprocedure(selectedValue) {
+  var index = procedure_id_Array.indexOf(String(selectedValue));
+  console.log(index);
+
+  if (index !== -1) {
+    procedure_id_Array.splice(index, 1);
+  }
+
+  $("#btn_routine").attr("disabled", false);
+  console.log(procedure_id_Array);
+  $(".div_" + selectedValue).attr("hidden", true);
+}
 
 function set_doctor(select_deproom_request) {
   $.ajax({

@@ -155,15 +155,22 @@ $meQuery = $conn->prepare($query);
 $meQuery->execute();
 
 while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
-    $dataArray[] = [
-        'itemcode2'   => $row['itemcode2'],
-        'itemname'    => $row['itemname'],
-        'UsageCode'   => $row['UsageCode'],
-        'Issue_Name'  => $row['Issue_Name'],
-        'ModifyDate'  => $row['ModifyDate'],
-        'HnCode'      => $row['HnCode'],
-        'STATUS'      => $row['STATUS']
-    ];
+
+    if($row['users_ID'] != '251'  && $row['users_ID'] != '177')
+    {
+        $dataArray[] = [
+            'itemcode2'   => $row['itemcode2'],
+            'itemname'    => $row['itemname'],
+            'UsageCode'   => $row['UsageCode'],
+            'Issue_Name'  => $row['Issue_Name'],
+            'ModifyDate'  => $row['ModifyDate'],
+            'HnCode'      => $row['HnCode'],
+            'STATUS'      => $row['STATUS']
+        ];
+    }
+
+    
+
 }
 
 $rowIndex = 9;
@@ -231,6 +238,7 @@ $sheet->getStyle('A8')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENT
 $sheet->getStyle('B8:H' . ($rowIndex - 1))->applyFromArray($styleArray_Center);
 
 $sheet->getStyle('A8')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+$sheet->getStyle('C9:C' . ($rowIndex - 1))->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
 
 
 
@@ -270,7 +278,7 @@ $sheet->getColumnDimension('H')->setWidth(30); // คอลัมน์ B ปร
 
 
 $sheet = $spreadsheet->createSheet();
-$sheet->setTitle("lotincabinet");
+$sheet->setTitle("Weighing");
 
 
 $type_date = $_GET['type_date'];
@@ -324,33 +332,31 @@ if ($type_date == 3) {
 }
 // --- ใส่โลโก้ ---
 
-
-$sheet->mergeCells('A1:A5');
+// $sheet->mergeCells('A1:A5');
 $drawing = new Drawing();
 $drawing->setName('Logo');
 $drawing->setPath('logo.png'); // เปลี่ยนเป็นไฟล์โลโก้ของคุณ
 $drawing->setCoordinates('A1');
-$drawing->setOffsetX(20);
-$drawing->setOffsetY(15);
+$drawing->setOffsetX(40);
+$drawing->setOffsetY(25);
 $drawing->setHeight(80);
 $drawing->setWorksheet($sheet);
 
 
 // --- ผสานเซลล์ ---
-$sheet->mergeCells('D1:E3'); // พิมพ์โดย poseMA
-$sheet->mergeCells('D4:E5'); // วันที่พิมพ์
+    // $sheet->mergeCells('D1:E3'); // พิมพ์โดย poseMA
+    // $sheet->mergeCells('D4:E5'); // วันที่พิมพ์
 // $sheet->mergeCells('B4:C4'); // เวลา
 // $sheet->mergeCells('A7:B7'); // หัวข้อ "SUDs"
 
 
 
-// --- ใส่ข้อมูล ---
 
 
-$sheet->setCellValue('D1', 'พิมพ์โดย '. $_FirstName);
-$sheet->setCellValue('D4', 'วันที่พิมพ์ ' . date('d/m/Y') . ' ' . date('H:i:s'));
-$sheet->getStyle('D1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
-$sheet->getStyle('D4')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+$sheet->setCellValue('F4', 'พิมพ์โดย '  . $_FirstName );
+$sheet->setCellValue('F5', 'วันที่พิมพ์ ' . date('d/m/Y') . ' ' . date('H:i:s'));
+$sheet->getStyle('F4')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+$sheet->getStyle('F5')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
 
 
 
@@ -404,6 +410,7 @@ foreach ($dataArray as $item) {
     $sheet->setCellValue('D' . $rowIndex, (string)$item['Issue_Name']);
     $sheet->setCellValue('E' . $rowIndex, (string)$item['ModifyDate']);
     $sheet->setCellValue('F' . $rowIndex, (string)$item['Qty']);
+
     $sheet->getRowDimension($rowIndex)->setRowHeight(30);
     $rowIndex++;
     $count++;
@@ -457,6 +464,7 @@ $sheet->getStyle('A8')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENT
 $sheet->getStyle('B8:F' . ($rowIndex - 1))->applyFromArray($styleArray_Center);
 
 $sheet->getStyle('A8')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+$sheet->getStyle('C9:C' . ($rowIndex - 1))->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
 
 
 

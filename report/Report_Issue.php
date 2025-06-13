@@ -81,6 +81,39 @@ class MYPDF extends TCPDF
 
             $image_file = "images/logo1.png";
             $this->Image($image_file, 10, 5, 10, 15, 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);
+
+
+
+
+            $DocNo = $_GET['DocNo'];
+            // $pageHeight = $this->getPageHeight();
+            $x = 160; // คงที่ตามที่คุณอยากได้
+            $y = 30;
+
+            $style = array(
+                'border' => true,
+                'vpadding' => 'auto',
+                'hpadding' => 'auto',
+                'fgcolor' => array(0, 0, 0),
+                'bgcolor' => false, //array(255,255,255)
+                'module_width' => 1, // width of a single module in points
+                'module_height' => 1 // height of a single module in points
+            );
+            // $url = 'http://10.11.9.54/Inventory_OR/pages/confirm_pay.php?doc=' . urlencode($DocNo); // หรือ link อะไรก็ได้
+            $url = 'http://192.168.2.101:8080/Inventory_OR/pages/confirm_pay.php?doc=' . urlencode($DocNo); // หรือ link อะไรก็ได้
+
+
+            $this->write2DBarcode($url, 'QRCODE,L', $x, $y, 80, 30, $style, 'N');
+
+
+            // ข้อความที่ต้องการ
+            $text = 'สแกนเพื่อยืนยันรับอุปกรณ์ไปใช้กับคนไข้';
+
+            // เลื่อน cursor ไปที่ตำแหน่ง
+            $this->SetXY($x, 60); // ขยับขึ้นจาก QR ประมาณ 8 หน่วย (เผื่อความสวย)
+            $this->SetFont('db_helvethaica_x', 'i', 12);
+            // วาด Cell ขนาดเท่าความกว้างของ QR แล้วจัดกลาง
+            $this->Cell(35, 5, $text, 0, 1, 'C');
         }
     }
     // Page footer
@@ -94,39 +127,11 @@ class MYPDF extends TCPDF
 
 
         if ($this->last_page_flag) {
-            $pageHeight = $this->getPageHeight();
-            $x = 160; // คงที่ตามที่คุณอยากได้
-            $y = $pageHeight - 45; // 40 คือความสูงของ QR + ขอบล่างเหลือเผื่อไว้
-    
-            $style = array(
-                'border' => true,
-                'vpadding' => 'auto',
-                'hpadding' => 'auto',
-                'fgcolor' => array(0, 0, 0),
-                'bgcolor' => false, //array(255,255,255)
-                'module_width' => 1, // width of a single module in points
-                'module_height' => 1 // height of a single module in points
-            );
-            // $url = 'http://10.11.9.54/Inventory_OR/pages/confirm_pay.php?doc=' . urlencode($DocNo); // หรือ link อะไรก็ได้
-             $url = 'http://192.168.2.101:8080/Inventory_OR/pages/confirm_pay.php?doc=' . urlencode($DocNo); // หรือ link อะไรก็ได้
-
-            
-            $this->write2DBarcode($url, 'QRCODE,L', $x, $y, 80, 30, $style, 'N');
-    
-    
-                    // ข้อความที่ต้องการ
-                $text = 'สแกนเพื่อยืนยันรับอุปกรณ์ไปใช้กับคนไข้';
-    
-                // เลื่อน cursor ไปที่ตำแหน่ง
-                $this->SetXY($x, $y - 8); // ขยับขึ้นจาก QR ประมาณ 8 หน่วย (เผื่อความสวย)
-    
-                // วาด Cell ขนาดเท่าความกว้างของ QR แล้วจัดกลาง
-                $this->Cell(35, 5, $text, 0, 1, 'C');
         }
 
 
 
-            $this->SetY(-15);
+        $this->SetY(-15);
 
         $this->Cell(190, 10,  "หน้า" . $this->getAliasNumPage() . '/' . $this->getAliasNbPages(), 0, 0, 'R');
     }
@@ -210,7 +215,7 @@ while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
     $_Doctor_Name = $row['Doctor_Name'];
     $_Doctor_Code = $row['Doctor_Code'];
 
-    if($_hn_record_id == ''){
+    if ($_hn_record_id == '') {
         $_hn_record_id = $number_box;
     }
 
@@ -229,7 +234,7 @@ while ($row_select = $meQuery_select->fetch(PDO::FETCH_ASSOC)) {
 
 
 $pdf->Cell(60, 5,  "เลข HN Code : " . $_hn_record_id, 0, 0, 'L');
-$pdf->Cell(50, 5,  "ชื่อ : - " , 0, 1, 'C');
+$pdf->Cell(50, 5,  "ชื่อ : - ", 0, 1, 'C');
 
 $pdf->Cell(130, 5,  "วันที่เข้ารับบริการ : " . $_serviceDate, 0, 1, 'L');
 $pdf->Cell(130, 5,  "เวลาเข้ารับบริการ : " . $_serviceTime, 0, 1, 'L');
@@ -270,7 +275,7 @@ if ($checkloopDoctor == 'loop') {
         }
 
 
-        $pdf->Cell(50, 5, ($key + 1). ". ". $_Doctor_Name, 0, 1, 'L');
+        $pdf->Cell(50, 5, ($key + 1) . ". " . $_Doctor_Name, 0, 1, 'L');
     }
 } else {
     $pdf->Cell(50, 5,  "1. " . $_Doctor_Name, 0, 1, 'L');
@@ -366,7 +371,7 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
         'border' => false,
         'hpadding' => 0,
         'vpadding' => 0,
-        'fgcolor' => array(0,0,0),
+        'fgcolor' => array(0, 0, 0),
         'bgcolor' => false,
         'text' => true,
         'font' => 'helvetica',
@@ -382,23 +387,30 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
     // $itemcode = strtoupper(preg_replace('/[^A-Z0-9 \-.\$\/\+\%]/', '', $Result_Detail['itemcode2']));
 
     $params = $pdf->serializeTCPDFtagParameters(array(
-        $Result_Detail['itemcode2'], 'C128', '', '', 50, 10, 0.4,
+        $Result_Detail['itemcode2'],
+        'C128',
+        '',
+        '',
+        50,
+        10,
+        0.4,
         array(
             'position' => 'S',
             'border' => false,
             'padding' => 0,
-            'fgcolor' => array(0,0,0),
-            'bgcolor' => array(255,255,255),
+            'fgcolor' => array(0, 0, 0),
+            'bgcolor' => array(255, 255, 255),
             'text' => true,
             'font' => 'thsarabunnew',  // ถ้าใช้ข้อความภาษาไทยประกอบ
             'fontsize' => 10,
             'stretchtext' => 1
-        ), 'N'
+        ),
+        'N'
     ));
 
     // $params = $pdf->serializeTCPDFtagParameters(array($itemcode, 'C128', '', '', 50, 10, 0.4, array('position' => 'S', 'border' => false, 'padding' => 0, 'fgcolor' => array(0, 0, 0), 'bgcolor' => array(255, 255, 255), 'text' => true, 'font' => 'helvetica', 'fontsize' => 8, 'stretchtext' => 1), 'N'));
 
-    if($Result_Detail['cnt_pay'] > 0){
+    if ($Result_Detail['cnt_pay'] > 0) {
         $html .= '<tr nobr="true" style="font-size:18px;height:30px;">';
         $html .=   '<td width="12 %" align="center" style="line-height:40px;vertical-align: middle;"> ' . $Result_Detail['itemcode2'] . '</td>';
         $html .=   '<td width="30 %" align="center" style="vertical-align: bottom; padding: 0px;"><tcpdf method="write1DBarcode" params="' . $params . '" /></td>';
@@ -408,8 +420,6 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
         $html .=  '</tr>';
         $count++;
     }
-
-
 }
 
 

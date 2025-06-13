@@ -3,6 +3,7 @@ require 'vendor/autoload.php';
 
 require('../../config/db.php');
 require('../../connect/connect.php');
+require('../Class.php');
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -34,15 +35,46 @@ $drawing->setWorksheet($sheet);
 // $sheet->mergeCells('B4:C5'); // วันที่พิมพ์
 // $sheet->mergeCells('B4:C4'); // เวลา
 
-
+$sheet->mergeCells('B1:C3'); // พิมพ์โดย poseMA
+$sheet->mergeCells('B4:C5'); // วันที่พิมพ์
+$sheet->mergeCells('A6:C6'); // เวลา
+$sheet->mergeCells('A7:B7'); // หัวข้อ "SUDs"
 
 // --- ใส่ข้อมูล ---
 
 
-$sheet->setCellValue('I3', 'พิมพ์โดย poseMA');
-$sheet->setCellValue('I4', 'วันที่พิมพ์ '.date('d/m/Y'). ' ' .date('H:i:s'));
-$sheet->getStyle('I3')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
-$sheet->getStyle('I4')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+$select_date_history_s = $_GET['select_date_history_s'];
+$select_date_history_l = $_GET['select_date_history_l'];
+// --- ใส่ข้อมูล ---
+$datetime = new DatetimeTH();
+
+$select_date_history_s_SHOW = explode("-", $select_date_history_s);
+$select_date_history_l_SHOW = explode("-", $select_date_history_l);
+
+$text_date = "วันที่ : " . $select_date_history_s_SHOW[0] . " " . $datetime->getTHmonthFromnum($select_date_history_s_SHOW[1]) . " " . " พ.ศ." . " " . ($select_date_history_s_SHOW[2] + 543) . " ถึง " .  $select_date_history_l_SHOW[0] . " " . $datetime->getTHmonthFromnum($select_date_history_l_SHOW[1]) . " " . " พ.ศ." . " " . ($select_date_history_l_SHOW[2] + 543);
+
+$Userid = $_GET['Userid'];
+
+$_FirstName = "";
+$user = "SELECT
+	employee.FirstName 
+FROM
+	users
+	INNER JOIN employee ON users.EmpCode = employee.EmpCode
+WHERE users.ID = '$Userid' ";
+$meQuery_user = $conn->prepare($user);
+$meQuery_user->execute();
+while ($row_user = $meQuery_user->fetch(PDO::FETCH_ASSOC)) {
+    $_FirstName = $row_user['FirstName'];
+}
+
+
+$sheet->setCellValue('B1', 'พิมพ์โดย '. $_FirstName);
+$sheet->setCellValue('B4', 'วันที่พิมพ์ '.date('d/m/Y'). ' ' .date('H:i:s'));
+$sheet->setCellValue('A6', $text_date);
+
+$sheet->getStyle('B1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+$sheet->getStyle('B4')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
 
 
 
@@ -50,8 +82,7 @@ $sheet->getStyle('I4')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGH
 $sheet->setCellValue('A8', 'ชื่อเครื่องมือ');
 $sheet->setCellValue('B8', 'จำนวน');
 
-$select_date_history_s = $_GET['select_date_history_s'];
-$select_date_history_l = $_GET['select_date_history_l'];
+
 
 
 $select_date_history_s = explode("-", $select_date_history_s);

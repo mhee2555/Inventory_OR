@@ -1,5 +1,7 @@
 var departmentroomname = "";
 var UserName = "";
+var Userid = "";
+
 var procedure_id_Array = [];
 var doctor_Array = [];
 
@@ -1209,7 +1211,7 @@ $("#btn_show_report").click(function () {
     $("#select_date_history_s").val() +
     "&select_date_history_l=" +
     $("#select_date_history_l").val();
-  window.open("report/phpexcel/Report_Create_Order_HN.php" + option, "_blank");
+  window.open("report/phpexcel/Report_Create_Order_HN.php" + option+"&Userid=" + Userid, "_blank");
 });
 
 function show_Report(DocNo) {
@@ -1565,6 +1567,7 @@ function session() {
       deproom = ObjData.deproom;
       RefDepID = ObjData.RefDepID;
       Permission_name = ObjData.Permission_name;
+      Userid = ObjData.Userid;
 
       $("#input_Deproom_Main").val(Permission_name);
       $("#input_Name_Main").val(UserName);

@@ -199,12 +199,13 @@ $sheet->getStyle('A8')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENT
 $sheet->getStyle('A8:D' . ($rowIndex - 1))->applyFromArray($styleArray_Center);
 
 $sheet->getStyle('A8')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+$sheet->getStyle('C9:C' . ($rowIndex - 1))->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
 
 
 
 // $sheet->getStyle('A1')->getFont()->setSize(20); // หัวข้อใหญ่
 // $sheet->getColumnDimension('A')->setWidth(40); // คอลัมน์ A กว้างขึ้น
-$sheet->getColumnDimension('A')->setWidth(30); // คอลัมน์ B ปรับอัตโนมัติ
+$sheet->getColumnDimension('A')->setWidth(10); // คอลัมน์ B ปรับอัตโนมัติ
 $sheet->getColumnDimension('B')->setWidth(30); // คอลัมน์ B ปรับอัตโนมัติ
 $sheet->getColumnDimension('C')->setWidth(30); // คอลัมน์ B ปรับอัตโนมัติ
 $sheet->getColumnDimension('D')->setWidth(30); // คอลัมน์ B ปรับอัตโนมัติ

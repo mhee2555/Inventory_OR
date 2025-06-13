@@ -4,6 +4,7 @@ require 'vendor/autoload.php';
 
 require('../../config/db.php');
 require('../../connect/connect.php');
+require('../Class.php');
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -54,12 +55,29 @@ while ($row_user = $meQuery_user->fetch(PDO::FETCH_ASSOC)) {
     $_FirstName = $row_user['FirstName'];
 }
 
+
+$select_date_history_s = $_GET['select_SDate'];
+$select_date_history_l = $_GET['select_EDate'];
+// --- ใส่ข้อมูล ---
+$datetime = new DatetimeTH();
+
+$select_date_history_s_SHOW = explode("-", $select_date_history_s);
+$select_date_history_l_SHOW = explode("-", $select_date_history_l);
+
+$text_date = "วันที่ : " . $select_date_history_s_SHOW[0] . " " . $datetime->getTHmonthFromnum($select_date_history_s_SHOW[1]) . " " . " พ.ศ." . " " . ($select_date_history_s_SHOW[2] + 543) . " ถึง " .  $select_date_history_l_SHOW[0] . " " . $datetime->getTHmonthFromnum($select_date_history_l_SHOW[1]) . " " . " พ.ศ." . " " . ($select_date_history_l_SHOW[2] + 543);
+
+
+
+
 $sheet->setCellValue('I3', 'พิมพ์โดย '. $_FirstName);
-$sheet->setCellValue('I4', 'วันที่พิมพ์ ' . date('d/m/Y') . ' ' . date('H:i:s'));
+$sheet->setCellValue('I4', $text_date);
+$sheet->setCellValue('I5', 'วันที่พิมพ์ ' . date('d/m/Y') . ' ' . date('H:i:s'));
 $sheet->getStyle('I3')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
 $sheet->getStyle('I4')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+$sheet->getStyle('I5')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
 $sheet->getCell('I3')->getStyle()->getFont()->setBold(true);
 $sheet->getCell('I4')->getStyle()->getFont()->setBold(true);
+$sheet->getCell('I5')->getStyle()->getFont()->setBold(true);
 
 
 // --- หัวตาราง ---
@@ -74,15 +92,7 @@ $sheet->setCellValue('H6', 'รหัสรายการ');
 $sheet->setCellValue('I6', 'อุปกรณ์');
 
 
-$sheet->getColumnDimension('A')->setAutoSize(true);
-$sheet->getColumnDimension('B')->setAutoSize(true);
-$sheet->getColumnDimension('C')->setAutoSize(true);
-$sheet->getColumnDimension('D')->setAutoSize(true);
-$sheet->getColumnDimension('E')->setWidth(45);
-$sheet->getColumnDimension('F')->setAutoSize(true);
-$sheet->getColumnDimension('G')->setAutoSize(true);
-$sheet->getColumnDimension('H')->setAutoSize(true);
-$sheet->getColumnDimension('I')->setAutoSize(true);
+
 
 $select_date_history_s = $_GET['select_SDate'];
 $select_date_history_l = $_GET['select_EDate'];
@@ -248,9 +258,24 @@ $styleArray_Center = [
 
 $sheet->getStyle('A6:I6')->applyFromArray($styleArray);
 $sheet->getStyle('A6:I' . ($rowIndex - 1))->applyFromArray($styleArray);
-// $sheet->getStyle('A6:K' . ($row - 1))->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-$sheet->getStyle('C7:C' . ($rowIndex - 1))->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
-$sheet->getStyle('A7:A' . ($rowIndex - 1))->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
+$sheet->getStyle('A6:I' . ($rowIndex - 1))->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+$sheet->getStyle('A7:H' . ($rowIndex - 1))->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+// $sheet->getStyle('D7:D' . ($rowIndex - 1))->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
+// $sheet->getStyle('I7:I' . ($rowIndex - 1))->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
+// $sheet->getStyle('F7:F' . ($rowIndex - 1))->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
+$sheet->getStyle('C7:I' . ($rowIndex - 1))->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
+
+
+$sheet->getColumnDimension('A')->setAutoSize(true);
+$sheet->getColumnDimension('B')->setAutoSize(true);
+$sheet->getColumnDimension('C')->setAutoSize(true);
+$sheet->getColumnDimension('D')->setAutoSize(true);
+$sheet->getColumnDimension('E')->setWidth(30);
+$sheet->getColumnDimension('F')->setAutoSize(true);
+$sheet->getColumnDimension('G')->setAutoSize(true);
+$sheet->getColumnDimension('H')->setAutoSize(true);
+$sheet->getColumnDimension('I')->setAutoSize(true);
+
 
 // $sheet->getStyle('A7:A' . ($row - 1))->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
 // $sheet->getStyle('B7:B' . ($row - 1))->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
