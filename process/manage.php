@@ -117,7 +117,6 @@ function select_edit_routine($conn)
         while ($row_doctor = $meQuery2->fetch(PDO::FETCH_ASSOC)) {
             $return['doctor'][] = $row_doctor;
         }
-
     }
 
     $query2 = "SELECT
@@ -141,8 +140,6 @@ function select_edit_routine($conn)
         while ($row_proceduce = $meQuery2->fetch(PDO::FETCH_ASSOC)) {
             $return['proceduce'][] = $row_proceduce;
         }
-
-        
     }
 
     echo json_encode($return);
@@ -173,10 +170,10 @@ function show_detail_routine($conn, $db)
     $input_search_routine = $_POST['input_search_routine'];
 
     $where = '';
-    if($input_search_routine != ""){
+    if ($input_search_routine != "") {
         $where = " WHERE doctor.Doctor_Name LIKE '%$input_search_routine%' OR  `procedure`.Procedure_TH LIKE '%$input_search_routine%' OR  departmentroom.departmentroomname LIKE '%$input_search_routine%'  ";
     }
-    
+
     $query = "SELECT
                     routine.id,
                     doctor.Doctor_Name,
@@ -201,7 +198,8 @@ function show_detail_routine($conn, $db)
     die;
 }
 
-function show_detail_request_byDocNo_change($conn, $db){
+function show_detail_request_byDocNo_change($conn, $db)
+{
     $return = array();
     $DepID = $_SESSION['DepID'];
     $select_deproom_routine = $_POST['select_deproom_routine'];
@@ -395,20 +393,20 @@ function saveDeproom($conn)
 
     $count_id = 0;
 
-        if ($input_IDDeproom == "") {
-            $check_d = "    SELECT id 
+    if ($input_IDDeproom == "") {
+        $check_d = "    SELECT id 
                             FROM   departmentroom 
                             WHERE departmentroomname_sub = '$input_DeproomName_sub' ";
-                        $meQuery_d = $conn->prepare($check_d);
-                        $meQuery_d->execute();
-                        while ($row_d = $meQuery_d->fetch(PDO::FETCH_ASSOC)) {
-                            $count_id ++;
-                        }
+        $meQuery_d = $conn->prepare($check_d);
+        $meQuery_d->execute();
+        while ($row_d = $meQuery_d->fetch(PDO::FETCH_ASSOC)) {
+            $count_id++;
         }
+    }
 
 
 
-    if($count_id == 0){
+    if ($count_id == 0) {
         if ($input_IDDeproom == "") {
             $query = "INSERT INTO departmentroom ( departmentroomname ,  floor_id ,  IsActive  ,  departmentroomname_EN ,  IsMainroom , departmentroomname_sub  ) 
             VALUES             ('$input_DeproomNameTH'  , '$input_DeproomFloor'  , $IsActive , '$input_DeproomNameEN'  , 0 , '$input_DeproomName_sub') ";
@@ -422,14 +420,11 @@ function saveDeproom($conn)
         echo "insert success";
         unset($conn);
         die;
-    }else{
+    } else {
         echo "xxxx";
         unset($conn);
         die;
     }
-
-
-
 }
 
 
@@ -513,13 +508,15 @@ function saveUser($conn)
         }
     }
 
-    if($count_id == 0 ){
+    if ($count_id == 0) {
         if ($input_IDUser == "") {
             $query = "INSERT INTO users ( EmpCode ,  UserName ,  Password ,  IsCancel , DeptID , display , permission, IsAdmin) 
             VALUES             ('$input_empcodeUser'  , '$input_userName'  , '$input_passWord'  , $IsCancel ,1  ,3 , '$select_permission', '$IsAdmin_new') ";
 
             $query2 = "INSERT INTO employee ( EmpCode ,  FirstName ,  LastName   , DepID ,IsAdmin) 
             VALUES             ('$input_empcodeUser'  , '$input_nameUser' , '$input_lastUser',1,'$IsAdmin_new') ";
+
+
 
 
             $meQuery = $conn->prepare($query);
@@ -538,6 +535,24 @@ function saveUser($conn)
             while ($rowE = $meQueryE->fetch(PDO::FETCH_ASSOC)) {
                 $_ID = $rowE['ID'];
             }
+            
+            if($IsAdmin_new == 1){
+                $insertSql = "INSERT INTO config_menu (userID,main,recieve_stock,create_request,request_item,set_hn,pay,hn,movement,manage,report,permission) 
+                VALUES (:userID,1,1,1,1,1,1,1,1,1,1,1)";
+                $insertStmt = $conn->prepare($insertSql);
+                $insertStmt->bindParam(':userID', $_ID);
+                $insertStmt->execute();
+            }else{
+                $insertSql = "INSERT INTO config_menu (userID,main,recieve_stock,create_request,request_item,set_hn,pay,hn,movement,manage,report,permission) 
+                VALUES (:userID,1,1,1,1,1,1,1,1,0,1,0)";
+                $insertStmt = $conn->prepare($insertSql);
+                $insertStmt->bindParam(':userID', $_ID);
+                $insertStmt->execute();
+            }
+
+
+
+
 
             $query3 = "INSERT INTO user_cabinet ( user_id ) 
             VALUES             ('$_ID' ) ";
@@ -570,13 +585,11 @@ function saveUser($conn)
         echo "insert success";
         unset($conn);
         die;
-    }else{
+    } else {
         echo $count_id;
         unset($conn);
         die;
     }
-
-
 }
 
 function feeddata_detailUser($conn, $db)
@@ -637,11 +650,11 @@ function saveDoctor($conn)
         $meQuery_d = $conn->prepare($check_d);
         $meQuery_d->execute();
         while ($row_d = $meQuery_d->fetch(PDO::FETCH_ASSOC)) {
-            $count_id ++;
+            $count_id++;
         }
     }
-    
-    if($count_id == 0){
+
+    if ($count_id == 0) {
         if ($input_IDdoctor == "") {
             $query = "INSERT INTO `doctor` ( Doctor_Name , IsCancel) 
             VALUES             ('$input_doctorth' , $IsActive ) ";
@@ -657,15 +670,11 @@ function saveDoctor($conn)
         echo "insert success";
         unset($conn);
         die;
-    }else{
+    } else {
         echo "xxxx";
         unset($conn);
         die;
     }
-
-
-
-
 }
 
 function feeddata_detailDoctor($conn, $db)
@@ -718,12 +727,12 @@ function saveProcedure($conn)
         $meQuery_d = $conn->prepare($check_d);
         $meQuery_d->execute();
         while ($row_d = $meQuery_d->fetch(PDO::FETCH_ASSOC)) {
-            $count_id ++;
+            $count_id++;
         }
     }
 
 
-    if($count_id == 0){
+    if ($count_id == 0) {
         if ($input_IDProcedure == "") {
             $stmt = $conn->prepare("INSERT INTO `procedure` (Procedure_TH, Procedure_EN, IsActive) VALUES (?, ?, ?)");
             $stmt->execute([$input_Procedure, $input_Procedure, $IsActive]);
@@ -734,16 +743,11 @@ function saveProcedure($conn)
         echo "insert success";
         unset($conn);
         die;
-    }else{
+    } else {
         echo "xxxx";
         unset($conn);
         die;
     }
-
-
-
-
-
 }
 
 function feeddata_detailProcedure($conn, $db)

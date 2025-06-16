@@ -368,7 +368,7 @@ $query = "SELECT
                 deproom.DocNo = '$DocNo' 
                 AND deproom.IsCancel = 0 
                 AND deproomdetail.IsCancel = 0 
-                -- AND deproomdetail.IsStart = 1
+                AND deproomdetail.IsStart = 1
                 GROUP BY
                 item.itemname,
                 item.itemcode,

@@ -24,9 +24,27 @@ $(function () {
       $("#permission_users").text(selectedUser.Permission);
 
       if (selectedUser.IsAdmin == 1) {
+
+      $(".clear_checkbox").prop("checked", true);
+        $(".clear_checkbox").prop("disabled", true);
+
         selectedUser.IsAdmin = "Admin";
+
+
+
+        // $("#manage").prop("disabled", false);
+        // $("#permission").prop("disabled", false);
       } else {
         selectedUser.IsAdmin = "User";
+
+        $(".clear_checkbox").prop("disabled", false);
+
+
+        $("#manage").prop("checked", false);
+        $("#permission").prop("checked", false);
+
+        $("#manage").prop("disabled", true);
+        $("#permission").prop("disabled", true);
       }
       $("#admin_users").text(selectedUser.IsAdmin);
 

@@ -231,11 +231,14 @@ $styleArray_Center = [
     ],
 ];
 
+$sheet->getStyle('A9:H' . ($rowIndex - 1))->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+
+
 $sheet->getStyle('A8:H8')->applyFromArray($styleArray);
 $sheet->getStyle('A8:A' . ($rowIndex - 1))->applyFromArray($styleArray);
 
 $sheet->getStyle('A8')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-$sheet->getStyle('B8:H' . ($rowIndex - 1))->applyFromArray($styleArray_Center);
+$sheet->getStyle('A8:H' . ($rowIndex - 1))->applyFromArray($styleArray_Center);
 
 $sheet->getStyle('A8')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 $sheet->getStyle('C9:C' . ($rowIndex - 1))->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
@@ -244,7 +247,7 @@ $sheet->getStyle('C9:C' . ($rowIndex - 1))->getAlignment()->setHorizontal(Alignm
 
 // $sheet->getStyle('A1')->getFont()->setSize(20); // หัวข้อใหญ่
 // $sheet->getColumnDimension('A')->setWidth(40); // คอลัมน์ A กว้างขึ้น
-$sheet->getColumnDimension('A')->setWidth(30); // คอลัมน์ B ปรับอัตโนมัติ
+$sheet->getColumnDimension('A')->setWidth(10); // คอลัมน์ B ปรับอัตโนมัติ
 $sheet->getColumnDimension('B')->setWidth(30); // คอลัมน์ B ปรับอัตโนมัติ
 $sheet->getColumnDimension('C')->setWidth(30); // คอลัมน์ B ปรับอัตโนมัติ
 $sheet->getColumnDimension('D')->setWidth(30); // คอลัมน์ B ปรับอัตโนมัติ
@@ -461,7 +464,7 @@ $sheet->getStyle('A8:F8')->applyFromArray($styleArray);
 $sheet->getStyle('A8:A' . ($rowIndex - 1))->applyFromArray($styleArray);
 
 $sheet->getStyle('A8')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-$sheet->getStyle('B8:F' . ($rowIndex - 1))->applyFromArray($styleArray_Center);
+$sheet->getStyle('A8:F' . ($rowIndex - 1))->applyFromArray($styleArray_Center);
 
 $sheet->getStyle('A8')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 $sheet->getStyle('C9:C' . ($rowIndex - 1))->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
@@ -470,7 +473,7 @@ $sheet->getStyle('C9:C' . ($rowIndex - 1))->getAlignment()->setHorizontal(Alignm
 
 // $sheet->getStyle('A1')->getFont()->setSize(20); // หัวข้อใหญ่
 // $sheet->getColumnDimension('A')->setWidth(40); // คอลัมน์ A กว้างขึ้น
-$sheet->getColumnDimension('A')->setWidth(30); // คอลัมน์ B ปรับอัตโนมัติ
+$sheet->getColumnDimension('A')->setWidth(10); // คอลัมน์ B ปรับอัตโนมัติ
 $sheet->getColumnDimension('B')->setWidth(30); // คอลัมน์ B ปรับอัตโนมัติ
 $sheet->getColumnDimension('C')->setWidth(30); // คอลัมน์ B ปรับอัตโนมัติ
 $sheet->getColumnDimension('D')->setWidth(30); // คอลัมน์ B ปรับอัตโนมัติ
@@ -482,7 +485,7 @@ $spreadsheet->setActiveSheetIndex(0);
 
 // สร้าง Writer และให้ดาวน์โหลด
 $writer = new Xlsx($spreadsheet);
-$filename = "Report_log_cabinet.xlsx";
+$filename = "Report_Patient_Requisition.xlsx";
 
 header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 header("Content-Disposition: attachment; filename=\"$filename\"");

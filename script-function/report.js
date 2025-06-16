@@ -617,7 +617,7 @@ $(function () {
           "&checkyear=" +
           checkyear;
 
-        window.open("report/Report_Issue2.php" + option, "_blank");
+        window.open("report/phpexcel/Report_Issue2.php" + option+"&Userid=" + Userid, "_blank");
       }
     } else {
       if ($("#select_report").val() == 7) {

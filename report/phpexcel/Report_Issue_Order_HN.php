@@ -19,7 +19,7 @@ $sheet->setTitle("RFID");
 // --- ใส่โลโก้ ---
 
 
-$sheet->mergeCells('A1:A5');
+// $sheet->mergeCells('A1:A5');
 $drawing = new Drawing();
 $drawing->setName('Logo');
 $drawing->setPath('logo.png'); // เปลี่ยนเป็นไฟล์โลโก้ของคุณ
@@ -32,10 +32,10 @@ $drawing->setWorksheet($sheet);
 
 
 // --- ผสานเซลล์ ---
-$sheet->mergeCells('B1:C3'); // พิมพ์โดย poseMA
-$sheet->mergeCells('B4:C5'); // วันที่พิมพ์
-$sheet->mergeCells('A6:C6'); // เวลา
-$sheet->mergeCells('A7:B7'); // หัวข้อ "SUDs"
+$sheet->mergeCells('A2:B2'); // พิมพ์โดย poseMA
+$sheet->mergeCells('A4:B4'); // วันที่พิมพ์
+$sheet->mergeCells('A6:B6'); // เวลา
+// $sheet->mergeCells('A7:B7'); // หัวข้อ "SUDs"
 
 
 $select_date_history_s = $_GET['select_date_history_s'];
@@ -65,12 +65,14 @@ while ($row_user = $meQuery_user->fetch(PDO::FETCH_ASSOC)) {
     $_FirstName = $row_user['FirstName'];
 }
 
-$sheet->setCellValue('B1', 'พิมพ์โดย '. $_FirstName);
-$sheet->setCellValue('B4', 'วันที่พิมพ์ '.date('d/m/Y'). ' ' .date('H:i:s'));
+$sheet->setCellValue('A2', 'พิมพ์โดย ' . $_FirstName);
+$sheet->setCellValue('A4', 'วันที่พิมพ์ ' . date('d/m/Y') . ' ' . date('H:i:s'));
 $sheet->setCellValue('A6', $text_date);
 
-$sheet->getStyle('B1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
-$sheet->getStyle('B4')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+$sheet->getStyle('A2')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+$sheet->getStyle('A4')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+$sheet->getStyle('A6')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+
 
 
 
@@ -91,7 +93,7 @@ $select_date_history_l = $select_date_history_l[2] . '-' . $select_date_history_
 $dataArray = [];
 
 
-if($db == 1){
+if ($db == 1) {
     $query = " SELECT
                     item.itemname,
                     item.itemcode,
@@ -111,7 +113,7 @@ if($db == 1){
                     item.itemcode 
                 ORDER BY
                     item.itemname ASC  ";
-}else{
+} else {
     $query = "SELECT
     item.itemname ,
     item.itemcode ,
@@ -144,21 +146,21 @@ ORDER BY
     item.itemname ASC ";
 }
 
- 
-    $meQuery = $conn->prepare($query);
-    $meQuery->execute();
-    while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
-        $dataArray[] = [$row['itemname'],$row['cnt']];
-    }
+
+$meQuery = $conn->prepare($query);
+$meQuery->execute();
+while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+    $dataArray[] = [$row['itemname'], $row['cnt']];
+}
 
 
-    $row = 9; 
-    foreach ($dataArray as $item) {
-        $sheet->setCellValue('A' . $row, $item[0]);
-        $sheet->setCellValue('B' . $row, $item[1]);
-        $sheet->getRowDimension($row)->setRowHeight(30); // ตั้งค่าความสูงของแถวข้อมูล
-        $row++;
-    }
+$row = 9;
+foreach ($dataArray as $item) {
+    $sheet->setCellValue('A' . $row, $item[0]);
+    $sheet->setCellValue('B' . $row, $item[1]);
+    $sheet->getRowDimension($row)->setRowHeight(30); // ตั้งค่าความสูงของแถวข้อมูล
+    $row++;
+}
 
 $sheet->getStyle('A1')->getFont()->setSize(20); // หัวข้อใหญ่
 $sheet->getStyle('A7')->getFont()->setSize(16)->setBold(true); // หัวข้อ "SUDs" ตัวหนา
@@ -232,7 +234,7 @@ $sheet2->mergeCells('A7:B7'); // หัวข้อ "SUDs"
 
 
 $sheet2->setCellValue('B1', 'พิมพ์โดย poseMA');
-$sheet2->setCellValue('B4', 'วันที่พิมพ์ '.date('d/m/Y'). ' ' .date('H:i:s'));
+$sheet2->setCellValue('B4', 'วันที่พิมพ์ ' . date('d/m/Y') . ' ' . date('H:i:s'));
 $sheet2->getStyle('B1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
 $sheet2->getStyle('B4')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
 
@@ -277,20 +279,20 @@ $query = " SELECT
 
 
 
-    $meQuery = $conn->prepare($query);
-    $meQuery->execute();
-    while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
-        $dataArray[] = [$row['itemname'], $row['cnt']];
-    }
+$meQuery = $conn->prepare($query);
+$meQuery->execute();
+while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+    $dataArray[] = [$row['itemname'], $row['cnt']];
+}
 
 
-    $row = 9; 
-    foreach ($dataArray as $item) {
-        $sheet2->setCellValue('A' . $row, $item[0]);
-        $sheet2->setCellValue('B' . $row, $item[1]);
-        $sheet2->getRowDimension($row)->setRowHeight(30); // ตั้งค่าความสูงของแถวข้อมูล
-        $row++;
-    }
+$row = 9;
+foreach ($dataArray as $item) {
+    $sheet2->setCellValue('A' . $row, $item[0]);
+    $sheet2->setCellValue('B' . $row, $item[1]);
+    $sheet2->getRowDimension($row)->setRowHeight(30); // ตั้งค่าความสูงของแถวข้อมูล
+    $row++;
+}
 
 $sheet2->getStyle('A1')->getFont()->setSize(20); // หัวข้อใหญ่
 $sheet2->getStyle('A7')->getFont()->setSize(16)->setBold(true); // หัวข้อ "SUDs" ตัวหนา

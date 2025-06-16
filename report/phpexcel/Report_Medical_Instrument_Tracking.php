@@ -68,8 +68,7 @@ $text_date = "วันที่ : " . $select_date_history_s_SHOW[0] . " " . $d
 
 
 
-
-$sheet->setCellValue('I3', 'พิมพ์โดย '. $_FirstName);
+$sheet->setCellValue('I3', 'พิมพ์โดย ' . $_FirstName);
 $sheet->setCellValue('I4', $text_date);
 $sheet->setCellValue('I5', 'วันที่พิมพ์ ' . date('d/m/Y') . ' ' . date('H:i:s'));
 $sheet->getStyle('I3')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
@@ -266,15 +265,15 @@ $sheet->getStyle('A7:H' . ($rowIndex - 1))->getAlignment()->setHorizontal(Alignm
 $sheet->getStyle('C7:I' . ($rowIndex - 1))->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
 
 
-$sheet->getColumnDimension('A')->setAutoSize(true);
-$sheet->getColumnDimension('B')->setAutoSize(true);
-$sheet->getColumnDimension('C')->setAutoSize(true);
-$sheet->getColumnDimension('D')->setAutoSize(true);
+$sheet->getColumnDimension('A')->setWidth(10);
+$sheet->getColumnDimension('B')->setWidth(30);
+$sheet->getColumnDimension('C')->setWidth(30);
+$sheet->getColumnDimension('D')->setWidth(30);
 $sheet->getColumnDimension('E')->setWidth(30);
-$sheet->getColumnDimension('F')->setAutoSize(true);
-$sheet->getColumnDimension('G')->setAutoSize(true);
-$sheet->getColumnDimension('H')->setAutoSize(true);
-$sheet->getColumnDimension('I')->setAutoSize(true);
+$sheet->getColumnDimension('F')->setWidth(30);
+$sheet->getColumnDimension('G')->setWidth(30);
+$sheet->getColumnDimension('H')->setWidth(30);
+$sheet->getColumnDimension('I')->setWidth(30);
 
 
 // $sheet->getStyle('A7:A' . ($row - 1))->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
