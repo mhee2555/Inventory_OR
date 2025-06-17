@@ -156,16 +156,23 @@ function show_detail_lot(itemcode) {
       if (!$.isEmptyObject(ObjData)) {
         $.each(ObjData, function (kay, value) {
           var txt = value.lotNo;
-          var hidden = "";
           if (value.lotNo == "") {
             txt = "อุปกรณ์ที่ไม่มีเลข Lot.";
-            hidden = "hidden";
           }
+
+          if (value.IsTracking == "0") {
+            var hidden = "gold";
+          }else{
+            var hidden = "red";
+
+          }
+
+          
           _tr += `<tr id="trtracking_${value.lotNo}" class="clear_bg">
                       <td class='text-center'>${txt}</td>
                       <td class='text-center'>${value.cnt}</td>
                       <td class='text-center'><label style='color:blue;font-weight:bold;cursor:pointer;' onclick="set_detail_lot_itemstock('${value.lotNo}','${value.ItemCode}')">เลือก</label></td>
-                      <td class='text-center'><i ${hidden} class="fa-solid fa-circle-exclamation" style="font-size: 30px;color: gold;cursor:pointer;" onclick="set_tracking('${value.lotNo}','${value.ItemCode}')"></i></td>
+                      <td class='text-center'><i  class="fa-solid fa-circle-exclamation" style="font-size: 30px;color: ${hidden};cursor:pointer;" onclick="set_tracking('${value.lotNo}','${value.ItemCode}','${hidden}')"></i></td>
                    </tr>`;
         });
       }
@@ -232,13 +239,45 @@ function show_detail_lot(itemcode) {
   });
 }
 
-function set_tracking(lotNo, itemcode) {
-  Swal.fire({
+function set_tracking(lotNo, itemcode, txt_check) {
+  if (txt_check == "gold") {
+    Swal.fire({
+      title: "ยืนยัน",
+      text: "ยืนยัน การติดตามอุปกรณ์",
+      icon: "warning",
+      input: "text", // เพิ่ม input
+      inputPlaceholder: "กรอกหมายเหตุ",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "ยืนยัน",
+      cancelButtonText: "ยกเลิก",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        let userInput = result.value; // ค่าที่ผู้ใช้กรอกมา
+
+        $.ajax({
+          url: "process/oc.php",
+          type: "POST",
+          data: {
+            FUNC_NAME: "set_tracking",
+            lotNo: lotNo,
+            itemcode: itemcode,
+            remark: userInput, // ส่งค่าที่กรอกไปด้วย
+            txt_check: txt_check, // ส่งค่าที่กรอกไปด้วย
+          },
+          success: function (result) {
+            showDialogSuccess("บันทึกสำเร็จ");
+            show_detail_lot(itemcode);
+          },
+        });
+      }
+    });
+  }else{
+      Swal.fire({
     title: "ยืนยัน",
-    text: "ยืนยัน การติดตามอุปกรณ์",
+    text: "ยืนยัน การยกเลิกติดตามอุปกรณ์",
     icon: "warning",
-    input: "text", // เพิ่ม input
-    inputPlaceholder: "กรอกหมายเหตุ",
     showCancelButton: true,
     confirmButtonColor: "#3085d6",
     cancelButtonColor: "#d33",
@@ -255,14 +294,20 @@ function set_tracking(lotNo, itemcode) {
           FUNC_NAME: "set_tracking",
           lotNo: lotNo,
           itemcode: itemcode,
-          remark: userInput, // ส่งค่าที่กรอกไปด้วย
+          remark: '', // ส่งค่าที่กรอกไปด้วยม,
+          txt_check: txt_check
         },
         success: function (result) {
           showDialogSuccess("บันทึกสำเร็จ");
+          show_detail_lot(itemcode);
         },
       });
     }
   });
+  }
+
+
+
 
   // Swal.fire({
   //   title: "ยืนยัน",
@@ -375,7 +420,7 @@ function show_detail_itemstock() {
         });
       }
 
-        $("#table_lot_detail tbody").html(matched_tr + _tr);
+      $("#table_lot_detail tbody").html(matched_tr + _tr);
       // $("#table_lot_detail").DataTable({
       //   language: {
       //     emptyTable: settext("dataTables_empty"),

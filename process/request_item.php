@@ -283,10 +283,12 @@ function show_detail_item_request($conn,$db)
 
     $query = "SELECT
                 item.itemcode,
+                item.itemcode2,
                 item.itemname AS Item_name,
                 itemtype.TyeName,
                 item.stock_min,
-                COUNT(itemstock.RowID) AS cnt
+                COUNT(itemstock.RowID) AS cnt,
+				( SELECT COUNT( ID ) FROM itemstock_transaction_detail WHERE ItemCode = item.itemcode AND IsStatus = 1 ) AS cnt_pay
             FROM
                 item
                 LEFT JOIN itemtype ON itemtype.ID = item.itemtypeID
@@ -312,6 +314,7 @@ function show_detail_item_request($conn,$db)
     $meQuery = $conn->prepare($query);
     $meQuery->execute();
     while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+         $row['cnt'] = $row['cnt'] - $row['cnt_pay'];
         $return[] = $row;
     }
     echo json_encode($return);

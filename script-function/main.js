@@ -16,6 +16,7 @@ $(function () {
   selection_use_deproom();
   selection_oc();
   selection_hn();
+  selection_request_item();
 
   
   setTimeout(() => {
@@ -28,6 +29,7 @@ $(function () {
       $("#row_nouse").attr('hidden',true);
       $("#row_borrow").attr('hidden',false);
       $("#row_damage").attr('hidden',true);
+      $("#row_request_item").attr('hidden',false);
       // $("#row_addon").attr('hidden',false);
     }else{
       $("#row_ex").attr('hidden',false);
@@ -36,6 +38,7 @@ $(function () {
       $("#row_nouse").attr('hidden',true);
       $("#row_borrow").attr('hidden',false);
       $("#row_damage").attr('hidden',true);
+      $("#row_request_item").attr('hidden',false);
       // $("#row_addon").attr('hidden',false);
     }
 
@@ -82,6 +85,28 @@ function selection_ExSoon() {
         $.each(ObjData, function(key, value) {
           $("#text_ExSoon").text(value.c);
         });
+      }
+    },
+  });
+}
+
+function selection_request_item() {
+  $.ajax({
+    url: "process/main.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "selection_request_item",
+    },
+    success: function(result) {
+      var ObjData = JSON.parse(result);
+      console.log(ObjData);
+      if (!$.isEmptyObject(ObjData)) {
+        var c = 0 ;
+        $.each(ObjData, function(key, value) {
+          $("#text_request_item").text(value.c);
+        });
+
+
       }
     },
   });
@@ -293,6 +318,30 @@ $('#btn_oc').on("click", function(e) {
 
       
       loadScript('script-function/oc.js');
+  });
+})
+
+
+
+
+$('#btn_request_item').on("click", function(e) {
+
+  e.preventDefault();
+  var link = this.href;
+  $.get(link, function(res) {
+
+      $(".nav-item").removeClass("active");
+      $(".nav-item").css("background-color", "");
+
+      $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
+      $("#menu1").css('color', '#667085');
+
+      $("#conMain").html(res);
+      history.pushState({}, "Results for `Cats`", 'index.php?s=request_item');
+      document.title = "request_item";
+
+      localStorage.setItem('request_item', '1');
+      loadScript('script-function/request_item.js');
   });
 })
 

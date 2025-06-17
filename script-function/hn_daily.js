@@ -275,15 +275,15 @@ function show_detail_his(ID, IsStatus) {
 
           QQ = QQ + parseFloat(parseInt(value.Qty) * parseInt(value.SalePrice));
           _tr += `<tr>
-                      <td class="f18 text-center" title="${value.TyeName}" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 150px;" >${value.TyeName}</td>
                       <td class="f18 text-center">${value.itemcode2}</td>
-                      <td class="f18 text-center">${value.itemname}</td>
+                      <td class="f18 text-left">${value.itemname}</td>
+                      <td class="f18 text-left" title="${value.TyeName}" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 150px;" >${value.TyeName}</td>
                       <td class="f18 text-center"> <input id="qty_item_${value.ID}" ${dis} onblur="updateDetail_qty(${value.ID},'${value.itemcode}')"  class=' unlock_qty numonly form-control' value='${value.Qty}' style='text-align: center;' ></td>
                    </tr>`;
         });
       }
 
-      $("#price_xx").text(parseFloat(QQ));
+      $("#price_xx").text(parseFloat(QQ).toFixed(2));
       $("#table_detail_his tbody").html(_tr);
 
       $(".numonly").on("input", function () {
@@ -438,7 +438,7 @@ function show_detail_daily() {
             value.isStatus == "1" ||
             value.isStatus == "2"
           ) {
-            var txt = `<a  href="#" style='font-weight: bold;color:#643695;' onclick='update_create_request(${value.ID})'>รอดำเนินการ</a>`;
+            var txt = `<button class='btn f18' style='color:#fff;font-weight: bold;background-color:#643695;' onclick='update_create_request(${value.ID})'>รอดำเนินการ</button>`;
           }
           if (value.isStatus == "3") {
             var txt = `<a  href="#" style='font-weight: bold;color:#1cc88a;' )'>ดำเนินการเรียบร้อย</a>`;
@@ -481,28 +481,30 @@ function update_create_request(ID) {
           ID: ID,
         },
         success: function (result) {
-          var link = "pages/create_request.php";
-          $.get(link, function (res) {
-            $(".nav-item").removeClass("active");
-            $(".nav-item").css("background-color", "");
 
-            $("#ic_mainpage").attr(
-              "src",
-              "assets/img_project/2_icon/ic_mainpage.png"
-            );
-            $("#menu1").css("color", "#667085");
+          show_detail_daily();
+          // var link = "pages/create_request.php";
+          // $.get(link, function (res) {
+          //   $(".nav-item").removeClass("active");
+          //   $(".nav-item").css("background-color", "");
 
-            $("#conMain").html(res);
-            history.pushState(
-              {},
-              "Results for `Cats`",
-              "index.php?s=create_request"
-            );
-            document.title = "create_request";
+          //   $("#ic_mainpage").attr(
+          //     "src",
+          //     "assets/img_project/2_icon/ic_mainpage.png"
+          //   );
+          //   $("#menu1").css("color", "#667085");
 
-            loadScript("script-function/create_request.js");
-            loadScript("assets/lang/create_request.js");
-          });
+          //   $("#conMain").html(res);
+          //   history.pushState(
+          //     {},
+          //     "Results for `Cats`",
+          //     "index.php?s=create_request"
+          //   );
+          //   document.title = "create_request";
+
+          //   loadScript("script-function/create_request.js");
+          //   loadScript("assets/lang/create_request.js");
+          // });
         },
       });
     }

@@ -187,9 +187,9 @@
                             <table class="table table-hover table-sm " id="table_detail_his">
                                 <thead class="table-active sticky-top">
                                     <tr>
-                                        <th scope="col" class="text-center" id="">ประเภท</th>
                                         <th scope="col" class="text-center" id="">รหัสอุปกรณ์</th>
                                         <th scope="col" class="text-center" id="">อุปกรณ์</th>
+                                        <th scope="col" class="text-center" id="">ประเภท</th>
                                         <th scope="col" class="text-center" id="" style='width: 15%;'>จำนวน</th>
                                     </tr>
                                 </thead>

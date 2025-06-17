@@ -86,11 +86,17 @@ function set_tracking($conn, $db)
     $lotNo = $_POST['lotNo'];
     $itemcode = $_POST['itemcode'];
     $remark = $_POST['remark'];
+    $txt_check = $_POST['txt_check'];
 
-
-    $update = "UPDATE itemstock SET IsTracking = 1 , remarkTracking = '$remark'  WHERE  itemstock.ItemCode = '$itemcode'  AND itemstock.lotNo = '$lotNo' ";
+    if($txt_check == 'gold'){
+        $IsTracking = 1;
+    }else{
+        $IsTracking = 0;
+    }
+    $update = "UPDATE itemstock SET IsTracking = $IsTracking , remarkTracking = '$remark'  WHERE  itemstock.ItemCode = '$itemcode'  AND itemstock.lotNo = '$lotNo' ";
     $meQuery = $conn->prepare($update);
     $meQuery->execute();
+
 
     echo json_encode($return);
     unset($conn);
@@ -177,7 +183,8 @@ function show_detail_lot($conn, $db)
     $query = "SELECT
                     itemstock.ItemCode,
                     itemstock.lotNo,
-                    COUNT( itemstock.RowID ) AS cnt
+                    COUNT( itemstock.RowID ) AS cnt,
+                    itemstock.IsTracking
                 FROM
                     itemstock 
                 WHERE

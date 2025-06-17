@@ -216,6 +216,7 @@ function setActive_feeddata_hncode_detail(ID, DocNo, HnCode,his_ID) {
     $("#btn_send_pay").attr("disabled", false);
   }else{
     $("#btn_send_pay").attr("disabled", true);
+    $("#tr_" + ID).css("background-color", "lightgreen");
   }
 
   // alert(DocNo);

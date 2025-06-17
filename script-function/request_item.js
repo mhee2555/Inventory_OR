@@ -42,6 +42,11 @@ $(function () {
   set_menu();
   session();
   show_detail_item_request();
+
+  if (localStorage.request_item == 1) {
+    $("#radio_receive").click();
+    localStorage.removeItem('request_item');
+  }
 });
 
 $("#select_typeItem_request").change(function () {
@@ -139,7 +144,7 @@ function show_detail_item_request() {
             input_cnt = `<input tyle='text' class='text-center form-control numonly loop_qty_request' data-itemcode="${value.itemcode}" >`;
           }
           _tr += `<tr>
-                      <td class='text-center'>${value.itemcode}</td>
+                      <td class='text-center'>${value.itemcode2}</td>
                       <td class='text-left'>${value.Item_name}</td>
                       <td class='text-center'>${value.stock_min}</td>
                       <td class='text-center' ${color}>${value.cnt}</td>
@@ -471,8 +476,6 @@ function session() {
   });
 }
 
-
-
 function show_detail_history() {
   $.ajax({
     url: "process/request_item.php",
@@ -489,12 +492,12 @@ function show_detail_history() {
       var ObjData = JSON.parse(result);
       if (!$.isEmptyObject(ObjData)) {
         $.each(ObjData, function (kay, value) {
-
-               if(value.StatusDocNo =='2'){
-                var txt = "<label style='color:lightgreen;'>Complete</label>";
-              }else{
-                var txt = "<label style='color:#643695;'>Waiting</label>";
-              }
+          if (value.StatusDocNo == "2") {
+            var txt =
+              "<label style='color:#1cc88a;font-weight: bold;'>Complete</label>";
+          } else {
+            var txt = "<label style='color:#643695;'>Waiting</label>";
+          }
 
           _tr += `<tr>
                       <td class="f18 text-center">${value.RqDocNo}</td>
@@ -505,19 +508,15 @@ function show_detail_history() {
                       <td class="f18 text-center"></td>
                       <td class="f18 text-center">${txt}</td>
                    </tr>`;
-
         });
       }
 
       $("#table_history tbody").html(_tr);
-
-
     },
   });
 }
 
-function showdetail(RqDocNo,RtDocNo) {
-
+function showdetail(RqDocNo, RtDocNo) {
   $("#myModal_detail").modal("toggle");
   $.ajax({
     url: "process/request_item.php",
@@ -534,24 +533,19 @@ function showdetail(RqDocNo,RtDocNo) {
       var ObjData = JSON.parse(result);
       if (!$.isEmptyObject(ObjData)) {
         $.each(ObjData, function (kay, value) {
-
           _tr += `<tr>
-                      <td class="f18 text-center">${kay+1}</td>
+                      <td class="f18 text-center">${kay + 1}</td>
                       <td class="f18 text-center">${value.itemcode}</td>
                       <td class="f18 text-left">${value.itemname}</td>
                       <td class="f18 text-center">${value.QrCode}</td>
                    </tr>`;
-
         });
       }
 
       $("#table_detail tbody").html(_tr);
-
-
     },
   });
 }
-
 
 function show_detail_receive() {
   $.ajax({
@@ -580,14 +574,13 @@ function show_detail_receive() {
                       <td class="f24 text-left"></td>
                    </tr>`;
           $.each(ObjData[value.RqDocNo], function (kay2, value2) {
-
-              if(value2.StatusDocNo =='2'){
-                var txt = "Complete";
-                var bg_g = "style='background-color: lightgreen;'";
-              }else{
-                var txt = "Waiting";
-                var bg_g = "";
-              }
+            if (value2.StatusDocNo == "2") {
+              var txt = "Complete";
+              var bg_g = "style='background-color: lightgreen;'";
+            } else {
+              var txt = "Waiting";
+              var bg_g = "";
+            }
             _tr += `<tr class='tr_${value.RqDocNo} all111' ${bg_g}>
                        <td class="f24 text-center">
 
@@ -616,18 +609,21 @@ function show_detail_receive() {
 
       $(".clear_checkbox").on("click", function () {
         const el = $(this);
-        oncheck_show_byDocNo(el.data("docnort"), el.data("docnorq"), el.data("status"));
+        oncheck_show_byDocNo(
+          el.data("docnort"),
+          el.data("docnorq"),
+          el.data("status")
+        );
       });
     },
   });
 }
 
-function oncheck_show_byDocNo(docnort, docnorq , status) {
-
-  if(status == '2'){
-    $("#btn_confirm_RQ").attr('disabled',true);
-  }else{
-    $("#btn_confirm_RQ").attr('disabled',false);
+function oncheck_show_byDocNo(docnort, docnorq, status) {
+  if (status == "2") {
+    $("#btn_confirm_RQ").attr("disabled", true);
+  } else {
+    $("#btn_confirm_RQ").attr("disabled", false);
   }
   $(".clear_checkbox").prop("checked", false);
   $("#checkbox_" + docnort).prop("checked", true);
@@ -709,12 +705,9 @@ function onconfirm_RQ() {
       docnorq: $("#btn_confirm_RQ").data("docnorq"),
     },
     success: function (result) {
-
-          $("#table_detail_rq tbody").html("");
-          show_detail_receive();
-          showDialogSuccess("บันทึกสำเร็จ");
-
-
+      $("#table_detail_rq tbody").html("");
+      show_detail_receive();
+      showDialogSuccess("บันทึกสำเร็จ");
     },
   });
 }

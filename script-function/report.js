@@ -247,7 +247,11 @@ $(function () {
         } else {
           var checkmonth = 2;
         }
-
+        if ($("#radio_year1").is(":checked")) {
+          var checkyear = 1;
+        } else {
+          var checkyear = 2;
+        }
         var option =
           "?type_date=" +
           $("#select_type_date").val() +
@@ -259,12 +263,21 @@ $(function () {
           $("#select_month1").val() +
           "&month2=" +
           $("#select_month2").val() +
+          "&year1=" +
+          $("#select_year1").val() +
+          "&year2=" +
+          $("#select_year2").val() +
           "&checkday=" +
           checkday +
           "&checkmonth=" +
-          checkmonth;
+          checkmonth +
+          "&checkyear=" +
+          checkyear;
 
-        window.open("report/Report_Issue.php" + option, "_blank");
+        window.open(
+          "report/Report_useItem.php" + option + "&Userid=" + Userid,
+          "_blank"
+        );
       }
       if ($("#select_report").val() == 4) {
         if ($("#radio_date1").is(":checked")) {
@@ -469,7 +482,10 @@ $(function () {
           checkyear;
 
         window.open(
-          "report/phpexcel/Report_Patient_Requisition.php" + option+"&Userid=" + Userid,
+          "report/phpexcel/Report_Patient_Requisition.php" +
+            option +
+            "&Userid=" +
+            Userid,
           "_blank"
         );
       }
@@ -484,7 +500,11 @@ $(function () {
         } else {
           var checkmonth = 2;
         }
-
+        if ($("#radio_year1").is(":checked")) {
+          var checkyear = 1;
+        } else {
+          var checkyear = 2;
+        }
         var option =
           "?type_date=" +
           $("#select_type_date").val() +
@@ -496,12 +516,21 @@ $(function () {
           $("#select_month1").val() +
           "&month2=" +
           $("#select_month2").val() +
+          "&year1=" +
+          $("#select_year1").val() +
+          "&year2=" +
+          $("#select_year2").val() +
           "&checkday=" +
           checkday +
           "&checkmonth=" +
-          checkmonth;
+          checkmonth +
+          "&checkyear=" +
+          checkyear;
 
-        window.open("report/Report_Issue.php" + option, "_blank");
+        window.open(
+          "report/phpexcel/Report_useItem.php" + option + "&Userid=" + Userid,
+          "_blank"
+        );
       }
       if ($("#select_report").val() == 4) {
         if ($("#radio_date1").is(":checked")) {
@@ -532,7 +561,10 @@ $(function () {
           checkmonth;
 
         window.open(
-          "report/phpexcel/Report_Cabinet_Issue.php" + option+"&Userid=" + Userid,
+          "report/phpexcel/Report_Cabinet_Issue.php" +
+            option +
+            "&Userid=" +
+            Userid,
           "_blank"
         );
       }
@@ -575,7 +607,10 @@ $(function () {
           checkyear;
 
         window.open(
-          "report/phpexcel/Report_Patient_Cost_Summary2.php" + option+"&Userid=" + Userid,
+          "report/phpexcel/Report_Patient_Cost_Summary2.php" +
+            option +
+            "&Userid=" +
+            Userid,
           "_blank"
         );
       }
@@ -617,11 +652,17 @@ $(function () {
           "&checkyear=" +
           checkyear;
 
-        window.open("report/phpexcel/Report_Issue2.php" + option+"&Userid=" + Userid, "_blank");
+        window.open(
+          "report/phpexcel/Report_Issue2.php" + option + "&Userid=" + Userid,
+          "_blank"
+        );
       }
     } else {
       if ($("#select_report").val() == 7) {
-        window.open("report/phpexcel/Report_stock.php"+"?Userid=" + Userid, "_blank");
+        window.open(
+          "report/phpexcel/Report_stock.php" + "?Userid=" + Userid,
+          "_blank"
+        );
       } else {
         Swal.fire("ล้มเหลว", "กรุณาเลือกประเภท", "error");
       }
@@ -646,7 +687,6 @@ function session() {
       RefDepID = ObjData.RefDepID;
       Permission_name = ObjData.Permission_name;
       Userid = ObjData.Userid;
-
 
       $("#input_Deproom_Main").val(Permission_name);
       $("#input_Name_Main").val(UserName);

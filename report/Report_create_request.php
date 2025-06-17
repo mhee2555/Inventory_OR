@@ -357,7 +357,8 @@ $query = "SELECT
                 item.itemcode ,
                 item.itemcode2 ,
                 deproomdetail.ID ,
-                SUM(deproomdetail.IsQtyStart) AS cnt ,
+                -- SUM(deproomdetail.IsQtyStart) AS cnt ,
+                SUM(deproomdetail.Qty) AS cnt ,
                 itemtype.TyeName
                 FROM
                 deproom

@@ -2,6 +2,8 @@
 session_start();
 require '../config/db.php';
 require '../connect/connect.php';
+require '../process/Createdeproom.php';
+require '../process/Createhncode.php';
 
 
 if (!empty($_POST['FUNC_NAME'])) {
@@ -209,9 +211,89 @@ function update_create_request($conn, $db)
 {
     $return = array();
     $ID = $_POST['ID'];
+    $Userid = $_SESSION['Userid'];
+    $DepID = $_SESSION['DepID'];
+
+    $Q1 = "SELECT
+                set_hn.ID,
+                set_hn.hncode,
+                -- DATE_FORMAT( set_hn.serviceDate, '%d-%m-%Y' ) AS serviceDate,
+                -- DATE_FORMAT( set_hn.serviceDate, '%H:%i' ) AS serviceTime,
+                DATE( set_hn.serviceDate) AS serviceDate,
+                TIME( set_hn.serviceDate) AS serviceTime,
+                set_hn.doctor,
+                set_hn.departmentroomid,
+                set_hn.`procedure`,
+                set_hn.remark,
+                set_hn.isStatus,
+                set_hn.userID,
+                set_hn.isCancel,
+                set_hn.createAt 
+            FROM
+                set_hn 
+            WHERE set_hn.ID = '$ID' ";
+    $meQuery = $conn->prepare($Q1);
+    $meQuery->execute();
+    while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+        $return[] = $row;
+
+        $select_deproom_request = $row['departmentroomid'];
+        $input_hn_request = $row['hncode'];
+        $select_procedure_request = $row['procedure'];
+        $select_doctor_request = $row['doctor'];
+        $ID = $row['ID'];
+        $remark = $row['remark'];
+        $serviceDate = $row['serviceDate'];
+        $serviceTime = $row['serviceTime'];
 
 
-    $Q1 = " UPDATE set_hn SET isStatus = 1 WHERE set_hn.ID = '$ID' ";
+    }
+
+
+    $txt_docno_request = createDocNo($conn, $Userid, $DepID, $select_deproom_request, $remark, 0, 0, 0, 0, '', '', $input_hn_request, '', $db, 1);
+
+    $sql1 = " UPDATE deproom SET IsStatus = 0 , serviceDate = '$serviceDate $serviceTime'  , hn_record_id = '$input_hn_request' , doctor = '$select_doctor_request' , `procedure` = '$select_procedure_request' , Ref_departmentroomid = '$select_deproom_request' WHERE DocNo = '$txt_docno_request' AND IsCancel = 0 ";
+    $meQueryUpdate = $conn->prepare($sql1);
+    $meQueryUpdate->execute();
+    createhncodeDocNo($conn, $Userid, $DepID, $input_hn_request, $select_deproom_request, 0, $select_procedure_request, $select_doctor_request, 'สร้างจากเมนูขอเบิกอุปกรณ์', $txt_docno_request, $db, $serviceDate, '');
+
+
+
+
+    $select = "SELECT
+                    routine_detail.itemcode,
+                    routine_detail.qty 
+                FROM
+                    routine_detail
+                    INNER JOIN routine ON routine_detail.routine_id = routine.id 
+                WHERE
+                    routine.doctor = '$select_doctor_request' 
+                    AND routine.proceduce = '$select_procedure_request' 
+                    AND routine.departmentroomid = '$select_deproom_request' ";
+    $meQuery = $conn->prepare($select);
+    $meQuery->execute();
+    while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+
+         $_itemcode = $row['itemcode'] ;
+         $_qty = $row['qty'] ;
+
+
+        $queryInsert = "INSERT INTO deproomdetail ( DocNo, ItemCode, Qty, IsStatus, PayDate, IsCancel, ModifyUser, ModifyTime , IsStart  , IsQtyStart  )
+                VALUES
+                    ( '$txt_docno_request', '$_itemcode', '$_qty', 0, NOW(), 0, '$Userid',NOW() , 1 , $_qty)";
+
+
+        $meQueryInsert = $conn->prepare($queryInsert);
+        $meQueryInsert->execute();
+        // $return[] = $row;
+        // $delete = "DELETE FROM deproomdetail WHERE DocNo = '$txt_docno_request' ";
+        // $meQuerydelete = $conn->prepare($delete);
+        // $meQuerydelete->execute();
+    }
+
+
+
+    $Q1 = " UPDATE set_hn SET isStatus = 3 WHERE set_hn.ID = '$ID' ";
     $meQ1 = $conn->prepare($Q1);
     $meQ1->execute();
 
@@ -291,10 +373,10 @@ function show_detail_daily($conn, $db)
 
 
     $whereD = "";
-    if($check_Box == 0){
+    if ($check_Box == 0) {
         $whereD = " AND DATE( set_hn.createAt ) = '$select_date1_search'  ";
     }
-    if($check_Box == 1){
+    if ($check_Box == 1) {
         $whereD = " AND  ( set_hn.isStatus = 0 OR set_hn.isStatus = 1 OR set_hn.isStatus = 2 ) ";
     }
     $Q1 = " SELECT

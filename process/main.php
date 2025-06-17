@@ -30,6 +30,8 @@ if (!empty($_POST['FUNC_NAME'])) {
         selection_oc($conn,$db);
     } else if ($_POST['FUNC_NAME'] == 'selection_hn') {
         selection_hn($conn,$db);
+    } else if ($_POST['FUNC_NAME'] == 'selection_request_item') {
+        selection_request_item($conn,$db);
     }
 }
 
@@ -67,6 +69,32 @@ function onUpdateDisplay($conn,$db)
     die;
 }
 
+
+
+function selection_request_item($conn,$db)
+{
+
+
+
+    $return = [];
+    $query = " SELECT
+                    COUNT( insertrfid_detail.ID ) AS c 
+                FROM
+                    insertrfid
+                    INNER JOIN insertrfid_detail ON insertrfid.DocNo = insertrfid_detail.DocNo
+                    INNER JOIN item ON insertrfid_detail.ItemCode = item.itemcode 
+                WHERE
+                    insertrfid.Createdate = NOW() 
+                    AND insertrfid.StatusDocNo != 2 ";
+    $meQuery = $conn->prepare($query);
+    $meQuery->execute();
+    while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+        $return[] = $row;
+    }
+    echo json_encode($return);
+    unset($conn);
+    die;
+}
 
 function selection_hn($conn,$db)
 {
@@ -375,6 +403,7 @@ function selection_itemborrow($conn,$db)
                 WHERE
                     deproomdetailsub.hn_record_id_borrow IS NOT NULL 
                     AND deproomdetailsub.hn_record_id_borrow <> '' 
+                    AND deproomdetailsub.PayDate = NOW() 
                     $wherepermission
                     $wheredep  ";
     $meQuery = $conn->prepare($query);

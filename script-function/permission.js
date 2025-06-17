@@ -6,21 +6,14 @@ $(function () {
 
   $("#selectUser").change(function () {
     var selectedID = $(this).val();
-    var selectedUser = userList.find(
-      (user) => String(user.ID) === String(selectedID)
-    );
+    var selectedUser = userList.find((user) => String(user.ID) === String(selectedID) );
 
     console.log(selectedUser);
     if (selectedUser) {
+
+      console.log(selectedUser);
       // สมมุติว่ามีช่องแสดงผลข้อมูลใน DOM ที่ต้องการแสดง
-      $("#name_users").text(
-        selectedUser.FirstName +
-          " " +
-          selectedUser.LastName +
-          " ( " +
-          selectedUser.EmpCode +
-          " ) "
-      );
+      $("#name_users").text( selectedUser.FirstName +" " +selectedUser.LastName +" ( " +selectedUser.EmpCode +" ) " );
       $("#permission_users").text(selectedUser.Permission);
 
       if (selectedUser.IsAdmin == 1) {
@@ -28,14 +21,14 @@ $(function () {
       $(".clear_checkbox").prop("checked", true);
         $(".clear_checkbox").prop("disabled", true);
 
-        selectedUser.IsAdmin = "Admin";
+        var xx = "Admin";
 
 
 
         // $("#manage").prop("disabled", false);
         // $("#permission").prop("disabled", false);
       } else {
-        selectedUser.IsAdmin = "User";
+        var xx = "User";
 
         $(".clear_checkbox").prop("disabled", false);
 
@@ -46,7 +39,7 @@ $(function () {
         $("#manage").prop("disabled", true);
         $("#permission").prop("disabled", true);
       }
-      $("#admin_users").text(selectedUser.IsAdmin);
+      $("#admin_users").text(xx);
 
       select_permission(selectedID);
       //   $("#userID").text(selectedUser.ID);
