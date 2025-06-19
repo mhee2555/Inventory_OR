@@ -18,7 +18,7 @@
             <div class="sb-sidenav-menu" id="mydiv" style="flex-grow:1;overflow-y: auto;max-height: 1000px;flex-grow:1;">
                 <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_main">
                     <a class="collapse-item" href="pages/main.php" style="color: black;font-size: 16px;" id="a_main">
-                        <img id="ic_mainpage"  style="width: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;">
+                        <img id="ic_mainpage" style="width: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;">
                         <label style="font-size: 20px;color: white;" class="color_menu" id="menu1">หน้าหลัก</label>
 
                         <p class="timertext" style="font-size: 1.5rem;" hidden>
@@ -41,149 +41,151 @@
 
 
 
-                    <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_recieve_stock" hidden>
-                        <a class="collapse-item" href="pages/recieve_stock.php" style="color: black;font-size: 16px;" id="a_recieve_stock">
-                            <img id="ic_setup_equipment_rooms" style="width: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;">
-                            <label style="font-size: 20px;color: #667085;" class="" id="menu2">รับอุปกรณ์เข้าคลัง</label>
-                        </a>
-                    </li>
+                <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_recieve_stock" hidden>
+                    <a class="collapse-item" href="pages/recieve_stock.php" style="color: black;font-size: 16px;" id="a_recieve_stock">
+                        <img id="ic_setup_equipment_rooms" style="width: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;">
+                        <label style="font-size: 20px;color: #667085;" class="" id="menu2">รับอุปกรณ์เข้าคลัง</label>
+                    </a>
+                </li>
 
-                    <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_create_request" hidden>
-                        <a class="collapse-item" href="index.php?s=create_request" style="color: black;font-size: 16px;" id="a_create_request">
-                            <img id="ic_create_equipment_request" style="width: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;">
-                            <label style="font-size: 20px;color: #667085;" class="" id="menu3">สร้างใบขอเบิกอุปกรณ์</label>
-                        </a>
-                    </li>
+                <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_set_hn" hidden>
+                    <a class="collapse-item" href="pages/set_hn.php" style="color: black;font-size: 16px;" id="a_set_hn">
+                        <img id="ic_set_hn" style="width: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;">
+                        <label style="font-size: 20px;color: #667085;" class="" id="menu16">กรอกข้อมูลคนไข้</label>
+                    </a>
+                </li>
 
-
-                    <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_request_item" hidden>
-                        <a class="collapse-item" href="pages/request_item.php" style="color: black;font-size: 16px;" id="a_request_item">
-                            <img id="ic_request_item"  style="width: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;">
-                            <label style="font-size: 20px;color: #667085;" class="" id="menu15">ขอเบิกอุปกรณ์</label>
-                        </a>
-                    </li>
-
-                    <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_set_hn" hidden>
-                        <a class="collapse-item" href="pages/set_hn.php" style="color: black;font-size: 16px;" id="a_set_hn">
-                            <img id="ic_set_hn"  style="width: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;">
-                            <label style="font-size: 20px;color: #667085;" class="" id="menu16">กรอกคนไข้</label>
-                        </a>
-                    </li>
-
-                    
-                    <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_pay" hidden>
-                        <a class="collapse-item" href="pages/pay.php" style="color: black;font-size: 16px;" id="a_pay">
-                            <img id="ic_dispense_equipment"  style="width: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;">
-                            <label style="font-size: 20px;color: #667085;" class="" id="menu4">จ่ายอุปกรณ์</label>
-                        </a>
-                    </li>
+                <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_create_request" hidden>
+                    <a class="collapse-item" href="index.php?s=create_request" style="color: black;font-size: 16px;" id="a_create_request">
+                        <img id="ic_create_equipment_request" style="width: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;">
+                        <label style="font-size: 20px;color: #667085;" class="" id="menu3">สร้างใบขอเบิกอุปกรณ์</label>
+                    </a>
+                </li>
 
 
-                    <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_hn" hidden>
-                        <a class="collapse-item" href="pages/hn.php" style="color: black;font-size: 16px;" id="a_hn">
-                            <img id="ic_search_hndata"  style="width: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;">
-                            <label style="font-size: 20px;color: #667085;" class="" id="menu9">สืบค้นข้อมูล HN</label>
-                        </a>
-                    </li>
-
-                    <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_movement" hidden>
-                        <a class="collapse-item" href="pages/movement.php" style="color: black;font-size: 16px;" id="a_movement">
-                            <img id="ic_movement" style="width: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;">
-                            <label style="font-size: 20px;color: #667085;" class="" id="menu11">ความเคลื่่อนไหว</label>
-                        </a>
-                    </li>
+                <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_pay" hidden>
+                    <a class="collapse-item" href="pages/pay.php" style="color: black;font-size: 16px;" id="a_pay">
+                        <img id="ic_dispense_equipment" style="width: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;">
+                        <label style="font-size: 20px;color: #667085;" class="" id="menu4">จ่ายอุปกรณ์</label>
+                    </a>
+                </li>
 
 
-                    <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_adjuststock" hidden>
-                        <a class="collapse-item" href="pages/adjuststock.php" style="color: black;font-size: 16px;" id="a_adjuststock">
-                            <img  id="ic_adjust_stock" style="width: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;">
-                            <label style="font-size: 20px;color: #667085;" class="" id="menu12">ปรับยอดสต๊อก</label>
-                        </a>
-                    </li>
+                <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_hn" hidden>
+                    <a class="collapse-item" href="pages/hn.php" style="color: black;font-size: 16px;" id="a_hn">
+                        <img id="ic_search_hndata" style="width: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;">
+                        <label style="font-size: 20px;color: #667085;" class="" id="menu9">สืบค้นข้อมูล HN</label>
+                    </a>
+                </li>
 
-                    <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_register_item" hidden>
-                        <a class="collapse-item" href="pages/register_item.php" style="color: black;font-size: 16px;" id="a_register_item">
-                            <img id="ic_register_equipment" style="width: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;">
-                            <label style="font-size: 20px;color: #667085;" class="" id="menu7">ลงทะเบียนอุปกรณ์</label>
-                        </a>
-                    </li>
+                <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_movement" hidden>
+                    <a class="collapse-item" href="pages/movement.php" style="color: black;font-size: 16px;" id="a_movement">
+                        <img id="ic_movement" style="width: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;">
+                        <label style="font-size: 20px;color: #667085;" class="" id="menu11">ความเคลื่่อนไหว</label>
+                    </a>
+                </li>
 
-                    
-                    <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_stock_item" hidden>
-                        <a class="collapse-item" href="pages/stock_item.php" style="color: black;font-size: 16px;" id="a_stock_item">
-                            <img id="ic_inventory_tools"  style="width: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;">
-                            <label style="font-size: 20px;color: #667085;" class="" id="menu8">คลังและเครื่องมือ</label>
-                        </a>
-                    </li>
-
-                    <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_receive_dirty" hidden>
-                        <a class="collapse-item" href="pages/receive_dirty.php" style="color: black;font-size: 16px;" id="a_receive_dirty">
-                            <img id="ic_receive_contaminated_equipment" style="width: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;">
-                            <label style="font-size: 20px;color: #667085;" class="" id="menu5">รับอุปกรณ์ปนเปื้อน</label>
-                        </a>
-                    </li>
-
-                    <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_send-n-sterile" hidden>
-                        <a class="collapse-item" href="pages/send-n-sterile.php" style="color: black;font-size: 16px;" id="a_send-n-sterile">
-                            <img  id="ic_send_nsterile" style="width: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;">
-                            <label style="font-size: 20px;color: #667085;" class="" id="menu6">ส่งไป N Sterile</label>
-                        </a>
-                    </li>
-
-                    
-                    <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_setting" hidden >
-                        <a class="collapse-item" href="pages/setting.php" style="color: black;font-size: 16px;" id="a_setting">
-                            <img id="ic_turnon_offdisplay" style="width: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;">
-                            <label style="font-size: 20px;color: #667085;" class="" id="menu10">เปิด/ปิดการแสดงผล</label>
-                        </a>
-                    </li>
+                <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_request_item" hidden>
+                    <a class="collapse-item" href="pages/request_item.php" style="color: black;font-size: 16px;" id="a_request_item">
+                        <img id="ic_request_item" style="width: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;">
+                        <label style="font-size: 20px;color: #667085;" class="" id="menu15">ขอเบิกอุปกรณ์</label>
+                    </a>
+                </li>
 
 
-                    <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_manage"  hidden>
-                        <a class="collapse-item" href="pages/manage.php" style="color: black;font-size: 16px;" id="a_manage">
-                            <img id="ic_turnon_offdisplay_2" style="width: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;">
-                            <label style="font-size: 20px;color: #667085;" class="" id="menu13">จัดการข้อมูลระบบ</label>
-                        </a>
-                    </li>
-                    
-                    <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_report"  hidden>
-                        <a class="collapse-item" href="pages/report.php" style="color: black;font-size: 16px;" id="a_report">
-                            <img id="ic_turnon_offdisplay_3" style="width: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;">
-                            <label style="font-size: 20px;color: #667085;" class="" id="menu14">รายงาน</label>
-                        </a>
-                    </li>
-                    
-                    <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_permission"  >
-                        <a class="collapse-item" href="pages/permission.php" style="color: black;font-size: 16px;" id="a_permission">
-                            <img id="ic_permission" style="width: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;">
-                            <label style="font-size: 17px;color: #667085;" class="" id="menu17">กำหนดสิทธิการเข้าถึง</label>
-                        </a>
-                    </li>
+                <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_report" hidden>
+                    <a class="collapse-item" href="pages/report.php" style="color: black;font-size: 16px;" id="a_report">
+                        <img id="ic_turnon_offdisplay_3" style="width: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;">
+                        <label style="font-size: 20px;color: #667085;" class="" id="menu14">รายงาน</label>
+                    </a>
+                </li>
+
+
+                <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_adjuststock" hidden>
+                    <a class="collapse-item" href="pages/adjuststock.php" style="color: black;font-size: 16px;" id="a_adjuststock">
+                        <img id="ic_adjust_stock" style="width: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;">
+                        <label style="font-size: 20px;color: #667085;" class="" id="menu12">ปรับยอดสต๊อก</label>
+                    </a>
+                </li>
+
+                <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_register_item" hidden>
+                    <a class="collapse-item" href="pages/register_item.php" style="color: black;font-size: 16px;" id="a_register_item">
+                        <img id="ic_register_equipment" style="width: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;">
+                        <label style="font-size: 20px;color: #667085;" class="" id="menu7">ลงทะเบียนอุปกรณ์</label>
+                    </a>
+                </li>
+
+
+                <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_stock_item" hidden>
+                    <a class="collapse-item" href="pages/stock_item.php" style="color: black;font-size: 16px;" id="a_stock_item">
+                        <img id="ic_inventory_tools" style="width: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;">
+                        <label style="font-size: 20px;color: #667085;" class="" id="menu8">คลังและเครื่องมือ</label>
+                    </a>
+                </li>
+
+                <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_receive_dirty" hidden>
+                    <a class="collapse-item" href="pages/receive_dirty.php" style="color: black;font-size: 16px;" id="a_receive_dirty">
+                        <img id="ic_receive_contaminated_equipment" style="width: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;">
+                        <label style="font-size: 20px;color: #667085;" class="" id="menu5">รับอุปกรณ์ปนเปื้อน</label>
+                    </a>
+                </li>
+
+                <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_send-n-sterile" hidden>
+                    <a class="collapse-item" href="pages/send-n-sterile.php" style="color: black;font-size: 16px;" id="a_send-n-sterile">
+                        <img id="ic_send_nsterile" style="width: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;">
+                        <label style="font-size: 20px;color: #667085;" class="" id="menu6">ส่งไป N Sterile</label>
+                    </a>
+                </li>
+
+
+                <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_setting" hidden>
+                    <a class="collapse-item" href="pages/setting.php" style="color: black;font-size: 16px;" id="a_setting">
+                        <img id="ic_turnon_offdisplay" style="width: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;">
+                        <label style="font-size: 20px;color: #667085;" class="" id="menu10">เปิด/ปิดการแสดงผล</label>
+                    </a>
+                </li>
+
+
+                <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_manage" hidden>
+                    <a class="collapse-item" href="pages/manage.php" style="color: black;font-size: 16px;" id="a_manage">
+                        <img id="ic_turnon_offdisplay_2" style="width: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;">
+                        <label style="font-size: 20px;color: #667085;" class="" id="menu13">จัดการข้อมูลระบบ</label>
+                    </a>
+                </li>
 
 
 
-
+                <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_permission">
+                    <a class="collapse-item" href="pages/permission.php" style="color: black;font-size: 16px;" id="a_permission">
+                        <img id="ic_permission" style="width: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;">
+                        <label style="font-size: 17px;color: #667085;" class="" id="menu17">กำหนดสิทธิการเข้าถึง</label>
+                    </a>
+                </li>
 
 
 
 
-                    
-                    <hr class="sidebar-divider d-none d-md-block">
+
+
+
+
+
+                <hr class="sidebar-divider d-none d-md-block">
 
 
 
 
                 <?php if ($RefDepID == "nsterile") { ?>
-                    <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_receive_dirty" >
+                    <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_receive_dirty">
                         <a class="collapse-item" href="pages/receive_dirty.php" style="color: black;font-size: 16px;" id="a_receive_dirty">
                             <img id="ic_receive_contaminated_equipment" style="width: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;">
                             <label style="font-size: 20px;color: #667085;" class="" id="menu5">รับอุปกรณ์ปนเปื้อน</label>
                         </a>
                     </li>
 
-                    <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_send-n-sterile" >
+                    <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_send-n-sterile">
                         <a class="collapse-item" href="pages/send-n-sterile.php" style="color: black;font-size: 16px;" id="a_send-n-sterile">
-                            <img  id="ic_send_nsterile" style="width: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;">
+                            <img id="ic_send_nsterile" style="width: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;">
                             <label style="font-size: 20px;color: #667085;" class="" id="menu6">ส่งไป N Sterile</label>
                         </a>
                     </li>

@@ -139,19 +139,19 @@
                 <div class="col-md-12">
 
 
-                            <table class="table table-hover table-sm" id="table_rq2">
-                                <thead style="background-color: #cdd6ff;">
-                                    <tr>
-                                        <th scope="col" class="text-left" style="width:5%;"></th>
-                                        <th scope="col" class="text-left" style="width:50%;">เลขเอกสารขอเบิกอุปกรณ์</th>
-                                        <th scope="col" class="text-center" style="width:10%;">สถานะ</th>
-                                        <th scope="col" class="text-center" style="width:10%;"></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-      
+                    <table class="table table-hover table-sm" id="table_rq2">
+                        <thead style="background-color: #cdd6ff;">
+                            <tr>
+                                <th scope="col" class="text-left" style="width:5%;"></th>
+                                <th scope="col" class="text-left" style="width:50%;">เลขเอกสารขอเบิกอุปกรณ์</th>
+                                <th scope="col" class="text-center" style="width:10%;">สถานะ</th>
+                                <th scope="col" class="text-center" style="width:10%;"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+
 
 
 
@@ -163,18 +163,18 @@
         <div class="col-md-6">
             <div class="row " style="margin-top: 3.3rem !important;">
                 <div class="col-md-12">
-                            <table class="table table-hover table-sm" id="table_detail_rq">
-                                <thead style="background-color: #cdd6ff;">
-                                    <tr>
-                                        <th scope="col" class="text-center" id="" style="width:5%;"></th>
-                                        <th scope="col" class="text-center" id="" >รหัสอุปกรณ์</th>
-                                        <th scope="col" class="text-center" id="" >อุปกรณ์</th>
-                                        <th scope="col" class="text-center" id="" >จำนวน</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
+                    <table class="table table-hover table-sm" id="table_detail_rq">
+                        <thead style="background-color: #cdd6ff;">
+                            <tr>
+                                <th scope="col" class="text-center" id="" style="width:5%;"></th>
+                                <th scope="col" class="text-center" id="">รหัสอุปกรณ์</th>
+                                <th scope="col" class="text-center" id="">อุปกรณ์</th>
+                                <th scope="col" class="text-center" id="">จำนวน</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
                 </div>
 
                 <div class="col-md-12 text-right mt-2">
@@ -214,23 +214,23 @@
                 <div class="col-md-12">
 
 
-                            <table class="table table-hover table-sm" id="table_history">
-                                <thead style="background-color: #cdd6ff;">
-                                    <tr>
-                                        <th scope="col" class="text-center" >เลขที่เอกสาร RQ</th>
-                                        <th scope="col" class="text-center" >เลขที่เอกสาร RT</th>
-                                        <th scope="col" class="text-center" >วันที่</th>
-                                        <th scope="col" class="text-center">เวลา</th>
-                                        <th scope="col" class="text-center">แสดงรายละเอียด</th>
-                                        <th scope="col" class="text-center">รายงาน</th>
-                                        <th scope="col" class="text-center">สถานะ</th>
+                    <table class="table table-hover table-sm" id="table_history">
+                        <thead style="background-color: #cdd6ff;">
+                            <tr>
+                                <th scope="col" class="text-center">เลขที่เอกสาร RQ</th>
+                                <th scope="col" class="text-center">เลขที่เอกสาร RT</th>
+                                <th scope="col" class="text-center">วันที่</th>
+                                <th scope="col" class="text-center">เวลา</th>
+                                <th scope="col" class="text-center">แสดงรายละเอียด</th>
+                                <th scope="col" class="text-center">รายงาน</th>
+                                <th scope="col" class="text-center">สถานะ</th>
 
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-      
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+
 
 
 
@@ -252,13 +252,22 @@
                 </button>
             </div>
             <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-md-12 text-right">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="customSwitch1">
+                            <label class="custom-control-label" style="color:black;font-weight: bold;" for="customSwitch1">แสดงรวม</label>
+                        </div>
+                    </div>
+                </div>
                 <table class="table table-hover table-sm" id="table_detail">
                     <thead style="background-color: #cdd6ff;">
                         <tr>
                             <th scope="col" class="text-center" id="">ลำดับ</th>
                             <th scope="col" class="text-center" id="">รหัสอุปกรณ์</th>
                             <th scope="col" class="text-center" id="">อุปกรณ์</th>
-                            <th scope="col" class="text-center" id="">QrCode</th>
+                            <th scope="col" class="text-center" id="qr_change">QrCode</th>
                         </tr>
                     </thead>
                     <tbody>

@@ -77,7 +77,6 @@ function click_main() {
     $("#row_mapping").hide();
     $("#row_manage").hide();
 
-    show_detail_routine();
     show_detail_item();
     select_type();
     select_doctor();
@@ -88,6 +87,9 @@ function click_main() {
       $("#select_doctor_routine").select2();
       $("#select_deproom_routine").select2();
       $("#select_procedure_routine").select2();
+
+      show_detail_routine();
+
     }, 500);
 
     $("#routine_id").val("");

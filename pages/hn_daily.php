@@ -82,7 +82,7 @@
                         <th scope="col" class="text-center" id="">วัน/เวลารับบริการ</th>
                         <th scope="col" class="text-center" id="">แพทย์</th>
                         <th scope="col" class="text-center" id="">ห้องผ่าตัด</th>
-                        <th scope="col" class="text-center" id="">หัตถการ</th>
+                        <th scope="col" class="text-center" id="" style="width:30%">หัตถการ</th>
                         <th scope="col" class="text-center" id="">#</th>
                         <th scope="col" class="text-center" id="">#</th>
                     </tr>

@@ -1,4 +1,16 @@
+var RqDocNo_x  = "";
+var RtDocNo_x  = "";
+
 $(function () {
+  $("#customSwitch1").change(function () {
+    if ($(this).is(":checked")) {
+      showdetail(RqDocNo_x, RtDocNo_x,1);
+      $("#qr_change").text('จำนวน');
+    } else {
+      showdetail(RqDocNo_x, RtDocNo_x,0);
+    }
+  });
+
   var d = new Date();
   var month = d.getMonth() + 1;
   var day = d.getDate();
@@ -45,7 +57,7 @@ $(function () {
 
   if (localStorage.request_item == 1) {
     $("#radio_receive").click();
-    localStorage.removeItem('request_item');
+    localStorage.removeItem("request_item");
   }
 });
 
@@ -504,7 +516,7 @@ function show_detail_history() {
                       <td class="f18 text-center">${value.RtDocNo}</td>
                       <td class="f18 text-center">${value.Createdate}</td>
                       <td class="f18 text-center">${value.Createtime}</td>
-                      <td class="f18 text-center"><button class='btn btn-primary' onclick='showdetail("${value.RqDocNo}","${value.RtDocNo}")'>แสดงรายละเอียด</button></td>
+                      <td class="f18 text-center"><button class='btn btn-primary' onclick='showdetail_popup("${value.RqDocNo}","${value.RtDocNo}")'>แสดงรายละเอียด</button></td>
                       <td class="f18 text-center"></td>
                       <td class="f18 text-center">${txt}</td>
                    </tr>`;
@@ -516,8 +528,16 @@ function show_detail_history() {
   });
 }
 
-function showdetail(RqDocNo, RtDocNo) {
+$("#customSwitch1").click(function () {});
+
+function showdetail_popup(RqDocNo, RtDocNo) {
+  RqDocNo_x = RqDocNo;
+  RtDocNo_x = RtDocNo;
   $("#myModal_detail").modal("toggle");
+  showdetail(RqDocNo, RtDocNo,0);
+}
+
+function showdetail(RqDocNo, RtDocNo,check_show) {
   $.ajax({
     url: "process/request_item.php",
     type: "POST",
@@ -525,6 +545,7 @@ function showdetail(RqDocNo, RtDocNo) {
       FUNC_NAME: "showdetail",
       RqDocNo: RqDocNo,
       RtDocNo: RtDocNo,
+      check_show: check_show,
     },
     success: function (result) {
       var _tr = "";
@@ -653,7 +674,7 @@ function show_detail_item_ByDocNo(docnort, docnorq) {
                       <td class="f24 text-left">
                       <i class="fa-solid fa-chevron-up" style='font-size:20px;cursor:pointer;' id='open_${value.itemcode}' value='0' onclick='open_item_sub("${value.itemcode}")'></i>
                       </td>
-                      <td class="f24 text-center">${value.itemcode}</td>
+                      <td class="f24 text-center">${value.itemcode2}</td>
                       <td class="f24 text-left">${value.itemname}</td>
                       <td class="f24 text-center">${value.cnt}</td>
                    </tr>`;

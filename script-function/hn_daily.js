@@ -441,7 +441,7 @@ function show_detail_daily() {
             var txt = `<button class='btn f18' style='color:#fff;font-weight: bold;background-color:#643695;' onclick='update_create_request(${value.ID})'>รอดำเนินการ</button>`;
           }
           if (value.isStatus == "3") {
-            var txt = `<a  href="#" style='font-weight: bold;color:#1cc88a;' )'>ดำเนินการเรียบร้อย</a>`;
+            var txt = `<a  class='btn f18'  href="#" style='font-weight: bold;background-color:#1cc88a;color:#fff;' )'>ดำเนินการเรียบร้อย</a>`;
             x = "hidden";
           }
           _tr += `<tr>
@@ -451,7 +451,7 @@ function show_detail_daily() {
                       <td class="f18 text-center">${value.departmentroomname}</td>
                       <td class="f18 text-center">${value.Procedure_TH}</td>
                       <td class="f18 text-center">${txt}</td>
-                      <td class="f18 text-center"><a ${x}  href="#" style='font-weight: bold;color:#e74a3b;' onclick='update_refrain(${value.ID})'>งด</a></td>
+                      <td class="f18 text-center"><a  class='btn f18' ${x}  href="#" style='font-weight: bold;background-color:#e74a3b;color:#fff;' onclick='update_refrain(${value.ID})'>งด</a></td>
                    </tr>`;
         });
       }

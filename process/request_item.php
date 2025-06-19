@@ -30,7 +30,9 @@ function showdetail($conn,$db){
     $return = array();
     $docnort = $_POST['RtDocNo'];
     $docnorq = $_POST['RqDocNo'];
+    $check_show = $_POST['check_show'];
 
+    if($check_show == 0){
     $Q1 = " SELECT
                 item.itemcode,
                 item.itemname,
@@ -42,6 +44,21 @@ function showdetail($conn,$db){
             WHERE
                     insertrfid.RqDocNo = '$docnorq' 
                 AND insertrfid.RtDocNo = '$docnort' ";
+    }else{
+            $Q1 = " SELECT
+                item.itemcode,
+                item.itemname,
+                COUNT(insertrfid_detail.QrCode) AS QrCode
+            FROM
+                insertrfid
+                INNER JOIN insertrfid_detail ON insertrfid.DocNo = insertrfid_detail.DocNo
+                INNER JOIN item ON insertrfid_detail.ItemCode = item.itemcode 
+            WHERE
+                    insertrfid.RqDocNo = '$docnorq' 
+                AND insertrfid.RtDocNo = '$docnort' 
+            GROUP BY item.itemcode ";
+    }
+
 
     $meQ1 = $conn->prepare($Q1);
     $meQ1->execute();
@@ -114,6 +131,7 @@ function show_detail_item_ByDocNo($conn,$db){
 
     $Q1 = " SELECT
                 item.itemcode,
+                item.itemcode2,
                 item.itemname,
                 COUNT( insertrfid_detail.ID ) AS cnt
             FROM

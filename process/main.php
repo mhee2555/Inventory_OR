@@ -84,8 +84,9 @@ function selection_request_item($conn,$db)
                     INNER JOIN insertrfid_detail ON insertrfid.DocNo = insertrfid_detail.DocNo
                     INNER JOIN item ON insertrfid_detail.ItemCode = item.itemcode 
                 WHERE
-                    insertrfid.Createdate = NOW() 
-                    AND insertrfid.StatusDocNo != 2 ";
+                    DATE(insertrfid.Createdate) = DATE(NOW())   
+                    AND insertrfid.StatusDocNo != 2 
+                    AND insertrfid.RqDocNo != '' ";
     $meQuery = $conn->prepare($query);
     $meQuery->execute();
     while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {

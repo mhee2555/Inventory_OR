@@ -825,7 +825,7 @@ function showDetail_Permission(DocNo) {
         $.each(ObjData, function (kay, value) {
           
           var txt = '';
-          if(value.cnt_pay >= value.cnt){
+          if(value.cnt_over == 0){
             txt = `<label class='f18' style='font-weight:bold;color:#1cc88a;' >ครบ</label>`;
           }else{
             txt = `<label class='f18' style='font-weight:bold;color:#e74a3b;' >ค้าง</label>`;
