@@ -38,6 +38,7 @@
                 <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;border-color: lightgray;" id="radio_suds">ความเคลื่อนไหว RFID</button>
                 <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;border-color: lightgray;" id="radio_sterile">ความเคลื่อนไหวตู้ Weighing</button>
                 <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;border-color: lightgray;" id="radio_normal">ความเคลื่อนไหว อุปกรณ์ปกติ</button>
+                <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;border-color: lightgray;" id="radio_restock">ปรับยอดสต๊อก</button>
             </div>
         </div>
     </div>
@@ -409,6 +410,47 @@
 
 
 
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="restock">
+    <div class="row">
+        <div class="col-md-12" id="row_return">
+            <div class="card">
+                <div class="card-body">
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group ">
+                                <div class="input-group mb-2">
+                                    <input type="text" class="form-control f18" id="input_scan_restock" autocomplete="off" placeholder="">
+                                    <div class="input-group-append">
+                                        <div class="input-group-text"><i class="fa-solid fa-qrcode"></i></div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <table class="table table-hover table-sm" id="table_item_restock">
+                        <thead style="background-color: #cdd6ff;">
+                            <tr>
+                                <th scope="col" class="text-center" id="">ItemCode</th>
+                                <th scope="col" class="text-center" id="">อุปกรณ์</th>
+                                <th scope="col" class="text-center" id="">รหัสใช้งาน</th>
+                                <th scope="col" class="text-center" id="">สถานะ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

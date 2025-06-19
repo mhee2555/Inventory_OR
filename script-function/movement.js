@@ -1,13 +1,10 @@
 var departmentroomname = "";
 var UserName = "";
 $(function () {
-
-
-  $('#excelFile').on('change', function() {
-    var fileName = this.files[0]?.name || '';
-    $('#filename').val(fileName);
+  $("#excelFile").on("change", function () {
+    var fileName = this.files[0]?.name || "";
+    $("#filename").val(fileName);
   });
-
 
   session();
   select_item();
@@ -52,6 +49,7 @@ $(function () {
   $("#suds").hide();
   $("#sterile").hide();
   $("#normal").hide();
+  $("#restock").hide();
 
   $("#radio_suds").css("color", "#bbbbb");
   $("#radio_suds").css("background", "#EAECF0");
@@ -73,7 +71,10 @@ $(function () {
 
     $("#radio_normal").css("color", "black");
     $("#radio_normal").css("background", "");
+    $("#radio_restock").css("color", "black");
+    $("#radio_restock").css("background", "");
 
+    $("#restock").hide();
     $("#sterile1").show();
     $("#sterile").hide();
     $("#normal").hide();
@@ -87,7 +88,10 @@ $(function () {
     $("#radio_suds").css("background", "");
     $("#radio_normal").css("color", "black");
     $("#radio_normal").css("background", "");
+    $("#radio_restock").css("color", "black");
+    $("#radio_restock").css("background", "");
 
+    $("#restock").hide();
     $("#sterile1").hide();
     $("#sterile").show();
     $("#normal").hide();
@@ -111,7 +115,10 @@ $(function () {
     $("#radio_suds").css("background", "");
     $("#radio_sterile").css("color", "black");
     $("#radio_sterile").css("background", "");
+    $("#radio_restock").css("color", "black");
+    $("#radio_restock").css("background", "");
 
+    $("#restock").hide();
     $("#sterile1").hide();
     $("#sterile").hide();
     $("#normal").show();
@@ -122,6 +129,213 @@ $(function () {
       selection_item_normal();
     }, 1000);
   });
+
+  $("#radio_restock").click(function () {
+    $("#radio_restock").css("color", "#bbbbb");
+    $("#radio_restock").css("background", "#EAECF0");
+
+    $("#radio_normal").css("color", "black");
+    $("#radio_normal").css("background", "");
+    $("#radio_suds").css("color", "black");
+    $("#radio_suds").css("background", "");
+    $("#radio_sterile").css("color", "black");
+    $("#radio_sterile").css("background", "");
+
+    $("#restock").show();
+    $("#sterile1").hide();
+    $("#sterile").hide();
+    $("#normal").hide();
+
+
+        $("#table_item_restock tbody").html("");
+
+
+    // selection_departmentRoom_normal();
+
+    // setTimeout(() => {
+    //   selection_item_normal();
+    // }, 1000);
+  });
+});
+
+function convertString(S_Input) {
+  var S_QR = "";
+  console.log(S_Input.charCodeAt(0));
+  if (S_Input.length > 0) {
+    if (S_Input.charCodeAt(0) > 1000 || S_Input.charCodeAt(0) == 63) {
+      for (var i = 0; i < S_Input.length; i++) {
+        S_QR += convertEN(S_Input[i]);
+      }
+    } else {
+      S_QR = S_Input;
+    }
+  }
+
+  return S_QR;
+}
+
+function convertEN(char) {
+  switch (char) {
+    case "ข":
+      return "-";
+    case "จ":
+      return "0";
+    case "ๅ":
+      return "1";
+    case "/":
+      return "2";
+    case "-":
+      return "3";
+    case "ภ":
+      return "4";
+    case "ถ":
+      return "5";
+    case "ุ":
+      return "6";
+    case "ึ":
+      return "7";
+    case "ค":
+      return "8";
+    case "ต":
+      return "9";
+    case "ฤ":
+      return "A";
+    case "ฺ":
+      return "B";
+    case "ฉ":
+      return "C";
+    case "ฏ":
+      return "D";
+    case "ฎ":
+      return "E";
+    case "โ":
+      return "F";
+    case "ฌ":
+      return "G";
+    case "็":
+      return "H";
+    case "ณ":
+      return "I";
+    case "๋":
+      return "J";
+    case "ษ":
+      return "K";
+    case "ศ":
+      return "L";
+    case "?":
+      return "M";
+    case "์":
+      return "N";
+    case "ฯ":
+      return "O";
+    case "ญ":
+      return "P";
+    case "๐":
+      return "Q";
+    case "ฑ":
+      return "R";
+    case "ฆ":
+      return "S";
+    case "ธ":
+      return "T";
+    case "๊":
+      return "U";
+    case "ฮ":
+      return "V";
+    case '"':
+      return "W";
+    case ")":
+      return "X";
+    case "ํ":
+      return "Y";
+    case "(":
+      return "Z";
+    case "ฟ":
+      return "a";
+    case "ิ":
+      return "b";
+    case "แ":
+      return "c";
+    case "ก":
+      return "d";
+    case "ำ":
+      return "e";
+    case "ด":
+      return "f";
+    case "เ":
+      return "g";
+    case "้":
+      return "h";
+    case "ร":
+      return "i";
+    case "่":
+      return "j";
+    case "า":
+      return "k";
+    case "ส":
+      return "l";
+    case "ท":
+      return "m";
+    case "ื":
+      return "n";
+    case "น":
+      return "o";
+    case "ย":
+      return "p";
+    case "ๆ":
+      return "q";
+    case "พ":
+      return "r";
+    case "ห":
+      return "s";
+    case "ะ":
+      return "t";
+    case "ี":
+      return "u";
+    case "อ":
+      return "v";
+    case "ไ":
+      return "w";
+    case "ป":
+      return "x";
+    case "ั":
+      return "y";
+    case "ผ":
+      return "z";
+    default:
+      return " ";
+  }
+}
+
+$("#input_scan_restock").keypress(function (e) {
+  if (e.which == 13) {
+    $("#input_scan_restock").val(convertString($(this).val().trim()));
+    $.ajax({
+      url: "process/movement.php",
+      type: "POST",
+      data: {
+        FUNC_NAME: "show_restock",
+        UsageCode: $(this).val(),
+      },
+      success: function (result) {
+        var ObjData = JSON.parse(result);
+        var tr = ``;
+        if (!$.isEmptyObject(ObjData)) {
+          $.each(ObjData, function (kay, value) {
+            tr += `<tr>
+                                <td class='text-center'>${value.itemcode2}</td>
+                                <td class='text-left'>${value.itemname}</td>
+                                <td class='text-center'>${value.UsageCode}</td>
+                                <td class='text-center'>อยู่คลัง</td>`;
+            tr += `</tr>`;
+          });
+        } else {
+        }
+        $("#table_item_restock tbody").append(tr);
+        $("#input_scan_restock").val("");
+      },
+    });
+  }
 });
 
 function selection_itemSuds() {
@@ -466,38 +680,42 @@ function selection_item() {
           //   parseInt(value.Qty) -
           //   (parseInt(value.cnt_pay) + parseInt(value.cnt_cssd));
 
-
-            if(value.stock_max == null){
-              value.stock_max = 0;
-            }
-            if(value.stock_min == null){
-              value.stock_min = 0;
-            }
-            var color  ='';
-            if(value.calculated_balance < value.stock_min){
-               color  ='color:red;'
-            }
-            if(value.cnt < value.stock_balance){
-              value.cnt = value.stock_balance;
-            }
-
+          if (value.stock_max == null) {
+            value.stock_max = 0;
+          }
+          if (value.stock_min == null) {
+            value.stock_min = 0;
+          }
+          var color = "";
+          if (value.calculated_balance < value.stock_min) {
+            color = "color:red;";
+          }
+          if (value.cnt < value.stock_balance) {
+            value.cnt = value.stock_balance;
+          }
 
           tr += `<tr>f
                                   <td class='text-center' style="text-wrap: nowrap;">${
                                     kay + 1
                                   }</td>
                                   <td style="text-wrap: nowrap;${color}" >${
-                                    value.itemname
-                                  }</td>
+            value.itemname
+          }</td>
                                   <td class='text-center' style="text-wrap: nowrap;">${
                                     value.cnt
                                   }</td>
                                   <td class='text-center' style="text-wrap: nowrap;background-color:#FFFAEB;">${
                                     value.cnt_pay
                                   }</td>
-                                  <td class='text-center' style="text-wrap: nowrap;background-color: #ECFDF3;">${value.calculated_balance}</td>
-                                  <td class='text-center' style="text-wrap: nowrap;background-color: #d0d9ff;"">${value.stock_max}</td>
-                                   <td class='text-center' style="text-wrap: nowrap;background-color: #b3e5fc;"">${value.stock_min}</td>`;
+                                  <td class='text-center' style="text-wrap: nowrap;background-color: #ECFDF3;">${
+                                    value.calculated_balance
+                                  }</td>
+                                  <td class='text-center' style="text-wrap: nowrap;background-color: #d0d9ff;"">${
+                                    value.stock_max
+                                  }</td>
+                                   <td class='text-center' style="text-wrap: nowrap;background-color: #b3e5fc;"">${
+                                     value.stock_min
+                                   }</td>`;
 
           var sumcount = 0;
           $.each(depRoom, function (keydep, valuedep) {
@@ -595,7 +813,6 @@ function set_date() {
   return output;
 }
 
-
 function showLoading() {
   $("body").loadingModal({
     position: "auto",
@@ -623,57 +840,48 @@ $("#save_upload_stock").click(function () {
     cancelButtonText: "ยกเลิก",
   }).then((result) => {
     if (result.isConfirmed) {
+      var fileInput = $("#excelFile")[0];
+      var file = fileInput.files[0];
 
+      if (!file) {
+        Swal.fire("ผิดพลาด", "กรุณาเลือกไฟล์ก่อน", "error");
+        return;
+      }
+      showLoading();
 
+      var formData = new FormData();
+      formData.append("excelFile", file);
 
+      $.ajax({
+        url: "process/upload_excel.php",
+        type: "POST",
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+          // Swal.fire("สำเร็จ", "อัปโหลดเรียบร้อย", "success");
 
-        var fileInput = $('#excelFile')[0];
-        var file = fileInput.files[0];
-    
-        if (!file) {
-          Swal.fire("ผิดพลาด", "กรุณาเลือกไฟล์ก่อน", "error");
-          return;
-        }
-        showLoading();
-    
-        var formData = new FormData();
-        formData.append('excelFile', file);
-
-
-        $.ajax({
-          url: 'process/upload_excel.php',
-          type: 'POST',
-          data: formData,
-          contentType: false,
-          processData: false,
-          success: function(response) {
-            // Swal.fire("สำเร็จ", "อัปโหลดเรียบร้อย", "success");
-
-            setTimeout(() => {
-              window.location.reload();
-              // $("body").loadingModal("destroy");
-            }, 500);
-            // หรือแสดงข้อความใน element แทน
-            // $('#message').html(response);
-          },
-          error: function() {
-            Swal.fire("ล้มเหลว", "เกิดข้อผิดพลาดระหว่างอัปโหลด", "error");
-          }
-        });
-
-
-
+          setTimeout(() => {
+            window.location.reload();
+            // $("body").loadingModal("destroy");
+          }, 500);
+          // หรือแสดงข้อความใน element แทน
+          // $('#message').html(response);
+        },
+        error: function () {
+          Swal.fire("ล้มเหลว", "เกิดข้อผิดพลาดระหว่างอัปโหลด", "error");
+        },
+      });
     }
   });
 });
 
 $(".btn_manage_stock").click(function () {
   $("#modal_manage_stockRFID").modal("toggle");
-  $("#max_manage_stockRFID").val('');
-  $("#min_manage_stockRFID").val('');
-  $("#item_manage_stockRFID").val('');
+  $("#max_manage_stockRFID").val("");
+  $("#min_manage_stockRFID").val("");
+  $("#item_manage_stockRFID").val("");
   setTimeout(() => {
-    
     $("#item_manage_stockRFID").select2({
       dropdownParent: $("#modal_manage_stockRFID"), // 👈 ต้องชี้ dropdownParent เป็น modal
     });
@@ -681,13 +889,15 @@ $(".btn_manage_stock").click(function () {
 });
 
 $("#save_manage_stockRFID").click(function () {
-
-  if($("#item_manage_stockRFID").val() == ""){
+  if ($("#item_manage_stockRFID").val() == "") {
     Swal.fire("ล้มเหลว", "กรุณาเลือกรายการ", "error");
     return;
   }
 
-  if($("#max_manage_stockRFID").val() == "" || $("#min_manage_stockRFID").val() == ""){
+  if (
+    $("#max_manage_stockRFID").val() == "" ||
+    $("#min_manage_stockRFID").val() == ""
+  ) {
     Swal.fire("ล้มเหลว", "กรุณากรอก Max & Min", "error");
     return;
   }
@@ -723,9 +933,7 @@ $("#save_manage_stockRFID").click(function () {
   });
 });
 
-
-function select_item(){
-
+function select_item() {
   $.ajax({
     url: "process/process_main/select_main.php",
     type: "POST",
@@ -746,11 +954,6 @@ function select_item(){
       $("#item_manage_stockRFID").html(option);
     },
   });
-
-
-  
-  
-  
 }
 
 function selection_departmentRoom_rfid() {
@@ -828,23 +1031,21 @@ function selection_item_rfid() {
 
       if (!$.isEmptyObject(ObjData)) {
         $.each(ObjData["item"], function (kay, value) {
-
-
           // var balance = parseInt(value.cnt) - parseInt(value.cnt_pay);
 
-          if(value.stock_max == null){
+          if (value.stock_max == null) {
             value.stock_max = 0;
           }
 
-          if(value.stock_min == null){
+          if (value.stock_min == null) {
             value.stock_min = 0;
           }
-          var color  ='';
-          if(value.calculated_balance < value.stock_min){
-             color  ='color:red;'
+          var color = "";
+          if (value.calculated_balance < value.stock_min) {
+            color = "color:red;";
           }
 
-          if(value.cnt < value.stock_balance){
+          if (value.cnt < value.stock_balance) {
             value.cnt = value.stock_balance;
           }
           tr += `<tr>
@@ -852,17 +1053,23 @@ function selection_item_rfid() {
                                     kay + 1
                                   }</td>
                                   <td style="text-wrap: nowrap;${color}">${
-                                    value.itemname
-                                  }</td>
+            value.itemname
+          }</td>
                                   <td class='text-center' style="text-wrap: nowrap;">${
                                     value.cnt
                                   }</td>
                                   <td class='text-center' style="text-wrap: nowrap;background-color:#FFFAEB;">${
                                     value.cnt_pay
                                   }</td>
-                                     <td class='text-center' style="text-wrap: nowrap;background-color:#ECFDF3;">${value.calculated_balance}</td>
-                                  <td class='text-center' style="text-wrap: nowrap;background-color: #d0d9ff;"">${value.stock_max}</td>
-                                   <td class='text-center' style="text-wrap: nowrap;background-color: #b3e5fc;"">${value.stock_min}</td>`;
+                                     <td class='text-center' style="text-wrap: nowrap;background-color:#ECFDF3;">${
+                                       value.calculated_balance
+                                     }</td>
+                                  <td class='text-center' style="text-wrap: nowrap;background-color: #d0d9ff;"">${
+                                    value.stock_max
+                                  }</td>
+                                   <td class='text-center' style="text-wrap: nowrap;background-color: #b3e5fc;"">${
+                                     value.stock_min
+                                   }</td>`;
 
           var sumcount = 0;
           $.each(depRoom, function (keydep, valuedep) {
@@ -885,7 +1092,6 @@ function selection_item_rfid() {
 
           tr += `</tr>`;
         });
-
       } else {
       }
 
@@ -1002,39 +1208,43 @@ function selection_item_normal() {
       // var tr = ``;
       if (!$.isEmptyObject(ObjData)) {
         $.each(ObjData["item"], function (kay, value) {
-
-
-          if(value.stock_max == null){
+          if (value.stock_max == null) {
             value.stock_max = 0;
           }
-          if(value.stock_min == null){
+          if (value.stock_min == null) {
             value.stock_min = 0;
           }
-          var color  ='';
-          if(value.calculated_balance < value.stock_min){
-             color  ='color:red;'
+          var color = "";
+          if (value.calculated_balance < value.stock_min) {
+            color = "color:red;";
           }
 
-          if(value.cnt < value.stock_balance){
+          if (value.cnt < value.stock_balance) {
             value.cnt = value.stock_balance;
           }
-          
+
           tr += `<tr>f
                                   <td class='text-center' style="text-wrap: nowrap;">${
                                     kay + 1
                                   }</td>
                                   <td style="text-wrap: nowrap;${color}" >${
-                                    value.itemname
-                                  }</td>
+            value.itemname
+          }</td>
                                   <td class='text-center' style="text-wrap: nowrap;">${
                                     value.cnt
                                   }</td>
                                   <td class='text-center' style="text-wrap: nowrap;background-color:#FFFAEB;">${
                                     value.cnt_pay
                                   }</td>
-                                     <td class='text-center' style="text-wrap: nowrap;background-color:#ECFDF3;">${value.calculated_balance}</td>
-                                  <td class='text-center' style="text-wrap: nowrap;background-color: #d0d9ff;"">${value.stock_max}</td>
-                                   <td class='text-center' style="text-wrap: nowrap;background-color: #b3e5fc;"">${value.stock_min}</td>`;
+                                     <td class='text-center' style="text-wrap: nowrap;background-color:#ECFDF3;">${
+                                       value.calculated_balance
+                                     }</td>
+                                  <td class='text-center' style="text-wrap: nowrap;background-color: #d0d9ff;"">${
+                                    value.stock_max
+                                  }</td>
+                                   <td class='text-center' style="text-wrap: nowrap;background-color: #b3e5fc;"">${
+                                     value.stock_min
+                                   }</td>`;
 
           var sumcount = 0;
           $.each(depRoom, function (keydep, valuedep) {
