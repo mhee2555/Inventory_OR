@@ -78,11 +78,9 @@ function selection_request_item($conn,$db)
 
     $return = [];
     $query = " SELECT
-                    COUNT( insertrfid_detail.ID ) AS c 
+                    COUNT( insertrfid.DocNo ) AS c 
                 FROM
                     insertrfid
-                    INNER JOIN insertrfid_detail ON insertrfid.DocNo = insertrfid_detail.DocNo
-                    INNER JOIN item ON insertrfid_detail.ItemCode = item.itemcode 
                 WHERE
                     DATE(insertrfid.Createdate) = DATE(NOW())   
                     AND insertrfid.StatusDocNo != 2 

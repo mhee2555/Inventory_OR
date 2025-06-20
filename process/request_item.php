@@ -252,7 +252,7 @@ function show_detail_request_byDocNo($conn,$db)
 
     $query = "SELECT
                 item.itemname ,
-                item.itemcode ,
+                item.itemcode2 AS itemcode ,
                 request_detail.ID ,
                 SUM(request_detail.Qty) AS cnt ,
                 itemtype.TyeName

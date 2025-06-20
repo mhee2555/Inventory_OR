@@ -86,7 +86,7 @@ function show_restock($conn, $db)
             $meQuery_2->execute();
             while ($row_2 = $meQuery_2->fetch(PDO::FETCH_ASSOC)) {
 
-                $return[] = $row_2;
+                // $return[] = $row_2;
                 $_ID = $row_2['ID'];
                 $_hndetail_ID = $row_2['hndetail_ID'];
                 $_ModifyDate = $row_2['ModifyDate'];

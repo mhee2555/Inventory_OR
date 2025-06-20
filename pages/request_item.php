@@ -255,13 +255,13 @@
 
                 <div class="row">
                     <div class="col-md-12 text-right">
-                        <div class="custom-control custom-switch">
+                        <div class="custom-control custom-switch custom-switch-lg">
                             <input type="checkbox" class="custom-control-input" id="customSwitch1">
-                            <label class="custom-control-label" style="color:black;font-weight: bold;" for="customSwitch1">แสดงรวม</label>
+                            <label class="custom-control-label" for="customSwitch1" style="color:black;font-weight: bold;">แสดงรวม</label>
                         </div>
                     </div>
                 </div>
-                <table class="table table-hover table-sm" id="table_detail">
+                <table class="table table-hover table-sm mt-2" id="table_detail">
                     <thead style="background-color: #cdd6ff;">
                         <tr>
                             <th scope="col" class="text-center" id="">ลำดับ</th>

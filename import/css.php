@@ -28,7 +28,27 @@
     /* ::-webkit-input-placeholder {
    text-align: center;
 } */
+    .custom-switch.custom-switch-lg .custom-control-label::before,
+    .custom-switch.custom-switch-lg .custom-control-label::after {
+        top: 0.25rem;
+        width: 3rem;
+        height: 1.5rem;
+    }
 
+    .custom-switch.custom-switch-lg .custom-control-label::after {
+        width: 1.5rem;
+        height: 1.5rem;
+        top: 0.25rem;
+    }
+
+    .custom-switch.custom-switch-lg .custom-control-input:checked ~ .custom-control-label::after {
+        transform: translateX(1.5rem);
+    }
+
+    .custom-switch.custom-switch-lg .custom-control-label {
+        font-size: 1.2rem;
+        padding-left: 3.5rem;
+    }
 .custom-label {
         display: inline-block;
         padding: 8px 15px;
