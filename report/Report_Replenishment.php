@@ -194,7 +194,7 @@ if ($type_date == 2) {
     $year1 = $year1-543;
 
     if ($checkmonth == 1) {
-        $where_date = "WHERE MONTH(itemstock.LastCabinetModify) = '$month1' AND YEAR(hncode.DocDate) = '$year1'   ";
+        $where_date = "WHERE MONTH(itemstock.LastCabinetModify) = '$month1' AND YEAR(itemstock.LastCabinetModify) = '$year1'   ";
 
     } else {
         $where_date = "WHERE MONTH(itemstock.LastCabinetModify) BETWEEN '$month1' 	AND '$month2' AND YEAR(itemstock.LastCabinetModify) = '$year1'  ";
@@ -242,6 +242,8 @@ $query = " SELECT
             GROUP BY
                 item.itemname
             ORDER BY  qty DESC ";
+
+
 
 $meQuery1 = $conn->prepare($query);
 $meQuery1->execute();

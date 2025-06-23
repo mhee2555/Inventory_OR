@@ -278,7 +278,7 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
 
 $html .= '<tr nobr="true" style="font-size:15px;">';
 $html .=   '<td width="90 %" align="center" rowspan="5">Grand Total</td>';
-$html .=   '<td width="10 %" align="center">' . number_format($sum_all,2) . '</td>';
+$html .=   '<td width="10 %" align="center">' . $sum_all . '</td>';
 $html .=  '</tr>';
 
 

@@ -441,7 +441,7 @@ $(function () {
           "&checkyear=" +
           checkyear;
 
-        window.open("report/Report_Replenishment.php" + option, "_blank");
+        window.open("report/phpexcel/Report_Replenishment.php" + option, "_blank");
       }
       if ($("#select_report").val() == 2) {
         if ($("#radio_date1").is(":checked")) {

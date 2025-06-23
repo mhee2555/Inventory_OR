@@ -317,7 +317,7 @@ $pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
 $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
 // set margins
 // $pdf->SetMargins(5,58, 5);
-$pdf->SetMargins(5, PDF_MARGIN_TOP, 5);
+$pdf->SetMargins(5, 15, 5);
 
 $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
 $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
@@ -337,7 +337,7 @@ $pdf->AddPage('P', 'A5');
 $pdf->SetFont('db_helvethaica_x', 'B', 18);
 $DocNo = $_GET['DocNo'];
 // $pdf->Ln(85);
-  $pdf->Ln(32);
+  $pdf->Ln(43);
 
 
 $html = '    
