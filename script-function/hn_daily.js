@@ -1,16 +1,11 @@
 $(function () {
   $("#checkbox_filter").change(function () {
-    show_detail_daily();
 
-    // if ($(this).is(":checked")) {
-    //   // ถ้า checkbox ถูกเลือก
-    //   console.log("เช็คแล้ว");
-    //   $("#select_type").prop("disabled", false); // หรือจะให้ enable select
-    // } else {
-    //   // ถ้า checkbox ไม่ถูกเลือก
-    //   console.log("ยังไม่เช็ค");
-    //   $("#select_type").prop("disabled", true); // หรือจะ disable select
-    // }
+    $("#select_type").val('');
+
+    setTimeout(() => {
+      show_detail_daily();
+    }, 500);
   });
 
   session();

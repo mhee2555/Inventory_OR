@@ -28,8 +28,6 @@ class MYPDF extends TCPDF
         $datetime = new DatetimeTH();
         // date th
         $printdate = date('d') . " " . $datetime->getTHmonth(date('F')) . " พ.ศ. " . $datetime->getTHyear(date('Y'));
-
-
         
         // $image_file = "images/logo.png";
         // $this->Image($image_file, 10, 5, 15, 8, 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);
@@ -111,11 +109,11 @@ class MYPDF extends TCPDF
             $this->SetFont('db_helvethaica_x', 'b', 14);
 
             $this->SetY(10);
-            $this->Cell(138, 5, 'รายงานขอเบิกใช้อุปกรณ์กับคนไข้', 1, 1, 'C');
+            $this->Cell(200, 5, 'รายงานขอเบิกใช้อุปกรณ์กับคนไข้', 1, 1, 'C');
 
 
             $this->Cell(30, 30,  "", 1, 0, 'L');
-            $this->Cell(83, 30,  "", 1, 0, 'L');
+            $this->Cell(145, 30,  "", 1, 0, 'L');
             $this->Cell(25, 30,  "", 1, 0, 'L');
             
 
@@ -136,7 +134,7 @@ class MYPDF extends TCPDF
 
 
             $this->SetY(17);
-            $this->SetX(123);
+            $this->SetX(185);
             $this->Cell(80, 0,  " QR Code HN ", 0, 0, 'L');
 
             $file = "images/LOGO_bkx.png";
@@ -144,7 +142,7 @@ class MYPDF extends TCPDF
             $pixel_size = 10;
             $frame_size = 4;
             QRcode::png($_hn_record_id, $file, $ecc, $pixel_size, $frame_size);
-            $this->Image($file, 120, 22, 20, 20, 'PNG');
+            $this->Image($file, 182, 22, 20, 20, 'PNG');
 
 
             $image_file = "images/logo1.png";
@@ -153,7 +151,7 @@ class MYPDF extends TCPDF
                         $this->Ln(23);
             $this->SetFillColor(255, 255, 255);
             $this->SetFont('db_helvethaica_x', 'b', 12);
-            $this->MultiCell(138, 9,  "    หัตถการ : " . $_Procedure_TH, 1, 1, 'L');
+            $this->MultiCell(200, 9,  "    หัตถการ : " . $_Procedure_TH, 1, 1, 'L');
             
             $this->Ln(1);
         }
@@ -333,7 +331,7 @@ $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 // add a page
 // $pdf->SetCellHeightRatio(1);  // Uniform line height
 // $pdf->SetCellPadding(2); 
-$pdf->AddPage('P', 'A5');
+$pdf->AddPage('P', 'A4');
 $pdf->SetFont('db_helvethaica_x', 'B', 18);
 $DocNo = $_GET['DocNo'];
 // $pdf->Ln(85);

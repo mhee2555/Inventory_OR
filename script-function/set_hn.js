@@ -121,11 +121,11 @@ function show_detail_history() {
                       <td class="f18 text-center">${value.serviceDate} ${
             value.serviceTime
           }</td>
-                      <td class="f18 text-center">${value.Doctor_Name}</td>
-                      <td class="f18 text-center">${
+                      <td class="f18 text-left">${value.Doctor_Name}</td>
+                      <td class="f18 text-left">${
                         value.departmentroomname
                       }</td>
-                      <td class="f18 text-center">${value.Procedure_TH}</td>
+                      <td class="f18 text-left">${value.Procedure_TH}</td>
                       <td class="f18 text-center"><button ${hidden} class='btn btn-primary' onclick='showdetail("${
             value.ID
           }","${value.hncode}","${value.serviceDate}","${value.serviceTime}","${
@@ -371,7 +371,8 @@ $("#btn_save_hn_manual").click(function () {
 
           $("#input_Hn_ID").val("");
           $("#input_Hn_pay_manual").val("");
-          $("#input_date_service_manual").val(output);
+          // $("#input_date_service_manual").val(output);
+          $('#input_date_service_manual').data('datepicker').selectDate(new Date());
           $("#input_time_service_manual").val(currentTime);
 
           $("#select_doctor_manual").val("").trigger("change");

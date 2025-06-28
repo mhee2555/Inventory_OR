@@ -256,8 +256,8 @@
                 <div class="row">
                     <div class="col-md-12 text-right">
                         <div class="custom-control custom-switch custom-switch-lg">
-                            <input type="checkbox" class="custom-control-input" id="customSwitch1">
-                            <label class="custom-control-label" for="customSwitch1" style="color:black;font-weight: bold;">แสดงรวม</label>
+                            <input type="checkbox" class="custom-control-input" id="customSwitch1" >
+                            <label class="custom-control-label" for="customSwitch1" style="color:black;font-weight: bold;padding-left: 1.5rem;">แสดงรวม</label>
                         </div>
                     </div>
                 </div>

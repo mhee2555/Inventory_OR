@@ -146,9 +146,7 @@ $(function () {
     $("#sterile").hide();
     $("#normal").hide();
 
-
-        $("#table_item_restock tbody").html("");
-
+    $("#table_item_restock tbody").html("");
 
     // selection_departmentRoom_normal();
 
@@ -310,6 +308,27 @@ function convertEN(char) {
 $("#input_scan_restock").keypress(function (e) {
   if (e.which == 13) {
     $("#input_scan_restock").val(convertString($(this).val().trim()));
+
+    let usageCode = $(this).val().trim();
+    let convertedCode = convertString(usageCode);
+    $("#input_scan_restock").val(convertedCode);
+
+    // ตรวจสอบก่อนว่า UsageCode นี้มีในตารางแล้วหรือไม่
+    let isDuplicate = false;
+    $("#table_item_restock tbody tr").each(function () {
+      let codeInRow = $(this).find("td:eq(2)").text().trim(); // คอลัมน์ที่ 3 (index 2) คือ UsageCode
+      if (codeInRow === usageCode) {
+        isDuplicate = true;
+        return false; // ออกจาก each loop
+      }
+    });
+
+    if (isDuplicate) {
+      // ถ้าซ้ำ: ไม่ต้องส่ง Ajax หรือเพิ่มแถว
+      $("#input_scan_restock").val("");
+      return;
+    }
+
     $.ajax({
       url: "process/movement.php",
       type: "POST",

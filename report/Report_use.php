@@ -170,7 +170,7 @@ while ($row_select = $meQuery_select->fetch(PDO::FETCH_ASSOC)) {
     $_procedure_ids = $row_select['procedure_ids'];
 }
 
-$pdf->Cell(50, 5,  "HN :" . $_HnCode, 0, 0, 'L');
+$pdf->Cell(50, 5,  "HN : " . $_HnCode, 0, 0, 'L');
 $pdf->Cell(50, 5,  "ชื่อ : - " , 0, 1, 'R');
 
 $pdf->Cell(83, 5,  "วันที่เข้ารับบริการ : " . $_CreateDate, 0, 0, 'L');

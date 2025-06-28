@@ -360,7 +360,7 @@ function onconfirm_request($conn, $db)
     $count = 0;
     if ($txt_docno_request == "") {
         $remark = "สร้างจาก ขอเบิกอุปกรณ์ ";
-        $txt_docno_request = createDocNo($conn, $Userid, $DepID, $deproom, $remark, 0, 0, 0, 0, '', '', '', '', $db, 0);
+        $txt_docno_request = createDocNo($conn, $Userid, $DepID, $deproom, $remark, 0, 1, 0, 0, '', '', '', '', $db, 0);
     }
 
     foreach ($array_itemcode as $key => $value) {

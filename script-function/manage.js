@@ -89,7 +89,6 @@ function click_main() {
       $("#select_procedure_routine").select2();
 
       show_detail_routine();
-
     }, 500);
 
     $("#routine_id").val("");
@@ -377,12 +376,21 @@ function feeddata_detailDoctor() {
 
       if (!$.isEmptyObject(ObjData)) {
         $.each(ObjData, function (kay, value) {
+          if (value.IsCancel == "0") {
+            value.IsCancel = "Active";
+            var bg = "style='background-color:#219E83;color:#fff;' ";
+          } else {
+            value.IsCancel = "InActive";
+            var bg = "style='background-color:#D92D20;color:#fff;' ";
+          }
+
           _tr += `<tr> 
                       <td class="text-center">${kay + 1}</td>
                       <td class="text-left">${value.Doctor_Name}</td>
+                      <td class="text-center"><button class='btn' ${bg}>  ${
+            value.IsCancel
+          } </button></td>
                       <td class="text-center">
-                      
-
                        <button class="btn btn-outline-dark f18" onclick='editDoctor("${
                          value.ID
                        }","${value.Doctor_Name}","${
@@ -422,12 +430,16 @@ function feeddata_detailDoctor() {
             targets: 0,
           },
           {
-            width: "70%",
+            width: "60%",
             targets: 1,
           },
           {
-            width: "20%",
+            width: "10%",
             targets: 2,
+          },
+          {
+            width: "20%",
+            targets: 3,
           },
         ],
         info: false,
@@ -557,10 +569,21 @@ function feeddata_detailProcedure() {
 
       if (!$.isEmptyObject(ObjData)) {
         $.each(ObjData, function (kay, value) {
+          if (value.IsActive == "0") {
+            value.IsActive = "InActive";
+            var bg = "style='background-color:#D92D20;color:#fff;' ";
+          } else {
+            value.IsActive = "Active";
+            var bg = "style='background-color:#219E83;color:#fff;' ";
+          }
+
           _tr +=
             `<tr> ` +
             `<td class="text-center">${kay + 1}</td>` +
             `<td class="text-left">${value.Procedure_TH}</td>` +
+
+           `<td class="text-center"><button class='btn' ${bg}>  ${value.IsActive } </button></td>` +
+
             `<td class="text-center">
             
                        <button class="btn btn-outline-dark f18 edit-btn" data-id="${value.ID}" data-name="${value.Procedure_TH}" data-active="${value.IsActive}" > <i class="fa-regular fa-pen-to-square"></i> แก้ไข</button>
@@ -609,12 +632,16 @@ function feeddata_detailProcedure() {
             targets: 0,
           },
           {
-            width: "70%",
+            width: "60%",
             targets: 1,
           },
           {
-            width: "20%",
+            width: "10%",
             targets: 2,
+          },
+                    {
+            width: "20%",
+            targets: 3,
           },
         ],
         info: false,

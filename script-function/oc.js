@@ -549,7 +549,7 @@ function show_detail_oc() {
                       <td class='text-center'>${value.UsageCode}</td>
                       <td class='text-center'>${txt}</td>
                       <td class='text-center'>${status}</td>
-                      <td class='text-center'>${value.remarkTracking}</td>
+                      <td class='text-left'>${value.remarkTracking}</td>
                    </tr>`;
         });
       }

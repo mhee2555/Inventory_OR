@@ -105,6 +105,7 @@
                                 <tr>
                                     <th scope="col" id="td_number" class="text-center" class="text-center">ลำดับ</th>
                                     <th scope="col" style="width: 20%;" class="text-center" id="">ชื่อแพทย์</th>
+                                    <th scope="col" style="width: 20%;" class="text-center" id="">สถานะ</th>
                                     <th scope="col" style="width: 20%;" class="text-center">#</th>
                                 </tr>
                             </thead>
@@ -168,6 +169,7 @@
                                 <tr>
                                     <th scope="col" id="td_numberPro" class="text-center" class="text-center">ลำดับ</th>
                                     <th scope="col" style="width: 20%;" class="text-center" id="td_nameProcedure">หัตถการ</th>
+                                    <th scope="col" style="width: 20%;" class="text-center" id="">สถานะ</th>
                                     <th scope="col" style="width: 20%;" class="text-center">#</th>
                                 </tr>
                             </thead>

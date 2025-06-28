@@ -253,7 +253,7 @@
           <div class="col-md-8 text-left">
             <h2 class="card-title text-dark font-weight-bold f24" id="">แจ้งเตือนรับอุปกรณ์เข้าคลัง</h2>
             <div class="card-text"> <label style="font-size: 70px;color:#101828;line-height: 55px;" id="text_request_item">0</label>
-              <label class="f24" style="color:black;" class="label_request_item"> รายการ </label>
+              <label class="f24" style="color:black;" class="label_request_item"> เอกสาร </label>
             </div>
           </div>
           <div class="col-md-12 text-left">
