@@ -446,30 +446,53 @@
                 </div>
             </div>
         </div>
-        <!-- ห้องผ่าตัด -->
+
+
+
+
+        <!-- เลขประจำตัวคนไข้ -->
         <div class="col-md-2">
+            <label class="font-weight-bold text-dark">HN</label>
+            <input type="text" class="form-control f18" id="input_hn_history">
+        </div>
+
+        <div class="col-md-2">
+            <label class="font-weight-bold text-dark">เงื่อนไข</label>
+            <select class="form-control f18" id="select_typeSearch_history">
+                <option value="">กรุณาเลือกประเภทการค้นหา</option>
+                <option value="1">ห้องผ่าตัด</option>
+                <option value="2">แพทย์</option>
+                <option value="3">หัตถการ</option>
+            </select>
+        </div>
+
+
+        <!-- ห้องผ่าตัด -->
+        <div class="col-md-2" id="col_deproom_history" >
             <label class="font-weight-bold text-dark">ห้องผ่าตัด</label>
             <select class="form-control f18" id="select_deproom_history"></select>
         </div>
 
         <!-- แพทย์ -->
-        <div class="col-md-2">
+        <div class="col-md-2" id="col_doctor_history" >
             <label class="font-weight-bold text-dark">แพทย์</label>
             <select class="form-control f18" id="select_doctor_history"></select>
         </div>
 
         <!-- หัตถการ -->
-        <div class="col-md-2">
+        <div class="col-md-2" id="col_procedure_history" >
             <label class="font-weight-bold text-dark">หัตถการ</label>
             <select class="form-control f18" id="select_procedure_history"></select>
         </div>
 
-        <!-- เลขประจำตัวคนไข้ -->
-        <div class="col-md-1">
-            <label class="font-weight-bold text-dark">HN</label>
-            <input type="text" class="form-control f18" id="input_hn_history">
-        </div>
 
+
+        <div class="col-md-3" id="col_hide">
+
+        </div>
+        <div class="col-md-1" id="col_hide_2">
+
+        </div>
         <!-- ปุ่ม Excel -->
         <div class="col-md-1">
             <label class="font-weight-bold text-dark">Excel</label>

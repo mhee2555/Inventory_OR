@@ -168,7 +168,7 @@ while ($row_select = $meQuery_select->fetch(PDO::FETCH_ASSOC)) {
     $_procedure_ids = $row_select['procedure_ids'];
 }
 
-$pdf->Cell(50, 5,  "HN :" . $_HnCode, 0, 0, 'L');
+$pdf->Cell(50, 5,  "HN : " . $_HnCode, 0, 0, 'L');
 $pdf->Cell(50, 5,  "ชื่อ : - " , 0, 1, 'R');
 
 $pdf->Cell(130, 5,  "วันที่เข้ารับบริการ : " . $_CreateDate, 0, 1, 'L');
@@ -308,8 +308,8 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
         $html .=   '<td width="30 %" align="center"> <tcpdf method="write1DBarcode" params="' . $params . '" /> </td>';
         $html .=   '<td width="32 %" align="left" style="line-height:50px;">' . $Result_Detail['itemname'] . '</td>';
         $html .=   '<td width="6 %" align="center" style="line-height:50px;">' . $Result_Detail['cnt'] . '</td>';
-        $html .=   '<td width="10 %" align="center" style="line-height:50px;">' . number_format($Result_Detail['SalePrice'],2) . '</td>';
-        $html .=   '<td width="10 %" align="center" style="line-height:50px;">' . number_format( ($Result_Detail['SalePrice'] * $Result_Detail['cnt']) ,2) . '</td>';
+        $html .=   '<td width="10 %" align="right" style="line-height:50px;">' . number_format($Result_Detail['SalePrice'],2) . '</td>';
+        $html .=   '<td width="10 %" align="right" style="line-height:50px;">' . number_format( ($Result_Detail['SalePrice'] * $Result_Detail['cnt']) ,2) . '</td>';
         $html .=  '</tr>';
         $count++;
 

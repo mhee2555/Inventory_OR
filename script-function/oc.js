@@ -421,72 +421,72 @@ function show_detail_itemstock() {
       }
 
       $("#table_lot_detail tbody").html(matched_tr + _tr);
-      // $("#table_lot_detail").DataTable({
-      //   language: {
-      //     emptyTable: settext("dataTables_empty"),
-      //     paginate: {
-      //       next: settext("table_itemStock_next"),
-      //       previous: settext("table_itemStock_previous"),
-      //     },
-      //     search: settext("btn_Search"),
-      //     info:
-      //       settext("dataTables_Showing") +
-      //       " _START_ " +
-      //       settext("dataTables_to") +
-      //       " _END_ " +
-      //       settext("dataTables_of") +
-      //       " _TOTAL_ " +
-      //       settext("dataTables_entries") +
-      //       " ",
-      //   },
-      //   columnDefs: [
-      //     {
-      //       width: "20%",
-      //       targets: 0,
-      //     },
-      //     {
-      //       width: "10%",
-      //       targets: 1,
-      //     },
-      //     {
-      //       width: "10%",
-      //       targets: 2,
-      //     },
-      //     {
-      //       width: "10%",
-      //       targets: 3,
-      //     },
-      //     {
-      //       width: "10%",
-      //       targets: 4,
-      //     },
-      //     {
-      //       width: "10%",
-      //       targets: 5,
-      //     },
-      //   ],
-      //   info: false,
-      //   scrollX: false,
-      //   scrollCollapse: false,
-      //   visible: false,
-      //   searching: false,
-      //   lengthChange: false,
-      //   fixedHeader: false,
-      //   ordering: false,
-      // });
-      // $("th").removeClass("sorting_asc");
-      // if (_tr == "") {
-      //   $(".dataTables_info").text(
-      //     settext("dataTables_Showing") +
-      //       " 0 " +
-      //       settext("dataTables_to") +
-      //       " 0 " +
-      //       settext("dataTables_of") +
-      //       " 0 " +
-      //       settext("dataTables_entries") +
-      //       ""
-      //   );
-      // }
+      $("#table_lot_detail").DataTable({
+        language: {
+          emptyTable: settext("dataTables_empty"),
+          paginate: {
+            next: settext("table_itemStock_next"),
+            previous: settext("table_itemStock_previous"),
+          },
+          search: settext("btn_Search"),
+          info:
+            settext("dataTables_Showing") +
+            " _START_ " +
+            settext("dataTables_to") +
+            " _END_ " +
+            settext("dataTables_of") +
+            " _TOTAL_ " +
+            settext("dataTables_entries") +
+            " ",
+        },
+        columnDefs: [
+          {
+            width: "20%",
+            targets: 0,
+          },
+          {
+            width: "10%",
+            targets: 1,
+          },
+          {
+            width: "10%",
+            targets: 2,
+          },
+          {
+            width: "10%",
+            targets: 3,
+          },
+          {
+            width: "10%",
+            targets: 4,
+          },
+          {
+            width: "10%",
+            targets: 5,
+          },
+        ],
+        info: false,
+        scrollX: false,
+        scrollCollapse: false,
+        visible: false,
+        searching: false,
+        lengthChange: false,
+        fixedHeader: false,
+        ordering: false,
+      });
+      $("th").removeClass("sorting_asc");
+      if (_tr == "") {
+        $(".dataTables_info").text(
+          settext("dataTables_Showing") +
+            " 0 " +
+            settext("dataTables_to") +
+            " 0 " +
+            settext("dataTables_of") +
+            " 0 " +
+            settext("dataTables_entries") +
+            ""
+        );
+      }
 
       $("#input_search_lot_detail").val("");
       $(".numonly").on("input", function () {

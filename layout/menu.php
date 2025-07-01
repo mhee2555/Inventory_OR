@@ -88,7 +88,7 @@
                 <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_request_item" hidden>
                     <a class="collapse-item" href="pages/request_item.php" style="color: black;font-size: 16px;" id="a_request_item">
                         <img id="ic_request_item" style="width: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;">
-                        <label style="font-size: 20px;color: #667085;" class="" id="menu15">ขอเบิกอุปกรณ์</label>
+                        <label style="font-size: 20px;color: #667085;" class="" id="menu15">ขอเบิกอุปกรณ์จากคลังหลัก</label>
                     </a>
                 </li>
 

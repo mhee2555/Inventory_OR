@@ -47,7 +47,35 @@ if (!empty($_POST['FUNC_NAME'])) {
         delete_request_byItem($conn, $db);
     } else if ($_POST['FUNC_NAME'] == 'show_detail_request_byDocNo_change') {
         show_detail_request_byDocNo_change($conn, $db);
+    } else if ($_POST['FUNC_NAME'] == 'updateDetail_qty') {
+        updateDetail_qty($conn, $db);
     }
+}
+
+function updateDetail_qty($conn, $db)
+{
+    $return = array();
+    $ID = $_POST['ID'];
+    $qty = $_POST['qty'];
+    $itemcode = $_POST['itemcode'];
+
+
+
+
+    $Userid = $_SESSION['Userid'];
+
+    $sql2 = " UPDATE routine_detail SET qty = $qty  WHERE id = '$ID' ";
+    $meQuery2 = $conn->prepare($sql2);
+    $meQuery2->execute();
+
+
+
+
+
+
+    echo json_encode($return);
+    unset($conn);
+    die;
 }
 
 function delete_request_byItem($conn)
@@ -656,10 +684,10 @@ function saveDoctor($conn)
 
     if ($count_id == 0) {
         if ($input_IDdoctor == "") {
-            $query = "INSERT INTO `doctor` ( Doctor_Name , IsCancel) 
+            $query = "INSERT INTO `doctor` ( Doctor_Name , IsActive) 
             VALUES             ('$input_doctorth' , $IsActive ) ";
         } else {
-            $query = "UPDATE `doctor` SET Doctor_Name = '$input_doctorth' , IsCancel = $IsActive WHERE ID = '$input_IDdoctor'  ";
+            $query = "UPDATE `doctor` SET Doctor_Name = '$input_doctorth' , IsActive = $IsActive WHERE ID = '$input_IDdoctor'  ";
         }
 
 
@@ -684,7 +712,7 @@ function feeddata_detailDoctor($conn, $db)
     $query = " SELECT
                      `doctor`.ID,
                      `doctor`.Doctor_Name,
-                     `doctor`.IsCancel
+                     `doctor`.IsActive
                 FROM
                      `doctor`  ";
 

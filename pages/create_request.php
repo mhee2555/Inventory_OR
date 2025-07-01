@@ -250,14 +250,25 @@
                     </div>
                 </div>
 
+
                 <div class="col-md-2">
+                    <label class="font-weight-bold text-dark">เงื่อนไข</label>
+                    <select class="form-control f18" id="select_typeSearch_history">
+                        <option value="">กรุณาเลือกประเภทการค้นหา</option>
+                        <option value="1">ห้องผ่าตัด</option>
+                        <option value="2">แพทย์</option>
+                        <option value="3">หัตถการ</option>
+                    </select>
+                </div>
+
+                <div class="col-md-2" id="col_deproom_history">
                     <div class="form-group">
                         <label style="color:black;font-weight: 600;">ห้องผ่าตัด</label>
                         <select class="form-control f18" autocomplete="off" id="select_deproom_history"></select>
                     </div>
                 </div>
 
-                <div class="col-md-2">
+                <div class="col-md-2" id="col_doctor_history">
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group ">
@@ -270,8 +281,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-2">
-
+                <div class="col-md-2" id="col_procedure_history">
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group ">
@@ -282,50 +292,59 @@
                         <div class="col-md-12" style="display: ruby;" id="row_procedure_history">
                         </div>
                     </div>
+                </div>
+
+
+
+                <div class="col-md-4" id="col_hide">
 
                 </div>
+                <div class="col-md-2" id="col_hide_2">
+
+                </div>
+
                 <div class="col-md-2">
-                            <div class="form-group ">
-                                <label style="color:black;font-weight: 600;">Excel</label>
-                                <br>
-                                <button class="btn  btn-block" style="border-color: gray;color:green;font-weight: bold;"  id="btn_show_report"><i class="fa-solid fa-file-excel"></i> EXCEL</button>
-                            </div>
+                    <div class="form-group ">
+                        <label style="color:black;font-weight: 600;">Excel</label>
+                        <br>
+                        <button class="btn  btn-block" style="border-color: gray;color:green;font-weight: bold;" id="btn_show_report"><i class="fa-solid fa-file-excel"></i> EXCEL</button>
                     </div>
-                    
                 </div>
-                <div class="col-md-12 mt-3">
 
-                    <div class="card">
+            </div>
+            <div class="col-md-12 mt-3">
 
-                        <div class="card-body">
-                            <table class="table table-hover table-sm" id="table_history">
-                                <thead style="background-color: #cdd6ff;">
-                                    <tr>
-                                        <th scope="col" class="text-center" id="">ลำดับ</th>
-                                        <th scope="col" class="text-center" id="">วันที่รับบริการ</th>
-                                        <th scope="col" class="text-center" id="">เลขประจำตัวคนไข้</th>
-                                        <th scope="col" class="text-center" id="">แพทย์</th>
-                                        <th scope="col" class="text-center" id="">หัตถการ</th>
-                                        <th scope="col" class="text-center" id="">ห้องผ่าตัด</th>
-                                        <th scope="col" class="text-center" id="">แก้ไข</th>
-                                        <th hidden scope="col" class="text-center" id="">ยกเลิก</th>
-                                        <th scope="col" class="text-center" id="">รายงานขอเบิก</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                        </div>
+                <div class="card">
+
+                    <div class="card-body">
+                        <table class="table table-hover table-sm" id="table_history">
+                            <thead style="background-color: #cdd6ff;">
+                                <tr>
+                                    <th scope="col" class="text-center" id="">ลำดับ</th>
+                                    <th scope="col" class="text-center" id="">วันที่รับบริการ</th>
+                                    <th scope="col" class="text-center" id="">เลขประจำตัวคนไข้</th>
+                                    <th scope="col" class="text-center" id="">แพทย์</th>
+                                    <th scope="col" class="text-center" id="">หัตถการ</th>
+                                    <th scope="col" class="text-center" id="">ห้องผ่าตัด</th>
+                                    <th scope="col" class="text-center" id="">แก้ไข</th>
+                                    <th hidden scope="col" class="text-center" id="">ยกเลิก</th>
+                                    <th scope="col" class="text-center" id="">รายงานขอเบิก</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
                     </div>
-
-
-
-
-
                 </div>
+
+
+
+
+
             </div>
         </div>
     </div>
+</div>
 </div>
 
 
@@ -380,4 +399,4 @@
     </div>
 </div>
 
-  <!-- <script src="../assets/lang/create_request.js"></script> -->
+<!-- <script src="../assets/lang/create_request.js"></script> -->

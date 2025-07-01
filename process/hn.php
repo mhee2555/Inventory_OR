@@ -21,7 +21,7 @@ function onHIS($conn, $db)
     $return = array();
     $DocNo = $_POST['DocNo'];
 
-    $Q1 = "INSERT INTO his ( DocNo, DocDate, HnCode, UserCode, IsStatus, IsCancel, `procedure`, doctor, departmentroomid, number_box ) SELECT
+    $Q1 = "INSERT INTO his ( DocNo, DocDate, HnCode, UserCode, IsStatus, IsCancel, `procedure`, doctor, departmentroomid, number_box , DocNo_deproom) SELECT
                 DocNo,
                 DocDate,
                 HnCode,
@@ -31,7 +31,8 @@ function onHIS($conn, $db)
                 `procedure`,
                 doctor,
                 departmentroomid,
-                number_box 
+                number_box ,
+                DocNo_SS 
             FROM
                 hncode 
             WHERE

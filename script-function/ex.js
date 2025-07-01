@@ -6,7 +6,7 @@ $(function() {
 
     $("#col_sendsterile").attr('hidden', true);
     $("#radio_tab3").css('color', '#bbbbb');
-    $("#radio_tab3").css('background', '#EAECF0');
+    $("#radio_tab3").css('background', '#EAE1F4');
     $("#radio_tab2").css('color', 'black');
     $("#radio_tab2").css('background', '');
     $("#radio_tab1").css('color', 'black');
@@ -25,7 +25,7 @@ $(function() {
 $("#radio_tab1").click(function() {
     $("#col_sendsterile").attr('hidden', true);
     $("#radio_tab1").css('color', '#bbbbb');
-    $("#radio_tab1").css('background', '#EAECF0');
+    $("#radio_tab1").css('background', '#EAE1F4');
     $("#radio_tab2").css('color', 'black');
     $("#radio_tab2").css('background', '');
     $("#radio_tab3").css('color', 'black');
@@ -39,7 +39,7 @@ $("#radio_tab1").click(function() {
 $("#radio_tab2").click(function() {
     $("#col_sendsterile").attr('hidden', true);
     $("#radio_tab2").css('color', '#bbbbb');
-    $("#radio_tab2").css('background', '#EAECF0');
+    $("#radio_tab2").css('background', '#EAE1F4');
     $("#radio_tab1").css('color', 'black');
     $("#radio_tab1").css('background', '');
     $("#radio_tab3").css('color', 'black');
@@ -53,7 +53,7 @@ $("#radio_tab2").click(function() {
 $("#radio_tab3").click(function() {
     $("#col_sendsterile").attr('hidden', true);
     $("#radio_tab3").css('color', '#bbbbb');
-    $("#radio_tab3").css('background', '#EAECF0');
+    $("#radio_tab3").css('background', '#EAE1F4');
     $("#radio_tab2").css('color', 'black');
     $("#radio_tab2").css('background', '');
     $("#radio_tab1").css('color', 'black');

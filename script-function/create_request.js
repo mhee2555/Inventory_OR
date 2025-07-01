@@ -124,6 +124,11 @@ $(function () {
         }
       });
     }, 500);
+
+    $("#col_deproom_history").attr("hidden", true);
+    $("#col_doctor_history").attr("hidden", true);
+    $("#col_procedure_history").attr("hidden", true);
+    $("#col_hide_2").attr("hidden", true);
   });
 
   show_detail_item_request();
@@ -199,7 +204,7 @@ $(function () {
     }
   });
 
-    set_hn();
+  set_hn();
 });
 
 function set_hn() {
@@ -234,9 +239,10 @@ function set_hn() {
           $("#input_hn_request").val(value.hncode);
           $("#select_date_request").val(value.serviceDate);
           $("#select_time_request").val(value.serviceTime);
-          $("#select_deproom_request").val(value.departmentroomid).trigger("change");
+          $("#select_deproom_request")
+            .val(value.departmentroomid)
+            .trigger("change");
           $("#input_remark_request").val(value.remark);
-
 
           $.ajax({
             url: "process/pay.php",
@@ -1013,6 +1019,41 @@ function onconfirm_send_request() {
 
 // create_Request
 
+$("#select_typeSearch_history").change(function (e) {
+  $("#select_deproom_history").val("").trigger("change");
+  $("#select_doctor_history").val("").trigger("change");
+  $("#select_deproom_history").val("").trigger("change");
+
+  if ($(this).val() == "") {
+    $("#col_deproom_history").attr("hidden", true);
+    $("#col_doctor_history").attr("hidden", true);
+    $("#col_procedure_history").attr("hidden", true);
+    $("#col_hide").attr("hidden", false);
+    $("#col_hide_2").attr("hidden", true);
+  }
+  if ($(this).val() == "1") {
+    $("#col_deproom_history").attr("hidden", false);
+    $("#col_doctor_history").attr("hidden", true);
+    $("#col_procedure_history").attr("hidden", true);
+    $("#col_hide").attr("hidden", true);
+    $("#col_hide_2").attr("hidden", false);
+  }
+  if ($(this).val() == "2") {
+    $("#col_deproom_history").attr("hidden", true);
+    $("#col_doctor_history").attr("hidden", false);
+    $("#col_procedure_history").attr("hidden", true);
+    $("#col_hide").attr("hidden", true);
+    $("#col_hide_2").attr("hidden", false);
+  }
+  if ($(this).val() == "3") {
+    $("#col_deproom_history").attr("hidden", true);
+    $("#col_doctor_history").attr("hidden", true);
+    $("#col_procedure_history").attr("hidden", false);
+    $("#col_hide").attr("hidden", true);
+    $("#col_hide_2").attr("hidden", false);
+  }
+});
+
 // history
 function show_detail_history() {
   $.ajax({
@@ -1211,7 +1252,10 @@ $("#btn_show_report").click(function () {
     $("#select_date_history_s").val() +
     "&select_date_history_l=" +
     $("#select_date_history_l").val();
-  window.open("report/phpexcel/Report_Create_Order_HN.php" + option+"&Userid=" + Userid, "_blank");
+  window.open(
+    "report/phpexcel/Report_Create_Order_HN.php" + option + "&Userid=" + Userid,
+    "_blank"
+  );
 });
 
 function show_Report(DocNo) {
@@ -1279,7 +1323,6 @@ function edit_item_byDocNo(
   procedure_id_Array = [];
 
   $("#radio_create_request").click();
-
 
   $("#input_set_hn_ID_request").val("");
   $("#txt_docno_request").val(DocNo);

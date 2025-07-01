@@ -291,9 +291,9 @@ $("#btn_saveDoctor").click(function () {
 });
 function saveDoctor() {
   if ($("#radio_statusDoctor1").is(":checked")) {
-    var IsActive = 0;
-  } else {
     var IsActive = 1;
+  } else {
+    var IsActive = 0;
   }
 
   $.ajax({
@@ -319,11 +319,11 @@ function saveDoctor() {
     },
   });
 }
-function editDoctor(ID, Doctor_Name, IsCancel) {
+function editDoctor(ID, Doctor_Name, IsActive) {
   $("#input_doctorth").val(Doctor_Name);
   $("#input_IDdoctor").val(ID);
 
-  if (IsCancel == "0") {
+  if (IsActive == "Active") {
     $("#radio_statusDoctor1").prop("checked", true);
   } else {
     $("#radio_statusDoctor2").prop("checked", true);
@@ -376,11 +376,11 @@ function feeddata_detailDoctor() {
 
       if (!$.isEmptyObject(ObjData)) {
         $.each(ObjData, function (kay, value) {
-          if (value.IsCancel == "0") {
-            value.IsCancel = "Active";
+          if (value.IsActive == "1") {
+            value.IsActive = "Active";
             var bg = "style='background-color:#219E83;color:#fff;' ";
           } else {
-            value.IsCancel = "InActive";
+            value.IsActive = "InActive";
             var bg = "style='background-color:#D92D20;color:#fff;' ";
           }
 
@@ -388,13 +388,13 @@ function feeddata_detailDoctor() {
                       <td class="text-center">${kay + 1}</td>
                       <td class="text-left">${value.Doctor_Name}</td>
                       <td class="text-center"><button class='btn' ${bg}>  ${
-            value.IsCancel
+            value.IsActive
           } </button></td>
                       <td class="text-center">
                        <button class="btn btn-outline-dark f18" onclick='editDoctor("${
                          value.ID
                        }","${value.Doctor_Name}","${
-            value.IsCancel
+            value.IsActive
           }")'  > <i class="fa-regular fa-pen-to-square"></i> แก้ไข</button>
                        <button  class="btn btn-outline-danger f18" onclick='deleteDoctor(${
                          value.ID
@@ -514,7 +514,7 @@ function editProcedure(ID, Procedure_TH, IsActive) {
   $("#input_Procedure").val(Procedure_TH);
   $("#input_IDProcedure").val(ID);
 
-  if (IsActive == "1") {
+  if (IsActive == "Active") {
     $("#radio_statusProcedure1").prop("checked", true);
   } else {
     $("#radio_statusProcedure2").prop("checked", true);
@@ -2501,9 +2501,7 @@ function show_detail_request_byDocNo() {
                       <td class='text-center'>${kay + 1}</td>
                       <td>${value.itemname}</td>
                       <td class='text-center'>${value.TyeName}</td>
-                      <td class='text-center'><input type="text" class="form-control text-center qty_loop" id="qty_item_${
-                        value.id
-                      }" data-id='${value.id}' value='${value.cnt}'> </td>
+                      <td class='text-center'><input type="text"  onblur="updateDetail_qty(${value.id },'${value.itemcode}')" class="form-control text-center qty_loop" id="qty_item_${value.id}" data-id='${value.id}' value='${value.cnt}'> </td>
                       <td class='text-center'>
                       <img src="assets/img_project/1_icon/ic_trash-1.png" style='width:30%;cursor:pointer;' onclick='delete_request_byItem(${
                         value.id
@@ -2577,6 +2575,21 @@ function show_detail_request_byDocNo() {
         );
       }
     },
+  });
+}
+
+function updateDetail_qty(ID, itemcode) {
+  $("#qty_item_" + ID).val();
+  $.ajax({
+    url: "process/manage.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "updateDetail_qty",
+      ID: ID,
+      itemcode: itemcode,
+      qty: $("#qty_item_" + ID).val(),
+    },
+    success: function (result) {},
   });
 }
 

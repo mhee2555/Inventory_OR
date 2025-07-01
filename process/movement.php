@@ -59,9 +59,9 @@ function show_restock($conn, $db)
         $_departmentroomid =  $row['departmentroomid'];
         $_RowID =  $row['RowID'];
 
-            $count_itemstock = 0;
+        $count_itemstock = 0;
 
-            $query_2 = "SELECT
+        $query_2 = "SELECT
                             deproomdetailsub.ID ,
                             hncode_detail.ID AS hndetail_ID,
 	                        deproomdetail.ItemCode,
@@ -80,92 +80,92 @@ function show_restock($conn, $db)
                             AND hncode_detail.ItemStockID = '$_RowID' 
                         ORDER BY
 	                        deproomdetailsub.ID DESC LIMIT 1 ";
-            // echo $query_2;
-            // exit;
-            $meQuery_2 = $conn->prepare($query_2);
-            $meQuery_2->execute();
-            while ($row_2 = $meQuery_2->fetch(PDO::FETCH_ASSOC)) {
+        // echo $query_2;
+        // exit;
+        $meQuery_2 = $conn->prepare($query_2);
+        $meQuery_2->execute();
+        while ($row_2 = $meQuery_2->fetch(PDO::FETCH_ASSOC)) {
 
-                // $return[] = $row_2;
-                $_ID = $row_2['ID'];
-                $_hndetail_ID = $row_2['hndetail_ID'];
-                $_ModifyDate = $row_2['ModifyDate'];
-                $_DocNo = $row_2['DocNo'];
+            // $return[] = $row_2;
+            $_ID = $row_2['ID'];
+            $_hndetail_ID = $row_2['hndetail_ID'];
+            $_ModifyDate = $row_2['ModifyDate'];
+            $_DocNo = $row_2['DocNo'];
 
-                $_hn_record_id = $row_2['hn_record_id'];
-                $_number_box = $row_2['number_box'];
+            $_hn_record_id = $row_2['hn_record_id'];
+            $_number_box = $row_2['number_box'];
 
-                if ($_hn_record_id == "") {
-                    $_hn_record_id = $_number_box;
-                }
+            if ($_hn_record_id == "") {
+                $_hn_record_id = $_number_box;
+            }
 
-                // ==============================
-                // $queryD1 = "DELETE FROM deproomdetailsub WHERE ID =  '$_ID' ";
-                // $meQueryD1 = $conn->prepare($queryD1);
-                // $meQueryD1->execute();
+            // ==============================
+            // $queryD1 = "DELETE FROM deproomdetailsub WHERE ID =  '$_ID' ";
+            // $meQueryD1 = $conn->prepare($queryD1);
+            // $meQueryD1->execute();
 
-                $queryD2 = "DELETE FROM hncode_detail WHERE ID =  '$_hndetail_ID' ";
-                $meQueryD2 = $conn->prepare($queryD2);
-                $meQueryD2->execute();
-                // ==============================
+            $queryD2 = "DELETE FROM hncode_detail WHERE ID =  '$_hndetail_ID' ";
+            $meQueryD2 = $conn->prepare($queryD2);
+            $meQueryD2->execute();
+            // ==============================
 
 
-                $insert_log = "INSERT INTO log_return (itemstockID, DocNo, userID, createAt) 
+            $insert_log = "INSERT INTO log_return (itemstockID, DocNo, userID, createAt) 
                             VALUES (:itemstockID, :DocNo, :userID, NOW())";
 
-                $meQuery_log = $conn->prepare($insert_log);
+            $meQuery_log = $conn->prepare($insert_log);
 
-                $meQuery_log->bindParam(':itemstockID', $_RowID);
-                $meQuery_log->bindParam(':DocNo', $_DocNo);
-                $meQuery_log->bindParam(':userID', $Userid);
+            $meQuery_log->bindParam(':itemstockID', $_RowID);
+            $meQuery_log->bindParam(':DocNo', $_DocNo);
+            $meQuery_log->bindParam(':userID', $Userid);
 
-                $meQuery_log->execute();
-                // =======================================================================================================================================
+            $meQuery_log->execute();
+            // =======================================================================================================================================
 
-                if ($db == 1) {
-                    $query = "DELETE FROM itemstock_transaction_detail  WHERE ItemStockID = '$_RowID' 
+            if ($db == 1) {
+                $query = "DELETE FROM itemstock_transaction_detail  WHERE ItemStockID = '$_RowID' 
                     AND ItemCode = '$_ItemCode' 
                     AND departmentroomid = '$_departmentroomid' 
                     AND  IsStatus = '1'
                     AND DATE(CreateDate) = '$_ModifyDate' ";
-                } else {
-                    $query = "DELETE FROM itemstock_transaction_detail  WHERE ItemStockID = '$_RowID' 
+            } else {
+                $query = "DELETE FROM itemstock_transaction_detail  WHERE ItemStockID = '$_RowID' 
                     AND ItemCode = '$_ItemCode' 
                     AND departmentroomid = '$_departmentroomid' 
                     AND  IsStatus = '1'
                     AND CONVERT(DATE,CreateDate) = '$_ModifyDate' ";
-                }
-
-                $insert_log = "INSERT INTO log_activity_users (itemCode , itemstockID , qty, isStatus, DocNo, userID, createAt) 
-                            VALUES (:itemCode, :itemstockID, 1, :isStatus, :DocNo, :Userid, NOW())";
-
-                $meQuery_log = $conn->prepare($insert_log);
-
-                $meQuery_log->bindParam(':itemCode', $_ItemCode);
-                $meQuery_log->bindParam(':itemstockID', $_RowID);
-                $meQuery_log->bindValue(':isStatus', 8, PDO::PARAM_INT);
-                $meQuery_log->bindParam(':DocNo', $_DocNo);
-                $meQuery_log->bindParam(':Userid', $Userid);
-
-
-                $meQuery_log->execute();
-
-                $meQuery = $conn->prepare($query);
-                $meQuery->execute();
-                // =======================================================================================================================================
-                $count_itemstock++;
             }
 
+            $insert_log = "INSERT INTO log_activity_users (itemCode , itemstockID , qty, isStatus, DocNo, userID, createAt) 
+                            VALUES (:itemCode, :itemstockID, 1, :isStatus, :DocNo, :Userid, NOW())";
+
+            $meQuery_log = $conn->prepare($insert_log);
+
+            $meQuery_log->bindParam(':itemCode', $_ItemCode);
+            $meQuery_log->bindParam(':itemstockID', $_RowID);
+            $meQuery_log->bindValue(':isStatus', 8, PDO::PARAM_INT);
+            $meQuery_log->bindParam(':DocNo', $_DocNo);
+            $meQuery_log->bindParam(':Userid', $Userid);
 
 
-            $queryUpdate = "UPDATE itemstock 
+            $meQuery_log->execute();
+
+            $meQuery = $conn->prepare($query);
+            $meQuery->execute();
+            // =======================================================================================================================================
+            $count_itemstock++;
+        }
+
+
+
+        $queryUpdate = "UPDATE itemstock 
             SET Isdeproom = 0 ,
             departmentroomid = '35',
             itemstock.IsCross = NULL
             WHERE
             RowID = '$_RowID' ";
-            $meQueryUpdate = $conn->prepare($queryUpdate);
-            $meQueryUpdate->execute();
+        $meQueryUpdate = $conn->prepare($queryUpdate);
+        $meQueryUpdate->execute();
     }
 
 
@@ -217,6 +217,13 @@ function selection_item_normal($conn, $db)
     $_itemcode = array();
 
 
+    $permission = $_SESSION['permission'];
+
+    $wherepermission = "";
+    if ($permission != '5') {
+        $wherepermission = " AND item.warehouseID = $permission ";
+    }
+
     $Q1 = "SELECT
                 sub.itemname,
                 sub.itemcode,
@@ -257,6 +264,7 @@ function selection_item_normal($conn, $db)
                 WHERE
                         ( item.itemname LIKE '%$input_search%' OR item.itemcode LIKE '%$input_search%' ) 
                    AND item.SpecialID = '1' 
+                   $wherepermission
                 GROUP BY
                     item.itemname,
                     item.itemcode,
@@ -533,6 +541,13 @@ function selection_item_rfid($conn, $db)
     // $meQuery_D2->execute();
 
 
+    $permission = $_SESSION['permission'];
+
+    $wherepermission = "";
+    if ($permission != '5') {
+        $wherepermission = " AND item.warehouseID = $permission ";
+    }
+
     $Q1 = "SELECT
                 sub.itemname,
                 sub.itemcode,
@@ -573,6 +588,7 @@ function selection_item_rfid($conn, $db)
                 WHERE
                         ( item.itemname LIKE '%$input_search%' OR item.itemcode LIKE '%$input_search%' ) 
                    AND item.SpecialID = '0' 
+                   $wherepermission
                 GROUP BY
                     item.itemname,
                     item.itemcode,
@@ -906,6 +922,13 @@ function selection_item($conn, $db)
 
     $_itemcode = array();
 
+    $permission = $_SESSION['permission'];
+
+    $wherepermission = "";
+    if ($permission != '5') {
+        $wherepermission = " AND item.warehouseID = $permission ";
+    }
+
     $Q1 = "SELECT
                 sub.itemname,
                 sub.itemcode,
@@ -946,6 +969,7 @@ function selection_item($conn, $db)
                 WHERE
                         ( item.itemname LIKE '%$input_search%' OR item.itemcode LIKE '%$input_search%' ) 
                    AND item.SpecialID = '2' 
+                   $wherepermission
                 GROUP BY
                     item.itemname,
                     item.itemcode,

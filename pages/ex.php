@@ -30,9 +30,9 @@
     <div class="row mb-3">
         <div class="col-md-12 text-left">
             <div class="btn-group btn-group-toggle" role="group" aria-label="Basic example">
-                <button type="button" class="btn btn-light" style="width: 250px;border: 1px solid;font-size: 24px;font-weight: 600;" id="radio_tab1">ทั้งหมด</button>
-                <button type="button" class="btn btn-light" style="width: 250px;border: 1px solid;font-size: 24px;font-weight: 600;" id="radio_tab2">อุปกรณ์ใกล้หมดอายุ</button>
-                <button type="button" class="btn btn-light" style="width: 250px;border: 1px solid;font-size: 24px;font-weight: 600;" id="radio_tab3">อุปกรณ์หมดอายุ</button>
+                <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;border-color: lightgray;" id="radio_tab1">ทั้งหมด</button>
+                <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;border-color: lightgray;" id="radio_tab2">อุปกรณ์ใกล้หมดอายุ</button>
+                <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;border-color: lightgray;" id="radio_tab3">อุปกรณ์หมดอายุ</button>
             </div>
         </div>
 

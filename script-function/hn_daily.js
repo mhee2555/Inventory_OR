@@ -192,11 +192,11 @@ function show_detail_his_docno() {
           var txt = "";
           var hid = "";
           if (value.IsStatus == "1") {
-            txt = `<label style="color:#643695;font-weight:bold;">รอดำเนินการ</label>`;
+            txt = `<button class='btn' style='font-weight: bold;background-color:#643695;color:#fff;'>รอดำเนินการ</button>`;
             var hid = "hidden";
           }
           if (value.IsStatus == "2") {
-            txt = `<label style="color:#1cc88a;font-weight:bold;">ส่งค่าใช้จ่ายเรียบร้อย</label>`;
+            txt = `<button class='btn' style="background-color:#1cc88a;color:#fff;font-weight:bold;">ส่งค่าใช้จ่ายเรียบร้อย</button>`;
           }
 
           _tr += `<tr class='color' id="tr_${value.ID}"  onclick='setActive_his(${value.ID},"${value.IsStatus}")'>
@@ -205,7 +205,7 @@ function show_detail_his_docno() {
                       <td class="f18 text-center">${value.Doctor_Name}</td>
                       <td class="f18 text-center" ${styleP} ${titleP}>${value.Procedure_TH}</td>
                       <td class="f18 text-center">${txt}</td>
-                      <td class="f18 text-center"><a href="#" ${hid} style='font-weight: bold;color:#e74a3b;' onclick='edit_his(${value.ID},${value.IsStatus})'>แก้ไข</a></td>
+                      <td class="f18 text-center"><button class='btn' ${hid} style='font-weight: bold;background-color:#e74a3b;color:#fff;' onclick='edit_his(${value.ID},${value.IsStatus})'>แก้ไข</button></td>
                    </tr>`;
         });
       }
@@ -331,8 +331,8 @@ function show_detail_refrain() {
                       <td class="f18 text-center">${value.Doctor_Name}</td>
                       <td class="f18 text-center">${value.departmentroomname}</td>
                       <td class="f18 text-center">${value.Procedure_TH}</td>
-                      <td class="f18 text-center"><a  href="#" style='font-weight: bold;color:#643695;' onclick='update_daily(${value.ID})'>สร้างเอกสาร</a></td>
-                      <td class="f18 text-center"><a  href="#" style='font-weight: bold;color:#e74a3b;' onclick='update_cancel(${value.ID})'>ยกเลิก</a></td>
+                      <td class="f18 text-center"><button class='btn' style='font-weight: bold;background-color:#643695;color:#fff;' onclick='update_daily(${value.ID})'>สร้างเอกสาร</button></td>
+                      <td class="f18 text-center"><button class='btn' style='font-weight: bold;background-color:#e74a3b;color:#fff;' onclick='update_cancel(${value.ID})'>ยกเลิก</button></td>
                    </tr>`;
         });
       }

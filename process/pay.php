@@ -5486,6 +5486,39 @@ function oncheck_pay($conn, $db)
                             ) ";
                         }
 
+                        $check_his = "SELECT his.IsStatus FROM his WHERE DocNo_deproom = '$DocNo_pay' ";
+                        $meQuery_his = $conn->prepare($check_his);
+                        $meQuery_his->execute();
+
+                        // exit;
+                        while ($row_his = $meQuery_his->fetch(PDO::FETCH_ASSOC)) {
+
+                            $delete_his = "DELETE FROM his_detail WHERE his_detail.DocNo = (SELECT hncode.DocNo FROM hncode  WHERE hncode.DocNo_SS = '$DocNo_pay'  LIMIT 1  ) ";
+                            $meQuery_delete_his = $conn->prepare($delete_his);
+                            $meQuery_delete_his->execute();
+
+
+
+                            $Q2_his_detail = "INSERT INTO his_detail ( DocNo , Qty , ItemCode ) 
+                                    SELECT
+                                        DocNo,
+                                        SUM( hncode_detail.Qty ),
+                                        itemstock.ItemCode 
+                                    FROM
+                                        hncode_detail
+                                        INNER JOIN itemstock ON hncode_detail.ItemStockID = itemstock.RowID 
+                                    WHERE
+                                        hncode_detail.DocNo = (SELECT hncode.DocNo FROM hncode  WHERE hncode.DocNo_SS = '$DocNo_pay'  LIMIT 1  )
+                                        AND hncode_detail.IsStatus != 99 
+                                        AND hncode_detail.Qty > 0 
+                                    GROUP BY
+                                        itemstock.ItemCode  ";
+
+                            $meQuery_his_detail = $conn->prepare($Q2_his_detail);
+                            $meQuery_his_detail->execute();
+                        }
+
+
 
 
                         $query_updateHN = "UPDATE hncode SET IsStatus = 1  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.`procedure` = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$input_date_service' ";
@@ -5708,6 +5741,39 @@ function oncheck_pay($conn, $db)
                             }
 
 
+                            $check_his = "SELECT his.IsStatus FROM his WHERE DocNo_deproom = '$DocNo_pay' ";
+                            $meQuery_his = $conn->prepare($check_his);
+                            $meQuery_his->execute();
+
+                            // exit;
+                            while ($row_his = $meQuery_his->fetch(PDO::FETCH_ASSOC)) {
+
+                                $delete_his = "DELETE FROM his_detail WHERE his_detail.DocNo = (SELECT hncode.DocNo FROM hncode  WHERE hncode.DocNo_SS = '$DocNo_pay'  LIMIT 1  ) ";
+                                $meQuery_delete_his = $conn->prepare($delete_his);
+                                $meQuery_delete_his->execute();
+
+
+
+                                $Q2_his_detail = "INSERT INTO his_detail ( DocNo , Qty , ItemCode ) 
+                                    SELECT
+                                        DocNo,
+                                        SUM( hncode_detail.Qty ),
+                                        itemstock.ItemCode 
+                                    FROM
+                                        hncode_detail
+                                        INNER JOIN itemstock ON hncode_detail.ItemStockID = itemstock.RowID 
+                                    WHERE
+                                        hncode_detail.DocNo = (SELECT hncode.DocNo FROM hncode  WHERE hncode.DocNo_SS = '$DocNo_pay'  LIMIT 1  )
+                                        AND hncode_detail.IsStatus != 99 
+                                        AND hncode_detail.Qty > 0 
+                                    GROUP BY
+                                        itemstock.ItemCode  ";
+
+                                $meQuery_his_detail = $conn->prepare($Q2_his_detail);
+                                $meQuery_his_detail->execute();
+                            }
+
+
 
                             $query_updateHN = "UPDATE hncode SET IsStatus = 1  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.`procedure` = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$input_date_service' ";
                             $query_updateHN = $conn->prepare($query_updateHN);
@@ -5782,7 +5848,8 @@ function oncheck_pay($conn, $db)
                                         deproom.Ref_departmentroomid ,
                                         DATE(deproom.serviceDate)  AS ModifyDate,
                                         deproom.number_box,
-                                        deproom.DocNo
+                                        deproom.DocNo,
+                                        hncode.DocNo AS hncode_DocNo 
                                     FROM
                                         deproom
                                         LEFT JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
@@ -5803,6 +5870,7 @@ function oncheck_pay($conn, $db)
                         $detailID = $row_old['detailID'];
                         $hndetail_ID = $row_old['hndetail_ID'];
                         $DocNo_borrow = $row_old['DocNo'];
+                        $DocNoHN_borrow = $row_old['hncode_DocNo'];
                         $deproom_qty = $row_old['deproom_qty'];
                         $hncode_qty = $row_old['hncode_qty'];
                         $deproomdetailsub_id = $row_old['ID'];
@@ -5870,6 +5938,29 @@ function oncheck_pay($conn, $db)
                             $meQuery0 = $conn->prepare($queryInsert0);
                             $meQuery0->execute();
                         }
+
+
+                        $delete_his = "DELETE FROM his_detail WHERE his_detail.DocNo = '$DocNoHN_borrow' ";
+                        $meQuery_delete_his = $conn->prepare($delete_his);
+                        $meQuery_delete_his->execute();
+
+                        $Q2_his  = "INSERT INTO his_detail ( DocNo , Qty , ItemCode ) 
+                                SELECT
+                                    DocNo,
+                                    SUM( hncode_detail.Qty ),
+                                    itemstock.ItemCode 
+                                FROM
+                                    hncode_detail
+                                    INNER JOIN itemstock ON hncode_detail.ItemStockID = itemstock.RowID 
+                                WHERE
+                                    hncode_detail.DocNo = '$DocNoHN_borrow' 
+                                    AND hncode_detail.IsStatus != 99 
+                                    AND hncode_detail.Qty > 0 
+                                GROUP BY
+                                    itemstock.ItemCode  ";
+
+                        $meQuery1_his = $conn->prepare($Q2_his);
+                        $meQuery1_his->execute();
 
 
 
@@ -6050,6 +6141,41 @@ function oncheck_pay($conn, $db)
                                 0, 
                                 (SELECT LastSterileDetailID FROM itemstock  WHERE itemstock.RowID = $_RowID)
                                 ) ";
+
+
+
+
+                            $check_his = "SELECT his.IsStatus FROM his WHERE DocNo_deproom = '$DocNo_pay' ";
+                            $meQuery_his = $conn->prepare($check_his);
+                            $meQuery_his->execute();
+
+                            // exit;
+                            while ($row_his = $meQuery_his->fetch(PDO::FETCH_ASSOC)) {
+
+                                $delete_his = "DELETE FROM his_detail WHERE his_detail.DocNo = (SELECT hncode.DocNo FROM hncode  WHERE hncode.DocNo_SS = '$DocNo_pay'  LIMIT 1  ) ";
+                                $meQuery_delete_his = $conn->prepare($delete_his);
+                                $meQuery_delete_his->execute();
+
+
+
+                                $Q2_his_detail = "INSERT INTO his_detail ( DocNo , Qty , ItemCode ) 
+                                    SELECT
+                                        DocNo,
+                                        SUM( hncode_detail.Qty ),
+                                        itemstock.ItemCode 
+                                    FROM
+                                        hncode_detail
+                                        INNER JOIN itemstock ON hncode_detail.ItemStockID = itemstock.RowID 
+                                    WHERE
+                                        hncode_detail.DocNo = (SELECT hncode.DocNo FROM hncode  WHERE hncode.DocNo_SS = '$DocNo_pay'  LIMIT 1  )
+                                        AND hncode_detail.IsStatus != 99 
+                                        AND hncode_detail.Qty > 0 
+                                    GROUP BY
+                                        itemstock.ItemCode  ";
+
+                                $meQuery_his_detail = $conn->prepare($Q2_his_detail);
+                                $meQuery_his_detail->execute();
+                            }
 
 
 
@@ -6527,7 +6653,8 @@ function show_detail_deproom_pay($conn, $db)
                             deproom.number_box,
                             deproom.IsConfirm_pay,
                             SUM(CASE WHEN deproomdetail.IsManual = 1 THEN 1 ELSE 0 END) AS IsManual ,
-                            SUM(CASE WHEN deproomdetail.IsRequest = 1 THEN 1 ELSE 0 END) AS IsRequest 
+                            SUM(CASE WHEN deproomdetail.IsRequest = 1 THEN 1 ELSE 0 END) AS IsRequest  ,
+	                        COALESCE(his.IsStatus, 0) AS his_IsStatus
                         FROM
                             deproom
                         LEFT JOIN
@@ -6538,6 +6665,8 @@ function show_detail_deproom_pay($conn, $db)
                             doctor ON deproom.doctor = doctor.ID
                         LEFT JOIN
                             `procedure` ON deproom.`procedure` = `procedure`.ID
+                        LEFT JOIN 
+                            his ON his.DocNo_Deproom = deproom.DocNo 
                         WHERE
                             departmentroom.id = '$_id'
                             AND deproom.IsCancel = 0

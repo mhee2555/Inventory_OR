@@ -34,7 +34,7 @@ function showdetail($conn,$db){
 
     if($check_show == 0){
     $Q1 = " SELECT
-                item.itemcode,
+                item.itemcode2 AS itemcode,
                 item.itemname,
                 insertrfid_detail.QrCode
             FROM
@@ -324,14 +324,9 @@ function show_detail_item_request($conn,$db)
                     item.itemname,
                     itemtype.TyeName,
                     item.stock_min 
-                    ORDER BY-- เงื่อนไขให้น้อยกว่า stock_min อยู่บนสุด
-                CASE
-                        
-                        WHEN COUNT( itemstock.RowID ) - ( SELECT COUNT( ID ) FROM itemstock_transaction_detail WHERE ItemCode = item.itemcode AND IsStatus = 1 ) < item.stock_min THEN
-                        0 ELSE 1 
-                    END ASC,-- เรียงจาก remain_balance น้อยไปมาก
-                    (
-                    COUNT( itemstock.RowID ) - ( SELECT COUNT( ID ) FROM itemstock_transaction_detail WHERE ItemCode = item.itemcode AND IsStatus = 1 )) ASC  ";
+                ORDER BY COUNT( itemstock.RowID ) - ( SELECT COUNT( ID ) FROM itemstock_transaction_detail WHERE ItemCode = item.itemcode AND IsStatus = 1 ) <  item.stock_min DESC ";
+
+          
     // $query = "SELECT
     //             item.itemcode,
     //             item.itemcode2,

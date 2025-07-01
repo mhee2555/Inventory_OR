@@ -360,6 +360,11 @@ $(function () {
         }
       });
     }, 500);
+
+    $("#col_deproom_history").attr("hidden", true);
+    $("#col_doctor_history").attr("hidden", true);
+    $("#col_procedure_history").attr("hidden", true);
+    $("#col_hide_2").attr("hidden", true);
   });
 
   $("#input_hn_history").keypress(function (e) {
@@ -766,7 +771,8 @@ function show_detail_deproom_pay() {
                                 data-time="${value2.serviceTime}"
                                 data-box="${value2.number_box}"
                                 data-doctor="${value2.doctorHN}"
-                                data-procedure="${value2.procedureHN}" >
+                                data-procedure="${value2.procedureHN}" 
+                                data-his_isstatus="${value2.his_IsStatus}" >
                             </div>
                           </td>
                           <td>
@@ -799,7 +805,8 @@ function show_detail_deproom_pay() {
           el.data("time"),
           el.data("box"),
           el.data("doctor"),
-          el.data("procedure")
+          el.data("procedure"),
+          el.data("his_isstatus")
         );
       });
     },
@@ -823,11 +830,10 @@ function showDetail_Permission(DocNo) {
         var _tr = ``;
         var allpage = 0;
         $.each(ObjData, function (kay, value) {
-          
-          var txt = '';
-          if(value.cnt_over == 0){
+          var txt = "";
+          if (value.cnt_over == 0) {
             txt = `<label class='f18' style='font-weight:bold;color:#1cc88a;' >ครบ</label>`;
-          }else{
+          } else {
             txt = `<label class='f18' style='font-weight:bold;color:#e74a3b;' >ค้าง</label>`;
           }
           _tr += `<tr>
@@ -912,8 +918,17 @@ function oncheck_show_byDocNo(
   serviceTime,
   number_box,
   doctor,
-  procedure
+  procedure,
+  his_isstatus
 ) {
+  if(his_isstatus == '2'){
+    $("#input_pay").attr('disabled',true);
+    $("#input_returnpay").attr('disabled',true);
+  }else{
+        $("#input_pay").attr('disabled',false);
+    $("#input_returnpay").attr('disabled',false);
+  }
+
   $("#btn_edit_hn").attr("disabled", false);
 
   $(".clear_checkbox").prop("checked", false);
@@ -1925,6 +1940,42 @@ $("#select_deproom_history").change(function (e) {
 // $("#select_procedure_history").change(function (e) {
 //   show_detail_history();
 // });
+
+$("#select_typeSearch_history").change(function (e) {
+  $("#select_deproom_history").val("").trigger("change");
+  $("#select_doctor_history").val("").trigger("change");
+  $("#select_deproom_history").val("").trigger("change");
+
+  if ($(this).val() == "") {
+    $("#col_deproom_history").attr("hidden", true);
+    $("#col_doctor_history").attr("hidden", true);
+    $("#col_procedure_history").attr("hidden", true);
+    $("#col_hide").attr("hidden", false);
+    $("#col_hide_2").attr("hidden", true);
+  }
+  if ($(this).val() == "1") {
+    $("#col_deproom_history").attr("hidden", false);
+    $("#col_doctor_history").attr("hidden", true);
+    $("#col_procedure_history").attr("hidden", true);
+    $("#col_hide").attr("hidden", true);
+    $("#col_hide_2").attr("hidden", false);
+  }
+  if ($(this).val() == "2") {
+    $("#col_deproom_history").attr("hidden", true);
+    $("#col_doctor_history").attr("hidden", false);
+    $("#col_procedure_history").attr("hidden", true);
+    $("#col_hide").attr("hidden", true);
+    $("#col_hide_2").attr("hidden", false);
+  }
+  if ($(this).val() == "3") {
+    $("#col_deproom_history").attr("hidden", true);
+    $("#col_doctor_history").attr("hidden", true);
+    $("#col_procedure_history").attr("hidden", false);
+    $("#col_hide").attr("hidden", true);
+    $("#col_hide_2").attr("hidden", false);
+  }
+});
+
 function show_detail_history() {
   $.ajax({
     url: "process/pay.php",
