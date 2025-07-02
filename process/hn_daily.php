@@ -89,7 +89,8 @@ function show_detail_his($conn, $db)
                 his_detail.Qty,
                 his_detail.ID,
 	            item.SalePrice,
-                his.IsStatus
+                his.IsStatus,
+                his_detail.edit_Qty
             FROM
                 his
                 LEFT JOIN his_detail ON his.DocNo = his_detail.DocNo
@@ -137,12 +138,14 @@ function show_detail_his_docno($conn, $db)
                 his.`procedure`,
                 doctor.Doctor_Name,
                 IFNULL( `procedure`.Procedure_TH, '' ) AS Procedure_TH,
-                departmentroom.departmentroomname
+                departmentroom.departmentroomname,
+	            SUM( his_detail.edit_qty ) AS edit_qty
             FROM
                 his
                 INNER JOIN doctor ON doctor.ID = his.doctor
                 LEFT JOIN `procedure` ON his.`procedure` = `procedure`.ID
                 INNER JOIN departmentroom ON his.departmentroomid = departmentroom.id 
+                INNER JOIN his_detail ON his.DocNo = his_detail.DocNo 
                 AND DATE( his.createAt ) = '$select_his_Date'
                 AND  ( his.isStatus = 1 OR his.isStatus = 2 ) ";
 
@@ -154,7 +157,6 @@ function show_detail_his_docno($conn, $db)
         if ($_HnCode == "") {
             $rowQ1['HnCode'] = $rowQ1['number_box'];
         }
-
 
         if (str_contains($rowQ1['procedure'], ',')) {
             $rowQ1['Procedure_TH'] = 'button';
@@ -255,7 +257,7 @@ function update_create_request($conn, $db)
     $sql1 = " UPDATE deproom SET IsStatus = 0 , serviceDate = '$serviceDate $serviceTime'  , hn_record_id = '$input_hn_request' , doctor = '$select_doctor_request' , `procedure` = '$select_procedure_request' , Ref_departmentroomid = '$select_deproom_request' WHERE DocNo = '$txt_docno_request' AND IsCancel = 0 ";
     $meQueryUpdate = $conn->prepare($sql1);
     $meQueryUpdate->execute();
-    createhncodeDocNo($conn, $Userid, $DepID, $input_hn_request, $select_deproom_request, 0, $select_procedure_request, $select_doctor_request, 'สร้างจากเมนูขอเบิกอุปกรณ์', $txt_docno_request, $db, $serviceDate, '');
+    createhncodeDocNo($conn, $Userid, $DepID, $input_hn_request, $select_deproom_request, 1, $select_procedure_request, $select_doctor_request, 'สร้างจากเมนูขอเบิกอุปกรณ์', $txt_docno_request, $db, $serviceDate, '');
 
 
 

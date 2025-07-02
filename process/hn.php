@@ -13,7 +13,57 @@ if (!empty($_POST['FUNC_NAME'])) {
         feeddata_hncode($conn, $db);
     } else  if ($_POST['FUNC_NAME'] == 'onHIS') {
         onHIS($conn, $db);
+    } else  if ($_POST['FUNC_NAME'] == 'check_usage') {
+        check_usage($conn, $db);
     }
+}
+function check_usage($conn, $db)
+{
+    $return_data = array(); // เปลี่ยนชื่อตัวแปรเพื่อไม่ให้ซ้ำกับ return array ของฟังก์ชัน
+    $usage_code = $_POST['usage_code'];
+    // ตรวจสอบว่า DocNo ถูกส่งมาหรือไม่
+    $DocNo = isset($_POST['DocNo']) ? $_POST['DocNo'] : '';
+
+    $query = "SELECT
+                  SUM( hncode_detail.Qty ) AS qty ,
+                  item.itemname,
+                  item.itemcode 
+              FROM
+                  hncode_detail
+                  INNER JOIN itemstock ON hncode_detail.ItemStockID = itemstock.RowID 
+                  INNER JOIN item ON itemstock.ItemCode = item.itemcode 
+              WHERE
+                  itemstock.UsageCode = :usage_code"; // ใช้ Placeholder เพื่อป้องกัน SQL Injection
+
+    // เพิ่มเงื่อนไข DocNo ถ้ามีค่า
+    if (!empty($DocNo)) {
+        $query .= " AND hncode_detail.DocNo = :DocNo";
+    }
+
+    // เพิ่ม GROUP BY เพื่อให้ SUM(Qty) ทำงานถูกต้องหากมีหลายรายการสำหรับ usage_code เดียวกัน
+    // หรือลบ GROUP BY หากคาดว่า UsageCode จะไม่ซ้ำกันใน DocNo เดียวกันและต้องการแค่ข้อมูลเดียว
+    $query .= " GROUP BY item.itemcode, item.itemname";
+
+    $meQuery = $conn->prepare($query);
+    $meQuery->bindParam(':usage_code', $usage_code);
+    if (!empty($DocNo)) {
+        $meQuery->bindParam(':DocNo', $DocNo);
+    }
+
+    $meQuery->execute();
+
+    if ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) { // ดึงมาแค่แถวเดียวตามที่ JS คาดหวัง
+        $return_data = array(
+            "item_code" => $row['itemcode'],
+            "item_name" => $row['itemname'],
+            "quantity"  => $row['qty']
+        );
+        echo json_encode(array("status" => "success", "data" => $return_data));
+    } else {
+        echo json_encode(array("status" => "error", "message" => "ไม่พบข้อมูลสำหรับ Usage Code นี้"));
+    }
+    unset($conn);
+    die;
 }
 
 function onHIS($conn, $db)

@@ -166,7 +166,7 @@ function set_doctor($conn)
 
 
 
-     
+
 
 
 
@@ -198,7 +198,7 @@ function set_proceduce($conn)
 
         $procedure_ids = $meQuery_select->fetchColumn();
 
- 
+
 
         if ($procedure_ids) {
 
@@ -266,13 +266,13 @@ function set_deproom_proceduce($conn)
     $count_doctor = 0;
     $select = " SELECT GROUP_CONCAT(departmentroom_id SEPARATOR ', ') AS departmentroom_ids FROM mapping_departmentroom WHERE mapping_departmentroom.procedure_id IN( $procedure_id_Array )  ";
 
-   
+
     $meQuery_select = $conn->prepare($select);
     $meQuery_select->execute();
 
 
 
-    if($procedure_id_Array != "''"){
+    if ($procedure_id_Array != "''") {
         $departmentroom_ids = $meQuery_select->fetchColumn();
     }
 
@@ -328,13 +328,13 @@ function set_deproom($conn)
     $count_doctor = 0;
     $select = " SELECT GROUP_CONCAT(departmentroom_id SEPARATOR ', ') AS departmentroom_ids FROM mapping_doctor WHERE mapping_doctor.doctor_id IN( $doctor_Array )  ";
 
-   
+
     $meQuery_select = $conn->prepare($select);
     $meQuery_select->execute();
 
 
 
-    if($doctor_Array != "''"){
+    if ($doctor_Array != "''") {
         $departmentroom_ids = $meQuery_select->fetchColumn();
     }
 
@@ -462,10 +462,17 @@ function select_item($conn)
 {
     $return = array();
 
+    $permission = $_SESSION['permission'];
+    $wherepermission = "";
+    if ($permission != '5') {
+        $wherepermission = " WHERE item.warehouseID = $permission ";
+    }
+
     $query = "SELECT item.itemcode,
                      item.itemname
               FROM 
                     item  
+               $wherepermission
             ORDER BY item.itemname ASC ";
 
 

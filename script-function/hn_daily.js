@@ -199,14 +199,19 @@ function show_detail_his_docno() {
             txt = `<button class='btn' style="background-color:#1cc88a;color:#fff;font-weight:bold;">ส่งค่าใช้จ่ายเรียบร้อย</button>`;
           }
 
+          var edit_qty = "";
+          if (value.edit_qty > 0) {
+            edit_qty = `<i style='color:red;' class="fa-solid fa-triangle-exclamation"></i>`;
+          }
           _tr += `<tr class='color' id="tr_${value.ID}"  onclick='setActive_his(${value.ID},"${value.IsStatus}")'>
                       <td class="f18 text-center">${value.createAt}</td>
                       <td class="f18 text-center">${value.HnCode}</td>
                       <td class="f18 text-center">${value.Doctor_Name}</td>
                       <td class="f18 text-center" ${styleP} ${titleP}>${value.Procedure_TH}</td>
                       <td class="f18 text-center">${txt}</td>
-                      <td class="f18 text-center"><button class='btn' ${hid} style='font-weight: bold;background-color:#e74a3b;color:#fff;' onclick='edit_his(${value.ID},${value.IsStatus})'>แก้ไข</button></td>
-                   </tr>`;
+                      <td class="f18 text-center"><button class='btn' ${hid} style='font-weight: bold;background-color:#e74a3b;color:#fff;' onclick='edit_his(${value.ID},${value.IsStatus},${value.edit_qty})'>แก้ไข</button></td>
+                      <td class="f18 text-center">${edit_qty}</td>
+                      </tr>`;
         });
       }
 
@@ -229,7 +234,7 @@ function setActive_his(ID, IsStatus) {
   show_detail_his(ID, IsStatus);
 }
 
-function edit_his(ID, IsStatus) {
+function edit_his(ID, IsStatus,edit_qty) {
   show_detail_his(ID, IsStatus);
 
   setTimeout(() => {
@@ -237,6 +242,11 @@ function edit_his(ID, IsStatus) {
     $("#btn_send_pay").data("id", ID);
 
     $(".unlock_qty").attr("disabled", false);
+
+
+    // if(edit_qty > 0){
+    //   $("#btn_send_pay").attr("disabled", false);
+    // }
   }, 500);
 
   // if(IsStatus == 1){
@@ -268,13 +278,29 @@ function show_detail_his(ID, IsStatus) {
             dis = `disabled`;
           }
 
+          if(value.edit_Qty == null){
+            value.edit_Qty = "";
+          }
+
+          var icon_ = "";
+          if(value.edit_Qty != ""){
+            if(value.edit_Qty > value.Qty){
+            icon_ = `<i style='color:green' class="fa-solid fa-caret-up"></i>`;
+            }else{
+            icon_ = `<i style='color:red' class="fa-solid fa-caret-down"></i>`;
+            }
+          }
+
+
           QQ = QQ + parseFloat(parseInt(value.Qty) * parseInt(value.SalePrice));
           _tr += `<tr>
                       <td class="f18 text-center">${value.itemcode2}</td>
                       <td class="f18 text-left">${value.itemname}</td>
                       <td class="f18 text-left" title="${value.TyeName}" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 150px;" >${value.TyeName}</td>
                       <td class="f18 text-center"> <input id="qty_item_${value.ID}" ${dis} onblur="updateDetail_qty(${value.ID},'${value.itemcode}')"  class=' unlock_qty numonly form-control' value='${value.Qty}' style='text-align: center;' ></td>
-                   </tr>`;
+                      <td class="f18 text-center"> <input disabled   class=' unlock_qty numonly form-control' value='${value.edit_Qty}' style='text-align: center;' ></td>
+                      <td class="f18 text-center">${icon_}</td>
+                      </tr>`;
         });
       }
 

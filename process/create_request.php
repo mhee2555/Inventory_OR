@@ -316,7 +316,7 @@ function onconfirm_send_request($conn, $db)
     $DepID = $_SESSION['DepID'];
 
     if ($text_edit != 'edit') {
-        createhncodeDocNo($conn, $Userid, $DepID, $input_hn_request, $select_deproom_request, 0, $select_procedure_request, $select_doctor_request, 'สร้างจากเมนูขอเบิกอุปกรณ์', $txt_docno_request, $db, $select_date_request, '');
+        createhncodeDocNo($conn, $Userid, $DepID, $input_hn_request, $select_deproom_request, 1 , $select_procedure_request, $select_doctor_request, 'สร้างจากเมนูขอเบิกอุปกรณ์', $txt_docno_request, $db, $select_date_request, '');
     }
 
 
@@ -449,13 +449,12 @@ function show_detail_item_request($conn, $db)
     $return = array();
     $input_Search = $_POST['input_search_request'];
     $select_typeItem = $_POST['select_typeItem'];
-    $permission = $_SESSION['permission'];
 
     $wheretype = "";
     if ($select_typeItem != "") {
         $wheretype = " AND itemtype.ID = '$select_typeItem' ";
     }
-
+    $permission = $_SESSION['permission'];
     $wherepermission = "";
     if ($permission != '5') {
         $wherepermission = " AND item.warehouseID = $permission ";

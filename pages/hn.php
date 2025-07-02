@@ -103,10 +103,10 @@
 
 
 
-            <div class="col-md-6">
+            <div class="col-md-2">
 
                 <div class="dropdown">
-                    <button style="background-color: #643695;color:white;" class="btn  dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <button style="background-color: #643695;color:white;" class=" f18 btn  dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         รายงาน
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="z-index: 9999;">
@@ -119,7 +119,10 @@
                 </div>
             </div>
 
-            
+            <div class="col-md-3">
+                <button class="btn btn-success f18" id="edit_his" disabled>แก้ไขอุปกรณ์</button>
+            </div>
+
             <div class="col-md-6 text-right">
                 <button class="btn btn-success" id="btn_send_pay" disabled>ยืนยันการส่งค่าใข้จ่าย (HIS)</button>
             </div>
@@ -321,3 +324,68 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="myCustomModal" tabindex="-1" role="dialog" aria-labelledby="myCustomModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5 class="mb-3" style="color:black;">สแกนคืน</h5>
+                            <div class="form-group">
+                                <input type="text" class="form-control f18" placeholder="" id="input_return_item_his">
+                            </div>
+                            <div class="table-responsive" id="table_return_his">
+                                <table class="table table-hover table-sm">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th>ชื่ออุปกรณ์</th>
+                                            <th class='text-center'>รหัสอุปกรณ์</th>
+                                            <th style="width: 80px; text-align: center;">จำนวน</th>
+                                            <th style="width: 100px; text-align: center;">#</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <h5 class="mb-3" style="color:black;">เพิ่มอุปกรณ์</h5>
+                            <div class="form-group">
+                                <select class="form-control f18" id="select_item_his">
+                                    <option>เลือกอุปกรณ์</option>
+                                </select>
+                            </div>
+                            <div class="table-responsive" id="table_add_his">
+                                <table class="table table-hover table-sm">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th>ชื่ออุปกรณ์</th>
+                                            <th style="width: 100px; text-align: center;">จำนวน</th>
+                                            <th style="width: 100px; text-align: center;">#</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer d-flex justify-content-end">
+                <button type="button" class="btn btn-light" data-dismiss="modal">ล้างข้อมูล</button>
+                <button type="button" class="btn btn-primary" id="btn_send_his">ส่งข้อมูล</button>
+            </div>
+        </div>
+    </div>
+</div>
+

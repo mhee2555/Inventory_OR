@@ -204,7 +204,7 @@ function feeddata_hncode(input_search) {
   });
 }
 
-function setActive_feeddata_hncode_detail(ID, DocNo, HnCode,his_ID) {
+function setActive_feeddata_hncode_detail(ID, DocNo, HnCode, his_ID) {
   $(".color").css("background-color", "");
   $("#tr_" + ID).css("background-color", "#FEE4E2");
 
@@ -212,16 +212,309 @@ function setActive_feeddata_hncode_detail(ID, DocNo, HnCode,his_ID) {
 
   $("#btn_Tracking").attr("disabled", false);
 
-  if(his_ID == 'null'){
+  if (his_ID == "null") {
     $("#btn_send_pay").attr("disabled", false);
-  }else{
+    $("#edit_his").attr("disabled", true);
+  } else {
     $("#btn_send_pay").attr("disabled", true);
     $("#tr_" + ID).css("background-color", "lightgreen");
+
+    $("#edit_his").attr("disabled", false);
   }
 
   // alert(DocNo);
   feeddata_hncode_detail(DocNo, HnCode);
 }
+// ========================================================================================HIS
+$("#edit_his").click(function () {
+  $("#myCustomModal").modal("toggle");
+  $("#table_add_his tbody").empty();
+  $("#table_return_his tbody").empty();
+  set_item();
+
+  setTimeout(() => {
+    $("#select_item_his").select2({
+      // เพิ่มบรรทัดนี้:
+      dropdownParent: $("#myCustomModal"), // หรือถ้ามีปัญหา ให้ลองใช้ $('#myCustomModal .modal-body')
+    });
+  }, 400);
+});
+
+function set_item() {
+  $.ajax({
+    url: "process/process_main/select_main.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "select_item",
+    },
+    success: function (result) {
+      var ObjData = JSON.parse(result);
+      console.log(ObjData);
+      var option = `<option value="" selected>กรุณาเลือกอุปกรณ์</option>`; // เปลี่ยนข้อความเริ่มต้น
+      if (!$.isEmptyObject(ObjData)) {
+        $.each(ObjData, function (kay, value) {
+          option += `<option value="${value.itemcode}" >${value.itemname}</option>`; // คาดว่าค่าที่ต้องการแสดงคือ itemname
+        });
+      } else {
+        option = `<option value="0">ไม่มีข้อมูล</option>`;
+      }
+      $("#select_item_his").html(option); // เปลี่ยน ID ของ select element ที่ต้องการให้แสดงผล
+    },
+  });
+}
+
+// เพิ่มโค้ดนี้เข้าไปใน hn.js
+// ตรวจสอบให้แน่ใจว่าอยู่หลังจากการโหลด jQuery และ Select2
+// หรืออยู่ภายใน $(function() { ... }); block
+
+$(document).on("change", "#select_item_his", function () {
+  var selectedItemCode = $(this).val();
+  var selectedItemName = $(this).find("option:selected").text();
+
+  // ตรวจสอบไม่ให้เพิ่มค่าว่าง ("") หรือ "0" หรือค่าที่ไม่ถูกต้อง
+  if (
+    selectedItemCode === "" ||
+    selectedItemCode === "0" ||
+    !selectedItemCode
+  ) {
+    return;
+  }
+
+  // ตรวจสอบว่ารายการนี้มีอยู่ในตารางแล้วหรือไม่
+  var itemAlreadyInTable = false;
+  $("#table_add_his tbody tr").each(function () {
+    if ($(this).data("itemcode") === selectedItemCode) {
+      // ถ้ามีอยู่แล้ว ให้เพิ่มจำนวน (Quantity) แทน
+      var currentQty = parseInt($(this).find("input[name='add_qty']").val());
+      $(this)
+        .find("input[name='add_qty']")
+        .val(currentQty + 1);
+      itemAlreadyInTable = true;
+      return false; // ออกจาก loop .each
+    }
+  });
+
+  if (!itemAlreadyInTable) {
+    // ถ้ายังไม่มีในตาราง ให้เพิ่มแถวใหม่
+    var newRowHtml = `<tr data-itemcode="${selectedItemCode}">
+                              <td>${selectedItemName}</td>
+                              <td class="text-center">
+                                  <input type="number" name="add_qty" class=" f18 form-control form-control-sm text-center" value="1" min="1" style="width: 70px; display: inline-block;">
+                              </td>
+                              <td class="text-center">
+                                  <button type="button" class="btn btn-danger btn-sm remove-added-item" style="margin-left: 5px;">X</button>
+                              </td>
+                          </tr>`;
+    $("#table_add_his tbody").append(newRowHtml);
+  }
+
+  // (เลือกได้) รีเซ็ต dropdown กลับไปที่ค่าเริ่มต้นหลังจากเลือก เพื่อให้เลือกรายการใหม่ได้ง่ายขึ้น
+  // หากใช้ Select2 ต้องใช้ trigger("change.select2") ด้วย
+  // $(this).val("").trigger("change.select2");
+});
+
+// Event listener สำหรับปุ่มลบรายการออกจาก table_add_his
+$(document).on("click", ".remove-added-item", function () {
+  $(this).closest("tr").remove(); // ลบแถวทั้งหมดที่ปุ่มนี้อยู่
+});
+
+// Event listener เมื่อมีการกดปุ่ม (โดยเฉพาะ Enter) ในช่องสแกน Usage Code
+$(document).on("keypress", "#input_return_item_his", function (e) {
+  if (e.which == 13) {
+    // ตรวจสอบว่ากดปุ่ม Enter หรือไม่
+    e.preventDefault(); // ป้องกันการ Submit form หาก input อยู่ใน form
+
+    var usageCode = $(this).val().trim(); // ดึงค่า Usage Code ที่สแกนมา
+
+    if (usageCode === "") {
+      Swal.fire("แจ้งเตือน", "กรุณาสแกน Usage Code", "warning");
+      return;
+    }
+
+    // ตรวจสอบว่า Usage Code นี้ถูกเพิ่มในตาราง table_return_his แล้วหรือยัง
+    var itemAlreadyInReturnTable = false;
+    $("#table_return_his tbody tr").each(function () {
+      if ($(this).data("usagecode") === usageCode) {
+        Swal.fire("แจ้งเตือน", "Usage Code นี้ถูกเพิ่มแล้วในรายการ", "info");
+        itemAlreadyInReturnTable = true;
+        return false; // ออกจาก loop .each
+      }
+    });
+
+    if (itemAlreadyInReturnTable) {
+      // เคลียร์ช่อง input หากรายการถูกเพิ่มแล้ว
+      $(this).val("");
+      return;
+    }
+
+    // ทำการเรียก AJAX เพื่อค้นหาข้อมูลอุปกรณ์จาก Usage Code
+    $.ajax({
+      url: "process/hn.php",
+      type: "POST",
+      dataType: "json",
+      data: {
+        FUNC_NAME: "check_usage",
+        usage_code: usageCode,
+        DocNo: $("#btn_Tracking").data("DocNo"),
+      }, // ส่ง Usage Code ไปยัง API
+
+      success: function (response) {
+        // ฟังก์ชันนี้จะทำงานเมื่อ AJAX request สำเร็จ
+        if (response.status === "success" && response.data) {
+          var item = response.data;
+          // เพิ่มรายการอุปกรณ์ที่พบลงในตาราง table_return_his
+          var newRowHtml = `<tr data-usagecode="${usageCode}" data-itemcode="${
+            item.item_code || ""
+          }">
+                                          <td style='max-width: 180px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>${
+                                            item.item_name ||
+                                            "ไม่ระบุชื่ออุปกรณ์"
+                                          }</td>
+                                          <td>${
+                                            usageCode || "ไม่ระบุชื่ออุปกรณ์"
+                                          }</td>
+                                          <td class='text-center'>${
+                                            item.quantity || 1
+                                          }</td>
+                                          <td class="text-center">
+                                              <button type="button" class="btn btn-danger btn-sm remove-returned-item">X</button>
+                                          </td>
+                                      </tr>`;
+          $("#table_return_his tbody").append(newRowHtml);
+        } else {
+          Swal.fire(
+            "ไม่พบข้อมูล!",
+            response.message || "ไม่พบอุปกรณ์สำหรับ Usage Code นี้",
+            "error"
+          );
+        }
+      },
+      error: function (xhr, status, error) {
+        // ฟังก์ชันนี้จะทำงานเมื่อ AJAX request เกิดข้อผิดพลาด
+        console.error("AJAX error: ", status, error, xhr);
+        Swal.fire(
+          "เกิดข้อผิดพลาด!",
+          "ไม่สามารถค้นหาข้อมูลได้ ลองอีกครั้ง",
+          "error"
+        );
+      },
+      complete: function () {
+        // เคลียร์ช่อง input หลังจาก AJAX call เสร็จสิ้น (ไม่ว่าจะสำเร็จหรือผิดพลาด)
+        $("#input_return_item_his").val("");
+      },
+    });
+  }
+});
+
+// Event listener สำหรับปุ่มลบรายการออกจาก table_return_his
+$(document).on("click", ".remove-returned-item", function () {
+  $(this).closest("tr").remove(); // ลบแถวทั้งหมดที่ปุ่มนี้อยู่
+});
+
+// Event listener เมื่อคลิกปุ่ม "ส่งข้อมูล"
+$("#btn_send_his").click(function () {
+  var addItems = [];
+  var returnItems = [];
+
+  // 1. รวบรวมข้อมูลจาก table_add_his (อุปกรณ์ที่เพิ่ม)
+  $("#table_add_his tbody tr").each(function () {
+    var itemCode = $(this).data("itemcode");
+    var quantity = $(this).find("input[name='add_qty']").val();
+
+    if (itemCode && quantity) {
+      addItems.push({
+        item_code: itemCode,
+        quantity: parseInt(quantity),
+      });
+    }
+  });
+
+  // 2. รวบรวมข้อมูลจาก table_return_his (อุปกรณ์ที่สแกนคืน)
+  $("#table_return_his tbody tr").each(function () {
+    var usageCode = $(this).data("usagecode");
+    var itemCode = $(this).data("itemcode");
+    var quantity = parseInt($(this).find("td:nth-child(3)").text());
+
+    if (usageCode && itemCode && quantity) {
+      returnItems.push({
+        usage_code: usageCode,
+        item_code: itemCode,
+        quantity: quantity,
+      });
+    }
+  });
+
+  // ตรวจสอบว่ามีข้อมูลจากทั้งสองตารางหรือไม่ ก่อนทำการยืนยัน
+  if (addItems.length === 0 && returnItems.length === 0) {
+    Swal.fire(
+      "แจ้งเตือน",
+      "กรุณาเพิ่มอุปกรณ์ หรือ สแกนอุปกรณ์ที่ต้องการส่งข้อมูล",
+      "warning"
+    );
+    return; // หยุดการทำงานถ้าไม่มีรายการใดๆ ในทั้งสองตาราง
+  }
+
+  // เพิ่ม Swal Confirmation ที่นี่
+  Swal.fire({
+    title: "ยืนยันการส่งข้อมูล?",
+    text: "คุณต้องการส่งข้อมูลอุปกรณ์เหล่านี้ใช่หรือไม่?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "ยืนยัน",
+    cancelButtonText: "ยกเลิก",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      // ถ้าผู้ใช้กด 'ใช่, ส่งเลย!' ให้ดำเนินการส่งข้อมูล
+      var combinedData = {
+        // เพิ่ม DocNo ที่นี่
+        DocNo: $("#btn_Tracking").data("DocNo"), // ดึงค่า DocNo จาก data attribute ของปุ่ม btn_Tracking
+        add_items: addItems,
+        return_items: returnItems,
+      };
+
+      // ทำการส่งข้อมูลผ่าน AJAX
+      $.ajax({
+        url: "api/process_all_modal_data.php", // *** โปรดตรวจสอบและเปลี่ยน URL ของ API ของคุณ ***
+        type: "POST",
+        dataType: "json",
+        contentType: "application/json; charset=utf-8",
+        data: JSON.stringify(combinedData),
+
+        success: function (response) {
+          if (response.status === "success") {
+            Swal.fire(
+              "สำเร็จ!",
+              response.message || "ส่งข้อมูลเรียบร้อยแล้ว",
+              "success"
+            );
+            // เคลียร์ทั้งสองตารางและปิด Modal หลังจากส่งข้อมูลสำเร็จ
+            $("#table_add_his tbody").empty();
+            $("#table_return_his tbody").empty();
+            $("#myCustomModal").modal("hide");
+          } else {
+            Swal.fire(
+              "เกิดข้อผิดพลาด!",
+              response.message || "ไม่สามารถส่งข้อมูลได้",
+              "error"
+            );
+          }
+        },
+        error: function (xhr, status, error) {
+          console.error("AJAX error: ", status, error, xhr);
+          Swal.fire(
+            "เกิดข้อผิดพลาด!",
+            "ไม่สามารถส่งข้อมูลได้ ลองอีกครั้ง",
+            "error"
+          );
+        },
+      });
+    }
+  });
+});
+// ========================================================================================HIS
+
 $("#btn_send_pay").click(function () {
   Swal.fire({
     title: "ยืนยัน",
@@ -242,24 +535,25 @@ $("#btn_send_pay").click(function () {
           DocNo: $("#btn_Tracking").data("DocNo"),
         },
         success: function (result) {
+          var link = "pages/hn_daily.php";
+          $.get(link, function (res) {
+            $(".nav-item").removeClass("active");
+            $(".nav-item").css("background-color", "");
 
-            var link = "pages/hn_daily.php";
-            $.get(link, function (res) {
-              $(".nav-item").removeClass("active");
-              $(".nav-item").css("background-color", "");
+            $("#ic_search_hndata").attr(
+              "src",
+              "assets/img_project/2_icon/ic_search_hndata.png"
+            );
+            $("#menu9").css("color", "#667085");
 
-              $("#ic_search_hndata").attr("src", "assets/img_project/2_icon/ic_search_hndata.png");
-              $("#menu9").css("color", "#667085");
+            $("#conMain").html(res);
+            history.pushState({}, "Results for `Cats`", "index.php?s=hn_daily");
+            document.title = "hn_daily";
 
-              $("#conMain").html(res);
-              history.pushState({}, "Results for `Cats`", "index.php?s=hn_daily");
-              document.title = "hn_daily";
+            loadScript("script-function/hn_daily.js");
+            loadScript("assets/lang/hn_daily.js");
+          });
 
-              loadScript("script-function/hn_daily.js");
-              loadScript('assets/lang/hn_daily.js');
-              
-            });
-            
           // feeddata_waitReturn();
         },
       });
@@ -288,9 +582,7 @@ $("#btn_use").click(function () {
 
 $("#btn_Tracking").click(function () {
   if ($("#btn_Tracking").data("DocNo") != undefined) {
-
-    
-    option = "?DocNo=" + $("#btn_Tracking").data("DocNo")
+    option = "?DocNo=" + $("#btn_Tracking").data("DocNo");
     window.open(
       "report/Report_Medical_Instrument_Tracking.php" + option,
       "_blank"
@@ -311,7 +603,12 @@ $("#btn_cost").click(function () {
 
 $("#btn_excel_all").click(function () {
   option =
-    "?select_SDate=" +$("#select_SDate").val() +"&select_EDate=" +$("#select_EDate").val()+"&Userid=" + Userid;
+    "?select_SDate=" +
+    $("#select_SDate").val() +
+    "&select_EDate=" +
+    $("#select_EDate").val() +
+    "&Userid=" +
+    Userid;
   window.open(
     "report/phpexcel/Report_Medical_Instrument_Tracking.php" + option,
     "_blank"

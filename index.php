@@ -205,6 +205,9 @@ if (!isset($_SESSION['UserName'])) {
                     <div class="form-group">
                         <input type="password" class="form-control" id="input_PassWord" placeholder="Password">
                     </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control form-control-user" id="input_Scan" placeholder="สแกนเข้าสู่ระบบ" style="font-size: 20px;">
+                    </div>
                 </form>
             </div>
             <div class="modal-footer" style="justify-content: center; border-top: none;">
@@ -2137,17 +2140,17 @@ if (!isset($_SESSION['UserName'])) {
                         }
                     });
                 } else {
-                            $("#li_main").attr('hidden', true);
-                            $("#li_recieve_stock").attr('hidden', true);
-                            $("#li_create_request").attr('hidden', true);
-                            $("#li_request_item").attr('hidden', true);
-                            $("#li_set_hn").attr('hidden', true);
-                            $("#li_pay").attr('hidden', true);
-                            $("#li_hn").attr('hidden', true);
-                            $("#li_movement").attr('hidden', true);
-                            $("#li_manage").attr('hidden', true);
-                            $("#li_report").attr('hidden', true);
-                            $("#li_permission").attr('hidden', true);
+                    $("#li_main").attr('hidden', true);
+                    $("#li_recieve_stock").attr('hidden', true);
+                    $("#li_create_request").attr('hidden', true);
+                    $("#li_request_item").attr('hidden', true);
+                    $("#li_set_hn").attr('hidden', true);
+                    $("#li_pay").attr('hidden', true);
+                    $("#li_hn").attr('hidden', true);
+                    $("#li_movement").attr('hidden', true);
+                    $("#li_manage").attr('hidden', true);
+                    $("#li_report").attr('hidden', true);
+                    $("#li_permission").attr('hidden', true);
 
                 }
             },
@@ -2170,6 +2173,12 @@ if (!isset($_SESSION['UserName'])) {
         <?php include_once('assets/lang/' . $page . '_set.js'); ?>
     }
 
+    $('#input_Scan').keypress(function(e) {
+        if (e.which == 13) {
+            LoginUser();
+        }
+    });
+
     function LoginUser() {
 
         var deproom = '<?php echo $deproom; ?>';
@@ -2184,7 +2193,7 @@ if (!isset($_SESSION['UserName'])) {
                 'input_UserName': $("#input_UserName").val(),
                 'input_PassWord': $("#input_PassWord").val(),
                 'select_departmentRoom': deproom,
-                'input_Scan': ""
+                'input_Scan': $("#input_Scan").val(),
             },
             error: function(result) {
                 console.log(result);

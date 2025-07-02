@@ -269,8 +269,8 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
         $html .=   '<td width="10 %" align="center"> ' . $Result_Detail['itemcode2'] . '</td>';
         $html .=   '<td width="60 %" align="left">' . $Result_Detail['itemname'] . '</td>';
         $html .=   '<td width="10 %" align="center">' . $Result_Detail['cnt'] . '</td>';
-        $html .=   '<td width="10 %" align="center">' . number_format($Result_Detail['SalePrice'],2) . '</td>';
-        $html .=   '<td width="10 %" align="center">' . number_format( ($Result_Detail['SalePrice'] * $Result_Detail['cnt']) ,2) . '</td>';
+        $html .=   '<td width="10 %" align="right">' . number_format($Result_Detail['SalePrice'],2) . '</td>';
+        $html .=   '<td width="10 %" align="right">' . number_format( ($Result_Detail['SalePrice'] * $Result_Detail['cnt']) ,2) . '</td>';
         $html .=  '</tr>';
         $count++;
 

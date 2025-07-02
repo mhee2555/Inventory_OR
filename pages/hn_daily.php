@@ -158,6 +158,7 @@
                                 <th scope="col" class="text-center" id="">หัตถการ</th>
                                 <th scope="col" class="text-center" id="">สถานะ</th>
                                 <th scope="col" class="text-center" id="">#</th>
+                                <th scope="col" class="text-center" id="">#</th>
                             </tr>
 
                         </thead>
@@ -191,6 +192,8 @@
                                         <th scope="col" class="text-center" id="">อุปกรณ์</th>
                                         <th scope="col" class="text-center" id="">ประเภท</th>
                                         <th scope="col" class="text-center" id="" style='width: 15%;'>จำนวน</th>
+                                        <th scope="col" class="text-center" id="" style='width: 15%;'>ปรับแก้</th>
+                                        <th scope="col" class="text-center" id="" style='width: 10%;'>#</th>
                                     </tr>
                                 </thead>
                                 <tbody>
