@@ -402,7 +402,7 @@ function selection_itemborrow($conn,$db)
                 WHERE
                     deproomdetailsub.hn_record_id_borrow IS NOT NULL 
                     AND deproomdetailsub.hn_record_id_borrow <> '' 
-                    AND deproomdetailsub.PayDate = NOW() 
+                    AND DATE(deproomdetailsub.PayDate) = DATE(NOW())
                     $wherepermission
                     $wheredep  ";
     $meQuery = $conn->prepare($query);

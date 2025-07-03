@@ -581,9 +581,7 @@ function feeddata_detailProcedure() {
             `<tr> ` +
             `<td class="text-center">${kay + 1}</td>` +
             `<td class="text-left">${value.Procedure_TH}</td>` +
-
-           `<td class="text-center"><button class='btn' ${bg}>  ${value.IsActive } </button></td>` +
-
+            `<td class="text-center"><button class='btn' ${bg}>  ${value.IsActive} </button></td>` +
             `<td class="text-center">
             
                        <button class="btn btn-outline-dark f18 edit-btn" data-id="${value.ID}" data-name="${value.Procedure_TH}" data-active="${value.IsActive}" > <i class="fa-regular fa-pen-to-square"></i> แก้ไข</button>
@@ -639,7 +637,7 @@ function feeddata_detailProcedure() {
             width: "10%",
             targets: 2,
           },
-                    {
+          {
             width: "20%",
             targets: 3,
           },
@@ -699,6 +697,10 @@ $("#btn_saveUser").click(function () {
   }
   if ($("#input_passWord").val() == "") {
     showDialogFailed("กรุณากรอก Password");
+    return;
+  }
+  if ($("#select_permission").val() == "") {
+    showDialogFailed("กรุณาเลือก สังกัด");
     return;
   }
   if ($("#input_empcodeUser").val() == "") {
@@ -2501,7 +2503,13 @@ function show_detail_request_byDocNo() {
                       <td class='text-center'>${kay + 1}</td>
                       <td>${value.itemname}</td>
                       <td class='text-center'>${value.TyeName}</td>
-                      <td class='text-center'><input type="text"  onblur="updateDetail_qty(${value.id },'${value.itemcode}')" class="form-control text-center qty_loop" id="qty_item_${value.id}" data-id='${value.id}' value='${value.cnt}'> </td>
+                      <td class='text-center'><input type="text"  onblur="updateDetail_qty(${
+                        value.id
+                      },'${
+            value.itemcode
+          }')" class="form-control text-center qty_loop" id="qty_item_${
+            value.id
+          }" data-id='${value.id}' value='${value.cnt}'> </td>
                       <td class='text-center'>
                       <img src="assets/img_project/1_icon/ic_trash-1.png" style='width:30%;cursor:pointer;' onclick='delete_request_byItem(${
                         value.id

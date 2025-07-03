@@ -1,7 +1,6 @@
 $(function () {
   $("#checkbox_filter").change(function () {
-
-    $("#select_type").val('');
+    $("#select_type").val("");
 
     setTimeout(() => {
       show_detail_daily();
@@ -198,19 +197,29 @@ function show_detail_his_docno() {
           if (value.IsStatus == "2") {
             txt = `<button class='btn' style="background-color:#1cc88a;color:#fff;font-weight:bold;">ส่งค่าใช้จ่ายเรียบร้อย</button>`;
           }
-
-          var edit_qty = "";
-          if (value.edit_qty > 0) {
-            edit_qty = `<i style='color:red;' class="fa-solid fa-triangle-exclamation"></i>`;
+          var add_Qty = "";
+          if (value.IsStatus == "3") {
+            txt = `<button class='btn' style="background-color:#1cc88a;color:#fff;font-weight:bold;">ส่งค่าใช้จ่ายเรียบร้อย</button>`;
+            var hid = "hidden";
+          } else {
+            if (value.add_Qty > 0) {
+              add_Qty = `<i style='color:red;' class="fa-solid fa-triangle-exclamation"></i>`;
+            }
           }
-          _tr += `<tr class='color' id="tr_${value.ID}"  onclick='setActive_his(${value.ID},"${value.IsStatus}")'>
+
+          if (value.isCancel == "1") {
+            txt = `<button class='btn' style="background-color:#e74a3b;color:#fff;font-weight:bold;">ยกเลิก</button>`;
+            var hid = "hidden";
+          }
+
+          _tr += `<tr class='color' id="tr_${value.ID}"  onclick='setActive_his(${value.ID},"${value.IsStatus}",${value.isCancel})'>
                       <td class="f18 text-center">${value.createAt}</td>
                       <td class="f18 text-center">${value.HnCode}</td>
                       <td class="f18 text-center">${value.Doctor_Name}</td>
                       <td class="f18 text-center" ${styleP} ${titleP}>${value.Procedure_TH}</td>
                       <td class="f18 text-center">${txt}</td>
                       <td class="f18 text-center"><button class='btn' ${hid} style='font-weight: bold;background-color:#e74a3b;color:#fff;' onclick='edit_his(${value.ID},${value.IsStatus},${value.edit_qty})'>แก้ไข</button></td>
-                      <td class="f18 text-center">${edit_qty}</td>
+                      <td class="f18 text-center">${add_Qty}</td>
                       </tr>`;
         });
       }
@@ -220,7 +229,7 @@ function show_detail_his_docno() {
   });
 }
 
-function setActive_his(ID, IsStatus) {
+function setActive_his(ID, IsStatus,isCancel) {
   $(".color").css("background-color", "");
   $("#tr_" + ID).css("background-color", "#FEE4E2");
 
@@ -231,10 +240,14 @@ function setActive_his(ID, IsStatus) {
     $("#btn_send_pay").attr("disabled", true);
   }
 
+  if (isCancel == 1) {
+    $("#btn_send_pay").attr("disabled", true);
+  }
+
   show_detail_his(ID, IsStatus);
 }
 
-function edit_his(ID, IsStatus,edit_qty) {
+function edit_his(ID, IsStatus, edit_qty) {
   show_detail_his(ID, IsStatus);
 
   setTimeout(() => {
@@ -242,7 +255,6 @@ function edit_his(ID, IsStatus,edit_qty) {
     $("#btn_send_pay").data("id", ID);
 
     $(".unlock_qty").attr("disabled", false);
-
 
     // if(edit_qty > 0){
     //   $("#btn_send_pay").attr("disabled", false);
@@ -278,28 +290,17 @@ function show_detail_his(ID, IsStatus) {
             dis = `disabled`;
           }
 
-          if(value.edit_Qty == null){
+          if (value.edit_Qty == null) {
             value.edit_Qty = "";
           }
-
-          var icon_ = "";
-          if(value.edit_Qty != ""){
-            if(value.edit_Qty > value.Qty){
-            icon_ = `<i style='color:green' class="fa-solid fa-caret-up"></i>`;
-            }else{
-            icon_ = `<i style='color:red' class="fa-solid fa-caret-down"></i>`;
-            }
-          }
-
 
           QQ = QQ + parseFloat(parseInt(value.Qty) * parseInt(value.SalePrice));
           _tr += `<tr>
                       <td class="f18 text-center">${value.itemcode2}</td>
                       <td class="f18 text-left">${value.itemname}</td>
-                      <td class="f18 text-left" title="${value.TyeName}" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 150px;" >${value.TyeName}</td>
-                      <td class="f18 text-center"> <input id="qty_item_${value.ID}" ${dis} onblur="updateDetail_qty(${value.ID},'${value.itemcode}')"  class=' unlock_qty numonly form-control' value='${value.Qty}' style='text-align: center;' ></td>
-                      <td class="f18 text-center"> <input disabled   class=' unlock_qty numonly form-control' value='${value.edit_Qty}' style='text-align: center;' ></td>
-                      <td class="f18 text-center">${icon_}</td>
+                      <td class="f18 text-center"> <input disabled id="qty_item_${value.ID}" ${dis} onblur="updateDetail_qty(${value.ID},'${value.itemcode}')"  class='  numonly form-control' value='${value.Qty}' style='text-align: center;' ></td>
+                      <td class="f18 text-center"> <input disabled   class='  numonly form-control' value='${value.add_Qty}' style='text-align: center;' ></td>
+                      <td class="f18 text-center"> <input disabled   class='  numonly form-control' value='${value.delete_Qty}' style='text-align: center;' ></td>
                       </tr>`;
         });
       }
@@ -423,8 +424,7 @@ function update_daily(ID) {
 }
 
 function show_detail_daily() {
-
-  if ($('#checkbox_filter').is(":checked")) {
+  if ($("#checkbox_filter").is(":checked")) {
     var check_Box = 1;
   } else {
     var check_Box = 0;
@@ -465,6 +465,12 @@ function show_detail_daily() {
             var txt = `<a  class='btn f18'  href="#" style='font-weight: bold;background-color:#1cc88a;color:#fff;' )'>ดำเนินการเรียบร้อย</a>`;
             x = "hidden";
           }
+
+          if (value.isCancel == "1") {
+            var txt = `<a  class='btn f18'  href="#" style='font-weight: bold;background-color:#e74a3b;color:#fff;' )'>ยกเลิก</a>`;
+            x = "hidden";
+          }
+
           _tr += `<tr>
                       <td class="f18 text-center">${value.hncode}</td>
                       <td class="f18 text-center">${value.serviceDate} ${value.serviceTime}</td>
@@ -502,7 +508,6 @@ function update_create_request(ID) {
           ID: ID,
         },
         success: function (result) {
-
           show_detail_daily();
           // var link = "pages/create_request.php";
           // $.get(link, function (res) {

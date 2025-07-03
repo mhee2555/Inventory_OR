@@ -372,8 +372,8 @@ function show_detail_itemstock() {
     },
     success: function (result) {
       var _tr = "";
-      // $("#table_lot_detail").DataTable().destroy();
-      $("#table_lot_detail tbody").html("");
+      $("#table_lot_detail").DataTable().destroy();
+      // $("#table_lot_detail tbody").html("");
       var matched_tr = ""; // สำหรับเก็บแถวที่ตรงกับ input
 
       var ObjData = JSON.parse(result);

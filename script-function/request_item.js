@@ -151,6 +151,9 @@ function show_detail_item_request() {
         $.each(ObjData, function (kay, value) {
           var color = "";
           var input_cnt = "";
+          if(value.stock_min == null){
+            value.stock_min = 0;
+          }
           if (value.cnt < value.stock_min) {
             color = "style='color:red;' ";
             input_cnt = `<input tyle='text' class='text-center form-control numonly loop_qty_request' data-itemcode="${value.itemcode}" >`;

@@ -860,9 +860,12 @@ function cancel_item_byDocNo($conn, $db)
     if ($db == 1) {
         $sql1 = " UPDATE deproom SET IsCancel = 1 , ModifyDate = NOW()  WHERE DocNo = '$txt_docno_request' ";
         $sql_hn = " UPDATE hncode SET IsCancel = 1 WHERE DocNo_SS = '$txt_docno_request' ";
+        $sql_his = " UPDATE his SET IsCancel = 1 WHERE DocNo_deproom = '$txt_docno_request' ";
+        $sql_set_hn = " UPDATE set_hn SET IsCancel = 1 WHERE DocNo_deproom = '$txt_docno_request' ";
     } else {
         $sql1 = " UPDATE deproom SET IsCancel = 1 , ModifyDate = GETDATE()  WHERE DocNo = '$txt_docno_request' ";
         $sql_hn = " UPDATE hncode SET IsCancel = 1 WHERE DocNo_SS = '$txt_docno_request' ";
+        $sql_set_hn = " UPDATE set_hn SET IsCancel = 1 WHERE DocNo_deproom = '$txt_docno_request' ";
     }
 
     $meQuery1 = $conn->prepare($sql1);
@@ -870,6 +873,12 @@ function cancel_item_byDocNo($conn, $db)
 
     $meQuery_hn = $conn->prepare($sql_hn);
     $meQuery_hn->execute();
+
+    $meQuery_his = $conn->prepare($sql_his);
+    $meQuery_his->execute();
+
+    $meQuery_set_hn = $conn->prepare($sql_set_hn);
+    $meQuery_set_hn->execute();
 
     $query = "DELETE FROM itemstock_transaction_detail  WHERE ItemStockID IN (   SELECT
                                                                 deproomdetailsub.ItemStockID 

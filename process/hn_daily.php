@@ -39,8 +39,14 @@ function onUPDATE_his($conn, $db)
 
 
 
-    $sql2 = " UPDATE his SET IsStatus = 2  WHERE ID = '$ID' ";
+    $sql2 = "UPDATE his 
+            SET IsStatus = CASE 
+                            WHEN IsStatus = 2 THEN 3 
+                            ELSE 2 
+                            END 
+            WHERE ID = :id";
     $meQuery2 = $conn->prepare($sql2);
+    $meQuery2->bindParam(':id', $ID, PDO::PARAM_INT);
     $meQuery2->execute();
 
 
@@ -90,7 +96,8 @@ function show_detail_his($conn, $db)
                 his_detail.ID,
 	            item.SalePrice,
                 his.IsStatus,
-                his_detail.edit_Qty
+                his_detail.add_Qty,
+                his_detail.delete_Qty
             FROM
                 his
                 LEFT JOIN his_detail ON his.DocNo = his_detail.DocNo
@@ -139,7 +146,8 @@ function show_detail_his_docno($conn, $db)
                 doctor.Doctor_Name,
                 IFNULL( `procedure`.Procedure_TH, '' ) AS Procedure_TH,
                 departmentroom.departmentroomname,
-	            SUM( his_detail.edit_qty ) AS edit_qty
+	            SUM( his_detail.add_Qty ) AS edit_qty,
+	            his.isCancel
             FROM
                 his
                 INNER JOIN doctor ON doctor.ID = his.doctor
@@ -147,7 +155,9 @@ function show_detail_his_docno($conn, $db)
                 INNER JOIN departmentroom ON his.departmentroomid = departmentroom.id 
                 INNER JOIN his_detail ON his.DocNo = his_detail.DocNo 
                 AND DATE( his.createAt ) = '$select_his_Date'
-                AND  ( his.isStatus = 1 OR his.isStatus = 2 ) ";
+                AND  ( his.isStatus = 1 OR his.isStatus = 2 OR his.isStatus = 3)
+                GROUP BY
+	                his.DocNo ";
 
     $meQ1 = $conn->prepare($Q1);
     $meQ1->execute();
@@ -295,7 +305,7 @@ function update_create_request($conn, $db)
 
 
 
-    $Q1 = " UPDATE set_hn SET isStatus = 3 WHERE set_hn.ID = '$ID' ";
+    $Q1 = " UPDATE set_hn SET isStatus = 3 , DocNo_deproom = '$txt_docno_request' WHERE set_hn.ID = '$ID' ";
     $meQ1 = $conn->prepare($Q1);
     $meQ1->execute();
 
@@ -393,7 +403,8 @@ function show_detail_daily($conn, $db)
                 set_hn.remark,
                 doctor.Doctor_Name,
                 IFNULL( `procedure`.Procedure_TH, '' ) AS Procedure_TH,
-                departmentroom.departmentroomname
+                departmentroom.departmentroomname,
+                set_hn.isCancel
             FROM
                 set_hn
                 INNER JOIN doctor ON doctor.ID = set_hn.doctor
@@ -401,7 +412,6 @@ function show_detail_daily($conn, $db)
                 INNER JOIN departmentroom ON set_hn.departmentroomid = departmentroom.id 
                 $whereD
                 AND NOT set_hn.isStatus = 9
-                AND  set_hn.isCancel = 0
                 $where_t
             ORDER BY set_hn.isStatus ASC";
 

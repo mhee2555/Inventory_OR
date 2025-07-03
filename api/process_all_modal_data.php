@@ -57,9 +57,10 @@ foreach ($add_items as $item) {
 
     if ($existing_record) {
         // 2. ถ้ามีข้อมูลอยู่แล้ว ให้ทำการ UPDATE (เพิ่มจำนวนเข้าไป)
-    $update_sql = "UPDATE his_detail SET edit_Qty = COALESCE(edit_Qty, Qty) + :QuantityToAdd WHERE DocNo = :DocNo AND ItemCode = :ItemCode";
+        $update_sql = "UPDATE his_detail SET Qty = Qty + :QuantityToAdd , add_Qty = add_Qty + :QuantityToAdd2  WHERE DocNo = :DocNo AND ItemCode = :ItemCode";
         $update_stmt = $conn->prepare($update_sql);
         $update_stmt->bindParam(':QuantityToAdd', $quantity, PDO::PARAM_INT); // ใช้ PARAM_INT สำหรับจำนวนเต็ม
+        $update_stmt->bindParam(':QuantityToAdd2', $quantity, PDO::PARAM_INT); // ใช้ PARAM_INT สำหรับจำนวนเต็ม
         $update_stmt->bindParam(':DocNo', $DocNo);
         $update_stmt->bindParam(':ItemCode', $itemCode);
         $update_stmt->execute();
@@ -72,12 +73,20 @@ foreach ($add_items as $item) {
 
     } else {
         // 3. ถ้าไม่มีข้อมูล ให้ทำการ INSERT รายการใหม่
-        $insert_sql = "INSERT INTO his_detail (DocNo, ItemCode, edit_Qty) VALUES (:DocNo, :ItemCode, :Qty)";
+        $insert_sql = "INSERT INTO his_detail (DocNo, ItemCode, add_Qty) VALUES (:DocNo, :ItemCode, :Qty)";
         $insert_stmt = $conn->prepare($insert_sql);
         $insert_stmt->bindParam(':DocNo', $DocNo);
         $insert_stmt->bindParam(':ItemCode', $itemCode);
         $insert_stmt->bindParam(':Qty', $quantity, PDO::PARAM_INT); // ใช้ PARAM_INT สำหรับจำนวนเต็ม
         $insert_stmt->execute();
+
+
+        $update_sql = "UPDATE his_detail SET Qty = Qty + :Qty   WHERE DocNo = :DocNo AND ItemCode = :ItemCode";
+        $update_stmt = $conn->prepare($update_sql);
+        $update_stmt->bindParam(':Qty', $quantity, PDO::PARAM_INT); // ใช้ PARAM_INT สำหรับจำนวนเต็ม
+        $update_stmt->bindParam(':DocNo', $DocNo);
+        $update_stmt->bindParam(':ItemCode', $itemCode);
+        $update_stmt->execute();
 
         // ตรวจสอบข้อผิดพลาดในการ INSERT (ไม่บังคับ แต่แนะนำ)
         // if ($insert_stmt->errorCode() != '00000') {
@@ -95,20 +104,156 @@ foreach ($return_items as $item) {
     // ทำการบันทึกข้อมูลการคืนในฐานข้อมูล
 
 
-        // 2. ถ้ามีข้อมูลอยู่แล้ว ให้ทำการ UPDATE (เพิ่มจำนวนเข้าไป)
-        $update_sql = "UPDATE his_detail SET edit_Qty = COALESCE(edit_Qty, Qty) - 1 WHERE DocNo = :DocNo AND ItemCode = :ItemCode";
-        $update_stmt = $conn->prepare($update_sql);
-        $update_stmt->bindParam(':DocNo', $DocNo);
-        $update_stmt->bindParam(':ItemCode', $itemCode);
-        $update_stmt->execute();
+    // 2. ถ้ามีข้อมูลอยู่แล้ว ให้ทำการ UPDATE (เพิ่มจำนวนเข้าไป)
+    $update_sql = "UPDATE his_detail SET Qty = Qty - 1 , delete_Qty = delete_Qty + 1  WHERE DocNo = :DocNo AND ItemCode = :ItemCode";
+    $update_stmt = $conn->prepare($update_sql);
+    $update_stmt->bindParam(':DocNo', $DocNo);
+    $update_stmt->bindParam(':ItemCode', $itemCode);
+    $update_stmt->execute();
 
-        // ตรวจสอบข้อผิดพลาดในการ UPDATE (ไม่บังคับ แต่แนะนำ)
-        // if ($update_stmt->errorCode() != '00000') {
-        //     error_log("UPDATE Error: " . print_r($update_stmt->errorInfo(), true));
-        //     // สามารถเพิ่ม logic การจัดการข้อผิดพลาด เช่น rollback หรือแจ้งเตือน
-        // }
+    // ตรวจสอบข้อผิดพลาดในการ UPDATE (ไม่บังคับ แต่แนะนำ)
+    // if ($update_stmt->errorCode() != '00000') {
+    //     error_log("UPDATE Error: " . print_r($update_stmt->errorInfo(), true));
+    //     // สามารถเพิ่ม logic การจัดการข้อผิดพลาด เช่น rollback หรือแจ้งเตือน
+    // }
 
-   
+
+    $query_1 = " SELECT
+                    itemstock.ItemCode,
+                    itemstock.Isdeproom,
+                    itemstock.departmentroomid ,
+                    itemstock.RowID 
+                FROM
+                    itemstock
+                WHERE   itemstock.UsageCode = '$usageCode' ";
+
+
+    $count_itemstock = 0;
+    $meQuery_1 = $conn->prepare($query_1);
+    $meQuery_1->execute();
+    while ($row_1 = $meQuery_1->fetch(PDO::FETCH_ASSOC)) {
+
+        $_ItemCode = $row_1['ItemCode'];
+        $_Isdeproom =  $row_1['Isdeproom'];
+        $_departmentroomid =  $row_1['departmentroomid'];
+        $_RowID =  $row_1['RowID'];
+
+        $count_itemstock++;
+
+        if ($_Isdeproom == 1) {
+            $count_itemstock = 0;
+
+            $query_2 = "SELECT
+                            deproomdetailsub.ID ,
+                            hncode_detail.ID AS hndetail_ID,
+	                        deproomdetail.ItemCode,
+	                        deproomdetail.DocNo,
+	                        DATE(deproom.serviceDate) AS ModifyDate,
+	                        deproom.number_box,
+	                        deproom.hn_record_id
+                        FROM
+                            deproom
+                            INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
+                            INNER JOIN deproomdetailsub ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID 
+                            INNER JOIN hncode ON hncode.DocNo_SS = deproom.DocNo 
+                            INNER JOIN hncode_detail ON hncode_detail.DocNo = hncode.DocNo
+                        WHERE
+                            deproomdetailsub.ItemStockID = '$_RowID' 
+                            AND hncode_detail.ItemStockID = '$_RowID' 
+                        ORDER BY
+	                        deproomdetailsub.ID DESC LIMIT 1 ";
+            // echo $query_2;
+            // exit;
+            $meQuery_2 = $conn->prepare($query_2);
+            $meQuery_2->execute();
+            while ($row_2 = $meQuery_2->fetch(PDO::FETCH_ASSOC)) {
+
+                $return[] = $row_2;
+                $_ID = $row_2['ID'];
+                $_hndetail_ID = $row_2['hndetail_ID'];
+                $_ModifyDate = $row_2['ModifyDate'];
+                $_DocNo = $row_2['DocNo'];
+
+                $_hn_record_id = $row_2['hn_record_id'];
+                $_number_box = $row_2['number_box'];
+
+                if ($_hn_record_id == "") {
+                    $_hn_record_id = $_number_box;
+                }
+
+                // ==============================
+                // $queryD1 = "DELETE FROM deproomdetailsub WHERE ID =  '$_ID' ";
+                // $meQueryD1 = $conn->prepare($queryD1);
+                // $meQueryD1->execute();
+
+                $queryD2 = "DELETE FROM hncode_detail WHERE ID =  '$_hndetail_ID' ";
+                $meQueryD2 = $conn->prepare($queryD2);
+                $meQueryD2->execute();
+                // ==============================
+
+
+                $insert_log = "INSERT INTO log_return (itemstockID, DocNo, userID, createAt) 
+                            VALUES (:itemstockID, :DocNo, :userID, NOW())";
+
+                $meQuery_log = $conn->prepare($insert_log);
+
+                $meQuery_log->bindParam(':itemstockID', $_RowID);
+                $meQuery_log->bindParam(':DocNo', $_DocNo);
+                $meQuery_log->bindParam(':userID', $Userid);
+
+                $meQuery_log->execute();
+                // =======================================================================================================================================
+
+                if ($db == 1) {
+                    $query = "DELETE FROM itemstock_transaction_detail  WHERE ItemStockID = '$_RowID' 
+                    AND ItemCode = '$_ItemCode' 
+                    AND departmentroomid = '$_departmentroomid' 
+                    AND  IsStatus = '1'
+                    AND DATE(CreateDate) = '$_ModifyDate' ";
+                } else {
+                    $query = "DELETE FROM itemstock_transaction_detail  WHERE ItemStockID = '$_RowID' 
+                    AND ItemCode = '$_ItemCode' 
+                    AND departmentroomid = '$_departmentroomid' 
+                    AND  IsStatus = '1'
+                    AND CONVERT(DATE,CreateDate) = '$_ModifyDate' ";
+                }
+
+                $insert_log = "INSERT INTO log_activity_users (itemCode , itemstockID , qty, isStatus, DocNo, userID, createAt) 
+                            VALUES (:itemCode, :itemstockID, 1, :isStatus, :DocNo, :Userid, NOW())";
+
+                $meQuery_log = $conn->prepare($insert_log);
+
+                $meQuery_log->bindParam(':itemCode', $_ItemCode);
+                $meQuery_log->bindParam(':itemstockID', $_RowID);
+                $meQuery_log->bindValue(':isStatus', 8, PDO::PARAM_INT);
+                $meQuery_log->bindParam(':DocNo', $_DocNo);
+                $meQuery_log->bindParam(':Userid', $Userid);
+
+
+                $meQuery_log->execute();
+
+                $meQuery = $conn->prepare($query);
+                $meQuery->execute();
+                // =======================================================================================================================================
+
+
+
+                // ==============================
+                $count_itemstock++;
+            }
+
+
+
+            $queryUpdate = "UPDATE itemstock 
+            SET Isdeproom = 0 ,
+            departmentroomid = '35',
+            itemstock.IsCross = NULL
+            WHERE
+            RowID = '$_RowID' ";
+            $meQueryUpdate = $conn->prepare($queryUpdate);
+            $meQueryUpdate->execute();
+        }
+    }
 }
 
 

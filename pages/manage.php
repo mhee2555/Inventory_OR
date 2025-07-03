@@ -309,7 +309,7 @@
                                 <input type="text" class="form-control" id="input_passWord" autocomplete="off" placeholder="Password">
                             </div>
                             <div class="col-md-12 mt-3">
-                                <select class="form-control" id="select_permission"></select>
+                                <select class="form-control f18" id="select_permission"></select>
                             </div>
                             <div class="col-md-12 mt-3" hidden>
                                 <input type="text" class="form-control" id="input_IDUser" autocomplete="off">
