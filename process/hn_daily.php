@@ -146,7 +146,8 @@ function show_detail_his_docno($conn, $db)
                 doctor.Doctor_Name,
                 IFNULL( `procedure`.Procedure_TH, '' ) AS Procedure_TH,
                 departmentroom.departmentroomname,
-	            SUM( his_detail.add_Qty ) AS edit_qty,
+	            SUM( his_detail.add_Qty ) AS add_Qty,
+	            SUM( his_detail.delete_Qty ) AS delete_Qty,
 	            his.isCancel
             FROM
                 his

@@ -628,6 +628,39 @@ function onReturnData($conn, $db)
 
                 // ==============================
                 $count_itemstock++;
+
+                $check_his = "SELECT his.IsStatus FROM his WHERE DocNo_deproom = '$_DocNo' ";
+                $meQuery_his = $conn->prepare($check_his);
+                $meQuery_his->execute();
+
+                // exit;
+                while ($row_his = $meQuery_his->fetch(PDO::FETCH_ASSOC)) {
+
+                    $update = "UPDATE his_detail 
+                        SET Qty = Qty - 1
+                        WHERE ItemCode = '$_ItemCode'
+                        AND Qty > 0
+                        AND DocNo = (
+                            SELECT DocNo 
+                            FROM hncode 
+                            WHERE DocNo_SS = '$_DocNo'
+                            LIMIT 1
+                        ); ";
+                    $meQuery_update_his = $conn->prepare($update);
+                    $meQuery_update_his->execute();
+
+                    $delete_his = "DELETE FROM his_detail 
+                            WHERE ItemCode = '$_ItemCode'
+                            AND DocNo IN (
+                                SELECT DocNo 
+                                FROM hncode 
+                                WHERE DocNo_SS = '$_DocNo'
+                                LIMIT 1
+                            )
+                            AND Qty = 0; ";
+                    $meQuery_delete_his = $conn->prepare($delete_his);
+                    $meQuery_delete_his->execute();
+                }
             }
 
 
@@ -3895,29 +3928,30 @@ function oncheck_Returnpay($conn, $db)
         // exit;
         while ($row_his = $meQuery_his->fetch(PDO::FETCH_ASSOC)) {
 
-            $delete_his = "DELETE FROM his_detail WHERE his_detail.DocNo = (SELECT hncode.DocNo FROM hncode  WHERE hncode.DocNo_SS = '$DocNo_pay'  LIMIT 1  ) ";
+            $update = "UPDATE his_detail 
+                        SET Qty = Qty - 1
+                        WHERE ItemCode = '$_ItemCode'
+                        AND Qty > 0
+                        AND DocNo = (
+                            SELECT DocNo 
+                            FROM hncode 
+                            WHERE DocNo_SS = '$DocNo_pay'
+                            LIMIT 1
+                        ); ";
+            $meQuery_update_his = $conn->prepare($update);
+            $meQuery_update_his->execute();
+
+            $delete_his = "DELETE FROM his_detail 
+                            WHERE ItemCode = '$_ItemCode'
+                            AND DocNo IN (
+                                SELECT DocNo 
+                                FROM hncode 
+                                WHERE DocNo_SS = '$DocNo_pay'
+                                LIMIT 1
+                            )
+                            AND Qty = 0; ";
             $meQuery_delete_his = $conn->prepare($delete_his);
             $meQuery_delete_his->execute();
-
-
-
-            $Q2_his_detail = "INSERT INTO his_detail ( DocNo , Qty , ItemCode ) 
-                                    SELECT
-                                        DocNo,
-                                        SUM( hncode_detail.Qty ),
-                                        itemstock.ItemCode 
-                                    FROM
-                                        hncode_detail
-                                        INNER JOIN itemstock ON hncode_detail.ItemStockID = itemstock.RowID 
-                                    WHERE
-                                        hncode_detail.DocNo = (SELECT hncode.DocNo FROM hncode  WHERE hncode.DocNo_SS = '$DocNo_pay'  LIMIT 1  )
-                                        AND hncode_detail.IsStatus != 99 
-                                        AND hncode_detail.Qty > 0 
-                                    GROUP BY
-                                        itemstock.ItemCode  ";
-
-            $meQuery_his_detail = $conn->prepare($Q2_his_detail);
-            $meQuery_his_detail->execute();
         }
     }
 
@@ -5332,7 +5366,8 @@ function oncheck_pay($conn, $db)
             }
         }
 
-
+        // echo $query_1;
+        // exit;
         $count_itemstock = 0;
         $meQuery_1 = $conn->prepare($query_1);
         $meQuery_1->execute();
@@ -5531,37 +5566,67 @@ function oncheck_pay($conn, $db)
                             ) ";
                         }
 
-                        $check_his = "SELECT his.IsStatus FROM his WHERE DocNo_deproom = '$DocNo_pay' ";
-                        $meQuery_his = $conn->prepare($check_his);
-                        $meQuery_his->execute();
+                        // 1. ค้นหา DocNo จาก DocNo_SS
+                        $sqlDocNo = "SELECT DocNo FROM hncode WHERE DocNo_SS = ? LIMIT 1";
+                        $stmtDoc = $conn->prepare($sqlDocNo);
+                        $stmtDoc->execute([$DocNo_pay]);
+                        $row = $stmtDoc->fetch(PDO::FETCH_ASSOC);
 
-                        // exit;
-                        while ($row_his = $meQuery_his->fetch(PDO::FETCH_ASSOC)) {
+                        if ($row) {
+                            $docNo_hn = $row['DocNo'];
 
-                            $delete_his = "DELETE FROM his_detail WHERE his_detail.DocNo = (SELECT hncode.DocNo FROM hncode  WHERE hncode.DocNo_SS = '$DocNo_pay'  LIMIT 1  ) ";
-                            $meQuery_delete_his = $conn->prepare($delete_his);
-                            $meQuery_delete_his->execute();
+                            // 2. เช็คว่า ItemCode มีอยู่ใน his_detail แล้วหรือยัง
+                            $sqlCheck = "SELECT Qty FROM his_detail WHERE DocNo = ? AND ItemCode = ?";
+                            $stmtCheck = $conn->prepare($sqlCheck);
+                            $stmtCheck->execute([$docNo_hn, $_ItemCode]);
+                            $resultCheck = $stmtCheck->fetch(PDO::FETCH_ASSOC);
 
-
-
-                            $Q2_his_detail = "INSERT INTO his_detail ( DocNo , Qty , ItemCode ) 
-                                    SELECT
-                                        DocNo,
-                                        SUM( hncode_detail.Qty ),
-                                        itemstock.ItemCode 
-                                    FROM
-                                        hncode_detail
-                                        INNER JOIN itemstock ON hncode_detail.ItemStockID = itemstock.RowID 
-                                    WHERE
-                                        hncode_detail.DocNo = (SELECT hncode.DocNo FROM hncode  WHERE hncode.DocNo_SS = '$DocNo_pay'  LIMIT 1  )
-                                        AND hncode_detail.IsStatus != 99 
-                                        AND hncode_detail.Qty > 0 
-                                    GROUP BY
-                                        itemstock.ItemCode  ";
-
-                            $meQuery_his_detail = $conn->prepare($Q2_his_detail);
-                            $meQuery_his_detail->execute();
+                            if ($resultCheck) {
+                                // เจอแล้ว -> UPDATE Qty +1
+                                $sqlUpdate = "UPDATE his_detail SET Qty = Qty + 1 WHERE DocNo = ? AND ItemCode = ?";
+                                $stmtUpdate = $conn->prepare($sqlUpdate);
+                                $stmtUpdate->execute([$docNo_hn, $_ItemCode]);
+                            } else {
+                                // ไม่เจอ -> INSERT
+                                $sqlInsert = "INSERT INTO his_detail (DocNo, ItemCode, Qty) VALUES (?, ?, 1)";
+                                $stmtInsert = $conn->prepare($sqlInsert);
+                                $stmtInsert->execute([$docNo_hn, $_ItemCode]);
+                            }
                         }
+
+
+
+                        // $check_his = "SELECT his.IsStatus FROM his WHERE DocNo_deproom = '$DocNo_pay' ";
+                        // $meQuery_his = $conn->prepare($check_his);
+                        // $meQuery_his->execute();
+
+                        // // exit;
+                        // while ($row_his = $meQuery_his->fetch(PDO::FETCH_ASSOC)) {
+
+                        //     $delete_his = "DELETE FROM his_detail WHERE his_detail.DocNo = (SELECT hncode.DocNo FROM hncode  WHERE hncode.DocNo_SS = '$DocNo_pay'  LIMIT 1  ) ";
+                        //     $meQuery_delete_his = $conn->prepare($delete_his);
+                        //     $meQuery_delete_his->execute();
+
+
+
+                        //     $Q2_his_detail = "INSERT INTO his_detail ( DocNo , Qty , ItemCode ) 
+                        //             SELECT
+                        //                 DocNo,
+                        //                 SUM( hncode_detail.Qty ),
+                        //                 itemstock.ItemCode 
+                        //             FROM
+                        //                 hncode_detail
+                        //                 INNER JOIN itemstock ON hncode_detail.ItemStockID = itemstock.RowID 
+                        //             WHERE
+                        //                 hncode_detail.DocNo = (SELECT hncode.DocNo FROM hncode  WHERE hncode.DocNo_SS = '$DocNo_pay'  LIMIT 1  )
+                        //                 AND hncode_detail.IsStatus != 99 
+                        //                 AND hncode_detail.Qty > 0 
+                        //             GROUP BY
+                        //                 itemstock.ItemCode  ";
+
+                        //     $meQuery_his_detail = $conn->prepare($Q2_his_detail);
+                        //     $meQuery_his_detail->execute();
+                        // }
 
 
 
@@ -5786,36 +5851,64 @@ function oncheck_pay($conn, $db)
                             }
 
 
-                            $check_his = "SELECT his.IsStatus FROM his WHERE DocNo_deproom = '$DocNo_pay' ";
-                            $meQuery_his = $conn->prepare($check_his);
-                            $meQuery_his->execute();
+                            // $check_his = "SELECT his.IsStatus FROM his WHERE DocNo_deproom = '$DocNo_pay' ";
+                            // $meQuery_his = $conn->prepare($check_his);
+                            // $meQuery_his->execute();
 
-                            // exit;
-                            while ($row_his = $meQuery_his->fetch(PDO::FETCH_ASSOC)) {
+                            // // exit;
+                            // while ($row_his = $meQuery_his->fetch(PDO::FETCH_ASSOC)) {
 
-                                $delete_his = "DELETE FROM his_detail WHERE his_detail.DocNo = (SELECT hncode.DocNo FROM hncode  WHERE hncode.DocNo_SS = '$DocNo_pay'  LIMIT 1  ) ";
-                                $meQuery_delete_his = $conn->prepare($delete_his);
-                                $meQuery_delete_his->execute();
+                            //     $delete_his = "DELETE FROM his_detail WHERE his_detail.DocNo = (SELECT hncode.DocNo FROM hncode  WHERE hncode.DocNo_SS = '$DocNo_pay'  LIMIT 1  ) ";
+                            //     $meQuery_delete_his = $conn->prepare($delete_his);
+                            //     $meQuery_delete_his->execute();
 
 
 
-                                $Q2_his_detail = "INSERT INTO his_detail ( DocNo , Qty , ItemCode ) 
-                                    SELECT
-                                        DocNo,
-                                        SUM( hncode_detail.Qty ),
-                                        itemstock.ItemCode 
-                                    FROM
-                                        hncode_detail
-                                        INNER JOIN itemstock ON hncode_detail.ItemStockID = itemstock.RowID 
-                                    WHERE
-                                        hncode_detail.DocNo = (SELECT hncode.DocNo FROM hncode  WHERE hncode.DocNo_SS = '$DocNo_pay'  LIMIT 1  )
-                                        AND hncode_detail.IsStatus != 99 
-                                        AND hncode_detail.Qty > 0 
-                                    GROUP BY
-                                        itemstock.ItemCode  ";
+                            //     $Q2_his_detail = "INSERT INTO his_detail ( DocNo , Qty , ItemCode ) 
+                            //         SELECT
+                            //             DocNo,
+                            //             SUM( hncode_detail.Qty ),
+                            //             itemstock.ItemCode 
+                            //         FROM
+                            //             hncode_detail
+                            //             INNER JOIN itemstock ON hncode_detail.ItemStockID = itemstock.RowID 
+                            //         WHERE
+                            //             hncode_detail.DocNo = (SELECT hncode.DocNo FROM hncode  WHERE hncode.DocNo_SS = '$DocNo_pay'  LIMIT 1  )
+                            //             AND hncode_detail.IsStatus != 99 
+                            //             AND hncode_detail.Qty > 0 
+                            //         GROUP BY
+                            //             itemstock.ItemCode  ";
 
-                                $meQuery_his_detail = $conn->prepare($Q2_his_detail);
-                                $meQuery_his_detail->execute();
+                            //     $meQuery_his_detail = $conn->prepare($Q2_his_detail);
+                            //     $meQuery_his_detail->execute();
+                            // }
+
+                            // 1. ค้นหา DocNo จาก DocNo_SS
+                            $sqlDocNo = "SELECT DocNo FROM hncode WHERE DocNo_SS = ? LIMIT 1";
+                            $stmtDoc = $conn->prepare($sqlDocNo);
+                            $stmtDoc->execute([$DocNo_pay]);
+                            $row = $stmtDoc->fetch(PDO::FETCH_ASSOC);
+
+                            if ($row) {
+                                $docNo_hn = $row['DocNo'];
+
+                                // 2. เช็คว่า ItemCode มีอยู่ใน his_detail แล้วหรือยัง
+                                $sqlCheck = "SELECT Qty FROM his_detail WHERE DocNo = ? AND ItemCode = ?";
+                                $stmtCheck = $conn->prepare($sqlCheck);
+                                $stmtCheck->execute([$docNo_hn, $_ItemCode]);
+                                $resultCheck = $stmtCheck->fetch(PDO::FETCH_ASSOC);
+
+                                if ($resultCheck) {
+                                    // เจอแล้ว -> UPDATE Qty +1
+                                    $sqlUpdate = "UPDATE his_detail SET Qty = Qty + 1 WHERE DocNo = ? AND ItemCode = ?";
+                                    $stmtUpdate = $conn->prepare($sqlUpdate);
+                                    $stmtUpdate->execute([$docNo_hn, $_ItemCode]);
+                                } else {
+                                    // ไม่เจอ -> INSERT
+                                    $sqlInsert = "INSERT INTO his_detail (DocNo, ItemCode, Qty) VALUES (?, ?, 1)";
+                                    $stmtInsert = $conn->prepare($sqlInsert);
+                                    $stmtInsert->execute([$docNo_hn, $_ItemCode]);
+                                }
                             }
 
 
@@ -6190,36 +6283,64 @@ function oncheck_pay($conn, $db)
 
 
 
-                            $check_his = "SELECT his.IsStatus FROM his WHERE DocNo_deproom = '$DocNo_pay' ";
-                            $meQuery_his = $conn->prepare($check_his);
-                            $meQuery_his->execute();
+                            // $check_his = "SELECT his.IsStatus FROM his WHERE DocNo_deproom = '$DocNo_pay' ";
+                            // $meQuery_his = $conn->prepare($check_his);
+                            // $meQuery_his->execute();
 
-                            // exit;
-                            while ($row_his = $meQuery_his->fetch(PDO::FETCH_ASSOC)) {
+                            // // exit;
+                            // while ($row_his = $meQuery_his->fetch(PDO::FETCH_ASSOC)) {
 
-                                $delete_his = "DELETE FROM his_detail WHERE his_detail.DocNo = (SELECT hncode.DocNo FROM hncode  WHERE hncode.DocNo_SS = '$DocNo_pay'  LIMIT 1  ) ";
-                                $meQuery_delete_his = $conn->prepare($delete_his);
-                                $meQuery_delete_his->execute();
+                            //     $delete_his = "DELETE FROM his_detail WHERE his_detail.DocNo = (SELECT hncode.DocNo FROM hncode  WHERE hncode.DocNo_SS = '$DocNo_pay'  LIMIT 1  ) ";
+                            //     $meQuery_delete_his = $conn->prepare($delete_his);
+                            //     $meQuery_delete_his->execute();
 
 
 
-                                $Q2_his_detail = "INSERT INTO his_detail ( DocNo , Qty , ItemCode ) 
-                                    SELECT
-                                        DocNo,
-                                        SUM( hncode_detail.Qty ),
-                                        itemstock.ItemCode 
-                                    FROM
-                                        hncode_detail
-                                        INNER JOIN itemstock ON hncode_detail.ItemStockID = itemstock.RowID 
-                                    WHERE
-                                        hncode_detail.DocNo = (SELECT hncode.DocNo FROM hncode  WHERE hncode.DocNo_SS = '$DocNo_pay'  LIMIT 1  )
-                                        AND hncode_detail.IsStatus != 99 
-                                        AND hncode_detail.Qty > 0 
-                                    GROUP BY
-                                        itemstock.ItemCode  ";
+                            //     $Q2_his_detail = "INSERT INTO his_detail ( DocNo , Qty , ItemCode ) 
+                            //         SELECT
+                            //             DocNo,
+                            //             SUM( hncode_detail.Qty ),
+                            //             itemstock.ItemCode 
+                            //         FROM
+                            //             hncode_detail
+                            //             INNER JOIN itemstock ON hncode_detail.ItemStockID = itemstock.RowID 
+                            //         WHERE
+                            //             hncode_detail.DocNo = (SELECT hncode.DocNo FROM hncode  WHERE hncode.DocNo_SS = '$DocNo_pay'  LIMIT 1  )
+                            //             AND hncode_detail.IsStatus != 99 
+                            //             AND hncode_detail.Qty > 0 
+                            //         GROUP BY
+                            //             itemstock.ItemCode  ";
 
-                                $meQuery_his_detail = $conn->prepare($Q2_his_detail);
-                                $meQuery_his_detail->execute();
+                            //     $meQuery_his_detail = $conn->prepare($Q2_his_detail);
+                            //     $meQuery_his_detail->execute();
+                            // }
+
+                            // 1. ค้นหา DocNo จาก DocNo_SS
+                            $sqlDocNo = "SELECT DocNo FROM hncode WHERE DocNo_SS = ? LIMIT 1";
+                            $stmtDoc = $conn->prepare($sqlDocNo);
+                            $stmtDoc->execute([$DocNo_pay]);
+                            $row = $stmtDoc->fetch(PDO::FETCH_ASSOC);
+
+                            if ($row) {
+                                $docNo_hn = $row['DocNo'];
+
+                                // 2. เช็คว่า ItemCode มีอยู่ใน his_detail แล้วหรือยัง
+                                $sqlCheck = "SELECT Qty FROM his_detail WHERE DocNo = ? AND ItemCode = ?";
+                                $stmtCheck = $conn->prepare($sqlCheck);
+                                $stmtCheck->execute([$docNo_hn, $_ItemCode]);
+                                $resultCheck = $stmtCheck->fetch(PDO::FETCH_ASSOC);
+
+                                if ($resultCheck) {
+                                    // เจอแล้ว -> UPDATE Qty +1
+                                    $sqlUpdate = "UPDATE his_detail SET Qty = Qty + 1 WHERE DocNo = ? AND ItemCode = ?";
+                                    $stmtUpdate = $conn->prepare($sqlUpdate);
+                                    $stmtUpdate->execute([$docNo_hn, $_ItemCode]);
+                                } else {
+                                    // ไม่เจอ -> INSERT
+                                    $sqlInsert = "INSERT INTO his_detail (DocNo, ItemCode, Qty) VALUES (?, ?, 1)";
+                                    $stmtInsert = $conn->prepare($sqlInsert);
+                                    $stmtInsert->execute([$docNo_hn, $_ItemCode]);
+                                }
                             }
 
 

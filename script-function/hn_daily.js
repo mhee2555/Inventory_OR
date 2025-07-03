@@ -202,7 +202,7 @@ function show_detail_his_docno() {
             txt = `<button class='btn' style="background-color:#1cc88a;color:#fff;font-weight:bold;">ส่งค่าใช้จ่ายเรียบร้อย</button>`;
             var hid = "hidden";
           } else {
-            if (value.add_Qty > 0) {
+            if (value.add_Qty > 0 || value.delete_Qty > 0) {
               add_Qty = `<i style='color:red;' class="fa-solid fa-triangle-exclamation"></i>`;
             }
           }
@@ -211,7 +211,6 @@ function show_detail_his_docno() {
             txt = `<button class='btn' style="background-color:#e74a3b;color:#fff;font-weight:bold;">ยกเลิก</button>`;
             var hid = "hidden";
           }
-
           _tr += `<tr class='color' id="tr_${value.ID}"  onclick='setActive_his(${value.ID},"${value.IsStatus}",${value.isCancel})'>
                       <td class="f18 text-center">${value.createAt}</td>
                       <td class="f18 text-center">${value.HnCode}</td>

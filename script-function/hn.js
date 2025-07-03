@@ -286,9 +286,7 @@ $(document).on("change", "#select_item_his", function () {
     if ($(this).data("itemcode") === selectedItemCode) {
       // ถ้ามีอยู่แล้ว ให้เพิ่มจำนวน (Quantity) แทน
       var currentQty = parseInt($(this).find("input[name='add_qty']").val());
-      $(this)
-        .find("input[name='add_qty']")
-        .val(currentQty + 1);
+      // $(this).find("input[name='add_qty']").val(currentQty + 1);
       itemAlreadyInTable = true;
       return false; // ออกจาก loop .each
     }
@@ -310,7 +308,7 @@ $(document).on("change", "#select_item_his", function () {
 
   // (เลือกได้) รีเซ็ต dropdown กลับไปที่ค่าเริ่มต้นหลังจากเลือก เพื่อให้เลือกรายการใหม่ได้ง่ายขึ้น
   // หากใช้ Select2 ต้องใช้ trigger("change.select2") ด้วย
-  // $(this).val("").trigger("change.select2");
+  $(this).val("").trigger("change.select2");
 });
 
 // Event listener สำหรับปุ่มลบรายการออกจาก table_add_his

@@ -519,8 +519,8 @@ function show_detail_history() {
                       <td class="f18 text-center">${value.RtDocNo}</td>
                       <td class="f18 text-center">${value.Createdate}</td>
                       <td class="f18 text-center">${value.Createtime}</td>
-                      <td class="f18 text-center"><button class='btn btn-primary' onclick='showdetail_popup("${value.RqDocNo}","${value.RtDocNo}")'>แสดงรายละเอียด</button></td>
-                      <td class="f18 text-center"></td>
+                      <td class="f18 text-center"><button class='btn btn-primary f18' onclick='showdetail_popup("${value.RqDocNo}","${value.RtDocNo}")'>แสดงรายละเอียด</button></td>
+                      <td class="f18 text-center"><button class="btn f18" style="background-color:#643695;color:#fff;" onclick='show_Report("${value.RqDocNo}","${value.RtDocNo}")'>รายงาน</button></td>
                       <td class="f18 text-center">${txt}</td>
                    </tr>`;
         });
@@ -529,6 +529,11 @@ function show_detail_history() {
       $("#table_history tbody").html(_tr);
     },
   });
+}
+
+function show_Report(RqDocNo,RtDocNo) {
+  option = "?RqDocNo=" + RqDocNo+"&RtDocNo=" + RtDocNo;
+  window.open("report/request_item.php" + option, "_blank");
 }
 
 $("#customSwitch1").click(function () {});
