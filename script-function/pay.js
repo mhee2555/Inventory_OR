@@ -2296,6 +2296,9 @@ $("#btn_send_return_data").click(function () {
     cancelButtonText: "ยกเลิก",
   }).then((result) => {
     if (result.isConfirmed) {
+
+      showLoading();
+
       $.ajax({
         url: "process/pay.php",
         type: "POST",
@@ -2303,6 +2306,7 @@ $("#btn_send_return_data").click(function () {
           FUNC_NAME: "onReturnData",
         },
         success: function (result) {
+          $("body").loadingModal("destroy");
           feeddata_waitReturn();
         },
       });

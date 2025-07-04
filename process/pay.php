@@ -636,30 +636,32 @@ function onReturnData($conn, $db)
                 // exit;
                 while ($row_his = $meQuery_his->fetch(PDO::FETCH_ASSOC)) {
 
-                    $update = "UPDATE his_detail 
-                        SET Qty = Qty - 1
-                        WHERE ItemCode = '$_ItemCode'
-                        AND Qty > 0
-                        AND DocNo = (
-                            SELECT DocNo 
-                            FROM hncode 
-                            WHERE DocNo_SS = '$_DocNo'
-                            LIMIT 1
-                        ); ";
-                    $meQuery_update_his = $conn->prepare($update);
-                    $meQuery_update_his->execute();
+                    // ค้นหา DocNo จาก DocNo_SS ก่อน
+                    $sqlDocNo = "SELECT DocNo FROM hncode WHERE DocNo_SS = ? LIMIT 1";
+                    $stmtDocNo = $conn->prepare($sqlDocNo);
+                    $stmtDocNo->execute([$_DocNo]);
+                    $row = $stmtDocNo->fetch(PDO::FETCH_ASSOC);
 
-                    $delete_his = "DELETE FROM his_detail 
-                            WHERE ItemCode = '$_ItemCode'
-                            AND DocNo IN (
-                                SELECT DocNo 
-                                FROM hncode 
-                                WHERE DocNo_SS = '$_DocNo'
-                                LIMIT 1
-                            )
-                            AND Qty = 0; ";
-                    $meQuery_delete_his = $conn->prepare($delete_his);
-                    $meQuery_delete_his->execute();
+                    if ($row && $row['DocNo']) {
+                        $DocNo_real = $row['DocNo'];
+
+                        // 1. UPDATE Qty - 1
+                        $update = "UPDATE his_detail 
+                                    SET Qty = Qty - 1
+                                    WHERE ItemCode = ?
+                                    AND Qty > 0
+                                    AND DocNo = ?";
+                                                $stmtUpdate = $conn->prepare($update);
+                                                $stmtUpdate->execute([$_ItemCode, $DocNo_real]);
+
+                                                // 2. DELETE ถ้า Qty = 0
+                                                $delete = "DELETE FROM his_detail 
+                                    WHERE ItemCode = ?
+                                    AND DocNo = ?
+                                    AND Qty = 0";
+                        $stmtDelete = $conn->prepare($delete);
+                        $stmtDelete->execute([$_ItemCode, $DocNo_real]);
+                    }
                 }
             }
 
@@ -3928,30 +3930,32 @@ function oncheck_Returnpay($conn, $db)
         // exit;
         while ($row_his = $meQuery_his->fetch(PDO::FETCH_ASSOC)) {
 
-            $update = "UPDATE his_detail 
-                        SET Qty = Qty - 1
-                        WHERE ItemCode = '$_ItemCode'
-                        AND Qty > 0
-                        AND DocNo = (
-                            SELECT DocNo 
-                            FROM hncode 
-                            WHERE DocNo_SS = '$DocNo_pay'
-                            LIMIT 1
-                        ); ";
-            $meQuery_update_his = $conn->prepare($update);
-            $meQuery_update_his->execute();
+                    // ค้นหา DocNo จาก DocNo_SS ก่อน
+                    $sqlDocNo = "SELECT DocNo FROM hncode WHERE DocNo_SS = ? LIMIT 1";
+                    $stmtDocNo = $conn->prepare($sqlDocNo);
+                    $stmtDocNo->execute([$DocNo_pay]);
+                    $row = $stmtDocNo->fetch(PDO::FETCH_ASSOC);
 
-            $delete_his = "DELETE FROM his_detail 
-                            WHERE ItemCode = '$_ItemCode'
-                            AND DocNo IN (
-                                SELECT DocNo 
-                                FROM hncode 
-                                WHERE DocNo_SS = '$DocNo_pay'
-                                LIMIT 1
-                            )
-                            AND Qty = 0; ";
-            $meQuery_delete_his = $conn->prepare($delete_his);
-            $meQuery_delete_his->execute();
+                    if ($row && $row['DocNo']) {
+                        $DocNo_real = $row['DocNo'];
+
+                        // 1. UPDATE Qty - 1
+                        $update = "UPDATE his_detail 
+                                    SET Qty = Qty - 1
+                                    WHERE ItemCode = ?
+                                    AND Qty > 0
+                                    AND DocNo = ?";
+                                                $stmtUpdate = $conn->prepare($update);
+                                                $stmtUpdate->execute([$_ItemCode, $DocNo_real]);
+
+                                                // 2. DELETE ถ้า Qty = 0
+                                                $delete = "DELETE FROM his_detail 
+                                    WHERE ItemCode = ?
+                                    AND DocNo = ?
+                                    AND Qty = 0";
+                        $stmtDelete = $conn->prepare($delete);
+                        $stmtDelete->execute([$_ItemCode, $DocNo_real]);
+                    }
         }
     }
 

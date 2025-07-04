@@ -138,8 +138,8 @@ function show_detail_his_docno($conn, $db)
                 his.IsStatus,
                 his.HnCode,
                 his.number_box,
-                DATE_FORMAT( his.createAt, '%d-%m-%Y' ) AS createAt,
-                his.createAt,
+                DATE_FORMAT( his.DocDate, '%d-%m-%Y' ) AS createAt,
+                -- his.createAt,
                 his.doctor,
                 his.departmentroomid,
                 his.`procedure`,
@@ -155,7 +155,7 @@ function show_detail_his_docno($conn, $db)
                 LEFT JOIN `procedure` ON his.`procedure` = `procedure`.ID
                 INNER JOIN departmentroom ON his.departmentroomid = departmentroom.id 
                 INNER JOIN his_detail ON his.DocNo = his_detail.DocNo 
-                AND DATE( his.createAt ) = '$select_his_Date'
+                AND DATE( his.DocDate ) = '$select_his_Date'
                 AND  ( his.isStatus = 1 OR his.isStatus = 2 OR his.isStatus = 3)
                 GROUP BY
 	                his.DocNo ";

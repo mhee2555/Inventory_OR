@@ -316,14 +316,11 @@ $(document).on("click", ".remove-added-item", function () {
   $(this).closest("tr").remove(); // ลบแถวทั้งหมดที่ปุ่มนี้อยู่
 });
 
-// Event listener เมื่อมีการกดปุ่ม (โดยเฉพาะ Enter) ในช่องสแกน Usage Code
-$(document).on("keypress", "#input_return_item_his", function (e) {
+$("#input_return_item_his").keypress(function (e) {
   if (e.which == 13) {
-    // ตรวจสอบว่ากดปุ่ม Enter หรือไม่
-    e.preventDefault(); // ป้องกันการ Submit form หาก input อยู่ใน form
+    var usageCode = convertString($(this).val().trim()); // ดึงค่า Usage Code ที่สแกนมา
 
-    var usageCode = $(this).val().trim(); // ดึงค่า Usage Code ที่สแกนมา
-
+    console.log(usageCode);
     if (usageCode === "") {
       Swal.fire("แจ้งเตือน", "กรุณาสแกน Usage Code", "warning");
       return;
@@ -359,7 +356,16 @@ $(document).on("keypress", "#input_return_item_his", function (e) {
       success: function (response) {
         // ฟังก์ชันนี้จะทำงานเมื่อ AJAX request สำเร็จ
         if (response.status === "success" && response.data) {
+          console.log(2222);
           var item = response.data;
+
+          if (
+            $(`#table_return_his tbody tr[data-usagecode="${usageCode}"]`)
+              .length > 0
+          ) {
+            return;
+          }
+
           // เพิ่มรายการอุปกรณ์ที่พบลงในตาราง table_return_his
           var newRowHtml = `<tr data-usagecode="${usageCode}" data-itemcode="${
             item.item_code || ""
@@ -385,6 +391,8 @@ $(document).on("keypress", "#input_return_item_his", function (e) {
             response.message || "ไม่พบอุปกรณ์สำหรับ Usage Code นี้",
             "error"
           );
+
+          return;
         }
       },
       error: function (xhr, status, error) {
@@ -409,6 +417,153 @@ $(document).on("click", ".remove-returned-item", function () {
   $(this).closest("tr").remove(); // ลบแถวทั้งหมดที่ปุ่มนี้อยู่
 });
 
+function convertString(S_Input) {
+  var S_QR = "";
+  console.log(S_Input.charCodeAt(0));
+  if (S_Input.length > 0) {
+    if (S_Input.charCodeAt(0) > 1000 || S_Input.charCodeAt(0) == 63) {
+      for (var i = 0; i < S_Input.length; i++) {
+        S_QR += convertEN(S_Input[i]);
+      }
+    } else {
+      S_QR = S_Input;
+    }
+  }
+
+  return S_QR;
+}
+function convertEN(char) {
+  switch (char) {
+    case "ข":
+      return "-";
+    case "จ":
+      return "0";
+    case "ๅ":
+      return "1";
+    case "/":
+      return "2";
+    case "-":
+      return "3";
+    case "ภ":
+      return "4";
+    case "ถ":
+      return "5";
+    case "ุ":
+      return "6";
+    case "ึ":
+      return "7";
+    case "ค":
+      return "8";
+    case "ต":
+      return "9";
+    case "ฤ":
+      return "A";
+    case "ฺ":
+      return "B";
+    case "ฉ":
+      return "C";
+    case "ฏ":
+      return "D";
+    case "ฎ":
+      return "E";
+    case "โ":
+      return "F";
+    case "ฌ":
+      return "G";
+    case "็":
+      return "H";
+    case "ณ":
+      return "I";
+    case "๋":
+      return "J";
+    case "ษ":
+      return "K";
+    case "ศ":
+      return "L";
+    case "?":
+      return "M";
+    case "์":
+      return "N";
+    case "ฯ":
+      return "O";
+    case "ญ":
+      return "P";
+    case "๐":
+      return "Q";
+    case "ฑ":
+      return "R";
+    case "ฆ":
+      return "S";
+    case "ธ":
+      return "T";
+    case "๊":
+      return "U";
+    case "ฮ":
+      return "V";
+    case '"':
+      return "W";
+    case ")":
+      return "X";
+    case "ํ":
+      return "Y";
+    case "(":
+      return "Z";
+    case "ฟ":
+      return "a";
+    case "ิ":
+      return "b";
+    case "แ":
+      return "c";
+    case "ก":
+      return "d";
+    case "ำ":
+      return "e";
+    case "ด":
+      return "f";
+    case "เ":
+      return "g";
+    case "้":
+      return "h";
+    case "ร":
+      return "i";
+    case "่":
+      return "j";
+    case "า":
+      return "k";
+    case "ส":
+      return "l";
+    case "ท":
+      return "m";
+    case "ื":
+      return "n";
+    case "น":
+      return "o";
+    case "ย":
+      return "p";
+    case "ๆ":
+      return "q";
+    case "พ":
+      return "r";
+    case "ห":
+      return "s";
+    case "ะ":
+      return "t";
+    case "ี":
+      return "u";
+    case "อ":
+      return "v";
+    case "ไ":
+      return "w";
+    case "ป":
+      return "x";
+    case "ั":
+      return "y";
+    case "ผ":
+      return "z";
+    default:
+      return " ";
+  }
+}
 // Event listener เมื่อคลิกปุ่ม "ส่งข้อมูล"
 $("#btn_send_his").click(function () {
   var addItems = [];

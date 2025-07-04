@@ -157,7 +157,7 @@
                                 <th scope="col" class="text-center" id="">แพทย์</th>
                                 <th scope="col" class="text-center" id="">หัตถการ</th>
                                 <th scope="col" class="text-center" id="">สถานะ</th>
-                                <th scope="col" class="text-center" id="">#</th>
+                                <th hidden scope="col" class="text-center" id="">#</th>
                                 <th scope="col" class="text-center" id="">#</th>
                             </tr>
 

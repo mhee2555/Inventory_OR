@@ -40,6 +40,8 @@ function check_usage($conn, $db)
         $query .= " AND hncode_detail.DocNo = :DocNo";
     }
 
+    // echo $query;
+    // exit;
     // เพิ่ม GROUP BY เพื่อให้ SUM(Qty) ทำงานถูกต้องหากมีหลายรายการสำหรับ usage_code เดียวกัน
     // หรือลบ GROUP BY หากคาดว่า UsageCode จะไม่ซ้ำกันใน DocNo เดียวกันและต้องการแค่ข้อมูลเดียว
     $query .= " GROUP BY item.itemcode, item.itemname";
@@ -71,6 +73,12 @@ function onHIS($conn, $db)
     $return = array();
     $DocNo = $_POST['DocNo'];
 
+    $checkSql = "SELECT COUNT(*) FROM his WHERE DocNo = ?";
+    $stmtCheck = $conn->prepare($checkSql);
+    $stmtCheck->execute([$DocNo]);
+    $exists = $stmtCheck->fetchColumn();
+
+if ($exists == 0) {
     $Q1 = "INSERT INTO his ( DocNo, DocDate, HnCode, UserCode, IsStatus, IsCancel, `procedure`, doctor, departmentroomid, number_box , DocNo_deproom) SELECT
                 DocNo,
                 DocDate,
@@ -108,6 +116,8 @@ function onHIS($conn, $db)
 
     $meQuery2 = $conn->prepare($Q2);
     $meQuery2->execute();
+}
+
 
     echo json_encode($return);
     unset($conn);

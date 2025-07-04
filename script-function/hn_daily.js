@@ -211,13 +211,13 @@ function show_detail_his_docno() {
             txt = `<button class='btn' style="background-color:#e74a3b;color:#fff;font-weight:bold;">ยกเลิก</button>`;
             var hid = "hidden";
           }
-          _tr += `<tr class='color' id="tr_${value.ID}"  onclick='setActive_his(${value.ID},"${value.IsStatus}",${value.isCancel})'>
+          _tr += `<tr class='color' id="tr_${value.ID}"  onclick='setActive_his(${value.ID},"${value.IsStatus}",${value.isCancel},${value.add_Qty},${value.delete_Qty})'>
                       <td class="f18 text-center">${value.createAt}</td>
                       <td class="f18 text-center">${value.HnCode}</td>
                       <td class="f18 text-center">${value.Doctor_Name}</td>
                       <td class="f18 text-center" ${styleP} ${titleP}>${value.Procedure_TH}</td>
                       <td class="f18 text-center">${txt}</td>
-                      <td class="f18 text-center"><button class='btn' ${hid} style='font-weight: bold;background-color:#e74a3b;color:#fff;' onclick='edit_his(${value.ID},${value.IsStatus},${value.edit_qty})'>แก้ไข</button></td>
+                      <td hidden class="f18 text-center"><button class='btn' ${hid} style='font-weight: bold;background-color:#e74a3b;color:#fff;' onclick='edit_his(${value.ID},${value.IsStatus},${value.edit_qty})'>แก้ไข</button></td>
                       <td class="f18 text-center">${add_Qty}</td>
                       </tr>`;
         });
@@ -228,11 +228,11 @@ function show_detail_his_docno() {
   });
 }
 
-function setActive_his(ID, IsStatus,isCancel) {
+function setActive_his(ID, IsStatus,isCancel,add_Qty,delete_Qty) {
   $(".color").css("background-color", "");
   $("#tr_" + ID).css("background-color", "#FEE4E2");
 
-  if (IsStatus == 1) {
+  if (IsStatus == 1 || ( add_Qty > 0 || delete_Qty > 0 ) ) {
     $("#btn_send_pay").attr("disabled", false);
     $("#btn_send_pay").data("id", ID);
   } else {
