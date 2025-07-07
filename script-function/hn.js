@@ -89,7 +89,7 @@ function show_detail_hn() {
           }
 
           _tr +=
-            `<tr class="color" onclick='setActive_feeddata_hncode_detail(${value.ID},"${value.DocNo}","${value.HnCode}","${value.his_ID}")' id="tr_${value.ID}"> ` +
+            `<tr class="color" onclick='setActive_feeddata_hncode_detail(${value.ID},"${value.DocNo}","${value.HnCode}","${value.his_IsStatus}")' id="tr_${value.ID}"> ` +
             `<td class="text-center">${kay + 1}</td>` +
             `<td class="text-center" >${value.DocDate}</td>` +
             `<td class="text-left" >${value.HnCode}</td>` +
@@ -204,7 +204,7 @@ function feeddata_hncode(input_search) {
   });
 }
 
-function setActive_feeddata_hncode_detail(ID, DocNo, HnCode, his_ID) {
+function setActive_feeddata_hncode_detail(ID, DocNo, HnCode, his_IsStatus) {
   $(".color").css("background-color", "");
   $("#tr_" + ID).css("background-color", "#FEE4E2");
 
@@ -212,14 +212,20 @@ function setActive_feeddata_hncode_detail(ID, DocNo, HnCode, his_ID) {
 
   $("#btn_Tracking").attr("disabled", false);
 
-  if (his_ID == "null") {
+  if (his_IsStatus == "null") {
     $("#btn_send_pay").attr("disabled", false);
     $("#edit_his").attr("disabled", true);
   } else {
+    if(his_IsStatus == '2'){
+      $("#edit_his").attr("disabled", false);
+    }else{
+      $("#edit_his").attr("disabled", true);
+    }
+
     $("#btn_send_pay").attr("disabled", true);
     $("#tr_" + ID).css("background-color", "lightgreen");
 
-    $("#edit_his").attr("disabled", false);
+
   }
 
   // alert(DocNo);

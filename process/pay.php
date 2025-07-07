@@ -637,7 +637,7 @@ function onReturnData($conn, $db)
                 while ($row_his = $meQuery_his->fetch(PDO::FETCH_ASSOC)) {
 
                     // ค้นหา DocNo จาก DocNo_SS ก่อน
-                    $sqlDocNo = "SELECT DocNo FROM hncode WHERE DocNo_SS = ? LIMIT 1";
+                    $sqlDocNo = "SELECT DocNo FROM his WHERE DocNo_deproom = ? LIMIT 1";
                     $stmtDocNo = $conn->prepare($sqlDocNo);
                     $stmtDocNo->execute([$_DocNo]);
                     $row = $stmtDocNo->fetch(PDO::FETCH_ASSOC);
@@ -1012,13 +1012,13 @@ function show_detail_history($conn, $db)
 
     $whereP = "";
     if (isset($select_procedure_history)) {
-        $select_procedure_history = implode(",", $select_procedure_history);
+        // $select_procedure_history = implode(",", $select_procedure_history);
         // $whereP = " AND  FIND_IN_SET('$select_procedure_history', deproom.`procedure`) ";
         $whereP = "  AND deproom.`procedure` LIKE '%$select_procedure_history%'  ";
     }
     $whereD = "";
     if (isset($select_doctor_history)) {
-        $select_doctor_history = implode(",", $select_doctor_history);
+        // $select_doctor_history = implode(",", $select_doctor_history);
         $whereD = "  AND deproom.`doctor` LIKE '%$select_doctor_history%'  ";
     }
 
@@ -1042,6 +1042,7 @@ function show_detail_history($conn, $db)
         $query = " SELECT
                         deproom.DocNo,
                         DATE_FORMAT(deproom.serviceDate, '%d-%m-%Y') AS serviceDate,
+                        DATE_FORMAT( deproom.serviceDate, '%H:%i' ) AS serviceTime,
                         DATE_FORMAT(deproom.CreateDate, '%d-%m-%Y') AS CreateDate,
                         COUNT(deproomdetailsub.ID) AS cnt_pay,
                         deproom.hn_record_id,
@@ -3931,7 +3932,7 @@ function oncheck_Returnpay($conn, $db)
         while ($row_his = $meQuery_his->fetch(PDO::FETCH_ASSOC)) {
 
                     // ค้นหา DocNo จาก DocNo_SS ก่อน
-                    $sqlDocNo = "SELECT DocNo FROM hncode WHERE DocNo_SS = ? LIMIT 1";
+                    $sqlDocNo = "SELECT DocNo FROM his WHERE DocNo_deproom = ? LIMIT 1";
                     $stmtDocNo = $conn->prepare($sqlDocNo);
                     $stmtDocNo->execute([$DocNo_pay]);
                     $row = $stmtDocNo->fetch(PDO::FETCH_ASSOC);
@@ -5571,7 +5572,7 @@ function oncheck_pay($conn, $db)
                         }
 
                         // 1. ค้นหา DocNo จาก DocNo_SS
-                        $sqlDocNo = "SELECT DocNo FROM hncode WHERE DocNo_SS = ? LIMIT 1";
+                        $sqlDocNo = "SELECT DocNo FROM his WHERE DocNo_deproom = ? LIMIT 1";
                         $stmtDoc = $conn->prepare($sqlDocNo);
                         $stmtDoc->execute([$DocNo_pay]);
                         $row = $stmtDoc->fetch(PDO::FETCH_ASSOC);
@@ -5888,7 +5889,7 @@ function oncheck_pay($conn, $db)
                             // }
 
                             // 1. ค้นหา DocNo จาก DocNo_SS
-                            $sqlDocNo = "SELECT DocNo FROM hncode WHERE DocNo_SS = ? LIMIT 1";
+                            $sqlDocNo = "SELECT DocNo FROM his WHERE DocNo_deproom = ? LIMIT 1";
                             $stmtDoc = $conn->prepare($sqlDocNo);
                             $stmtDoc->execute([$DocNo_pay]);
                             $row = $stmtDoc->fetch(PDO::FETCH_ASSOC);
@@ -6082,27 +6083,33 @@ function oncheck_pay($conn, $db)
                         }
 
 
-                        $delete_his = "DELETE FROM his_detail WHERE his_detail.DocNo = '$DocNoHN_borrow' ";
-                        $meQuery_delete_his = $conn->prepare($delete_his);
-                        $meQuery_delete_his->execute();
+                            // 1. ค้นหา DocNo จาก DocNo_SS
+                            $sqlDocNo = "SELECT DocNo FROM his WHERE DocNo_deproom = ? LIMIT 1";
+                            $stmtDoc = $conn->prepare($sqlDocNo);
+                            $stmtDoc->execute([$DocNo_pay]);
+                            $row = $stmtDoc->fetch(PDO::FETCH_ASSOC);
 
-                        $Q2_his  = "INSERT INTO his_detail ( DocNo , Qty , ItemCode ) 
-                                SELECT
-                                    DocNo,
-                                    SUM( hncode_detail.Qty ),
-                                    itemstock.ItemCode 
-                                FROM
-                                    hncode_detail
-                                    INNER JOIN itemstock ON hncode_detail.ItemStockID = itemstock.RowID 
-                                WHERE
-                                    hncode_detail.DocNo = '$DocNoHN_borrow' 
-                                    AND hncode_detail.IsStatus != 99 
-                                    AND hncode_detail.Qty > 0 
-                                GROUP BY
-                                    itemstock.ItemCode  ";
+                            if ($row) {
+                                $docNo_hn = $row['DocNo'];
 
-                        $meQuery1_his = $conn->prepare($Q2_his);
-                        $meQuery1_his->execute();
+                                // 2. เช็คว่า ItemCode มีอยู่ใน his_detail แล้วหรือยัง
+                                $sqlCheck = "SELECT Qty FROM his_detail WHERE DocNo = ? AND ItemCode = ?";
+                                $stmtCheck = $conn->prepare($sqlCheck);
+                                $stmtCheck->execute([$docNo_hn, $_ItemCode]);
+                                $resultCheck = $stmtCheck->fetch(PDO::FETCH_ASSOC);
+
+                                if ($resultCheck) {
+                                    // เจอแล้ว -> UPDATE Qty +1
+                                    $sqlUpdate = "UPDATE his_detail SET Qty = Qty + 1 WHERE DocNo = ? AND ItemCode = ?";
+                                    $stmtUpdate = $conn->prepare($sqlUpdate);
+                                    $stmtUpdate->execute([$docNo_hn, $_ItemCode]);
+                                } else {
+                                    // ไม่เจอ -> INSERT
+                                    $sqlInsert = "INSERT INTO his_detail (DocNo, ItemCode, Qty) VALUES (?, ?, 1)";
+                                    $stmtInsert = $conn->prepare($sqlInsert);
+                                    $stmtInsert->execute([$docNo_hn, $_ItemCode]);
+                                }
+                            }
 
 
 
@@ -6320,7 +6327,7 @@ function oncheck_pay($conn, $db)
                             // }
 
                             // 1. ค้นหา DocNo จาก DocNo_SS
-                            $sqlDocNo = "SELECT DocNo FROM hncode WHERE DocNo_SS = ? LIMIT 1";
+                            $sqlDocNo = "SELECT DocNo FROM his WHERE DocNo_deproom = ? LIMIT 1";
                             $stmtDoc = $conn->prepare($sqlDocNo);
                             $stmtDoc->execute([$DocNo_pay]);
                             $row = $stmtDoc->fetch(PDO::FETCH_ASSOC);

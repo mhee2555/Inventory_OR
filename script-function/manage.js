@@ -1463,6 +1463,10 @@ function DeleteDeproom(selectedValue) {
 }
 
 $("#btn_Save_doctor_deproom").click(function () {
+  if ($("#select_doctor_deproom").val() == "") {
+    showDialogFailed("กรุณาเลือกแพทย์");
+    return;
+  }
   if (deproom_Array.length === 0) {
     showDialogFailed("กรุณาเลือกห้องผ่าตัด");
     return;
@@ -1594,6 +1598,10 @@ function Deleteproceduce(selectedValue) {
 }
 
 $("#btn_Save_deproom_proceduce").click(function () {
+  if ($("#select_deproom_proceduce").val() == "") {
+    showDialogFailed("กรุณาเลือกห้องผ่าตัด");
+    return;
+  }
   if (procedure_id_Array.length === 0) {
     showDialogFailed("กรุณาเลือกหัตถการ");
     return;

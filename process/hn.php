@@ -382,7 +382,7 @@ function show_detail_hn($conn, $db)
 
     if ($db == 1) {
         $query = "SELECT
-                    his.ID AS his_ID,
+                    his.IsStatus AS his_IsStatus,
                     hncode.ID,
                     DATE_FORMAT(hncode.DocDate, '%d-%m-%Y') AS DocDate,
                     hncode.HnCode,

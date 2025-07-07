@@ -559,13 +559,13 @@ function show_detail_history($conn, $db)
 
     $whereP = "";
     if (isset($select_procedure_history)) {
-        $select_procedure_history = implode(",", $select_procedure_history);
+        // $select_procedure_history = implode(",", $select_procedure_history);
         // $whereP = " AND  FIND_IN_SET('$select_procedure_history', deproom.`procedure`) ";
         $whereP = "  AND deproom.`procedure` LIKE '%$select_procedure_history%'  ";
     }
     $whereD = "";
     if (isset($select_doctor_history)) {
-        $select_doctor_history = implode(",", $select_doctor_history);
+        // $select_doctor_history = implode(",", $select_doctor_history);
         $whereD = "  AND deproom.`doctor` LIKE '%$select_doctor_history%'  ";
     }
 

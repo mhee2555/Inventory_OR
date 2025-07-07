@@ -232,7 +232,7 @@ function setActive_his(ID, IsStatus,isCancel,add_Qty,delete_Qty) {
   $(".color").css("background-color", "");
   $("#tr_" + ID).css("background-color", "#FEE4E2");
 
-  if (IsStatus == 1 || ( add_Qty > 0 || delete_Qty > 0 ) ) {
+  if (IsStatus == 1 || ( add_Qty > 0 || delete_Qty > 0 && IsStatus == 2 ) ) {
     $("#btn_send_pay").attr("disabled", false);
     $("#btn_send_pay").data("id", ID);
   } else {

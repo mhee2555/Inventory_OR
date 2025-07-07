@@ -136,84 +136,69 @@ $html = '<table cellspacing="0" cellpadding="2" border="1" >
 
 
 
-// $count = 1;
+$count = 1;
 
 
-// $query = " SELECT
-//                 hncode.DocNo_SS,
-//                 item.itemname,
-//                 item.itemcode,
-//                 item.itemcode2,
-//                 item.SalePrice,
-//                 COUNT(deproomdetailsub.ID) AS cnt,
-//                 (
-//                     SELECT COUNT(log_return.id)
-//                     FROM log_return
-//                     LEFT JOIN itemstock AS is_return ON log_return.itemstockID = is_return.RowID
-//                     WHERE log_return.DocNo = '$_DocNo_SS'
-//                         AND is_return.ItemCode = item.itemcode
-//                 ) AS cnt_return
-//             FROM
-//                 hncode
-//                 INNER JOIN deproom ON hncode.DocNo_SS = deproom.DocNo
-//                 INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
-//                 INNER JOIN deproomdetailsub ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID 
-//                 LEFT JOIN itemstock ON itemstock.RowID = deproomdetailsub.ItemStockID
-//                 LEFT JOIN item ON itemstock.ItemCode = item.itemcode
-//             WHERE
-//                 hncode.DocNo = '$DocNo'
-//             GROUP BY
-//                     item.itemname,
-//                     item.itemcode,
-//                     item.itemcode2,
-//                     item.SalePrice,
-//                     hncode.DocNo_SS 
-//             ORDER BY
-//             (
-//                 COUNT( deproomdetailsub.ID ) - COALESCE ((
-//                     SELECT
-//                         COUNT( log_return.id ) 
-//                     FROM
-//                         log_return
-//                         LEFT JOIN itemstock AS is_return ON log_return.itemstockID = is_return.RowID 
-//                     WHERE
-//                         log_return.DocNo = '$_DocNo_SS' 
-//                         AND is_return.ItemCode = item.itemcode 
-//                         ),
-//                     0 
-//                 )) DESC,
-//             item.itemname ASC;  ";
+    $query = " SELECT
+                    item.itemcode2 AS itemcode,
+                    item.itemname,
+                    rq.request_qty,
+                    IFNULL( COUNT( rf.QrCode ), 0 ) AS receive_qty,
+                CASE
+                        
+                        WHEN IFNULL( COUNT( rf.QrCode ), 0 ) > rq.request_qty THEN
+                        CONCAT(
+                            '+',
+                        ( COUNT( rf.QrCode ) - rq.request_qty )) ELSE rq.request_qty - IFNULL( COUNT( rf.QrCode ), 0 ) 
+                    END AS remain_qty 
+                FROM
+                    item
+                    LEFT JOIN ( SELECT request_detail.ItemCode, SUM( request_detail.qty ) AS request_qty FROM request_detail WHERE request_detail.DocNo = '$RqDocNo' GROUP BY request_detail.ItemCode ) rq ON rq.ItemCode = item.itemcode
+                    LEFT JOIN (
+                    SELECT
+                        insertrfid_detail.ItemCode,
+                        insertrfid_detail.QrCode 
+                    FROM
+                        insertrfid
+                        INNER JOIN insertrfid_detail ON insertrfid.DocNo = insertrfid_detail.DocNo 
+                    WHERE
+                        insertrfid.RqDocNo = '$RqDocNo' 
+                        AND insertrfid.RtDocNo = '$RtDocNo' 
+                    ) rf ON rf.ItemCode = item.itemcode 
+                WHERE
+                    rq.request_qty IS NOT NULL 
+                GROUP BY
+                    item.itemcode2,
+                    item.itemname,
+                    rq.request_qty  ";
 
-// $meQuery1 = $conn->prepare($query);
-// $meQuery1->execute();
-// while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
+
+
+$meQuery1 = $conn->prepare($query);
+$meQuery1->execute();
+while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
     
-//     $pdf->SetFont('db_helvethaica_x', 'B', 18);
-
-//         $itemcode = $Result_Detail['itemcode'];
-//         $DocNo_SS = $Result_Detail['DocNo_SS'];
-//         $cnt_return = $Result_Detail['cnt_return'];
+    $pdf->SetFont('db_helvethaica_x', 'B', 18);
 
 
 
+        $html .= '<tr nobr="true" style="font-size:15px;">';
+        $html .=   '<td width="15 %" align="center" > ' . $count . '</td>';
+        $html .=   '<td width="15 %" align="left" > ' . $Result_Detail['itemcode'] . '</td>';
+        $html .=   '<td width="25 %" align="center" >' . $Result_Detail['itemname'] . '</td>';
+        $html .=   '<td width="15 %" align="center" >' . $Result_Detail['request_qty'] . '</td>';
+        $html .=   '<td width="15 %" align="center" >' . $Result_Detail['receive_qty'] . '</td>';
+        $html .=   '<td width="15 %" align="center" >' . $Result_Detail['remain_qty'] . '</td>';
+        $html .=  '</tr>';
 
 
-//         $html .= '<tr nobr="true" style="font-size:15px;">';
-//         $html .=   '<td width="15 %" align="center" > ' . $Result_Detail['itemcode2'] . '</td>';
-//         $html .=   '<td width="25 %" align="left" > ' . $Result_Detail['itemname'] . '</td>';
-//         $html .=   '<td width="15 %" align="center" >' . $Result_Detail['cnt'] . '</td>';
-//         $html .=   '<td width="15 %" align="center" >' . $cnt_return . '</td>';
-//         $html .=   '<td width="15 %" align="center" style="background-color:#E6E6FA;">' . number_format( ($Result_Detail['cnt'] - $cnt_return)) . '</td>';
-//         $html .=   '<td width="15 %" align="right" >' . number_format( ($Result_Detail['SalePrice'] * ($Result_Detail['cnt'] - $cnt_return)) ,2) . '</td>';
-//         $html .=  '</tr>';
-//         $count++
 
 
 
     
 
 
-// }
+}
 
 
 

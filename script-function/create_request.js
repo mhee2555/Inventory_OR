@@ -82,47 +82,52 @@ $(function () {
     $("#select_procedure_history").select2();
 
     setTimeout(() => {
-      $("#select_doctor_history").on("select2:select", function (e) {
-        var selectedValue = e.params.data.id; // ดึงค่า value
-        var selectedText = e.params.data.text; // ดึงค่า text
-        if (selectedValue != "") {
-          var index = doctor_history_Array.indexOf(selectedValue);
-          if (index == -1) {
-            doctor_history_Array.push(selectedValue);
-            var _row = "";
-            _row += `       <div  class='div_${selectedValue}  clear_doctor' onclick='DeleteDoctor_history(${selectedValue})'>
-                                <label for="" class="custom-label">${selectedText}</label>
-                            </div> `;
+      // $("#select_doctor_history").on("select2:select", function (e) {
 
-            $("#row_doctor_history").append(_row);
 
-            $("#select_doctor_history").val("").trigger("change");
-          }
 
-          show_detail_history();
-        }
-      });
+      //   // var selectedValue = e.params.data.id; // ดึงค่า value
+      //   // var selectedText = e.params.data.text; // ดึงค่า text
+      //   // if (selectedValue != "") {
+      //   //   var index = doctor_history_Array.indexOf(selectedValue);
+      //   //   if (index == -1) {
+      //   //     doctor_history_Array.push(selectedValue);
+      //   //     var _row = "";
+      //   //     _row += `       <div  class='div_${selectedValue}  clear_doctor' onclick='DeleteDoctor_history(${selectedValue})'>
+      //   //                         <label for="" class="custom-label">${selectedText}</label>
+      //   //                     </div> `;
 
-      $("#select_procedure_history").on("select2:select", function (e) {
-        var selectedValue = e.params.data.id; // ดึงค่า value
-        var selectedText = e.params.data.text; // ดึงค่า text
-        if (selectedValue != "") {
-          var index = procedure_id_history_Array.indexOf(selectedValue);
-          if (index == -1) {
-            procedure_id_history_Array.push(selectedValue);
-            var _row = "";
-            _row += `       <div  class='div_${selectedValue} clear_procedure' onclick='Deletprocedure_history(${selectedValue})'>
-                                <label for="" class="custom-label">${selectedText}</label>
-                            </div> `;
+      //   //     $("#row_doctor_history").append(_row);
 
-            $("#row_procedure_history").append(_row);
+      //   //     $("#select_doctor_history").val("").trigger("change");
+      //   //   }
 
-            $("#select_procedure_history").val("").trigger("change");
-          }
+      //   //   show_detail_history();
+      //   // }
+      // });
 
-          show_detail_history();
-        }
-      });
+      // $("#select_procedure_history").on("select2:select", function (e) {
+
+
+      //   // var selectedValue = e.params.data.id; // ดึงค่า value
+      //   // var selectedText = e.params.data.text; // ดึงค่า text
+      //   // if (selectedValue != "") {
+      //   //   var index = procedure_id_history_Array.indexOf(selectedValue);
+      //   //   if (index == -1) {
+      //   //     procedure_id_history_Array.push(selectedValue);
+      //   //     var _row = "";
+      //   //     _row += `       <div  class='div_${selectedValue} clear_procedure' onclick='Deletprocedure_history(${selectedValue})'>
+      //   //                         <label for="" class="custom-label">${selectedText}</label>
+      //   //                     </div> `;
+
+      //   //     $("#row_procedure_history").append(_row);
+
+      //   //     $("#select_procedure_history").val("").trigger("change");
+      //   //   }
+
+      //   //   show_detail_history();
+      //   // }
+      // });
     }, 500);
 
     $("#col_deproom_history").attr("hidden", true);
@@ -1054,6 +1059,10 @@ $("#select_typeSearch_history").change(function (e) {
   }
 });
 
+
+
+
+
 // history
 function show_detail_history() {
   $.ajax({
@@ -1064,8 +1073,10 @@ function show_detail_history() {
       select_date_history_s: $("#select_date_history_s").val(),
       select_date_history_l: $("#select_date_history_l").val(),
       select_deproom_history: $("#select_deproom_history").val(),
-      select_doctor_history: doctor_history_Array,
-      select_procedure_history: procedure_id_history_Array,
+      select_doctor_history: $("#select_doctor_history").val(),
+      select_procedure_history: $("#select_procedure_history").val(),
+      // select_doctor_history: doctor_history_Array,
+      // select_procedure_history: procedure_id_history_Array,
     },
     success: function (result) {
       var _tr = "";
@@ -1090,7 +1101,7 @@ function show_detail_history() {
 
           _tr += `<tr>
                       <td class='text-center'>${kay + 1}</td>
-                      <td class='text-center'>${value.serviceDate}</td>
+                      <td class='text-center'>${value.serviceDate} ${value.serviceTime}</td>
                       <td class='text-center'>${value.hn_record_id}</td>
                       <td class='text-left'>${value.Doctor_Name}</td>
                       <td class='text-left'>${value.Procedure_TH}</td>
