@@ -184,8 +184,8 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
 
         $html .= '<tr nobr="true" style="font-size:15px;">';
         $html .=   '<td width="15 %" align="center" > ' . $count . '</td>';
-        $html .=   '<td width="15 %" align="left" > ' . $Result_Detail['itemcode'] . '</td>';
-        $html .=   '<td width="25 %" align="center" >' . $Result_Detail['itemname'] . '</td>';
+        $html .=   '<td width="15 %" align="center" > ' . $Result_Detail['itemcode'] . '</td>';
+        $html .=   '<td width="25 %" align="left" >' . $Result_Detail['itemname'] . '</td>';
         $html .=   '<td width="15 %" align="center" >' . $Result_Detail['request_qty'] . '</td>';
         $html .=   '<td width="15 %" align="center" >' . $Result_Detail['receive_qty'] . '</td>';
         $html .=   '<td width="15 %" align="center" >' . $Result_Detail['remain_qty'] . '</td>';

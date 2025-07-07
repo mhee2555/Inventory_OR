@@ -651,11 +651,11 @@ function onReturnData($conn, $db)
                                     WHERE ItemCode = ?
                                     AND Qty > 0
                                     AND DocNo = ?";
-                                                $stmtUpdate = $conn->prepare($update);
-                                                $stmtUpdate->execute([$_ItemCode, $DocNo_real]);
+                        $stmtUpdate = $conn->prepare($update);
+                        $stmtUpdate->execute([$_ItemCode, $DocNo_real]);
 
-                                                // 2. DELETE ถ้า Qty = 0
-                                                $delete = "DELETE FROM his_detail 
+                        // 2. DELETE ถ้า Qty = 0
+                        $delete = "DELETE FROM his_detail 
                                     WHERE ItemCode = ?
                                     AND DocNo = ?
                                     AND Qty = 0";
@@ -3931,32 +3931,32 @@ function oncheck_Returnpay($conn, $db)
         // exit;
         while ($row_his = $meQuery_his->fetch(PDO::FETCH_ASSOC)) {
 
-                    // ค้นหา DocNo จาก DocNo_SS ก่อน
-                    $sqlDocNo = "SELECT DocNo FROM his WHERE DocNo_deproom = ? LIMIT 1";
-                    $stmtDocNo = $conn->prepare($sqlDocNo);
-                    $stmtDocNo->execute([$DocNo_pay]);
-                    $row = $stmtDocNo->fetch(PDO::FETCH_ASSOC);
+            // ค้นหา DocNo จาก DocNo_SS ก่อน
+            $sqlDocNo = "SELECT DocNo FROM his WHERE DocNo_deproom = ? LIMIT 1";
+            $stmtDocNo = $conn->prepare($sqlDocNo);
+            $stmtDocNo->execute([$DocNo_pay]);
+            $row = $stmtDocNo->fetch(PDO::FETCH_ASSOC);
 
-                    if ($row && $row['DocNo']) {
-                        $DocNo_real = $row['DocNo'];
+            if ($row && $row['DocNo']) {
+                $DocNo_real = $row['DocNo'];
 
-                        // 1. UPDATE Qty - 1
-                        $update = "UPDATE his_detail 
+                // 1. UPDATE Qty - 1
+                $update = "UPDATE his_detail 
                                     SET Qty = Qty - 1
                                     WHERE ItemCode = ?
                                     AND Qty > 0
                                     AND DocNo = ?";
-                                                $stmtUpdate = $conn->prepare($update);
-                                                $stmtUpdate->execute([$_ItemCode, $DocNo_real]);
+                $stmtUpdate = $conn->prepare($update);
+                $stmtUpdate->execute([$_ItemCode, $DocNo_real]);
 
-                                                // 2. DELETE ถ้า Qty = 0
-                                                $delete = "DELETE FROM his_detail 
+                // 2. DELETE ถ้า Qty = 0
+                $delete = "DELETE FROM his_detail 
                                     WHERE ItemCode = ?
                                     AND DocNo = ?
                                     AND Qty = 0";
-                        $stmtDelete = $conn->prepare($delete);
-                        $stmtDelete->execute([$_ItemCode, $DocNo_real]);
-                    }
+                $stmtDelete = $conn->prepare($delete);
+                $stmtDelete->execute([$_ItemCode, $DocNo_real]);
+            }
         }
     }
 
@@ -6083,33 +6083,64 @@ function oncheck_pay($conn, $db)
                         }
 
 
-                            // 1. ค้นหา DocNo จาก DocNo_SS
-                            $sqlDocNo = "SELECT DocNo FROM his WHERE DocNo_deproom = ? LIMIT 1";
-                            $stmtDoc = $conn->prepare($sqlDocNo);
-                            $stmtDoc->execute([$DocNo_pay]);
-                            $row = $stmtDoc->fetch(PDO::FETCH_ASSOC);
+                        // 1. ค้นหา DocNo จาก DocNo_SS
+                        $sqlDocNo1 = "SELECT DocNo FROM his WHERE DocNo_deproom = ? LIMIT 1";
+                        $stmtDoc1 = $conn->prepare($sqlDocNo1);
+                        $stmtDoc1->execute([$DocNo_borrow]);
+                        $row1 = $stmtDoc1->fetch(PDO::FETCH_ASSOC);
 
-                            if ($row) {
-                                $docNo_hn = $row['DocNo'];
+                        if ($row1) {
+                            $docNo_hn1 = $row1['DocNo'];
 
-                                // 2. เช็คว่า ItemCode มีอยู่ใน his_detail แล้วหรือยัง
-                                $sqlCheck = "SELECT Qty FROM his_detail WHERE DocNo = ? AND ItemCode = ?";
-                                $stmtCheck = $conn->prepare($sqlCheck);
-                                $stmtCheck->execute([$docNo_hn, $_ItemCode]);
-                                $resultCheck = $stmtCheck->fetch(PDO::FETCH_ASSOC);
+                            // 2. เช็คว่า ItemCode มีอยู่ใน his_detail แล้วหรือยัง
+                            $sqlCheck1 = "SELECT Qty FROM his_detail WHERE DocNo = ? AND ItemCode = ?";
+                            $stmtCheck1 = $conn->prepare($sqlCheck1); // แก้ชื่อเป็น $sqlCheck1 ให้ตรงกัน
+                            $stmtCheck1->execute([$docNo_hn1, $_ItemCode]);
+                            $resultCheck1 = $stmtCheck1->fetch(PDO::FETCH_ASSOC);
 
-                                if ($resultCheck) {
-                                    // เจอแล้ว -> UPDATE Qty +1
-                                    $sqlUpdate = "UPDATE his_detail SET Qty = Qty + 1 WHERE DocNo = ? AND ItemCode = ?";
+                            if ($resultCheck1) {
+                                if ($resultCheck1['Qty'] > 1) {
+                                    // ถ้า Qty มากกว่า 1 -> ลบ 1
+                                    $sqlUpdate = "UPDATE his_detail SET Qty = Qty - 1 WHERE DocNo = ? AND ItemCode = ?";
                                     $stmtUpdate = $conn->prepare($sqlUpdate);
-                                    $stmtUpdate->execute([$docNo_hn, $_ItemCode]);
+                                    $stmtUpdate->execute([$docNo_hn1, $_ItemCode]);
                                 } else {
-                                    // ไม่เจอ -> INSERT
-                                    $sqlInsert = "INSERT INTO his_detail (DocNo, ItemCode, Qty) VALUES (?, ?, 1)";
-                                    $stmtInsert = $conn->prepare($sqlInsert);
-                                    $stmtInsert->execute([$docNo_hn, $_ItemCode]);
+                                    // ถ้า Qty เท่ากับ 1 -> ลบ record นี้ทิ้ง
+                                    $sqlDelete = "DELETE FROM his_detail WHERE DocNo = ? AND ItemCode = ?";
+                                    $stmtDelete = $conn->prepare($sqlDelete);
+                                    $stmtDelete->execute([$docNo_hn1, $_ItemCode]);
                                 }
                             }
+                        }
+
+
+                        // 1. ค้นหา DocNo จาก DocNo_SS
+                        $sqlDocNo = "SELECT DocNo FROM his WHERE DocNo_deproom = ? LIMIT 1";
+                        $stmtDoc = $conn->prepare($sqlDocNo);
+                        $stmtDoc->execute([$DocNo_pay]);
+                        $row = $stmtDoc->fetch(PDO::FETCH_ASSOC);
+
+                        if ($row) {
+                            $docNo_hn = $row['DocNo'];
+
+                            // 2. เช็คว่า ItemCode มีอยู่ใน his_detail แล้วหรือยัง
+                            $sqlCheck = "SELECT Qty FROM his_detail WHERE DocNo = ? AND ItemCode = ?";
+                            $stmtCheck = $conn->prepare($sqlCheck);
+                            $stmtCheck->execute([$docNo_hn, $_ItemCode]);
+                            $resultCheck = $stmtCheck->fetch(PDO::FETCH_ASSOC);
+
+                            if ($resultCheck) {
+                                // เจอแล้ว -> UPDATE Qty +1
+                                $sqlUpdate = "UPDATE his_detail SET Qty = Qty + 1 WHERE DocNo = ? AND ItemCode = ?";
+                                $stmtUpdate = $conn->prepare($sqlUpdate);
+                                $stmtUpdate->execute([$docNo_hn, $_ItemCode]);
+                            } else {
+                                // ไม่เจอ -> INSERT
+                                $sqlInsert = "INSERT INTO his_detail (DocNo, ItemCode, Qty) VALUES (?, ?, 1)";
+                                $stmtInsert = $conn->prepare($sqlInsert);
+                                $stmtInsert->execute([$docNo_hn, $_ItemCode]);
+                            }
+                        }
 
 
 
@@ -6327,32 +6358,32 @@ function oncheck_pay($conn, $db)
                             // }
 
                             // 1. ค้นหา DocNo จาก DocNo_SS
-                            $sqlDocNo = "SELECT DocNo FROM his WHERE DocNo_deproom = ? LIMIT 1";
-                            $stmtDoc = $conn->prepare($sqlDocNo);
-                            $stmtDoc->execute([$DocNo_pay]);
-                            $row = $stmtDoc->fetch(PDO::FETCH_ASSOC);
+                            // $sqlDocNo = "SELECT DocNo FROM his WHERE DocNo_deproom = ? LIMIT 1";
+                            // $stmtDoc = $conn->prepare($sqlDocNo);
+                            // $stmtDoc->execute([$DocNo_pay]);
+                            // $row = $stmtDoc->fetch(PDO::FETCH_ASSOC);
 
-                            if ($row) {
-                                $docNo_hn = $row['DocNo'];
+                            // if ($row) {
+                            //     $docNo_hn = $row['DocNo'];
 
-                                // 2. เช็คว่า ItemCode มีอยู่ใน his_detail แล้วหรือยัง
-                                $sqlCheck = "SELECT Qty FROM his_detail WHERE DocNo = ? AND ItemCode = ?";
-                                $stmtCheck = $conn->prepare($sqlCheck);
-                                $stmtCheck->execute([$docNo_hn, $_ItemCode]);
-                                $resultCheck = $stmtCheck->fetch(PDO::FETCH_ASSOC);
+                            //     // 2. เช็คว่า ItemCode มีอยู่ใน his_detail แล้วหรือยัง
+                            //     $sqlCheck = "SELECT Qty FROM his_detail WHERE DocNo = ? AND ItemCode = ?";
+                            //     $stmtCheck = $conn->prepare($sqlCheck);
+                            //     $stmtCheck->execute([$docNo_hn, $_ItemCode]);
+                            //     $resultCheck = $stmtCheck->fetch(PDO::FETCH_ASSOC);
 
-                                if ($resultCheck) {
-                                    // เจอแล้ว -> UPDATE Qty +1
-                                    $sqlUpdate = "UPDATE his_detail SET Qty = Qty + 1 WHERE DocNo = ? AND ItemCode = ?";
-                                    $stmtUpdate = $conn->prepare($sqlUpdate);
-                                    $stmtUpdate->execute([$docNo_hn, $_ItemCode]);
-                                } else {
-                                    // ไม่เจอ -> INSERT
-                                    $sqlInsert = "INSERT INTO his_detail (DocNo, ItemCode, Qty) VALUES (?, ?, 1)";
-                                    $stmtInsert = $conn->prepare($sqlInsert);
-                                    $stmtInsert->execute([$docNo_hn, $_ItemCode]);
-                                }
-                            }
+                            //     if ($resultCheck) {
+                            //         // เจอแล้ว -> UPDATE Qty +1
+                            //         $sqlUpdate = "UPDATE his_detail SET Qty = Qty + 1 WHERE DocNo = ? AND ItemCode = ?";
+                            //         $stmtUpdate = $conn->prepare($sqlUpdate);
+                            //         $stmtUpdate->execute([$docNo_hn, $_ItemCode]);
+                            //     } else {
+                            //         // ไม่เจอ -> INSERT
+                            //         $sqlInsert = "INSERT INTO his_detail (DocNo, ItemCode, Qty) VALUES (?, ?, 1)";
+                            //         $stmtInsert = $conn->prepare($sqlInsert);
+                            //         $stmtInsert->execute([$docNo_hn, $_ItemCode]);
+                            //     }
+                            // }
 
 
 

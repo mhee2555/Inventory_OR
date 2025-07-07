@@ -46,7 +46,7 @@ function showdetail($conn,$db){
                 AND insertrfid.RtDocNo = '$docnort' ";
     }else{
             $Q1 = " SELECT
-                item.itemcode,
+                item.itemcode2 AS itemcode,
                 item.itemname,
                 COUNT(insertrfid_detail.QrCode) AS QrCode
             FROM

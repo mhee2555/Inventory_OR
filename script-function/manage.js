@@ -2352,6 +2352,11 @@ $("#btn_confirm_request").click(function () {
     }
   });
 
+  if (count_qty_request == 0) {
+    showDialogFailed("กรุณากรอกจำนวน");
+    return;
+  }
+
   if ($("#select_doctor_routine").val() == "") {
     showDialogFailed("กรุณาเลือกแพทย์");
     return;
@@ -2362,11 +2367,6 @@ $("#btn_confirm_request").click(function () {
   }
   if ($("#select_procedure_routine").val() == "") {
     showDialogFailed("กรุณาเลือกหัตถการ");
-    return;
-  }
-
-  if (count_qty_request == 0) {
-    showDialogFailed("กรุณากรอกจำนวน");
     return;
   }
 

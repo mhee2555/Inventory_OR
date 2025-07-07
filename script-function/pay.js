@@ -575,6 +575,7 @@ $("#input_pay").keypress(function (e) {
     if ($(this).val().trim() != "") {
       $("#input_pay").val(convertString($(this).val()));
       oncheck_pay($(this).val());
+      $("#input_pay").val("");
     }
   }
 });

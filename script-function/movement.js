@@ -52,7 +52,7 @@ $(function () {
   $("#restock").hide();
 
   $("#radio_suds").css("color", "#bbbbb");
-  $("#radio_suds").css("background", "#EAECF0");
+  $("#radio_suds").css("background", "#EAE1F4");
 
   // selection_itemSuds();
 
@@ -64,7 +64,7 @@ $(function () {
 
   $("#radio_suds").click(function () {
     $("#radio_suds").css("color", "#bbbbb");
-    $("#radio_suds").css("background", "#EAECF0");
+    $("#radio_suds").css("background", "#EAE1F4");
 
     $("#radio_sterile").css("color", "black");
     $("#radio_sterile").css("background", "");
@@ -82,7 +82,7 @@ $(function () {
 
   $("#radio_sterile").click(function () {
     $("#radio_sterile").css("color", "#bbbbb");
-    $("#radio_sterile").css("background", "#EAECF0");
+    $("#radio_sterile").css("background", "#EAE1F4");
 
     $("#radio_suds").css("color", "black");
     $("#radio_suds").css("background", "");
@@ -109,7 +109,7 @@ $(function () {
 
   $("#radio_normal").click(function () {
     $("#radio_normal").css("color", "#bbbbb");
-    $("#radio_normal").css("background", "#EAECF0");
+    $("#radio_normal").css("background", "#EAE1F4");
 
     $("#radio_suds").css("color", "black");
     $("#radio_suds").css("background", "");
@@ -132,7 +132,7 @@ $(function () {
 
   $("#radio_restock").click(function () {
     $("#radio_restock").css("color", "#bbbbb");
-    $("#radio_restock").css("background", "#EAECF0");
+    $("#radio_restock").css("background", "#EAE1F4");
 
     $("#radio_normal").css("color", "black");
     $("#radio_normal").css("background", "");

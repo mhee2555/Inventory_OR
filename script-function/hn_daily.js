@@ -304,7 +304,9 @@ function show_detail_his(ID, IsStatus) {
         });
       }
 
-      $("#price_xx").text(parseFloat(QQ).toFixed(2));
+      // $("#price_xx").text(parseFloat(QQ).toFixed(2));
+      $("#price_xx").text(parseFloat(QQ).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+
       $("#table_detail_his tbody").html(_tr);
 
       $(".numonly").on("input", function () {
