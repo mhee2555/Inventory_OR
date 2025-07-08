@@ -222,10 +222,10 @@ $html = '<table cellspacing="0" cellpadding="2" border="1" >
 <thead><tr style="font-size:18px;color:#fff;background-color:#663399;">
 <th width="12 %" align="center">Code</th>
 <th width="30 %" align="center">Barcode</th>
-<th width="32 %"  align="center">ชื่อ</th>
+<th width="28 %"  align="center">ชื่อ</th>
 <th width="6 %" align="center">Qty</th>
-<th width="10 %" align="center">Unit price</th>
-<th width="10 %" align="center">Total Price</th>
+<th width="12 %" align="center">Unit price</th>
+<th width="12 %" align="center">Total Price</th>
 </tr> </thead>';
 
 
@@ -306,10 +306,10 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
         $html .= '<tr nobr="true" style="font-size:15px;">';
         $html .=   '<td width="12 %" align="center" style="line-height:50px;"> ' . $Result_Detail['itemcode2'] . '</td>';
         $html .=   '<td width="30 %" align="center"> <tcpdf method="write1DBarcode" params="' . $params . '" /> </td>';
-        $html .=   '<td width="32 %" align="left" style="line-height:50px;">' . $Result_Detail['itemname'] . '</td>';
+        $html .=   '<td width="28 %" align="left" style="line-height:50px;">' . $Result_Detail['itemname'] . '</td>';
         $html .=   '<td width="6 %" align="center" style="line-height:50px;">' . $Result_Detail['cnt'] . '</td>';
-        $html .=   '<td width="10 %" align="right" style="line-height:50px;">' . number_format($Result_Detail['SalePrice'],2) . '</td>';
-        $html .=   '<td width="10 %" align="right" style="line-height:50px;">' . number_format( ($Result_Detail['SalePrice'] * $Result_Detail['cnt']) ,2) . '</td>';
+        $html .=   '<td width="12 %" align="right" style="line-height:50px;">' . number_format($Result_Detail['SalePrice'],2) . '</td>';
+        $html .=   '<td width="12 %" align="right" style="line-height:50px;">' . number_format( ($Result_Detail['SalePrice'] * $Result_Detail['cnt']) ,2) . '</td>';
         $html .=  '</tr>';
         $count++;
 
@@ -320,8 +320,8 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
 }
 
 $html .= '<tr nobr="true" style="font-size:15px;">';
-$html .=   '<td width="90 %" align="center" rowspan="5">Grand Total</td>';
-$html .=   '<td width="10 %" align="center">' . number_format($sum_all,2) . '</td>';
+$html .=   '<td width="88 %" align="center" rowspan="5">Grand Total</td>';
+$html .=   '<td width="12 %" align="center">' . number_format($sum_all,2) . '</td>';
 $html .=  '</tr>';
 
 

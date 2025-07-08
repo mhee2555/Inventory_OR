@@ -6887,7 +6887,8 @@ function show_detail_deproom_pay($conn, $db)
                             `procedure`.Procedure_TH,
                             deproom.hn_record_id,
                             DATE_FORMAT(deproom.serviceDate, '%d-%m-%Y'),
-                            DATE_FORMAT(deproom.serviceDate, '%H:%i') ";
+                            DATE_FORMAT(deproom.serviceDate, '%H:%i')
+                        ORDER BY deproom.serviceDate DESC ";
         } else {
             $query_sub = "SELECT
                             deproom.DocNo,

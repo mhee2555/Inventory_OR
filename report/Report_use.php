@@ -223,10 +223,10 @@ $pdf->SetFont('db_helvethaica_x', 'B', 18);
 $html = '<table cellspacing="0" cellpadding="2" border="1" >
 <thead><tr style="font-size:18px;color:#fff;background-color:#663399;">
 <th width="15 %" align="center">รหัสอุปกรณ์</th>
-<th width="25 %" align="center">ชื่ออุปกรณ์</th>
-<th width="15 %"  align="center">ยอดสแกนจ่าย</th>
-<th width="15 %" align="center">ยอดสแกนคืน</th>
-<th width="15 %" align="center">ยอดใช้กับคนไข้</th>
+<th width="40 %" align="center">ชื่ออุปกรณ์</th>
+<th width="10 %"  align="center">สแกนจ่าย</th>
+<th width="10 %" align="center">สแกนคืน</th>
+<th width="10 %" align="center">ใช้กับคนไข้</th>
 <th width="15 %" align="center">รวมค่าใช้จ่าย</th>
 </tr> </thead>';
 
@@ -305,10 +305,10 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
 
         $html .= '<tr nobr="true" style="font-size:15px;">';
         $html .=   '<td width="15 %" align="center" > ' . $Result_Detail['itemcode2'] . '</td>';
-        $html .=   '<td width="25 %" align="left" > ' . $Result_Detail['itemname'] . '</td>';
-        $html .=   '<td width="15 %" align="center" >' . $Result_Detail['cnt'] . '</td>';
-        $html .=   '<td width="15 %" align="center" >' . $cnt_return . '</td>';
-        $html .=   '<td width="15 %" align="center" style="background-color:#E6E6FA;">' . number_format( ($Result_Detail['cnt'] - $cnt_return)) . '</td>';
+        $html .=   '<td width="40 %" align="left" > ' . $Result_Detail['itemname'] . '</td>';
+        $html .=   '<td width="10 %" align="center" >' . $Result_Detail['cnt'] . '</td>';
+        $html .=   '<td width="10 %" align="center" >' . $cnt_return . '</td>';
+        $html .=   '<td width="10 %" align="center" style="background-color:#E6E6FA;">' . number_format( ($Result_Detail['cnt'] - $cnt_return)) . '</td>';
         $html .=   '<td width="15 %" align="right" >' . number_format( ($Result_Detail['SalePrice'] * ($Result_Detail['cnt'] - $cnt_return)) ,2) . '</td>';
         $html .=  '</tr>';
         $count++;
@@ -331,18 +331,18 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
         $sum_all33 = ($sum_all3 / $sum_all1) *100 ;
 
 $html .= '<tr nobr="true" style="font-size:15px;">';
-$html .=   '<td width="40 %" align="center" colspan="2">Grand Total</td>';
-$html .=   '<td width="15 %" align="center">' . number_format($sum_all1) . '</td>';
-$html .=   '<td width="15 %" align="center">' . number_format($sum_all2) . '</td>';
-$html .=   '<td width="15 %" align="center" style="background-color:#E6E6FA;">' . number_format($sum_all3) . '</td>';
+$html .=   '<td width="55 %" align="center" colspan="2">Grand Total</td>';
+$html .=   '<td width="10 %" align="center">' . number_format($sum_all1) . '</td>';
+$html .=   '<td width="10 %" align="center">' . number_format($sum_all2) . '</td>';
+$html .=   '<td width="10 %" align="center" style="background-color:#E6E6FA;">' . number_format($sum_all3) . '</td>';
 $html .=   '<td width="15 %" align="right">' . number_format($sum_all4,2) . '</td>';
 $html .=  '</tr>';
 
 $html .= '<tr nobr="true" style="font-size:15px;">';
-$html .=   '<td width="40 %" align="center" colspan="2">Utilization use rate</td>';
-$html .=   '<td width="15 %" align="center">' . number_format($sum_all11,2) . '%</td>';
-$html .=   '<td width="15 %" align="center">' . number_format($sum_all22,2) . '%</td>';
-$html .=   '<td width="15 %" align="center" style="background-color:#E6E6FA;">' . number_format($sum_all33,2) . '%</td>';
+$html .=   '<td width="55 %" align="center" colspan="2">Utilization use rate</td>';
+$html .=   '<td width="10 %" align="center">' . number_format($sum_all11,2) . '%</td>';
+$html .=   '<td width="10 %" align="center">' . number_format($sum_all22,2) . '%</td>';
+$html .=   '<td width="10 %" align="center" style="background-color:#E6E6FA;">' . number_format($sum_all33,2) . '%</td>';
 $html .=   '<td width="15 %" align="right"></td>';
 $html .=  '</tr>';
 
