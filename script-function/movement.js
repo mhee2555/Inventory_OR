@@ -51,8 +51,8 @@ $(function () {
   $("#normal").hide();
   $("#restock").hide();
 
-  $("#radio_suds").css("color", "#bbbbb");
-  $("#radio_suds").css("background", "#EAE1F4");
+  // $("#radio_suds").css("color", "#bbbbb");
+  // $("#radio_suds").css("background", "#EAE1F4");
 
   // selection_itemSuds();
 
@@ -63,16 +63,8 @@ $(function () {
   }, 1000);
 
   $("#radio_suds").click(function () {
-    $("#radio_suds").css("color", "#bbbbb");
-    $("#radio_suds").css("background", "#EAE1F4");
-
-    $("#radio_sterile").css("color", "black");
-    $("#radio_sterile").css("background", "");
-
-    $("#radio_normal").css("color", "black");
-    $("#radio_normal").css("background", "");
-    $("#radio_restock").css("color", "black");
-    $("#radio_restock").css("background", "");
+      $('.tab-button').removeClass('active');
+      $(this).addClass('active');
 
     $("#restock").hide();
     $("#sterile1").show();
@@ -81,15 +73,8 @@ $(function () {
   });
 
   $("#radio_sterile").click(function () {
-    $("#radio_sterile").css("color", "#bbbbb");
-    $("#radio_sterile").css("background", "#EAE1F4");
-
-    $("#radio_suds").css("color", "black");
-    $("#radio_suds").css("background", "");
-    $("#radio_normal").css("color", "black");
-    $("#radio_normal").css("background", "");
-    $("#radio_restock").css("color", "black");
-    $("#radio_restock").css("background", "");
+      $('.tab-button').removeClass('active');
+      $(this).addClass('active');
 
     $("#restock").hide();
     $("#sterile1").hide();
@@ -108,15 +93,8 @@ $(function () {
   });
 
   $("#radio_normal").click(function () {
-    $("#radio_normal").css("color", "#bbbbb");
-    $("#radio_normal").css("background", "#EAE1F4");
-
-    $("#radio_suds").css("color", "black");
-    $("#radio_suds").css("background", "");
-    $("#radio_sterile").css("color", "black");
-    $("#radio_sterile").css("background", "");
-    $("#radio_restock").css("color", "black");
-    $("#radio_restock").css("background", "");
+      $('.tab-button').removeClass('active');
+      $(this).addClass('active');
 
     $("#restock").hide();
     $("#sterile1").hide();
@@ -131,15 +109,8 @@ $(function () {
   });
 
   $("#radio_restock").click(function () {
-    $("#radio_restock").css("color", "#bbbbb");
-    $("#radio_restock").css("background", "#EAE1F4");
-
-    $("#radio_normal").css("color", "black");
-    $("#radio_normal").css("background", "");
-    $("#radio_suds").css("color", "black");
-    $("#radio_suds").css("background", "");
-    $("#radio_sterile").css("color", "black");
-    $("#radio_sterile").css("background", "");
+      $('.tab-button').removeClass('active');
+      $(this).addClass('active');
 
     $("#restock").show();
     $("#sterile1").hide();

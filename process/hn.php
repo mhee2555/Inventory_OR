@@ -373,11 +373,17 @@ function show_detail_hn($conn, $db)
     $input_search = $_POST['input_search'];
 
     $where = "";
-    if ($input_type_search == 1) {
-        $where = " AND  ( hncode.HnCode LIKE '%$input_search%' OR hncode.number_box LIKE '%$input_search%' ) ";
-    } else {
-        $where = "AND itemstock.UsageCode LIKE '%$input_search%' ";
+    
+    if($input_search != ""){
+        if ($input_type_search == 1) {
+            $where = " AND  ( hncode.HnCode LIKE '%$input_search%' OR hncode.number_box LIKE '%$input_search%' ) ";
+        } else {
+            $where = "AND itemstock.UsageCode LIKE '%$input_search%' ";
+        }
+    }else{
+            $where = " AND DATE(hncode.DocDate) BETWEEN '$select_SDate' AND '$select_EDate'  ";
     }
+
 
 
     if ($db == 1) {
@@ -410,8 +416,9 @@ function show_detail_hn($conn, $db)
                 WHERE
                     hncode.IsStatus = 1
                     AND hncode.IsCancel = 0
+                    AND hncode.IsBlock = 0
                     $where
-                    AND DATE(hncode.DocDate) BETWEEN '$select_SDate' AND '$select_EDate'
+                    
                 GROUP BY hncode.DocNo
                 ORDER BY
                     DATE_FORMAT(hncode.DocDate, '%d-%m-%Y') ASC ";

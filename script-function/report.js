@@ -16,19 +16,22 @@ $(function () {
     "-" +
     year;
 
+  $("#select_date1_9").val(output);
+  $("#select_date1_9").datepicker({
+    onSelect: function (date) {},
+  });
+
   $("#select_date1").val(output);
   $("#select_date1").datepicker({
-    onSelect: function (date) {
-      show_detail_history();
-    },
+    onSelect: function (date) {},
   });
 
   $("#select_date2").val(output);
   $("#select_date2").datepicker({
-    onSelect: function (date) {
-      show_detail_history();
-    },
+    onSelect: function (date) {},
   });
+
+  $("#row_day_9").hide();
 
   $("#row_typeday").hide();
   $("#row_day").hide();
@@ -150,8 +153,15 @@ $(function () {
 
     if ($(this).val() == 7) {
       $("#row_typedate").hide();
+      $("#row_day_9").hide();
     } else {
-      $("#row_typedate").show();
+      if ($(this).val() == 9 || $(this).val() == 8) {
+        $("#row_typedate").hide();
+        $("#row_day_9").show();
+      } else {
+        $("#row_typedate").show();
+        $("#row_day_9").hide();
+      }
     }
   });
   $("#btn_report").click(function (e) {
@@ -194,7 +204,10 @@ $(function () {
           "&checkyear=" +
           checkyear;
 
-        window.open("report/Report_Replenishment.php" + option + "&Userid=" + Userid, "_blank");
+        window.open(
+          "report/Report_Replenishment.php" + option + "&Userid=" + Userid,
+          "_blank"
+        );
       }
       if ($("#select_report").val() == 2) {
         if ($("#radio_date1").is(":checked")) {
@@ -392,11 +405,22 @@ $(function () {
 
         window.open("report/Report_Issue2.php" + option, "_blank");
       }
+
     } else {
       if ($("#select_report").val() == 7) {
         window.open("report/Report_stock.php", "_blank");
       } else {
-        Swal.fire("ล้มเหลว", "กรุณาเลือกประเภท", "error");
+        if ($("#select_report").val() == 9) {
+          var option = "?date1=" + $("#select_date1_9").val();
+
+          window.open("report/Report_OR_tracking.php" + option, "_blank");
+        }else if($("#select_report").val() == 8) {
+          var option = "?date1=" + $("#select_date1_9").val();
+
+        window.open("report/Report_SumService.php" + option, "_blank");
+      }else{
+          Swal.fire("ล้มเหลว", "กรุณาเลือกประเภท", "error");
+        }
       }
     }
   });
@@ -441,7 +465,13 @@ $(function () {
           "&checkyear=" +
           checkyear;
 
-        window.open("report/phpexcel/Report_Replenishment.php" + option + "&Userid=" + Userid, "_blank");
+        window.open(
+          "report/phpexcel/Report_Replenishment.php" +
+            option +
+            "&Userid=" +
+            Userid,
+          "_blank"
+        );
       }
       if ($("#select_report").val() == 2) {
         if ($("#radio_date1").is(":checked")) {

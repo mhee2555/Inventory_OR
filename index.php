@@ -548,28 +548,14 @@ if (!isset($_SESSION['UserName'])) {
             $.get(link, function(res) {
 
                 if (display == '3') {
+
+                    $(".color_menu").removeClass('color_menu1');
+                    $(".color_menu").addClass('color_menu3');
+                    $("#menu1").removeClass('color_menu3');
+                    $("#menu1").addClass('color_menu1');
+
+
                     $("#ic_mainpage").attr("src", "assets/img_project/3_icon/ic_mainpage.png");
-                    $("#menu1").css('color', 'white');
-
-
-                    $("#menu2").css('color', '#667085');
-                    $("#menu3").css('color', '#667085');
-                    $("#menu4").css('color', '#667085');
-                    $("#menu5").css('color', '#667085');
-                    $("#menu6").css('color', '#667085');
-                    $("#menu7").css('color', '#667085');
-                    $("#menu8").css('color', '#667085');
-                    $("#menu9").css('color', '#667085');
-                    $("#menu10").css('color', '#667085');
-                    $("#menu11").css('color', '#667085');
-                    $("#menu12").css('color', '#667085');
-                    $("#menu13").css('color', '#667085');
-                    $("#menu14").css('color', '#667085');
-                    $("#menu15").css('color', '#667085');
-                    $("#menu16").css('color', '#667085');
-                    $("#menu17").css('color', '#667085');
-
-
 
                     $("#ic_permission").attr("src", "assets/img_project/2_icon/permission.png");
                     $("#ic_set_hn").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
@@ -591,12 +577,44 @@ if (!isset($_SESSION['UserName'])) {
 
                 }
 
+                // 
+                // $("#menu2").css('color', '#667085');
+                // $("#menu3").css('color', '#667085');
+                // $("#menu4").css('color', '#667085');
+                // $("#menu5").css('color', '#667085');
+                // $("#menu6").css('color', '#667085');
+                // $("#menu7").css('color', '#667085');
+                // $("#menu8").css('color', '#667085');
+                // $("#menu9").css('color', '#667085');
+                // $("#menu10").css('color', '#667085');
+                // $("#menu11").css('color', '#667085');
+                // $("#menu12").css('color', '#667085');
+                // $("#menu13").css('color', '#667085');
+                // $("#menu14").css('color', '#667085');
+                // $("#menu15").css('color', '#667085');
+                // $("#menu16").css('color', '#667085');
+                // $("#menu17").css('color', '#667085');
+
+
+
+
+
+
+                // if (display == '3') {
+
+                // }
+
                 $(".nav-item").removeClass("active");
                 $(".nav-item").css("background-color", "");
 
                 $("#conMain").html(res);
                 $("#li_main").addClass("active");
-                $("#li_main").css("background-color", "#643695");
+
+                if (display == '2') {
+                    $("#li_main").css("background-color", "#3C205A");
+                } else {
+                    $("#li_main").css("background-color", "#643695");
+                }
                 history.pushState({}, "Results for `Cats`", 'index.php?s=main');
                 document.title = "main";
                 loadScript('script-function/main.js');
@@ -646,7 +664,7 @@ if (!isset($_SESSION['UserName'])) {
             // http://10.11.9.3:8003/ test
             // window.open(" http://192.168.2.101:8003/Login/Index?user=" + UserName_login + "&pass=" + Password, "_blank");
 
-            window.open(" http://10.11.9.3:8003/Login/Index?user=" + UserName_login + "&pass=" + Password, "_blank");
+            window.open(" http://192.168.2.101:8003/Login/Index?user=" + UserName_login + "&pass=" + Password, "_blank");
 
             e.preventDefault();
             var link = this.href;
@@ -655,33 +673,23 @@ if (!isset($_SESSION['UserName'])) {
                 $(".nav-item").removeClass("active");
                 $(".nav-item").css("background-color", "");
 
+
                 if (display == '3') {
+
                     $("#ic_setup_equipment_rooms").attr("src", "assets/img_project/3_icon/ic_receiveinventory.png");
-                    $("#menu2").css('color', 'white');
 
 
-                    $("#menu1").css('color', '#667085');
-                    $("#menu3").css('color', '#667085');
-                    $("#menu4").css('color', '#667085');
-                    $("#menu5").css('color', '#667085');
-                    $("#menu6").css('color', '#667085');
-                    $("#menu7").css('color', '#667085');
-                    $("#menu8").css('color', '#667085');
-                    $("#menu9").css('color', '#667085');
-                    $("#menu10").css('color', '#667085');
-                    $("#menu11").css('color', '#667085');
-                    $("#menu12").css('color', '#667085');
-                    $("#menu13").css('color', '#667085');
-                    $("#menu14").css('color', '#667085');
-                    $("#menu15").css('color', '#667085');
-                    $("#menu16").css('color', '#667085');
-                    $("#menu17").css('color', '#667085');
+                    $(".color_menu").removeClass('color_menu1');
+                    $(".color_menu").addClass('color_menu3');
+                    $("#menu2").removeClass('color_menu3');
+                    $("#menu2").addClass('color_menu1');
 
+                    $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
                     $("#ic_permission").attr("src", "assets/img_project/2_icon/permission.png");
                     $("#ic_set_hn").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
                     $("#ic_request_item").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
                     $("#ic_turnon_offdisplay_3").attr("src", "assets/img_project/2_icon/ic_report.png");
-                    $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
+                    $("#ic_operation_room").attr("src", "assets/img_project/2_icon/ic_operation_room.png");
                     $("#ic_create_equipment_request").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
                     $("#ic_dispense_equipment").attr("src", "assets/img_project/2_icon/ic_dispense_equipment.png");
                     $("#ic_receive_contaminated_equipment").attr("src", "assets/img_project/2_icon/ic_receive_contaminated_equipment.png");
@@ -696,9 +704,53 @@ if (!isset($_SESSION['UserName'])) {
 
                 }
 
+
+
+
+                // $("#menu1").css('color', '#667085');
+                // $("#menu3").css('color', '#667085');
+                // $("#menu4").css('color', '#667085');
+                // $("#menu5").css('color', '#667085');
+                // $("#menu6").css('color', '#667085');
+                // $("#menu7").css('color', '#667085');
+                // $("#menu8").css('color', '#667085');
+                // $("#menu9").css('color', '#667085');
+                // $("#menu10").css('color', '#667085');
+                // $("#menu11").css('color', '#667085');
+                // $("#menu12").css('color', '#667085');
+                // $("#menu13").css('color', '#667085');
+                // $("#menu14").css('color', '#667085');
+                // $("#menu15").css('color', '#667085');
+                // $("#menu16").css('color', '#667085');
+                // $("#menu17").css('color', '#667085');
+
+                // $("#ic_permission").attr("src", "assets/img_project/2_icon/permission.png");
+                // $("#ic_set_hn").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
+                // $("#ic_request_item").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
+                // $("#ic_turnon_offdisplay_3").attr("src", "assets/img_project/2_icon/ic_report.png");
+                // $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
+                // $("#ic_create_equipment_request").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
+                // $("#ic_dispense_equipment").attr("src", "assets/img_project/2_icon/ic_dispense_equipment.png");
+                // $("#ic_receive_contaminated_equipment").attr("src", "assets/img_project/2_icon/ic_receive_contaminated_equipment.png");
+                // $("#ic_send_nsterile").attr("src", "assets/img_project/2_icon/ic_send_nsterile.png");
+                // $("#ic_register_equipment").attr("src", "assets/img_project/2_icon/ic_register_equipment.png");
+                // $("#ic_inventory_tools").attr("src", "assets/img_project/2_icon/ic_inventory_tools.png");
+                // $("#ic_search_hndata").attr("src", "assets/img_project/2_icon/ic_search_hndata.png");
+                // $("#ic_turnon_offdisplay").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
+                // $("#ic_movement").attr("src", "assets/img_project/2_icon/ic_movement.png");
+                // $("#ic_adjust_stock").attr("src", "assets/img_project/2_icon/ic_adjust_stock.png");
+                // $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
+                // if (display == '3') {
+
+                // }
+
                 $("#conMain").html(res);
                 $("#li_recieve_stock").addClass("active");
-                $("#li_recieve_stock").css("background-color", "#643695");
+                if (display == '2') {
+                    $("#li_recieve_stock").css("background-color", "#3C205A");
+                } else {
+                    $("#li_recieve_stock").css("background-color", "#643695");
+                }
                 history.pushState({}, "Results for `Cats`", 'index.php?s=recieve_stock');
                 document.title = "recieve_stock";
                 loadScript('script-function/recieve_stock.js');
@@ -715,50 +767,47 @@ if (!isset($_SESSION['UserName'])) {
                 $(".nav-item").removeClass("active");
                 $(".nav-item").css("background-color", "");
 
-                $("#ic_create_equipment_request").attr("src", "assets/img_project/3_icon/ic_create_equipment_request.png");
-                $("#menu3").css('color', 'white');
+
+                if (display == '3') {
+
+                    $("#ic_create_equipment_request").attr("src", "assets/img_project/3_icon/ic_create_equipment_request.png");
 
 
-                $("#menu1").css('color', '#667085');
-                $("#menu2").css('color', '#667085');
-                $("#menu4").css('color', '#667085');
-                $("#menu5").css('color', '#667085');
-                $("#menu6").css('color', '#667085');
-                $("#menu7").css('color', '#667085');
-                $("#menu8").css('color', '#667085');
-                $("#menu9").css('color', '#667085');
-                $("#menu10").css('color', '#667085');
-                $("#menu11").css('color', '#667085');
-                $("#menu12").css('color', '#667085');
-                $("#menu13").css('color', '#667085');
-                $("#menu14").css('color', '#667085');
-                $("#menu15").css('color', '#667085');
-                $("#menu16").css('color', '#667085');
-                $("#menu17").css('color', '#667085');
+                    $(".color_menu").removeClass('color_menu1');
+                    $(".color_menu").addClass('color_menu3');
+                    $("#menu3").removeClass('color_menu3');
+                    $("#menu3").addClass('color_menu1');
 
-                $("#ic_permission").attr("src", "assets/img_project/2_icon/permission.png");
-                $("#ic_set_hn").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
-                $("#ic_request_item").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
-                $("#ic_turnon_offdisplay_3").attr("src", "assets/img_project/2_icon/ic_report.png");
-                $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
-                $("#ic_setup_equipment_rooms").attr("src", "assets/img_project/2_icon/ic_receiveinventory.png");
-                $("#ic_dispense_equipment").attr("src", "assets/img_project/2_icon/ic_dispense_equipment.png");
-                $("#ic_receive_contaminated_equipment").attr("src", "assets/img_project/2_icon/ic_receive_contaminated_equipment.png");
-                $("#ic_send_nsterile").attr("src", "assets/img_project/2_icon/ic_send_nsterile.png");
-                $("#ic_register_equipment").attr("src", "assets/img_project/2_icon/ic_register_equipment.png");
-                $("#ic_inventory_tools").attr("src", "assets/img_project/2_icon/ic_inventory_tools.png");
-                $("#ic_search_hndata").attr("src", "assets/img_project/2_icon/ic_search_hndata.png");
-                $("#ic_turnon_offdisplay").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
-                $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
-                $("#ic_movement").attr("src", "assets/img_project/2_icon/ic_movement.png");
-                $("#ic_adjust_stock").attr("src", "assets/img_project/2_icon/ic_adjust_stock.png");
-                $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
+
+                    $("#ic_setup_equipment_rooms").attr("src", "assets/img_project/2_icon/ic_receiveinventory.png");
+                    $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
+                    $("#ic_permission").attr("src", "assets/img_project/2_icon/permission.png");
+                    $("#ic_set_hn").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
+                    $("#ic_request_item").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
+                    $("#ic_turnon_offdisplay_3").attr("src", "assets/img_project/2_icon/ic_report.png");
+                    $("#ic_operation_room").attr("src", "assets/img_project/2_icon/ic_operation_room.png");
+                    $("#ic_dispense_equipment").attr("src", "assets/img_project/2_icon/ic_dispense_equipment.png");
+                    $("#ic_receive_contaminated_equipment").attr("src", "assets/img_project/2_icon/ic_receive_contaminated_equipment.png");
+                    $("#ic_send_nsterile").attr("src", "assets/img_project/2_icon/ic_send_nsterile.png");
+                    $("#ic_register_equipment").attr("src", "assets/img_project/2_icon/ic_register_equipment.png");
+                    $("#ic_inventory_tools").attr("src", "assets/img_project/2_icon/ic_inventory_tools.png");
+                    $("#ic_search_hndata").attr("src", "assets/img_project/2_icon/ic_search_hndata.png");
+                    $("#ic_turnon_offdisplay").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
+                    $("#ic_movement").attr("src", "assets/img_project/2_icon/ic_movement.png");
+                    $("#ic_adjust_stock").attr("src", "assets/img_project/2_icon/ic_adjust_stock.png");
+                    $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
+
+                }
 
 
 
                 $("#conMain").html(res);
                 $("#li_create_request").addClass("active");
-                $("#li_create_request").css("background-color", "#643695");
+                if (display == '2') {
+                    $("#li_create_request").css("background-color", "#3C205A");
+                } else {
+                    $("#li_create_request").css("background-color", "#643695");
+                }
                 history.pushState({}, "Results for `Cats`", 'index.php?s=create_request');
                 document.title = "create_request";
                 loadScript('script-function/create_request.js');
@@ -775,52 +824,85 @@ if (!isset($_SESSION['UserName'])) {
                 $(".nav-item").removeClass("active");
                 $(".nav-item").css("background-color", "");
 
-                $("#ic_request_item").attr("src", "assets/img_project/3_icon/ic_create_equipment_request.png");
-                $("#menu15").css('color', 'white');
+
+                if (display == '3') {
+
+                    $("#ic_request_item").attr("src", "assets/img_project/3_icon/ic_create_equipment_request.png");
+                    $(".color_menu").removeClass('color_menu1');
+                    $(".color_menu").addClass('color_menu3');
+                    $("#menu15").removeClass('color_menu3');
+                    $("#menu15").addClass('color_menu1');
 
 
-                $("#menu1").css('color', '#667085');
-                $("#menu2").css('color', '#667085');
-                $("#menu3").css('color', '#667085');
-                $("#menu4").css('color', '#667085');
-                $("#menu5").css('color', '#667085');
-                $("#menu6").css('color', '#667085');
-                $("#menu7").css('color', '#667085');
-                $("#menu8").css('color', '#667085');
-                $("#menu9").css('color', '#667085');
-                $("#menu10").css('color', '#667085');
-                $("#menu11").css('color', '#667085');
-                $("#menu12").css('color', '#667085');
-                $("#menu13").css('color', '#667085');
-                $("#menu14").css('color', '#667085');
-                $("#menu16").css('color', '#667085');
-                $("#menu17").css('color', '#667085');
+                    $("#ic_movement").attr("src", "assets/img_project/2_icon/ic_movement.png");
+                    $("#ic_search_hndata").attr("src", "assets/img_project/2_icon/ic_search_hndata.png");
+                    $("#ic_dispense_equipment").attr("src", "assets/img_project/2_icon/ic_dispense_equipment.png");
+                    $("#ic_setup_equipment_rooms").attr("src", "assets/img_project/2_icon/ic_receiveinventory.png");
+                    $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
+                    $("#ic_permission").attr("src", "assets/img_project/2_icon/permission.png");
+                    $("#ic_turnon_offdisplay_3").attr("src", "assets/img_project/2_icon/ic_report.png");
+                    $("#ic_operation_room").attr("src", "assets/img_project/2_icon/ic_operation_room.png");
+                    $("#ic_receive_contaminated_equipment").attr("src", "assets/img_project/2_icon/ic_receive_contaminated_equipment.png");
+                    $("#ic_send_nsterile").attr("src", "assets/img_project/2_icon/ic_send_nsterile.png");
+                    $("#ic_register_equipment").attr("src", "assets/img_project/2_icon/ic_register_equipment.png");
+                    $("#ic_inventory_tools").attr("src", "assets/img_project/2_icon/ic_inventory_tools.png");
+                    $("#ic_turnon_offdisplay").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
+                    $("#ic_adjust_stock").attr("src", "assets/img_project/2_icon/ic_adjust_stock.png");
+                    $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
+
+                }
+
+
+                // 
+                // $("#menu15").css('color', 'white');
+
+
+                // $("#menu1").css('color', '#667085');
+                // $("#menu2").css('color', '#667085');
+                // $("#menu3").css('color', '#667085');
+                // $("#menu4").css('color', '#667085');
+                // $("#menu5").css('color', '#667085');
+                // $("#menu6").css('color', '#667085');
+                // $("#menu7").css('color', '#667085');
+                // $("#menu8").css('color', '#667085');
+                // $("#menu9").css('color', '#667085');
+                // $("#menu10").css('color', '#667085');
+                // $("#menu11").css('color', '#667085');
+                // $("#menu12").css('color', '#667085');
+                // $("#menu13").css('color', '#667085');
+                // $("#menu14").css('color', '#667085');
+                // $("#menu16").css('color', '#667085');
+                // $("#menu17").css('color', '#667085');
 
 
 
-                $("#ic_permission").attr("src", "assets/img_project/2_icon/permission.png");
-                $("#ic_set_hn").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
-                $("#ic_create_equipment_request").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
-                $("#ic_turnon_offdisplay_3").attr("src", "assets/img_project/2_icon/ic_report.png");
-                $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
-                $("#ic_setup_equipment_rooms").attr("src", "assets/img_project/2_icon/ic_receiveinventory.png");
-                $("#ic_dispense_equipment").attr("src", "assets/img_project/2_icon/ic_dispense_equipment.png");
-                $("#ic_receive_contaminated_equipment").attr("src", "assets/img_project/2_icon/ic_receive_contaminated_equipment.png");
-                $("#ic_send_nsterile").attr("src", "assets/img_project/2_icon/ic_send_nsterile.png");
-                $("#ic_register_equipment").attr("src", "assets/img_project/2_icon/ic_register_equipment.png");
-                $("#ic_inventory_tools").attr("src", "assets/img_project/2_icon/ic_inventory_tools.png");
-                $("#ic_search_hndata").attr("src", "assets/img_project/2_icon/ic_search_hndata.png");
-                $("#ic_turnon_offdisplay").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
-                $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
-                $("#ic_movement").attr("src", "assets/img_project/2_icon/ic_movement.png");
-                $("#ic_adjust_stock").attr("src", "assets/img_project/2_icon/ic_adjust_stock.png");
-                $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
+                // $("#ic_permission").attr("src", "assets/img_project/2_icon/permission.png");
+                // $("#ic_set_hn").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
+                // $("#ic_create_equipment_request").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
+                // $("#ic_turnon_offdisplay_3").attr("src", "assets/img_project/2_icon/ic_report.png");
+                // $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
+                // $("#ic_setup_equipment_rooms").attr("src", "assets/img_project/2_icon/ic_receiveinventory.png");
+                // $("#ic_dispense_equipment").attr("src", "assets/img_project/2_icon/ic_dispense_equipment.png");
+                // $("#ic_receive_contaminated_equipment").attr("src", "assets/img_project/2_icon/ic_receive_contaminated_equipment.png");
+                // $("#ic_send_nsterile").attr("src", "assets/img_project/2_icon/ic_send_nsterile.png");
+                // $("#ic_register_equipment").attr("src", "assets/img_project/2_icon/ic_register_equipment.png");
+                // $("#ic_inventory_tools").attr("src", "assets/img_project/2_icon/ic_inventory_tools.png");
+                // $("#ic_search_hndata").attr("src", "assets/img_project/2_icon/ic_search_hndata.png");
+                // $("#ic_turnon_offdisplay").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
+                // $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
+                // $("#ic_movement").attr("src", "assets/img_project/2_icon/ic_movement.png");
+                // $("#ic_adjust_stock").attr("src", "assets/img_project/2_icon/ic_adjust_stock.png");
+                // $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
 
 
 
                 $("#conMain").html(res);
                 $("#li_request_item").addClass("active");
-                $("#li_request_item").css("background-color", "#643695");
+                if (display == '2') {
+                    $("#li_request_item").css("background-color", "#3C205A");
+                } else {
+                    $("#li_request_item").css("background-color", "#643695");
+                }
                 history.pushState({}, "Results for `Cats`", 'index.php?s=request_item');
                 document.title = "request_item";
                 loadScript('script-function/request_item.js');
@@ -837,52 +919,47 @@ if (!isset($_SESSION['UserName'])) {
                 $(".nav-item").removeClass("active");
                 $(".nav-item").css("background-color", "");
 
-                $("#ic_set_hn").attr("src", "assets/img_project/3_icon/ic_create_equipment_request.png");
-                $("#menu16").css('color', 'white');
+
+                if (display == '3') {
+
+                    $("#ic_set_hn").attr("src", "assets/img_project/3_icon/ic_create_equipment_request.png");
+
+                    $(".color_menu").removeClass('color_menu1');
+                    $(".color_menu").addClass('color_menu3');
+                    $("#menu16").removeClass('color_menu3');
+                    $("#menu16").addClass('color_menu1');
+
+                    $("#ic_create_equipment_request").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
+                    $("#ic_setup_equipment_rooms").attr("src", "assets/img_project/2_icon/ic_receiveinventory.png");
+                    $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
+                    $("#ic_permission").attr("src", "assets/img_project/2_icon/permission.png");
+                    $("#ic_request_item").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
+                    $("#ic_turnon_offdisplay_3").attr("src", "assets/img_project/2_icon/ic_report.png");
+                    $("#ic_operation_room").attr("src", "assets/img_project/2_icon/ic_operation_room.png");
+                    $("#ic_dispense_equipment").attr("src", "assets/img_project/2_icon/ic_dispense_equipment.png");
+                    $("#ic_receive_contaminated_equipment").attr("src", "assets/img_project/2_icon/ic_receive_contaminated_equipment.png");
+                    $("#ic_send_nsterile").attr("src", "assets/img_project/2_icon/ic_send_nsterile.png");
+                    $("#ic_register_equipment").attr("src", "assets/img_project/2_icon/ic_register_equipment.png");
+                    $("#ic_inventory_tools").attr("src", "assets/img_project/2_icon/ic_inventory_tools.png");
+                    $("#ic_search_hndata").attr("src", "assets/img_project/2_icon/ic_search_hndata.png");
+                    $("#ic_turnon_offdisplay").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
+                    $("#ic_movement").attr("src", "assets/img_project/2_icon/ic_movement.png");
+                    $("#ic_adjust_stock").attr("src", "assets/img_project/2_icon/ic_adjust_stock.png");
+                    $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
+
+                }
 
 
-                $("#menu1").css('color', '#667085');
-                $("#menu2").css('color', '#667085');
-                $("#menu3").css('color', '#667085');
-                $("#menu4").css('color', '#667085');
-                $("#menu5").css('color', '#667085');
-                $("#menu6").css('color', '#667085');
-                $("#menu7").css('color', '#667085');
-                $("#menu8").css('color', '#667085');
-                $("#menu9").css('color', '#667085');
-                $("#menu10").css('color', '#667085');
-                $("#menu11").css('color', '#667085');
-                $("#menu12").css('color', '#667085');
-                $("#menu13").css('color', '#667085');
-                $("#menu14").css('color', '#667085');
-                $("#menu15").css('color', '#667085');
-                $("#menu17").css('color', '#667085');
-
-
-
-                $("#ic_permission").attr("src", "assets/img_project/2_icon/permission.png");
-                $("#ic_request_item").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
-                $("#ic_create_equipment_request").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
-                $("#ic_turnon_offdisplay_3").attr("src", "assets/img_project/2_icon/ic_report.png");
-                $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
-                $("#ic_setup_equipment_rooms").attr("src", "assets/img_project/2_icon/ic_receiveinventory.png");
-                $("#ic_dispense_equipment").attr("src", "assets/img_project/2_icon/ic_dispense_equipment.png");
-                $("#ic_receive_contaminated_equipment").attr("src", "assets/img_project/2_icon/ic_receive_contaminated_equipment.png");
-                $("#ic_send_nsterile").attr("src", "assets/img_project/2_icon/ic_send_nsterile.png");
-                $("#ic_register_equipment").attr("src", "assets/img_project/2_icon/ic_register_equipment.png");
-                $("#ic_inventory_tools").attr("src", "assets/img_project/2_icon/ic_inventory_tools.png");
-                $("#ic_search_hndata").attr("src", "assets/img_project/2_icon/ic_search_hndata.png");
-                $("#ic_turnon_offdisplay").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
-                $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
-                $("#ic_movement").attr("src", "assets/img_project/2_icon/ic_movement.png");
-                $("#ic_adjust_stock").attr("src", "assets/img_project/2_icon/ic_adjust_stock.png");
-                $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
 
 
 
                 $("#conMain").html(res);
                 $("#li_set_hn").addClass("active");
-                $("#li_set_hn").css("background-color", "#643695");
+                if (display == '2') {
+                    $("#li_set_hn").css("background-color", "#3C205A");
+                } else {
+                    $("#li_set_hn").css("background-color", "#643695");
+                }
                 history.pushState({}, "Results for `Cats`", 'index.php?s=set_hn');
                 document.title = "set_hn";
                 loadScript('script-function/set_hn.js');
@@ -896,51 +973,44 @@ if (!isset($_SESSION['UserName'])) {
                 $(".nav-item").removeClass("active");
                 $(".nav-item").css("background-color", "");
 
-                $("#ic_dispense_equipment").attr("src", "assets/img_project/3_icon/ic_dispense_equipment.png");
-                $("#menu4").css('color', 'white');
+
+                if (display == '3') {
+
+                    $("#ic_dispense_equipment").attr("src", "assets/img_project/3_icon/ic_dispense_equipment.png");
+                    $(".color_menu").removeClass('color_menu1');
+                    $(".color_menu").addClass('color_menu3');
+                    $("#menu4").removeClass('color_menu3');
+                    $("#menu4").addClass('color_menu1');
+
+                    $("#ic_create_equipment_request").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
+                    $("#ic_setup_equipment_rooms").attr("src", "assets/img_project/2_icon/ic_receiveinventory.png");
+                    $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
+                    $("#ic_permission").attr("src", "assets/img_project/2_icon/permission.png");
+                    $("#ic_request_item").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
+                    $("#ic_turnon_offdisplay_3").attr("src", "assets/img_project/2_icon/ic_report.png");
+                    $("#ic_operation_room").attr("src", "assets/img_project/2_icon/ic_operation_room.png");
+                    $("#ic_receive_contaminated_equipment").attr("src", "assets/img_project/2_icon/ic_receive_contaminated_equipment.png");
+                    $("#ic_send_nsterile").attr("src", "assets/img_project/2_icon/ic_send_nsterile.png");
+                    $("#ic_register_equipment").attr("src", "assets/img_project/2_icon/ic_register_equipment.png");
+                    $("#ic_inventory_tools").attr("src", "assets/img_project/2_icon/ic_inventory_tools.png");
+                    $("#ic_search_hndata").attr("src", "assets/img_project/2_icon/ic_search_hndata.png");
+                    $("#ic_turnon_offdisplay").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
+                    $("#ic_movement").attr("src", "assets/img_project/2_icon/ic_movement.png");
+                    $("#ic_adjust_stock").attr("src", "assets/img_project/2_icon/ic_adjust_stock.png");
+                    $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
+
+                }
 
 
-                $("#menu1").css('color', '#667085');
-                $("#menu2").css('color', '#667085');
-                $("#menu3").css('color', '#667085');
-                $("#menu5").css('color', '#667085');
-                $("#menu6").css('color', '#667085');
-                $("#menu7").css('color', '#667085');
-                $("#menu8").css('color', '#667085');
-                $("#menu9").css('color', '#667085');
-                $("#menu10").css('color', '#667085');
-                $("#menu11").css('color', '#667085');
-                $("#menu12").css('color', '#667085');
-                $("#menu13").css('color', '#667085');
-                $("#menu14").css('color', '#667085');
-                $("#menu15").css('color', '#667085');
-                $("#menu16").css('color', '#667085');
-                $("#menu17").css('color', '#667085');
-
-
-
-                $("#ic_permission").attr("src", "assets/img_project/2_icon/permission.png");
-                $("#ic_set_hn").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
-                $("#ic_request_item").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
-                $("#ic_turnon_offdisplay_3").attr("src", "assets/img_project/2_icon/ic_report.png");
-                $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
-                $("#ic_create_equipment_request").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
-                $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
-                $("#ic_setup_equipment_rooms").attr("src", "assets/img_project/2_icon/ic_receiveinventory.png");
-                $("#ic_receive_contaminated_equipment").attr("src", "assets/img_project/2_icon/ic_receive_contaminated_equipment.png");
-                $("#ic_send_nsterile").attr("src", "assets/img_project/2_icon/ic_send_nsterile.png");
-                $("#ic_register_equipment").attr("src", "assets/img_project/2_icon/ic_register_equipment.png");
-                $("#ic_inventory_tools").attr("src", "assets/img_project/2_icon/ic_inventory_tools.png");
-                $("#ic_search_hndata").attr("src", "assets/img_project/2_icon/ic_search_hndata.png");
-                $("#ic_turnon_offdisplay").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
-                $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
-                $("#ic_movement").attr("src", "assets/img_project/2_icon/ic_movement.png");
-                $("#ic_adjust_stock").attr("src", "assets/img_project/2_icon/ic_adjust_stock.png");
 
 
                 $("#conMain").html(res);
                 $("#li_pay").addClass("active");
-                $("#li_pay").css("background-color", "#643695");
+                if (display == '2') {
+                    $("#li_pay").css("background-color", "#3C205A");
+                } else {
+                    $("#li_pay").css("background-color", "#643695");
+                }
                 history.pushState({}, "Results for `Cats`", 'index.php?s=pay');
                 document.title = "pay";
                 loadScript('script-function/pay.js');
@@ -955,39 +1025,39 @@ if (!isset($_SESSION['UserName'])) {
                 $(".nav-item").css("background-color", "");
 
 
-                $("#ic_receive_contaminated_equipment").attr("src", "assets/img_project/3_icon/ic_receive_contaminated_equipment.png");
-                $("#menu5").css('color', 'white');
+                // $("#ic_receive_contaminated_equipment").attr("src", "assets/img_project/3_icon/ic_receive_contaminated_equipment.png");
+                // $("#menu5").css('color', 'white');
 
 
-                $("#menu1").css('color', '#667085');
-                $("#menu2").css('color', '#667085');
-                $("#menu3").css('color', '#667085');
-                $("#menu4").css('color', '#667085');
-                $("#menu6").css('color', '#667085');
-                $("#menu7").css('color', '#667085');
-                $("#menu8").css('color', '#667085');
-                $("#menu9").css('color', '#667085');
-                $("#menu10").css('color', '#667085');
-                $("#menu11").css('color', '#667085');
-                $("#menu12").css('color', '#667085');
-                $("#menu13").css('color', '#667085');
-                $("#menu14").css('color', '#667085');
-                $("#menu15").css('color', '#667085');
+                // $("#menu1").css('color', '#667085');
+                // $("#menu2").css('color', '#667085');
+                // $("#menu3").css('color', '#667085');
+                // $("#menu4").css('color', '#667085');
+                // $("#menu6").css('color', '#667085');
+                // $("#menu7").css('color', '#667085');
+                // $("#menu8").css('color', '#667085');
+                // $("#menu9").css('color', '#667085');
+                // $("#menu10").css('color', '#667085');
+                // $("#menu11").css('color', '#667085');
+                // $("#menu12").css('color', '#667085');
+                // $("#menu13").css('color', '#667085');
+                // $("#menu14").css('color', '#667085');
+                // $("#menu15").css('color', '#667085');
 
 
-                $("#ic_turnon_offdisplay_3").attr("src", "assets/img_project/2_icon/ic_report.png");
-                $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
-                $("#ic_dispense_equipment").attr("src", "assets/img_project/2_icon/ic_dispense_equipment.png");
-                $("#ic_create_equipment_request").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
-                $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
-                $("#ic_setup_equipment_rooms").attr("src", "assets/img_project/2_icon/ic_receiveinventory.png");
-                $("#ic_send_nsterile").attr("src", "assets/img_project/2_icon/ic_send_nsterile.png");
-                $("#ic_register_equipment").attr("src", "assets/img_project/2_icon/ic_register_equipment.png");
-                $("#ic_inventory_tools").attr("src", "assets/img_project/2_icon/ic_inventory_tools.png");
-                $("#ic_search_hndata").attr("src", "assets/img_project/2_icon/ic_search_hndata.png");
-                $("#ic_turnon_offdisplay").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
-                $("#ic_movement").attr("src", "assets/img_project/2_icon/ic_movement.png");
-                $("#ic_adjust_stock").attr("src", "assets/img_project/2_icon/ic_adjust_stock.png");
+                // $("#ic_turnon_offdisplay_3").attr("src", "assets/img_project/2_icon/ic_report.png");
+                // $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
+                // $("#ic_dispense_equipment").attr("src", "assets/img_project/2_icon/ic_dispense_equipment.png");
+                // $("#ic_create_equipment_request").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
+                // $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
+                // $("#ic_setup_equipment_rooms").attr("src", "assets/img_project/2_icon/ic_receiveinventory.png");
+                // $("#ic_send_nsterile").attr("src", "assets/img_project/2_icon/ic_send_nsterile.png");
+                // $("#ic_register_equipment").attr("src", "assets/img_project/2_icon/ic_register_equipment.png");
+                // $("#ic_inventory_tools").attr("src", "assets/img_project/2_icon/ic_inventory_tools.png");
+                // $("#ic_search_hndata").attr("src", "assets/img_project/2_icon/ic_search_hndata.png");
+                // $("#ic_turnon_offdisplay").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
+                // $("#ic_movement").attr("src", "assets/img_project/2_icon/ic_movement.png");
+                // $("#ic_adjust_stock").attr("src", "assets/img_project/2_icon/ic_adjust_stock.png");
 
 
                 $("#conMain").html(res);
@@ -1006,39 +1076,39 @@ if (!isset($_SESSION['UserName'])) {
                 $(".nav-item").removeClass("active");
                 $(".nav-item").css("background-color", "");
 
-                $("#ic_send_nsterile").attr("src", "assets/img_project/3_icon/ic_send_nsterile.png");
-                $("#menu6").css('color', 'white');
+                // $("#ic_send_nsterile").attr("src", "assets/img_project/3_icon/ic_send_nsterile.png");
+                // $("#menu6").css('color', 'white');
 
 
-                $("#menu1").css('color', '#667085');
-                $("#menu2").css('color', '#667085');
-                $("#menu3").css('color', '#667085');
-                $("#menu4").css('color', '#667085');
-                $("#menu5").css('color', '#667085');
-                $("#menu7").css('color', '#667085');
-                $("#menu8").css('color', '#667085');
-                $("#menu9").css('color', '#667085');
-                $("#menu10").css('color', '#667085');
-                $("#menu11").css('color', '#667085');
-                $("#menu12").css('color', '#667085');
-                $("#menu13").css('color', '#667085');
-                $("#menu14").css('color', '#667085');
-                $("#menu15").css('color', '#667085');
+                // $("#menu1").css('color', '#667085');
+                // $("#menu2").css('color', '#667085');
+                // $("#menu3").css('color', '#667085');
+                // $("#menu4").css('color', '#667085');
+                // $("#menu5").css('color', '#667085');
+                // $("#menu7").css('color', '#667085');
+                // $("#menu8").css('color', '#667085');
+                // $("#menu9").css('color', '#667085');
+                // $("#menu10").css('color', '#667085');
+                // $("#menu11").css('color', '#667085');
+                // $("#menu12").css('color', '#667085');
+                // $("#menu13").css('color', '#667085');
+                // $("#menu14").css('color', '#667085');
+                // $("#menu15").css('color', '#667085');
 
 
-                $("#ic_turnon_offdisplay_3").attr("src", "assets/img_project/2_icon/ic_report.png");
-                $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
-                $("#ic_receive_contaminated_equipment").attr("src", "assets/img_project/2_icon/ic_receive_contaminated_equipment.png");
-                $("#ic_dispense_equipment").attr("src", "assets/img_project/2_icon/ic_dispense_equipment.png");
-                $("#ic_create_equipment_request").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
-                $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
-                $("#ic_setup_equipment_rooms").attr("src", "assets/img_project/2_icon/ic_receiveinventory.png");
-                $("#ic_register_equipment").attr("src", "assets/img_project/2_icon/ic_register_equipment.png");
-                $("#ic_inventory_tools").attr("src", "assets/img_project/2_icon/ic_inventory_tools.png");
-                $("#ic_search_hndata").attr("src", "assets/img_project/2_icon/ic_search_hndata.png");
-                $("#ic_turnon_offdisplay").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
-                $("#ic_movement").attr("src", "assets/img_project/2_icon/ic_movement.png");
-                $("#ic_adjust_stock").attr("src", "assets/img_project/2_icon/ic_adjust_stock.png");
+                // $("#ic_turnon_offdisplay_3").attr("src", "assets/img_project/2_icon/ic_report.png");
+                // $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
+                // $("#ic_receive_contaminated_equipment").attr("src", "assets/img_project/2_icon/ic_receive_contaminated_equipment.png");
+                // $("#ic_dispense_equipment").attr("src", "assets/img_project/2_icon/ic_dispense_equipment.png");
+                // $("#ic_create_equipment_request").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
+                // $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
+                // $("#ic_setup_equipment_rooms").attr("src", "assets/img_project/2_icon/ic_receiveinventory.png");
+                // $("#ic_register_equipment").attr("src", "assets/img_project/2_icon/ic_register_equipment.png");
+                // $("#ic_inventory_tools").attr("src", "assets/img_project/2_icon/ic_inventory_tools.png");
+                // $("#ic_search_hndata").attr("src", "assets/img_project/2_icon/ic_search_hndata.png");
+                // $("#ic_turnon_offdisplay").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
+                // $("#ic_movement").attr("src", "assets/img_project/2_icon/ic_movement.png");
+                // $("#ic_adjust_stock").attr("src", "assets/img_project/2_icon/ic_adjust_stock.png");
 
                 $("#conMain").html(res);
                 $("#li_send-n-sterile").addClass("active");
@@ -1056,39 +1126,39 @@ if (!isset($_SESSION['UserName'])) {
                 $(".nav-item").removeClass("active");
                 $(".nav-item").css("background-color", "");
 
-                $("#ic_register_equipment").attr("src", "assets/img_project/3_icon/ic_register_equipment.png");
-                $("#menu7").css('color', 'white');
+                // $("#ic_register_equipment").attr("src", "assets/img_project/3_icon/ic_register_equipment.png");
+                // $("#menu7").css('color', 'white');
 
 
-                $("#menu1").css('color', '#667085');
-                $("#menu2").css('color', '#667085');
-                $("#menu3").css('color', '#667085');
-                $("#menu4").css('color', '#667085');
-                $("#menu5").css('color', '#667085');
-                $("#menu6").css('color', '#667085');
-                $("#menu8").css('color', '#667085');
-                $("#menu9").css('color', '#667085');
-                $("#menu10").css('color', '#667085');
-                $("#menu11").css('color', '#667085');
-                $("#menu12").css('color', '#667085');
-                $("#menu13").css('color', '#667085');
-                $("#menu14").css('color', '#667085');
-                $("#menu15").css('color', '#667085');
+                // $("#menu1").css('color', '#667085');
+                // $("#menu2").css('color', '#667085');
+                // $("#menu3").css('color', '#667085');
+                // $("#menu4").css('color', '#667085');
+                // $("#menu5").css('color', '#667085');
+                // $("#menu6").css('color', '#667085');
+                // $("#menu8").css('color', '#667085');
+                // $("#menu9").css('color', '#667085');
+                // $("#menu10").css('color', '#667085');
+                // $("#menu11").css('color', '#667085');
+                // $("#menu12").css('color', '#667085');
+                // $("#menu13").css('color', '#667085');
+                // $("#menu14").css('color', '#667085');
+                // $("#menu15").css('color', '#667085');
 
 
-                $("#ic_turnon_offdisplay_3").attr("src", "assets/img_project/2_icon/ic_report.png");
-                $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
-                $("#ic_send_nsterile").attr("src", "assets/img_project/2_icon/ic_send_nsterile.png");
-                $("#ic_receive_contaminated_equipment").attr("src", "assets/img_project/2_icon/ic_receive_contaminated_equipment.png");
-                $("#ic_dispense_equipment").attr("src", "assets/img_project/2_icon/ic_dispense_equipment.png");
-                $("#ic_create_equipment_request").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
-                $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
-                $("#ic_setup_equipment_rooms").attr("src", "assets/img_project/2_icon/ic_receiveinventory.png");
-                $("#ic_inventory_tools").attr("src", "assets/img_project/2_icon/ic_inventory_tools.png");
-                $("#ic_search_hndata").attr("src", "assets/img_project/2_icon/ic_search_hndata.png");
-                $("#ic_turnon_offdisplay").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
-                $("#ic_movement").attr("src", "assets/img_project/2_icon/ic_movement.png");
-                $("#ic_adjust_stock").attr("src", "assets/img_project/2_icon/ic_adjust_stock.png");
+                // $("#ic_turnon_offdisplay_3").attr("src", "assets/img_project/2_icon/ic_report.png");
+                // $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
+                // $("#ic_send_nsterile").attr("src", "assets/img_project/2_icon/ic_send_nsterile.png");
+                // $("#ic_receive_contaminated_equipment").attr("src", "assets/img_project/2_icon/ic_receive_contaminated_equipment.png");
+                // $("#ic_dispense_equipment").attr("src", "assets/img_project/2_icon/ic_dispense_equipment.png");
+                // $("#ic_create_equipment_request").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
+                // $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
+                // $("#ic_setup_equipment_rooms").attr("src", "assets/img_project/2_icon/ic_receiveinventory.png");
+                // $("#ic_inventory_tools").attr("src", "assets/img_project/2_icon/ic_inventory_tools.png");
+                // $("#ic_search_hndata").attr("src", "assets/img_project/2_icon/ic_search_hndata.png");
+                // $("#ic_turnon_offdisplay").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
+                // $("#ic_movement").attr("src", "assets/img_project/2_icon/ic_movement.png");
+                // $("#ic_adjust_stock").attr("src", "assets/img_project/2_icon/ic_adjust_stock.png");
 
                 $("#conMain").html(res);
                 $("#li_register_item").addClass("active");
@@ -1180,50 +1250,84 @@ if (!isset($_SESSION['UserName'])) {
                 $(".nav-item").removeClass("active");
                 $(".nav-item").css("background-color", "");
 
-                $("#ic_search_hndata").attr("src", "assets/img_project/3_icon/ic_search_hndata.png");
-                $("#menu9").css('color', 'white');
+
+                if (display == '3') {
+
+                    $("#ic_search_hndata").attr("src", "assets/img_project/3_icon/ic_search_hndata.png");
+                    $(".color_menu").removeClass('color_menu1');
+                    $(".color_menu").addClass('color_menu3');
+                    $("#menu9").removeClass('color_menu3');
+                    $("#menu9").addClass('color_menu1');
 
 
-                $("#menu1").css('color', '#667085');
-                $("#menu2").css('color', '#667085');
-                $("#menu3").css('color', '#667085');
-                $("#menu4").css('color', '#667085');
-                $("#menu5").css('color', '#667085');
-                $("#menu6").css('color', '#667085');
-                $("#menu7").css('color', '#667085');
-                $("#menu8").css('color', '#667085');
-                $("#menu10").css('color', '#667085');
-                $("#menu11").css('color', '#667085');
-                $("#menu12").css('color', '#667085');
-                $("#menu13").css('color', '#667085');
-                $("#menu14").css('color', '#667085');
-                $("#menu15").css('color', '#667085');
-                $("#menu16").css('color', '#667085');
-                $("#menu17").css('color', '#667085');
+                    $("#ic_dispense_equipment").attr("src", "assets/img_project/2_icon/ic_dispense_equipment.png");
+                    $("#ic_setup_equipment_rooms").attr("src", "assets/img_project/2_icon/ic_receiveinventory.png");
+                    $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
+                    $("#ic_permission").attr("src", "assets/img_project/2_icon/permission.png");
+                    $("#ic_request_item").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
+                    $("#ic_turnon_offdisplay_3").attr("src", "assets/img_project/2_icon/ic_report.png");
+                    $("#ic_operation_room").attr("src", "assets/img_project/2_icon/ic_operation_room.png");
+                    $("#ic_receive_contaminated_equipment").attr("src", "assets/img_project/2_icon/ic_receive_contaminated_equipment.png");
+                    $("#ic_send_nsterile").attr("src", "assets/img_project/2_icon/ic_send_nsterile.png");
+                    $("#ic_register_equipment").attr("src", "assets/img_project/2_icon/ic_register_equipment.png");
+                    $("#ic_inventory_tools").attr("src", "assets/img_project/2_icon/ic_inventory_tools.png");
+                    $("#ic_turnon_offdisplay").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
+                    $("#ic_movement").attr("src", "assets/img_project/2_icon/ic_movement.png");
+                    $("#ic_adjust_stock").attr("src", "assets/img_project/2_icon/ic_adjust_stock.png");
+                    $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
+
+                }
 
 
 
-                $("#ic_permission").attr("src", "assets/img_project/2_icon/permission.png");
-                $("#ic_set_hn").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
-                $("#ic_request_item").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
-                $("#ic_turnon_offdisplay_3").attr("src", "assets/img_project/2_icon/ic_report.png");
-                $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
-                $("#ic_inventory_tools").attr("src", "assets/img_project/2_icon/ic_inventory_tools.png");
-                $("#ic_register_equipment").attr("src", "assets/img_project/2_icon/ic_register_equipment.png");
-                $("#ic_send_nsterile").attr("src", "assets/img_project/2_icon/ic_send_nsterile.png");
-                $("#ic_receive_contaminated_equipment").attr("src", "assets/img_project/2_icon/ic_receive_contaminated_equipment.png");
-                $("#ic_dispense_equipment").attr("src", "assets/img_project/2_icon/ic_dispense_equipment.png");
-                $("#ic_create_equipment_request").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
-                $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
-                $("#ic_setup_equipment_rooms").attr("src", "assets/img_project/2_icon/ic_receiveinventory.png");
-                $("#ic_turnon_offdisplay").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
-                $("#ic_movement").attr("src", "assets/img_project/2_icon/ic_movement.png");
-                $("#ic_adjust_stock").attr("src", "assets/img_project/2_icon/ic_adjust_stock.png");
+                // 
+                // $("#menu9").css('color', 'white');
+
+
+                // $("#menu1").css('color', '#667085');
+                // $("#menu2").css('color', '#667085');
+                // $("#menu3").css('color', '#667085');
+                // $("#menu4").css('color', '#667085');
+                // $("#menu5").css('color', '#667085');
+                // $("#menu6").css('color', '#667085');
+                // $("#menu7").css('color', '#667085');
+                // $("#menu8").css('color', '#667085');
+                // $("#menu10").css('color', '#667085');
+                // $("#menu11").css('color', '#667085');
+                // $("#menu12").css('color', '#667085');
+                // $("#menu13").css('color', '#667085');
+                // $("#menu14").css('color', '#667085');
+                // $("#menu15").css('color', '#667085');
+                // $("#menu16").css('color', '#667085');
+                // $("#menu17").css('color', '#667085');
+
+
+
+                // $("#ic_permission").attr("src", "assets/img_project/2_icon/permission.png");
+                // $("#ic_set_hn").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
+                // $("#ic_request_item").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
+                // $("#ic_turnon_offdisplay_3").attr("src", "assets/img_project/2_icon/ic_report.png");
+                // $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
+                // $("#ic_inventory_tools").attr("src", "assets/img_project/2_icon/ic_inventory_tools.png");
+                // $("#ic_register_equipment").attr("src", "assets/img_project/2_icon/ic_register_equipment.png");
+                // $("#ic_send_nsterile").attr("src", "assets/img_project/2_icon/ic_send_nsterile.png");
+                // $("#ic_receive_contaminated_equipment").attr("src", "assets/img_project/2_icon/ic_receive_contaminated_equipment.png");
+                // $("#ic_dispense_equipment").attr("src", "assets/img_project/2_icon/ic_dispense_equipment.png");
+                // $("#ic_create_equipment_request").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
+                // $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
+                // $("#ic_setup_equipment_rooms").attr("src", "assets/img_project/2_icon/ic_receiveinventory.png");
+                // $("#ic_turnon_offdisplay").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
+                // $("#ic_movement").attr("src", "assets/img_project/2_icon/ic_movement.png");
+                // $("#ic_adjust_stock").attr("src", "assets/img_project/2_icon/ic_adjust_stock.png");
 
 
                 $("#conMain").html(res);
                 $("#li_hn").addClass("active");
-                $("#li_hn").css("background-color", "#643695");
+                if (display == '2') {
+                    $("#li_hn").css("background-color", "#3C205A");
+                } else {
+                    $("#li_hn").css("background-color", "#643695");
+                }
                 history.pushState({}, "Results for `Cats`", 'index.php?s=hn');
                 document.title = "hn";
                 loadScript('script-function/hn.js');
@@ -1237,49 +1341,53 @@ if (!isset($_SESSION['UserName'])) {
                 $(".nav-item").removeClass("active");
                 $(".nav-item").css("background-color", "");
 
-                $("#ic_turnon_offdisplay").attr("src", "assets/img_project/3_icon/ic_turnon_offdisplay.png");
-                $("#menu10").css('color', 'white');
+                // $("#ic_turnon_offdisplay").attr("src", "assets/img_project/3_icon/ic_turnon_offdisplay.png");
+                // $("#menu10").css('color', 'white');
 
 
-                $("#menu1").css('color', '#667085');
-                $("#menu2").css('color', '#667085');
-                $("#menu3").css('color', '#667085');
-                $("#menu4").css('color', '#667085');
-                $("#menu5").css('color', '#667085');
-                $("#menu6").css('color', '#667085');
-                $("#menu7").css('color', '#667085');
-                $("#menu8").css('color', '#667085');
-                $("#menu9").css('color', '#667085');
-                $("#menu11").css('color', '#667085');
-                $("#menu12").css('color', '#667085');
-                $("#menu13").css('color', '#667085');
-                $("#menu14").css('color', '#667085');
-                $("#menu15").css('color', '#667085');
-                $("#menu16").css('color', '#667085');
-                $("#menu17").css('color', '#667085');
+                // $("#menu1").css('color', '#667085');
+                // $("#menu2").css('color', '#667085');
+                // $("#menu3").css('color', '#667085');
+                // $("#menu4").css('color', '#667085');
+                // $("#menu5").css('color', '#667085');
+                // $("#menu6").css('color', '#667085');
+                // $("#menu7").css('color', '#667085');
+                // $("#menu8").css('color', '#667085');
+                // $("#menu9").css('color', '#667085');
+                // $("#menu11").css('color', '#667085');
+                // $("#menu12").css('color', '#667085');
+                // $("#menu13").css('color', '#667085');
+                // $("#menu14").css('color', '#667085');
+                // $("#menu15").css('color', '#667085');
+                // $("#menu16").css('color', '#667085');
+                // $("#menu17").css('color', '#667085');
 
 
 
-                $("#ic_permission").attr("src", "assets/img_project/2_icon/permission.png");
-                $("#ic_set_hn").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
-                $("#ic_request_item").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
-                $("#ic_turnon_offdisplay_3").attr("src", "assets/img_project/2_icon/ic_report.png");
-                $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
-                $("#ic_search_hndata").attr("src", "assets/img_project/2_icon/ic_search_hndata.png");
-                $("#ic_inventory_tools").attr("src", "assets/img_project/2_icon/ic_inventory_tools.png");
-                $("#ic_register_equipment").attr("src", "assets/img_project/2_icon/ic_register_equipment.png");
-                $("#ic_send_nsterile").attr("src", "assets/img_project/2_icon/ic_send_nsterile.png");
-                $("#ic_receive_contaminated_equipment").attr("src", "assets/img_project/2_icon/ic_receive_contaminated_equipment.png");
-                $("#ic_dispense_equipment").attr("src", "assets/img_project/2_icon/ic_dispense_equipment.png");
-                $("#ic_create_equipment_request").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
-                $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
-                $("#ic_setup_equipment_rooms").attr("src", "assets/img_project/2_icon/ic_receiveinventory.png");
-                $("#ic_movement").attr("src", "assets/img_project/2_icon/ic_movement.png");
-                $("#ic_adjust_stock").attr("src", "assets/img_project/2_icon/ic_adjust_stock.png");
+                // $("#ic_permission").attr("src", "assets/img_project/2_icon/permission.png");
+                // $("#ic_set_hn").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
+                // $("#ic_request_item").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
+                // $("#ic_turnon_offdisplay_3").attr("src", "assets/img_project/2_icon/ic_report.png");
+                // $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
+                // $("#ic_search_hndata").attr("src", "assets/img_project/2_icon/ic_search_hndata.png");
+                // $("#ic_inventory_tools").attr("src", "assets/img_project/2_icon/ic_inventory_tools.png");
+                // $("#ic_register_equipment").attr("src", "assets/img_project/2_icon/ic_register_equipment.png");
+                // $("#ic_send_nsterile").attr("src", "assets/img_project/2_icon/ic_send_nsterile.png");
+                // $("#ic_receive_contaminated_equipment").attr("src", "assets/img_project/2_icon/ic_receive_contaminated_equipment.png");
+                // $("#ic_dispense_equipment").attr("src", "assets/img_project/2_icon/ic_dispense_equipment.png");
+                // $("#ic_create_equipment_request").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
+                // $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
+                // $("#ic_setup_equipment_rooms").attr("src", "assets/img_project/2_icon/ic_receiveinventory.png");
+                // $("#ic_movement").attr("src", "assets/img_project/2_icon/ic_movement.png");
+                // $("#ic_adjust_stock").attr("src", "assets/img_project/2_icon/ic_adjust_stock.png");
 
                 $("#conMain").html(res);
                 $("#li_setting").addClass("active");
-                $("#li_setting").css("background-color", "#643695");
+                if (display == '2') {
+                    $("#li_setting").css("background-color", "#3C205A");
+                } else {
+                    $("#li_setting").css("background-color", "#643695");
+                }
                 history.pushState({}, "Results for `Cats`", 'index.php?s=setting');
                 document.title = "setting";
                 loadScript('script-function/setting.js');
@@ -1293,49 +1401,85 @@ if (!isset($_SESSION['UserName'])) {
                 $(".nav-item").removeClass("active");
                 $(".nav-item").css("background-color", "");
 
-                $("#ic_movement").attr("src", "assets/img_project/3_icon/ic_movement.png");
-                $("#menu11").css('color', 'white');
+
+                if (display == '3') {
 
 
-                $("#menu1").css('color', '#667085');
-                $("#menu2").css('color', '#667085');
-                $("#menu3").css('color', '#667085');
-                $("#menu4").css('color', '#667085');
-                $("#menu5").css('color', '#667085');
-                $("#menu6").css('color', '#667085');
-                $("#menu7").css('color', '#667085');
-                $("#menu8").css('color', '#667085');
-                $("#menu9").css('color', '#667085');
-                $("#menu10").css('color', '#667085');
-                $("#menu12").css('color', '#667085');
-                $("#menu13").css('color', '#667085');
-                $("#menu14").css('color', '#667085');
-                $("#menu15").css('color', '#667085');
-                $("#menu16").css('color', '#667085');
-                $("#menu17").css('color', '#667085');
+                    $("#ic_movement").attr("src", "assets/img_project/3_icon/ic_movement.png");
+                    $(".color_menu").removeClass('color_menu1');
+                    $(".color_menu").addClass('color_menu3');
+                    $("#menu11").removeClass('color_menu3');
+                    $("#menu11").addClass('color_menu1');
 
 
 
-                $("#ic_permission").attr("src", "assets/img_project/2_icon/permission.png");
-                $("#ic_set_hn").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
-                $("#ic_request_item").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
-                $("#ic_turnon_offdisplay_3").attr("src", "assets/img_project/2_icon/ic_report.png");
-                $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
-                $("#ic_turnon_offdisplay").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
-                $("#ic_search_hndata").attr("src", "assets/img_project/2_icon/ic_search_hndata.png");
-                $("#ic_inventory_tools").attr("src", "assets/img_project/2_icon/ic_inventory_tools.png");
-                $("#ic_register_equipment").attr("src", "assets/img_project/2_icon/ic_register_equipment.png");
-                $("#ic_send_nsterile").attr("src", "assets/img_project/2_icon/ic_send_nsterile.png");
-                $("#ic_receive_contaminated_equipment").attr("src", "assets/img_project/2_icon/ic_receive_contaminated_equipment.png");
-                $("#ic_dispense_equipment").attr("src", "assets/img_project/2_icon/ic_dispense_equipment.png");
-                $("#ic_create_equipment_request").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
-                $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
-                $("#ic_setup_equipment_rooms").attr("src", "assets/img_project/2_icon/ic_receiveinventory.png");
-                $("#ic_adjust_stock").attr("src", "assets/img_project/2_icon/ic_adjust_stock.png");
+                    $("#ic_search_hndata").attr("src", "assets/img_project/2_icon/ic_search_hndata.png");
+                    $("#ic_dispense_equipment").attr("src", "assets/img_project/2_icon/ic_dispense_equipment.png");
+                    $("#ic_setup_equipment_rooms").attr("src", "assets/img_project/2_icon/ic_receiveinventory.png");
+                    $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
+                    $("#ic_permission").attr("src", "assets/img_project/2_icon/permission.png");
+                    $("#ic_request_item").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
+                    $("#ic_turnon_offdisplay_3").attr("src", "assets/img_project/2_icon/ic_report.png");
+                    $("#ic_operation_room").attr("src", "assets/img_project/2_icon/ic_operation_room.png");
+                    $("#ic_receive_contaminated_equipment").attr("src", "assets/img_project/2_icon/ic_receive_contaminated_equipment.png");
+                    $("#ic_send_nsterile").attr("src", "assets/img_project/2_icon/ic_send_nsterile.png");
+                    $("#ic_register_equipment").attr("src", "assets/img_project/2_icon/ic_register_equipment.png");
+                    $("#ic_inventory_tools").attr("src", "assets/img_project/2_icon/ic_inventory_tools.png");
+                    $("#ic_turnon_offdisplay").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
+                    $("#ic_adjust_stock").attr("src", "assets/img_project/2_icon/ic_adjust_stock.png");
+                    $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
+
+                }
+
+
+
+                // 
+                // $("#menu11").css('color', 'white');
+
+
+                // $("#menu1").css('color', '#667085');
+                // $("#menu2").css('color', '#667085');
+                // $("#menu3").css('color', '#667085');
+                // $("#menu4").css('color', '#667085');
+                // $("#menu5").css('color', '#667085');
+                // $("#menu6").css('color', '#667085');
+                // $("#menu7").css('color', '#667085');
+                // $("#menu8").css('color', '#667085');
+                // $("#menu9").css('color', '#667085');
+                // $("#menu10").css('color', '#667085');
+                // $("#menu12").css('color', '#667085');
+                // $("#menu13").css('color', '#667085');
+                // $("#menu14").css('color', '#667085');
+                // $("#menu15").css('color', '#667085');
+                // $("#menu16").css('color', '#667085');
+                // $("#menu17").css('color', '#667085');
+
+
+
+                // $("#ic_permission").attr("src", "assets/img_project/2_icon/permission.png");
+                // $("#ic_set_hn").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
+                // $("#ic_request_item").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
+                // $("#ic_turnon_offdisplay_3").attr("src", "assets/img_project/2_icon/ic_report.png");
+                // $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
+                // $("#ic_turnon_offdisplay").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
+                // $("#ic_search_hndata").attr("src", "assets/img_project/2_icon/ic_search_hndata.png");
+                // $("#ic_inventory_tools").attr("src", "assets/img_project/2_icon/ic_inventory_tools.png");
+                // $("#ic_register_equipment").attr("src", "assets/img_project/2_icon/ic_register_equipment.png");
+                // $("#ic_send_nsterile").attr("src", "assets/img_project/2_icon/ic_send_nsterile.png");
+                // $("#ic_receive_contaminated_equipment").attr("src", "assets/img_project/2_icon/ic_receive_contaminated_equipment.png");
+                // $("#ic_dispense_equipment").attr("src", "assets/img_project/2_icon/ic_dispense_equipment.png");
+                // $("#ic_create_equipment_request").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
+                // $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
+                // $("#ic_setup_equipment_rooms").attr("src", "assets/img_project/2_icon/ic_receiveinventory.png");
+                // $("#ic_adjust_stock").attr("src", "assets/img_project/2_icon/ic_adjust_stock.png");
 
                 $("#conMain").html(res);
                 $("#li_movement").addClass("active");
-                $("#li_movement").css("background-color", "#643695");
+                if (display == '2') {
+                    $("#li_movement").css("background-color", "#3C205A");
+                } else {
+                    $("#li_movement").css("background-color", "#643695");
+                }
                 history.pushState({}, "Results for `Cats`", 'index.php?s=movement');
                 document.title = "movement";
                 loadScript('script-function/movement.js');
@@ -1404,47 +1548,78 @@ if (!isset($_SESSION['UserName'])) {
                 $(".nav-item").removeClass("active");
                 $(".nav-item").css("background-color", "");
 
-                $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/3_icon/ic_turnon_offdisplay.png");
-                $("#menu13").css('color', 'white');
+                if (display == '3') {
 
 
-                $("#menu1").css('color', '#667085');
-                $("#menu2").css('color', '#667085');
-                $("#menu3").css('color', '#667085');
-                $("#menu4").css('color', '#667085');
-                $("#menu5").css('color', '#667085');
-                $("#menu6").css('color', '#667085');
-                $("#menu7").css('color', '#667085');
-                $("#menu8").css('color', '#667085');
-                $("#menu9").css('color', '#667085');
-                $("#menu10").css('color', '#667085');
-                $("#menu11").css('color', '#667085');
-                $("#menu14").css('color', '#667085');
-                $("#menu15").css('color', '#667085');
-                $("#menu16").css('color', '#667085');
-                $("#menu17").css('color', '#667085');
+                    $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/3_icon/ic_turnon_offdisplay.png");
+                    $(".color_menu").removeClass('color_menu1');
+                    $(".color_menu").addClass('color_menu3');
+                    $("#menu13").removeClass('color_menu3');
+                    $("#menu13").addClass('color_menu1');
+
+                    $("#ic_turnon_offdisplay_3").attr("src", "assets/img_project/2_icon/ic_report.png");
+                    $("#ic_request_item").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
+                    $("#ic_movement").attr("src", "assets/img_project/2_icon/ic_movement.png");
+                    $("#ic_search_hndata").attr("src", "assets/img_project/2_icon/ic_search_hndata.png");
+                    $("#ic_dispense_equipment").attr("src", "assets/img_project/2_icon/ic_dispense_equipment.png");
+                    $("#ic_setup_equipment_rooms").attr("src", "assets/img_project/2_icon/ic_receiveinventory.png");
+                    $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
+                    $("#ic_permission").attr("src", "assets/img_project/2_icon/permission.png");
+                    $("#ic_operation_room").attr("src", "assets/img_project/2_icon/ic_operation_room.png");
+                    $("#ic_receive_contaminated_equipment").attr("src", "assets/img_project/2_icon/ic_receive_contaminated_equipment.png");
+                    $("#ic_send_nsterile").attr("src", "assets/img_project/2_icon/ic_send_nsterile.png");
+                    $("#ic_register_equipment").attr("src", "assets/img_project/2_icon/ic_register_equipment.png");
+                    $("#ic_inventory_tools").attr("src", "assets/img_project/2_icon/ic_inventory_tools.png");
+                    $("#ic_turnon_offdisplay").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
+                    $("#ic_adjust_stock").attr("src", "assets/img_project/2_icon/ic_adjust_stock.png");
+
+                }
+
+                // $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/3_icon/ic_turnon_offdisplay.png");
+                // $("#menu13").css('color', 'white');
+
+
+                // $("#menu1").css('color', '#667085');
+                // $("#menu2").css('color', '#667085');
+                // $("#menu3").css('color', '#667085');
+                // $("#menu4").css('color', '#667085');
+                // $("#menu5").css('color', '#667085');
+                // $("#menu6").css('color', '#667085');
+                // $("#menu7").css('color', '#667085');
+                // $("#menu8").css('color', '#667085');
+                // $("#menu9").css('color', '#667085');
+                // $("#menu10").css('color', '#667085');
+                // $("#menu11").css('color', '#667085');
+                // $("#menu14").css('color', '#667085');
+                // $("#menu15").css('color', '#667085');
+                // $("#menu16").css('color', '#667085');
+                // $("#menu17").css('color', '#667085');
 
 
 
-                $("#ic_permission").attr("src", "assets/img_project/2_icon/permission.png");
-                $("#ic_set_hn").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
-                $("#ic_request_item").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
-                $("#ic_movement").attr("src", "assets/img_project/2_icon/ic_movement.png");
-                $("#ic_turnon_offdisplay").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
-                $("#ic_turnon_offdisplay_3").attr("src", "assets/img_project/2_icon/ic_report.png");
-                $("#ic_search_hndata").attr("src", "assets/img_project/2_icon/ic_search_hndata.png");
-                $("#ic_inventory_tools").attr("src", "assets/img_project/2_icon/ic_inventory_tools.png");
-                $("#ic_register_equipment").attr("src", "assets/img_project/2_icon/ic_register_equipment.png");
-                $("#ic_send_nsterile").attr("src", "assets/img_project/2_icon/ic_send_nsterile.png");
-                $("#ic_receive_contaminated_equipment").attr("src", "assets/img_project/2_icon/ic_receive_contaminated_equipment.png");
-                $("#ic_dispense_equipment").attr("src", "assets/img_project/2_icon/ic_dispense_equipment.png");
-                $("#ic_create_equipment_request").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
-                $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
-                $("#ic_setup_equipment_rooms").attr("src", "assets/img_project/2_icon/ic_receiveinventory.png");
+                // $("#ic_permission").attr("src", "assets/img_project/2_icon/permission.png");
+                // $("#ic_set_hn").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
+                // $("#ic_request_item").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
+                // $("#ic_movement").attr("src", "assets/img_project/2_icon/ic_movement.png");
+                // $("#ic_turnon_offdisplay").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
+                // $("#ic_turnon_offdisplay_3").attr("src", "assets/img_project/2_icon/ic_report.png");
+                // $("#ic_search_hndata").attr("src", "assets/img_project/2_icon/ic_search_hndata.png");
+                // $("#ic_inventory_tools").attr("src", "assets/img_project/2_icon/ic_inventory_tools.png");
+                // $("#ic_register_equipment").attr("src", "assets/img_project/2_icon/ic_register_equipment.png");
+                // $("#ic_send_nsterile").attr("src", "assets/img_project/2_icon/ic_send_nsterile.png");
+                // $("#ic_receive_contaminated_equipment").attr("src", "assets/img_project/2_icon/ic_receive_contaminated_equipment.png");
+                // $("#ic_dispense_equipment").attr("src", "assets/img_project/2_icon/ic_dispense_equipment.png");
+                // $("#ic_create_equipment_request").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
+                // $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
+                // $("#ic_setup_equipment_rooms").attr("src", "assets/img_project/2_icon/ic_receiveinventory.png");
 
                 $("#conMain").html(res);
                 $("#li_manage").addClass("active");
-                $("#li_manage").css("background-color", "#643695");
+                if (display == '2') {
+                    $("#li_manage").css("background-color", "#3C205A");
+                } else {
+                    $("#li_manage").css("background-color", "#643695");
+                }
                 history.pushState({}, "Results for `Cats`", 'index.php?s=manage');
                 document.title = "manage";
                 loadScript('script-function/manage.js');
@@ -1458,48 +1633,82 @@ if (!isset($_SESSION['UserName'])) {
                 $(".nav-item").removeClass("active");
                 $(".nav-item").css("background-color", "");
 
-                $("#ic_turnon_offdisplay_3").attr("src", "assets/img_project/2_icon/ic_report.png");
-                $("#menu14").css('color', 'white');
 
 
-                $("#menu1").css('color', '#667085');
-                $("#menu2").css('color', '#667085');
-                $("#menu3").css('color', '#667085');
-                $("#menu4").css('color', '#667085');
-                $("#menu5").css('color', '#667085');
-                $("#menu6").css('color', '#667085');
-                $("#menu7").css('color', '#667085');
-                $("#menu8").css('color', '#667085');
-                $("#menu9").css('color', '#667085');
-                $("#menu10").css('color', '#667085');
-                $("#menu11").css('color', '#667085');
-                $("#menu13").css('color', '#667085');
-                $("#menu15").css('color', '#667085');
-                $("#menu16").css('color', '#667085');
-                $("#menu17").css('color', '#667085');
+                if (display == '3') {
+
+                    $("#ic_turnon_offdisplay_3").attr("src", "assets/img_project/3_icon/ic_report.png");
+                    $(".color_menu").removeClass('color_menu1');
+                    $(".color_menu").addClass('color_menu3');
+                    $("#menu14").removeClass('color_menu3');
+                    $("#menu14").addClass('color_menu1');
+
+                    $("#ic_request_item").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
+                    $("#ic_movement").attr("src", "assets/img_project/2_icon/ic_movement.png");
+                    $("#ic_search_hndata").attr("src", "assets/img_project/2_icon/ic_search_hndata.png");
+                    $("#ic_dispense_equipment").attr("src", "assets/img_project/2_icon/ic_dispense_equipment.png");
+                    $("#ic_setup_equipment_rooms").attr("src", "assets/img_project/2_icon/ic_receiveinventory.png");
+                    $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
+                    $("#ic_permission").attr("src", "assets/img_project/2_icon/permission.png");
+                    $("#ic_operation_room").attr("src", "assets/img_project/2_icon/ic_operation_room.png");
+                    $("#ic_receive_contaminated_equipment").attr("src", "assets/img_project/2_icon/ic_receive_contaminated_equipment.png");
+                    $("#ic_send_nsterile").attr("src", "assets/img_project/2_icon/ic_send_nsterile.png");
+                    $("#ic_register_equipment").attr("src", "assets/img_project/2_icon/ic_register_equipment.png");
+                    $("#ic_inventory_tools").attr("src", "assets/img_project/2_icon/ic_inventory_tools.png");
+                    $("#ic_turnon_offdisplay").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
+                    $("#ic_adjust_stock").attr("src", "assets/img_project/2_icon/ic_adjust_stock.png");
+                    $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
+
+                }
 
 
 
-                $("#ic_permission").attr("src", "assets/img_project/2_icon/permission.png");
-                $("#ic_set_hn").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
+                // 
+                // $("#menu14").css('color', 'white');
 
-                $("#ic_request_item").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
-                $("#ic_movement").attr("src", "assets/img_project/2_icon/ic_movement.png");
-                $("#ic_turnon_offdisplay").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
-                $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
-                $("#ic_search_hndata").attr("src", "assets/img_project/2_icon/ic_search_hndata.png");
-                $("#ic_inventory_tools").attr("src", "assets/img_project/2_icon/ic_inventory_tools.png");
-                $("#ic_register_equipment").attr("src", "assets/img_project/2_icon/ic_register_equipment.png");
-                $("#ic_send_nsterile").attr("src", "assets/img_project/2_icon/ic_send_nsterile.png");
-                $("#ic_receive_contaminated_equipment").attr("src", "assets/img_project/2_icon/ic_receive_contaminated_equipment.png");
-                $("#ic_dispense_equipment").attr("src", "assets/img_project/2_icon/ic_dispense_equipment.png");
-                $("#ic_create_equipment_request").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
-                $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
-                $("#ic_setup_equipment_rooms").attr("src", "assets/img_project/2_icon/ic_receiveinventory.png");
+
+                // $("#menu1").css('color', '#667085');
+                // $("#menu2").css('color', '#667085');
+                // $("#menu3").css('color', '#667085');
+                // $("#menu4").css('color', '#667085');
+                // $("#menu5").css('color', '#667085');
+                // $("#menu6").css('color', '#667085');
+                // $("#menu7").css('color', '#667085');
+                // $("#menu8").css('color', '#667085');
+                // $("#menu9").css('color', '#667085');
+                // $("#menu10").css('color', '#667085');
+                // $("#menu11").css('color', '#667085');
+                // $("#menu13").css('color', '#667085');
+                // $("#menu15").css('color', '#667085');
+                // $("#menu16").css('color', '#667085');
+                // $("#menu17").css('color', '#667085');
+
+
+
+                // $("#ic_permission").attr("src", "assets/img_project/2_icon/permission.png");
+                // $("#ic_set_hn").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
+
+                // $("#ic_request_item").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
+                // $("#ic_movement").attr("src", "assets/img_project/2_icon/ic_movement.png");
+                // $("#ic_turnon_offdisplay").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
+                // $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
+                // $("#ic_search_hndata").attr("src", "assets/img_project/2_icon/ic_search_hndata.png");
+                // $("#ic_inventory_tools").attr("src", "assets/img_project/2_icon/ic_inventory_tools.png");
+                // $("#ic_register_equipment").attr("src", "assets/img_project/2_icon/ic_register_equipment.png");
+                // $("#ic_send_nsterile").attr("src", "assets/img_project/2_icon/ic_send_nsterile.png");
+                // $("#ic_receive_contaminated_equipment").attr("src", "assets/img_project/2_icon/ic_receive_contaminated_equipment.png");
+                // $("#ic_dispense_equipment").attr("src", "assets/img_project/2_icon/ic_dispense_equipment.png");
+                // $("#ic_create_equipment_request").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
+                // $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
+                // $("#ic_setup_equipment_rooms").attr("src", "assets/img_project/2_icon/ic_receiveinventory.png");
 
                 $("#conMain").html(res);
                 $("#li_report").addClass("active");
-                $("#li_report").css("background-color", "#643695");
+                if (display == '2') {
+                    $("#li_report").css("background-color", "#3C205A");
+                } else {
+                    $("#li_report").css("background-color", "#643695");
+                }
                 history.pushState({}, "Results for `Cats`", 'index.php?s=report');
                 document.title = "report";
                 loadScript('script-function/report.js');
@@ -1513,47 +1722,78 @@ if (!isset($_SESSION['UserName'])) {
                 $(".nav-item").removeClass("active");
                 $(".nav-item").css("background-color", "");
 
-                $("#ic_permission").attr("src", "assets/img_project/2_icon/permission.png");
-                $("#menu17").css('color', 'white');
+
+                if (display == '3') {
+
+                    $("#ic_permission").attr("src", "assets/img_project/3_icon/permission.png");
+                    $(".color_menu").removeClass('color_menu1');
+                    $(".color_menu").addClass('color_menu3');
+                    $("#menu17").removeClass('color_menu3');
+                    $("#menu17").addClass('color_menu1');
+
+                    $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
+                    $("#ic_turnon_offdisplay_3").attr("src", "assets/img_project/2_icon/ic_report.png");
+                    $("#ic_request_item").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
+                    $("#ic_movement").attr("src", "assets/img_project/2_icon/ic_movement.png");
+                    $("#ic_search_hndata").attr("src", "assets/img_project/2_icon/ic_search_hndata.png");
+                    $("#ic_dispense_equipment").attr("src", "assets/img_project/2_icon/ic_dispense_equipment.png");
+                    $("#ic_setup_equipment_rooms").attr("src", "assets/img_project/2_icon/ic_receiveinventory.png");
+                    $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
+                    $("#ic_operation_room").attr("src", "assets/img_project/2_icon/ic_operation_room.png");
+                    $("#ic_receive_contaminated_equipment").attr("src", "assets/img_project/2_icon/ic_receive_contaminated_equipment.png");
+                    $("#ic_send_nsterile").attr("src", "assets/img_project/2_icon/ic_send_nsterile.png");
+                    $("#ic_register_equipment").attr("src", "assets/img_project/2_icon/ic_register_equipment.png");
+                    $("#ic_inventory_tools").attr("src", "assets/img_project/2_icon/ic_inventory_tools.png");
+                    $("#ic_turnon_offdisplay").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
+                    $("#ic_adjust_stock").attr("src", "assets/img_project/2_icon/ic_adjust_stock.png");
+
+                }
+
+                // 
+                // $("#menu17").css('color', 'white');
 
 
-                $("#menu1").css('color', '#667085');
-                $("#menu2").css('color', '#667085');
-                $("#menu3").css('color', '#667085');
-                $("#menu4").css('color', '#667085');
-                $("#menu5").css('color', '#667085');
-                $("#menu6").css('color', '#667085');
-                $("#menu7").css('color', '#667085');
-                $("#menu8").css('color', '#667085');
-                $("#menu9").css('color', '#667085');
-                $("#menu10").css('color', '#667085');
-                $("#menu11").css('color', '#667085');
-                $("#menu13").css('color', '#667085');
-                $("#menu14").css('color', '#667085');
-                $("#menu15").css('color', '#667085');
-                $("#menu16").css('color', '#667085');
+                // $("#menu1").css('color', '#667085');
+                // $("#menu2").css('color', '#667085');
+                // $("#menu3").css('color', '#667085');
+                // $("#menu4").css('color', '#667085');
+                // $("#menu5").css('color', '#667085');
+                // $("#menu6").css('color', '#667085');
+                // $("#menu7").css('color', '#667085');
+                // $("#menu8").css('color', '#667085');
+                // $("#menu9").css('color', '#667085');
+                // $("#menu10").css('color', '#667085');
+                // $("#menu11").css('color', '#667085');
+                // $("#menu13").css('color', '#667085');
+                // $("#menu14").css('color', '#667085');
+                // $("#menu15").css('color', '#667085');
+                // $("#menu16").css('color', '#667085');
 
-                $("#ic_set_hn").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
+                // $("#ic_set_hn").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
 
 
-                $("#ic_turnon_offdisplay_3").attr("src", "assets/img_project/2_icon/ic_report.png");
-                $("#ic_request_item").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
-                $("#ic_movement").attr("src", "assets/img_project/2_icon/ic_movement.png");
-                $("#ic_turnon_offdisplay").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
-                $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
-                $("#ic_search_hndata").attr("src", "assets/img_project/2_icon/ic_search_hndata.png");
-                $("#ic_inventory_tools").attr("src", "assets/img_project/2_icon/ic_inventory_tools.png");
-                $("#ic_register_equipment").attr("src", "assets/img_project/2_icon/ic_register_equipment.png");
-                $("#ic_send_nsterile").attr("src", "assets/img_project/2_icon/ic_send_nsterile.png");
-                $("#ic_receive_contaminated_equipment").attr("src", "assets/img_project/2_icon/ic_receive_contaminated_equipment.png");
-                $("#ic_dispense_equipment").attr("src", "assets/img_project/2_icon/ic_dispense_equipment.png");
-                $("#ic_create_equipment_request").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
-                $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
-                $("#ic_setup_equipment_rooms").attr("src", "assets/img_project/2_icon/ic_receiveinventory.png");
+                // $("#ic_turnon_offdisplay_3").attr("src", "assets/img_project/2_icon/ic_report.png");
+                // $("#ic_request_item").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
+                // $("#ic_movement").attr("src", "assets/img_project/2_icon/ic_movement.png");
+                // $("#ic_turnon_offdisplay").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
+                // $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
+                // $("#ic_search_hndata").attr("src", "assets/img_project/2_icon/ic_search_hndata.png");
+                // $("#ic_inventory_tools").attr("src", "assets/img_project/2_icon/ic_inventory_tools.png");
+                // $("#ic_register_equipment").attr("src", "assets/img_project/2_icon/ic_register_equipment.png");
+                // $("#ic_send_nsterile").attr("src", "assets/img_project/2_icon/ic_send_nsterile.png");
+                // $("#ic_receive_contaminated_equipment").attr("src", "assets/img_project/2_icon/ic_receive_contaminated_equipment.png");
+                // $("#ic_dispense_equipment").attr("src", "assets/img_project/2_icon/ic_dispense_equipment.png");
+                // $("#ic_create_equipment_request").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
+                // $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
+                // $("#ic_setup_equipment_rooms").attr("src", "assets/img_project/2_icon/ic_receiveinventory.png");
 
                 $("#conMain").html(res);
                 $("#li_permission").addClass("active");
-                $("#li_permission").css("background-color", "#643695");
+                if (display == '2') {
+                    $("#li_permission").css("background-color", "#3C205A");
+                } else {
+                    $("#li_permission").css("background-color", "#643695");
+                }
                 history.pushState({}, "Results for `Cats`", 'index.php?s=permission');
                 document.title = "permission";
                 loadScript('script-function/permission.js');
@@ -1696,29 +1936,40 @@ if (!isset($_SESSION['UserName'])) {
             $("#accordionSidebar").removeClass('display-dark3');
             $("#accordionSidebar").removeClass('display-dark2');
             $("#accordionSidebar").addClass('display-dark1');
-            $(".color_menu").addClass('color_menu2');
 
-            $("#ic_operation_room").attr("src", "assets/img_project/2_icon/ic_operation_room.png");
-            $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
-            $("#ic_setup_equipment_rooms").attr("src", "assets/img_project/2_icon/ic_receiveinventory.png");
-            $("#ic_create_equipment_request").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
-            $("#ic_request_item").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
-            $("#ic_set_hn").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
-            $("#ic_dispense_equipment").attr("src", "assets/img_project/2_icon/ic_dispense_equipment.png");
-            $("#ic_receive_contaminated_equipment").attr("src", "assets/img_project/2_icon/ic_receive_contaminated_equipment.png");
-            $("#ic_send_nsterile").attr("src", "assets/img_project/2_icon/ic_send_nsterile.png");
-            $("#ic_register_equipment").attr("src", "assets/img_project/2_icon/ic_register_equipment.png");
-            $("#ic_inventory_tools").attr("src", "assets/img_project/2_icon/ic_inventory_tools.png");
-            $("#ic_search_hndata").attr("src", "assets/img_project/2_icon/ic_search_hndata.png");
-            $("#ic_turnon_offdisplay").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
-            $("#ic_movement").attr("src", "assets/img_project/2_icon/ic_movement.png");
-            $("#ic_adjust_stock").attr("src", "assets/img_project/2_icon/ic_adjust_stock.png");
+            $(".color_menu").removeClass('color_menu3');
+            $(".color_menu").removeClass('color_menu2');
+            $(".color_menu").addClass('color_menu1');
 
 
+            $("#ic_mainpage").attr("src", "assets/img_project/3_icon/ic_mainpage.png");
+            $("#ic_permission").attr("src", "assets/img_project/3_icon/permission.png");
+            $("#ic_set_hn").attr("src", "assets/img_project/3_icon/ic_create_equipment_request.png");
+            $("#ic_request_item").attr("src", "assets/img_project/3_icon/ic_create_equipment_request.png");
+            $("#ic_turnon_offdisplay_3").attr("src", "assets/img_project/3_icon/ic_report.png");
+            $("#ic_operation_room").attr("src", "assets/img_project/3_icon/ic_operation_room.png");
+            $("#ic_setup_equipment_rooms").attr("src", "assets/img_project/3_icon/ic_receiveinventory.png");
+            $("#ic_create_equipment_request").attr("src", "assets/img_project/3_icon/ic_create_equipment_request.png");
+            $("#ic_dispense_equipment").attr("src", "assets/img_project/3_icon/ic_dispense_equipment.png");
+            $("#ic_receive_contaminated_equipment").attr("src", "assets/img_project/3_icon/ic_receive_contaminated_equipment.png");
+            $("#ic_send_nsterile").attr("src", "assets/img_project/3_icon/ic_send_nsterile.png");
+            $("#ic_register_equipment").attr("src", "assets/img_project/3_icon/ic_register_equipment.png");
+            $("#ic_inventory_tools").attr("src", "assets/img_project/3_icon/ic_inventory_tools.png");
+            $("#ic_search_hndata").attr("src", "assets/img_project/3_icon/ic_search_hndata.png");
+            $("#ic_turnon_offdisplay").attr("src", "assets/img_project/3_icon/ic_turnon_offdisplay.png");
+            $("#ic_movement").attr("src", "assets/img_project/3_icon/ic_movement.png");
+            $("#ic_adjust_stock").attr("src", "assets/img_project/3_icon/ic_adjust_stock.png");
+            $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/3_icon/ic_turnon_offdisplay.png");
 
-            $("#li_logout").css('background-color', 'lightgray');
-            $("#img_logo").attr("src", "assets/img/logo.png");
 
+            $("#li_logout").css('background-color', '#101323');
+            $("#img_logo").attr("src", "assets/img/logo-w.png");
+
+            // setTimeout(() => {
+            //     $('#a_' + page).click();
+            // }, 300);
+
+            location.reload();
 
         });
         $("#display-2").click(function() {
@@ -1739,23 +1990,31 @@ if (!isset($_SESSION['UserName'])) {
             $("#accordionSidebar").removeClass('display-dark3');
             $("#accordionSidebar").removeClass('display-dark1');
             $("#accordionSidebar").addClass('display-dark2');
-            $(".color_menu").addClass('color_menu2');
 
-            $("#ic_operation_room").attr("src", "assets/img_project/2_icon/ic_operation_room.png");
-            $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
-            $("#ic_setup_equipment_rooms").attr("src", "assets/img_project/2_icon/ic_receiveinventory.png");
-            $("#ic_create_equipment_request").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
-            $("#ic_request_item").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
-            $("#ic_set_hn").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
-            $("#ic_dispense_equipment").attr("src", "assets/img_project/2_icon/ic_dispense_equipment.png");
-            $("#ic_receive_contaminated_equipment").attr("src", "assets/img_project/2_icon/ic_receive_contaminated_equipment.png");
-            $("#ic_send_nsterile").attr("src", "assets/img_project/2_icon/ic_send_nsterile.png");
-            $("#ic_register_equipment").attr("src", "assets/img_project/2_icon/ic_register_equipment.png");
-            $("#ic_inventory_tools").attr("src", "assets/img_project/2_icon/ic_inventory_tools.png");
-            $("#ic_search_hndata").attr("src", "assets/img_project/2_icon/ic_search_hndata.png");
-            $("#ic_turnon_offdisplay").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
-            $("#ic_movement").attr("src", "assets/img_project/2_icon/ic_movement.png");
-            $("#ic_adjust_stock").attr("src", "assets/img_project/2_icon/ic_adjust_stock.png");
+            $(".color_menu").removeClass('color_menu3');
+            $(".color_menu").removeClass('color_menu2');
+            $(".color_menu").addClass('color_menu1');
+
+
+            $("#ic_mainpage").attr("src", "assets/img_project/3_icon/ic_mainpage.png");
+            $("#ic_permission").attr("src", "assets/img_project/3_icon/permission.png");
+            $("#ic_set_hn").attr("src", "assets/img_project/3_icon/ic_create_equipment_request.png");
+            $("#ic_request_item").attr("src", "assets/img_project/3_icon/ic_create_equipment_request.png");
+            $("#ic_turnon_offdisplay_3").attr("src", "assets/img_project/3_icon/ic_report.png");
+            $("#ic_operation_room").attr("src", "assets/img_project/3_icon/ic_operation_room.png");
+            $("#ic_setup_equipment_rooms").attr("src", "assets/img_project/3_icon/ic_receiveinventory.png");
+            $("#ic_create_equipment_request").attr("src", "assets/img_project/3_icon/ic_create_equipment_request.png");
+            $("#ic_dispense_equipment").attr("src", "assets/img_project/3_icon/ic_dispense_equipment.png");
+            $("#ic_receive_contaminated_equipment").attr("src", "assets/img_project/3_icon/ic_receive_contaminated_equipment.png");
+            $("#ic_send_nsterile").attr("src", "assets/img_project/3_icon/ic_send_nsterile.png");
+            $("#ic_register_equipment").attr("src", "assets/img_project/3_icon/ic_register_equipment.png");
+            $("#ic_inventory_tools").attr("src", "assets/img_project/3_icon/ic_inventory_tools.png");
+            $("#ic_search_hndata").attr("src", "assets/img_project/3_icon/ic_search_hndata.png");
+            $("#ic_turnon_offdisplay").attr("src", "assets/img_project/3_icon/ic_turnon_offdisplay.png");
+            $("#ic_movement").attr("src", "assets/img_project/3_icon/ic_movement.png");
+            $("#ic_adjust_stock").attr("src", "assets/img_project/3_icon/ic_adjust_stock.png");
+            $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/3_icon/ic_turnon_offdisplay.png");
+
 
 
 
@@ -1763,6 +2022,10 @@ if (!isset($_SESSION['UserName'])) {
             $("#img_logo").attr("src", "assets/img/logo.png");
 
 
+            // setTimeout(() => {
+            //     $('#a_' + page).click();
+            // }, 300);
+            location.reload();
 
         });
         $("#display-3").click(function() {
@@ -1783,6 +2046,9 @@ if (!isset($_SESSION['UserName'])) {
             $("#accordionSidebar").removeClass('display-dark1');
             $("#accordionSidebar").removeClass('display-dark2');
             $("#accordionSidebar").addClass('display-dark3');
+
+            $(".color_menu").removeClass('color_menu1');
+            $(".color_menu").removeClass('color_menu2');
             $(".color_menu").addClass('color_menu3');
 
             $("#ic_operation_room").attr("src", "assets/img_project/2_icon/ic_operation_room.png");
@@ -1807,6 +2073,10 @@ if (!isset($_SESSION['UserName'])) {
             $("#img_logo").attr("src", "assets/img/logo.png");
 
 
+            // setTimeout(() => {
+            //     $('#a_' + page).click();
+            // }, 300);
+            location.reload();
         });
 
         if (display == '1') {
@@ -1826,58 +2096,71 @@ if (!isset($_SESSION['UserName'])) {
             $("#accordionSidebar").addClass('display-dark1');
 
 
-            $("#ic_operation_room").attr("src", "assets/img_project/2_icon/ic_operation_room.png");
-
-            $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
-            $("#ic_setup_equipment_rooms").attr("src", "assets/img_project/2_icon/ic_receiveinventory.png");
-            $("#ic_create_equipment_request").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
-            $("#ic_request_item").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
-            $("#ic_set_hn").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
-            $("#ic_dispense_equipment").attr("src", "assets/img_project/2_icon/ic_dispense_equipment.png");
-            $("#ic_receive_contaminated_equipment").attr("src", "assets/img_project/2_icon/ic_receive_contaminated_equipment.png");
-            $("#ic_send_nsterile").attr("src", "assets/img_project/2_icon/ic_send_nsterile.png");
-            $("#ic_register_equipment").attr("src", "assets/img_project/2_icon/ic_register_equipment.png");
-            $("#ic_inventory_tools").attr("src", "assets/img_project/2_icon/ic_inventory_tools.png");
-            $("#ic_search_hndata").attr("src", "assets/img_project/2_icon/ic_search_hndata.png");
-            $("#ic_turnon_offdisplay").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
-            $("#ic_movement").attr("src", "assets/img_project/2_icon/ic_movement.png");
-            $("#ic_adjust_stock").attr("src", "assets/img_project/2_icon/ic_adjust_stock.png");
-            $("#ic_permission").attr("src", "assets/img_project/2_icon/permission.png");
+            $("#ic_operation_room").attr("src", "assets/img_project/3_icon/ic_operation_room.png");
+            $(".color_menu").addClass('color_menu1');
 
 
+            $(".color_menu").removeClass('color_menu3');
+            $(".color_menu").removeClass('color_menu2');
+            $(".color_menu").addClass('color_menu1');
 
-            $("#li_logout").css('background-color', 'lightgray');
-            $("#img_logo").attr("src", "assets/img/logo.png");
+            $("#ic_operation_room").attr("src", "assets/img_project/3_icon/ic_operation_room.png");
+            $("#ic_mainpage").attr("src", "assets/img_project/3_icon/ic_mainpage.png");
+            $("#ic_setup_equipment_rooms").attr("src", "assets/img_project/3_icon/ic_receiveinventory.png");
+            $("#ic_create_equipment_request").attr("src", "assets/img_project/3_icon/ic_create_equipment_request.png");
+            $("#ic_request_item").attr("src", "assets/img_project/3_icon/ic_create_equipment_request.png");
+            $("#ic_set_hn").attr("src", "assets/img_project/3_icon/ic_create_equipment_request.png");
+            $("#ic_dispense_equipment").attr("src", "assets/img_project/3_icon/ic_dispense_equipment.png");
+            $("#ic_receive_contaminated_equipment").attr("src", "assets/img_project/3_icon/ic_receive_contaminated_equipment.png");
+            $("#ic_send_nsterile").attr("src", "assets/img_project/3_icon/ic_send_nsterile.png");
+            $("#ic_register_equipment").attr("src", "assets/img_project/3_icon/ic_register_equipment.png");
+            $("#ic_inventory_tools").attr("src", "assets/img_project/3_icon/ic_inventory_tools.png");
+            $("#ic_search_hndata").attr("src", "assets/img_project/3_icon/ic_search_hndata.png");
+            $("#ic_turnon_offdisplay").attr("src", "assets/img_project/3_icon/ic_turnon_offdisplay.png");
+            $("#ic_movement").attr("src", "assets/img_project/3_icon/ic_movement.png");
+            $("#ic_adjust_stock").attr("src", "assets/img_project/3_icon/ic_adjust_stock.png");
+            $("#ic_turnon_offdisplay_3").attr("src", "assets/img_project/3_icon/ic_report.png");
+            $("#ic_permission").attr("src", "assets/img_project/3_icon/permission.png");
+            $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/3_icon/ic_turnon_offdisplay.png");
+
+
+            $("#li_logout").css('background-color', '#101323');
+            $("#img_logo").attr("src", "assets/img/logo-w.png");
 
         }
         if (localStorage.display == '2') {
             $(".clearfont").removeClass('activeFont');
             $("#display-2").addClass('activeFont');
 
+            $(".color_menu").removeClass('color_menu3');
+            $(".color_menu").removeClass('color_menu2');
+            $(".color_menu").addClass('color_menu1');
+
+
             $("#accordionSidebar").addClass('display-dark2');
 
-            $("#ic_operation_room").attr("src", "assets/img_project/2_icon/ic_operation_room.png");
-
-            $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
-            $("#ic_setup_equipment_rooms").attr("src", "assets/img_project/2_icon/ic_receiveinventory.png");
-            $("#ic_create_equipment_request").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
-            $("#ic_request_item").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
-            $("#ic_set_hn").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
-            $("#ic_dispense_equipment").attr("src", "assets/img_project/2_icon/ic_dispense_equipment.png");
-            $("#ic_receive_contaminated_equipment").attr("src", "assets/img_project/2_icon/ic_receive_contaminated_equipment.png");
-            $("#ic_send_nsterile").attr("src", "assets/img_project/2_icon/ic_send_nsterile.png");
-            $("#ic_register_equipment").attr("src", "assets/img_project/2_icon/ic_register_equipment.png");
-            $("#ic_inventory_tools").attr("src", "assets/img_project/2_icon/ic_inventory_tools.png");
-            $("#ic_search_hndata").attr("src", "assets/img_project/2_icon/ic_search_hndata.png");
-            $("#ic_turnon_offdisplay").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
-            $("#ic_movement").attr("src", "assets/img_project/2_icon/ic_movement.png");
-            $("#ic_adjust_stock").attr("src", "assets/img_project/2_icon/ic_adjust_stock.png");
-
-
+            $("#ic_operation_room").attr("src", "assets/img_project/3_icon/ic_operation_room.png");
+            $("#ic_mainpage").attr("src", "assets/img_project/3_icon/ic_mainpage.png");
+            $("#ic_setup_equipment_rooms").attr("src", "assets/img_project/3_icon/ic_receiveinventory.png");
+            $("#ic_create_equipment_request").attr("src", "assets/img_project/3_icon/ic_create_equipment_request.png");
+            $("#ic_request_item").attr("src", "assets/img_project/3_icon/ic_create_equipment_request.png");
+            $("#ic_set_hn").attr("src", "assets/img_project/3_icon/ic_create_equipment_request.png");
+            $("#ic_dispense_equipment").attr("src", "assets/img_project/3_icon/ic_dispense_equipment.png");
+            $("#ic_receive_contaminated_equipment").attr("src", "assets/img_project/3_icon/ic_receive_contaminated_equipment.png");
+            $("#ic_send_nsterile").attr("src", "assets/img_project/3_icon/ic_send_nsterile.png");
+            $("#ic_register_equipment").attr("src", "assets/img_project/3_icon/ic_register_equipment.png");
+            $("#ic_inventory_tools").attr("src", "assets/img_project/3_icon/ic_inventory_tools.png");
+            $("#ic_search_hndata").attr("src", "assets/img_project/3_icon/ic_search_hndata.png");
+            $("#ic_turnon_offdisplay").attr("src", "assets/img_project/3_icon/ic_turnon_offdisplay.png");
+            $("#ic_movement").attr("src", "assets/img_project/3_icon/ic_movement.png");
+            $("#ic_adjust_stock").attr("src", "assets/img_project/3_icon/ic_adjust_stock.png");
+            $("#ic_turnon_offdisplay_3").attr("src", "assets/img_project/3_icon/ic_report.png");
+            $("#ic_permission").attr("src", "assets/img_project/3_icon/permission.png");
+            $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/3_icon/ic_turnon_offdisplay.png");
 
 
             $("#li_logout").css('background-color', 'lightgray');
-            $("#img_logo").attr("src", "assets/img/logo.png");
+            $("#img_logo").attr("src", "assets/img/logo-w.png");
 
         }
         if (localStorage.display == '3') {
@@ -1889,6 +2172,9 @@ if (!isset($_SESSION['UserName'])) {
 
 
 
+            $(".color_menu").removeClass('color_menu1');
+            $(".color_menu").removeClass('color_menu2');
+            $(".color_menu").addClass('color_menu3');
 
             $("#ic_operation_room").attr("src", "assets/img_project/2_icon/ic_operation_room.png");
             $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");

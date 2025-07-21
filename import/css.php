@@ -25,6 +25,73 @@
 <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/css/dropify.css" integrity="sha512-In/+MILhf6UMDJU4ZhDL0R0fEpsp4D3Le23m6+ujDWXwl3whwpucJG1PEmI3B07nyJx+875ccs+yX2CqQJUxUw==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
 
 <style>
+    .position-relative {
+        width: 100%;
+        /* ปรับขนาดตามต้องการ */
+    }
+
+    .input-icon {
+        position: absolute;
+        right: 18px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 1.2em;
+        pointer-events: none;
+        /* ไม่ให้คลิกโดนไอคอน */
+    }
+
+    .tab-button-group {
+        display: inline-flex;
+        /* เปลี่ยนจาก flex -> inline-flex */
+        flex-wrap: wrap;
+        border: 1px solid #ddd;
+        border-radius: 12px;
+        padding: 8px;
+        background-color: #fff;
+        gap: 8px;
+    }
+
+    .tab-button {
+        padding: 8px 16px;
+        background-color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-weight: bold;
+        color: #333;
+        transition: background-color 0.3s;
+        white-space: nowrap;
+    }
+
+    .tab-button.active {
+        background-color: #f1e9f9;
+    }
+
+    .tab-button-group {
+        display: inline-flex;
+        /* เปลี่ยนจาก flex -> inline-flex */
+        flex-wrap: wrap;
+        border: 1px solid #ddd;
+        border-radius: 12px;
+        padding: 8px;
+        background-color: #fff;
+        gap: 8px;
+    }
+
+    .tab-button2 {
+        padding: 8px 16px;
+        background-color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-weight: bold;
+        color: #333;
+        transition: background-color 0.3s;
+        white-space: nowrap;
+    }
+
+    .tab-button2.active {
+        background-color: #f1e9f9;
+    }
+
     /* ::-webkit-input-placeholder {
    text-align: center;
 } */
@@ -41,7 +108,7 @@
         top: 0.25rem;
     }
 
-    .custom-switch.custom-switch-lg .custom-control-input:checked ~ .custom-control-label::after {
+    .custom-switch.custom-switch-lg .custom-control-input:checked~.custom-control-label::after {
         transform: translateX(1.5rem);
     }
 
@@ -49,7 +116,8 @@
         font-size: 1.2rem;
         padding-left: 3.5rem;
     }
-.custom-label {
+
+    .custom-label {
         display: inline-block;
         padding: 8px 15px;
         /* เพิ่มระยะขอบ */
@@ -398,6 +466,7 @@
     .f24 {
         font-size: 24px;
     }
+
     .f20 {
         font-size: 20px;
     }

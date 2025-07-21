@@ -15,30 +15,20 @@ function click_main() {
   $("#row_mapping").hide();
   $("#row_routine").hide();
 
-  $("#manage").css("color", "#bbbbb");
-  $("#manage").css("background", "#E0D2EF");
+  // $("#manage").css("color", "#bbbbb");
+  // $("#manage").css("background", "#E0D2EF");
 
   $("#manage").click(function () {
-    $("#manage").css("color", "#bbbbb");
-    $("#manage").css("background", "#E0D2EF");
-
-    $("#mapping").css("color", "black");
-    $("#mapping").css("background", "");
-    $("#routine").css("color", "black");
-    $("#routine").css("background", "");
+      $('.tab-button').removeClass('active');
+      $(this).addClass('active');
     $("#row_manage").show();
     $("#row_mapping").hide();
     $("#row_routine").hide();
   });
 
   $("#mapping").click(function () {
-    $("#mapping").css("color", "#bbbbb");
-    $("#mapping").css("background", "#E0D2EF");
-
-    $("#manage").css("color", "black");
-    $("#manage").css("background", "");
-    $("#routine").css("color", "black");
-    $("#routine").css("background", "");
+      $('.tab-button').removeClass('active');
+      $(this).addClass('active');
     $("#row_manage").hide();
     $("#row_mapping").show();
     $("#row_routine").hide();
@@ -65,13 +55,8 @@ function click_main() {
   });
 
   $("#routine").click(function () {
-    $("#routine").css("color", "#bbbbb");
-    $("#routine").css("background", "#E0D2EF");
-
-    $("#manage").css("color", "black");
-    $("#manage").css("background", "");
-    $("#mapping").css("color", "black");
-    $("#mapping").css("background", "");
+      $('.tab-button').removeClass('active');
+      $(this).addClass('active');
 
     $("#row_routine").show();
     $("#row_mapping").hide();
@@ -197,21 +182,14 @@ function click_menu() {
   $("#row_deproom_").hide();
   $("#row_users").hide();
 
-  $("#radio1").css("color", "#bbbbb");
-  $("#radio1").css("background", "#E0D2EF");
+  // $("#radio1").css("color", "#bbbbb");
+  // $("#radio1").css("background", "#E0D2EF");
 
   feeddata_detailDoctor();
 
   $("#radio1").click(function () {
-    $("#radio1").css("color", "#bbbbb");
-    $("#radio1").css("background", "#E0D2EF");
-
-    $("#radio2").css("color", "black");
-    $("#radio2").css("background", "");
-    $("#radio3").css("color", "black");
-    $("#radio3").css("background", "");
-    $("#radio4").css("color", "black");
-    $("#radio4").css("background", "");
+      $('.tab-button2').removeClass('active');
+      $(this).addClass('active');
 
     $("#row_doctor").show();
     $("#row_procedure_").hide();
@@ -222,15 +200,8 @@ function click_menu() {
   });
 
   $("#radio2").click(function () {
-    $("#radio2").css("color", "#bbbbb");
-    $("#radio2").css("background", "#E0D2EF");
-
-    $("#radio1").css("color", "black");
-    $("#radio1").css("background", "");
-    $("#radio3").css("color", "black");
-    $("#radio3").css("background", "");
-    $("#radio4").css("color", "black");
-    $("#radio4").css("background", "");
+      $('.tab-button2').removeClass('active');
+      $(this).addClass('active');
 
     $("#row_doctor").hide();
     $("#row_procedure_").show();
@@ -241,15 +212,8 @@ function click_menu() {
   });
 
   $("#radio3").click(function () {
-    $("#radio3").css("color", "#bbbbb");
-    $("#radio3").css("background", "#E0D2EF");
-
-    $("#radio2").css("color", "black");
-    $("#radio2").css("background", "");
-    $("#radio1").css("color", "black");
-    $("#radio1").css("background", "");
-    $("#radio4").css("color", "black");
-    $("#radio4").css("background", "");
+      $('.tab-button2').removeClass('active');
+      $(this).addClass('active');
 
     $("#row_doctor").hide();
     $("#row_procedure_").hide();
@@ -261,15 +225,8 @@ function click_menu() {
   });
 
   $("#radio4").click(function () {
-    $("#radio4").css("color", "#bbbbb");
-    $("#radio4").css("background", "#E0D2EF");
-
-    $("#radio2").css("color", "black");
-    $("#radio2").css("background", "");
-    $("#radio3").css("color", "black");
-    $("#radio3").css("background", "");
-    $("#radio1").css("color", "black");
-    $("#radio1").css("background", "");
+      $('.tab-button2').removeClass('active');
+      $(this).addClass('active');
 
     $("#row_doctor").hide();
     $("#row_procedure_").hide();

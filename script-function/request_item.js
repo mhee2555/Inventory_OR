@@ -1,13 +1,13 @@
-var RqDocNo_x  = "";
-var RtDocNo_x  = "";
+var RqDocNo_x = "";
+var RtDocNo_x = "";
 
 $(function () {
   $("#customSwitch1").change(function () {
     if ($(this).is(":checked")) {
-      showdetail(RqDocNo_x, RtDocNo_x,1);
-      $("#qr_change").text('จำนวน');
+      showdetail(RqDocNo_x, RtDocNo_x, 1);
+      $("#qr_change").text("จำนวน");
     } else {
-      showdetail(RqDocNo_x, RtDocNo_x,0);
+      showdetail(RqDocNo_x, RtDocNo_x, 0);
     }
   });
 
@@ -151,7 +151,7 @@ function show_detail_item_request() {
         $.each(ObjData, function (kay, value) {
           var color = "";
           var input_cnt = "";
-          if(value.stock_min == null){
+          if (value.stock_min == null) {
             value.stock_min = 0;
           }
           if (value.cnt < value.stock_min) {
@@ -394,20 +394,12 @@ function show_detail_request_byDocNo() {
 }
 
 function set_menu() {
-  $("#radio_request").css("color", "#bbbbb");
-  $("#radio_request").css("background", "#EAE1F4");
-
   $("#row_receive").hide();
   $("#row_history").hide();
 
   $("#radio_request").click(function () {
-    $("#radio_request").css("color", "#bbbbb");
-    $("#radio_request").css("background", "#EAE1F4");
-
-    $("#radio_receive").css("color", "black");
-    $("#radio_receive").css("background", "");
-    $("#radio_history").css("color", "black");
-    $("#radio_history").css("background", "");
+    $(".tab-button").removeClass("active");
+    $(this).addClass("active");
 
     $("#row_request").show();
     $("#row_receive").hide();
@@ -415,29 +407,20 @@ function set_menu() {
   });
 
   $("#radio_receive").click(function () {
-    $("#radio_receive").css("color", "#bbbbb");
-    $("#radio_receive").css("background", "#EAE1F4");
-
-    $("#radio_request").css("color", "black");
-    $("#radio_request").css("background", "");
-    $("#radio_history").css("color", "black");
-    $("#radio_history").css("background", "");
+    $(".tab-button").removeClass("active");
+    $(this).addClass("active");
 
     $("#row_request").hide();
     $("#row_receive").show();
     $("#row_history").hide();
 
     show_detail_receive();
+
   });
 
   $("#radio_history").click(function () {
-    $("#radio_history").css("color", "#bbbbb");
-    $("#radio_history").css("background", "#EAE1F4");
-
-    $("#radio_request").css("color", "black");
-    $("#radio_request").css("background", "");
-    $("#radio_receive").css("color", "black");
-    $("#radio_receive").css("background", "");
+    $(".tab-button").removeClass("active");
+    $(this).addClass("active");
 
     $("#row_request").hide();
     $("#row_receive").hide();
@@ -531,8 +514,8 @@ function show_detail_history() {
   });
 }
 
-function show_Report(RqDocNo,RtDocNo) {
-  option = "?RqDocNo=" + RqDocNo+"&RtDocNo=" + RtDocNo;
+function show_Report(RqDocNo, RtDocNo) {
+  option = "?RqDocNo=" + RqDocNo + "&RtDocNo=" + RtDocNo;
   window.open("report/request_item.php" + option, "_blank");
 }
 
@@ -542,10 +525,10 @@ function showdetail_popup(RqDocNo, RtDocNo) {
   RqDocNo_x = RqDocNo;
   RtDocNo_x = RtDocNo;
   $("#myModal_detail").modal("toggle");
-  showdetail(RqDocNo, RtDocNo,0);
+  showdetail(RqDocNo, RtDocNo, 0);
 }
 
-function showdetail(RqDocNo, RtDocNo,check_show) {
+function showdetail(RqDocNo, RtDocNo, check_show) {
   $.ajax({
     url: "process/request_item.php",
     type: "POST",

@@ -542,8 +542,7 @@ function saveUser($conn)
             VALUES             ('$input_empcodeUser'  , '$input_userName'  , '$input_passWord'  , $IsCancel ,1  ,3 , '$select_permission', '$IsAdmin_new') ";
 
             $query2 = "INSERT INTO employee ( EmpCode ,  FirstName ,  LastName   , DepID ,IsAdmin) 
-            VALUES             ('$input_empcodeUser'  , '$input_nameUser' , '$input_lastUser',1,'$IsAdmin_new') ";
-
+            VALUES             ('$input_empcodeUser'  , '$input_nameUser' , '$input_lastUser',1,$IsAdmin_new) ";
 
 
 

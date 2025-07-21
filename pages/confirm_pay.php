@@ -46,6 +46,18 @@ $doc = $_GET['doc'];
 
                         </div>
                     </div>
+
+                    <table class="table table-hover table-sm" id="table_detail">
+                        <thead style="background-color: #643695;">
+                            <tr>
+                                <th scope="col" class="text-center" id="">Code</th>
+                                <th scope="col" class="text-center" id="">Name</th>
+                                <th scope="col" class="text-center" id="">Qty</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -107,7 +119,7 @@ $doc = $_GET['doc'];
         $(function() {
             var doc = '<?php echo $doc; ?>';
 
-
+            show_detail(doc);
             set_users();
 
             setTimeout(() => {
@@ -148,7 +160,37 @@ $doc = $_GET['doc'];
 
 
         });
-        
+
+        function show_detail(doc) {
+
+            $.ajax({
+                url: "../process/confirm_pay.php",
+                type: "POST",
+                data: {
+                    FUNC_NAME: "show_detail",
+                    doc: doc,
+                },
+                success: function(result) {
+                    var _tr = "";
+                    // $("#table_deproom_pay").DataTable().destroy();
+                    $("#table_detail tbody").html("");
+                    var ObjData = JSON.parse(result);
+                    if (!$.isEmptyObject(ObjData)) {
+                        $.each(ObjData, function(kay, value) {
+
+                _tr += `<tr>
+                            <td class="f18 text-center">${value.itemcode2}</td>
+                            <td class="f18 text-left">${value.itemname}</td>
+                            <td class="f18 text-center">${value.cnt_pay}</td>
+                        </tr>`;
+                        });
+                    }
+
+                    $("#table_detail tbody").html(_tr);
+                },
+            });
+        }
+
         function onUpdateConfirm() {
             var doc = '<?php echo $doc; ?>';
 
@@ -167,16 +209,16 @@ $doc = $_GET['doc'];
                 success: function(result) {
                     var ObjData = JSON.parse(result);
 
-                        Swal.fire({
-                            title: 'สำเร็จ',
-                            text: 'บันทึกสำเร็จ',
-                            icon: "success",
-                            timer: 1000,
-                        });
+                    Swal.fire({
+                        title: 'สำเร็จ',
+                        text: 'บันทึกสำเร็จ',
+                        icon: "success",
+                        timer: 1000,
+                    });
 
-                        setTimeout(() => {
-                            location.reload();
-                        }, 1000);
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1000);
                 }
             });
         }
@@ -219,9 +261,9 @@ $doc = $_GET['doc'];
                                 value.hn_record_id = value.number_box;
                             }
                             if (value.IsConfirm_pay == 1) {
-                                $("#btn_save_item").attr('hidden',true);
+                                $("#btn_save_item").attr('hidden', true);
                             }
-                            
+
                             $('#select_users').val(value.userConfirm_pay).trigger('change');
                             $("#text_hn").text(value.hn_record_id);
                             $("#text_doctor").html(doctor);

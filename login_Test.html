@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>เข้าสู่ระบบ</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Kanit&display=swap');
+
+    body {
+      font-family: 'Kanit', sans-serif;
+      background: linear-gradient(to right, #cbb8e5 50%, #65d4c0 50%);
+      margin: 0;
+      padding: 0;
+    }
+
+    .main-container {
+      display: flex;
+      height: 100vh;
+      justify-content: center;
+      align-items: center;
+      padding: 10px;
+    }
+
+    .login-box {
+      width: 100%;
+      max-width: 1300px;
+      height: 760px;
+      background-color: white;
+      display: flex;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    }
+
+    .left-panel {
+      width: 50%;
+      background-color: white;
+      padding: 80px 60px;
+    }
+
+    .right-panel {
+      width: 50%;
+      background: url('assets/img/img_login.png') no-repeat center center;
+      background-size: cover;
+    }
+
+    .form-control {
+      height: 45px;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    .btn-login {
+      background-color: #6b2da5;
+      color: white;
+      font-weight: bold;
+      height: 45px;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    .btn-login:hover {
+      background-color: #5a2393;
+    }
+
+    .custom-checkbox {
+      margin-top: 10px;
+    }
+
+    .logo {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .logo img {
+      height: 60px;
+    }
+
+    /* ส่วนของ Responsive Mobile */
+    @media (max-width: 768px) {
+      .login-box {
+        flex-direction: column;
+        height: auto;
+      }
+
+      .left-panel, .right-panel {
+        width: 100%;
+        height: auto;
+      }
+
+      .right-panel {
+        order: -1;
+        min-height: 200px;
+      }
+
+      .left-panel {
+        padding: 30px 20px;
+      }
+
+      .form-control, .btn-login {
+        font-size: 16px;
+        height: 44px;
+      }
+
+      h3, h5 {
+        font-size: 20px;
+      }
+
+      .text-muted {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="main-container">
+    <div class="login-box">
+      
+      <!-- ฟอร์มด้านซ้าย -->
+      <div class="left-panel">
+        <div class="logo">
+          <img src="assets/img/logosripat.png" alt="logo">
+        </div>
+
+        <div class="text-center mb-4">
+          <h3 class="font-weight-bold mb-2">ยินดีต้อนรับ</h3>
+          <h5 class="text-primary font-weight-bold mb-2">เข้าสู่ระบบศูนย์ศรีพัฒน์</h5>
+          <p class="text-muted mb-1">กรุณาเข้าสู่ระบบด้วยชื่อผู้ใช้งานและรหัสผ่านของคุณ</p>
+        </div>
+
+        <form>
+          <div class="form-group">
+            <label>ชื่อผู้ใช้งาน</label>
+            <input type="text" class="form-control" placeholder="Username00001">
+          </div>
+          <div class="form-group">
+            <label>รหัสผ่าน</label>
+            <input type="password" class="form-control" placeholder="**********">
+          </div>
+          <div class="form-group d-flex justify-content-between align-items-center">
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="rememberCheck">
+              <label class="custom-control-label" for="rememberCheck">จดจำรหัสผ่าน</label>
+            </div>
+            <a href="#" class="text-primary">ลืมรหัสผ่าน ?</a>
+          </div>
+
+          <button type="submit" class="btn btn-login btn-block mt-3">เข้าสู่ระบบ</button>
+
+          <hr class="my-4">
+
+          <div class="form-group text-center">
+            <label for="scanInput" class="font-weight-bold">หรือเข้าสู่ระบบด้วยการสแกน</label>
+            <input type="text" id="scanInput" class="form-control text-center" placeholder="กรุณาสแกนที่นี่..." autofocus onkeypress="handleScan(event)">
+          </div>
+        </form>
+      </div>
+
+      <!-- ภาพด้านขวา -->
+      <div class="right-panel">
+        <!-- พื้นหลังภาพแสดงที่นี่ -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function handleScan(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        const scannedCode = e.target.value.trim();
+        console.log("Scanned code:", scannedCode);
+        // TODO: ส่ง code นี้ไป login หรือ redirect ได้เลย
+      }
+    }
+  </script>
+
+</body>
+</html>

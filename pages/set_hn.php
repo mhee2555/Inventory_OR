@@ -1,22 +1,32 @@
 <div>
-    <div class="row">
-        <div class="col-md-6">
-        </div>
-        <div class="col-lg-3 mt-3 text-right">
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <div class="input-group-text" id="lang_text_roomcheck" style="    background-color: white;border: none;">สิทธิ์การเข้าใช้งาน : </div>
+    <div class="container-fluid">
+        <div class="row justify-content-end mt-3">
+            <div class="col-auto">
+                <div class="input-group" style="background-color: #f1f3fb; border-radius: 10px; border: 1px solid #dce0eb; overflow: hidden;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"
+                            style="border: none; background-color: white; font-weight: bold; border-right: 1px solid #dce0eb;">
+                            สิทธิ์การเข้าใช้งาน :
+                        </span>
+                    </div>
+                    <input type="text" class="form-control font-weight-bold"
+                        id="input_Deproom_Main" disabled
+                        style="background-color: #f1f3fb; border: none; color: #000;">
                 </div>
-                <input type="text" class="form-control f18" id="input_Deproom_Main" disabled value="" style="font-weight: bold;">
             </div>
-        </div>
 
-        <div class="col-lg-3 mt-3 text-right">
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <div class="input-group-text" id="lang_text_username" style="    background-color: white;border: none;">ชื่อผู้ใช้งาน : </div>
+            <div class="col-auto ml-2">
+                <div class="input-group" style="background-color: #f1f3fb; border-radius: 10px; border: 1px solid #dce0eb; overflow: hidden;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"
+                            style="border: none; background-color: white; font-weight: bold; border-right: 1px solid #dce0eb;">
+                            ชื่อผู้ใช้งาน :
+                        </span>
+                    </div>
+                    <input type="text" class="form-control font-weight-bold"
+                        id="input_Name_Main" disabled
+                        style="background-color: #f1f3fb; border: none; color: #000;">
                 </div>
-                <input type="text" class="form-control f18" id="input_Name_Main" disabled value="" style="font-weight: bold;">
             </div>
         </div>
     </div>
@@ -24,10 +34,16 @@
 
 <div class="row mt-3">
     <div class=" col-md-12 col-lg-9  ">
-        <div class="btn-group btn-group-toggle" role="group" aria-label="Basic example">
+
+        <div class="tab-button-group">
+            <button class="tab-button active" id="radio_set_hn">กรอกข้อมูลคนไข้</button>
+            <button class="tab-button" id="radio_history">ประวัติคนไข้</button>
+        </div>
+
+        <!-- <div class="btn-group btn-group-toggle" role="group" aria-label="Basic example">
             <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;border-color: lightgray;" id="radio_set_hn">กรอกข้อมูลคนไข้</button>
             <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;border-color: lightgray;" id="radio_history">ประวัติคนไข้</button>
-        </div>
+        </div> -->
     </div>
 </div>
 
@@ -51,12 +67,21 @@
 
                                     <div class="form-group ">
                                         <label style="color:black;font-weight: 600;">วันที่รับบริการ</label>
-                                        <div class="input-group">
+
+
+                                        <div class="position-relative">
+                                            <input type="text" class="form-control rounded pr-5 f18" placeholder="" id="input_date_service_manual" data-language='en' data-date-format='dd-mm-yyyy'>
+                                            <span class="input-icon">
+                                                <i class="fa-solid fa-calendar" style="color:black;"></i>
+                                            </span>
+                                        </div>
+
+                                        <!-- <div class="input-group">
                                             <input type="text" class="form-control datepicker-here f18" id="input_date_service_manual" data-language='en' data-date-format='dd-mm-yyyy'>
                                             <div class="input-group-append">
                                                 <div class="input-group-text bg-light" style="font-size: 20px;font-weight: bold;"><i class="fa-regular fa-calendar-days"></i></div>
                                             </div>
-                                        </div>
+                                        </div> -->
                                     </div>
                                 </div>
                                 <div class="col-md-4 ">
@@ -142,23 +167,39 @@
             <div class="row">
                 <div class="col-md-3">
                     <div class="form-group ">
-                        <div class="input-group">
+
+                        <div class="position-relative">
+                            <input type="text" class="form-control rounded pr-5 f18" placeholder="" id="select_date1_search" data-language='en' data-date-format='dd-mm-yyyy'>
+                            <span class="input-icon">
+                                <i class="fa-solid fa-calendar" style="color:black;"></i>
+                            </span>
+                        </div>
+
+                        <!-- <div class="input-group">
                             <input type="text" class="form-control datepicker-here f18" id="select_date1_search" data-language='en' data-date-format='dd-mm-yyyy'>
                             <div class="input-group-append">
                                 <div class="input-group-text bg-light" style="font-size: 20px;font-weight: bold;"><i class="fa-regular fa-calendar-days"></i></div>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
 
                 <div class="col-md-3">
                     <div class="form-group ">
-                        <div class="input-group">
+
+                        <div class="position-relative">
+                            <input type="text" class="form-control rounded pr-5 f18" placeholder="" id="select_date2_search" data-language='en' data-date-format='dd-mm-yyyy'>
+                            <span class="input-icon">
+                                <i class="fa-solid fa-calendar" style="color:black;"></i>
+                            </span>
+                        </div>
+
+                        <!-- <div class="input-group">
                             <input type="text" class="form-control datepicker-here f18" id="select_date2_search" data-language='en' data-date-format='dd-mm-yyyy'>
                             <div class="input-group-append">
                                 <div class="input-group-text bg-light" style="font-size: 20px;font-weight: bold;"><i class="fa-regular fa-calendar-days"></i></div>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
                 <div class="col-md-12">

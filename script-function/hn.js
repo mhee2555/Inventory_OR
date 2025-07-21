@@ -81,7 +81,7 @@ function show_detail_hn() {
             var styleP = ``;
             var titleP = ``;
           } else {
-            var styleP = `style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 300px;" `;
+            var styleP = `style='max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;' `;
             var titleP = `title="${value.Procedure_TH}"`;
           }
           if (value.Doctor_Name == "button") {
@@ -92,9 +92,9 @@ function show_detail_hn() {
             `<tr class="color" onclick='setActive_feeddata_hncode_detail(${value.ID},"${value.DocNo}","${value.HnCode}","${value.his_IsStatus}")' id="tr_${value.ID}"> ` +
             `<td class="text-center">${kay + 1}</td>` +
             `<td class="text-center" >${value.DocDate}</td>` +
-            `<td class="text-left" >${value.HnCode}</td>` +
-            `<td class="text-left">${value.departmentroomname}</td>` +
-            `<td class="text-left">${value.Doctor_Name}</td>` +
+            `<td class="text-left" style='max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>${value.HnCode}</td>` +
+            `<td class="text-left" style='max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>${value.departmentroomname}</td>` +
+            `<td class="text-left" style='max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>${value.Doctor_Name}</td>` +
             `<td class="text-left" ${styleP} ${titleP} >${value.Procedure_TH}</td>` +
             ` </tr>`;
         });
@@ -124,15 +124,15 @@ function show_detail_hn() {
             targets: 0,
           },
           {
-            width: "15%",
+            width: "20%",
             targets: 1,
           },
           {
-            width: "15%",
+            width: "10%",
             targets: 2,
           },
           {
-            width: "30%",
+            width: "10%",
             targets: 3,
           },
           {
@@ -140,7 +140,7 @@ function show_detail_hn() {
             targets: 4,
           },
           {
-            width: "25%",
+            width: "10%",
             targets: 5,
           },
         ],

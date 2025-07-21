@@ -11,8 +11,8 @@ $(function () {
 
   $("#row_refrain").hide();
   $("#row_his").hide();
-  $("#radio_daily").css("color", "#bbbbb");
-  $("#radio_daily").css("background", "#EAE1F4");
+  // $("#radio_daily").css("color", "#bbbbb");
+  // $("#radio_daily").css("background", "#EAE1F4");
 
   var d = new Date();
   var month = d.getMonth() + 1;
@@ -50,13 +50,8 @@ $(function () {
 
   show_detail_daily();
   $("#radio_daily").click(function () {
-    $("#radio_daily").css("color", "#bbbbb");
-    $("#radio_daily").css("background", "#EAE1F4");
-
-    $("#radio_refrain").css("color", "black");
-    $("#radio_refrain").css("background", "");
-    $("#radio_his").css("color", "black");
-    $("#radio_his").css("background", "");
+      $('.tab-button').removeClass('active');
+      $(this).addClass('active');
 
     $("#row_daily").show();
     $("#row_refrain").hide();
@@ -65,13 +60,8 @@ $(function () {
   });
 
   $("#radio_refrain").click(function () {
-    $("#radio_refrain").css("color", "#bbbbb");
-    $("#radio_refrain").css("background", "#EAE1F4");
-
-    $("#radio_daily").css("color", "black");
-    $("#radio_daily").css("background", "");
-    $("#radio_his").css("color", "black");
-    $("#radio_his").css("background", "");
+      $('.tab-button').removeClass('active');
+      $(this).addClass('active');
 
     $("#row_refrain").show();
     $("#row_daily").hide();
@@ -81,13 +71,8 @@ $(function () {
   });
 
   $("#radio_his").click(function () {
-    $("#radio_his").css("color", "#bbbbb");
-    $("#radio_his").css("background", "#EAE1F4");
-
-    $("#radio_daily").css("color", "black");
-    $("#radio_daily").css("background", "");
-    $("#radio_refrain").css("color", "black");
-    $("#radio_refrain").css("background", "");
+      $('.tab-button').removeClass('active');
+      $(this).addClass('active');
 
     $("#row_refrain").hide();
     $("#row_daily").hide();
@@ -476,8 +461,8 @@ function show_detail_daily() {
                       <td class="f18 text-center">${value.hncode}</td>
                       <td class="f18 text-center">${value.serviceDate} ${value.serviceTime}</td>
                       <td class="f18 text-center">${value.Doctor_Name}</td>
-                      <td class="f18 text-center">${value.departmentroomname}</td>
-                      <td class="f18 text-center">${value.Procedure_TH}</td>
+                      <td class="f18 text-left">${value.departmentroomname}</td>
+                      <td class="f18 text-left">${value.Procedure_TH}</td>
                       <td class="f18 text-center">${txt}</td>
                       <td class="f18 text-center"><a  class='btn f18' ${x}  href="#" style='font-weight: bold;background-color:#e74a3b;color:#fff;' onclick='update_refrain(${value.ID})'>งด</a></td>
                    </tr>`;

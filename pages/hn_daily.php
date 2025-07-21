@@ -1,29 +1,37 @@
 <div>
 
 
-
-
-    <div class="row">
-        <div class="col-md-6">
-        </div>
-        <div class="col-lg-3 mt-3 text-right">
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <div class="input-group-text" id="lang_text_roomcheck" style="    background-color: white;border: none;">สิทธิ์การเข้าใช้งาน : </div>
+    <div class="container-fluid">
+        <div class="row justify-content-end mt-3">
+            <div class="col-auto">
+                <div class="input-group" style="background-color: #f1f3fb; border-radius: 10px; border: 1px solid #dce0eb; overflow: hidden;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"
+                            style="border: none; background-color: white; font-weight: bold; border-right: 1px solid #dce0eb;">
+                            สิทธิ์การเข้าใช้งาน :
+                        </span>
+                    </div>
+                    <input type="text" class="form-control font-weight-bold"
+                        id="input_Deproom_Main" disabled
+                        style="background-color: #f1f3fb; border: none; color: #000;">
                 </div>
-                <input type="text" class="form-control f18" id="input_Deproom_Main" disabled value="" style="font-weight: bold;">
             </div>
-        </div>
-        <div class="col-lg-3 mt-3 text-right">
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <div class="input-group-text" id="lang_text_username" style="    background-color: white;border: none;">ชื่อผู้ใช้งาน : </div>
+
+            <div class="col-auto ml-2">
+                <div class="input-group" style="background-color: #f1f3fb; border-radius: 10px; border: 1px solid #dce0eb; overflow: hidden;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"
+                            style="border: none; background-color: white; font-weight: bold; border-right: 1px solid #dce0eb;">
+                            ชื่อผู้ใช้งาน :
+                        </span>
+                    </div>
+                    <input type="text" class="form-control font-weight-bold"
+                        id="input_Name_Main" disabled
+                        style="background-color: #f1f3fb; border: none; color: #000;">
                 </div>
-                <input type="text" class="form-control f18" id="input_Name_Main" disabled value="" style="font-weight: bold;">
             </div>
         </div>
     </div>
-
 
 </div>
 
@@ -33,25 +41,58 @@
 
 <div class="row mt-3">
     <div class=" col-md-12 col-lg-9  ">
+
+        <div class="tab-button-group">
+            <button class="tab-button active" id="radio_daily">คนไข้ประจำวัน</button>
+            <button class="tab-button" id="radio_refrain">งด</button>
+            <button class="tab-button" id="radio_his">ยืนยันการส่งค่าใช้จ่าย (HIS)</button>
+        </div>
+        <!-- 
         <div class="btn-group btn-group-toggle" role="group" aria-label="Basic example">
             <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;border-color: lightgray;" id="radio_daily">คนไข้ประจำวัน</button>
             <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;border-color: lightgray;" id="radio_refrain">งด</button>
             <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;border-color: lightgray;" id="radio_his">ยืนยันการส่งค่าใช้จ่าย (HIS)</button>
-        </div>
+        </div> -->
     </div>
 </div>
 
 <div id="row_daily">
-    <div class="row">
-        <div class="col-md-9">
+    <div class="row mt-3">
+        <div class="col-md-3">
+            <label style="color:black;font-weight: 600;">สถานะ</label>
+            <select class="form-control f18" id="select_type" style="min-width: 330px;">
+                <option value="">เลือกทั้งหมด</option>
+                <option value="1">รอดำเนินการ</option>
+                <option value="2">ดำเนินการเรียบร้อย</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group row">
+                <label style="color:black;font-weight: 600;">วันที่</label>
+                <div class="position-relative">
+                    <input type="text" class="form-control rounded pr-5 f18" placeholder="" id="select_date1_search1" data-language='en' data-date-format='dd-mm-yyyy'>
+                    <span class="input-icon">
+                        <i class="fa-solid fa-calendar" style="color:black;"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-check " style="margin-top: 38px;">
+                <input type="checkbox" class="form-check-input" id="checkbox_filter" style="width: 25px;height: 25px;">
+                <label class="form-check-label f18 ml-4 mt-1" for="checkbox_filter" style="color:black;font-weight:bold;">แสดงเอกสารคงค้าง</label>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-2">
+
+        <!-- <div class="col-md-9">
             <div class="d-flex justify-content-end align-items-center">
-                <!-- Checkbox -->
                 <div class="form-check mr-2">
                     <input type="checkbox" class="form-check-input" id="checkbox_filter" style="width: 25px;height: 25px;">
                     <label class="form-check-label f18 ml-2 mt-1" for="checkbox_filter" style="color:black;font-weight:bold;">แสดงเอกสารคงค้าง</label>
                 </div>
 
-                <!-- Select -->
                 <div class="form-group mb-0">
                     <select class="form-control f18" id="select_type" style="min-width: 330px;">
                         <option value="">เลือกทั้งหมด</option>
@@ -71,7 +112,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
 
 
         <div class="col-md-12 mt-2">
@@ -101,12 +142,15 @@
         <div class="col-md-3"></div>
         <div class="col-md-3">
             <div class="form-group ">
-                <div class="input-group">
-                    <input type="text" class="form-control datepicker-here f18" id="select_date1_search2" data-language='en' data-date-format='dd-mm-yyyy'>
-                    <div class="input-group-append">
-                        <div class="input-group-text bg-light" style="font-size: 20px;font-weight: bold;"><i class="fa-regular fa-calendar-days"></i></div>
-                    </div>
+
+                <div class="position-relative">
+                    <input type="text" class="form-control rounded pr-5 f18" placeholder="" id="select_date1_search2" data-language='en' data-date-format='dd-mm-yyyy'>
+                    <span class="input-icon">
+                        <i class="fa-solid fa-calendar" style="color:black;"></i>
+                    </span>
                 </div>
+
+
             </div>
         </div>
 
@@ -138,12 +182,14 @@
                 <div class="col-md-6  mt-3">
                     <label for="" id="lang_text_date2" style="font-weight: 600;color:black;">วันที่</label>
 
-                    <div class="input-group">
-                        <input type="text" style="font-size:20px;" class="form-control datepicker-here" id="select_his_Date" data-language='en' data-date-format='dd-mm-yyyy' autocomplete="off">
-                        <div class="input-group-append">
-                            <div class="input-group-text bg-light" style="font-size: 20px;font-weight: bold;"><i class="fa-regular fa-calendar-days"></i></div>
-                        </div>
+                    <div class="position-relative">
+                        <input type="text" class="form-control rounded pr-5 f18" placeholder="" id="select_his_Date" data-language='en' data-date-format='dd-mm-yyyy'>
+                        <span class="input-icon">
+                            <i class="fa-solid fa-calendar" style="color:black;"></i>
+                        </span>
                     </div>
+
+
                 </div>
 
 

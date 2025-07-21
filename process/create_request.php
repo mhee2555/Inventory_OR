@@ -548,25 +548,25 @@ function show_detail_history($conn, $db)
     $select_date_history_l = explode("-", $select_date_history_l);
     $select_date_history_l = $select_date_history_l[2] . '-' . $select_date_history_l[1] . '-' . $select_date_history_l[0];
 
+    $select_doctor_history = $_POST['select_doctor_history'];
+    $select_procedure_history = $_POST['select_procedure_history'];
 
-
-    if (isset($_POST['select_doctor_history'])) {
-        $select_doctor_history = $_POST['select_doctor_history'];
-    }
-    if (isset($_POST['select_procedure_history'])) {
-        $select_procedure_history = $_POST['select_procedure_history'];
-    }
-
+    // if (isset($_POST['select_doctor_history'])) {
+    //     $select_doctor_history = $_POST['select_doctor_history'];
+    // }
+    // if (isset($_POST['select_procedure_history'])) {
+    //     $select_procedure_history = $_POST['select_procedure_history'];
+    // }
     $whereP = "";
-    if (isset($select_procedure_history)) {
+    if ($select_procedure_history != "") {
         // $select_procedure_history = implode(",", $select_procedure_history);
         // $whereP = " AND  FIND_IN_SET('$select_procedure_history', deproom.`procedure`) ";
-        $whereP = "  AND deproom.`procedure` LIKE '%$select_procedure_history%'  ";
+        $whereP = "  AND deproom.`procedure` = '$select_procedure_history'  ";
     }
     $whereD = "";
-    if (isset($select_doctor_history)) {
+    if ($select_doctor_history != "") {
         // $select_doctor_history = implode(",", $select_doctor_history);
-        $whereD = "  AND deproom.`doctor` LIKE '%$select_doctor_history%'  ";
+        $whereD = "  AND deproom.`doctor` = '$select_doctor_history'  ";
     }
 
     if ($db == 1) {
@@ -591,7 +591,8 @@ function show_detail_history($conn, $db)
                         deproom.Remark,
                         deproom.doctor,
                         deproom.`procedure` ,
-                        deproomdetailsub.ID  AS cnt_id
+                        deproomdetailsub.ID  AS cnt_id,
+                        deproomdetail.IsStart 
                     FROM
                         deproom
                         INNER JOIN doctor ON doctor.ID = deproom.doctor
@@ -610,6 +611,9 @@ function show_detail_history($conn, $db)
                         deproom.DocNo 
                     ORDER BY
                         deproom.ID DESC ";
+
+                        // echo $query;
+                        // exit;
     } else {
 
         $whereD = "";

@@ -1,8 +1,8 @@
 $(function () {
   session();
 
-  $("#radio_oc").css("color", "#bbbbb");
-  $("#radio_oc").css("background", "#EAE1F4");
+  // $("#radio_oc").css("color", "#bbbbb");
+  // $("#radio_oc").css("background", "#EAE1F4");
 
   $("#row_tracking").hide();
 
@@ -10,11 +10,8 @@ $(function () {
   show_detail_oc();
 
   $("#radio_oc").click(function () {
-    $("#radio_oc").css("color", "#bbbbb");
-    $("#radio_oc").css("background", "#EAE1F4");
-
-    $("#radio_tracking").css("color", "black");
-    $("#radio_tracking").css("background", "");
+      $('.tab-button').removeClass('active');
+      $(this).addClass('active');
 
     $("#row_oc").show();
     $("#row_tracking").hide();
@@ -23,11 +20,8 @@ $(function () {
   });
 
   $("#radio_tracking").click(function () {
-    $("#radio_tracking").css("color", "#bbbbb");
-    $("#radio_tracking").css("background", "#EAE1F4");
-
-    $("#radio_oc").css("color", "black");
-    $("#radio_oc").css("background", "");
+      $('.tab-button').removeClass('active');
+      $(this).addClass('active');
 
     $("#row_oc").hide();
     $("#row_tracking").show();
@@ -532,15 +526,15 @@ function show_detail_oc() {
           if (value.IsDeproom == "1") {
             txt = value.hn_record_id;
             status =
-              "<label style='color:green;font-weight:bold;'>ถูกใช้งาน</label>";
+              "<button class='btn btn-success' >ถูกใช้งาน</button>";
           }
           if (value.IsDeproom == "0") {
             status =
-              "<labe style='color:violet;font-weight:bold;'>อยู่คลัง Stock</label>";
+              "<button class='btn btn-primary' >อยู่คลัง Stock</button>";
           }
           if (value.check_exp == "exp") {
             status =
-              "<labe style='color:red;font-weight:bold;'>หมดอายุ</label>";
+              "<button class='btn btn-danger' >หมดอายุ</button>";
           }
           _tr += `<tr >
                       <td class='text-left'>${value.itemname}</td>
@@ -575,7 +569,7 @@ function show_detail_oc() {
         },
         columnDefs: [
           {
-            width: "20%",
+            width: "25%",
             targets: 0,
           },
           {
@@ -591,7 +585,7 @@ function show_detail_oc() {
             targets: 3,
           },
           {
-            width: "10%",
+            width: "15%",
             targets: 4,
           },
           {
@@ -599,7 +593,7 @@ function show_detail_oc() {
             targets: 5,
           },
           {
-            width: "10%",
+            width: "5%",
             targets: 5,
           },
         ],

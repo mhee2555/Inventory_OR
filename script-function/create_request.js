@@ -51,26 +51,20 @@ $(function () {
 
   $("#history_create_request").hide();
 
-  $("#radio_create_request").css("color", "#bbbbb");
-  $("#radio_create_request").css("background", "#EAE1F4");
+
 
   $("#radio_create_request").click(function () {
-    $("#radio_create_request").css("color", "#bbbbb");
-    $("#radio_create_request").css("background", "#EAE1F4");
 
-    $("#radio_history_create_request").css("color", "black");
-    $("#radio_history_create_request").css("background", "");
+      $('.tab-button').removeClass('active');
+      $(this).addClass('active');
 
     $("#create_request").show();
     $("#history_create_request").hide();
   });
 
   $("#radio_history_create_request").click(function () {
-    $("#radio_history_create_request").css("color", "#bbbbb");
-    $("#radio_history_create_request").css("background", "#EAE1F4");
-
-    $("#radio_create_request").css("color", "black");
-    $("#radio_create_request").css("background", "");
+      $('.tab-button').removeClass('active');
+      $(this).addClass('active');
 
     $("#create_request").hide();
     $("#history_create_request").show();
@@ -778,7 +772,7 @@ function show_detail_request_byDocNo() {
             value.ID
           }" data-id='${value.ID}' value='${value.cnt}'> </td>
                       <td class='text-center'>
-                      <img src="assets/img_project/1_icon/ic_trash-1.png" style='width:30%;cursor:pointer;' onclick='delete_request_byItem(${
+                      <img src="assets/img_project/1_icon/ic_trash-1.png" style='width:60%;cursor:pointer;' onclick='delete_request_byItem(${
                         value.ID
                       })'>
                       </td>
@@ -1092,22 +1086,27 @@ function show_detail_history() {
           }
 
           if (value.cnt_id == null) {
-            var edit_id = `<button class='btn btn-outline-dark f18' onclick='edit_item_byDocNo("${value.DocNo}","${value.hn_record_id}","${value.serviceDate}","${value.doctor_ID}","${value.procedure_ID}","${value.deproom_ID}","${value.Remark}","${value.doctor}","${value.procedure}","${value.departmentroomname}","edit","${value.serviceTime}")'><i class="fa-regular fa-pen-to-square"></i> แก้ไข</button>`;
+            var edit_id = `<button class=' btn-block btn btn-outline-dark f18' onclick='edit_item_byDocNo("${value.DocNo}","${value.hn_record_id}","${value.serviceDate}","${value.doctor_ID}","${value.procedure_ID}","${value.deproom_ID}","${value.Remark}","${value.doctor}","${value.procedure}","${value.departmentroomname}","edit","${value.serviceTime}")'><i class="fa-regular fa-pen-to-square"></i> แก้ไข</button>`;
             var showreport = `<button class='btn f18' style='background-color:#643695;color:#fff;' onclick='show_Report("${value.DocNo}")'>รายงานขอเบิก</button>`;
           } else {
             var edit_id = ``;
-            var showreport = `<button class='btn f18 btn-success' onclick='show_Report("${value.DocNo}")')'>ถูกสแกนจ่าย</button>`;
+            
+            if(value.IsStart == null){
+              var showreport = `<button disabled class='btn f18 btn-secondary' onclick='show_Report("${value.DocNo}")')'>ถูกสแกนจ่าย</button>`;
+            }else{
+              var showreport = `<button  class='btn f18 btn-success' onclick='show_Report("${value.DocNo}")')'>ถูกสแกนจ่าย</button>`;
+            }
           }
 
           _tr += `<tr>
                       <td class='text-center'>${kay + 1}</td>
                       <td class='text-center'>${value.serviceDate} ${value.serviceTime}</td>
-                      <td class='text-center'>${value.hn_record_id}</td>
-                      <td class='text-left'>${value.Doctor_Name}</td>
-                      <td class='text-left'>${value.Procedure_TH}</td>
-                      <td class='text-left'>${value.departmentroomname}</td>
+                      <td class='text-left' style='max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>${value.hn_record_id}</td>
+                      <td class='text-left' style='max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>${value.Doctor_Name}</td>
+                      <td class='text-left' style='max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>${value.Procedure_TH}</td>
+                      <td class='text-left' style='max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>${value.departmentroomname}</td>
                       <td class='text-center'>${edit_id}</td>
-                      <td hidden class='text-center'><button class='btn btn-outline-danger f18' onclick='cancel_item_byDocNo("${
+                      <td hidden class='text-center'><button class='btn-block btn btn-outline-danger f18' onclick='cancel_item_byDocNo("${
                         value.DocNo
                       }")' >ยกเลิก</button></td>
                       <td class='text-center'>${showreport}</td>
@@ -1148,27 +1147,27 @@ function show_detail_history() {
             targets: 2,
           },
           {
-            width: "15%",
+            width: "5%",
             targets: 3,
           },
           {
-            width: "15%",
+            width: "5%",
             targets: 4,
           },
           {
-            width: "10%",
+            width: "5%",
             targets: 5,
           },
           {
-            width: "8%",
+            width: "5%",
             targets: 6,
           },
           {
-            width: "8%",
+            width: "5%",
             targets: 7,
           },
           {
-            width: "10%",
+            width: "5%",
             targets: 8,
           },
         ],

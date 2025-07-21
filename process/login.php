@@ -71,7 +71,11 @@ function LoginUser($conn, $db)
     $IsAdmin = 0;
 
     if ($input_Scan != "") {
-        $where = " WHERE  users.EmpCode = '$input_Scan' ";
+        if($input_UserName != "" && $input_PassWord !=""){
+            $where = " WHERE  users.UserName = '$input_UserName' AND users.Password = '$input_PassWord' ";
+        }else{
+            $where = " WHERE  users.EmpCode = '$input_Scan' ";
+        }
     } else {
         $where = " WHERE  users.UserName = '$input_UserName' AND users.Password = '$input_PassWord' ";
     }

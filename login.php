@@ -17,11 +17,60 @@
 
 <!-- <body style="background-image: url(assets/img/bg-77.png);background-size: cover;"> -->
 
-<body style="overflow-y: hidden;">
+<body>
 
 
+    <div class="main-container">
+        <div class="login-box">
 
-    <div class="wallpaper">
+            <!-- ฟอร์มด้านซ้าย -->
+            <div class="left-panel">
+                <div class="logo">
+                    <img src="assets/img/logosripat.png" alt="logo">
+                </div>
+
+                <div class="text-center mb-4">
+                    <h3 class="font-weight-bold mb-2">ยินดีต้อนรับ</h3>
+                    <h5 class="text-primary font-weight-bold mb-2">เข้าสู่ระบบศูนย์ศรีพัฒน์</h5>
+                    <p class="text-muted mb-1">กรุณาเข้าสู่ระบบด้วยชื่อผู้ใช้งานและรหัสผ่านของคุณ</p>
+                </div>
+
+                <div class="form-group">
+                    <label>ชื่อผู้ใช้งาน</label>
+                    <input type="text" class="form-control" id="input_UserName" style="font-size:18px;">
+                </div>
+                <div class="form-group">
+                    <label>รหัสผ่าน</label>
+                    <input type="password" class="form-control" id="input_PassWord" style="font-size:18px;">
+                </div>
+
+
+                <button type="submit" class="btn btn-login btn-block mt-3" id="btn_login">เข้าสู่ระบบ</button>
+
+                <hr class="my-4">
+
+                <div class="form-group text-center">
+                    <label for="scanInput" class="font-weight-bold">หรือเข้าสู่ระบบด้วยการสแกน</label>
+                    <input type="text" class="form-control text-center" placeholder="กรุณาสแกนที่นี่..." autofocus id="input_Scan">
+                </div>
+
+                <div class="form-group" hidden>
+                    <label for="" style="font-size: 18px;font-weight: bold;color:black;">ห้องตรวจ</label>
+                    <select id="select_departmentRoom" class="form-control" style="font-size: 20px;">
+                    </select>
+                </div>
+
+            </div>
+
+            <!-- ภาพด้านขวา -->
+            <div class="right-panel">
+                <!-- พื้นหลังภาพแสดงที่นี่ -->
+            </div>
+        </div>
+    </div>
+
+
+    <!-- <div class="wallpaper">
 
 
 
@@ -53,12 +102,7 @@
                                     <select id="select_departmentRoom" class="form-control" style="font-size: 20px;">
                                     </select>
                                 </div>
-                                <!-- <div class="form-group">
-                                    <label for="" style="font-size: 18px;font-weight: bold;color:black;">เลือกแพทย์</label>
-                                    <br>
-                                    <select id="select_doctor" class="form-control select2" style="font-size: 20px;">
-                                    </select>
-                                </div> -->
+        
                                 <div class="form-check">
                                     <input type="checkbox" class="form-check-input" id="remember">
                                     <label class="form-check-label" for="exampleCheck1">Remember me</label>
@@ -81,7 +125,7 @@
 
 
         </div>
-    </div>
+    </div> -->
 
 
 
@@ -113,7 +157,7 @@
             var localStorageDoctor = localStorage.getItem('doctor');
             var localStorageDoctorName = localStorage.getItem('doctorName');
 
-            
+
 
 
 
@@ -165,7 +209,7 @@
 
 
         })
-        
+
         // function selection_Doctor() {
         //     $.ajax({
         //         url: "process/login.php",
@@ -256,7 +300,7 @@
 
                             if ($('#remember').is(':checked')) {
                                 localStorage.setItem('deproom', $("#select_departmentRoom").val());
-                            
+
                                 localStorage.setItem('checkbox', 1);
                             } else {
                                 localStorage.setItem('checkbox', 0);
@@ -265,7 +309,7 @@
                             // localStorage.setItem('doctorName', $("#select2-select_doctor-container").text());
 
                         });
-                    }else{
+                    } else {
                         text = "ผู้ใช้หรือรหัสผ่านผิด";
                         showDialogFailed(text);
 
@@ -278,7 +322,7 @@
 
 
 
-     
+
 
                 }
             });

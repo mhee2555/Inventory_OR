@@ -29,18 +29,23 @@ html {
 } */
 
 .display-dark1{
-  background-color: #344CB7!important;
+  background-color: #101323!important;
 }
 .display-dark2{
-  background-color: #BCCCDC!important;
+  background-color: #5A3187!important;
 }
 .display-dark3{
   background-color: #fff!important;
 }
 .color_menu3{
-  color : #1D2939!important;
+  color : #667085!important;
 }
-
+.color_menu1{
+  color : #fff!important;
+}
+.color_menu2{
+  color : #fff!important;
+}
 .font-small {
   font-size: 14px;
 }

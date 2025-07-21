@@ -43,8 +43,12 @@
 
 
 
+
   <div class="col-sm-12 col-md-12 col-lg-6 mt-3" id="row_ex" hidden>
     <div class="card text-center">
+
+
+
       <div class="card-body">
         <div class="row g-0">
           <div class="col-md-8 text-left">
@@ -64,6 +68,11 @@
 
   <div class="col-sm-12 col-md-12 col-lg-6 mt-3" id="row_exsoon" hidden>
     <div class="card text-center">
+
+      <div style="position: absolute; top: 15px; right: 15px;">
+        <i class="fa-solid fa-bell" style="font-size: 50px; color: #f4a100;"></i>
+      </div>
+
       <div class="card-body">
         <div class="row g-0">
           <div class="col-md-8 text-left">
@@ -85,6 +94,11 @@
 
   <div class="col-sm-12 col-md-12 col-lg-6 mt-3" id="row_receive_stock" hidden>
     <div class="card text-center">
+
+      <div style="position: absolute; top: 15px; right: 15px;">
+        <i class="fa-solid fa-bell" style="font-size: 50px; color: #f4a100;"></i>
+      </div>
+
       <div class="card-body">
         <div class="row g-0">
           <div class="col-md-8 text-left">
@@ -151,6 +165,12 @@
 
   <div class="col-sm-12 col-md-12 col-lg-6 mt-3" id="row_addon" hidden>
     <div class="card text-center">
+
+      <div style="position: absolute; top: 15px; right: 15px;">
+        <i class="fa-solid fa-bell" style="font-size: 50px; color: #f4a100;"></i>
+      </div>
+
+
       <div class="card-body">
         <div class="row g-0">
           <div class="col-md-8 text-left">
@@ -169,6 +189,11 @@
 
   <div class="col-sm-12 col-md-12 col-lg-6 mt-3" id="row_nouse" hidden>
     <div class="card text-center">
+
+      <div style="position: absolute; top: 15px; right: 15px;">
+        <i class="fa-solid fa-bell" style="font-size: 50px; color: #f4a100;"></i>
+      </div>
+
       <div class="card-body">
         <div class="row g-0">
           <div class="col-md-8 text-left">
@@ -246,7 +271,7 @@
     </div>
   </div>
 
-    <div class="col-sm-12 col-md-12 col-lg-6 mt-3" id="row_request_item">
+  <div class="col-sm-12 col-md-12 col-lg-6 mt-3" id="row_request_item">
     <div class="card text-center">
       <div class="card-body">
         <div class="row g-0">

@@ -5,8 +5,8 @@ $(function () {
   session();
 
   $("#history").hide();
-  $("#radio_set_hn").css("color", "#bbbbb");
-  $("#radio_set_hn").css("background", "#EAE1F4");
+  // $("#radio_set_hn").css("color", "#bbbbb");
+  // $("#radio_set_hn").css("background", "#EAE1F4");
 
   var now = new Date();
   var hours = String(now.getHours()).padStart(2, "0");
@@ -48,11 +48,8 @@ $(function () {
   $("#input_time_service_manual").val(currentTime);
 
   $("#radio_set_hn").click(function () {
-    $("#radio_set_hn").css("color", "#bbbbb");
-    $("#radio_set_hn").css("background", "#EAE1F4");
-
-    $("#radio_history").css("color", "black");
-    $("#radio_history").css("background", "");
+      $('.tab-button').removeClass('active');
+      $(this).addClass('active');
 
     $("#set_hn").show();
     $("#history").hide();
@@ -61,11 +58,8 @@ $(function () {
   });
 
   $("#radio_history").click(function () {
-    $("#radio_history").css("color", "#bbbbb");
-    $("#radio_history").css("background", "#EAE1F4");
-
-    $("#radio_set_hn").css("color", "black");
-    $("#radio_set_hn").css("background", "");
+      $('.tab-button').removeClass('active');
+      $(this).addClass('active');
 
     $("#set_hn").hide();
     $("#history").show();
@@ -100,7 +94,10 @@ function show_detail_history() {
       if (!$.isEmptyObject(ObjData)) {
         $.each(ObjData, function (kay, value) {
           if (value.Procedure_TH == "button") {
+            var title = '';
             value.Procedure_TH = `<a class="text-primary" style="cursor:pointer;" onclick='showDetail_Procedure("${value.procedure}")'>หัตถการ</a>`;
+          }else{
+            var title = `title='${value.Procedure_TH}' `;
           }
           if (value.Doctor_Name == "button") {
             value.Doctor_Name = `<a class="text-primary" style="cursor:pointer;" onclick='showDetail_Doctor("${value.doctor}")'>แพทย์</a>`;
@@ -117,16 +114,14 @@ function show_detail_history() {
 
           _tr += `<tr>
                       <td class="f18 text-center">${kay + 1}</td>
-                      <td class="f18 text-center">${value.hncode}</td>
+                      <td class="f18 text-left" style='width:20%;'>${value.hncode}</td>
                       <td class="f18 text-center">${value.serviceDate} ${
             value.serviceTime
           }</td>
                       <td class="f18 text-left">${value.Doctor_Name}</td>
-                      <td class="f18 text-left">${
-                        value.departmentroomname
-                      }</td>
-                      <td class="f18 text-left">${value.Procedure_TH}</td>
-                      <td class="f18 text-center"><button ${hidden} class='btn btn-primary' onclick='showdetail("${
+                      <td class="f18 text-left">${ value.departmentroomname }</td>
+                      <td class="f18 text-left" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 300px;" ${title}>${value.Procedure_TH}</td>
+                      <td class="f18 text-center" style='width:10%;'><button ${hidden} class='btn btn-primary btn-block' onclick='showdetail("${
             value.ID
           }","${value.hncode}","${value.serviceDate}","${value.serviceTime}","${
             value.doctor

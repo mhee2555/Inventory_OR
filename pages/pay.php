@@ -1,32 +1,36 @@
 <div>
-
-
-
-
-
-
-
-    <div class="row">
-        <div class="col-md-6">
-        </div>
-        <div class="col-lg-3 mt-3 text-right">
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <div class="input-group-text" id="lang_text_roomcheck" style="    background-color: white;border: none;">สิทธิ์การเข้าใช้งาน : </div>
+    <div class="container-fluid">
+        <div class="row justify-content-end mt-3">
+            <div class="col-auto">
+                <div class="input-group" style="background-color: #f1f3fb; border-radius: 10px; border: 1px solid #dce0eb; overflow: hidden;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"
+                            style="border: none; background-color: white; font-weight: bold; border-right: 1px solid #dce0eb;">
+                            สิทธิ์การเข้าใช้งาน :
+                        </span>
+                    </div>
+                    <input type="text" class="form-control font-weight-bold"
+                        id="input_Deproom_Main" disabled
+                        style="background-color: #f1f3fb; border: none; color: #000;">
                 </div>
-                <input type="text" class="form-control f18" id="input_Deproom_Main" disabled value="" style="font-weight: bold;">
             </div>
-        </div>
 
-        <div class="col-lg-3 mt-3 text-right">
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <div class="input-group-text" id="lang_text_username" style="    background-color: white;border: none;">ชื่อผู้ใช้งาน : </div>
+            <div class="col-auto ml-2">
+                <div class="input-group" style="background-color: #f1f3fb; border-radius: 10px; border: 1px solid #dce0eb; overflow: hidden;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"
+                            style="border: none; background-color: white; font-weight: bold; border-right: 1px solid #dce0eb;">
+                            ชื่อผู้ใช้งาน :
+                        </span>
+                    </div>
+                    <input type="text" class="form-control font-weight-bold"
+                        id="input_Name_Main" disabled
+                        style="background-color: #f1f3fb; border: none; color: #000;">
                 </div>
-                <input type="text" class="form-control f18" id="input_Name_Main" disabled value="" style="font-weight: bold;">
             </div>
         </div>
     </div>
+
 </div>
 
 
@@ -34,12 +38,23 @@
 
 <div class="row mt-3">
     <div class=" col-md-12 col-lg-9  ">
-        <div class="btn-group btn-group-toggle" role="group" aria-label="Basic example">
+
+        <div class="tab-button-group">
+            <button class="tab-button active" id="radio_pay">จ่ายอุปกรณ์</button>
+            <button class="tab-button" id="radio_pay_manual">จ่ายอุปกรณ์ Manual</button>
+            <button class="tab-button" id="radio_return_pay">สแกนอุปกรณ์คืนคลัง</button>
+            <button class="tab-button" id="radio_history_pay">ประวัติการจ่ายอุปกรณ์</button>
+            <button class="tab-button" id="radio_hn_pay_block">ผู้ป่วยงดรับบริการ</button>
+        </div>
+
+
+
+        <!-- <div class="btn-group btn-group-toggle" role="group" aria-label="Basic example">
             <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;border-color: lightgray;" id="radio_pay">จ่ายอุปกรณ์</button>
             <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;border-color: lightgray;" id="radio_pay_manual">จ่ายอุปกรณ์ Manual</button>
             <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;border-color: lightgray;" id="radio_return_pay">สแกนอุปกรณ์คืนคลัง</button>
             <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;border-color: lightgray;" id="radio_history_pay">ประวัติการจ่ายอุปกรณ์</button>
-        </div>
+        </div> -->
     </div>
 </div>
 
@@ -51,16 +66,23 @@
 <div id="pay">
     <div class="row">
         <div class="col-md-6">
+
+
+
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group ">
                         <label style="color:black;font-weight: 600;">วันที่</label>
-                        <div class="input-group">
-                            <input type="text" class="form-control datepicker-here f18" id="select_date_pay" data-language='en' data-date-format='dd-mm-yyyy'>
-                            <div class="input-group-append">
-                                <div class="input-group-text bg-light" style="font-size: 20px;font-weight: bold;"><i class="fa-regular fa-calendar-days"></i></div>
-                            </div>
+
+                        <div class="position-relative">
+                            <input type="text" class="form-control rounded pr-5 f18" placeholder="" id="select_date_pay" data-language='en' data-date-format='dd-mm-yyyy'>
+                            <span class="input-icon">
+                                <i class="fa-solid fa-calendar" style="color:black;"></i>
+                            </span>
                         </div>
+
+
+
                     </div>
                 </div>
 
@@ -94,8 +116,6 @@
 
 
 
-
-
                 </div>
             </div>
         </div>
@@ -107,12 +127,15 @@
 
                             <div class="row">
 
-                                <div class="col-md-8">
+                                <div class="col-md-4">
                                     <label style="color:black;font-weight: 600;">เลขที่กล่อง</label>
                                     <input type='text' class='form-control f18' id="input_box_pay" disabled>
                                 </div>
                                 <div class="col-md-4">
                                     <button disabled class="btn btn-danger btn-block f18" style="margin-top: 2rem;" id="btn_edit_hn"><i class="fa-solid fa-pen-to-square"></i> แก้ไขข้อมูล</button>
+                                </div>
+                                <div class="col-md-4">
+                                    <button disabled class="btn btn-danger btn-block f18" style="margin-top: 2rem;" id="btn_block_hn"><i class="fa-regular fa-circle-xmark"></i> งด </button>
                                 </div>
                                 <div class="col-md-4 mt-3">
                                     <label style="color:black;font-weight: 600;">เลขประจำตัวคนไข้</label>
@@ -122,7 +145,16 @@
 
                                     <div class="form-group ">
                                         <label style="color:black;font-weight: 600;">วันที่รับบริการ</label>
-                                        <input type="text" class="form-control datepicker-here f18" id="input_date_service" data-language='en' data-date-format='dd-mm-yyyy'>
+
+                                        <div class="position-relative">
+                                            <input type="text" class="form-control rounded pr-5 f18" placeholder="" id="input_date_service" data-language='en' data-date-format='dd-mm-yyyy'>
+                                            <span class="input-icon">
+                                                <i class="fa-solid fa-calendar" style="color:black;"></i>
+                                            </span>
+                                        </div>
+
+
+                                        <!-- <input type="text" class="form-control datepicker-here f18" id="input_date_service" data-language='en' data-date-format='dd-mm-yyyy'> -->
                                     </div>
 
 
@@ -137,16 +169,37 @@
 
                                 </div>
                                 <div class="col-md-4 mt-3">
+
+
+
+
                                     <div class="form-group ">
                                         <label style="color:black;font-weight: 600;">สแกนจ่าย</label>
-                                        <input type="text" class="form-control f18" id="input_pay" placeholder="" autocomplete="off">
+
+                                        <div class="position-relative">
+                                            <input type="text" class="form-control rounded pr-5 f18" placeholder="" id="input_pay">
+                                            <span class="input-icon">
+                                                <i class="fas fa-qrcode" style="color:black;"></i>
+                                            </span>
+                                        </div>
+
+                                        <!-- <input type="text" class="form-control f18" id="input_pay" placeholder="" autocomplete="off"> -->
 
                                     </div>
                                 </div>
                                 <div class="col-md-4 mt-3">
                                     <div class="form-group ">
                                         <label style="color:red;font-weight: 600;">สแกนคืนคลังหลักห้องผ่าตัด</label>
-                                        <input type="text" class="form-control f18" id="input_returnpay" placeholder="" style="border-color: red;" autocomplete="off">
+
+                                        <div class="position-relative">
+                                            <input type="text" class="form-control rounded pr-5 f18" placeholder="" id="input_returnpay">
+                                            <span class="input-icon">
+                                                <i class="fas fa-qrcode" style="color: #d32f2f;"></i>
+                                            </span>
+                                        </div>
+
+
+                                        <!-- <input type="text" class="form-control f18" id="input_returnpay" placeholder="" style="border-color: red;" autocomplete="off"> -->
                                     </div>
                                 </div>
                                 <div class="col-md-4 mt-3">
@@ -196,7 +249,14 @@
                                 <div class="col-md-4 mt-3">
                                     <div class="form-group ">
                                         <label style="color:black;font-weight: 600;">วันที่รับบริการ</label>
-                                        <input type="text" class="form-control datepicker-here f18" id="input_date_service_manual" data-language='en' data-date-format='dd-mm-yyyy'>
+
+                                        <div class="position-relative">
+                                            <input type="text" class="form-control rounded pr-5 f18" placeholder="" id="input_date_service_manual" data-language='en' data-date-format='dd-mm-yyyy'>
+                                            <span class="input-icon">
+                                                <i class="fa-solid fa-calendar" style="color:black;"></i>
+                                            </span>
+                                        </div>
+
                                     </div>
                                 </div>
                                 <div class="col-md-4 mt-3">
@@ -268,15 +328,28 @@
 
                                 <div class="col-md-4 ">
                                     <div class="form-group ">
-                                        <label style="color:green;font-weight: 600;">สแกนจ่าย</label>
-                                        <input type="text" class="form-control f18" id="input_pay_manual" placeholder="" style="border-color: green;" autocomplete="off">
+                                        <label style="color:black;font-weight: 600;">สแกนจ่าย</label>
+
+                                        <div class="position-relative">
+                                            <input type="text" class="form-control rounded pr-5 f18" placeholder="" id="input_pay_manual" autocomplete="off">
+                                            <span class="input-icon">
+                                                <i class="fas fa-qrcode" style="color:black;"></i>
+                                            </span>
+                                        </div>
+
 
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group ">
                                         <label style="color:red;font-weight: 600;">สแกนคืนคลังหลักห้องผ่าตัด</label>
-                                        <input type="text" class="form-control f18" id="input_returnpay_manual" placeholder="" style="border-color: red;" autocomplete="off">
+
+                                        <div class="position-relative">
+                                            <input type="text" class="form-control rounded pr-5 f18" placeholder="" id="input_returnpay_manual" autocomplete="off">
+                                            <span class="input-icon">
+                                                <i class="fas fa-qrcode" style="color: #d32f2f;"></i>
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -331,10 +404,16 @@
 
     <div class="row mt-3">
         <div class=" col-md-12 col-lg-9  ">
-            <div class="btn-group btn-group-toggle" role="group" aria-label="Basic example">
+
+            <div class="tab-button-group">
+                <button class="tab-button2 active" id="radio_return">สแกนคืนอุปกรณ์</button>
+                <button class="tab-button2" id="radio_history_return">ประวัติสแกนคืนอุปกรณ์</button>
+            </div>
+
+            <!-- <div class="btn-group btn-group-toggle" role="group" aria-label="Basic example">
                 <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;border-color: lightgray;" id="radio_return">สแกนคืนอุปกรณ์</button>
                 <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;border-color: lightgray;" id="radio_history_return">ประวัติสแกนคืนอุปกรณ์</button>
-            </div>
+            </div> -->
         </div>
     </div>
 
@@ -347,13 +426,22 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group ">
-                                <div class="input-group mb-2">
+
+
+                                <div class="position-relative">
+                                    <input type="text" class="form-control rounded pr-5 f18" placeholder="" id="input_scan_return" autocomplete="off" placeholder="สแกนคืน">
+                                    <span class="input-icon">
+                                        <i class="fas fa-qrcode" style="color:black;"></i>
+                                    </span>
+                                </div>
+
+                                <!-- <div class="input-group mb-2">
                                     <input type="text" class="form-control f18" id="input_scan_return" autocomplete="off" placeholder="สแกนคืน">
                                     <div class="input-group-append">
                                         <div class="input-group-text"><i class="fa-solid fa-qrcode"></i></div>
                                     </div>
 
-                                </div>
+                                </div> -->
 
                             </div>
                         </div>
@@ -394,7 +482,14 @@
                         <div class="col-md-3">
                             <div class="form-group ">
                                 <label for="" style="color:black;font-weight: 600;">วันที่</label>
-                                <input type="text" class="form-control datepicker-here f18" id="select_date_history_return" autocomplete="off" data-language="en" data-date-format="dd-mm-yyyy">
+
+                                <div class="position-relative">
+                                    <input type="text" class="form-control rounded pr-5 f18" placeholder="" id="select_date_history_return" data-language='en' data-date-format='dd-mm-yyyy'>
+                                    <span class="input-icon">
+                                        <i class="fa-solid fa-calendar" style="color:black;"></i>
+                                    </span>
+                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -429,20 +524,36 @@
             <label class="font-weight-bold text-dark">วันที่</label>
             <div class="form-row">
                 <div class="col">
-                    <div class="input-group">
+
+                    <div class="position-relative">
+                        <input type="text" class="form-control rounded pr-5 f18" placeholder="" id="select_date_history_S" data-language='en' data-date-format='dd-mm-yyyy'>
+                        <span class="input-icon">
+                            <i class="fa-solid fa-calendar" style="color:black;"></i>
+                        </span>
+                    </div>
+
+                    <!-- <div class="input-group">
                         <input type="text" class="form-control datepicker-here f18" id="select_date_history_S" data-language='en' data-date-format='dd-mm-yyyy'>
                         <div class="input-group-append">
                             <div class="input-group-text bg-light"><i class="fa-regular fa-calendar-days"></i></div>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="col">
-                    <div class="input-group">
+
+                    <div class="position-relative">
+                        <input type="text" class="form-control rounded pr-5 f18" placeholder="" id="select_date_history_L" data-language='en' data-date-format='dd-mm-yyyy'>
+                        <span class="input-icon">
+                            <i class="fa-solid fa-calendar" style="color:black;"></i>
+                        </span>
+                    </div>
+
+                    <!-- <div class="input-group">
                         <input type="text" class="form-control datepicker-here f18" id="select_date_history_L" data-language='en' data-date-format='dd-mm-yyyy'>
                         <div class="input-group-append">
                             <div class="input-group-text bg-light"><i class="fa-regular fa-calendar-days"></i></div>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>
@@ -468,19 +579,19 @@
 
 
         <!-- ห้องผ่าตัด -->
-        <div class="col-md-2" id="col_deproom_history" >
+        <div class="col-md-2" id="col_deproom_history">
             <label class="font-weight-bold text-dark">ห้องผ่าตัด</label>
             <select class="form-control f18" id="select_deproom_history"></select>
         </div>
 
         <!-- แพทย์ -->
-        <div class="col-md-2" id="col_doctor_history" >
+        <div class="col-md-2" id="col_doctor_history">
             <label class="font-weight-bold text-dark">แพทย์</label>
             <select class="form-control f18" id="select_doctor_history"></select>
         </div>
 
         <!-- หัตถการ -->
-        <div class="col-md-2" id="col_procedure_history" >
+        <div class="col-md-2" id="col_procedure_history">
             <label class="font-weight-bold text-dark">หัตถการ</label>
             <select class="form-control f18" id="select_procedure_history"></select>
         </div>
@@ -642,6 +753,177 @@
             </div>
         </div>
 
+    </div>
+</div>
+
+<div id="hn_pay_block">
+
+    <div class="form-row align-items-end flex-wrap">
+        <!-- วันที่ -->
+        <div class="col-md-4">
+            <label class="font-weight-bold text-dark">วันที่</label>
+            <div class="form-row">
+                <div class="col">
+
+                    <div class="position-relative">
+                        <input type="text" class="form-control rounded pr-5 f18" placeholder="" id="select_date_history_S_block" data-language='en' data-date-format='dd-mm-yyyy'>
+                        <span class="input-icon">
+                            <i class="fa-solid fa-calendar" style="color:black;"></i>
+                        </span>
+                    </div>
+
+                    <!-- <div class="input-group">
+                        <input type="text" class="form-control datepicker-here f18" id="select_date_history_S" data-language='en' data-date-format='dd-mm-yyyy'>
+                        <div class="input-group-append">
+                            <div class="input-group-text bg-light"><i class="fa-regular fa-calendar-days"></i></div>
+                        </div>
+                    </div> -->
+                </div>
+                <div class="col">
+
+                    <div class="position-relative">
+                        <input type="text" class="form-control rounded pr-5 f18" placeholder="" id="select_date_history_L_block" data-language='en' data-date-format='dd-mm-yyyy'>
+                        <span class="input-icon">
+                            <i class="fa-solid fa-calendar" style="color:black;"></i>
+                        </span>
+                    </div>
+
+                    <!-- <div class="input-group">
+                        <input type="text" class="form-control datepicker-here f18" id="select_date_history_L" data-language='en' data-date-format='dd-mm-yyyy'>
+                        <div class="input-group-append">
+                            <div class="input-group-text bg-light"><i class="fa-regular fa-calendar-days"></i></div>
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <!-- เลขประจำตัวคนไข้ -->
+        <div class="col-md-2">
+            <label class="font-weight-bold text-dark">HN</label>
+            <input type="text" class="form-control f18" id="input_hn_history_block">
+        </div>
+
+        <div class="col-md-2">
+            <label class="font-weight-bold text-dark">เงื่อนไข</label>
+            <select class="form-control f18" id="select_typeSearch_history_block">
+                <option value="">กรุณาเลือกประเภทการค้นหา</option>
+                <option value="1">ห้องผ่าตัด</option>
+                <option value="2">แพทย์</option>
+                <option value="3">หัตถการ</option>
+            </select>
+        </div>
+
+
+        <!-- ห้องผ่าตัด -->
+        <div class="col-md-2" id="col_deproom_history_block">
+            <label class="font-weight-bold text-dark">ห้องผ่าตัด</label>
+            <select class="form-control f18" id="select_deproom_history_block"></select>
+        </div>
+
+        <!-- แพทย์ -->
+        <div class="col-md-2" id="col_doctor_history_block">
+            <label class="font-weight-bold text-dark">แพทย์</label>
+            <select class="form-control f18" id="select_doctor_history_block"></select>
+        </div>
+
+        <!-- หัตถการ -->
+        <div class="col-md-2" id="col_procedure_history_block">
+            <label class="font-weight-bold text-dark">หัตถการ</label>
+            <select class="form-control f18" id="select_procedure_history_block"></select>
+        </div>
+
+
+
+        <div class="col-md-3" id="col_hide_block">
+
+        </div>
+        <div class="col-md-1" id="col_hide_2_block">
+
+        </div>
+
+
+
+    </div>
+
+    <div class="form-row align-items-end flex-wrap">
+        <!-- วันที่ -->
+        <div class="col-md-4">
+
+        </div>
+        <!-- ห้องผ่าตัด -->
+        <div class="col-md-2">
+
+        </div>
+
+        <!-- แพทย์ -->
+        <div class="col-md-2">
+            <div class="row mt-2">
+                <div class="col-md-12" style="display: ruby;" id="row_doctor_history_block">
+                </div>
+            </div>
+        </div>
+
+        <!-- หัตถการ -->
+        <div class="col-md-2">
+            <div class="row mt-2">
+                <div class="col-md-12" style="display: ruby;" id="row_procedure_history_block">
+                </div>
+            </div>
+        </div>
+
+        <!-- เลขประจำตัวคนไข้ -->
+        <div class="col-md-1">
+
+        </div>
+
+        <!-- ปุ่ม Excel -->
+        <div class="col-md-1">
+
+        </div>
+
+
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-12 mt-3">
+
+                    <div class="card">
+
+                        <div class="card-body">
+                            <table class="table table-hover table-sm" id="table_history_block">
+                                <thead style="background-color: #cdd6ff;">
+                                    <tr>
+                                        <th scope="col" class="text-center" id="">ลำดับ</th>
+                                        <th scope="col" class="text-center" id="">วันที่รับบริการ</th>
+                                        <th scope="col" class="text-center" id="">เลขประจำตัวคนไข้</th>
+                                        <th scope="col" class="text-center" id="">แพทย์</th>
+                                        <th scope="col" class="text-center" id="">หัตถการ</th>
+                                        <th scope="col" class="text-center" id="">ห้องผ่าตัด</th>
+                                        <th scope="col" class="text-center" id="">อุปกรณ์</th>
+                                        <th scope="col" class="text-center" id="">อัพเดตข้อมูล</th>
+                                        <th scope="col" class="text-center" id="">ยกเลิก</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+
+
+
+
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -808,6 +1090,95 @@
             </div>
             <div class="modal-footer">
                 <button class="btn-success btn f18" id="btn_save_edit_hn">บันทึก</button>
+                <button class="btn-danger btn f18" data-dismiss="modal">ยกเลิก</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModal_edit_hn_block" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+
+                    <div class="col-md-12">
+                        <label style="color:black;font-weight: 600;">เลขที่กล่อง</label>
+                        <input type='text' class='form-control f18' id="input_box_pay_editHN_block">
+                    </div>
+                    <div class="col-md-4 mt-3">
+                        <label style="color:black;font-weight: 600;">เลขประจำตัวคนไข้</label>
+                        <input type='text' class='form-control f18' id="input_Hn_pay_editHN_block">
+                    </div>
+                    <div class="col-md-4 mt-3">
+
+                        <div class="form-group ">
+                            <label style="color:black;font-weight: 600;">วันที่รับบริการ</label>
+                            <input type="text" class="form-control datepicker-here f18" id="input_date_service_editHN_block" data-language='en' data-date-format='dd-mm-yyyy'>
+                        </div>
+
+
+                    </div>
+                    <div class="col-md-4 mt-3">
+
+                        <div class="form-group ">
+                            <label style="color:black;font-weight: 600;">เวลารับบริการ</label>
+                            <input type="time" class="form-control datepicker-here f18" id="input_time_service_editHN_block" data-language='en' data-date-format='dd-mm-yyyy'>
+                        </div>
+
+
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group x">
+                                    <label style="color:black;font-weight: 600;">แพทย์</label>
+                                    <select class="form-control f18" autocomplete="off" id="select_doctor_editHN_block"></select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12" style="display: ruby;" id="row_doctor_editHN_block">
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-4">
+                        <div class="form-group ">
+                            <label style="color:black;font-weight: 600;">ห้องผ่าตัด</label>
+                            <select class="form-control f18" autocomplete="off" id="select_deproom_editHN_block"></select>
+                        </div>
+                    </div>
+
+
+
+                    <div class="col-md-4">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group ">
+                                    <label style="color:black;font-weight: 600;">หัตถการ</label>
+                                    <select class="form-control f18" autocomplete="off" id="select_procedure_editHN_block"></select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12" style="display: ruby;" id="row_procedure_editHN_block">
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn-success btn f18" id="btn_save_edit_hn_block">บันทึก</button>
                 <button class="btn-danger btn f18" data-dismiss="modal">ยกเลิก</button>
             </div>
         </div>

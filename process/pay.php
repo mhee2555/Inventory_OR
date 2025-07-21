@@ -72,6 +72,12 @@ if (!empty($_POST['FUNC_NAME'])) {
         feeddata_history_Return($conn, $db);
     } else if ($_POST['FUNC_NAME'] == 'showDetail_Permission') {
         showDetail_Permission($conn, $db);
+    } else if ($_POST['FUNC_NAME'] == 'block_item_byDocNo') {
+        block_item_byDocNo($conn, $db);
+    } else if ($_POST['FUNC_NAME'] == 'show_detail_history_block') {
+        show_detail_history_block($conn, $db);
+    } else if ($_POST['FUNC_NAME'] == 'save_edit_hn_block') {
+        save_edit_hn_block($conn, $db);
     }
 }
 
@@ -87,14 +93,12 @@ function showDetail_Permission($conn, $db)
     $query = "SELECT
                 permission.Permission,
                 item.warehouseID,
-                SUM( deproomdetail.Qty ) AS cnt,
-                SUM(
-                IFNULL( subs.total_qty_weighing, 0 )) AS cnt_pay,
+                SUM(CASE WHEN deproomdetail.IsRequest = 0 THEN deproomdetail.Qty ELSE 0 END) AS cnt,
+                SUM(IFNULL( subs.total_qty_weighing, 0 )) AS cnt_pay,
                 SUM(
                 CASE
-                        
-                        WHEN IFNULL(( SELECT SUM( deproomdetailsub.qty_weighing ) FROM deproomdetailsub WHERE deproomdetailsub.Deproomdetail_RowID = deproomdetail.ID ), 0 ) < deproomdetail.Qty THEN
-                        1 ELSE 0 
+                    WHEN IFNULL(( SELECT SUM( deproomdetailsub.qty_weighing ) FROM deproomdetailsub WHERE deproomdetailsub.Deproomdetail_RowID = deproomdetail.ID ), 0 ) < deproomdetail.Qty THEN
+                    1 ELSE 0 
                     END 
                     ) AS cnt_over 
                 FROM
@@ -872,6 +876,23 @@ function updateService($conn, $db)
     die;
 }
 
+
+function block_item_byDocNo($conn, $db)
+{
+    $return = array();
+    $txt_docno_request = $_POST['txt_docno_request'];
+    $sql_1 = " UPDATE deproom SET IsBlock = 1   WHERE DocNo = '$txt_docno_request' ";
+    $sql_2 = " UPDATE hncode SET IsBlock = 1 WHERE DocNo_SS = '$txt_docno_request' ";
+    $meQuery1 = $conn->prepare($sql_1);
+    $meQuery1->execute();
+    $meQuery2 = $conn->prepare($sql_2);
+    $meQuery2->execute();
+
+    echo json_encode($txt_docno_request);
+    unset($conn);
+    die;
+}
+
 function cancel_item_byDocNo($conn, $db)
 {
     $return = array();
@@ -987,7 +1008,8 @@ function cancel_item_byDocNo($conn, $db)
     die;
 }
 
-function show_detail_history($conn, $db)
+
+function show_detail_history_block($conn, $db)
 {
     $return = array();
     $DepID = $_SESSION['DepID'];
@@ -995,6 +1017,8 @@ function show_detail_history($conn, $db)
     $select_date_history_l = $_POST['select_date_history_l'];
     $select_deproom_history = $_POST['select_deproom_history'];
     $input_hn_history = $_POST['input_hn_history'];
+    $select_doctor_history = $_POST['select_doctor_history'];
+    $select_procedure_history = $_POST['select_procedure_history'];
 
 
     $select_date_history_s = explode("-", $select_date_history_s);
@@ -1003,27 +1027,131 @@ function show_detail_history($conn, $db)
     $select_date_history_l = explode("-", $select_date_history_l);
     $select_date_history_l = $select_date_history_l[2] . '-' . $select_date_history_l[1] . '-' . $select_date_history_l[0];
 
-    if (isset($_POST['select_doctor_history'])) {
-        $select_doctor_history = $_POST['select_doctor_history'];
-    }
-    if (isset($_POST['select_procedure_history'])) {
-        $select_procedure_history = $_POST['select_procedure_history'];
-    }
 
     $whereP = "";
-    if (isset($select_procedure_history)) {
-        // $select_procedure_history = implode(",", $select_procedure_history);
-        // $whereP = " AND  FIND_IN_SET('$select_procedure_history', deproom.`procedure`) ";
-        $whereP = "  AND deproom.`procedure` LIKE '%$select_procedure_history%'  ";
+    if ($select_procedure_history != "") {
+        $whereP = "  AND deproom.`procedure` = '$select_procedure_history'  ";
     }
     $whereD = "";
-    if (isset($select_doctor_history)) {
-        // $select_doctor_history = implode(",", $select_doctor_history);
-        $whereD = "  AND deproom.`doctor` LIKE '%$select_doctor_history%'  ";
+    if ($select_doctor_history != "") {
+        $whereD = "  AND deproom.`doctor` = '$select_doctor_history'  ";
     }
 
     $whereHN = "";
-    if (isset($input_hn_history)) {
+    if ($input_hn_history != "") {
+        $whereHN = "  AND  ( deproom.hn_record_id LIKE '%$input_hn_history%' OR deproom.number_box LIKE '%$input_hn_history%' )  ";
+    }
+
+    $whereR = "";
+    if ($select_deproom_history != "") {
+        $whereR = " AND deproom.Ref_departmentroomid = '$select_deproom_history' ";
+    }
+
+
+
+    $query = " SELECT
+                        deproom.DocNo,
+                        DATE_FORMAT(deproom.serviceDate, '%d-%m-%Y') AS serviceDate,
+                        DATE_FORMAT( deproom.serviceDate, '%H:%i' ) AS serviceTime,
+                        DATE_FORMAT(deproom.CreateDate, '%d-%m-%Y') AS CreateDate,
+                        COUNT(deproomdetailsub.ID) AS cnt_pay,
+                        deproom.hn_record_id,
+                        doctor.Doctor_Name,
+                        IFNULL(`procedure`.Procedure_TH, '') AS Procedure_TH,                        
+                        departmentroom.departmentroomname,
+                        doctor.ID AS doctor_ID,
+                        `procedure`.ID AS procedure_ID,
+                        departmentroom.id AS deproom_ID,
+                        deproom.Remark,
+                        deproom.doctor ,
+                        deproom.`procedure`,
+                        deproom.number_box,
+                        employee.FirstName
+                    FROM
+                        deproom
+                    LEFT JOIN
+                        deproomdetail ON deproom.DocNo = deproomdetail.DocNo
+                    LEFT JOIN
+                        deproomdetailsub ON deproomdetailsub.Deproomdetail_RowID = deproomdetail.ID
+                    INNER JOIN
+                        doctor ON doctor.ID = deproom.doctor
+                    LEFT JOIN
+                        `procedure` ON deproom.procedure = `procedure`.ID
+                    INNER JOIN
+                        departmentroom ON deproom.Ref_departmentroomid = departmentroom.id
+                    LEFT JOIN users ON users.ID = deproom.userConfirm_pay
+	                LEFT JOIN employee ON employee.EmpCode = users.EmpCode
+                    WHERE
+                        DATE(deproom.serviceDate) BETWEEN '$select_date_history_s' AND '$select_date_history_l'
+                        AND deproom.IsCancel = 0
+                        AND deproom.Isblock = 1
+                        $whereD
+                        $whereP
+                        $whereR
+                        $whereHN
+                    GROUP BY deproom.DocNo
+                    ORDER BY deproom.ModifyDate DESC ";
+
+
+
+    $meQuery = $conn->prepare($query);
+    $meQuery->execute();
+    while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+
+        if (str_contains($row['procedure'], ',')) {
+            $row['Procedure_TH'] = 'button';
+        }
+        if (str_contains($row['doctor'], ',')) {
+            $row['Doctor_Name'] = 'button';
+        }
+
+
+
+
+        $return[] = $row;
+    }
+    echo json_encode($return);
+    unset($conn);
+    die;
+}
+
+function show_detail_history($conn, $db)
+{
+    $return = array();
+    $DepID = $_SESSION['DepID'];
+    $select_date_history_s = $_POST['select_date_history_s'];
+    $select_date_history_l = $_POST['select_date_history_l'];
+    $select_deproom_history = $_POST['select_deproom_history'];
+    $input_hn_history = $_POST['input_hn_history'];
+    $select_doctor_history = $_POST['select_doctor_history'];
+    $select_procedure_history = $_POST['select_procedure_history'];
+
+
+    $select_date_history_s = explode("-", $select_date_history_s);
+    $select_date_history_s = $select_date_history_s[2] . '-' . $select_date_history_s[1] . '-' . $select_date_history_s[0];
+
+    $select_date_history_l = explode("-", $select_date_history_l);
+    $select_date_history_l = $select_date_history_l[2] . '-' . $select_date_history_l[1] . '-' . $select_date_history_l[0];
+
+    // if (isset($_POST['select_doctor_history'])) {
+    // }
+    // if (isset($_POST['select_procedure_history'])) {
+    // }
+
+    $whereP = "";
+    if ($select_procedure_history != "") {
+        // $select_procedure_history = implode(",", $select_procedure_history);
+        // $whereP = " AND  FIND_IN_SET('$select_procedure_history', deproom.`procedure`) ";
+        $whereP = "  AND deproom.`procedure` = '$select_procedure_history'  ";
+    }
+    $whereD = "";
+    if ($select_doctor_history != "") {
+        // $select_doctor_history = implode(",", $select_doctor_history);
+        $whereD = "  AND deproom.`doctor` = '$select_doctor_history'  ";
+    }
+
+    $whereHN = "";
+    if ($input_hn_history != "") {
         $whereHN = "  AND  ( deproom.hn_record_id LIKE '%$input_hn_history%' OR deproom.number_box LIKE '%$input_hn_history%' )  ";
     }
 
@@ -1141,6 +1269,125 @@ function show_detail_history($conn, $db)
 
         $return[] = $row;
     }
+    echo json_encode($return);
+    unset($conn);
+    die;
+}
+
+
+function save_edit_hn_block($conn, $db)
+{
+    $DocNo_editHN_block = $_POST['DocNo_editHN_block'];
+    $input_box_pay_editHN_block = $_POST['input_box_pay_editHN_block'];
+    $input_Hn_pay_editHN_block = $_POST['input_Hn_pay_editHN_block'];
+    $input_date_service_editHN_block = $_POST['input_date_service_editHN_block'];
+    $input_time_service_editHN_block = $_POST['input_time_service_editHN_block'];
+    $select_deproom_editHN_block = $_POST['select_deproom_editHN_block'];
+    // $select_doctor_editHN_block = $_POST['select_doctor_editHN_block'];
+    // $select_procedure_editHN_block = $_POST['select_procedure_editHN_block'];
+
+    $procedure_edit_hn_block_Array = $_POST['procedure_edit_hn_block_Array'];
+    $doctor_edit_hn_block_Array = $_POST['doctor_edit_hn_block_Array'];
+
+    $procedure_edit_hn_block_Array = implode(",", $procedure_edit_hn_block_Array);
+    $doctor_edit_hn_block_Array = implode(",", $doctor_edit_hn_block_Array);
+
+    $return = array();
+
+
+    $input_date_service_editHN_block = explode("-", $input_date_service_editHN_block);
+    $input_date_service_editHN_block = $input_date_service_editHN_block[2] . '-' . $input_date_service_editHN_block[1] . '-' . $input_date_service_editHN_block[0];
+
+
+    $query = "UPDATE itemstock_transaction_detail 
+    SET departmentroomid = '$select_deproom_editHN_block'   
+    WHERE 
+        ItemStockID IN (
+            SELECT deproomdetailsub.ItemStockID 
+            FROM deproomdetail
+            INNER JOIN deproomdetailsub 
+                ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID
+            WHERE deproomdetail.DocNo = '$DocNo_editHN_block'
+        )
+        AND departmentroomid = (
+            SELECT Ref_departmentroomid 
+            FROM deproom 
+            WHERE deproom.DocNo = '$DocNo_editHN_block'
+        )
+        AND IsStatus = '1'
+        AND DATE(CreateDate) = (
+            SELECT DATE(deproomdetailsub.PayDate)
+            FROM deproom
+            INNER JOIN deproomdetail 
+                ON deproom.DocNo = deproomdetail.DocNo
+            INNER JOIN deproomdetailsub 
+                ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID
+            WHERE deproom.DocNo = '$DocNo_editHN_block'
+            GROUP BY deproom.DocNo
+        ) ";
+
+    $meQueryq = $conn->prepare($query);
+    $meQueryq->execute();
+
+
+    $update1 = "UPDATE deproom SET
+                        number_box = :number_box,
+                        hn_record_id = :hn_record_id,
+                        serviceDate = :serviceDate,
+                        Ref_departmentroomid = :Ref_departmentroomid,
+                        doctor = :doctor,
+                        `procedure` = :procedure,
+                        IsBlock = 0
+                WHERE DocNo = :DocNo";
+
+    $stmt = $conn->prepare($update1);
+    $stmt->execute([
+        ':number_box' => $input_box_pay_editHN_block,
+        ':hn_record_id' => $input_Hn_pay_editHN_block,
+        ':serviceDate' => $input_date_service_editHN_block . ' ' . $input_time_service_editHN_block,
+        ':Ref_departmentroomid' => $select_deproom_editHN_block,
+        ':doctor' => $doctor_edit_hn_block_Array, // เห็นว่าคุณส่ง $input_box_pay_editHN ให้ doctor ด้วย ถูกไหมครับ?
+        ':procedure' => $procedure_edit_hn_block_Array,
+        ':DocNo' => $DocNo_editHN_block
+    ]);
+
+    $update2 = "UPDATE hncode SET
+                        number_box = :number_box,
+                        HnCode = :hn_record_id,
+                        DocDate = :serviceDate,
+                        departmentroomid = :Ref_departmentroomid,
+                        doctor = :doctor,
+                        `procedure` = :procedure,
+                        IsBlock = 0
+                WHERE DocNo_SS = :DocNo";
+
+    $stmt = $conn->prepare($update2);
+    $stmt->execute([
+        ':number_box' => $input_box_pay_editHN_block,
+        ':hn_record_id' => $input_Hn_pay_editHN_block,
+        ':serviceDate' => $input_date_service_editHN_block,
+        ':Ref_departmentroomid' => $select_deproom_editHN_block,
+        ':doctor' => $doctor_edit_hn_block_Array, // เห็นว่าคุณส่ง $input_box_pay_editHN ให้ doctor ด้วย ถูกไหมครับ?
+        ':procedure' => $procedure_edit_hn_block_Array,
+        ':DocNo' => $DocNo_editHN_block
+    ]);
+
+
+
+
+
+    // $query_old = "DELETE FROM itemstock_transaction_detail  WHERE ItemStockID = '$_RowID' 
+    // AND ItemCode = '$_ItemCode' 
+    // AND departmentroomid = '$__Ref_departmentroomid' 
+    // AND  IsStatus = '1'
+    // AND DATE(CreateDate) = '$_ModifyDate' ";
+    // $meQuery_old = $conn->prepare($query_old);
+    // $meQuery_old->execute();
+
+
+    // echo $doctor_edit_hn_Array;
+    // exit;
+
     echo json_encode($return);
     unset($conn);
     die;
@@ -3872,6 +4119,33 @@ function oncheck_Returnpay($conn, $db)
                 $meQueryD2->execute();
                 // ==============================
 
+                //check ว่า ตัว IsRequest = 1 เหลือกี่ตัว
+
+                $qq1 = "SELECT
+                            deproomdetail.ID,
+                            SUM( deproomdetail.Qty ) AS cnt,
+                            IFNULL(( SELECT SUM( deproomdetailsub.qty_weighing ) FROM deproomdetailsub WHERE deproomdetailsub.Deproomdetail_RowID = deproomdetail.ID ), 0 ) AS cnt_pay
+                        FROM
+                            deproom
+                            INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo 
+                        WHERE
+                            deproom.DocNo = '$DocNo_pay' 
+                            AND deproom.IsCancel = 0 
+                            AND deproomdetail.IsCancel = 0 
+                            AND deproomdetail.ItemCode = '$_ItemCode'
+                            AND deproomdetail.IsRequest = 1
+                        GROUP BY
+                            deproomdetail.ID ";
+                $meQuery_qq1 = $conn->prepare($qq1);
+                $meQuery_qq1->execute();
+                while ($row_qq1 = $meQuery_qq1->fetch(PDO::FETCH_ASSOC)) {
+                    if ($row_qq1['cnt_pay'] == '0') {
+                        $ID_Detail = $row_qq1['ID'];
+                        $queryqq1 = "DELETE FROM deproomdetail WHERE ID =  '$ID_Detail' ";
+                        $meQueryqq1 = $conn->prepare($queryqq1);
+                        $meQueryqq1->execute();
+                    }
+                }
                 // =======================================================================================================================================
 
                 if ($db == 1) {
@@ -5314,27 +5588,6 @@ function oncheck_pay($conn, $db)
                                 WHERE
                                         itemstock.UsageCode = '$input_pay' 
                                         $wherepermission ";
-            // -- AND itemstock.departmentroomid = '35' 
-            // -- AND itemstock.Isdeproom = '0' 
-            // AND itemstock.HNCode = '$hncode' ";
-
-
-
-            // $query_1 = " SELECT
-            //                     itemstock.ItemCode,
-            //                     itemstock.Isdeproom,
-            //                     itemstock.departmentroomid,
-            //                     itemstock.RowID,
-            //                     IF(DATE(itemstock.ExpireDate) <= CURDATE(), 'exp', 'no_exp') AS check_exp
-            //                 FROM
-            //                     itemstock
-            //                 WHERE
-            //                     itemstock.UsageCode = '$input_pay'
-            //                     AND itemstock.departmentroomid = '35'
-            //                     AND itemstock.Isdeproom = '0'
-            //                     AND itemstock.ExpireDate > CURDATE()
-            //                     AND (itemstock.IsDamage IS NULL OR itemstock.IsDamage = 0)
-            //                     AND (itemstock.IsClaim IS NULL OR itemstock.IsClaim = 0) ";
         } else {
 
             if ($db == 1) {
@@ -6072,6 +6325,11 @@ function oncheck_pay($conn, $db)
                         }
 
 
+
+
+
+
+
                         if ($hncode_qty == 1) {
                             $queryD2 = "DELETE FROM hncode_detail WHERE ID =  '$hndetail_ID' ";
                             $meQueryD2 = $conn->prepare($queryD2);
@@ -6164,6 +6422,34 @@ function oncheck_pay($conn, $db)
 
 
 
+
+                        //check ว่า ตัว IsRequest = 1 เหลือกี่ตัว
+
+                        $qq1 = "SELECT
+                            deproomdetail.ID,
+                            SUM( deproomdetail.Qty ) AS cnt,
+                            IFNULL(( SELECT SUM( deproomdetailsub.qty_weighing ) FROM deproomdetailsub WHERE deproomdetailsub.Deproomdetail_RowID = deproomdetail.ID ), 0 ) AS cnt_pay
+                        FROM
+                            deproom
+                            INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo 
+                        WHERE
+                            deproom.DocNo = '$DocNo_borrow' 
+                            AND deproom.IsCancel = 0 
+                            AND deproomdetail.IsCancel = 0 
+                            AND deproomdetail.ItemCode = '$_ItemCode'
+                            AND deproomdetail.IsRequest = 1
+                        GROUP BY
+                            deproomdetail.ID ";
+                        $meQuery_qq1 = $conn->prepare($qq1);
+                        $meQuery_qq1->execute();
+                        while ($row_qq1 = $meQuery_qq1->fetch(PDO::FETCH_ASSOC)) {
+                            if ($row_qq1['cnt_pay'] == '0') {
+                                $ID_Detail = $row_qq1['ID'];
+                                $queryqq1 = "DELETE FROM deproomdetail WHERE ID =  '$ID_Detail' ";
+                                $meQueryqq1 = $conn->prepare($queryqq1);
+                                $meQueryqq1->execute();
+                            }
+                        }
 
                         $query_old = "DELETE FROM itemstock_transaction_detail  WHERE ItemStockID = '$_RowID' 
                         AND ItemCode = '$_ItemCode' 
@@ -6815,6 +7101,7 @@ function show_detail_deproom_pay($conn, $db)
                         DATE(deproom.serviceDate) = '$select_date_pay'
                         $whereDep
                         AND deproom.IsCancel = 0
+                        AND deproom.IsBlock = 0
                     GROUP BY
                         departmentroom.id,
                         departmentroom.departmentroomname ";
@@ -6829,6 +7116,7 @@ function show_detail_deproom_pay($conn, $db)
                         CONVERT(DATE,deproom.serviceDate) =  '$select_date_pay' 
                         $whereDep
                         AND deproom.IsCancel = 0
+                        AND deproom.IsBlock = 0
                     GROUP BY
                         departmentroom.id,
                         departmentroom.departmentroomname  ";
@@ -6879,6 +7167,7 @@ function show_detail_deproom_pay($conn, $db)
                             departmentroom.id = '$_id'
                             AND deproom.IsCancel = 0
                             AND DATE(deproom.serviceDate) = '$select_date_pay'
+                            AND deproom.IsBlock = 0
                         GROUP BY
                             deproom.DocNo,
                             departmentroom.id,
@@ -6888,7 +7177,7 @@ function show_detail_deproom_pay($conn, $db)
                             deproom.hn_record_id,
                             DATE_FORMAT(deproom.serviceDate, '%d-%m-%Y'),
                             DATE_FORMAT(deproom.serviceDate, '%H:%i')
-                        ORDER BY deproom.serviceDate DESC ";
+                        ORDER BY deproom.serviceDate ASC ";
         } else {
             $query_sub = "SELECT
                             deproom.DocNo,
@@ -6970,6 +7259,7 @@ function show_detail_deproom_pay($conn, $db)
                             AND deproomdetail.IsCancel = 0 
                         GROUP BY
                             deproomdetail.ID  ";
+
             $meQuerych = $conn->prepare($querych);
             $meQuerych->execute();
             while ($rowch = $meQuerych->fetch(PDO::FETCH_ASSOC)) {
@@ -6980,7 +7270,9 @@ function show_detail_deproom_pay($conn, $db)
                     $rowch['cnt'] = 0;
                 }
 
-                if ($rowch['cnt_pay'] < $rowch['cnt']) {
+
+
+                if ((int)$rowch['cnt_pay'] < (int)$rowch['cnt']) {
                     $check_q++;
                 }
 
@@ -6997,8 +7289,10 @@ function show_detail_deproom_pay($conn, $db)
                 $row_sub['cnt_detail'] = 'ค้าง';
             } else {
                 if ($check_q == 0) {
+
                     $row_sub['cnt_detail'] = 'ครบ';
                 } else {
+
                     if ($check_all == 1000) {
                         $row_sub['cnt_detail'] = 'บางส่วน';
                     } else {

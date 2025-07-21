@@ -378,10 +378,10 @@ function show_detail_daily($conn, $db)
 
     $where_t = "";
     if ($select_type == 1) {
-        $where_t = " AND  ( set_hn.isStatus = 0 OR set_hn.isStatus = 1 OR set_hn.isStatus = 2 )";
+        $where_t = " AND  ( set_hn.isStatus = 0 OR set_hn.isStatus = 1 OR set_hn.isStatus = 2 ) AND NOT set_hn.isCancel = 1 ";
     }
     if ($select_type == 2) {
-        $where_t = " AND set_hn.isStatus = 3 ";
+        $where_t = " AND set_hn.isStatus = 3 AND NOT set_hn.isCancel = 1 ";
     }
 
 
@@ -414,7 +414,7 @@ function show_detail_daily($conn, $db)
                 $whereD
                 AND NOT set_hn.isStatus = 9
                 $where_t
-            ORDER BY set_hn.isStatus ASC";
+            ORDER BY set_hn.serviceDate ASC";
 
     $meQ1 = $conn->prepare($Q1);
     $meQ1->execute();

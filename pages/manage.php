@@ -2,24 +2,34 @@
 
 
 
-    <div class="row">
-        <div class="col-md-6">
-        </div>
-        <div class="col-lg-3 mt-3 text-right">
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <div class="input-group-text" id="lang_text_roomcheck" style="    background-color: white;border: none;">สิทธิ์การเข้าใช้งาน : </div>
+    <div class="container-fluid">
+        <div class="row justify-content-end mt-3">
+            <div class="col-auto">
+                <div class="input-group" style="background-color: #f1f3fb; border-radius: 10px; border: 1px solid #dce0eb; overflow: hidden;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"
+                            style="border: none; background-color: white; font-weight: bold; border-right: 1px solid #dce0eb;">
+                            สิทธิ์การเข้าใช้งาน :
+                        </span>
+                    </div>
+                    <input type="text" class="form-control font-weight-bold"
+                        id="input_Deproom_Main" disabled
+                        style="background-color: #f1f3fb; border: none; color: #000;">
                 </div>
-                <input type="text" class="form-control f18" id="input_Deproom_Main" disabled value="" style="font-weight: bold;">
             </div>
-        </div>
 
-        <div class="col-lg-3 mt-3 text-right">
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <div class="input-group-text" id="lang_text_username" style="    background-color: white;border: none;">ชื่อผู้ใช้งาน : </div>
+            <div class="col-auto ml-2">
+                <div class="input-group" style="background-color: #f1f3fb; border-radius: 10px; border: 1px solid #dce0eb; overflow: hidden;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"
+                            style="border: none; background-color: white; font-weight: bold; border-right: 1px solid #dce0eb;">
+                            ชื่อผู้ใช้งาน :
+                        </span>
+                    </div>
+                    <input type="text" class="form-control font-weight-bold"
+                        id="input_Name_Main" disabled
+                        style="background-color: #f1f3fb; border: none; color: #000;">
                 </div>
-                <input type="text" class="form-control f18" id="input_Name_Main" disabled value="" style="font-weight: bold;">
             </div>
         </div>
     </div>
@@ -30,11 +40,19 @@
 
 <div class="row mb-3 mt-4">
     <div class="col-md-6">
+
+        <div class="tab-button-group">
+            <button class="tab-button active" id="manage">จัดการข้อมูลระบบ</button>
+            <button class="tab-button" id="mapping">Data Mapping</button>
+            <button class="tab-button" id="routine">จัดการ Routine</button>
+        </div>
+
+        <!-- 
         <div class="btn-group btn-group-toggle" role="group" aria-label="Basic example">
             <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;border-color: lightgray;" id="manage">จัดการข้อมูลระบบ</button>
             <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;border-color: lightgray;" id="mapping">Data Mapping</button>
             <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;border-color: lightgray;" id="routine">จัดการ Routine</button>
-        </div>
+        </div> -->
     </div>
 </div>
 
@@ -43,12 +61,21 @@
 
     <div class="row mb-3 mt-4">
         <div class="col-md-6">
-            <div class="btn-group btn-group-toggle" role="group" aria-label="Basic example">
+
+            <div class="tab-button-group">
+                <button class="tab-button2 active" id="radio1">เพิ่มแพทย์</button>
+                <button class="tab-button2" id="radio2">เพิ่มหัตถการ</button>
+                <button class="tab-button2" id="radio3">เพิ่มห้องผ่าตัด</button>
+                <button class="tab-button2" id="radio4">เพิ่ม User</button>
+            </div>
+
+
+            <!-- <div class="btn-group btn-group-toggle" role="group" aria-label="Basic example">
                 <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;border-color: lightgray;" id="radio1">เพิ่มแพทย์</button>
                 <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;border-color: lightgray;" id="radio2">เพิ่มหัตถการ</button>
                 <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;border-color: lightgray;" id="radio3">เพิ่มห้องผ่าตัด</button>
                 <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;border-color: lightgray;" id="radio4">เพิ่ม User</button>
-            </div>
+            </div> -->
         </div>
     </div>
 

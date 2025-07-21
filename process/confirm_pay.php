@@ -8,7 +8,55 @@ if (!empty($_POST['FUNC_NAME'])) {
         check_hn($conn, $db);
     }else if ($_POST['FUNC_NAME'] == 'onUpdateConfirm') {
         onUpdateConfirm($conn, $db);
+    }else if ($_POST['FUNC_NAME'] == 'show_detail') {
+        show_detail($conn, $db);
     }
+}
+
+function show_detail($conn, $db)
+{
+    $return = array();
+    $doc = $_POST['doc'];
+
+    
+    $query = " SELECT
+                item.itemname,
+                item.itemcode2,
+                deproomdetail.ID,
+                SUM(deproomdetail.Qty) AS cnt,
+                (SELECT COUNT(deproomdetailsub.ID) FROM deproomdetailsub WHERE deproomdetailsub.Deproomdetail_RowID = deproomdetail.ID) AS cnt_pay,
+                itemtype.TyeName
+                FROM
+                deproom
+                INNER JOIN
+                deproomdetail ON deproom.DocNo = deproomdetail.DocNo
+                INNER JOIN
+                item ON deproomdetail.ItemCode = item.itemcode
+                INNER JOIN
+                itemtype ON item.itemtypeID = itemtype.ID
+                WHERE
+                deproom.DocNo = '$doc'
+                AND deproom.IsCancel = 0
+                AND deproomdetail.IsCancel = 0
+                GROUP BY
+                item.itemname,
+                item.itemcode2,
+                deproomdetail.ID,
+                itemtype.TyeName
+                ORDER BY
+                item.itemname ASC   ";
+
+    $meQuery = $conn->prepare($query);
+    $meQuery->execute();
+    while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+
+        $return[] = $row;
+    }
+
+
+    echo json_encode($return);
+    unset($conn);
+    die;
 }
 
 function onUpdateConfirm($conn, $db)

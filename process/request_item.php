@@ -326,35 +326,6 @@ function show_detail_item_request($conn,$db)
                     item.stock_min 
                 ORDER BY COUNT( itemstock.RowID ) - ( SELECT COUNT( ID ) FROM itemstock_transaction_detail WHERE ItemCode = item.itemcode AND IsStatus = 1 ) <  item.stock_min DESC ";
 
-          
-    // $query = "SELECT
-    //             item.itemcode,
-    //             item.itemcode2,
-    //             item.itemname AS Item_name,
-    //             itemtype.TyeName,
-    //             item.stock_min,
-    //             COUNT(itemstock.RowID) AS cnt,
-	// 			( SELECT COUNT( ID ) FROM itemstock_transaction_detail WHERE ItemCode = item.itemcode AND IsStatus = 1 ) AS cnt_pay
-    //         FROM
-    //             item
-    //             LEFT JOIN itemtype ON itemtype.ID = item.itemtypeID
-    //             INNER JOIN itemstock ON item.itemcode = itemstock.ItemCode 
-    //         WHERE
-    //             item.IsNormal = 1 
-    //             AND item.IsCancel = 0 
-    //             AND ( item.itemcode LIKE '%$input_Search%'  OR item.itemname LIKE '%$input_Search%' )
-    //             $wherepermission
-    //             $wheretype
-    //         GROUP BY
-    //             item.ItemCode,
-    //             item.itemname,
-    //             itemtype.TyeName,
-    //             item.stock_min
-    //         ORDER BY
-    //             CASE WHEN COUNT(itemstock.RowID) < item.stock_min THEN 0 ELSE 1 END,
-    //             item.itemname ASC  ";
-
-             
 
 
     $meQuery = $conn->prepare($query);
