@@ -116,14 +116,14 @@
 
 
         <div class="col-md-12 mt-2">
-            <table class="table table-hover table-sm" id="table_daily">
+            <table class="table table-hover " id="table_daily">
                 <thead c style="background-color: #cdd6ff;">
                     <tr>
                         <th scope="col" class="text-center" id="">เลขประจำตัวคนไข้</th>
                         <th scope="col" class="text-center" id="">วัน/เวลารับบริการ</th>
                         <th scope="col" class="text-center" id="">แพทย์</th>
                         <th scope="col" class="text-center" id="">ห้องผ่าตัด</th>
-                        <th scope="col" class="text-center" id="" style="width:30%">หัตถการ</th>
+                        <th scope="col" class="text-center" id="">หัตถการ</th>
                         <th scope="col" class="text-center" id="">#</th>
                         <th scope="col" class="text-center" id="">#</th>
                     </tr>
@@ -156,7 +156,7 @@
 
 
         <div class="col-md-12 mt-2">
-            <table class="table table-hover table-sm" id="table_refrain">
+            <table class="table table-hover " id="table_refrain">
                 <thead c style="background-color: #cdd6ff;">
                     <tr>
                         <th scope="col" class="text-center" id="">เลขประจำตัวคนไข้</th>
@@ -195,7 +195,7 @@
 
                 <div class="col-md-12 col-lg-12 mt-3">
 
-                    <table class="table table-hover table-sm " id="table_his_docno">
+                    <table class="table table-hover  " id="table_his_docno">
                         <thead class="table-active sticky-top">
                             <tr>
                                 <th scope="col" class="text-center" id="">วันที่</th>
@@ -231,7 +231,7 @@
                 <div class="col-md-12 col-lg-12 mt-2">
                     <div class="row">
                         <div class="col-md-12 " id="div_detailleft1">
-                            <table class="table table-hover table-sm " id="table_detail_his">
+                            <table class="table table-hover  " id="table_detail_his">
                                 <thead class="table-active sticky-top">
                                     <tr>
                                         <th scope="col" class="text-center" id="">รหัสอุปกรณ์</th>
@@ -264,7 +264,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <table class="table table-hover table-sm" id="table_detail_Procedure">
+                <table class="table table-hover " id="table_detail_Procedure">
                     <thead style="background-color: #cdd6ff;">
                         <tr>
                             <th scope="col" class="text-center" id="">ลำดับ</th>
@@ -289,7 +289,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <table class="table table-hover table-sm" id="table_detail_Doctor">
+                <table class="table table-hover " id="table_detail_Doctor">
                     <thead style="background-color: #cdd6ff;">
                         <tr>
                             <th scope="col" class="text-center" id="">ลำดับ</th>

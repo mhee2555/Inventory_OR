@@ -95,7 +95,7 @@
 
     <div class="col-md-12 mt-3" id="table_ex">
         <input type="text" id="check_ex" hidden>
-        <table class="table table-hover table-sm " id="table_data">
+        <table class="table table-hover  " id="table_data">
             <thead class="table-active">
                 <tr>
                     <!-- <th scope="col" class="text-center" style="width: 20%;"></th> -->

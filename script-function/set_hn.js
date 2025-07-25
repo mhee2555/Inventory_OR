@@ -113,14 +113,14 @@ function show_detail_history() {
           }
 
           _tr += `<tr>
-                      <td class="f18 text-center">${kay + 1}</td>
-                      <td class="f18 text-left" style='width:20%;'>${value.hncode}</td>
-                      <td class="f18 text-center">${value.serviceDate} ${
+                      <td class="f18 text-center" style='line-height: 35px;'>${kay + 1}</td>
+                      <td class="f18 text-center" style='line-height: 35px;'>${value.hncode}</td>
+                      <td class="f18 text-center" style='line-height: 35px;'>${value.serviceDate} ${
             value.serviceTime
           }</td>
-                      <td class="f18 text-left">${value.Doctor_Name}</td>
-                      <td class="f18 text-left">${ value.departmentroomname }</td>
-                      <td class="f18 text-left" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 300px;" ${title}>${value.Procedure_TH}</td>
+                      <td class="f18 text-left" style='line-height: 35px;'>${value.Doctor_Name}</td>
+                      <td class="f18 text-left" style='line-height: 35px;'>${ value.departmentroomname }</td>
+                      <td class="f18 text-left" style="line-height: 35px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 300px;" ${title}>${value.Procedure_TH}</td>
                       <td class="f18 text-center" style='width:10%;'><button ${hidden} class='btn btn-primary btn-block' onclick='showdetail("${
             value.ID
           }","${value.hncode}","${value.serviceDate}","${value.serviceTime}","${

@@ -18,17 +18,17 @@ $(function () {
 
   $("#select_date1_9").val(output);
   $("#select_date1_9").datepicker({
-    onSelect: function (date) {},
+    onSelect: function (date) { },
   });
 
   $("#select_date1").val(output);
   $("#select_date1").datepicker({
-    onSelect: function (date) {},
+    onSelect: function (date) { },
   });
 
   $("#select_date2").val(output);
   $("#select_date2").datepicker({
-    onSelect: function (date) {},
+    onSelect: function (date) { },
   });
 
   $("#row_day_9").hide();
@@ -158,6 +158,13 @@ $(function () {
       if ($(this).val() == 9 || $(this).val() == 8) {
         $("#row_typedate").hide();
         $("#row_day_9").show();
+        if ($(this).val() == 8) {
+          $("#btn_excel").attr('hidden', true);
+          $("#btn_png").attr('hidden', false);
+        } else {
+          $("#btn_excel").attr('hidden', false);
+          $("#btn_png").attr('hidden', true);
+        }
       } else {
         $("#row_typedate").show();
         $("#row_day_9").hide();
@@ -414,11 +421,13 @@ $(function () {
           var option = "?date1=" + $("#select_date1_9").val();
 
           window.open("report/Report_OR_tracking.php" + option, "_blank");
-        }else if($("#select_report").val() == 8) {
+        } else if ($("#select_report").val() == 8) {
+
+
           var option = "?date1=" + $("#select_date1_9").val();
 
-        window.open("report/Report_SumService.php" + option, "_blank");
-      }else{
+          window.open("report/Report_SumService.php" + option, "_blank");
+        } else {
           Swal.fire("ล้มเหลว", "กรุณาเลือกประเภท", "error");
         }
       }
@@ -467,9 +476,9 @@ $(function () {
 
         window.open(
           "report/phpexcel/Report_Replenishment.php" +
-            option +
-            "&Userid=" +
-            Userid,
+          option +
+          "&Userid=" +
+          Userid,
           "_blank"
         );
       }
@@ -513,9 +522,9 @@ $(function () {
 
         window.open(
           "report/phpexcel/Report_Patient_Requisition.php" +
-            option +
-            "&Userid=" +
-            Userid,
+          option +
+          "&Userid=" +
+          Userid,
           "_blank"
         );
       }
@@ -592,9 +601,9 @@ $(function () {
 
         window.open(
           "report/phpexcel/Report_Cabinet_Issue.php" +
-            option +
-            "&Userid=" +
-            Userid,
+          option +
+          "&Userid=" +
+          Userid,
           "_blank"
         );
       }
@@ -638,9 +647,9 @@ $(function () {
 
         window.open(
           "report/phpexcel/Report_Patient_Cost_Summary2.php" +
-            option +
-            "&Userid=" +
-            Userid,
+          option +
+          "&Userid=" +
+          Userid,
           "_blank"
         );
       }
@@ -696,6 +705,14 @@ $(function () {
       } else {
         Swal.fire("ล้มเหลว", "กรุณาเลือกประเภท", "error");
       }
+    }
+  });
+
+  $("#btn_png").click(function (e) {
+    if ($("#select_report").val() == 8) {
+      var option = "?date1=" + $("#select_date1_9").val()+"&action=preview&format=png";
+
+      window.open("report/Report_SumService2.php" + option, "_blank");
     }
   });
 

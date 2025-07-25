@@ -97,7 +97,7 @@
                 <div class="col-md-6 mt-3">
                     <div class="card">
                         <div class="card-body">
-                            <table class="table table-hover table-sm" id="table_item_suds1">
+                            <table class="table table-hover " id="table_item_suds1">
                                 <thead style="background-color: #cdd6ff;">
                                     <tr>
                                         <th scope="col" class="text-center" id="">รหัสอุปกรณ์</th>
@@ -120,7 +120,7 @@
                             <span id="itemNameSUDs" style="color: black;font-weight: 600;font-size: 25px;"></span>
                         </div>
                         <div class="card-body">
-                            <table class="table table-hover table-sm" id="table_item_suds2">
+                            <table class="table table-hover " id="table_item_suds2">
                                 <thead style="background-color: #cdd6ff;">
                                     <tr>
                                         <th scope="col" class="text-center" id="">รหัสเครื่องมือ SUDs</th>
@@ -158,7 +158,7 @@
 
                         </div>
                         <div class="card-body">
-                            <table class="table table-hover table-sm" id="table_item_suds3">
+                            <table class="table table-hover " id="table_item_suds3">
                                 <thead style="background-color: #cdd6ff;">
                                     <tr>
                                         <th scope="col" class="text-center" id="">รหัสเครื่องมือ</th>
@@ -223,7 +223,7 @@
                             <div class="row">
                                 <div class="col-lg-12 mt-3  table-responsive">
 
-                                    <table class="table table-sm table-bordered" id="table_DepRoom_rfid">
+                                    <table class="table  table-bordered" id="table_DepRoom_rfid">
                                         <thead>
                                             <tr id="tr_TableDephead_rfid">
 
@@ -238,7 +238,7 @@
                                 </div>
                             </div>
 
-                            <!-- <table class="table table-hover table-sm" id="table_receive_stock">
+                            <!-- <table class="table table-hover " id="table_receive_stock">
                                 <thead style="background-color: #cdd6ff;">
                                     <tr>
                                         <th scope="col" class="text-center" id="">ลำดับ</th>
@@ -317,7 +317,7 @@
                             <div class="row">
                                 <div class="col-lg-12 mt-3  table-responsive">
 
-                                    <table class="table table-sm table-bordered" id="table_DepRoom">
+                                    <table class="table  table-bordered" id="table_DepRoom">
                                         <thead>
                                             <tr id="tr_TableDephead">
 
@@ -332,7 +332,7 @@
                                 </div>
                             </div>
 
-                            <!-- <table class="table table-hover table-sm" id="table_receive_stock">
+                            <!-- <table class="table table-hover " id="table_receive_stock">
                                 <thead style="background-color: #cdd6ff;">
                                     <tr>
                                         <th scope="col" class="text-center" id="">ลำดับ</th>
@@ -413,7 +413,7 @@
                             <div class="row">
                                 <div class="col-lg-12 mt-3  table-responsive">
 
-                                    <table class="table table-sm table-bordered" id="table_DepRoom_normal">
+                                    <table class="table  table-bordered" id="table_DepRoom_normal">
                                         <thead>
                                             <tr id="tr_TableDephead_normal">
 
@@ -428,7 +428,7 @@
                                 </div>
                             </div>
 
-                            <!-- <table class="table table-hover table-sm" id="table_receive_stock">
+                            <!-- <table class="table table-hover " id="table_receive_stock">
                                 <thead style="background-color: #cdd6ff;">
                                     <tr>
                                         <th scope="col" class="text-center" id="">ลำดับ</th>
@@ -486,7 +486,7 @@
                     </div>
 
 
-                    <table class="table table-hover table-sm" id="table_item_restock">
+                    <table class="table table-hover " id="table_item_restock">
                         <thead style="background-color: #cdd6ff;">
                             <tr>
                                 <th scope="col" class="text-center" id="">ItemCode</th>

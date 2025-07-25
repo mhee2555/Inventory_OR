@@ -125,9 +125,9 @@
 
             </div>
             <div class="col-md-8">
-                <div class="row">
+                <div class="row" style="margin-top: -50px;">
                     <div class="col-md-12">
-                        <table class="table table-hover table-sm" id="table_detailDoctor">
+                        <table class="table table-hover " id="table_detailDoctor">
                             <thead class="thead-light">
                                 <tr>
                                     <th scope="col" id="td_number" class="text-center" class="text-center">ลำดับ</th>
@@ -189,9 +189,9 @@
 
             </div>
             <div class="col-md-8">
-                <div class="row">
+                <div class="row" style="margin-top: -50px;">
                     <div class="col-md-12">
-                        <table class="table table-hover table-sm" id="table_detailProcedure">
+                        <table class="table table-hover " id="table_detailProcedure">
                             <thead class="thead-light">
                                 <tr>
                                     <th scope="col" id="td_numberPro" class="text-center" class="text-center">ลำดับ</th>
@@ -289,9 +289,9 @@
 
             </div>
             <div class="col-md-9">
-                <div class="row">
+                <div class="row" style="margin-top: -50px;">
                     <div class="col-md-12">
-                        <table class="table table-hover table-sm" id="table_detailDeproom">
+                        <table class="table table-hover " id="table_detailDeproom">
                             <thead class="thead-light">
                                 <tr>
                                     <th scope="col" id="td_numberdep" class="text-center" class="text-center">ลำดับ</th>
@@ -421,9 +421,9 @@
 
             </div>
             <div class="col-md-9">
-                <div class="row">
+                <div class="row" style="margin-top: -50px;">
                     <div class="col-md-12">
-                        <table class="table table-hover table-sm" id="table_detailUser">
+                        <table class="table table-hover " id="table_detailUser">
                             <thead class="thead-light">
                                 <tr>
                                     <th scope="col" id="td_numberuser" class="text-center" class="text-center">ลำดับ</th>
@@ -580,7 +580,7 @@
 
                         <div class="row">
                             <div class="col-md-12">
-                                <table class="table table-hover table-sm" id="table_detail_doctor">
+                                <table class="table table-hover " id="table_detail_doctor">
                                     <thead class="thead-light">
                                         <tr>
                                             <th scope="col" id="td_number" class="text-center" class="text-center">ชื่อแพทย์</th>
@@ -612,7 +612,7 @@
 
                         <div class="row">
                             <div class="col-md-12">
-                                <table class="table table-hover table-sm" id="table_detail_deproom">
+                                <table class="table table-hover " id="table_detail_deproom">
                                     <thead class="thead-light">
                                         <tr>
                                             <th scope="col" id="td_number" class="text-center" class="text-center">ห้องผ่าตัด</th>
@@ -674,7 +674,7 @@
 
 
 
-                    <table class="table table-hover table-sm" id="table_detail_item">
+                    <table class="table table-hover " id="table_detail_item">
                         <thead class="thead-light">
                             <tr>
                                 <th scope="col" id="td_number" class="text-center" class="text-center">ลำดับ</th>
@@ -746,7 +746,7 @@
 
 
 
-                    <table class="table table-hover table-sm" id="table_item_detail_request">
+                    <table class="table table-hover " id="table_item_detail_request">
                         <thead class="thead-light">
                             <tr>
                                 <th scope="col" class="text-center" id="">ลำดับ</th>
@@ -779,7 +779,7 @@
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <table class="table table-hover table-sm" id="table_detail_routine">
+                    <table class="table table-hover " id="table_detail_routine">
                         <thead class="thead-light">
                             <tr>
                                 <th scope="col" id="" class="text-center" class="text-center">ลำดับ</th>
@@ -812,7 +812,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <table class="table table-hover table-sm" id="table_detail_deproom_modal">
+                <table class="table table-hover " id="table_detail_deproom_modal">
                     <thead style="background-color: #cdd6ff;">
                         <tr>
                             <th scope="col" class="text-center" id="">ลำดับ</th>
@@ -837,7 +837,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <table class="table table-hover table-sm" id="table_detail_Procedure">
+                <table class="table table-hover " id="table_detail_Procedure">
                     <thead style="background-color: #cdd6ff;">
                         <tr>
                             <th scope="col" class="text-center" id="">ลำดับ</th>

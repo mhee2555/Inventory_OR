@@ -76,7 +76,7 @@
 
 
                 <div class="col-md-12 mt-2">
-                    <table class="table table-hover table-sm" id="table_item_request">
+                    <table class="table table-hover " id="table_item_request">
                         <thead c style="background-color: #cdd6ff;">
                             <tr>
                                 <th scope="col" class="text-center" id="">รหัสอุปกรณ์</th>
@@ -103,7 +103,7 @@
             <input type="text" id="input_docnoRQ" hidden>
             <div class="row" style="margin-top: 4.6rem !important;">
                 <div class="col-md-12 mt-2">
-                    <table class="table table-hover table-sm" id="table_rq">
+                    <table class="table table-hover " id="table_rq">
                         <thead c style="background-color: #cdd6ff;">
                             <tr>
                                 <th scope="col" class="text-center" id="">รหัสอุปกรณ์</th>
@@ -161,7 +161,7 @@
                 <div class="col-md-12">
 
 
-                    <table class="table table-hover table-sm" id="table_rq2">
+                    <table class="table table-hover " id="table_rq2">
                         <thead style="background-color: #cdd6ff;">
                             <tr>
                                 <th scope="col" class="text-left" style="width:5%;"></th>
@@ -185,7 +185,7 @@
         <div class="col-md-6">
             <div class="row " style="margin-top: 3.3rem !important;">
                 <div class="col-md-12">
-                    <table class="table table-hover table-sm" id="table_detail_rq">
+                    <table class="table table-hover " id="table_detail_rq">
                         <thead style="background-color: #cdd6ff;">
                             <tr>
                                 <th scope="col" class="text-center" id="" style="width:5%;"></th>
@@ -236,7 +236,7 @@
                 <div class="col-md-12">
 
 
-                    <table class="table table-hover table-sm" id="table_history">
+                    <table class="table table-hover " id="table_history">
                         <thead style="background-color: #cdd6ff;">
                             <tr>
                                 <th scope="col" class="text-center">เลขที่เอกสาร RQ</th>
@@ -283,7 +283,7 @@
                         </div>
                     </div>
                 </div>
-                <table class="table table-hover table-sm mt-2" id="table_detail">
+                <table class="table table-hover  mt-2" id="table_detail">
                     <thead style="background-color: #cdd6ff;">
                         <tr>
                             <th scope="col" class="text-center" id="">ลำดับ</th>

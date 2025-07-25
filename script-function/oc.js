@@ -59,7 +59,7 @@ function show_detail_item() {
           _tr += `<tr id="tr_${value.itemcode}" class="clear_bg">
                       <td class='text-center'>${value.TyeName}</td>
                       <td class='text-left'>${value.Item_name}</td>
-                      <td class='text-center'><label style='color:blue;font-weight:bold;cursor:pointer;' onclick="set_detail_lot('${value.itemcode}')">เลือก</label></td>
+                      <td class='text-center'><button class='btn-block btn btn-primary' style='color:#fff;font-weight:bold;cursor:pointer;' onclick="set_detail_lot('${value.itemcode}')">เลือก</button></td>
                    </tr>`;
         });
       }
@@ -85,7 +85,7 @@ function show_detail_item() {
         },
         columnDefs: [
           {
-            width: "20%",
+            width: "40%",
             targets: 0,
           },
           {
@@ -165,7 +165,7 @@ function show_detail_lot(itemcode) {
           _tr += `<tr id="trtracking_${value.lotNo}" class="clear_bg">
                       <td class='text-center'>${txt}</td>
                       <td class='text-center'>${value.cnt}</td>
-                      <td class='text-center'><label style='color:blue;font-weight:bold;cursor:pointer;' onclick="set_detail_lot_itemstock('${value.lotNo}','${value.ItemCode}')">เลือก</label></td>
+                      <td class='text-center'><button class='btn-block btn btn-primary' style='color:#fff;font-weight:bold;cursor:pointer;' onclick="set_detail_lot_itemstock('${value.lotNo}','${value.ItemCode}')">เลือก</button></td>
                       <td class='text-center'><i  class="fa-solid fa-circle-exclamation" style="font-size: 30px;color: ${hidden};cursor:pointer;" onclick="set_tracking('${value.lotNo}','${value.ItemCode}','${hidden}')"></i></td>
                    </tr>`;
         });
@@ -526,15 +526,15 @@ function show_detail_oc() {
           if (value.IsDeproom == "1") {
             txt = value.hn_record_id;
             status =
-              "<button class='btn btn-success' >ถูกใช้งาน</button>";
+              "<button class='btn btn-success btn-block' >ถูกใช้งาน</button>";
           }
           if (value.IsDeproom == "0") {
             status =
-              "<button class='btn btn-primary' >อยู่คลัง Stock</button>";
+              "<button class='btn btn-primary btn-block' >อยู่คลัง Stock</button>";
           }
           if (value.check_exp == "exp") {
             status =
-              "<button class='btn btn-danger' >หมดอายุ</button>";
+              "<button class='btn btn-danger btn-block' >หมดอายุ</button>";
           }
           _tr += `<tr >
                       <td class='text-left'>${value.itemname}</td>
@@ -569,19 +569,19 @@ function show_detail_oc() {
         },
         columnDefs: [
           {
-            width: "25%",
+            width: "15%",
             targets: 0,
           },
           {
-            width: "10%",
+            width: "15%",
             targets: 1,
           },
           {
-            width: "10%",
+            width: "15%",
             targets: 2,
           },
           {
-            width: "10%",
+            width: "15%",
             targets: 3,
           },
           {

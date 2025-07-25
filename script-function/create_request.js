@@ -32,7 +32,7 @@ $(function () {
 
   // $("#select_date_request").val(set_date());
   $("#select_date_request").datepicker({
-    onSelect: function (date) {},
+    onSelect: function (date) { },
   });
   $("#select_date_history_s").val(output);
   $("#select_date_history_s").datepicker({
@@ -55,25 +55,40 @@ $(function () {
 
   $("#radio_create_request").click(function () {
 
-      $('.tab-button').removeClass('active');
-      $(this).addClass('active');
+    $('.tab-button').removeClass('active');
+    $(this).addClass('active');
 
     $("#create_request").show();
     $("#history_create_request").hide();
   });
 
   $("#radio_history_create_request").click(function () {
-      $('.tab-button').removeClass('active');
-      $(this).addClass('active');
+    $('.tab-button').removeClass('active');
+    $(this).addClass('active');
 
     $("#create_request").hide();
     $("#history_create_request").show();
 
     show_detail_history();
 
-    $("#select_deproom_history").select2();
-    $("#select_doctor_history").select2();
-    $("#select_procedure_history").select2();
+    // $("#select_deproom_history").select2();
+    // $("#select_doctor_history").select2();
+    // $("#select_procedure_history").select2();
+
+    $("#select_typeSearch_history").val('');
+
+    if (!$("#select_deproom_history").hasClass("select2-hidden-accessible")) {
+      $("#select_deproom_history").select2();
+    }
+    if (!$("#select_doctor_history").hasClass("select2-hidden-accessible")) {
+      $("#select_doctor_history").select2();
+    }
+    if (!$("#select_procedure_history").hasClass("select2-hidden-accessible")) {
+      $("#select_procedure_history").select2();
+    }
+
+
+
 
     setTimeout(() => {
       // $("#select_doctor_history").on("select2:select", function (e) {
@@ -128,6 +143,7 @@ $(function () {
     $("#col_doctor_history").attr("hidden", true);
     $("#col_procedure_history").attr("hidden", true);
     $("#col_hide_2").attr("hidden", true);
+    $("#col_hide").attr("hidden", false);
   });
 
   show_detail_item_request();
@@ -624,10 +640,9 @@ function show_detail_item_request() {
           _tr += `<tr>
                       <td class='text-center' >${kay + 1}</td>
                       <td>${value.Item_name}</td>
-                      <td class='text-center'>${value.TyeName}</td>
-                      <td class='text-center'><input type='text' class='numonly form-control loop_qty_request text-center' data-itemcode="${
-                        value.itemcode
-                      }"></td>
+                      <td class='text-left'>${value.TyeName}</td>
+                      <td class='text-center'><input type='text' class='numonly form-control loop_qty_request text-center' data-itemcode="${value.itemcode
+            }"></td>
                    </tr>`;
         });
       }
@@ -682,13 +697,13 @@ function show_detail_item_request() {
       if (_tr == "") {
         $(".dataTables_info").text(
           settext("dataTables_Showing") +
-            " 0 " +
-            settext("dataTables_to") +
-            " 0 " +
-            settext("dataTables_of") +
-            " 0 " +
-            settext("dataTables_entries") +
-            ""
+          " 0 " +
+          settext("dataTables_to") +
+          " 0 " +
+          settext("dataTables_of") +
+          " 0 " +
+          settext("dataTables_entries") +
+          ""
         );
       }
 
@@ -764,17 +779,13 @@ function show_detail_request_byDocNo() {
                       <td class='text-center'>${kay + 1}</td>
                       <td>${value.itemname}</td>
                       <td class='text-center'>${value.TyeName}</td>
-                      <td class='text-center'><input type="number" onblur="updateDetail_qty(${
-                        value.ID
-                      },'${
-            value.itemcode
-          }')" class="form-control text-center qty_loop numonly" id="qty_item_${
-            value.ID
-          }" data-id='${value.ID}' value='${value.cnt}'> </td>
+                      <td class='text-center'><input type="number" onblur="updateDetail_qty(${value.ID
+            },'${value.itemcode
+            }')" class="form-control text-center qty_loop numonly" id="qty_item_${value.ID
+            }" data-id='${value.ID}' value='${value.cnt}'> </td>
                       <td class='text-center'>
-                      <img src="assets/img_project/1_icon/ic_trash-1.png" style='width:60%;cursor:pointer;' onclick='delete_request_byItem(${
-                        value.ID
-                      })'>
+                      <img src="assets/img_project/1_icon/ic_trash-1.png" style='width:60%;cursor:pointer;' onclick='delete_request_byItem(${value.ID
+            })'>
                       </td>
                    </tr>`;
         });
@@ -834,13 +845,13 @@ function show_detail_request_byDocNo() {
       if (_tr == "") {
         $(".dataTables_info").text(
           settext("dataTables_Showing") +
-            " 0 " +
-            settext("dataTables_to") +
-            " 0 " +
-            settext("dataTables_of") +
-            " 0 " +
-            settext("dataTables_entries") +
-            ""
+          " 0 " +
+          settext("dataTables_to") +
+          " 0 " +
+          settext("dataTables_of") +
+          " 0 " +
+          settext("dataTables_entries") +
+          ""
         );
       }
 
@@ -863,7 +874,7 @@ function updateDetail_qty(ID, itemcode) {
       txt_docno_request: $("#txt_docno_request").val(),
       qty: $("#qty_item_" + ID).val(),
     },
-    success: function (result) {},
+    success: function (result) { },
   });
 }
 
@@ -881,7 +892,7 @@ function add_request_qty(ID) {
       ID: ID,
       qty: qty,
     },
-    success: function (result) {},
+    success: function (result) { },
   });
 }
 
@@ -903,7 +914,7 @@ function delete_request_qty(ID) {
       ID: ID,
       qty: qty,
     },
-    success: function (result) {},
+    success: function (result) { },
   });
 }
 
@@ -1079,7 +1090,10 @@ function show_detail_history() {
       if (!$.isEmptyObject(ObjData)) {
         $.each(ObjData, function (kay, value) {
           if (value.Procedure_TH == "button") {
+            var title = ``;
             value.Procedure_TH = `<a class="text-primary" style="cursor:pointer;" onclick='showDetail_Procedure("${value.procedure}")'>หัตถการ</a>`;
+          } else {
+            var title = `title='${value.Procedure_TH}' `;
           }
           if (value.Doctor_Name == "button") {
             value.Doctor_Name = `<a class="text-primary" style="cursor:pointer;" onclick='showDetail_Doctor("${value.doctor}")'>แพทย์</a>`;
@@ -1090,10 +1104,10 @@ function show_detail_history() {
             var showreport = `<button class='btn f18' style='background-color:#643695;color:#fff;' onclick='show_Report("${value.DocNo}")'>รายงานขอเบิก</button>`;
           } else {
             var edit_id = ``;
-            
-            if(value.IsStart == null){
+
+            if (value.IsStart == null) {
               var showreport = `<button disabled class='btn f18 btn-secondary' onclick='show_Report("${value.DocNo}")')'>ถูกสแกนจ่าย</button>`;
-            }else{
+            } else {
               var showreport = `<button  class='btn f18 btn-success' onclick='show_Report("${value.DocNo}")')'>ถูกสแกนจ่าย</button>`;
             }
           }
@@ -1103,12 +1117,11 @@ function show_detail_history() {
                       <td class='text-center'>${value.serviceDate} ${value.serviceTime}</td>
                       <td class='text-left' style='max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>${value.hn_record_id}</td>
                       <td class='text-left' style='max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>${value.Doctor_Name}</td>
-                      <td class='text-left' style='max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>${value.Procedure_TH}</td>
+                      <td class='text-left' style='max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;' ${title}>${value.Procedure_TH}</td>
                       <td class='text-left' style='max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>${value.departmentroomname}</td>
                       <td class='text-center'>${edit_id}</td>
-                      <td hidden class='text-center'><button class='btn-block btn btn-outline-danger f18' onclick='cancel_item_byDocNo("${
-                        value.DocNo
-                      }")' >ยกเลิก</button></td>
+                      <td hidden class='text-center'><button class='btn-block btn btn-outline-danger f18' onclick='cancel_item_byDocNo("${value.DocNo
+            }")' >ยกเลิก</button></td>
                       <td class='text-center'>${showreport}</td>
                    </tr>`;
         });
@@ -1135,7 +1148,7 @@ function show_detail_history() {
         },
         columnDefs: [
           {
-            width: "5%",
+            width: "3%",
             targets: 0,
           },
           {
@@ -1147,28 +1160,24 @@ function show_detail_history() {
             targets: 2,
           },
           {
-            width: "5%",
+            width: "10%",
             targets: 3,
           },
           {
-            width: "5%",
+            width: "10%",
             targets: 4,
           },
           {
-            width: "5%",
+            width: "10%",
             targets: 5,
           },
           {
-            width: "5%",
+            width: "8%",
             targets: 6,
           },
           {
-            width: "5%",
+            width: "8%",
             targets: 7,
-          },
-          {
-            width: "5%",
-            targets: 8,
           },
         ],
         info: false,
@@ -1184,13 +1193,13 @@ function show_detail_history() {
       if (_tr == "") {
         $(".dataTables_info").text(
           settext("dataTables_Showing") +
-            " 0 " +
-            settext("dataTables_to") +
-            " 0 " +
-            settext("dataTables_of") +
-            " 0 " +
-            settext("dataTables_entries") +
-            ""
+          " 0 " +
+          settext("dataTables_to") +
+          " 0 " +
+          settext("dataTables_of") +
+          " 0 " +
+          settext("dataTables_entries") +
+          ""
         );
       }
     },

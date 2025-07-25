@@ -124,23 +124,23 @@ function show_detail_hn() {
             targets: 0,
           },
           {
-            width: "20%",
+            width: "15%",
             targets: 1,
           },
           {
-            width: "10%",
+            width: "15%",
             targets: 2,
           },
           {
-            width: "10%",
+            width: "15%",
             targets: 3,
           },
           {
-            width: "10%",
+            width: "15%",
             targets: 4,
           },
           {
-            width: "10%",
+            width: "15%",
             targets: 5,
           },
         ],
@@ -899,23 +899,23 @@ function feeddata_hncode_detail(DocNo, HnCode) {
         },
         columnDefs: [
           {
-            width: "10%",
+            width: "3%",
             targets: 0,
           },
           {
-            width: "10%",
+            width: "18%",
             targets: 1,
           },
           {
-            width: "10%",
+            width: "15%",
             targets: 2,
           },
           {
-            width: "10%",
+            width: "20%",
             targets: 3,
           },
           {
-            width: "10%",
+            width: "5%",
             targets: 4,
           },
         ],

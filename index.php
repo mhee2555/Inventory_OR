@@ -998,6 +998,7 @@ if (!isset($_SESSION['UserName'])) {
                     $("#ic_movement").attr("src", "assets/img_project/2_icon/ic_movement.png");
                     $("#ic_adjust_stock").attr("src", "assets/img_project/2_icon/ic_adjust_stock.png");
                     $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
+                    $("#ic_set_hn").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
 
                 }
 
@@ -1275,6 +1276,7 @@ if (!isset($_SESSION['UserName'])) {
                     $("#ic_movement").attr("src", "assets/img_project/2_icon/ic_movement.png");
                     $("#ic_adjust_stock").attr("src", "assets/img_project/2_icon/ic_adjust_stock.png");
                     $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
+                    $("#ic_set_hn").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
 
                 }
 
@@ -1428,6 +1430,7 @@ if (!isset($_SESSION['UserName'])) {
                     $("#ic_turnon_offdisplay").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
                     $("#ic_adjust_stock").attr("src", "assets/img_project/2_icon/ic_adjust_stock.png");
                     $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
+                    $("#ic_set_hn").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
 
                 }
 
@@ -1572,6 +1575,7 @@ if (!isset($_SESSION['UserName'])) {
                     $("#ic_inventory_tools").attr("src", "assets/img_project/2_icon/ic_inventory_tools.png");
                     $("#ic_turnon_offdisplay").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
                     $("#ic_adjust_stock").attr("src", "assets/img_project/2_icon/ic_adjust_stock.png");
+                    $("#ic_set_hn").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
 
                 }
 
@@ -1658,6 +1662,7 @@ if (!isset($_SESSION['UserName'])) {
                     $("#ic_turnon_offdisplay").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
                     $("#ic_adjust_stock").attr("src", "assets/img_project/2_icon/ic_adjust_stock.png");
                     $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
+                    $("#ic_set_hn").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
 
                 }
 
@@ -1746,6 +1751,7 @@ if (!isset($_SESSION['UserName'])) {
                     $("#ic_inventory_tools").attr("src", "assets/img_project/2_icon/ic_inventory_tools.png");
                     $("#ic_turnon_offdisplay").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
                     $("#ic_adjust_stock").attr("src", "assets/img_project/2_icon/ic_adjust_stock.png");
+                    $("#ic_set_hn").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
 
                 }
 
@@ -1857,7 +1863,9 @@ if (!isset($_SESSION['UserName'])) {
         function startIdleTimer() {
 
             var time_out = '<?php echo $time_out; ?>';
-
+            if(time_out == 0){
+                time_out = 999999;
+            }
             let seconds = time_out * 60;
 
             currSeconds++;
@@ -1962,7 +1970,7 @@ if (!isset($_SESSION['UserName'])) {
             $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/3_icon/ic_turnon_offdisplay.png");
 
 
-            $("#li_logout").css('background-color', '#101323');
+            $("#li_logout").css('background-color', 'lightgray');
             $("#img_logo").attr("src", "assets/img/logo-w.png");
 
             // setTimeout(() => {
@@ -2124,7 +2132,7 @@ if (!isset($_SESSION['UserName'])) {
             $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/3_icon/ic_turnon_offdisplay.png");
 
 
-            $("#li_logout").css('background-color', '#101323');
+            $("#li_logout").css('background-color', 'lightgray');
             $("#img_logo").attr("src", "assets/img/logo-w.png");
 
         }

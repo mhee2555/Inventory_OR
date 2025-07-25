@@ -1,5 +1,5 @@
         <!-- Sidebar -->
-        <ul class="navbar-nav sidebar sidebar-dark accordion " id="accordionSidebar" style="background-color: #004aad;overflow-y: auto;border: 2px solid #D0D5DD;">
+        <ul class="navbar-nav sidebar sidebar-dark accordion " id="accordionSidebar" style="overflow-y: auto;border: 2px solid #D0D5DD;">
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
                 <div class="sidebar-brand-text mx-3 color_menu">

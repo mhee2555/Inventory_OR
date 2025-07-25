@@ -203,11 +203,11 @@ function feeddata() {
 
         $.each(ObjData, function (kay, value) {
           var color = "";
-          if (value.IsStatus == "ใกล้หมดอายุ") {
-            color = "btn btn-warning' ";
-          } else {
-            color = "btn btn-danger' ";
-          }
+                    if (value.IsStatus == 'ใกล้หมดอายุ') {
+                        color = "btn btn-warning btn-block' ";
+                    } else {
+                        color = "btn btn-danger btn-block' ";
+                    }
 
           console.log($("#check_ex").val());
 
@@ -224,7 +224,7 @@ function feeddata() {
               `<td class="text-left"><label >${value.itemname}</label></td>` +
               `<td class="text-center"><label >${value.ExpireDate}</label</td>` +
               `<td class="text-center"><label >${value.Qty}</label</td>` +
-              `<td class="text-center"><label ><button class='${color}' disabled>${value.IsStatus}</button></label</td>` +
+               `<td class="text-center"><button class='${color}' disabled>${value.IsStatus}</button></td>` +
               ` </tr>`;
 
             number_ex++;
@@ -239,7 +239,7 @@ function feeddata() {
                 `<td class="text-left"><label >${value.itemname}</label></td>` +
                 `<td class="text-center"><label >${value.ExpireDate}</label</td>` +
                 `<td class="text-center"><label >${value.Qty}</label</td>` +
-                `<td class="text-center"><label > <button class='${color}' disabled>${value.IsStatus}</button></label</td>` +
+                `<td class="text-center"> <button class='${color}' disabled>${value.IsStatus}</button></td>` +
                 ` </tr>`;
 
               number_ex++;
@@ -257,7 +257,7 @@ function feeddata() {
                 `<td class="text-left"><label >${value.itemname}</label></td>` +
                 `<td class="text-center"><label >${value.ExpireDate}</label</td>` +
                 `<td class="text-center"><label >${value.Qty}</label</td>` +
-                `<td class="text-center"><label >  <button class='${color}' disabled>${value.IsStatus}</button> </label</td>` +
+                `<td class="text-center"> <button class='${color}' disabled>${value.IsStatus}</button></td>` +
                 ` </tr>`;
 
               number_ex++;

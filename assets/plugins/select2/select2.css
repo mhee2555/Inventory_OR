@@ -1,3 +1,13 @@
+.select2-search input,
+.select2-search__field {
+    background-color: #ffffff !important;
+    color: #333333 !important;
+    border: 1px solid #cccccc !important;
+    border-radius: 4px !important;
+    padding: 8px 12px !important;
+    font-size: 16px !important; /* ป้องกัน auto-zoom ใน iOS */
+}
+
 .select2-container {
   box-sizing: border-box;
   display: inline-block;

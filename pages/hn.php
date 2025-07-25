@@ -99,7 +99,7 @@
 
                 <div class="row">
                     <div class="col-md-12 ">
-                        <table class="table table-hover table-sm " id="table_detail">
+                        <table class="table table-hover  " id="table_detail">
                             <thead class="table-active sticky-top">
                                 <tr>
                                     <th scope="col" style="width: 5%; text-align: center;" id="td_no">ลำดับ</th>
@@ -154,7 +154,7 @@
             <div class="col-md-12 col-lg-12 mt-2">
                 <div class="row">
                     <div class="col-md-12 " id="div_detailleft1">
-                        <table class="table table-hover table-sm " id="table_detail_sub">
+                        <table class="table table-hover  " id="table_detail_sub">
                             <thead class="table-active sticky-top">
                                 <tr>
                                     <th scope="col" class="text-center" style="width: 10%;" id="td_no2">ลำดับ</th>
@@ -309,7 +309,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <table class="table table-hover table-sm" id="table_detail_Procedure">
+                <table class="table table-hover " id="table_detail_Procedure">
                     <thead style="background-color: #cdd6ff;">
                         <tr>
                             <th scope="col" class="text-center" id="">ลำดับ</th>
@@ -334,7 +334,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <table class="table table-hover table-sm" id="table_detail_Doctor">
+                <table class="table table-hover " id="table_detail_Doctor">
                     <thead style="background-color: #cdd6ff;">
                         <tr>
                             <th scope="col" class="text-center" id="">ลำดับ</th>
@@ -366,7 +366,7 @@
                                 <input type="text" class="form-control f18" placeholder="" id="input_return_item_his">
                             </div>
                             <div class="table-responsive" id="table_return_his">
-                                <table class="table table-hover table-sm">
+                                <table class="table table-hover ">
                                     <thead class="thead-light">
                                         <tr>
                                             <th>ชื่ออุปกรณ์</th>
@@ -389,7 +389,7 @@
                                 </select>
                             </div>
                             <div class="table-responsive" id="table_add_his">
-                                <table class="table table-hover table-sm">
+                                <table class="table table-hover ">
                                     <thead class="thead-light">
                                         <tr>
                                             <th>ชื่ออุปกรณ์</th>

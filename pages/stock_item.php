@@ -78,7 +78,7 @@
     </div>
 
     <div class="row mt-3" id="">
-        <table class="table table-hover table-sm" id="table_store">
+        <table class="table table-hover " id="table_store">
             <thead style="background-color: #cdd6ff;">
                 <tr>
                     <th scope="col" class="text-center" style="width: 10%;" id="">ลำดับ</th>
@@ -125,7 +125,7 @@
             </div>
 
             <div class="row mt-3" id="">
-                <table class="table table-hover table-sm" id="table_store_detail">
+                <table class="table table-hover " id="table_store_detail">
                     <thead style="background-color: #cdd6ff;">
                         <tr>
                             <th scope="col" class="text-center" id="" style="width: 10%;">ลำดับ</th>
@@ -197,7 +197,7 @@
 
                 </div>
                 <div class="card-body">
-                    <table class="table table-hover table-sm" id="table_item">
+                    <table class="table table-hover " id="table_item">
                         <thead style="background-color: #cdd6ff;">
                             <tr>
                                 <th scope="col" class="text-center" id="">ลำดับ</th>
@@ -237,7 +237,7 @@
 
                 </div>
                 <div class="card-body">
-                    <table class="table table-hover table-sm" id="table_item_store">
+                    <table class="table table-hover " id="table_item_store">
                         <thead style="background-color: #cdd6ff;">
                             <tr>
                                 <th scope="col" class="text-center" id="">ลำดับ</th>

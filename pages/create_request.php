@@ -104,7 +104,7 @@
                     <div class="card">
 
                         <div class="card-body">
-                            <table class="table table-hover table-sm" id="table_item_request">
+                            <table class="table table-hover " id="table_item_request">
                                 <thead>
                                     <tr>
                                         <th scope="col" class="text-center" id="">ลำดับ</th>
@@ -237,7 +237,7 @@
                             </div>
 
 
-                            <table class="table table-hover table-sm" id="table_item_detail_request">
+                            <table class="table table-hover " id="table_item_detail_request">
                                 <thead>
                                     <tr>
                                         <th scope="col" class="text-center" id="">ลำดับ</th>
@@ -380,7 +380,7 @@
                 <div class="card">
 
                     <div class="card-body">
-                        <table class="table table-hover table-sm" id="table_history">
+                        <table class="table table-hover " id="table_history">
                             <thead style="background-color: #cdd6ff;">
                                 <tr>
                                     <th scope="col" class="text-center" id="">ลำดับ</th>
@@ -390,7 +390,6 @@
                                     <th scope="col" class="text-center" id="">หัตถการ</th>
                                     <th scope="col" class="text-center" id="">ห้องผ่าตัด</th>
                                     <th scope="col" class="text-center" id="">แก้ไข</th>
-                                    <th hidden scope="col" class="text-center" id="">ยกเลิก</th>
                                     <th scope="col" class="text-center" id="">รายงานขอเบิก</th>
                                 </tr>
                             </thead>
@@ -422,7 +421,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <table class="table table-hover table-sm" id="table_detail_Procedure">
+                <table class="table table-hover " id="table_detail_Procedure">
                     <thead style="background-color: #cdd6ff;">
                         <tr>
                             <th scope="col" class="text-center" id="">ลำดับ</th>
@@ -447,7 +446,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <table class="table table-hover table-sm" id="table_detail_Doctor">
+                <table class="table table-hover " id="table_detail_Doctor">
                     <thead style="background-color: #cdd6ff;">
                         <tr>
                             <th scope="col" class="text-center" id="">ลำดับ</th>

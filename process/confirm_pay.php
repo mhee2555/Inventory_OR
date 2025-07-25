@@ -6,9 +6,9 @@ require '../connect/connect.php';
 if (!empty($_POST['FUNC_NAME'])) {
     if ($_POST['FUNC_NAME'] == 'check_hn') {
         check_hn($conn, $db);
-    }else if ($_POST['FUNC_NAME'] == 'onUpdateConfirm') {
+    } else if ($_POST['FUNC_NAME'] == 'onUpdateConfirm') {
         onUpdateConfirm($conn, $db);
-    }else if ($_POST['FUNC_NAME'] == 'show_detail') {
+    } else if ($_POST['FUNC_NAME'] == 'show_detail') {
         show_detail($conn, $db);
     }
 }
@@ -18,7 +18,7 @@ function show_detail($conn, $db)
     $return = array();
     $doc = $_POST['doc'];
 
-    
+
     $query = " SELECT
                 item.itemname,
                 item.itemcode2,
@@ -65,7 +65,7 @@ function onUpdateConfirm($conn, $db)
     $doc = $_POST['doc'];
     $select_users = $_POST['select_users'];
 
-    
+
     $query = "UPDATE deproom SET IsConfirm_pay = 1 , userConfirm_pay = $select_users WHERE DocNo ='$doc' ";
 
     $meQuery = $conn->prepare($query);
@@ -104,12 +104,27 @@ function check_hn($conn, $db)
     $meQuery = $conn->prepare($query);
     $meQuery->execute();
     while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+        $_procedure = $row['procedure'];
+        $_doctor = $row['doctor'];
 
         if (str_contains($row['procedure'], ',')) {
-            $row['Procedure_TH'] = 'button';
+
+            $select = " SELECT GROUP_CONCAT(Procedure_TH SEPARATOR ', ') AS procedure_ids FROM `procedure` WHERE `procedure`.ID IN( $_procedure )  ";
+            $meQuery_select = $conn->prepare($select);
+            $meQuery_select->execute();
+            while ($row_select = $meQuery_select->fetch(PDO::FETCH_ASSOC)) {
+                $row['Procedure_TH'] = $row_select['procedure_ids'];
+            }
         }
         if (str_contains($row['doctor'], ',')) {
-            $row['Doctor_Name'] = 'button';
+
+            $select = " SELECT GROUP_CONCAT(Doctor_Name SEPARATOR ', ') AS doctor_ids FROM doctor WHERE doctor.ID IN( $_doctor )  ";
+            $meQuery_select = $conn->prepare($select);
+            $meQuery_select->execute();
+            while ($row_select = $meQuery_select->fetch(PDO::FETCH_ASSOC)) {
+                $row['Doctor_Name'] = $row_select['doctor_ids'];
+            }
+
         }
 
         $return[] = $row;
@@ -120,4 +135,3 @@ function check_hn($conn, $db)
     unset($conn);
     die;
 }
-

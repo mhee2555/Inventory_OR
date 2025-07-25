@@ -189,11 +189,11 @@ function show_detail_item_request() {
         },
         columnDefs: [
           {
-            width: "10%",
+            width: "20%",
             targets: 0,
           },
           {
-            width: "40%",
+            width: "35%",
             targets: 1,
           },
           {

@@ -173,7 +173,8 @@ $query = "SELECT
             LEFT JOIN `procedure` ON `procedure`.ID = deproom.`procedure` 
             LEFT JOIN set_hn ON set_hn.DocNo_deproom = deproom.DocNo
             $where_date  
-            AND deproom.DocNo NOT IN (SELECT set_hn.DocNo_deproom FROM set_hn WHERE DATE( set_hn.serviceDate ) = '$date1' )
+            AND deproom.DocNo NOT IN (SELECT set_hn.DocNo_deproom FROM set_hn WHERE DATE( set_hn.serviceDate ) = '$date1' AND set_hn.isStatus = 9  )
+            AND deproom.IsCancel = 0
             GROUP BY deproom.DocNo";
 
 

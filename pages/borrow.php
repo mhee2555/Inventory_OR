@@ -78,7 +78,7 @@
                 แจ้งเตือนยืมของ
             </div>
             <div class="card-body">
-                <table class="table table-hover table-sm" id="table_deproom_borrow">
+                <table class="table table-hover" id="table_deproom_borrow">
                     <thead c style="background-color: #cdd6ff;">
                         <tr>
                             <th scope="col" class="text-center" id="">ลำดับ</th>

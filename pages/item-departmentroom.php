@@ -51,7 +51,7 @@
             <div class="modal-body">
 
 
-                <table class="table table-hover table-sm" id="modal_table_detail">
+                <table class="table table-hover " id="modal_table_detail">
                     <thead class="thead-light">
                         <tr>
                             <th scope="col" class="text-center" id="td_no">ลำดับ</th>
@@ -82,7 +82,7 @@
             <div class="modal-body">
 
 
-                <table class="table table-hover table-sm" id="modal_table_detail_searchitem">
+                <table class="table table-hover " id="modal_table_detail_searchitem">
                     <thead class="thead-light">
                         <tr>
                             <th scope="col" class="text-center" id="td_deproom1" style="width: 40%;">ห้องตรวจที่มีอุปกรณ์</th>

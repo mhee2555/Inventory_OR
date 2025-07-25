@@ -97,7 +97,7 @@
                     <div class="row">
                         <div class="col-lg-12 mt-3  table-responsive">
 
-                            <table class="table table-sm table-bordered" id="table_DepRoom">
+                            <table class="table  table-bordered" id="table_DepRoom">
                                 <thead>
                                     <tr id="tr_TableDephead">
 
@@ -145,7 +145,7 @@
         <div class="row">
             <div class="col-lg-12 mt-3  table-responsive">
 
-                <table class="table  table-sm table-bordered" id="table_DepRoom2">
+                <table class="table   table-bordered" id="table_DepRoom2">
                     <thead>
                         <tr id="tr_TableDephead2">
 

@@ -176,15 +176,15 @@ function show_detail_his_docno() {
           var txt = "";
           var hid = "";
           if (value.IsStatus == "1") {
-            txt = `<button class='btn' style='font-weight: bold;background-color:#643695;color:#fff;'>รอดำเนินการ</button>`;
+            txt = `<button class='btn btn-block' style='font-weight: bold;background-color:#643695;color:#fff;'>รอดำเนินการ</button>`;
             var hid = "hidden";
           }
           if (value.IsStatus == "2") {
-            txt = `<button class='btn' style="background-color:#1cc88a;color:#fff;font-weight:bold;">ส่งค่าใช้จ่ายเรียบร้อย</button>`;
+            txt = `<button class='btn btn-block' style="background-color:#1cc88a;color:#fff;font-weight:bold;">ส่งค่าใช้จ่ายเรียบร้อย</button>`;
           }
           var add_Qty = "";
           if (value.IsStatus == "3") {
-            txt = `<button class='btn' style="background-color:#1cc88a;color:#fff;font-weight:bold;">ส่งค่าใช้จ่ายเรียบร้อย</button>`;
+            txt = `<button class='btn btn-block' style="background-color:#1cc88a;color:#fff;font-weight:bold;">ส่งค่าใช้จ่ายเรียบร้อย</button>`;
             var hid = "hidden";
           } else {
             if (value.add_Qty > 0 || value.delete_Qty > 0) {
@@ -199,8 +199,8 @@ function show_detail_his_docno() {
           _tr += `<tr class='color' id="tr_${value.ID}"  onclick='setActive_his(${value.ID},"${value.IsStatus}",${value.isCancel},${value.add_Qty},${value.delete_Qty})'>
                       <td class="f18 text-center">${value.createAt}</td>
                       <td class="f18 text-center">${value.HnCode}</td>
-                      <td class="f18 text-center">${value.Doctor_Name}</td>
-                      <td class="f18 text-center" ${styleP} ${titleP}>${value.Procedure_TH}</td>
+                      <td class="f18 text-left">${value.Doctor_Name}</td>
+                      <td class="f18 text-left" ${styleP} ${titleP}>${value.Procedure_TH}</td>
                       <td class="f18 text-center">${txt}</td>
                       <td hidden class="f18 text-center"><button class='btn' ${hid} style='font-weight: bold;background-color:#e74a3b;color:#fff;' onclick='edit_his(${value.ID},${value.IsStatus},${value.edit_qty})'>แก้ไข</button></td>
                       <td class="f18 text-center">${add_Qty}</td>

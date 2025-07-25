@@ -81,15 +81,15 @@ function show_detail_borrow() {
         },
         columnDefs: [
           {
-            width: "10%",
+            width: "3%",
             targets: 0,
           },
           {
-            width: "20%",
+            width: "15%",
             targets: 1,
           },
           {
-            width: "20%",
+            width: "25%",
             targets: 2,
           },
           {

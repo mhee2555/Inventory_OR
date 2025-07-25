@@ -344,16 +344,9 @@ function feeddata_detailDoctor() {
           _tr += `<tr> 
                       <td class="text-center">${kay + 1}</td>
                       <td class="text-left">${value.Doctor_Name}</td>
-                      <td class="text-center"><button class='btn' ${bg}>  ${
-            value.IsActive
-          } </button></td>
-                      <td class="text-center">
-                       <button class="btn btn-outline-dark f18" onclick='editDoctor("${
-                         value.ID
-                       }","${value.Doctor_Name}","${
-            value.IsActive
-          }")'  > <i class="fa-regular fa-pen-to-square"></i> แก้ไข</button>
-                       <button  class="btn btn-outline-danger f18" onclick='deleteDoctor(${
+                      <td class="text-center"><button class='btn' ${bg}>  ${value.IsActive} </button></td>
+                      <td class="text-center"> <button class="btn btn-outline-dark f18 mr-4" onclick='editDoctor("${value.ID }","${value.Doctor_Name}","${value.IsActive}")'  > <i class="fa-regular fa-pen-to-square"></i> แก้ไข</button>
+                       <button  class="btn btn-outline-danger f18 ml-4" onclick='deleteDoctor(${
                          value.ID
                        })'><i class="fa-solid fa-trash-can"></i></button> 
           
@@ -387,7 +380,7 @@ function feeddata_detailDoctor() {
             targets: 0,
           },
           {
-            width: "60%",
+            width: "40%",
             targets: 1,
           },
           {
@@ -541,8 +534,8 @@ function feeddata_detailProcedure() {
             `<td class="text-center"><button class='btn' ${bg}>  ${value.IsActive} </button></td>` +
             `<td class="text-center">
             
-                       <button class="btn btn-outline-dark f18 edit-btn" data-id="${value.ID}" data-name="${value.Procedure_TH}" data-active="${value.IsActive}" > <i class="fa-regular fa-pen-to-square"></i> แก้ไข</button>
-                       <button  class="btn btn-outline-danger f18" onclick='deleteProcedure(${value.ID})'><i class="fa-solid fa-trash-can"></i></button> 
+                       <button class="btn btn-outline-dark f18 edit-btn mr-4" data-id="${value.ID}" data-name="${value.Procedure_TH}" data-active="${value.IsActive}" > <i class="fa-regular fa-pen-to-square"></i> แก้ไข</button>
+                       <button  class="btn btn-outline-danger f18 ml-4" onclick='deleteProcedure(${value.ID})'><i class="fa-solid fa-trash-can"></i></button> 
             
             
             
@@ -587,7 +580,7 @@ function feeddata_detailProcedure() {
             targets: 0,
           },
           {
-            width: "60%",
+            width: "40%",
             targets: 1,
           },
           {
@@ -814,7 +807,7 @@ function feeddata_detailUser() {
             value.IsCancel
           } </button></td>
                       <td class="text-center">
-                      <button class="btn btn-outline-dark f18" onclick='editUser("${
+                      <button class="btn btn-outline-dark f18 mr-4" onclick='editUser("${
                         value.ID
                       }","${value.EmpCode}","${value.FirstName}","${
             value.LastName
@@ -823,7 +816,7 @@ function feeddata_detailUser() {
           }","${
             value.IsAdmin
           }")'  > <i class="fa-regular fa-pen-to-square"></i> แก้ไข</button>
-                       <button  class="btn btn-outline-danger f18" onclick='deleteUser(${
+                       <button  class="btn btn-outline-danger f18 ml-4" onclick='deleteUser(${
                          value.ID
                        },"${
             value.EmpCode
@@ -1053,14 +1046,14 @@ function feeddata_detailDeproom() {
           } </button></td>
 
                       <td class="text-center">
-                       <button class="btn btn-outline-dark f18" onclick='editDeproom("${
+                       <button class="btn btn-outline-dark f18 mr-4" onclick='editDeproom("${
                          value.id
                        }","${value.departmentroomname}","${
             value.departmentroomname_EN
           }","${value.ID_floor}","${value.IsActive}","${
             value.departmentroomname_sub
           }")'  > <i class="fa-regular fa-pen-to-square"></i> แก้ไข</button>
-                       <button  class="btn btn-outline-danger f18" onclick='deleteDeproom(${
+                       <button  class="btn btn-outline-danger f18 ml-4" onclick='deleteDeproom(${
                          value.id
                        })'><i class="fa-solid fa-trash-can"></i></button> 
 
@@ -1113,7 +1106,7 @@ function feeddata_detailDeproom() {
             targets: 5,
           },
           {
-            width: "10%",
+            width: "15%",
             targets: 6,
           },
         ],

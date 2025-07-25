@@ -216,6 +216,9 @@
                     <div class="col-md-12 text-right mt-3">
                         <button class="btn btn-outline-success f18" id="btn_excel" style="width: 200px;line-height: 40px;"><i class="fa-solid fa-file-excel"></i> Excel</button>
                     </div>
+                    <div class="col-md-12 text-right mt-3">
+                        <button class="btn btn-outline-primary f18" id="btn_png" style="width: 200px;line-height: 40px;" hidden><i class="fa-solid fa-images"></i> PNG</button>
+                    </div>
                 </div>
             </div>
         </div>

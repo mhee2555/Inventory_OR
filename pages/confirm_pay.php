@@ -24,13 +24,13 @@ $doc = $_GET['doc'];
             <div class="card">
                 <div class="card-body">
                     <div class="text-center">
-                        <button class="btn btn-lg mb-3 " style="width: 100%;background-color: #643695;color:#fff;">ยืนยัน!</button>
+                        <label class="mb-3 " style="width: 100%;color: #643695;font-size: 40px;font-weight: bold;">ยืนยัน!</label>
 
                         <h2 style="color: black;">ยืนยัน การรับอุปกรณ์ !</h2>
 
                         <img src="../assets/img_project/confrim_pay.png" alt="package" width="200" class="mb-4">
 
-                        <div class="text-start mx-auto" style="max-width: 400px;">
+                        <div class="text-left mx-auto" style="max-width: 400px;">
                             <p style="color: black;"><strong>HN Code :</strong> <label for="" id="text_hn"></label></p>
                             <p style="color: black;" id="text_doctor"></p>
                             <p style="color: black;" id="text_procedure"></p>

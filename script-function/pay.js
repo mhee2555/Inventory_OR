@@ -244,6 +244,11 @@ $(function () {
 
     $("#row_history_return").hide();
 
+
+    $(".tab-button2").removeClass("active");
+    $("#radio_return").addClass("active");
+
+
     feeddata_waitReturn();
     // feeddataClaim();
   });
@@ -489,7 +494,6 @@ $("#btn_edit_hn").click(function () {
   $("#select_deproom_editHN").change(function () {
     set_proceduce2($("#select_deproom_editHN").val());
   });
-
   $.ajax({
     url: "process/pay.php",
     type: "POST",
@@ -812,8 +816,8 @@ function show_detail_deproom_pay() {
       if (!$.isEmptyObject(ObjData)) {
         $.each(ObjData["departmentroomname"], function (kay, value) {
           _tr += `<tr id='trbg_${value.id}'>
-                      <td class="f24 text-left"><i class="fa-solid fa-chevron-up" style='font-size:20px;cursor:pointer;' id='open_${value.id
-            }' value='0' onclick='open_deproom_sub(${value.id
+                      <td class="f24 text-left"><i class="fa-solid fa-chevron-up" style='font-size:20px;cursor:pointer;rotate: 180deg;' id='open_${value.id
+            }' value='1' onclick='open_deproom_sub(${value.id
             })'></i> ${kay + 1}</td>
                       <td class="f24 text-left" style='font-weight:bold;'>${value.departmentroomname
             }</td>
@@ -900,7 +904,7 @@ function show_detail_deproom_pay() {
 
       $("#table_deproom_pay tbody").html(_tr);
 
-      $(".all111").hide();
+      $(".all111").show();
 
       $(".clear_checkbox").on("click", function () {
         const el = $(this);
@@ -1973,6 +1977,7 @@ function oncheck_Returnpay(input_returnpay) {
 }
 
 function open_deproom_sub(id) {
+
   if ($("#open_" + id).val() == 1) {
     $("#open_" + id).val(0);
     $("#open_" + id).animate({ rotate: "0deg", scale: "1.25" }, 500);
@@ -1983,14 +1988,26 @@ function open_deproom_sub(id) {
 
     // $(".tr_"+id).attr('hidden',true);
   } else {
-    $("#open_" + id).val(1);
-    $("#open_" + id).animate({ rotate: "180deg", scale: "1.25" }, 500);
+    if ($("#open_" + id).val() == "") {
+      $("#open_" + id).val(0);
+      $("#open_" + id).animate({ rotate: "0deg", scale: "1.25" }, 500);
 
-    $(".tr_" + id).show(500);
+      $(".tr_" + id).hide(300);
 
-    $("#trbg_" + id).css("background-color", "#EFF8FF");
+      $("#trbg_" + id).css("background-color", "");
 
-    // $(".tr_"+id).attr('hidden',false);
+      // $(".tr_"+id).attr('hidden',true);
+    } else {
+      $("#open_" + id).val(1);
+      $("#open_" + id).animate({ rotate: "180deg", scale: "1.25" }, 500);
+
+      $(".tr_" + id).show(500);
+
+      $("#trbg_" + id).css("background-color", "#EFF8FF");
+
+      // $(".tr_"+id).attr('hidden',false);
+    }
+
   }
 }
 
@@ -2177,7 +2194,10 @@ function show_detail_history_block() {
       if (!$.isEmptyObject(ObjData)) {
         $.each(ObjData, function (kay, value) {
           if (value.Procedure_TH == "button") {
+            var title = ``;
             value.Procedure_TH = `<a class="text-primary" style="cursor:pointer;" onclick='showDetail_Procedure("${value.procedure}")'>หัตถการ</a>`;
+          } else {
+            var title = `title='${value.Procedure_TH}' `;
           }
           if (value.Doctor_Name == "button") {
             value.Doctor_Name = `<a class="text-primary" style="cursor:pointer;" onclick='showDetail_Doctor("${value.doctor}")'>แพทย์</a>`;
@@ -2196,9 +2216,9 @@ function show_detail_history_block() {
             }</td>
                       <td class='text-left' style='max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>${value.hn_record_id}</td>
                       <td class='text-left' style='max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>${value.Doctor_Name}</td>
-                      <td class='text-left' style='max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>${value.Procedure_TH}</td>
+                      <td class='text-left' style='max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;' ${title}>${value.Procedure_TH}</td>
                       <td class='text-left' style='max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>${value.departmentroomname}</td>
-                      <td class='text-center'>อุปกรณ์</td>
+                      <td class='text-center'> <label style="color:blue;cursor:pointer;text-decoration: underline;" onclick="showDetail_item_block('${value.DocNo}')" > อุปกรณ์ </label></td>
                       <td class='text-center'><button class='btn f18 btn-success btn-block btn_block' style='color:#fff;'
                                 id="btn_block_${value.DocNo}"
                                 data-docno="${value.DocNo}"
@@ -2237,11 +2257,11 @@ function show_detail_history_block() {
         },
         columnDefs: [
           {
-            width: "2%",
+            width: "3%",
             targets: 0,
           },
           {
-            width: "10%",
+            width: "5%",
             targets: 1,
           },
           {
@@ -2314,6 +2334,38 @@ function show_detail_history_block() {
 
     },
   });
+}
+
+function showDetail_item_block(DocNo) {
+  $("#myModal_Detail_Block").modal("toggle");
+
+  $.ajax({
+    url: "process/pay.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "showDetail_item_block",
+      DocNo: DocNo,
+    },
+    success: function (result) {
+      $("#table_Detail_item_block tbody").html("");
+      var ObjData = JSON.parse(result);
+      if (!$.isEmptyObject(ObjData)) {
+        var _tr = ``;
+        var allpage = 0;
+        $.each(ObjData, function (kay, value) {
+
+          _tr += `<tr>
+              <td class="text-center">${value.itemcode2}</td>
+              <td class="text-left">${value.itemname}</td>
+              <td class="text-center">${value.cnt_pay}</td>
+            </tr>`;
+        });
+
+        $("#table_Detail_item_block tbody").html(_tr);
+      }
+    },
+  });
+
 }
 
 function onclick_show_modal_block(docno, hn, date, time, box, doctor, procedure, departmentroomname) {
@@ -2532,7 +2584,10 @@ function show_detail_history() {
       if (!$.isEmptyObject(ObjData)) {
         $.each(ObjData, function (kay, value) {
           if (value.Procedure_TH == "button") {
+            var title = `title='${value.Procedure_TH}' `;
             value.Procedure_TH = `<a class="text-primary" style="cursor:pointer;" onclick='showDetail_Procedure("${value.procedure}")'>หัตถการ</a>`;
+          } else {
+            var title = `title='${value.Procedure_TH}' `;
           }
           if (value.Doctor_Name == "button") {
             value.Doctor_Name = `<a class="text-primary" style="cursor:pointer;" onclick='showDetail_Doctor("${value.doctor}")'>แพทย์</a>`;
@@ -2554,12 +2609,11 @@ function show_detail_history() {
           _tr += `<tr>
                       <td class='text-center'>${kay + 1}</td>
                       <td class='text-center'>${value.CreateDate}</td>
-                      <td class='text-center'>${value.serviceDate} ${value.serviceTime
-            }</td>
+                      <td class='text-center'>${value.serviceDate} ${value.serviceTime}</td>
                       <td class='text-center'>${value.FirstName}</td>
                       <td class='text-left' style='max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>${value.hn_record_id}</td>
                       <td class='text-left' style='max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>${value.Doctor_Name}</td>
-                      <td class='text-left' style='max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>${value.Procedure_TH}</td>
+                      <td class='text-left' style='max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;' ${title}>${value.Procedure_TH}</td>
                       <td class='text-left'   style='max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>${value.departmentroomname}</td>
                       <td class='text-center'><button class='btn btn-outline-danger f18 btn-block' onclick='cancel_item_byDocNo("${value.DocNo}")' >ยกเลิก</button></td>
                       <td class='text-center'>${hidden}</td>
@@ -2588,7 +2642,7 @@ function show_detail_history() {
         },
         columnDefs: [
           {
-            width: "5%",
+            width: "3%",
             targets: 0,
           },
           {
@@ -2916,7 +2970,7 @@ function feeddata_history_Return() {
     },
     success: function (result) {
       // $("#table_item_claim").DataTable().destroy();
-      $("#table_history_return tbody").html("");
+      $("#table_history_return").DataTable().destroy();
       var ObjData = JSON.parse(result);
       if (!$.isEmptyObject(ObjData)) {
         var _tr = ``;
@@ -2933,6 +2987,68 @@ function feeddata_history_Return() {
         });
 
         $("#table_history_return tbody").html(_tr);
+        $("#table_history_return").DataTable({
+          language: {
+            emptyTable: settext("dataTables_empty"),
+            paginate: {
+              next: settext("table_itemStock_next"),
+              previous: settext("table_itemStock_previous"),
+            },
+            search: settext("btn_Search"),
+            info:
+              settext("dataTables_Showing") +
+              " _START_ " +
+              settext("dataTables_to") +
+              " _END_ " +
+              settext("dataTables_of") +
+              " _TOTAL_ " +
+              settext("dataTables_entries") +
+              " ",
+          },
+          columnDefs: [
+            {
+              width: "2%",
+              targets: 0,
+            },
+            {
+              width: "2%",
+              targets: 1,
+            },
+            {
+              width: "5%",
+              targets: 2,
+            },
+            {
+              width: "3%",
+              targets: 3,
+            },
+            {
+              width: "5%",
+              targets: 4,
+            }
+          ],
+          info: false,
+          scrollX: false,
+          scrollCollapse: false,
+          visible: false,
+          searching: false,
+          lengthChange: false,
+          fixedHeader: false,
+          ordering: false,
+        });
+        $("th").removeClass("sorting_asc");
+        if (_tr == "") {
+          $(".dataTables_info").text(
+            settext("dataTables_Showing") +
+            " 0 " +
+            settext("dataTables_to") +
+            " 0 " +
+            settext("dataTables_of") +
+            " 0 " +
+            settext("dataTables_entries") +
+            ""
+          );
+        }
       }
     },
   });

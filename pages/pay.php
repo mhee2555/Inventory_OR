@@ -101,7 +101,7 @@
                     <div class="card">
 
                         <div class="card-body">
-                            <table class="table table-hover table-sm" id="table_deproom_pay">
+                            <table class="table table-hover " id="table_deproom_pay">
                                 <thead style="background-color: #cdd6ff;">
                                     <tr>
                                         <th scope="col" class="text-left" style="width:5%;">ลำดับ</th>
@@ -208,7 +208,7 @@
                             </div>
 
 
-                            <table class="table table-hover table-sm" id="table_deproom_DocNo_pay">
+                            <table class="table table-hover " id="table_deproom_DocNo_pay">
                                 <thead style="background-color: #cdd6ff;">
                                     <tr>
                                         <th scope="col" class="text-center" id="" style="width: 70%;">รายการ</th>
@@ -378,7 +378,7 @@
                             </div>
 
 
-                            <table class="table table-hover table-sm mt-3" id="table_deproom_DocNo_pay_manual">
+                            <table class="table table-hover  mt-3" id="table_deproom_DocNo_pay_manual">
                                 <thead style="background-color: #cdd6ff;">
                                     <tr>
                                         <th scope="col" class="text-center" id="" style="width: 10%;">ลำดับ</th>
@@ -449,7 +449,7 @@
                     </div>
 
 
-                    <table class="table table-hover table-sm" id="table_item_return">
+                    <table class="table table-hover " id="table_item_return">
                         <thead style="background-color: #cdd6ff;">
                             <tr>
                                 <th scope="col" class="text-center" id="">ลำดับ</th>
@@ -495,7 +495,7 @@
                     </div>
 
 
-                    <table class="table table-hover table-sm" id="table_history_return">
+                    <table class="table table-hover " id="table_history_return">
                         <thead style="background-color: #cdd6ff;">
                             <tr>
                                 <th scope="col" class="text-center" id="">ลำดับ</th>
@@ -661,7 +661,7 @@
                     <div class="card">
 
                         <div class="card-body">
-                            <table class="table table-hover table-sm" id="table_history">
+                            <table class="table table-hover" id="table_history">
                                 <thead style="background-color: #cdd6ff;">
                                     <tr>
                                         <th scope="col" class="text-center" id="">ลำดับ</th>
@@ -732,7 +732,7 @@
                     </div>
 
 
-                    <table class="table table-hover table-sm" id="table_item_claim">
+                    <table class="table table-hover " id="table_item_claim">
                         <thead style="background-color: #cdd6ff;">
                             <tr>
                                 <th scope="col" class="text-center" id="">ลำดับ</th>
@@ -897,7 +897,7 @@
                     <div class="card">
 
                         <div class="card-body">
-                            <table class="table table-hover table-sm" id="table_history_block">
+                            <table class="table table-hover " id="table_history_block">
                                 <thead style="background-color: #cdd6ff;">
                                     <tr>
                                         <th scope="col" class="text-center" id="">ลำดับ</th>
@@ -938,7 +938,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <table class="table table-hover table-sm" id="table_detail_Procedure">
+                <table class="table table-hover " id="table_detail_Procedure">
                     <thead style="background-color: #cdd6ff;">
                         <tr>
                             <th scope="col" class="text-center" id="">ลำดับ</th>
@@ -963,7 +963,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <table class="table table-hover table-sm" id="table_detail_Doctor">
+                <table class="table table-hover " id="table_detail_Doctor">
                     <thead style="background-color: #cdd6ff;">
                         <tr>
                             <th scope="col" class="text-center" id="">ลำดับ</th>
@@ -988,7 +988,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <table class="table table-hover table-sm" id="table_Detail_Permission">
+                <table class="table table-hover " id="table_Detail_Permission">
                     <thead style="background-color: #cdd6ff;">
                         <tr>
                             <th scope="col" class="text-center" id="">สังกัด</th>
@@ -1180,6 +1180,33 @@
             <div class="modal-footer">
                 <button class="btn-success btn f18" id="btn_save_edit_hn_block">บันทึก</button>
                 <button class="btn-danger btn f18" data-dismiss="modal">ยกเลิก</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="myModal_Detail_Block" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-hover " id="table_Detail_item_block">
+                    <thead style="background-color: #cdd6ff;">
+                        <tr>
+                            <th scope="col" class="text-center" id="">รหัสรายการ</th>
+                            <th scope="col" class="text-center" id="">อุปกรณ์</th>
+                            <th scope="col" class="text-center" id="">จ่าย</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

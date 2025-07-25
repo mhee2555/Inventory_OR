@@ -78,10 +78,46 @@ if (!empty($_POST['FUNC_NAME'])) {
         show_detail_history_block($conn, $db);
     } else if ($_POST['FUNC_NAME'] == 'save_edit_hn_block') {
         save_edit_hn_block($conn, $db);
+    } else if ($_POST['FUNC_NAME'] == 'showDetail_item_block') {
+        showDetail_item_block($conn, $db);
     }
 }
 
 
+function showDetail_item_block($conn, $db)
+{
+    $return = array();
+    $DocNo = $_POST['DocNo'];
+
+
+    $query = "SELECT
+                    item.itemcode2,
+                    item.itemname,
+                    SUM(IFNULL( subs.total_qty_weighing, 0 )) AS cnt_pay 
+                FROM
+                    deproom
+                    INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
+                    INNER JOIN item ON deproomdetail.ItemCode = item.itemcode
+                    LEFT JOIN ( SELECT Deproomdetail_RowID, SUM( qty_weighing ) AS total_qty_weighing FROM deproomdetailsub GROUP BY Deproomdetail_RowID ) AS subs ON subs.Deproomdetail_RowID = deproomdetail.ID 
+                WHERE
+                    deproom.DocNo = '$DocNo' 
+                    AND deproom.IsCancel = 0 
+                    AND deproomdetail.IsCancel = 0 
+                GROUP BY
+                    item.itemname; ";
+
+    // echo $query;
+    $meQuery = $conn->prepare($query);
+    $meQuery->execute();
+    while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+        $return[] = $row;
+    }
+
+
+    echo json_encode($return);
+    unset($conn);
+    die;
+}
 
 function showDetail_Permission($conn, $db)
 {
@@ -424,6 +460,7 @@ function feeddata_history_Return($conn, $db)
 {
     $input_search_history_return = $_POST['input_search_history_return'];
     $select_date_history_return = $_POST['select_date_history_return'];
+    $Userid = $_SESSION['Userid'];
 
 
 
@@ -450,6 +487,7 @@ function feeddata_history_Return($conn, $db)
                     INNER JOIN deproom ON deproom.DocNo = log_return.DocNo 
                 WHERE  item.itemname LIKE '%$input_search_history_return%' 
                 AND DATE(log_return.createAt) = '$select_date_history_return' 
+                AND log_return.userID  = '$Userid'
                 ORDER BY log_return.createAt DESC ";
 
 
@@ -471,6 +509,7 @@ function feeddata_history_Return($conn, $db)
 function feeddata_waitReturn($conn, $db)
 {
     $DepID = $_SESSION['DepID'];
+    $Userid = $_SESSION['Userid'];
 
     $return = [];
 
@@ -484,6 +523,7 @@ function feeddata_waitReturn($conn, $db)
                         item ON itemstock.ItemCode = item.itemcode
                     WHERE
                         itemstock.IsCross = 9
+                        AND itemstock.return_userID  = '$Userid'
                     GROUP BY
 	                    item.itemname  
                     ORDER BY itemstock.ReturnDate DESC ";
@@ -517,7 +557,8 @@ function onReturnData($conn, $db)
                     itemstock.RowID 
                 FROM
                     itemstock
-                WHERE   itemstock.IsCross = 9 ";
+                WHERE   itemstock.IsCross = 9
+                AND itemstock.return_userID  = '$Userid'  ";
 
 
     $count_itemstock = 0;
@@ -751,8 +792,9 @@ function updateReturn($conn, $db)
 {
 
     $UsageCode = $_POST['UsageCode'];
+    $Userid = $_SESSION['Userid'];
 
-    $update1 = "UPDATE itemstock SET  itemstock.IsCross = 9 , itemstock.ReturnDate = NOW() WHERE itemstock.UsageCode = '$UsageCode' LIMIT 1 ";
+    $update1 = "UPDATE itemstock SET  itemstock.IsCross = 9 , itemstock.ReturnDate = NOW(), itemstock.return_userID = $Userid  WHERE itemstock.UsageCode = '$UsageCode' LIMIT 1 ";
 
     $meQuery1 = $conn->prepare($update1);
     $meQuery1->execute();
@@ -1479,6 +1521,24 @@ function save_edit_hn($conn, $db)
         ':number_box' => $input_box_pay_editHN,
         ':hn_record_id' => $input_Hn_pay_editHN,
         ':serviceDate' => $input_date_service_editHN,
+        ':Ref_departmentroomid' => $select_deproom_editHN,
+        ':doctor' => $doctor_edit_hn_Array, // เห็นว่าคุณส่ง $input_box_pay_editHN ให้ doctor ด้วย ถูกไหมครับ?
+        ':procedure' => $procedure_edit_hn_Array,
+        ':DocNo' => $DocNo_editHN
+    ]);
+
+    $update3 = "UPDATE set_hn SET
+                        hncode = :hn_record_id,
+                        serviceDate = :serviceDate,
+                        departmentroomid = :Ref_departmentroomid,
+                        doctor = :doctor,
+                        `procedure` = :procedure
+                WHERE DocNo_deproom = :DocNo";
+
+    $stmt = $conn->prepare($update3);
+    $stmt->execute([
+        ':hn_record_id' => $input_Hn_pay_editHN,
+        ':serviceDate' => $input_date_service_editHN . ' ' . $input_time_service_editHN,
         ':Ref_departmentroomid' => $select_deproom_editHN,
         ':doctor' => $doctor_edit_hn_Array, // เห็นว่าคุณส่ง $input_box_pay_editHN ให้ doctor ด้วย ถูกไหมครับ?
         ':procedure' => $procedure_edit_hn_Array,

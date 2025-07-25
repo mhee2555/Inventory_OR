@@ -74,7 +74,7 @@
 
 
         <div class="col-md-12 mt-2">
-            <table class="table table-hover table-sm" id="table_oc">
+            <table class="table table-hover " id="table_oc">
                 <thead c style="background-color: #cdd6ff;">
                     <tr>
                         <th scope="col" class="text-center" id="">อุปกรณ์</th>
@@ -112,7 +112,7 @@
 
 
                 <div class="col-md-12 mt-2">
-                    <table class="table table-hover table-sm" id="table_item_tracking">
+                    <table class="table table-hover " id="table_item_tracking">
                         <thead c style="background-color: #cdd6ff;">
                             <tr>
                                 <th scope="col" class="text-center" id="">ประเภท</th>
@@ -141,7 +141,7 @@
 
 
                 <div class="col-md-12 mt-2">
-                    <table class="table table-hover table-sm" id="table_lot_tracking">
+                    <table class="table table-hover " id="table_lot_tracking">
                         <thead c style="background-color: #cdd6ff;">
                             <tr>
                                 <th scope="col" class="text-center" id="">Lot. อุปกรณ์</th>
@@ -171,7 +171,7 @@
 
 
                 <div class="col-md-12 mt-2">
-                    <table class="table table-hover table-sm" id="table_lot_detail">
+                    <table class="table table-hover " id="table_lot_detail">
                         <thead c style="background-color: #cdd6ff;">
                             <tr>
                                 <th scope="col" class="text-center" id="">อุปกรณ์</th>

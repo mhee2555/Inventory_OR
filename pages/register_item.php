@@ -280,7 +280,7 @@
 
 
                 <div class="row mt-3" id="">
-                    <table class="table table-hover table-sm" id="table_DocNo_SUDs">
+                    <table class="table table-hover " id="table_DocNo_SUDs">
                         <thead style="background-color: #cdd6ff;">
                             <tr>
                                 <th scope="col" class="text-center" id="">ลำดับ</th>
@@ -314,7 +314,7 @@
                 <div class="row " id="">
 
                     <div class="col-md-12 mt-3">
-                        <table class="table table-hover table-sm" id="table_UsageCode_SUDs">
+                        <table class="table table-hover " id="table_UsageCode_SUDs">
                             <thead style="background-color: #cdd6ff;">
                                 <tr>
                                     <th scope="col" class="text-center" id="">ลำดับ</th>
@@ -581,7 +581,7 @@
 
 
                 <div class="row mt-3" id="">
-                    <table class="table table-hover table-sm" id="table_DocNo_Sterile">
+                    <table class="table table-hover " id="table_DocNo_Sterile">
                         <thead style="background-color: #cdd6ff;">
                             <tr>
                                 <th scope="col" class="text-center" id="">ลำดับ</th>
@@ -616,7 +616,7 @@
                 <div class="row mt-3" id="">
 
                     <div class="col-md-12 mt-3">
-                        <table class="table table-hover table-sm" id="table_UsageCode_Sterile">
+                        <table class="table table-hover " id="table_UsageCode_Sterile">
                             <thead style="background-color: #cdd6ff;">
                                 <tr>
                                     <th scope="col" class="text-center" id="">ลำดับ</th>
@@ -873,7 +873,7 @@
 
 
                 <div class="row mt-3" id="">
-                    <table class="table table-hover table-sm" id="table_DocNo_implant">
+                    <table class="table table-hover " id="table_DocNo_implant">
                         <thead style="background-color: #cdd6ff;">
                             <tr>
                                 <th scope="col" class="text-center" id="">ลำดับ</th>
@@ -908,7 +908,7 @@
                 <div class="row mt-3" id="">
                     <div class="col-md-12 mt-3">
 
-                        <table class="table table-hover table-sm" id="table_UsageCode_implant">
+                        <table class="table table-hover " id="table_UsageCode_implant">
                             <thead style="background-color: #cdd6ff;">
                                 <tr>
                                     <th scope="col" class="text-center" id="">ลำดับ</th>
@@ -960,7 +960,7 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-12">
-                            <table class="table table-hover table-sm" id="">
+                            <table class="table table-hover " id="">
                                 <thead style="background-color: #cdd6ff;">
                                     <tr>
                                         <th scope="col" class="text-center" id="">หมายเลขอุปกรณ์</th>
@@ -995,7 +995,7 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-12">
-                            <table class="table table-hover table-sm" id="">
+                            <table class="table table-hover " id="">
                                 <thead style="background-color: #cdd6ff;">
                                     <tr>
                                         <th scope="col" class="text-center" id="">รหัสอุปกรณ์ SUDs</th>
@@ -1051,7 +1051,7 @@
 
                 </div>
                 <div class="card-body">
-                    <table class="table table-hover table-sm" id="">
+                    <table class="table table-hover " id="">
                         <thead style="background-color: #cdd6ff;">
                             <tr>
                                 <th scope="col" class="text-center" id="">รหัสอุปกรณ์</th>
@@ -1078,7 +1078,7 @@
 
 <div class="row" id="use_limit">
     <div class="col-md-12">
-        <table class="table table-hover table-sm" id="">
+        <table class="table table-hover " id="">
             <thead style="background-color: #cdd6ff;">
                 <tr>
                     <th scope="col" class="text-center" id="">รหัสอุปกรณ์ SUDs</th>
@@ -1117,7 +1117,7 @@
                 </div>
 
 
-                <table class="table table-hover table-sm" id="modal_table_item_implant">
+                <table class="table table-hover " id="modal_table_item_implant">
                     <thead class="thead-light">
                         <tr>
                             <th scope="col" id="">หมายเลขอุปกรณ์</th>
@@ -1236,7 +1236,7 @@
                 </div>
 
 
-                <table class="table table-hover table-sm" id="modal_table_item_Sterile">
+                <table class="table table-hover " id="modal_table_item_Sterile">
                     <thead class="thead-light">
                         <tr>
                             <th scope="col" id="">หมายเลขอุปกรณ์</th>
@@ -1356,7 +1356,7 @@
                 </div>
 
 
-                <table class="table table-hover table-sm" id="modal_table_item_SUDs">
+                <table class="table table-hover " id="modal_table_item_SUDs">
                     <thead class="thead-light">
                         <tr>
                             <th scope="col" id="">หมายเลขอุปกรณ์</th>
