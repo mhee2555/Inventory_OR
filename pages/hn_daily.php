@@ -43,13 +43,13 @@
     <div class=" col-md-12 col-lg-9  ">
 
         <div class="tab-button-group">
-            <button class="tab-button active" id="radio_daily">คนไข้ประจำวัน</button>
+            <button class="tab-button active" id="radio_daily">ผู้ป่วยประจำวัน</button>
             <button class="tab-button" id="radio_refrain">งด</button>
             <button class="tab-button" id="radio_his">ยืนยันการส่งค่าใช้จ่าย (HIS)</button>
         </div>
         <!-- 
         <div class="btn-group btn-group-toggle" role="group" aria-label="Basic example">
-            <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;border-color: lightgray;" id="radio_daily">คนไข้ประจำวัน</button>
+            <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;border-color: lightgray;" id="radio_daily">ผู้ป่วยประจำวัน</button>
             <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;border-color: lightgray;" id="radio_refrain">งด</button>
             <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;border-color: lightgray;" id="radio_his">ยืนยันการส่งค่าใช้จ่าย (HIS)</button>
         </div> -->
@@ -119,13 +119,13 @@
             <table class="table table-hover " id="table_daily">
                 <thead c style="background-color: #cdd6ff;">
                     <tr>
-                        <th scope="col" class="text-center" id="">เลขประจำตัวคนไข้</th>
+                        <th scope="col" class="text-center" id="">เลขประจำตัวผู้ป่วย</th>
                         <th scope="col" class="text-center" id="">วัน/เวลารับบริการ</th>
                         <th scope="col" class="text-center" id="">แพทย์</th>
                         <th scope="col" class="text-center" id="">ห้องผ่าตัด</th>
                         <th scope="col" class="text-center" id="">หัตถการ</th>
-                        <th scope="col" class="text-center" id="">#</th>
-                        <th scope="col" class="text-center" id="">#</th>
+                        <th scope="col" class="text-center" id="" style='width: 10%;'>#</th>
+                        <th scope="col" class="text-center" id="" style='width: 10%;'>#</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -159,13 +159,13 @@
             <table class="table table-hover " id="table_refrain">
                 <thead c style="background-color: #cdd6ff;">
                     <tr>
-                        <th scope="col" class="text-center" id="">เลขประจำตัวคนไข้</th>
+                        <th scope="col" class="text-center" id="">เลขประจำตัวผู้ป่วย</th>
                         <th scope="col" class="text-center" id="">วัน/เวลารับบริการ</th>
                         <th scope="col" class="text-center" id="">แพทย์</th>
                         <th scope="col" class="text-center" id="">ห้องผ่าตัด</th>
                         <th scope="col" class="text-center" id="">หัตถการ</th>
-                        <th scope="col" class="text-center" id="">#</th>
-                        <th scope="col" class="text-center" id="">#</th>
+                        <th scope="col" class="text-center" id="" style='width: 10%;'>#</th>
+                        <th scope="col" class="text-center" id="" style='width: 10%;'>#</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -202,7 +202,7 @@
                                 <th scope="col" class="text-center" id="">HN Number</th>
                                 <th scope="col" class="text-center" id="">แพทย์</th>
                                 <th scope="col" class="text-center" id="">หัตถการ</th>
-                                <th scope="col" class="text-center" id="">สถานะ</th>
+                                <th scope="col" class="text-center" id="" style="width: 23%;">สถานะ</th>
                                 <th hidden scope="col" class="text-center" id="">#</th>
                                 <th scope="col" class="text-center" id="">#</th>
                             </tr>

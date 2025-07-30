@@ -121,7 +121,7 @@ function show_detail_history() {
                       <td class="f18 text-left" style='line-height: 35px;'>${value.Doctor_Name}</td>
                       <td class="f18 text-left" style='line-height: 35px;'>${ value.departmentroomname }</td>
                       <td class="f18 text-left" style="line-height: 35px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 300px;" ${title}>${value.Procedure_TH}</td>
-                      <td class="f18 text-center" style='width:10%;'><button ${hidden} class='btn btn-primary btn-block' onclick='showdetail("${
+                      <td class="f18 text-center" style='width:10%;'><button ${hidden} class='btn btn-primary' style='width:70%;' onclick='showdetail("${
             value.ID
           }","${value.hncode}","${value.serviceDate}","${value.serviceTime}","${
             value.doctor

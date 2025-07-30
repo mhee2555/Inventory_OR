@@ -130,7 +130,7 @@
             <div class="col-md-2">
 
                 <div class="dropdown">
-                    <button style="background-color: #643695;color:white;" class=" f18 btn  dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <button style="background-color: #643695;color:white;" class=" f18 btn  dropdown-toggle btn-block" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         รายงาน
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="z-index: 9999;">
@@ -138,12 +138,12 @@
                         <a class="dropdown-item" href="#" id="btn_excel_all" style="color: green;">Excel All</a>
                         <a class="dropdown-item" href="#" id="btn_cost" style="color: #643695;">สรุปค่าใช้จ่าย</a>
                         <a class="dropdown-item" href="#" id="btn_Tracking" style="color: #643695;">Medical Instrument Tracking</a>
-                        <a class="dropdown-item" href="#" id="btn_use" style="color: #643695;">สรุปการใช้อุปกรณ์กับคนไข้</a>
+                        <a class="dropdown-item" href="#" id="btn_use" style="color: #643695;">สรุปการใช้อุปกรณ์กับผู้ป่วย</a>
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-4 pl-0">
                 <button class="btn btn-success f18" id="edit_his" disabled>แก้ไขอุปกรณ์</button>
             </div>
 
@@ -160,7 +160,7 @@
                                     <th scope="col" class="text-center" style="width: 10%;" id="td_no2">ลำดับ</th>
                                     <th scope="col" class="text-center" style="width: 15%;" id="td_date2">ประเภท</th>
                                     <!-- <th scope="col" class="text-center" style="width: 20%;" id="td_usage">จำนวนการใช้งาน</th> -->
-                                    <th scope="col" class="text-center" id="td_item">รหัสรายการ</th>
+                                    <th scope="col" class="text-center" id="td_item">รหัสอุปกรณ์</th>
                                     <th scope="col" class="text-center" id="td_item">อุปกรณ์</th>
                                     <th scope="col" class="text-center" id="">จำนวน</th>
                                 </tr>

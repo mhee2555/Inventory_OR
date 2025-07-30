@@ -343,9 +343,9 @@ function show_detail_refrain() {
                       <td class="f18 text-center">${value.serviceDate} ${value.serviceTime}</td>
                       <td class="f18 text-center">${value.Doctor_Name}</td>
                       <td class="f18 text-center">${value.departmentroomname}</td>
-                      <td class="f18 text-center">${value.Procedure_TH}</td>
-                      <td class="f18 text-center"><button class='btn' style='font-weight: bold;background-color:#643695;color:#fff;' onclick='update_daily(${value.ID})'>สร้างเอกสาร</button></td>
-                      <td class="f18 text-center"><button class='btn' style='font-weight: bold;background-color:#e74a3b;color:#fff;' onclick='update_cancel(${value.ID})'>ยกเลิก</button></td>
+                      <td class="f18 text-left">${value.Procedure_TH}</td>
+                      <td class="f18 text-center"><button class='btn' style='font-weight: bold;background-color:#643695;color:#fff;width:100%;' onclick='update_daily(${value.ID})'>สร้างเอกสาร</button></td>
+                      <td class="f18 text-center"><button class='btn' style='font-weight: bold;background-color:#e74a3b;color:#fff;width:100%;' onclick='update_cancel(${value.ID})'>ยกเลิก</button></td>
                    </tr>`;
         });
       }
@@ -445,7 +445,7 @@ function show_detail_daily() {
             value.isStatus == "1" ||
             value.isStatus == "2"
           ) {
-            var txt = `<button class='btn f18' style='color:#fff;font-weight: bold;background-color:#643695;' onclick='update_create_request(${value.ID})'>รอดำเนินการ</button>`;
+            var txt = `<button class='btn f18' style='color:#fff;font-weight: bold;background-color:#643695;width: 100%;' onclick='update_create_request(${value.ID})'>รอดำเนินการ</button>`;
           }
           if (value.isStatus == "3") {
             var txt = `<a  class='btn f18'  href="#" style='font-weight: bold;background-color:#1cc88a;color:#fff;' )'>ดำเนินการเรียบร้อย</a>`;
@@ -460,11 +460,11 @@ function show_detail_daily() {
           _tr += `<tr>
                       <td class="f18 text-center">${value.hncode}</td>
                       <td class="f18 text-center">${value.serviceDate} ${value.serviceTime}</td>
-                      <td class="f18 text-center">${value.Doctor_Name}</td>
+                      <td class="f18 text-left">${value.Doctor_Name}</td>
                       <td class="f18 text-left">${value.departmentroomname}</td>
                       <td class="f18 text-left">${value.Procedure_TH}</td>
                       <td class="f18 text-center">${txt}</td>
-                      <td class="f18 text-center"><a  class='btn f18' ${x}  href="#" style='font-weight: bold;background-color:#e74a3b;color:#fff;' onclick='update_refrain(${value.ID})'>งด</a></td>
+                      <td class="f18 text-center"><a  class='btn f18' ${x}  href="#" style='font-weight: bold;background-color:#e74a3b;color:#fff;width: 100%;' onclick='update_refrain(${value.ID})'>งด</a></td>
                    </tr>`;
         });
       }

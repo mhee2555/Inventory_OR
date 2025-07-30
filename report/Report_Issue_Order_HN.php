@@ -334,7 +334,7 @@ $DocNo = $_GET['DocNo'];
 $html = '<table cellspacing="0" cellpadding="2" border="1" >
 <thead><tr style="font-size:16px;line-height:35px;">
 <th width="10 %" align="center">ลำดับ</th>
-<th width="30 %" align="center">รายการ</th>
+<th width="30 %" align="center">อุปกรณ์</th>
 <th width="15 %"  align="center">ประเภท</th>
 <th width="15 %" align="center">จำนวนขอเบิก</th>
 <th width="15 %" align="center">จำนวนจ่าย</th>

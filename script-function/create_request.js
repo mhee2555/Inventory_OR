@@ -32,7 +32,7 @@ $(function () {
 
   // $("#select_date_request").val(set_date());
   $("#select_date_request").datepicker({
-    onSelect: function (date) { },
+    onSelect: function (date) {},
   });
   $("#select_date_history_s").val(output);
   $("#select_date_history_s").datepicker({
@@ -51,20 +51,17 @@ $(function () {
 
   $("#history_create_request").hide();
 
-
-
   $("#radio_create_request").click(function () {
-
-    $('.tab-button').removeClass('active');
-    $(this).addClass('active');
+    $(".tab-button").removeClass("active");
+    $(this).addClass("active");
 
     $("#create_request").show();
     $("#history_create_request").hide();
   });
 
   $("#radio_history_create_request").click(function () {
-    $('.tab-button').removeClass('active');
-    $(this).addClass('active');
+    $(".tab-button").removeClass("active");
+    $(this).addClass("active");
 
     $("#create_request").hide();
     $("#history_create_request").show();
@@ -75,7 +72,7 @@ $(function () {
     // $("#select_doctor_history").select2();
     // $("#select_procedure_history").select2();
 
-    $("#select_typeSearch_history").val('');
+    $("#select_typeSearch_history").val("");
 
     if (!$("#select_deproom_history").hasClass("select2-hidden-accessible")) {
       $("#select_deproom_history").select2();
@@ -87,14 +84,8 @@ $(function () {
       $("#select_procedure_history").select2();
     }
 
-
-
-
     setTimeout(() => {
       // $("#select_doctor_history").on("select2:select", function (e) {
-
-
-
       //   // var selectedValue = e.params.data.id; // ดึงค่า value
       //   // var selectedText = e.params.data.text; // ดึงค่า text
       //   // if (selectedValue != "") {
@@ -105,19 +96,13 @@ $(function () {
       //   //     _row += `       <div  class='div_${selectedValue}  clear_doctor' onclick='DeleteDoctor_history(${selectedValue})'>
       //   //                         <label for="" class="custom-label">${selectedText}</label>
       //   //                     </div> `;
-
       //   //     $("#row_doctor_history").append(_row);
-
       //   //     $("#select_doctor_history").val("").trigger("change");
       //   //   }
-
       //   //   show_detail_history();
       //   // }
       // });
-
       // $("#select_procedure_history").on("select2:select", function (e) {
-
-
       //   // var selectedValue = e.params.data.id; // ดึงค่า value
       //   // var selectedText = e.params.data.text; // ดึงค่า text
       //   // if (selectedValue != "") {
@@ -128,12 +113,9 @@ $(function () {
       //   //     _row += `       <div  class='div_${selectedValue} clear_procedure' onclick='Deletprocedure_history(${selectedValue})'>
       //   //                         <label for="" class="custom-label">${selectedText}</label>
       //   //                     </div> `;
-
       //   //     $("#row_procedure_history").append(_row);
-
       //   //     $("#select_procedure_history").val("").trigger("change");
       //   //   }
-
       //   //   show_detail_history();
       //   // }
       // });
@@ -640,9 +622,12 @@ function show_detail_item_request() {
           _tr += `<tr>
                       <td class='text-center' >${kay + 1}</td>
                       <td>${value.Item_name}</td>
-                      <td class='text-left'>${value.TyeName}</td>
-                      <td class='text-center'><input type='text' class='numonly form-control loop_qty_request text-center' data-itemcode="${value.itemcode
-            }"></td>
+                      <td class='text-left'> <label style='color: lightgray;max-width: 240px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;' title='${
+                        value.TyeName
+                      }'>${value.TyeName}</label> </td>
+                      <td class='text-center'><input type='text' class='numonly form-control loop_qty_request text-center' data-itemcode="${
+                        value.itemcode
+                      }"></td>
                    </tr>`;
         });
       }
@@ -672,11 +657,11 @@ function show_detail_item_request() {
             targets: 0,
           },
           {
-            width: "40%",
+            width: "30%",
             targets: 1,
           },
           {
-            width: "20%",
+            width: "30%",
             targets: 2,
           },
           {
@@ -697,13 +682,13 @@ function show_detail_item_request() {
       if (_tr == "") {
         $(".dataTables_info").text(
           settext("dataTables_Showing") +
-          " 0 " +
-          settext("dataTables_to") +
-          " 0 " +
-          settext("dataTables_of") +
-          " 0 " +
-          settext("dataTables_entries") +
-          ""
+            " 0 " +
+            settext("dataTables_to") +
+            " 0 " +
+            settext("dataTables_of") +
+            " 0 " +
+            settext("dataTables_entries") +
+            ""
         );
       }
 
@@ -779,13 +764,17 @@ function show_detail_request_byDocNo() {
                       <td class='text-center'>${kay + 1}</td>
                       <td>${value.itemname}</td>
                       <td class='text-center'>${value.TyeName}</td>
-                      <td class='text-center'><input type="number" onblur="updateDetail_qty(${value.ID
-            },'${value.itemcode
-            }')" class="form-control text-center qty_loop numonly" id="qty_item_${value.ID
-            }" data-id='${value.ID}' value='${value.cnt}'> </td>
+                      <td class='text-center'><input type="number" onblur="updateDetail_qty(${
+                        value.ID
+                      },'${
+            value.itemcode
+          }')" class="form-control text-center qty_loop numonly" id="qty_item_${
+            value.ID
+          }" data-id='${value.ID}' value='${value.cnt}'> </td>
                       <td class='text-center'>
-                      <img src="assets/img_project/1_icon/ic_trash-1.png" style='width:60%;cursor:pointer;' onclick='delete_request_byItem(${value.ID
-            })'>
+                      <img src="assets/img_project/1_icon/ic_trash-1.png" style='width:60%;cursor:pointer;' onclick='delete_request_byItem(${
+                        value.ID
+                      })'>
                       </td>
                    </tr>`;
         });
@@ -824,7 +813,7 @@ function show_detail_request_byDocNo() {
             targets: 2,
           },
           {
-            width: "10%",
+            width: "15%",
             targets: 3,
           },
           {
@@ -845,13 +834,13 @@ function show_detail_request_byDocNo() {
       if (_tr == "") {
         $(".dataTables_info").text(
           settext("dataTables_Showing") +
-          " 0 " +
-          settext("dataTables_to") +
-          " 0 " +
-          settext("dataTables_of") +
-          " 0 " +
-          settext("dataTables_entries") +
-          ""
+            " 0 " +
+            settext("dataTables_to") +
+            " 0 " +
+            settext("dataTables_of") +
+            " 0 " +
+            settext("dataTables_entries") +
+            ""
         );
       }
 
@@ -874,7 +863,7 @@ function updateDetail_qty(ID, itemcode) {
       txt_docno_request: $("#txt_docno_request").val(),
       qty: $("#qty_item_" + ID).val(),
     },
-    success: function (result) { },
+    success: function (result) {},
   });
 }
 
@@ -892,7 +881,7 @@ function add_request_qty(ID) {
       ID: ID,
       qty: qty,
     },
-    success: function (result) { },
+    success: function (result) {},
   });
 }
 
@@ -914,7 +903,7 @@ function delete_request_qty(ID) {
       ID: ID,
       qty: qty,
     },
-    success: function (result) { },
+    success: function (result) {},
   });
 }
 
@@ -1022,6 +1011,12 @@ function onconfirm_send_request() {
         procedure_id_Array = [];
 
         $("#input_remark_request").val("");
+
+        setTimeout(() => {
+          select_deproom();
+          select_procedure();
+          select_doctor();
+        }, 500);
       }, 300);
     },
   });
@@ -1063,10 +1058,6 @@ $("#select_typeSearch_history").change(function (e) {
     $("#col_hide_2").attr("hidden", false);
   }
 });
-
-
-
-
 
 // history
 function show_detail_history() {
@@ -1111,17 +1102,27 @@ function show_detail_history() {
               var showreport = `<button  class='btn f18 btn-success' onclick='show_Report("${value.DocNo}")')'>ถูกสแกนจ่าย</button>`;
             }
           }
-
+          //  <td hidden class='text-center'><button class='btn-block btn btn-outline-danger f18' onclick='cancel_item_byDocNo("${value.DocNo
+          //       }")' >ยกเลิก</button></td>
           _tr += `<tr>
                       <td class='text-center'>${kay + 1}</td>
-                      <td class='text-center'>${value.serviceDate} ${value.serviceTime}</td>
-                      <td class='text-left' style='max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>${value.hn_record_id}</td>
-                      <td class='text-left' style='max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>${value.Doctor_Name}</td>
-                      <td class='text-left' style='max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;' ${title}>${value.Procedure_TH}</td>
-                      <td class='text-left' style='max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>${value.departmentroomname}</td>
+                      <td class='text-center'>${value.serviceDate} ${
+            value.serviceTime
+          }</td>
+                      <td class='text-center' style='max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>${
+                        value.hn_record_id
+                      }</td>
+                      <td class='text-left' style='max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>${
+                        value.Doctor_Name
+                      }</td>
+                      <td class='text-left' style='max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;' ${title}>${
+            value.Procedure_TH
+          }</td>
+                      <td class='text-left' style='max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>${
+                        value.departmentroomname
+                      }</td>
                       <td class='text-center'>${edit_id}</td>
-                      <td hidden class='text-center'><button class='btn-block btn btn-outline-danger f18' onclick='cancel_item_byDocNo("${value.DocNo
-            }")' >ยกเลิก</button></td>
+               
                       <td class='text-center'>${showreport}</td>
                    </tr>`;
         });
@@ -1148,7 +1149,7 @@ function show_detail_history() {
         },
         columnDefs: [
           {
-            width: "3%",
+            width: "2%",
             targets: 0,
           },
           {
@@ -1193,13 +1194,13 @@ function show_detail_history() {
       if (_tr == "") {
         $(".dataTables_info").text(
           settext("dataTables_Showing") +
-          " 0 " +
-          settext("dataTables_to") +
-          " 0 " +
-          settext("dataTables_of") +
-          " 0 " +
-          settext("dataTables_entries") +
-          ""
+            " 0 " +
+            settext("dataTables_to") +
+            " 0 " +
+            settext("dataTables_of") +
+            " 0 " +
+            settext("dataTables_entries") +
+            ""
         );
       }
     },

@@ -118,7 +118,7 @@ class MYPDF extends TCPDF
         $this->SetX(57);
         $this->Cell(50, 0,  "HN : " . $HnCode, 0, 0, 'L');
         $this->SetX(110);
-        $this->Cell(50, 0,  "Physicial : " . $Doctor_Name, 0, 1, 'L');
+        $this->Cell(50, 0,  "Physician : " . $Doctor_Name, 0, 1, 'L');
         $this->SetX(57);
         $this->Cell(50, 0,  "Visit Date : " . $date1, 0, 0, 'L');
         $this->SetX(110);
@@ -195,7 +195,7 @@ class MYPDF extends TCPDF
 
         $this->SetY(50);
         $this->SetX(6);
-        $this->Cell(50, 0,  "Proceduce_____________________________________________________________________________________________", 0, 1, 'L');
+        $this->Cell(50, 0,  "Procedure_____________________________________________________________________________________________", 0, 1, 'L');
         $this->Cell(50, 0,  " Date___________________________________________________________Time___________________________________", 0, 0, 'L');
 
 

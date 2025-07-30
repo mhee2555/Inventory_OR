@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-md-6">
         <h1 class="  mt-4" style="font-size:30px;color:black;font-weight: bold;" id="main1">ระบบทันตกรรม</h1>
-        <!-- <label for="" id="label_mainpage">หน้าหลัก </label> > <a href="#" style="font-size:25px;" id="text_damaged"> รายการชำรุด</a> -->
+        <!-- <label for="" id="label_mainpage">หน้าหลัก </label> > <a href="#" style="font-size:25px;" id="text_damaged"> อุปกรณ์ชำรุด</a> -->
     </div>
 </div>
 

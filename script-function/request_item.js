@@ -149,21 +149,21 @@ function show_detail_item_request() {
       var ObjData = JSON.parse(result);
       if (!$.isEmptyObject(ObjData)) {
         $.each(ObjData, function (kay, value) {
-          var color = "";
+          var color = "style='line-height: 40px;'";
           var input_cnt = "";
           if (value.stock_min == null) {
             value.stock_min = 0;
           }
           if (value.cnt < value.stock_min) {
-            color = "style='color:red;' ";
+            color = "style='color:red;line-height: 40px;' ";
             input_cnt = `<input tyle='text' class='text-center form-control numonly loop_qty_request' data-itemcode="${value.itemcode}" >`;
           }
           _tr += `<tr>
-                      <td class='text-center'>${value.itemcode2}</td>
-                      <td class='text-left'>${value.Item_name}</td>
-                      <td class='text-center'>${value.stock_min}</td>
-                      <td class='text-center' ${color}>${value.cnt}</td>
-                      <td class='text-center'>${input_cnt}</td>
+                      <td class='text-center' style='line-height: 40px;'>${value.itemcode2}</td>
+                      <td class='text-left' style='line-height: 40px;'>${value.Item_name}</td>
+                      <td class='text-center' style='line-height: 40px;'>${value.stock_min}</td>
+                      <td class='text-center'  ${color}>${value.cnt}</td>
+                      <td class='text-center' style='line-height: 40px;'>${input_cnt}</td>
                    </tr>`;
         });
       }
@@ -189,11 +189,11 @@ function show_detail_item_request() {
         },
         columnDefs: [
           {
-            width: "20%",
+            width: "15%",
             targets: 0,
           },
           {
-            width: "35%",
+            width: "40%",
             targets: 1,
           },
           {
@@ -205,7 +205,7 @@ function show_detail_item_request() {
             targets: 3,
           },
           {
-            width: "10%",
+            width: "13%",
             targets: 4,
           },
         ],

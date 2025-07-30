@@ -62,7 +62,6 @@
     <div class="row mt-3">
         <div class="col-md-6">
             <div class="row">
-                <div class="col-md-4"></div>
 
                 <div class="col-md-4">
                     <label style="color:black;font-weight: 600;">ประเภทอุปกรณ์</label>
@@ -101,7 +100,7 @@
         <div class="col-md-6">
 
             <input type="text" id="input_docnoRQ" hidden>
-            <div class="row" style="margin-top: 4.6rem !important;">
+            <div class="row" style="margin-top: 4.7rem !important;">
                 <div class="col-md-12 mt-2">
                     <table class="table table-hover " id="table_rq">
                         <thead c style="background-color: #cdd6ff;">

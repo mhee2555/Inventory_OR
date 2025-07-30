@@ -242,7 +242,7 @@
                                 <thead style="background-color: #cdd6ff;">
                                     <tr>
                                         <th scope="col" class="text-center" id="">ลำดับ</th>
-                                        <th scope="col" class="text-center" id="">รายการ</th>
+                                        <th scope="col" class="text-center" id="">อุปกรณ์</th>
                                         <th scope="col" class="text-center" id="">จำนวนทั้งหมด</th>
                                         <th scope="col" class="text-center" id="">จ่ายไปห้องผ่าตัด</th>
                                         <th scope="col" class="text-center" id="">ส่ง CSSD</th>
@@ -336,7 +336,7 @@
                                 <thead style="background-color: #cdd6ff;">
                                     <tr>
                                         <th scope="col" class="text-center" id="">ลำดับ</th>
-                                        <th scope="col" class="text-center" id="">รายการ</th>
+                                        <th scope="col" class="text-center" id="">อุปกรณ์</th>
                                         <th scope="col" class="text-center" id="">จำนวนทั้งหมด</th>
                                         <th scope="col" class="text-center" id="">จ่ายไปห้องผ่าตัด</th>
                                         <th scope="col" class="text-center" id="">ส่ง CSSD</th>
@@ -432,7 +432,7 @@
                                 <thead style="background-color: #cdd6ff;">
                                     <tr>
                                         <th scope="col" class="text-center" id="">ลำดับ</th>
-                                        <th scope="col" class="text-center" id="">รายการ</th>
+                                        <th scope="col" class="text-center" id="">อุปกรณ์</th>
                                         <th scope="col" class="text-center" id="">จำนวนทั้งหมด</th>
                                         <th scope="col" class="text-center" id="">จ่ายไปห้องผ่าตัด</th>
                                         <th scope="col" class="text-center" id="">ส่ง CSSD</th>

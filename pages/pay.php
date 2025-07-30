@@ -104,8 +104,8 @@
                             <table class="table table-hover " id="table_deproom_pay">
                                 <thead style="background-color: #cdd6ff;">
                                     <tr>
-                                        <th scope="col" class="text-left" style="width:5%;">ลำดับ</th>
-                                        <th scope="col" class="text-center" style="width:40%;">ห้องผ่าตัด</th>
+                                        <th scope="col" class="text-left" style="width:10%;">ลำดับ</th>
+                                        <th scope="col" class="text-center" style="width:80%;">ห้องผ่าตัด</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -138,7 +138,7 @@
                                     <button disabled class="btn btn-danger btn-block f18" style="margin-top: 2rem;" id="btn_block_hn"><i class="fa-regular fa-circle-xmark"></i> งด </button>
                                 </div>
                                 <div class="col-md-4 mt-3">
-                                    <label style="color:black;font-weight: 600;">เลขประจำตัวคนไข้</label>
+                                    <label style="color:black;font-weight: 600;">เลขประจำตัวผู้ป่วย</label>
                                     <input type='text' class='form-control f18' id="input_Hn_pay" disabled>
                                 </div>
                                 <div class="col-md-4 mt-3">
@@ -211,7 +211,7 @@
                             <table class="table table-hover " id="table_deproom_DocNo_pay">
                                 <thead style="background-color: #cdd6ff;">
                                     <tr>
-                                        <th scope="col" class="text-center" id="" style="width: 70%;">รายการ</th>
+                                        <th scope="col" class="text-center" id="" style="width: 60%;">อุปกรณ์</th>
                                         <th scope="col" class="text-center" id="" style='background-color:#4fc3f7;'>ขอเบิก</th>
                                         <th scope="col" class="text-center" id="" style="background-color: #9AEAD8;">สแกนจ่าย</th>
                                         <th scope="col" class="text-center" id="" style='background-color:#f36c60;'>คงเหลือ</th>
@@ -243,7 +243,7 @@
                                     <input type='text' class='form-control f18' id="input_box_pay_manual">
                                 </div>
                                 <div class="col-md-6">
-                                    <label style="color:black;font-weight: 600;">เลขประจำตัวคนไข้</label>
+                                    <label style="color:black;font-weight: 600;">เลขประจำตัวผู้ป่วย</label>
                                     <input type='text' class='form-control f18' id="input_Hn_pay_manual">
                                 </div>
                                 <div class="col-md-4 mt-3">
@@ -382,7 +382,7 @@
                                 <thead style="background-color: #cdd6ff;">
                                     <tr>
                                         <th scope="col" class="text-center" id="" style="width: 10%;">ลำดับ</th>
-                                        <th scope="col" class="text-center" id="" style="width: 70%;">รายการ</th>
+                                        <th scope="col" class="text-center" id="" style="width: 70%;">อุปกรณ์</th>
                                         <!-- <th scope="col" class="text-center" id="">ขอเบิก</th> -->
                                         <th scope="col" class="text-center" id="" style="width: 10%;background-color: #9AEAD8;">สแกนจ่าย</th>
                                         <!-- <th scope="col" class="text-center" id="">คงเหลือ</th> -->
@@ -561,7 +561,7 @@
 
 
 
-        <!-- เลขประจำตัวคนไข้ -->
+        <!-- เลขประจำตัวผู้ป่วย -->
         <div class="col-md-2">
             <label class="font-weight-bold text-dark">HN</label>
             <input type="text" class="form-control f18" id="input_hn_history">
@@ -639,7 +639,7 @@
             </div>
         </div>
 
-        <!-- เลขประจำตัวคนไข้ -->
+        <!-- เลขประจำตัวผู้ป่วย -->
         <div class="col-md-1">
 
         </div>
@@ -668,7 +668,7 @@
                                         <th scope="col" class="text-center" id="">วันที่จ่ายอุปกรณ์</th>
                                         <th scope="col" class="text-center" id="">วันที่รับบริการ</th>
                                         <th scope="col" class="text-center" id="">ผุ้ยืนยัน</th>
-                                        <th scope="col" class="text-center" id="">เลขประจำตัวคนไข้</th>
+                                        <th scope="col" class="text-center" id="">เลขประจำตัวผู้ป่วย</th>
                                         <th scope="col" class="text-center" id="">แพทย์</th>
                                         <th scope="col" class="text-center" id="">หัตถการ</th>
                                         <th scope="col" class="text-center" id="">ห้องผ่าตัด</th>
@@ -801,7 +801,7 @@
 
 
 
-        <!-- เลขประจำตัวคนไข้ -->
+        <!-- เลขประจำตัวผู้ป่วย -->
         <div class="col-md-2">
             <label class="font-weight-bold text-dark">HN</label>
             <input type="text" class="form-control f18" id="input_hn_history_block">
@@ -838,14 +838,19 @@
 
 
 
-        <div class="col-md-3" id="col_hide_block">
+        <div class="col-md-2" id="col_hide_block">
 
         </div>
-        <div class="col-md-1" id="col_hide_2_block">
+        <!-- <div class="col-md-1" id="col_hide_2_block">
 
+        </div> -->
+
+        <div class="col-md-2 text-right">
+            <div class="form-check " style="margin-top: 38px;">
+                <input type="checkbox" class="form-check-input" id="checkbox_filter" style="width: 25px;height: 25px;">
+                <label class="form-check-label f18 ml-4 mt-1" for="checkbox_filter" style="color:black;font-weight:bold;">แสดงทั้งหมด</label>
+            </div>
         </div>
-
-
 
     </div>
 
@@ -875,7 +880,7 @@
             </div>
         </div>
 
-        <!-- เลขประจำตัวคนไข้ -->
+        <!-- เลขประจำตัวผู้ป่วย -->
         <div class="col-md-1">
 
         </div>
@@ -884,6 +889,8 @@
         <div class="col-md-1">
 
         </div>
+
+        
 
 
     </div>
@@ -902,7 +909,7 @@
                                     <tr>
                                         <th scope="col" class="text-center" id="">ลำดับ</th>
                                         <th scope="col" class="text-center" id="">วันที่รับบริการ</th>
-                                        <th scope="col" class="text-center" id="">เลขประจำตัวคนไข้</th>
+                                        <th scope="col" class="text-center" id="">เลขประจำตัวผู้ป่วย</th>
                                         <th scope="col" class="text-center" id="">แพทย์</th>
                                         <th scope="col" class="text-center" id="">หัตถการ</th>
                                         <th scope="col" class="text-center" id="">ห้องผ่าตัด</th>
@@ -1021,7 +1028,7 @@
                         <input type='text' class='form-control f18' id="input_box_pay_editHN">
                     </div>
                     <div class="col-md-4 mt-3">
-                        <label style="color:black;font-weight: 600;">เลขประจำตัวคนไข้</label>
+                        <label style="color:black;font-weight: 600;">เลขประจำตัวผู้ป่วย</label>
                         <input type='text' class='form-control f18' id="input_Hn_pay_editHN">
                     </div>
                     <div class="col-md-4 mt-3">
@@ -1112,7 +1119,7 @@
                         <input type='text' class='form-control f18' id="input_box_pay_editHN_block">
                     </div>
                     <div class="col-md-4 mt-3">
-                        <label style="color:black;font-weight: 600;">เลขประจำตัวคนไข้</label>
+                        <label style="color:black;font-weight: 600;">เลขประจำตัวผู้ป่วย</label>
                         <input type='text' class='form-control f18' id="input_Hn_pay_editHN_block">
                     </div>
                     <div class="col-md-4 mt-3">
@@ -1199,7 +1206,7 @@
                 <table class="table table-hover " id="table_Detail_item_block">
                     <thead style="background-color: #cdd6ff;">
                         <tr>
-                            <th scope="col" class="text-center" id="">รหัสรายการ</th>
+                            <th scope="col" class="text-center" id="">รหัสอุปกรณ์</th>
                             <th scope="col" class="text-center" id="">อุปกรณ์</th>
                             <th scope="col" class="text-center" id="">จ่าย</th>
                         </tr>

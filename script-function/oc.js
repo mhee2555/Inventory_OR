@@ -10,8 +10,8 @@ $(function () {
   show_detail_oc();
 
   $("#radio_oc").click(function () {
-      $('.tab-button').removeClass('active');
-      $(this).addClass('active');
+    $('.tab-button').removeClass('active');
+    $(this).addClass('active');
 
     $("#row_oc").show();
     $("#row_tracking").hide();
@@ -20,8 +20,8 @@ $(function () {
   });
 
   $("#radio_tracking").click(function () {
-      $('.tab-button').removeClass('active');
-      $(this).addClass('active');
+    $('.tab-button').removeClass('active');
+    $(this).addClass('active');
 
     $("#row_oc").hide();
     $("#row_tracking").show();
@@ -57,7 +57,7 @@ function show_detail_item() {
       if (!$.isEmptyObject(ObjData)) {
         $.each(ObjData, function (kay, value) {
           _tr += `<tr id="tr_${value.itemcode}" class="clear_bg">
-                      <td class='text-center'>${value.TyeName}</td>
+                      <td class='text-left'>${value.TyeName}</td>
                       <td class='text-left'>${value.Item_name}</td>
                       <td class='text-center'><button class='btn-block btn btn-primary' style='color:#fff;font-weight:bold;cursor:pointer;' onclick="set_detail_lot('${value.itemcode}')">เลือก</button></td>
                    </tr>`;
@@ -89,11 +89,11 @@ function show_detail_item() {
             targets: 0,
           },
           {
-            width: "40%",
+            width: "45%",
             targets: 1,
           },
           {
-            width: "20%",
+            width: "15%",
             targets: 2,
           },
         ],
@@ -110,13 +110,13 @@ function show_detail_item() {
       if (_tr == "") {
         $(".dataTables_info").text(
           settext("dataTables_Showing") +
-            " 0 " +
-            settext("dataTables_to") +
-            " 0 " +
-            settext("dataTables_of") +
-            " 0 " +
-            settext("dataTables_entries") +
-            ""
+          " 0 " +
+          settext("dataTables_to") +
+          " 0 " +
+          settext("dataTables_of") +
+          " 0 " +
+          settext("dataTables_entries") +
+          ""
         );
       }
 
@@ -156,12 +156,12 @@ function show_detail_lot(itemcode) {
 
           if (value.IsTracking == "0") {
             var hidden = "gold";
-          }else{
+          } else {
             var hidden = "red";
 
           }
 
-          
+
           _tr += `<tr id="trtracking_${value.lotNo}" class="clear_bg">
                       <td class='text-center'>${txt}</td>
                       <td class='text-center'>${value.cnt}</td>
@@ -196,11 +196,11 @@ function show_detail_lot(itemcode) {
             targets: 0,
           },
           {
-            width: "40%",
+            width: "45%",
             targets: 1,
           },
           {
-            width: "20%",
+            width: "15%",
             targets: 2,
           },
         ],
@@ -217,13 +217,13 @@ function show_detail_lot(itemcode) {
       if (_tr == "") {
         $(".dataTables_info").text(
           settext("dataTables_Showing") +
-            " 0 " +
-            settext("dataTables_to") +
-            " 0 " +
-            settext("dataTables_of") +
-            " 0 " +
-            settext("dataTables_entries") +
-            ""
+          " 0 " +
+          settext("dataTables_to") +
+          " 0 " +
+          settext("dataTables_of") +
+          " 0 " +
+          settext("dataTables_entries") +
+          ""
         );
       }
       $(".numonly").on("input", function () {
@@ -267,37 +267,37 @@ function set_tracking(lotNo, itemcode, txt_check) {
         });
       }
     });
-  }else{
-      Swal.fire({
-    title: "ยืนยัน",
-    text: "ยืนยัน การยกเลิกติดตามอุปกรณ์",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#3085d6",
-    cancelButtonColor: "#d33",
-    confirmButtonText: "ยืนยัน",
-    cancelButtonText: "ยกเลิก",
-  }).then((result) => {
-    if (result.isConfirmed) {
-      let userInput = result.value; // ค่าที่ผู้ใช้กรอกมา
+  } else {
+    Swal.fire({
+      title: "ยืนยัน",
+      text: "ยืนยัน การยกเลิกติดตามอุปกรณ์",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "ยืนยัน",
+      cancelButtonText: "ยกเลิก",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        let userInput = result.value; // ค่าที่ผู้ใช้กรอกมา
 
-      $.ajax({
-        url: "process/oc.php",
-        type: "POST",
-        data: {
-          FUNC_NAME: "set_tracking",
-          lotNo: lotNo,
-          itemcode: itemcode,
-          remark: '', // ส่งค่าที่กรอกไปด้วยม,
-          txt_check: txt_check
-        },
-        success: function (result) {
-          showDialogSuccess("บันทึกสำเร็จ");
-          show_detail_lot(itemcode);
-        },
-      });
-    }
-  });
+        $.ajax({
+          url: "process/oc.php",
+          type: "POST",
+          data: {
+            FUNC_NAME: "set_tracking",
+            lotNo: lotNo,
+            itemcode: itemcode,
+            remark: '', // ส่งค่าที่กรอกไปด้วยม,
+            txt_check: txt_check
+          },
+          success: function (result) {
+            showDialogSuccess("บันทึกสำเร็จ");
+            show_detail_lot(itemcode);
+          },
+        });
+      }
+    });
   }
 
 
@@ -472,13 +472,13 @@ function show_detail_itemstock() {
       if (_tr == "") {
         $(".dataTables_info").text(
           settext("dataTables_Showing") +
-            " 0 " +
-            settext("dataTables_to") +
-            " 0 " +
-            settext("dataTables_of") +
-            " 0 " +
-            settext("dataTables_entries") +
-            ""
+          " 0 " +
+          settext("dataTables_to") +
+          " 0 " +
+          settext("dataTables_of") +
+          " 0 " +
+          settext("dataTables_entries") +
+          ""
         );
       }
 
@@ -526,15 +526,15 @@ function show_detail_oc() {
           if (value.IsDeproom == "1") {
             txt = value.hn_record_id;
             status =
-              "<button class='btn btn-success btn-block' >ถูกใช้งาน</button>";
+              "<button class='btn btn-success' style='width: 70%;'>ถูกใช้งาน</button>";
           }
           if (value.IsDeproom == "0") {
             status =
-              "<button class='btn btn-primary btn-block' >อยู่คลัง Stock</button>";
+              "<button class='btn btn-primary' style='width: 70%;'>อยู่คลัง Stock</button>";
           }
           if (value.check_exp == "exp") {
             status =
-              "<button class='btn btn-danger btn-block' >หมดอายุ</button>";
+              "<button class='btn btn-danger '  style='width: 70%;'>หมดอายุ</button>";
           }
           _tr += `<tr >
                       <td class='text-left'>${value.itemname}</td>
@@ -569,15 +569,15 @@ function show_detail_oc() {
         },
         columnDefs: [
           {
-            width: "15%",
+            width: "20%",
             targets: 0,
           },
           {
-            width: "15%",
+            width: "10%",
             targets: 1,
           },
           {
-            width: "15%",
+            width: "10%",
             targets: 2,
           },
           {
@@ -589,7 +589,7 @@ function show_detail_oc() {
             targets: 4,
           },
           {
-            width: "10%",
+            width: "15%",
             targets: 5,
           },
           {
@@ -610,13 +610,13 @@ function show_detail_oc() {
       if (_tr == "") {
         $(".dataTables_info").text(
           settext("dataTables_Showing") +
-            " 0 " +
-            settext("dataTables_to") +
-            " 0 " +
-            settext("dataTables_of") +
-            " 0 " +
-            settext("dataTables_entries") +
-            ""
+          " 0 " +
+          settext("dataTables_to") +
+          " 0 " +
+          settext("dataTables_of") +
+          " 0 " +
+          settext("dataTables_entries") +
+          ""
         );
       }
       $(".numonly").on("input", function () {
@@ -625,7 +625,13 @@ function show_detail_oc() {
     },
   });
 }
-
+function settext(key) {
+  if (localStorage.lang == "en") {
+    return en[key];
+  } else {
+    return th[key];
+  }
+}
 function select_type() {
   $.ajax({
     url: "process/process_main/select_main.php",

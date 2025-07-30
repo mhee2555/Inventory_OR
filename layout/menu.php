@@ -51,7 +51,7 @@
                 <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_set_hn" hidden>
                     <a class="collapse-item" href="pages/set_hn.php" style="color: black;font-size: 16px;" id="a_set_hn">
                         <img id="ic_set_hn" style="width: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;">
-                        <label style="font-size: 20px;color: #667085;" class="color_menu" id="menu16">กรอกข้อมูลคนไข้</label>
+                        <label style="font-size: 20px;color: #667085;" class="color_menu" id="menu16">กรอกข้อมูลผู้ป่วย</label>
                     </a>
                 </li>
 

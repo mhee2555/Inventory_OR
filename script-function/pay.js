@@ -832,11 +832,18 @@ function show_detail_deproom_pay() {
               var sty = "color:#ed1c24 ";
             }
 
+              var titleP = '';
             if (value2.Procedure_TH == "button") {
               value2.Procedure_TH = `<a class="text-primary" style="cursor:pointer;" onclick='showDetail_Procedure("${value2.procedure}")'>หัตถการ</a>`;
+            }else{
+               titleP = `title='${value2.Procedure_TH}'`;
             }
+
+            var titleD = '';
             if (value2.Doctor_Name == "button") {
               value2.Doctor_Name = `<a class="text-primary" style="cursor:pointer;" onclick='showDetail_Doctor("${value2.doctor}")'>แพทย์</a>`;
+            }else{
+              titleD = `title='${value2.Doctor_Name}'`;
             }
 
             if (value2.hn_record_id == "") {
@@ -853,54 +860,98 @@ function show_detail_deproom_pay() {
 
             if (value2.IsManual > 0) {
               var txt = "manual";
-              var btn_ = `<label class=' btn btn-block' style='background-color:#673ab7;color:#fff;'>${txt}</label>`;
+              var btn_ = `<span   class="badge" style="width: 120px;background-color: #673ab7; color: white; padding: 0.5em 0.75em; font-size: 14px;">${txt}</span>`;
             } else {
               if (value2.cnt_detail == "ครบ") {
                 var txt = "จ่ายแล้วทั้งหมด";
-                var btn_ = `<label onclick='showDetail_Permission("${value2.DocNo}")' class='btn btn-success btn-block' id='textstatus_${value2.DocNo}'>${txt}</label>`;
+                var btn_ = `<span  onclick='showDetail_Permission("${value2.DocNo}")' class="badge" style="cursor:pointer; width: 120px;background-color: #1cc88a; color: white; padding: 0.5em 0.75em; font-size: 14px;" id='textstatus_${value2.DocNo}'>${txt}</span>`;
               } else if (value2.cnt_detail == "บางส่วน") {
                 var txt = "จ่ายแล้วบางส่วน";
-                var btn_ = `<label onclick='showDetail_Permission("${value2.DocNo}")' class='btn btn-primary btn-block' id='textstatus_${value2.DocNo}'>${txt}</label>`;
+                var btn_ = `<span  onclick='showDetail_Permission("${value2.DocNo}")' class="badge" style="cursor:pointer;  width: 120px;background-color: #4c6ef5; color: white; padding: 0.5em 0.75em; font-size: 14px;" id='textstatus_${value2.DocNo}'>${txt}</span>`;
               } else {
                 var txt = "รอดำเนินการ";
-                var btn_ = `<label onclick='showDetail_Permission("${value2.DocNo}")' class='btn btn-danger btn-block'  id='textstatus_${value2.DocNo}'>${txt}</label>`;
+                var btn_ = `<span  onclick='showDetail_Permission("${value2.DocNo}")' class="badge" style="cursor:pointer;  width: 120px;background-color: #e74a3b; color: white; padding: 0.5em 0.75em; font-size: 14px;" id='textstatus_${value2.DocNo}'>${txt}</span>`;
               }
             }
 
             _tr += `<tr class='tr_${value.id} all111' ${sty} id='deproom_${value2.DocNo}'>
                           <td class='text-center' >
-                            <div class="form-check">
-                             <input 
-                                style="width: 20px;height: 20px;"
-                                class="form-check-input position-static clear_checkbox"
-                                type="checkbox"
-                                id="checkbox_${value2.DocNo}"
-                                data-id="${value.id}"
-                                data-docno="${value2.DocNo}"
-                                data-hn="${value2.hn_record_id}"
-                                data-date="${value2.serviceDate}"
-                                data-time="${value2.serviceTime}"
-                                data-box="${value2.number_box}"
-                                data-doctor="${value2.doctorHN}"
-                                data-procedure="${value2.procedureHN}" 
-                                data-his_isstatus="${value2.his_IsStatus}" >
-                            </div>
+
+              
                           </td>
-                          <td>
-                            <div class="row">
-                              <div class="col-md-2 text-left"> ${tttt}</div>
-                              <div class="col-md-4 text-left">${value2.Procedure_TH}</div>
-                              <div class="col-md-3 text-center">${value2.Doctor_Name}</div>
-                              <div class="col-md-3 text-center">${btn_}</div>
-                            </div>
-                          
-                           </td>
+                          <td colspan="99" style=" padding: 0.75rem 1rem; ">
+                              <div class="d-flex align-items-center justify-content-between">
+                                <!-- ฝั่งซ้าย -->
+                                <div class="d-flex align-items-center flex-wrap">
+                                  <input id="checkbox_${value2.DocNo}"
+                                        data-id="${value.id}"
+                                        data-docno="${value2.DocNo}"
+                                        data-hn="${value2.hn_record_id}"
+                                        data-date="${value2.serviceDate}"
+                                        data-time="${value2.serviceTime}"
+                                        data-box="${value2.number_box}"
+                                        data-doctor="${value2.doctorHN}"
+                                        data-procedure="${value2.procedureHN}" 
+                                        data-his_isstatus="${value2.his_IsStatus}"  type="checkbox" class="mr-3 form-check-input position-static clear_checkbox"  style="width: 20px;height: 20px;accent-color: #9A53FF;">
+
+                                  <!-- HN -->
+                                  <div class="text-truncate mr-2 text-dark" style="max-width: 150px; font-weight: 500;" title="${tttt}">
+                                    ${tttt} 
+                                  </div>
+
+                                  <label class="pl-2 pr-2">|</label>
+                                      
+                                  <!-- Procedure -->
+                                  <div class="text-truncate mr-2 text-dark" style="max-width: 200px;" ${titleP}>
+                                    ${value2.Procedure_TH} 
+                                  </div>
+
+                                    <label class="pl-2 pr-2">|</label>
+
+                                  <!-- Doctor -->
+                                  <div class="text-truncate text-dark" style="max-width: 200px;" ${titleD}>
+                                    ${value2.Doctor_Name} 
+                                  </div>
+                                </div>
+
+                                <!-- ฝั่งขวา: ป้าย manual -->
+                                <div>
+                                  ${btn_}
+                                </div>
+                              </div>
+                            </td>
                           <td hidden class='text-center'> <label id='text_balance_${value2.DocNo}' class='f18' style='font-weight:bold;${sty};text-decoration-line: underline;'>${txt}</label> </td>
 
                         </tr>`;
           });
         });
       }
+
+
+                    // <div class="form-check">
+                    //          <input 
+                    //             style="width: 20px;height: 20px;"
+                    //             class="form-check-input position-static clear_checkbox"
+                    //             type="checkbox"
+                    //             id="checkbox_${value2.DocNo}"
+                    //             data-id="${value.id}"
+                    //             data-docno="${value2.DocNo}"
+                    //             data-hn="${value2.hn_record_id}"
+                    //             data-date="${value2.serviceDate}"
+                    //             data-time="${value2.serviceTime}"
+                    //             data-box="${value2.number_box}"
+                    //             data-doctor="${value2.doctorHN}"
+                    //             data-procedure="${value2.procedureHN}" 
+                    //             data-his_isstatus="${value2.his_IsStatus}" >
+                    //         </div>
+
+
+                //  <div class="row">
+                //               <div class="col-md-2 text-left"> ${tttt}</div>
+                //               <div class="col-md-4 text-left">${value2.Procedure_TH}</div>
+                //               <div class="col-md-3 text-center">${value2.Doctor_Name}</div>
+                //               <div class="col-md-3 text-center">${btn_}</div>
+                //             </div>
 
       $("#table_deproom_pay tbody").html(_tr);
 
@@ -1032,6 +1083,7 @@ function oncheck_show_byDocNo(
   procedure,
   his_isstatus
 ) {
+  $("#input_pay").focus();
   $(".all111").css("background-color", "");
   $("#deproom_" + DocNo).css("background-color", "#F9F5FF");
 
@@ -2172,7 +2224,21 @@ $("#select_typeSearch_history_block").change(function (e) {
   }
 });
 
+
+$("#checkbox_filter").change(function () {
+  setTimeout(() => {
+    show_detail_history_block();
+  }, 500);
+});
+
 function show_detail_history_block() {
+
+  if ($("#checkbox_filter").is(":checked")) {
+    var check_Box = 1;
+  } else {
+    var check_Box = 0;
+  }
+
   $.ajax({
     url: "process/pay.php",
     type: "POST",
@@ -2184,6 +2250,7 @@ function show_detail_history_block() {
       input_hn_history: $("#input_hn_history_block").val(),
       select_doctor_history: $("#select_doctor_history_block").val(),
       select_procedure_history: $("#select_procedure_history_block").val(),
+      check_Box: check_Box,
       // select_doctor_history: doctor_Array,
       // select_procedure_history: procedure_id_Array,
     },
@@ -2214,12 +2281,12 @@ function show_detail_history_block() {
                       <td class='text-center'>${kay + 1}</td>
                       <td class='text-center'>${value.serviceDate} ${value.serviceTime
             }</td>
-                      <td class='text-left' style='max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>${value.hn_record_id}</td>
+                      <td class='text-center' style='max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>${value.hn_record_id}</td>
                       <td class='text-left' style='max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>${value.Doctor_Name}</td>
                       <td class='text-left' style='max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;' ${title}>${value.Procedure_TH}</td>
                       <td class='text-left' style='max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>${value.departmentroomname}</td>
                       <td class='text-center'> <label style="color:blue;cursor:pointer;text-decoration: underline;" onclick="showDetail_item_block('${value.DocNo}')" > อุปกรณ์ </label></td>
-                      <td class='text-center'><button class='btn f18 btn-success btn-block btn_block' style='color:#fff;'
+                      <td class='text-center'><button class='btn f18 btn-success ' style='width:80%;'  style='color:#fff;'
                                 id="btn_block_${value.DocNo}"
                                 data-docno="${value.DocNo}"
                                 data-hn="${value.hn_record_id}"
@@ -2230,7 +2297,7 @@ function show_detail_history_block() {
                                 data-procedure="${value.procedure}" 
                                 data-departmentroomname="${value.deproom_ID}" 
                       >อัพเดตข้อมูล</button></td>
-                      <td class='text-center'><button class='btn btn-outline-danger f18 btn-block' onclick='cancel_item_byDocNo("${value.DocNo
+                      <td class='text-center'><button class='btn btn-outline-danger f18 ' style='width:80%;' onclick='cancel_item_byDocNo("${value.DocNo
             }")' >ยกเลิก</button></td>
                    </tr>`;
         });
@@ -2594,9 +2661,9 @@ function show_detail_history() {
           }
 
           if (value.cnt_pay > 0) {
-            var hidden = `<button ${hidden} class='btn-block btn f18' style='background-color:#643695;color:#fff;' onclick='show_Report("${value.DocNo}")'>รายงาน</button>`;
+            var hidden = `<button ${hidden} class=' btn f18' style='background-color:#643695;color:#fff;width:80%;' onclick='show_Report("${value.DocNo}")'>รายงาน</button>`;
           } else {
-            var hidden = `<button ${hidden} class='btn-block btn f18 btn-primary ' style='color:#fff;'>รอดำเนินการ</button>`;
+            var hidden = `<button ${hidden} class=' btn f18 btn-primary ' style='color:#fff;width:80%;'>รอดำเนินการ</button>`;
           }
 
           if (value.hn_record_id == "") {
@@ -2611,11 +2678,11 @@ function show_detail_history() {
                       <td class='text-center'>${value.CreateDate}</td>
                       <td class='text-center'>${value.serviceDate} ${value.serviceTime}</td>
                       <td class='text-center'>${value.FirstName}</td>
-                      <td class='text-left' style='max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>${value.hn_record_id}</td>
+                      <td class='text-center' style='max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>${value.hn_record_id}</td>
                       <td class='text-left' style='max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>${value.Doctor_Name}</td>
                       <td class='text-left' style='max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;' ${title}>${value.Procedure_TH}</td>
                       <td class='text-left'   style='max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>${value.departmentroomname}</td>
-                      <td class='text-center'><button class='btn btn-outline-danger f18 btn-block' onclick='cancel_item_byDocNo("${value.DocNo}")' >ยกเลิก</button></td>
+                      <td class='text-center'><button class='btn btn-outline-danger f18' style='width:80%;' onclick='cancel_item_byDocNo("${value.DocNo}")' >ยกเลิก</button></td>
                       <td class='text-center'>${hidden}</td>
                    </tr>`;
         });
@@ -2650,7 +2717,7 @@ function show_detail_history() {
             targets: 1,
           },
           {
-            width: "5%",
+            width: "8%",
             targets: 2,
           },
           {
@@ -2674,11 +2741,11 @@ function show_detail_history() {
             targets: 7,
           },
           {
-            width: "5%",
+            width: "8%",
             targets: 8,
           },
           {
-            width: "5%",
+            width: "8%",
             targets: 9,
           },
         ],
@@ -3011,19 +3078,19 @@ function feeddata_history_Return() {
               targets: 0,
             },
             {
-              width: "2%",
+              width: "15%",
               targets: 1,
             },
             {
-              width: "5%",
+              width: "35%",
               targets: 2,
             },
             {
-              width: "3%",
+              width: "10%",
               targets: 3,
             },
             {
-              width: "5%",
+              width: "10%",
               targets: 4,
             }
           ],

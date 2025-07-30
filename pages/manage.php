@@ -338,6 +338,20 @@
                             <div class="col-md-12 mt-3">
                                 <select class="form-control f18" id="select_permission"></select>
                             </div>
+                            <div class="col-md-6 mt-3">
+                                <select class="form-control f18" id="select_user_rfid" disabled>
+                                    <option value="">RFID</option>
+                                    <option value="1">True</option>
+                                    <option value="0">False</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mt-3">
+                                <select class="form-control f18" id="select_user_weighing" disabled>
+                                    <option value="">Weighing</option>
+                                    <option value="1">True</option>
+                                    <option value="0">False</option>
+                                </select>
+                            </div>
                             <div class="col-md-12 mt-3" hidden>
                                 <input type="text" class="form-control" id="input_IDUser" autocomplete="off">
                             </div>
@@ -430,8 +444,8 @@
                                     <th scope="col" style="width: 20%;" class="text-center" id="td_empuser">รหัสพนักงาน</th>
                                     <th scope="col" style="width: 20%;" class="text-center" id="td_nameuser">ชื่อ</th>
                                     <th scope="col" style="width: 20%;" class="text-center" id="td_lastuser">นามสกุล</th>
-                                    <th scope="col" style="width: 20%;" class="text-center" id="td_username">Username</th>
-                                    <th scope="col" style="width: 20%;" class="text-center" id="td_password">Password</th>
+                                    <th scope="col" style="width: 20%;" class="text-center" id="td_username">RFID</th>
+                                    <th scope="col" style="width: 20%;" class="text-center" id="td_password">Weighing</th>
                                     <th scope="col" style="width: 20%;" class="text-center" id="td_statususer">สถานะ</th>
                                     <th scope="col" style="width: 20%;" class="text-center">#</th>
                                 </tr>
@@ -574,7 +588,7 @@
             <div class="col-md-6 mt-3">
 
                 <div class="card">
-                    <div class="card-header f18 " style="color:black;">รายการที่บันทึก แพทย์&ห้องผ่าตัด</div>
+                    <div class="card-header f18 " style="color:black;">อุปกรณ์ที่บันทึก แพทย์&ห้องผ่าตัด</div>
                     <div class="card-body">
 
 
@@ -607,7 +621,7 @@
             <div class="col-md-6 mt-3">
 
                 <div class="card">
-                    <div class="card-header f18 " style="color:black;">รายการที่บันทึก ห้องผ่าตัด&หัตถการ</div>
+                    <div class="card-header f18 " style="color:black;">อุปกรณ์ที่บันทึก ห้องผ่าตัด&หัตถการ</div>
                     <div class="card-body">
 
                         <div class="row">
@@ -678,7 +692,7 @@
                         <thead class="thead-light">
                             <tr>
                                 <th scope="col" id="td_number" class="text-center" class="text-center">ลำดับ</th>
-                                <th scope="col" style="width: 20%;" class="text-center">รายการ</th>
+                                <th scope="col" style="width: 20%;" class="text-center">อุปกรณ์</th>
                                 <th scope="col" style="width: 20%;" class="text-center">ลักษณะการใช้งาน</th>
                                 <th scope="col" style="width: 20%;" class="text-center">จำนวน</th>
                             </tr>
@@ -750,7 +764,7 @@
                         <thead class="thead-light">
                             <tr>
                                 <th scope="col" class="text-center" id="">ลำดับ</th>
-                                <th scope="col" class="text-center" id="">รายการ</th>
+                                <th scope="col" class="text-center" id="">อุปกรณ์</th>
                                 <th scope="col" class="text-center" id="">ลักษณะการใช้งาน</th>
                                 <th scope="col" class="text-center" id="">จำนวน</th>
                                 <th scope="col" class="text-center" id="">ลบ</th>

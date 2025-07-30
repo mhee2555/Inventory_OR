@@ -63,8 +63,8 @@ $(function () {
   }, 1000);
 
   $("#radio_suds").click(function () {
-      $('.tab-button').removeClass('active');
-      $(this).addClass('active');
+    $('.tab-button').removeClass('active');
+    $(this).addClass('active');
 
     $("#restock").hide();
     $("#sterile1").show();
@@ -73,8 +73,8 @@ $(function () {
   });
 
   $("#radio_sterile").click(function () {
-      $('.tab-button').removeClass('active');
-      $(this).addClass('active');
+    $('.tab-button').removeClass('active');
+    $(this).addClass('active');
 
     $("#restock").hide();
     $("#sterile1").hide();
@@ -93,8 +93,8 @@ $(function () {
   });
 
   $("#radio_normal").click(function () {
-      $('.tab-button').removeClass('active');
-      $(this).addClass('active');
+    $('.tab-button').removeClass('active');
+    $(this).addClass('active');
 
     $("#restock").hide();
     $("#sterile1").hide();
@@ -109,8 +109,8 @@ $(function () {
   });
 
   $("#radio_restock").click(function () {
-      $('.tab-button').removeClass('active');
-      $(this).addClass('active');
+    $('.tab-button').removeClass('active');
+    $(this).addClass('active');
 
     $("#restock").show();
     $("#sterile1").hide();
@@ -405,13 +405,13 @@ function selection_itemSuds() {
       if (_tr == "") {
         $(".dataTables_info").text(
           settext("dataTables_Showing") +
-            " 0 " +
-            settext("dataTables_to") +
-            " 0 " +
-            settext("dataTables_of") +
-            " 0 " +
-            settext("dataTables_entries") +
-            ""
+          " 0 " +
+          settext("dataTables_to") +
+          " 0 " +
+          settext("dataTables_of") +
+          " 0 " +
+          settext("dataTables_entries") +
+          ""
         );
       }
     },
@@ -533,13 +533,13 @@ function showDetail_itemSuds(itemcode, itemname) {
       if (_tr == "") {
         $(".dataTables_info").text(
           settext("dataTables_Showing") +
-            " 0 " +
-            settext("dataTables_to") +
-            " 0 " +
-            settext("dataTables_of") +
-            " 0 " +
-            settext("dataTables_entries") +
-            ""
+          " 0 " +
+          settext("dataTables_to") +
+          " 0 " +
+          settext("dataTables_of") +
+          " 0 " +
+          settext("dataTables_entries") +
+          ""
         );
       }
     },
@@ -611,7 +611,7 @@ function selection_departmentRoom() {
         var tr = `<th class='text-center' style="text-wrap: nowrap;width: 3%;" rowspan="2">ลำดับ</th>`;
       }
 
-      tr += `<th class='text-center' style="text-wrap: nowrap;width: 25%;" rowspan="2" id="td_item">รายการ</th>`;
+      tr += `<th class='text-center' style="text-wrap: nowrap;width: 25%;" rowspan="2" id="td_item">อุปกรณ์</th>`;
       tr += `<th style="text-wrap: nowrap;width: 5%;" class='text-center' rowspan="2" id="">จำนวนทั้งหมด</th>`;
       tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#FEF0C7;border-bottom-color: #F79009;" class='text-center' rowspan="2" id="">จ่ายไปห้องผ่าตัด</th>`;
       // tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#D1FADF;border-bottom-color: #12B76A;" class='text-center' rowspan="2" id="">ส่ง CSSD</th>`;
@@ -659,7 +659,7 @@ function selection_item() {
     },
     success: function (result) {
       var ObjData = JSON.parse(result);
-      // $('#table_DepRoom').DataTable().destroy();
+      $('#table_DepRoom').DataTable().destroy();
       $("#table_DepRoom tbody").html("");
       console.log(ObjData);
       var tr = ``;
@@ -685,27 +685,20 @@ function selection_item() {
           }
 
           tr += `<tr>f
-                                  <td class='text-center' style="text-wrap: nowrap;">${
-                                    kay + 1
-                                  }</td>
-                                  <td style="text-wrap: nowrap;${color}" >${
-            value.itemname
-          }</td>
-                                  <td class='text-center' style="text-wrap: nowrap;">${
-                                    value.cnt
-                                  }</td>
-                                  <td class='text-center' style="text-wrap: nowrap;background-color:#FFFAEB;">${
-                                    value.cnt_pay
-                                  }</td>
-                                  <td class='text-center' style="text-wrap: nowrap;background-color: #ECFDF3;">${
-                                    value.calculated_balance
-                                  }</td>
-                                  <td class='text-center' style="text-wrap: nowrap;background-color: #d0d9ff;"">${
-                                    value.stock_max
-                                  }</td>
-                                   <td class='text-center' style="text-wrap: nowrap;background-color: #b3e5fc;"">${
-                                     value.stock_min
-                                   }</td>`;
+                                  <td class='text-center' style="text-wrap: nowrap;">${kay + 1
+            }</td>
+                                  <td style="text-wrap: nowrap;${color}" >${value.itemname
+            }</td>
+                                  <td class='text-center' style="text-wrap: nowrap;">${value.cnt
+            }</td>
+                                  <td class='text-center' style="text-wrap: nowrap;background-color:#FFFAEB;">${value.cnt_pay
+            }</td>
+                                  <td class='text-center' style="text-wrap: nowrap;background-color: #ECFDF3;">${value.calculated_balance
+            }</td>
+                                  <td class='text-center' style="text-wrap: nowrap;background-color: #d0d9ff;"">${value.stock_max
+            }</td>
+                                   <td class='text-center' style="text-wrap: nowrap;background-color: #b3e5fc;"">${value.stock_min
+            }</td>`;
 
           var sumcount = 0;
           $.each(depRoom, function (keydep, valuedep) {
@@ -732,40 +725,40 @@ function selection_item() {
       }
 
       $("#table_DepRoom tbody").html(tr);
-      // $('#table_DepRoom').DataTable({
-      //     language: {
-      //         emptyTable: settext("dataTables_empty"),
-      //         paginate: {
-      //             next: settext("table_itemStock_next"),
-      //             previous: settext("table_itemStock_previous")
-      //         },
-      //         info: settext("dataTables_Showing") + " _START_ " + settext("dataTables_to") + " _END_ " + settext("dataTables_of") + " _TOTAL_ " + settext("dataTables_entries") + " ",
-      //     },
-      //     columnDefs: [{
-      //         width: '10%',
-      //         targets: 0
-      //     }],
-      //     info: true,
-      //     scrollX: true,
-      //     scrollCollapse: true,
-      //     fixedColumns: {
-      //         leftColumns: 6,
-      //         rightColumns: 0
-      //     },
-      //     paging: false,
-      //     pageLength: 300,
-      //     scrollY: 500,
-      //     visible: false,
-      //     searching: false,
-      //     lengthChange: false,
-      //     fixedHeader: true,
-      //     ordering: false
-      // });
+      $('#table_DepRoom').DataTable({
+        language: {
+          emptyTable: settext("dataTables_empty"),
+          paginate: {
+            next: settext("table_itemStock_next"),
+            previous: settext("table_itemStock_previous")
+          },
+          info: settext("dataTables_Showing") + " _START_ " + settext("dataTables_to") + " _END_ " + settext("dataTables_of") + " _TOTAL_ " + settext("dataTables_entries") + " ",
+        },
+        columnDefs: [{
+          width: '10%',
+          targets: 0
+        }],
+        info: true,
+        scrollX: true,
+        scrollCollapse: true,
+        fixedColumns: {
+          leftColumns: 7,
+          rightColumns: 0
+        },
+        paging: true,
+        pageLength: 15,
+        scrollY: 800,
+        visible: false,
+        searching: false,
+        lengthChange: false,
+        fixedHeader: true,
+        ordering: false
+      });
 
-      // $('th').removeClass('sorting_asc');
-      // if (tr == "") {
-      //     $('.dataTables_info').text(settext("dataTables_Showing") + ' 0 ' + settext("dataTables_to") + ' 0 ' + settext("dataTables_of") + ' 0 ' + settext("dataTables_entries") + '');
-      // }
+      $('th').removeClass('sorting_asc');
+      if (tr == "") {
+        $('.dataTables_info').text(settext("dataTables_Showing") + ' 0 ' + settext("dataTables_to") + ' 0 ' + settext("dataTables_of") + ' 0 ' + settext("dataTables_entries") + '');
+      }
     },
   });
 }
@@ -880,7 +873,7 @@ $(".btn_manage_stock").click(function () {
 
 $("#save_manage_stockRFID").click(function () {
   if ($("#item_manage_stockRFID").val() == "") {
-    Swal.fire("ล้มเหลว", "กรุณาเลือกรายการ", "error");
+    Swal.fire("ล้มเหลว", "กรุณาเลือกอุปกรณ์", "error");
     return;
   }
 
@@ -966,7 +959,7 @@ function selection_departmentRoom_rfid() {
         var tr = `<th class='text-center' style="text-wrap: nowrap;width: 3%;" rowspan="2">ลำดับ</th>`;
       }
 
-      tr += `<th class='text-center' style="text-wrap: nowrap;width: 25%;" rowspan="2" id="td_item">รายการ</th>`;
+      tr += `<th class='text-center' style="text-wrap: nowrap;width: 25%;" rowspan="2" id="td_item">อุปกรณ์</th>`;
       tr += `<th style="text-wrap: nowrap;width: 5%;" class='text-center' rowspan="2" id="">จำนวนทั้งหมด</th>`;
       tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#FEF0C7;border-bottom-color: #F79009;" class='text-center' rowspan="2" id="">จ่ายไปห้องผ่าตัด</th>`;
       // tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#D1FADF;border-bottom-color: #12B76A;" class='text-center' rowspan="2" id="">ส่ง CSSD</th>`;
@@ -1013,7 +1006,7 @@ function selection_item_rfid() {
     },
     success: function (result) {
       var ObjData = JSON.parse(result);
-      // $('#table_DepRoom').DataTable().destroy();
+      $('#table_DepRoom_rfid').DataTable().destroy();
       $("#table_DepRoom_rfid tbody").html("");
       console.log(ObjData);
       var tr = ``;
@@ -1039,27 +1032,20 @@ function selection_item_rfid() {
             value.cnt = value.stock_balance;
           }
           tr += `<tr>
-                                  <td class='text-center' style="text-wrap: nowrap;">${
-                                    kay + 1
-                                  }</td>
-                                  <td style="text-wrap: nowrap;${color}">${
-            value.itemname
-          }</td>
-                                  <td class='text-center' style="text-wrap: nowrap;">${
-                                    value.cnt
-                                  }</td>
-                                  <td class='text-center' style="text-wrap: nowrap;background-color:#FFFAEB;">${
-                                    value.cnt_pay
-                                  }</td>
-                                     <td class='text-center' style="text-wrap: nowrap;background-color:#ECFDF3;">${
-                                       value.calculated_balance
-                                     }</td>
-                                  <td class='text-center' style="text-wrap: nowrap;background-color: #d0d9ff;"">${
-                                    value.stock_max
-                                  }</td>
-                                   <td class='text-center' style="text-wrap: nowrap;background-color: #b3e5fc;"">${
-                                     value.stock_min
-                                   }</td>`;
+                                  <td class='text-center' style="text-wrap: nowrap;">${kay + 1
+            }</td>
+                                  <td style="text-wrap: nowrap;${color}">${value.itemname
+            }</td>
+                                  <td class='text-center' style="text-wrap: nowrap;">${value.cnt
+            }</td>
+                                  <td class='text-center' style="text-wrap: nowrap;background-color:#FFFAEB;">${value.cnt_pay
+            }</td>
+                                     <td class='text-center' style="text-wrap: nowrap;background-color:#ECFDF3;">${value.calculated_balance
+            }</td>
+                                  <td class='text-center' style="text-wrap: nowrap;background-color: #d0d9ff;"">${value.stock_max
+            }</td>
+                                   <td class='text-center' style="text-wrap: nowrap;background-color: #b3e5fc;"">${value.stock_min
+            }</td>`;
 
           var sumcount = 0;
           $.each(depRoom, function (keydep, valuedep) {
@@ -1086,40 +1072,40 @@ function selection_item_rfid() {
       }
 
       $("#table_DepRoom_rfid tbody").html(tr);
-      // $('#table_DepRoom').DataTable({
-      //     language: {
-      //         emptyTable: settext("dataTables_empty"),
-      //         paginate: {
-      //             next: settext("table_itemStock_next"),
-      //             previous: settext("table_itemStock_previous")
-      //         },
-      //         info: settext("dataTables_Showing") + " _START_ " + settext("dataTables_to") + " _END_ " + settext("dataTables_of") + " _TOTAL_ " + settext("dataTables_entries") + " ",
-      //     },
-      //     columnDefs: [{
-      //         width: '10%',
-      //         targets: 0
-      //     }],
-      //     info: true,
-      //     scrollX: true,
-      //     scrollCollapse: true,
-      //     fixedColumns: {
-      //         leftColumns: 6,
-      //         rightColumns: 0
-      //     },
-      //     paging: false,
-      //     pageLength: 300,
-      //     scrollY: 500,
-      //     visible: false,
-      //     searching: false,
-      //     lengthChange: false,
-      //     fixedHeader: true,
-      //     ordering: false
-      // });
+      $('#table_DepRoom_rfid').DataTable({
+        language: {
+          emptyTable: settext("dataTables_empty"),
+          paginate: {
+            next: settext("table_itemStock_next"),
+            previous: settext("table_itemStock_previous")
+          },
+          info: settext("dataTables_Showing") + " _START_ " + settext("dataTables_to") + " _END_ " + settext("dataTables_of") + " _TOTAL_ " + settext("dataTables_entries") + " ",
+        },
+        columnDefs: [{
+          width: '10%',
+          targets: 0
+        }],
+        info: true,
+        scrollX: true,
+        scrollCollapse: true,
+        fixedColumns: {
+          leftColumns: 7,
+          rightColumns: 0
+        },
+        paging: true,
+        pageLength: 15,
+        scrollY: 800,
+        visible: false,
+        searching: false,
+        lengthChange: false,
+        fixedHeader: true,
+        ordering: false
+      });
 
-      // $('th').removeClass('sorting_asc');
-      // if (tr == "") {
-      //     $('.dataTables_info').text(settext("dataTables_Showing") + ' 0 ' + settext("dataTables_to") + ' 0 ' + settext("dataTables_of") + ' 0 ' + settext("dataTables_entries") + '');
-      // }
+      $('th').removeClass('sorting_asc');
+      if (tr == "") {
+        $('.dataTables_info').text(settext("dataTables_Showing") + ' 0 ' + settext("dataTables_to") + ' 0 ' + settext("dataTables_of") + ' 0 ' + settext("dataTables_entries") + '');
+      }
     },
   });
 }
@@ -1144,7 +1130,7 @@ function selection_departmentRoom_normal() {
         var tr = `<th class='text-center' style="text-wrap: nowrap;width: 3%;" rowspan="2">ลำดับ</th>`;
       }
 
-      tr += `<th class='text-center' style="text-wrap: nowrap;width: 25%;" rowspan="2" id="td_item">รายการ</th>`;
+      tr += `<th class='text-center' style="text-wrap: nowrap;width: 25%;" rowspan="2" id="td_item">อุปกรณ์</th>`;
       tr += `<th style="text-wrap: nowrap;width: 5%;" class='text-center' rowspan="2" id="">จำนวนทั้งหมด</th>`;
       tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#FEF0C7;border-bottom-color: #F79009;" class='text-center' rowspan="2" id="">จ่ายไปห้องผ่าตัด</th>`;
       // tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#D1FADF;border-bottom-color: #12B76A;" class='text-center' rowspan="2" id="">ส่ง CSSD</th>`;
@@ -1191,7 +1177,7 @@ function selection_item_normal() {
     },
     success: function (result) {
       var ObjData = JSON.parse(result);
-      // $('#table_DepRoom').DataTable().destroy();
+      $('#table_DepRoom_normal').DataTable().destroy();
       $("#table_DepRoom_normal tbody").html("");
       console.log(ObjData);
       var tr = ``;
@@ -1213,28 +1199,21 @@ function selection_item_normal() {
             value.cnt = value.stock_balance;
           }
 
-          tr += `<tr>f
-                                  <td class='text-center' style="text-wrap: nowrap;">${
-                                    kay + 1
-                                  }</td>
-                                  <td style="text-wrap: nowrap;${color}" >${
-            value.itemname
-          }</td>
-                                  <td class='text-center' style="text-wrap: nowrap;">${
-                                    value.cnt
-                                  }</td>
-                                  <td class='text-center' style="text-wrap: nowrap;background-color:#FFFAEB;">${
-                                    value.cnt_pay
-                                  }</td>
-                                     <td class='text-center' style="text-wrap: nowrap;background-color:#ECFDF3;">${
-                                       value.calculated_balance
-                                     }</td>
-                                  <td class='text-center' style="text-wrap: nowrap;background-color: #d0d9ff;"">${
-                                    value.stock_max
-                                  }</td>
-                                   <td class='text-center' style="text-wrap: nowrap;background-color: #b3e5fc;"">${
-                                     value.stock_min
-                                   }</td>`;
+          tr += `<tr>
+                                  <td class='text-center' style="text-wrap: nowrap;">${kay + 1
+            }</td>
+                                  <td style="text-wrap: nowrap;${color}" >${value.itemname
+            }</td>
+                                  <td class='text-center' style="text-wrap: nowrap;">${value.cnt
+            }</td>
+                                  <td class='text-center' style="text-wrap: nowrap;background-color:#FFFAEB;">${value.cnt_pay
+            }</td>
+                                     <td class='text-center' style="text-wrap: nowrap;background-color:#ECFDF3;">${value.calculated_balance
+            }</td>
+                                  <td class='text-center' style="text-wrap: nowrap;background-color: #d0d9ff;"">${value.stock_max
+            }</td>
+                                   <td class='text-center' style="text-wrap: nowrap;background-color: #b3e5fc;"">${value.stock_min
+            }</td>`;
 
           var sumcount = 0;
           $.each(depRoom, function (keydep, valuedep) {
@@ -1261,6 +1240,40 @@ function selection_item_normal() {
       }
 
       $("#table_DepRoom_normal tbody").html(tr);
+      $('#table_DepRoom_normal').DataTable({
+        language: {
+          emptyTable: settext("dataTables_empty"),
+          paginate: {
+            next: settext("table_itemStock_next"),
+            previous: settext("table_itemStock_previous")
+          },
+          info: settext("dataTables_Showing") + " _START_ " + settext("dataTables_to") + " _END_ " + settext("dataTables_of") + " _TOTAL_ " + settext("dataTables_entries") + " ",
+        },
+        columnDefs: [{
+          width: '10%',
+          targets: 0
+        }],
+        info: true,
+        scrollX: true,
+        scrollCollapse: true,
+        fixedColumns: {
+          leftColumns: 7,
+          rightColumns: 0
+        },
+        paging: true,
+        pageLength: 15,
+        scrollY: 800,
+        visible: false,
+        searching: false,
+        lengthChange: false,
+        fixedHeader: true,
+        ordering: false
+      });
+
+      $('th').removeClass('sorting_asc');
+      if (tr == "") {
+        $('.dataTables_info').text(settext("dataTables_Showing") + ' 0 ' + settext("dataTables_to") + ' 0 ' + settext("dataTables_of") + ' 0 ' + settext("dataTables_entries") + '');
+      }
     },
   });
 }

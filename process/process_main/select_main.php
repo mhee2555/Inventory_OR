@@ -99,7 +99,8 @@ function set_users($conn)
                 FROM
                     users
                     INNER JOIN employee ON users.EmpCode = employee.EmpCode
-                    INNER JOIN permission ON users.permission = permission.PmID  ";
+                    INNER JOIN permission ON users.permission = permission.PmID 
+                WHERE users.IsCancel = 0 AND users.IsAdmin = 0 ";
 
     $meQuery = $conn->prepare($query);
     $meQuery->execute();

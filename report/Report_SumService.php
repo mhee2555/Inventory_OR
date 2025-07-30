@@ -117,7 +117,7 @@ $pdf->SetFont('db_helvethaica_x', 'b', 16);
 $pdf->Ln(5);
 
 
-$pdf->Cell(0, 10,  "รายงานสรุปคนไข้รับเข้าบริการ", 0, 1, 'C');
+$pdf->Cell(0, 10,  "รายงานสรุปผู้ป่วยเข้ารับบริการ", 0, 1, 'C');
 $pdf->Cell(0, 10,  $text_date, 0, 1, 'C');
 
 
@@ -131,7 +131,7 @@ $pdf->Ln(5);
 $html = '<table cellspacing="0" cellpadding="2" border="1" >
 <thead><tr style="font-size:18px;color:#fff;background-color:#663399;">
 <th width="6 %" align="center">ลำดับ</th>
-<th width="20 %" align="center">รหัสคนไข้</th>
+<th width="20 %" align="center">รหัสผู้ป่วย</th>
 <th width="23 %"  align="center">หัตถการ</th>
 <th width="23 %" align="center">แพทย์</th>
 <th width="15 %" align="center">วัน/เวลารับบริการ</th>

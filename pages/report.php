@@ -52,7 +52,7 @@
                             <option value="5">สรุปค่าใช้จ่าย OR</option>
                             <option value="6">รายงานจ่ายอุปกรณ์</option>
                             <option value="7">รายงานสต๊อกคงเหลือในคลัง</option>
-                            <option value="8">สรุปคนไข้เข้ารับบริการ</option>
+                            <option value="8">สรุปผู้ป่วยเข้ารับบริการ</option>
                             <option value="9">Operating Room Inventory Tracking</option>
 
 

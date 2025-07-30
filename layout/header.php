@@ -20,7 +20,7 @@
       <i class="fa-solid fa-gear mr-3" style="font-size: 25px; cursor: pointer;" id="btn_setting_timeout"></i>
 
       <!-- Dropdown ภาษา -->
-      <div class="dropdown">
+      <div class="dropdown" hidden>
         <button class="btn dropdown-toggle" type="button" data-toggle="dropdown" style="background-color: white;">
           <img src="assets/icon_ui/orter/ic_thailand.png" alt="" style="width: 20%;" class="pr-2">
           <span id="lang-change">ภาษาไทย</span>

@@ -503,6 +503,8 @@ function deleteUser($conn)
 
 function saveUser($conn)
 {
+    $select_user_rfid = $_POST['select_user_rfid'];
+    $select_user_weighing = $_POST['select_user_weighing'];
     $input_empcodeUser = $_POST['input_empcodeUser'];
     $input_nameUser = $_POST['input_nameUser'];
     $input_lastUser = $_POST['input_lastUser'];
@@ -515,6 +517,12 @@ function saveUser($conn)
 
     $IsAdmin = 0;
 
+    if ($select_user_rfid == "") {
+        $select_user_rfid = 0;
+    }
+    if ($select_user_weighing == "") {
+        $select_user_weighing = 0;
+    }
     $count_id = 0;
     if ($input_IDUser == "") {
 
@@ -538,8 +546,8 @@ function saveUser($conn)
 
     if ($count_id == 0) {
         if ($input_IDUser == "") {
-            $query = "INSERT INTO users ( EmpCode ,  UserName ,  Password ,  IsCancel , DeptID , display , permission, IsAdmin) 
-            VALUES             ('$input_empcodeUser'  , '$input_userName'  , '$input_passWord'  , $IsCancel ,1  ,3 , '$select_permission', '$IsAdmin_new') ";
+            $query = "INSERT INTO users ( EmpCode ,  UserName ,  Password ,  IsCancel , DeptID , display , permission, IsAdmin, IsFingerPrint1, IsFingerPrint2) 
+            VALUES             ('$input_empcodeUser'  , '$input_userName'  , '$input_passWord'  , $IsCancel ,1  ,3 , '$select_permission', '$IsAdmin_new', $select_user_rfid, $select_user_weighing) ";
 
             $query2 = "INSERT INTO employee ( EmpCode ,  FirstName ,  LastName   , DepID ,IsAdmin) 
             VALUES             ('$input_empcodeUser'  , '$input_nameUser' , '$input_lastUser',1,$IsAdmin_new) ";
@@ -562,14 +570,14 @@ function saveUser($conn)
             while ($rowE = $meQueryE->fetch(PDO::FETCH_ASSOC)) {
                 $_ID = $rowE['ID'];
             }
-            
-            if($IsAdmin_new == 1){
+
+            if ($IsAdmin_new == 1) {
                 $insertSql = "INSERT INTO config_menu (userID,main,recieve_stock,create_request,request_item,set_hn,pay,hn,movement,manage,report,permission) 
                 VALUES (:userID,1,1,1,1,1,1,1,1,1,1,1)";
                 $insertStmt = $conn->prepare($insertSql);
                 $insertStmt->bindParam(':userID', $_ID);
                 $insertStmt->execute();
-            }else{
+            } else {
                 $insertSql = "INSERT INTO config_menu (userID,main,recieve_stock,create_request,request_item,set_hn,pay,hn,movement,manage,report,permission) 
                 VALUES (:userID,1,1,1,1,1,1,1,1,0,1,0)";
                 $insertStmt = $conn->prepare($insertSql);
@@ -598,7 +606,7 @@ function saveUser($conn)
                 $emID = $rowE['ID'];
             }
 
-            $query = "UPDATE users SET IsAdmin = $IsAdmin_new ,  EmpCode = '$input_empcodeUser' , UserName = '$input_userName' , Password = '$input_passWord' , IsCancel = $IsCancel , permission = '$select_permission'
+            $query = "UPDATE users SET IsFingerPrint1 = $select_user_rfid , IsFingerPrint2 = $select_user_weighing ,  IsAdmin = $IsAdmin_new ,  EmpCode = '$input_empcodeUser' , UserName = '$input_userName' , Password = '$input_passWord' , IsCancel = $IsCancel , permission = '$select_permission'
                     WHERE ID = '$input_IDUser'  ";
 
             $query2 = "UPDATE employee SET IsAdmin = $IsAdmin_new , EmpCode = '$input_empcodeUser' , FirstName = '$input_nameUser' , LastName = '$input_lastUser'
@@ -608,6 +616,25 @@ function saveUser($conn)
             $meQuery->execute();
             $meQuery2 = $conn->prepare($query2);
             $meQuery2->execute();
+
+
+            if ($IsAdmin_new == 1) {
+                $updateSql = "UPDATE config_menu SET 
+                                main=1, recieve_stock=1, create_request=1, request_item=1, 
+                                set_hn=1, pay=1, hn=1, movement=1, manage=1, report=1, permission=1
+                                WHERE userID = :userID";
+                $updateStmt = $conn->prepare($updateSql);
+                $updateStmt->bindParam(':userID', $input_IDUser);
+                $updateStmt->execute();
+            } else {
+                $updateSql = "UPDATE config_menu SET 
+                                main=1, recieve_stock=1, create_request=1, request_item=1, 
+                                set_hn=1, pay=1, hn=1, movement=1, manage=0, report=1, permission=0
+                                WHERE userID = :userID";
+                $updateStmt = $conn->prepare($updateSql);
+                $updateStmt->bindParam(':userID', $input_IDUser);
+                $updateStmt->execute();
+            }
         }
         echo "insert success";
         unset($conn);
@@ -634,7 +661,9 @@ function feeddata_detailUser($conn, $db)
                     users.IsCancel,
                     users.DeptID ,
                     users.permission,
-                    users.IsAdmin
+                    users.IsAdmin,
+                    users.IsFingerPrint1,
+                    users.IsFingerPrint2
                 FROM
                     users
                     INNER JOIN employee ON users.EmpCode = employee.EmpCode   ";

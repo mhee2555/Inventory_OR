@@ -203,11 +203,11 @@ function feeddata() {
 
         $.each(ObjData, function (kay, value) {
           var color = "";
-                    if (value.IsStatus == 'ใกล้หมดอายุ') {
-                        color = "btn btn-warning btn-block' ";
-                    } else {
-                        color = "btn btn-danger btn-block' ";
-                    }
+          if (value.IsStatus == 'ใกล้หมดอายุ') {
+            color = "btn btn-warning ' ";
+          } else {
+            color = "btn btn-danger ' ";
+          }
 
           console.log($("#check_ex").val());
 
@@ -224,7 +224,7 @@ function feeddata() {
               `<td class="text-left"><label >${value.itemname}</label></td>` +
               `<td class="text-center"><label >${value.ExpireDate}</label</td>` +
               `<td class="text-center"><label >${value.Qty}</label</td>` +
-               `<td class="text-center"><button class='${color}' disabled>${value.IsStatus}</button></td>` +
+              `<td class="text-center"><button class='${color}' style='width: 80%;' disabled>${value.IsStatus}</button></td>` +
               ` </tr>`;
 
             number_ex++;
@@ -239,7 +239,7 @@ function feeddata() {
                 `<td class="text-left"><label >${value.itemname}</label></td>` +
                 `<td class="text-center"><label >${value.ExpireDate}</label</td>` +
                 `<td class="text-center"><label >${value.Qty}</label</td>` +
-                `<td class="text-center"> <button class='${color}' disabled>${value.IsStatus}</button></td>` +
+                `<td class="text-center"> <button class='${color}' style='width: 80%;' disabled>${value.IsStatus}</button></td>` +
                 ` </tr>`;
 
               number_ex++;
@@ -257,7 +257,7 @@ function feeddata() {
                 `<td class="text-left"><label >${value.itemname}</label></td>` +
                 `<td class="text-center"><label >${value.ExpireDate}</label</td>` +
                 `<td class="text-center"><label >${value.Qty}</label</td>` +
-                `<td class="text-center"> <button class='${color}' disabled>${value.IsStatus}</button></td>` +
+                `<td class="text-center"> <button class='${color}' style='width: 80%;' disabled>${value.IsStatus}</button></td>` +
                 ` </tr>`;
 
               number_ex++;
@@ -282,12 +282,25 @@ function feeddata() {
               settext("dataTables_entries") +
               " ",
           },
-          columnDefs: [
-            {
-              width: "10%",
-              targets: 0,
-            },
-          ],
+          columnDefs: [{
+            width: '5%',
+            targets: 0
+          }, {
+            width: '15%',
+            targets: 1
+          }, {
+            width: '20%',
+            targets: 2
+          }, {
+            width: '15%',
+            targets: 3
+          }, {
+            width: '10%',
+            targets: 4
+          }, {
+            width: '10%',
+            targets: 5
+          }],
           info: false,
           scrollX: false,
           scrollCollapse: false,
@@ -302,13 +315,13 @@ function feeddata() {
         if (_tr == "") {
           $(".dataTables_info").text(
             settext("dataTables_Showing") +
-              " 0 " +
-              settext("dataTables_to") +
-              " 0 " +
-              settext("dataTables_of") +
-              " 0 " +
-              settext("dataTables_entries") +
-              ""
+            " 0 " +
+            settext("dataTables_to") +
+            " 0 " +
+            settext("dataTables_of") +
+            " 0 " +
+            settext("dataTables_entries") +
+            ""
           );
         }
       }

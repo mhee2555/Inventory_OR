@@ -19,16 +19,16 @@ function click_main() {
   // $("#manage").css("background", "#E0D2EF");
 
   $("#manage").click(function () {
-      $('.tab-button').removeClass('active');
-      $(this).addClass('active');
+    $('.tab-button').removeClass('active');
+    $(this).addClass('active');
     $("#row_manage").show();
     $("#row_mapping").hide();
     $("#row_routine").hide();
   });
 
   $("#mapping").click(function () {
-      $('.tab-button').removeClass('active');
-      $(this).addClass('active');
+    $('.tab-button').removeClass('active');
+    $(this).addClass('active');
     $("#row_manage").hide();
     $("#row_mapping").show();
     $("#row_routine").hide();
@@ -55,8 +55,8 @@ function click_main() {
   });
 
   $("#routine").click(function () {
-      $('.tab-button').removeClass('active');
-      $(this).addClass('active');
+    $('.tab-button').removeClass('active');
+    $(this).addClass('active');
 
     $("#row_routine").show();
     $("#row_mapping").hide();
@@ -188,8 +188,8 @@ function click_menu() {
   feeddata_detailDoctor();
 
   $("#radio1").click(function () {
-      $('.tab-button2').removeClass('active');
-      $(this).addClass('active');
+    $('.tab-button2').removeClass('active');
+    $(this).addClass('active');
 
     $("#row_doctor").show();
     $("#row_procedure_").hide();
@@ -200,8 +200,8 @@ function click_menu() {
   });
 
   $("#radio2").click(function () {
-      $('.tab-button2').removeClass('active');
-      $(this).addClass('active');
+    $('.tab-button2').removeClass('active');
+    $(this).addClass('active');
 
     $("#row_doctor").hide();
     $("#row_procedure_").show();
@@ -212,8 +212,8 @@ function click_menu() {
   });
 
   $("#radio3").click(function () {
-      $('.tab-button2').removeClass('active');
-      $(this).addClass('active');
+    $('.tab-button2').removeClass('active');
+    $(this).addClass('active');
 
     $("#row_doctor").hide();
     $("#row_procedure_").hide();
@@ -225,8 +225,8 @@ function click_menu() {
   });
 
   $("#radio4").click(function () {
-      $('.tab-button2').removeClass('active');
-      $(this).addClass('active');
+    $('.tab-button2').removeClass('active');
+    $(this).addClass('active');
 
     $("#row_doctor").hide();
     $("#row_procedure_").hide();
@@ -240,7 +240,7 @@ function click_menu() {
 
 // ================================================
 $("#btn_saveDoctor").click(function () {
-  if ($("#input_doctorth").val() == "") {
+  if ($("#input_doctorth").val().trim() == "") {
     showDialogFailed("กรุณาเลือกแพทย์");
     return;
   }
@@ -345,10 +345,9 @@ function feeddata_detailDoctor() {
                       <td class="text-center">${kay + 1}</td>
                       <td class="text-left">${value.Doctor_Name}</td>
                       <td class="text-center"><button class='btn' ${bg}>  ${value.IsActive} </button></td>
-                      <td class="text-center"> <button class="btn btn-outline-dark f18 mr-4" onclick='editDoctor("${value.ID }","${value.Doctor_Name}","${value.IsActive}")'  > <i class="fa-regular fa-pen-to-square"></i> แก้ไข</button>
-                       <button  class="btn btn-outline-danger f18 ml-4" onclick='deleteDoctor(${
-                         value.ID
-                       })'><i class="fa-solid fa-trash-can"></i></button> 
+                      <td class="text-center"> <button class="btn btn-outline-dark f18 mr-4" onclick='editDoctor("${value.ID}","${value.Doctor_Name}","${value.IsActive}")'  > <i class="fa-regular fa-pen-to-square"></i> แก้ไข</button>
+                       <button  class="btn btn-outline-danger f18 ml-4" onclick='deleteDoctor(${value.ID
+            })'><i class="fa-solid fa-trash-can"></i></button> 
           
           
           </td>
@@ -405,13 +404,13 @@ function feeddata_detailDoctor() {
       if (_tr == "") {
         $(".dataTables_info").text(
           settext("dataTables_Showing") +
-            " 0 " +
-            settext("dataTables_to") +
-            " 0 " +
-            settext("dataTables_of") +
-            " 0 " +
-            settext("dataTables_entries") +
-            ""
+          " 0 " +
+          settext("dataTables_to") +
+          " 0 " +
+          settext("dataTables_of") +
+          " 0 " +
+          settext("dataTables_entries") +
+          ""
         );
       }
     },
@@ -422,7 +421,7 @@ function feeddata_detailDoctor() {
 // ================================================
 
 $("#btn_saveProcedure").click(function () {
-  if ($("#input_Procedure").val() == "") {
+  if ($("#input_Procedure").val().trim() == "") {
     showDialogFailed("กรุณาเลือกหัตถการ");
     return;
   }
@@ -605,13 +604,13 @@ function feeddata_detailProcedure() {
       if (_tr == "") {
         $(".dataTables_info").text(
           settext("dataTables_Showing") +
-            " 0 " +
-            settext("dataTables_to") +
-            " 0 " +
-            settext("dataTables_of") +
-            " 0 " +
-            settext("dataTables_entries") +
-            ""
+          " 0 " +
+          settext("dataTables_to") +
+          " 0 " +
+          settext("dataTables_of") +
+          " 0 " +
+          settext("dataTables_entries") +
+          ""
         );
       }
 
@@ -629,23 +628,23 @@ function feeddata_detailProcedure() {
 
 // ================================================
 $("#btn_saveUser").click(function () {
-  if ($("#input_empcodeUser").val() == "") {
+  if ($("#input_empcodeUser").val().trim() == "") {
     showDialogFailed("กรุณากรอก รหัสพนักงาน");
     return;
   }
-  if ($("#input_nameUser").val() == "") {
+  if ($("#input_nameUser").val().trim() == "") {
     showDialogFailed("กรุณากรอก ชื่อ");
     return;
   }
-  if ($("#input_lastUser").val() == "") {
+  if ($("#input_lastUser").val().trim() == "") {
     showDialogFailed("กรุณากรอก นามสกุล");
     return;
   }
-  if ($("#input_userName").val() == "") {
+  if ($("#input_userName").val().trim() == "") {
     showDialogFailed("กรุณากรอก userName");
     return;
   }
-  if ($("#input_passWord").val() == "") {
+  if ($("#input_passWord").val().trim() == "") {
     showDialogFailed("กรุณากรอก Password");
     return;
   }
@@ -681,6 +680,8 @@ function saveUser() {
       input_userName: $("#input_userName").val(),
       input_passWord: $("#input_passWord").val(),
       select_permission: $("#select_permission").val(),
+      select_user_rfid: $("#select_user_rfid").val(),
+      select_user_weighing: $("#select_user_weighing").val(),
       IsAdmin: IsAdmin,
       input_IDUser: $("#input_IDUser").val(),
       IsCancel: IsCancel,
@@ -701,11 +702,15 @@ function saveUser() {
       $("#input_lastUser").val("");
       $("#input_userName").val("");
       $("#input_passWord").val("");
+      $("#select_user_rfid").val("");
+      $("#select_user_weighing").val("");
       $("#input_IDUser").val("");
     },
   });
 }
 function editUser(
+  IsFingerPrint1,
+  IsFingerPrint2,
   ID,
   EmpCode,
   FirstName,
@@ -716,6 +721,8 @@ function editUser(
   permission,
   IsAdmin
 ) {
+  $("#select_user_rfid").val(IsFingerPrint1);
+  $("#select_user_weighing").val(IsFingerPrint2);
   $("#input_empcodeUser").val(EmpCode);
   $("#input_nameUser").val(FirstName);
   $("#input_lastUser").val(LastName);
@@ -772,6 +779,8 @@ $("#btn_clearUser").click(function () {
   $("#input_passWord").val("");
   $("#select_permission").val("");
   $("#input_IDUser").val("");
+  $("#select_user_rfid").val("");
+  $("#select_user_weighing").val("");
 });
 function feeddata_detailUser() {
   $.ajax({
@@ -796,31 +805,32 @@ function feeddata_detailUser() {
             var bg = "style='background-color:#D92D20;color:#fff;' ";
           }
 
+          if (value.IsFingerPrint1 == "0") {
+            var img1 = ` <img src="assets/img/fingerprint_0.png" style='width:30%;' > `;
+          } else {
+            var img1 = ` <img src="assets/img/fingerprint_1.png" style='width:30%;' > `;
+          }
+
+          if (value.IsFingerPrint2 == "0") {
+            var img2 = ` <img src="assets/img/fingerprint_0.png" style='width:30%;' > `;
+          } else {
+            var img2 = ` <img src="assets/img/fingerprint_1.png" style='width:30%;' > `;
+          }
+
+
           _tr += `<tr> 
                       <td class="text-center">${kay + 1}</td>
                       <td class="text-left">${value.EmpCode}</td>
                       <td class="text-left">${value.FirstName}</td>
                       <td class="text-left">${value.LastName}</td>
-                      <td class="text-left">${value.UserName}</td>
-                      <td class="text-left">${value.Password}</td>
-                      <td class="text-left"><button class='btn' ${bg}>  ${
-            value.IsCancel
-          } </button></td>
+                      <td class="text-center">${img1}</td>
+                      <td class="text-center">${img2}</td>
+                      <td class="text-left"><button class='btn' ${bg}>  ${value.IsCancel} </button></td>
                       <td class="text-center">
-                      <button class="btn btn-outline-dark f18 mr-4" onclick='editUser("${
-                        value.ID
-                      }","${value.EmpCode}","${value.FirstName}","${
-            value.LastName
-          }","${value.UserName}","${value.Password}","${value.IsCancel}","${
-            value.permission
-          }","${
-            value.IsAdmin
-          }")'  > <i class="fa-regular fa-pen-to-square"></i> แก้ไข</button>
-                       <button  class="btn btn-outline-danger f18 ml-4" onclick='deleteUser(${
-                         value.ID
-                       },"${
-            value.EmpCode
-          }")'><i class="fa-solid fa-trash-can"></i></button> 
+                      <button class="btn btn-outline-dark f18 mr-4" onclick='editUser("${value.IsFingerPrint1}","${value.IsFingerPrint2}","${value.ID}","${value.EmpCode}","${value.FirstName}","${value.LastName}","${value.UserName}","${value.Password}","${value.IsCancel}","${value.permission
+            }","${value.IsAdmin}")'  > <i class="fa-regular fa-pen-to-square"></i> แก้ไข</button> <button  class="btn btn-outline-danger f18 ml-4" onclick='deleteUser(${value.ID
+            },"${value.EmpCode
+            }")'><i class="fa-solid fa-trash-can"></i></button> 
                       </td>
                        </tr>`;
         });
@@ -891,13 +901,13 @@ function feeddata_detailUser() {
       if (_tr == "") {
         $(".dataTables_info").text(
           settext("dataTables_Showing") +
-            " 0 " +
-            settext("dataTables_to") +
-            " 0 " +
-            settext("dataTables_of") +
-            " 0 " +
-            settext("dataTables_entries") +
-            ""
+          " 0 " +
+          settext("dataTables_to") +
+          " 0 " +
+          settext("dataTables_of") +
+          " 0 " +
+          settext("dataTables_entries") +
+          ""
         );
       }
     },
@@ -907,15 +917,15 @@ function feeddata_detailUser() {
 
 // =============DEPROOM===================================
 $("#btn_saveDeproom").click(function () {
-  if ($("#input_DeproomNameTH").val() == "") {
+  if ($("#input_DeproomNameTH").val().trim() == "") {
     showDialogFailed("กรุณากรอก ชื่อห้อง ไทย");
     return;
   }
-  if ($("#input_DeproomNameEN").val() == "") {
+  if ($("#input_DeproomNameEN").val().trim() == "") {
     showDialogFailed("กรุณากรอก ชื่อห้อง อังกฤษ");
     return;
   }
-  if ($("#input_DeproomName_sub").val() == "") {
+  if ($("#input_DeproomName_sub").val().trim() == "") {
     showDialogFailed("กรุณากรอก ตัวย่อ");
     return;
   }
@@ -1041,21 +1051,16 @@ function feeddata_detailDeproom() {
                       <td class="text-left">${value.departmentroomname_EN}</td>
                       <td class="text-left">${value.departmentroomname_sub}</td>
                       <td class="text-center">${value.floor_id}</td>
-                      <td class="text-center"><button class='btn' ${bg}>  ${
-            value.IsActive
-          } </button></td>
+                      <td class="text-center"><button class='btn' ${bg}>  ${value.IsActive
+            } </button></td>
 
                       <td class="text-center">
-                       <button class="btn btn-outline-dark f18 mr-4" onclick='editDeproom("${
-                         value.id
-                       }","${value.departmentroomname}","${
-            value.departmentroomname_EN
-          }","${value.ID_floor}","${value.IsActive}","${
-            value.departmentroomname_sub
-          }")'  > <i class="fa-regular fa-pen-to-square"></i> แก้ไข</button>
-                       <button  class="btn btn-outline-danger f18 ml-4" onclick='deleteDeproom(${
-                         value.id
-                       })'><i class="fa-solid fa-trash-can"></i></button> 
+                       <button class="btn btn-outline-dark f18 mr-4" onclick='editDeproom("${value.id
+            }","${value.departmentroomname}","${value.departmentroomname_EN
+            }","${value.ID_floor}","${value.IsActive}","${value.departmentroomname_sub
+            }")'  > <i class="fa-regular fa-pen-to-square"></i> แก้ไข</button>
+                       <button  class="btn btn-outline-danger f18 ml-4" onclick='deleteDeproom(${value.id
+            })'><i class="fa-solid fa-trash-can"></i></button> 
 
                       </td>
                        </tr>`;
@@ -1123,13 +1128,13 @@ function feeddata_detailDeproom() {
       if (_tr == "") {
         $(".dataTables_info").text(
           settext("dataTables_Showing") +
-            " 0 " +
-            settext("dataTables_to") +
-            " 0 " +
-            settext("dataTables_of") +
-            " 0 " +
-            settext("dataTables_entries") +
-            ""
+          " 0 " +
+          settext("dataTables_to") +
+          " 0 " +
+          settext("dataTables_of") +
+          " 0 " +
+          settext("dataTables_entries") +
+          ""
         );
       }
     },
@@ -1719,13 +1724,13 @@ function show_detail_doctor() {
       if (_tr == "") {
         $(".dataTables_info").text(
           settext("dataTables_Showing") +
-            " 0 " +
-            settext("dataTables_to") +
-            " 0 " +
-            settext("dataTables_of") +
-            " 0 " +
-            settext("dataTables_entries") +
-            ""
+          " 0 " +
+          settext("dataTables_to") +
+          " 0 " +
+          settext("dataTables_of") +
+          " 0 " +
+          settext("dataTables_entries") +
+          ""
         );
       }
     },
@@ -1862,13 +1867,13 @@ function show_detail_deproom() {
       if (_tr == "") {
         $(".dataTables_info").text(
           settext("dataTables_Showing") +
-            " 0 " +
-            settext("dataTables_to") +
-            " 0 " +
-            settext("dataTables_of") +
-            " 0 " +
-            settext("dataTables_entries") +
-            ""
+          " 0 " +
+          settext("dataTables_to") +
+          " 0 " +
+          settext("dataTables_of") +
+          " 0 " +
+          settext("dataTables_entries") +
+          ""
         );
       }
     },
@@ -2087,14 +2092,11 @@ function show_detail_routine() {
                       <td>${value.Doctor_Name}</td>
                       <td>${value.departmentroomname}</td>
                       <td>${value.Procedure_TH}</td>
-                      <td class="text-center" > <button class="btn btn-outline-dark f18"  onclick='edit_routine(${
-                        value.id
-                      },${value.departmentroom_id},${value.doctor_id},${
-            value.procedure_id
-          })'> <i class="fa-regular fa-pen-to-square"></i> แก้ไข</button> </td>
-                      <td class="text-center"> <button  class="btn btn-outline-danger f18" onclick='delete_routine(${
-                        value.id
-                      })'><i class="fa-solid fa-trash-can"></i></button> </td>
+                      <td class="text-center" > <button class="btn btn-outline-dark f18"  onclick='edit_routine(${value.id
+            },${value.departmentroom_id},${value.doctor_id},${value.procedure_id
+            })'> <i class="fa-regular fa-pen-to-square"></i> แก้ไข</button> </td>
+                      <td class="text-center"> <button  class="btn btn-outline-danger f18" onclick='delete_routine(${value.id
+            })'><i class="fa-solid fa-trash-can"></i></button> </td>
                    </tr>`;
         });
       }
@@ -2157,13 +2159,13 @@ function show_detail_routine() {
       if (_tr == "") {
         $(".dataTables_info").text(
           settext("dataTables_Showing") +
-            " 0 " +
-            settext("dataTables_to") +
-            " 0 " +
-            settext("dataTables_of") +
-            " 0 " +
-            settext("dataTables_entries") +
-            ""
+          " 0 " +
+          settext("dataTables_to") +
+          " 0 " +
+          settext("dataTables_of") +
+          " 0 " +
+          settext("dataTables_entries") +
+          ""
         );
       }
 
@@ -2193,9 +2195,8 @@ function show_detail_item() {
                       <td class='text-center' >${kay + 1}</td>
                       <td>${value.Item_name}</td>
                       <td class='text-center'>${value.TyeName}</td>
-                      <td class='text-center'><input type='text' class='numonly form-control loop_qty_request text-center' data-itemcode="${
-                        value.itemcode
-                      }"></td>
+                      <td class='text-center'><input type='text' class='numonly form-control loop_qty_request text-center' data-itemcode="${value.itemcode
+            }"></td>
                    </tr>`;
         });
       }
@@ -2250,13 +2251,13 @@ function show_detail_item() {
       if (_tr == "") {
         $(".dataTables_info").text(
           settext("dataTables_Showing") +
-            " 0 " +
-            settext("dataTables_to") +
-            " 0 " +
-            settext("dataTables_of") +
-            " 0 " +
-            settext("dataTables_entries") +
-            ""
+          " 0 " +
+          settext("dataTables_to") +
+          " 0 " +
+          settext("dataTables_of") +
+          " 0 " +
+          settext("dataTables_entries") +
+          ""
         );
       }
 
@@ -2350,7 +2351,7 @@ $("#select_procedure_routine").change(function () {
         procedure_routine: $("#select_procedure_routine").val(),
         routine_id: $("#routine_id").val(),
       },
-      success: function (result) {},
+      success: function (result) { },
     });
   } else {
     show_detail_request_byDocNo_change();
@@ -2367,7 +2368,7 @@ $("#select_doctor_routine").change(function () {
         doctor_routine: $("#select_doctor_routine").val(),
         routine_id: $("#routine_id").val(),
       },
-      success: function (result) {},
+      success: function (result) { },
     });
   } else {
     show_detail_request_byDocNo_change();
@@ -2461,17 +2462,13 @@ function show_detail_request_byDocNo() {
                       <td class='text-center'>${kay + 1}</td>
                       <td>${value.itemname}</td>
                       <td class='text-center'>${value.TyeName}</td>
-                      <td class='text-center'><input type="text"  onblur="updateDetail_qty(${
-                        value.id
-                      },'${
-            value.itemcode
-          }')" class="form-control text-center qty_loop" id="qty_item_${
-            value.id
-          }" data-id='${value.id}' value='${value.cnt}'> </td>
+                      <td class='text-center'><input type="text"  onblur="updateDetail_qty(${value.id
+            },'${value.itemcode
+            }')" class="form-control text-center qty_loop" id="qty_item_${value.id
+            }" data-id='${value.id}' value='${value.cnt}'> </td>
                       <td class='text-center'>
-                      <img src="assets/img_project/1_icon/ic_trash-1.png" style='width:30%;cursor:pointer;' onclick='delete_request_byItem(${
-                        value.id
-                      })'>
+                      <img src="assets/img_project/1_icon/ic_trash-1.png" style='width:30%;cursor:pointer;' onclick='delete_request_byItem(${value.id
+            })'>
                       </td>
                    </tr>`;
         });
@@ -2531,13 +2528,13 @@ function show_detail_request_byDocNo() {
       if (_tr == "") {
         $(".dataTables_info").text(
           settext("dataTables_Showing") +
-            " 0 " +
-            settext("dataTables_to") +
-            " 0 " +
-            settext("dataTables_of") +
-            " 0 " +
-            settext("dataTables_entries") +
-            ""
+          " 0 " +
+          settext("dataTables_to") +
+          " 0 " +
+          settext("dataTables_of") +
+          " 0 " +
+          settext("dataTables_entries") +
+          ""
         );
       }
     },
@@ -2555,7 +2552,7 @@ function updateDetail_qty(ID, itemcode) {
       itemcode: itemcode,
       qty: $("#qty_item_" + ID).val(),
     },
-    success: function (result) {},
+    success: function (result) { },
   });
 }
 

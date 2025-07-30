@@ -45,15 +45,15 @@
     <div class=" col-md-12 col-lg-9  ">
 
         <div class="tab-button-group">
-            <button class="tab-button active" id="radio_create_request">สร้างใบขอเบิกใช้อุปกรณ์กับคนไข้</button>
-            <button class="tab-button" id="radio_history_create_request">ประวัติขอเบิกใช้อุปกรณ์กับคนไข้</button>
+            <button class="tab-button active" id="radio_create_request">สร้างใบขอเบิกใช้อุปกรณ์กับผู้ป่วย</button>
+            <button class="tab-button" id="radio_history_create_request">ประวัติขอเบิกใช้อุปกรณ์กับผู้ป่วย</button>
         </div>
 
 
 
         <!-- <div class="btn-group btn-group-toggle" role="group" aria-label="Basic example">
-            <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;border-color: lightgray;" id="radio_create_request">สร้างใบขอเบิกใช้อุปกรณ์กับคนไข้</button>
-            <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;border-color: lightgray;" id="radio_history_create_request">ประวัติขอเบิกใช้อุปกรณ์กับคนไข้</button>
+            <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;border-color: lightgray;" id="radio_create_request">สร้างใบขอเบิกใช้อุปกรณ์กับผู้ป่วย</button>
+            <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;border-color: lightgray;" id="radio_history_create_request">ประวัติขอเบิกใช้อุปกรณ์กับผู้ป่วย</button>
         </div> -->
     </div>
 </div>
@@ -108,8 +108,8 @@
                                 <thead>
                                     <tr>
                                         <th scope="col" class="text-center" id="">ลำดับ</th>
-                                        <th scope="col" class="text-center" id="">รายการ</th>
-                                        <th scope="col" class="text-center" id="">ลักษณะการใช้งาน</th>
+                                        <th scope="col" class="text-center" id="">อุปกรณ์</th>
+                                        <th scope="col" class="text-center" id="">ประเภท</th>
                                         <!-- <th scope="col" class="text-center" id="">รูปภาพ</th> -->
                                         <th scope="col" class="text-center" id="">จำนวน</th>
                                     </tr>
@@ -142,7 +142,7 @@
                                 <input type="text" class="form-control" id="text_edit" placeholder="" hidden>
                                 <div class="col-md-6">
                                     <div class="form-group ">
-                                        <label style="color:black;font-weight: 600;">เลขประจำตัวคนไข้</label>
+                                        <label style="color:black;font-weight: 600;">เลขประจำตัวผู้ป่วย</label>
                                         <div class="input-group">
                                             <input type="text" class="form-control f18 " id="input_hn_request" placeholder="" autocomplete="off">
                                             <input type="text" class="form-control f18 " id="input_set_hn_ID_request" placeholder="" autocomplete="off" hidden>
@@ -241,7 +241,7 @@
                                 <thead>
                                     <tr>
                                         <th scope="col" class="text-center" id="">ลำดับ</th>
-                                        <th scope="col" class="text-center" id="">รายการ</th>
+                                        <th scope="col" class="text-center" id="">อุปกรณ์</th>
                                         <th scope="col" class="text-center" id="">ลักษณะการใช้งาน</th>
                                         <th scope="col" class="text-center" id="">จำนวน</th>
                                         <th scope="col" class="text-center" id="">ลบ</th>
@@ -385,7 +385,7 @@
                                 <tr>
                                     <th scope="col" class="text-center" id="">ลำดับ</th>
                                     <th scope="col" class="text-center" id="">วันที่รับบริการ</th>
-                                    <th scope="col" class="text-center" id="">เลขประจำตัวคนไข้</th>
+                                    <th scope="col" class="text-center" id="">เลขประจำตัวผู้ป่วย</th>
                                     <th scope="col" class="text-center" id="">แพทย์</th>
                                     <th scope="col" class="text-center" id="">หัตถการ</th>
                                     <th scope="col" class="text-center" id="">ห้องผ่าตัด</th>

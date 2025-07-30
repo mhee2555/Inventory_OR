@@ -109,7 +109,7 @@ class MYPDF extends TCPDF
             $this->SetFont('db_helvethaica_x', 'b', 14);
 
             $this->SetY(10);
-            $this->Cell(200, 5, 'รายงานขอเบิกใช้อุปกรณ์กับคนไข้', 1, 1, 'C');
+            $this->Cell(200, 5, 'รายงานขอเบิกใช้อุปกรณ์กับผู้ป่วย', 1, 1, 'C');
 
 
             $this->Cell(30, 30,  "", 1, 0, 'L');
@@ -159,7 +159,7 @@ class MYPDF extends TCPDF
 
 
 
-            // $this->Cell(138, 8, 'รายงานขอเบิกใช้อุปกรณ์กับคนไข้', 1, 1, 'C');
+            // $this->Cell(138, 8, 'รายงานขอเบิกใช้อุปกรณ์กับผู้ป่วย', 1, 1, 'C');
     
             // $this->Cell(30, 11,  "  HN Code", 1, 0, 'L');
             // $this->Cell(108, 11, "     ".$_hn_record_id, 1, 1, 'L');
@@ -204,7 +204,7 @@ class MYPDF extends TCPDF
             // $this->Cell(150, 8,  " OPERATING ROOM NO 1", 1, 1, 'L');
 
             // $this->Cell(50, 8,  "  หมายเหตุ", 1, 0, 'C');
-            // $this->Cell(150, 8,  " คนไข้อายุมาก", 1, 1, 'L');
+            // $this->Cell(150, 8,  " ผู้ป่วยอายุมาก", 1, 1, 'L');
 
 
 

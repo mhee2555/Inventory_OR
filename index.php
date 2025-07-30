@@ -51,7 +51,7 @@ if (!isset($_SESSION['UserName'])) {
     <meta name="author" content="">
 
     <title>CSSD</title>
-    <link rel="icon" type="image/x-icon" href="assets/img/logo.png">
+    <link rel="icon" type="image/x-icon" href="assets/img/logotop.png">
 
     <?php require("import/css.php"); ?>
 

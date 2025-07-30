@@ -101,7 +101,7 @@
                     <td class="text-center"><input type="checkbox"  style="width: 50px;height: 30px;" id="request_item" class="clear_checkbox"></td>
                 </tr>
                 <tr>
-                    <td>กรอกคนไข้</td>
+                    <td>กรอกผู้ป่วย</td>
                     <td class="text-center"><input type="checkbox"  style="width: 50px;height: 30px;" id="set_hn" class="clear_checkbox"></td>
                 </tr>
                 <tr>

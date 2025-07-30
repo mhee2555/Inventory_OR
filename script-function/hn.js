@@ -92,8 +92,8 @@ function show_detail_hn() {
             `<tr class="color" onclick='setActive_feeddata_hncode_detail(${value.ID},"${value.DocNo}","${value.HnCode}","${value.his_IsStatus}")' id="tr_${value.ID}"> ` +
             `<td class="text-center">${kay + 1}</td>` +
             `<td class="text-center" >${value.DocDate}</td>` +
-            `<td class="text-left" style='max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>${value.HnCode}</td>` +
-            `<td class="text-left" style='max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>${value.departmentroomname}</td>` +
+            `<td class="text-center" style='max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;' title='${value.HnCode}'>${value.HnCode}</td>` +
+            `<td class="text-left" style='max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;' title='${value.departmentroomname}'>${value.departmentroomname}</td>` +
             `<td class="text-left" style='max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>${value.Doctor_Name}</td>` +
             `<td class="text-left" ${styleP} ${titleP} >${value.Procedure_TH}</td>` +
             ` </tr>`;
@@ -868,8 +868,8 @@ function feeddata_hncode_detail(DocNo, HnCode) {
             _tr +=
               `<tr id='tdDetail_${value.ID}'> ` +
               `<td class="text-center">${kay + 1}</td>` +
-              `<td class="text-center">
-                  <button class="btn btn-sm" disabled>${value.TyeName}</button>
+              `<td class="text-left">
+                  <label style='color: lightgray;max-width: 160px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;' title='${value.TyeName}'>${value.TyeName}</label>
               </td>` +
               // `<td class="text-center">${user_count}</td>` +
               `<td class="text-center" >${label}</td>` +
@@ -903,15 +903,15 @@ function feeddata_hncode_detail(DocNo, HnCode) {
             targets: 0,
           },
           {
-            width: "18%",
+            width: "10%",
             targets: 1,
           },
           {
-            width: "15%",
+            width: "20%",
             targets: 2,
           },
           {
-            width: "20%",
+            width: "27%",
             targets: 3,
           },
           {

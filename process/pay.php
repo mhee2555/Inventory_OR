@@ -470,6 +470,16 @@ function feeddata_history_Return($conn, $db)
 
     $return = [];
 
+    $IsAdmin = $_SESSION['IsAdmin'];
+
+    $return = [];
+    if ($IsAdmin == 1) {
+        $where = "";
+    } else {
+        $where = " AND log_return.userID  = '$Userid' ";
+    }
+
+
     $query = " SELECT
                     item.itemname,
                     itemstock.UsageCode,
@@ -487,7 +497,7 @@ function feeddata_history_Return($conn, $db)
                     INNER JOIN deproom ON deproom.DocNo = log_return.DocNo 
                 WHERE  item.itemname LIKE '%$input_search_history_return%' 
                 AND DATE(log_return.createAt) = '$select_date_history_return' 
-                AND log_return.userID  = '$Userid'
+                 $where
                 ORDER BY log_return.createAt DESC ";
 
 
@@ -510,8 +520,14 @@ function feeddata_waitReturn($conn, $db)
 {
     $DepID = $_SESSION['DepID'];
     $Userid = $_SESSION['Userid'];
+    $IsAdmin = $_SESSION['IsAdmin'];
 
     $return = [];
+    if ($IsAdmin == 1) {
+        $where = "";
+    } else {
+        $where = " AND itemstock.return_userID  = '$Userid' ";
+    }
 
     $query = " SELECT
                         item.itemname,
@@ -523,7 +539,7 @@ function feeddata_waitReturn($conn, $db)
                         item ON itemstock.ItemCode = item.itemcode
                     WHERE
                         itemstock.IsCross = 9
-                        AND itemstock.return_userID  = '$Userid'
+                       $where
                     GROUP BY
 	                    item.itemname  
                     ORDER BY itemstock.ReturnDate DESC ";
@@ -1061,6 +1077,7 @@ function show_detail_history_block($conn, $db)
     $input_hn_history = $_POST['input_hn_history'];
     $select_doctor_history = $_POST['select_doctor_history'];
     $select_procedure_history = $_POST['select_procedure_history'];
+    $check_Box = $_POST['check_Box'];
 
 
     $select_date_history_s = explode("-", $select_date_history_s);
@@ -1087,6 +1104,14 @@ function show_detail_history_block($conn, $db)
     $whereR = "";
     if ($select_deproom_history != "") {
         $whereR = " AND deproom.Ref_departmentroomid = '$select_deproom_history' ";
+    }
+
+    $whereDate = "";
+    if ($check_Box == 0) {
+        $whereDate = " AND  DATE(deproom.serviceDate) BETWEEN '$select_date_history_s' AND '$select_date_history_l'  ";
+    }
+    if ($check_Box == 1) {
+        $whereDate = " ";
     }
 
 
@@ -1124,9 +1149,9 @@ function show_detail_history_block($conn, $db)
                     LEFT JOIN users ON users.ID = deproom.userConfirm_pay
 	                LEFT JOIN employee ON employee.EmpCode = users.EmpCode
                     WHERE
-                        DATE(deproom.serviceDate) BETWEEN '$select_date_history_s' AND '$select_date_history_l'
-                        AND deproom.IsCancel = 0
+                            deproom.IsCancel = 0
                         AND deproom.Isblock = 1
+                        $whereDate
                         $whereD
                         $whereP
                         $whereR

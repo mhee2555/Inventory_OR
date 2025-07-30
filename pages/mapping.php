@@ -158,7 +158,7 @@
         <div class="col-md-6">
 
             <div class="card">
-                <div class="card-header f18 " style="color:black;">รายการที่บันทึก แพทย์&ห้องผ่าตัด</div>
+                <div class="card-header f18 " style="color:black;">อุปกรณ์ที่บันทึก แพทย์&ห้องผ่าตัด</div>
                 <div class="card-body">
 
 
@@ -191,7 +191,7 @@
         <div class="col-md-6">
 
             <div class="card">
-                <div class="card-header f18 " style="color:black;">รายการที่บันทึก ห้องผ่าตัด&หัตถการ</div>
+                <div class="card-header f18 " style="color:black;">อุปกรณ์ที่บันทึก ห้องผ่าตัด&หัตถการ</div>
                 <div class="card-body">
 
                 <div class="row">

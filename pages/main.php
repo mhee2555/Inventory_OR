@@ -52,9 +52,9 @@
       <div class="card-body">
         <div class="row g-0">
           <div class="col-md-8 text-left">
-            <h2 class="card-title text-dark font-weight-bold f24" id="header_ex">แจ้งเตือนรายการหมดอายุ</h2>
+            <h2 class="card-title text-dark font-weight-bold f24" id="header_ex">แจ้งเตือนอุปกรณ์หมดอายุ</h2>
             <div class="card-text"> <label style="font-size: 70px;color:#101828;line-height: 55px;" id="text_ex">0</label>
-              <label class="f24" style="font-size: 28px;color:black;" class="label_item"> รายการ </label>
+              <label class="f24" style="font-size: 28px;color:black;" class="label_item"> อุปกรณ์ </label>
             </div>
           </div>
           <div class="col-md-12 text-left">
@@ -69,16 +69,16 @@
   <div class="col-sm-12 col-md-12 col-lg-6 mt-3" id="row_exsoon" hidden>
     <div class="card text-center">
 
-      <div style="position: absolute; top: 15px; right: 15px;">
+      <!-- <div style="position: absolute; top: 15px; right: 15px;">
         <i class="fa-solid fa-bell" style="font-size: 50px; color: #f4a100;"></i>
-      </div>
+      </div> -->
 
       <div class="card-body">
         <div class="row g-0">
           <div class="col-md-8 text-left">
-            <h2 class="card-title text-dark font-weight-bold f24" id="header_exsoon">แจ้งเตือนรายการใกล้หมดอายุ</h2>
+            <h2 class="card-title text-dark font-weight-bold f24" id="header_exsoon">แจ้งเตือนอุปกรณ์ใกล้หมดอายุ</h2>
             <div class="card-text"> <label style="font-size: 70px;color:#101828;line-height: 55px;" id="text_ExSoon">0</label>
-              <label class="f24" style="font-size: 28px;color:black;" class="label_item"> รายการ </label>
+              <label class="f24" style="font-size: 28px;color:black;" class="label_item"> อุปกรณ์ </label>
             </div>
           </div>
           <div class="col-md-12 text-left">
@@ -104,7 +104,7 @@
           <div class="col-md-8 text-left">
             <h2 class="card-title text-dark font-weight-bold f24" id="header_receive_stock">แจ้งเตือนรับอุปกรณ์เข้าคลังหลักห้องผ่าตัด</h2>
             <div class="card-text"> <label style="font-size: 70px;color:#101828;line-height: 55px;" id="text_receive_stock">0</label>
-              <label class="f24" style="font-size: 28px;color:black;" class="label_item"> รายการ </label>
+              <label class="f24" style="font-size: 28px;color:black;" class="label_item"> อุปกรณ์ </label>
             </div>
           </div>
           <div class="col-md-4 text-right">
@@ -150,7 +150,7 @@
           <div class="col-md-8 text-left">
             <h2 class="card-title text-dark font-weight-bold f24" id="header_damage">แจ้งเตือนการบันทึกอุปกรณ์ชำรุด</h2>
             <div class="card-text"> <label style="font-size: 70px;color:#101828;line-height: 55px;" id="text_damage">0</label>
-              <label class="f24" style="font-size: 28px;color:black;" class="label_item"> รายการ </label>
+              <label class="f24" style="font-size: 28px;color:black;" class="label_item"> อุปกรณ์ </label>
             </div>
           </div>
           <div class="col-md-12 text-left">
@@ -176,7 +176,7 @@
           <div class="col-md-8 text-left">
             <h2 class="card-title text-dark font-weight-bold f24" id="header_exsoon">แจ้งเตือนห้องผ่าตัดขอเบิกเพิ่ม</h2>
             <div class="card-text"> <label style="font-size: 70px;color:#101828;line-height: 55px;" id="text_ExSoon">0</label>
-              <label class="f24" style="font-size: 28px;color:black;" class="label_item"> รายการ </label>
+              <label class="f24" style="font-size: 28px;color:black;" class="label_item"> อุปกรณ์ </label>
             </div>
           </div>
           <div class="col-md-12 text-left">
@@ -197,9 +197,9 @@
       <div class="card-body">
         <div class="row g-0">
           <div class="col-md-8 text-left">
-            <h2 class="card-title text-dark font-weight-bold f24" id="header_exsoon">แจ้งเตือนอุปกรณ์ที่ไม่ใช้กับคนไข้</h2>
+            <h2 class="card-title text-dark font-weight-bold f24" id="header_exsoon">แจ้งเตือนอุปกรณ์ที่ไม่ใช้กับผู้ป่วย</h2>
             <div class="card-text"> <label style="font-size: 70px;color:#101828;line-height: 55px;" id="text_nouse">0</label>
-              <label class="f24" style="font-size: 28px;color:black;" class="label_item"> รายการ </label>
+              <label class="f24" style="font-size: 28px;color:black;" class="label_item"> อุปกรณ์ </label>
             </div>
           </div>
           <div class="col-md-4 text-right">
@@ -210,7 +210,7 @@
             </ul>
           </div>
           <div class="col-md-12 text-left">
-            <a href="pages/nouse.php" class="btn btn-primary" id="btn_nouse" style="font-size: 25px;background-color:#643695;"> <label class="mb-0" id="go_nouse">ไปยังหน้า อุปกรณ์ที่ไม่ใช้กับคนไข้<i class="fa-solid fa-arrow-right-long" style="font-size: 15px;margin-left: 15px;"></i> </label> </a>
+            <a href="pages/nouse.php" class="btn btn-primary" id="btn_nouse" style="font-size: 25px;background-color:#643695;"> <label class="mb-0" id="go_nouse">ไปยังหน้า อุปกรณ์ที่ไม่ใช้กับผู้ป่วย<i class="fa-solid fa-arrow-right-long" style="font-size: 15px;margin-left: 15px;"></i> </label> </a>
           </div>
         </div>
       </div>
@@ -224,7 +224,7 @@
           <div class="col-md-8 text-left">
             <h2 class="card-title text-dark font-weight-bold f24" id="header_borrow">แจ้งเตือนยืมของ</h2>
             <div class="card-text"> <label style="font-size: 70px;color:#101828;line-height: 55px;" id="text_borrow">0</label>
-              <label class="f24" style="color:black;" class="label_item"> รายการ </label>
+              <label class="f24" style="color:black;" class="label_item"> อุปกรณ์ </label>
             </div>
           </div>
           <div class="col-md-12 text-left">
@@ -242,7 +242,7 @@
           <div class="col-md-8 text-left">
             <h2 class="card-title text-dark font-weight-bold f24" id="">ติดตามอุปกรณ์</h2>
             <div class="card-text"> <label style="font-size: 70px;color:#101828;line-height: 55px;" id="text_oc">0</label>
-              <label class="f24" style="color:black;" class="label_item"> รายการ </label>
+              <label class="f24" style="color:black;" class="label_item"> อุปกรณ์ </label>
             </div>
           </div>
           <div class="col-md-12 text-left">
@@ -258,13 +258,13 @@
       <div class="card-body">
         <div class="row g-0">
           <div class="col-md-8 text-left">
-            <h2 class="card-title text-dark font-weight-bold f24" id="">แจ้งเตือนคนไข้</h2>
+            <h2 class="card-title text-dark font-weight-bold f24" id="">แจ้งเตือนผู้ป่วย</h2>
             <div class="card-text"> <label style="font-size: 70px;color:#101828;line-height: 55px;" id="text_hn">0</label>
               <label class="f24" style="color:black;" class="label_hn"> เอกสาร </label>
             </div>
           </div>
           <div class="col-md-12 text-left">
-            <a href="pages/hn_daily.php" class="btn btn-primary" id="btn_hn" style="font-size: 25px;background-color:#643695;"> <label class="mb-0">ไปยังหน้า แจ้งเตือนคนไข้<i class="fa-solid fa-arrow-right-long" style="font-size: 15px;margin-left: 15px;"></i> </label> </a>
+            <a href="pages/hn_daily.php" class="btn btn-primary" id="btn_hn" style="font-size: 25px;background-color:#643695;"> <label class="mb-0">ไปยังหน้า แจ้งเตือนผู้ป่วย<i class="fa-solid fa-arrow-right-long" style="font-size: 15px;margin-left: 15px;"></i> </label> </a>
           </div>
         </div>
       </div>

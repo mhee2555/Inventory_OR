@@ -25,7 +25,7 @@
                     <div class="col-md-12">
                         <div class="form-check form-check-inline  border rounded-lg " style="width: 100%;">
                             <input class="form-check-input" type="checkbox" name="" id="111" value="" style="width: 40px;height: 20px;">
-                            <label class="form-check-label" for="111" style="color:black;font-size: 25px;">ชื่อรายการ</label>
+                            <label class="form-check-label" for="111" style="color:black;font-size: 25px;">ชื่ออุปกรณ์</label>
                         </div>
                     </div>
                     <div class="col-md-12 mt-2">

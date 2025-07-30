@@ -43,7 +43,7 @@ class MYPDF extends TCPDF
             $this->Ln(10);
 
 
-              $this->Cell(0, 10,  "รายงานสรุปการใช้อุปกรณ์กับคนไข้", 0, 1, 'C');
+              $this->Cell(0, 10,  "รายงานสรุปการใช้อุปกรณ์กับผู้ป่วย", 0, 1, 'C');
             //   $this->Cell(0, 10,  $text_date, 0, 1, 'C');
 
 
@@ -226,7 +226,7 @@ $html = '<table cellspacing="0" cellpadding="2" border="1" >
 <th width="40 %" align="center">ชื่ออุปกรณ์</th>
 <th width="10 %"  align="center">สแกนจ่าย</th>
 <th width="10 %" align="center">สแกนคืน</th>
-<th width="10 %" align="center">ใช้กับคนไข้</th>
+<th width="10 %" align="center">ใช้กับผู้ป่วย</th>
 <th width="15 %" align="center">รวมค่าใช้จ่าย</th>
 </tr> </thead>';
 

@@ -299,14 +299,18 @@ function show_detail_item_request($conn,$db)
         $wherepermission = " AND item.warehouseID = $permission ";
     }
 
-    $query = "SELECT
+    $query="SELECT
+                * 
+            FROM
+                (
+                SELECT
                     item.itemcode,
                     item.itemcode2,
                     item.itemname AS Item_name,
                     itemtype.TyeName,
                     item.stock_min,
                     COUNT( itemstock.RowID ) AS cnt,
-                    ( SELECT COUNT( ID ) FROM itemstock_transaction_detail WHERE ItemCode = item.itemcode AND IsStatus = 1 ) AS cnt_pay,-- คำนวณ remain_balance
+                    ( SELECT COUNT( ID ) FROM itemstock_transaction_detail WHERE ItemCode = item.itemcode AND IsStatus = 1 ) AS cnt_pay,
                     COUNT( itemstock.RowID ) - ( SELECT COUNT( ID ) FROM itemstock_transaction_detail WHERE ItemCode = item.itemcode AND IsStatus = 1 ) AS remain_balance 
                 FROM
                     item
@@ -315,18 +319,29 @@ function show_detail_item_request($conn,$db)
                 WHERE
                     item.IsNormal = 1 
                     AND item.IsCancel = 0 
-                    AND ( item.itemcode LIKE '%$input_Search%'  OR item.itemname LIKE '%$input_Search%' )
+                    AND ( item.itemcode LIKE '%$input_Search%' OR item.itemname LIKE '%$input_Search%' ) 
                     $wherepermission
-                    $wheretype
+                    $wheretype 
                 GROUP BY
                     item.itemcode,
                     item.itemcode2,
                     item.itemname,
                     itemtype.TyeName,
                     item.stock_min 
-                ORDER BY COUNT( itemstock.RowID ) - ( SELECT COUNT( ID ) FROM itemstock_transaction_detail WHERE ItemCode = item.itemcode AND IsStatus = 1 ) <  item.stock_min DESC ";
+                ) AS result 
+            ORDER BY
+            CASE
+                    
+                    WHEN remain_balance < stock_min THEN
+                    1 ELSE 2 
+                END ASC,
+                remain_balance ASC ";
 
 
+
+
+    // echo $query;
+    // exit;
 
     $meQuery = $conn->prepare($query);
     $meQuery->execute();

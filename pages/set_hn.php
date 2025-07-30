@@ -36,13 +36,13 @@
     <div class=" col-md-12 col-lg-9  ">
 
         <div class="tab-button-group">
-            <button class="tab-button active" id="radio_set_hn">กรอกข้อมูลคนไข้</button>
-            <button class="tab-button" id="radio_history">ประวัติคนไข้</button>
+            <button class="tab-button active" id="radio_set_hn">กรอกข้อมูลผู้ป่วย</button>
+            <button class="tab-button" id="radio_history">ประวัติผู้ป่วย</button>
         </div>
 
         <!-- <div class="btn-group btn-group-toggle" role="group" aria-label="Basic example">
-            <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;border-color: lightgray;" id="radio_set_hn">กรอกข้อมูลคนไข้</button>
-            <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;border-color: lightgray;" id="radio_history">ประวัติคนไข้</button>
+            <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;border-color: lightgray;" id="radio_set_hn">กรอกข้อมูลผู้ป่วย</button>
+            <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;border-color: lightgray;" id="radio_history">ประวัติผู้ป่วย</button>
         </div> -->
     </div>
 </div>
@@ -59,7 +59,7 @@
 
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label style="color:black;font-weight: 600;">เลขประจำตัวคนไข้</label>
+                                    <label style="color:black;font-weight: 600;">เลขประจำตัวผู้ป่วย</label>
                                     <input type='text' class='form-control f18' id="input_Hn_pay_manual">
                                     <input type='text' class='form-control f18' id="input_Hn_ID" hidden>
                                 </div>
@@ -208,8 +208,8 @@
                     <table class="table table-hover " id="table_history">
                         <thead style="background-color: #cdd6ff;">
                             <tr>
-                                <th scope="col" class="text-center"  style="width: 10%;">ลำดับ</th>
-                                <th scope="col" class="text-center"  style="width: 15%;">เลขที่ประจำตัวคนไข้</th>
+                                <th scope="col" class="text-center"  style="width: 5%;">ลำดับ</th>
+                                <th scope="col" class="text-center"  style="width: 15%;">เลขที่ประจำตัวผู้ป่วย</th>
                                 <th scope="col" class="text-center"  style="width: 15%;">วัน/เวลารับบริการ</th>
                                 <th scope="col" class="text-center"  style="width: 15%;">แพทย์</th>
                                 <th scope="col" class="text-center"  style="width: 15%;">ห้องผ่าตัด</th>

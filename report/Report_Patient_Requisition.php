@@ -233,7 +233,7 @@ $count = 1;
 //                 itemstock.LastCabinetModify,
 //                 CASE
 //                     WHEN itemstock.HnCode IS NOT NULL THEN
-//                     'ถูกยิงใช้กับคนไข้' ELSE 'ไม่ถูกยิงใช้กับคนไข้'  END AS STATUS 
+//                     'ถูกยิงใช้กับผู้ป่วย' ELSE 'ไม่ถูกยิงใช้กับผู้ป่วย'  END AS STATUS 
 //                 FROM
 //                 itemstock
 //                 LEFT JOIN item ON itemstock.ItemCode = item.itemcode
@@ -259,7 +259,7 @@ $query = " SELECT
             CASE
                     
                     WHEN hncode.HnCode IS NOT NULL THEN
-                    'ถูกยิงใช้กับคนไข้' ELSE 'ไม่ถูกยิงใช้กับคนไข้' 
+                    'ถูกยิงใช้กับผู้ป่วย' ELSE 'ไม่ถูกยิงใช้กับผู้ป่วย' 
             END AS STATUS 
             FROM
                 log_cabinet
