@@ -652,25 +652,33 @@ function feeddata_detailUser($conn, $db)
 
 
     $query = " SELECT
-                    users.ID,
-                    users.EmpCode,
-                    employee.FirstName,
-                    employee.LastName,
-                    users.UserName,
-                    users.Password,
-                    users.IsCancel,
-                    users.DeptID ,
-                    users.permission,
-                    users.IsAdmin,
-                    users.IsFingerPrint1,
-                    users.IsFingerPrint2
+                    u.ID,
+                    u.EmpCode,
+                    e.FirstName,
+                    e.LastName,
+                    u.UserName,
+                    u.`Password`,
+                    u.IsCancel,
+                    u.DeptID,
+                CASE
+                        
+                        WHEN u.permission IS NULL THEN
+                        '' ELSE u.permission 
+                    END AS permission,
+                    u.IsAdmin,
+                    ( SELECT GROUP_CONCAT( cabinet_id ORDER BY cabinet_id SEPARATOR ',' ) FROM user_cabinet WHERE user_id = u.ID ) AS cabinet_ids 
                 FROM
-                    users
-                    INNER JOIN employee ON users.EmpCode = employee.EmpCode   ";
-
+                    users u
+                    INNER JOIN employee e ON u.EmpCode = e.EmpCode ";
+    // echo $query;
+    // exit;
     $meQuery = $conn->prepare($query);
     $meQuery->execute();
     while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+
+        if (!is_null($row['cabinet_ids']) && str_contains($row['cabinet_ids'], ',')) {
+            $row['cabinet_ids'] = 'button';
+        }
         $return[] = $row;
     }
     echo json_encode($return);

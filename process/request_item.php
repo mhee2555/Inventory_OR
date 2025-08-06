@@ -249,6 +249,7 @@ function show_detail_request_byDocNo($conn,$db)
     $return = array();
     $DepID = $_SESSION['DepID'];
     $txt_docno_request = $_POST['txt_docno_request'];
+    $input_search_request_rq = $_POST['input_search_request_rq'];
 
     $query = "SELECT
                 item.itemname ,
@@ -263,6 +264,7 @@ function show_detail_request_byDocNo($conn,$db)
                 INNER JOIN itemtype ON itemtype.ID = item.itemtypeID
             WHERE
                 request.DocNo = '$txt_docno_request' 
+                AND ( item.itemcode LIKE '%$input_search_request_rq%' OR item.itemname LIKE '%$input_search_request_rq%' ) 
             GROUP BY
                 item.itemname,
                 item.itemcode,

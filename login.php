@@ -10,7 +10,7 @@
     <meta name="author" content="">
 
     <title>เข้าสู่ระบบ</title>
-    <link rel="icon" type="image/x-icon" href="assets/img/icon_bangkok_hospital_dentistry.png">
+    <link rel="icon" type="image/x-icon" href="assets/img/logotop.png">
     <?php include_once('import/css_index.php'); ?>
 
 </head>

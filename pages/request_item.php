@@ -99,8 +99,16 @@
         </div>
         <div class="col-md-6">
 
+
             <input type="text" id="input_docnoRQ" hidden>
-            <div class="row" style="margin-top: 4.7rem !important;">
+            <div class="row">
+
+                <div class="col-md-4">
+                    <label style="color:black;font-weight: 600;">ชื่ออุปกรณ์</label>
+                    <input type="text" class="form-control  f18" id="input_search_request_rq" placeholder="พิมพ์ชื่อค้นหา หรือรหัสอุปกรณ์">
+                </div>
+
+
                 <div class="col-md-12 mt-2">
                     <table class="table table-hover " id="table_rq">
                         <thead c style="background-color: #cdd6ff;">
@@ -117,7 +125,7 @@
 
                 <div class="col-md-12 text-right mt-2">
                     <button class="btn f18" id="btn_clear_request">ล้างข้อมูล</button>
-                    <button class="btn f18" style="background-color: #643695;color:#fff;" id="btn_confirm_send_request">สร้างใบขอซื้อ</button>
+                    <button class="btn f18" style="background-color: #643695;color:#fff;" id="btn_confirm_send_request">สร้างใบขอเบิก</button>
                 </div>
 
             </div>

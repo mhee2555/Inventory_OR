@@ -37,7 +37,7 @@
 
 
 <div class="row mt-3">
-    <div class=" col-md-12 col-lg-9  ">
+    <div class=" col-md-12 col-lg-9">
 
         <div class="tab-button-group">
             <button class="tab-button active" id="radio_pay">จ่ายอุปกรณ์</button>
@@ -45,6 +45,7 @@
             <button class="tab-button" id="radio_return_pay">สแกนอุปกรณ์คืนคลัง</button>
             <button class="tab-button" id="radio_history_pay">ประวัติการจ่ายอุปกรณ์</button>
             <button class="tab-button" id="radio_hn_pay_block">ผู้ป่วยงดรับบริการ</button>
+            <button class="tab-button" id="radio_sell_deproom">ขายให้หน่วยงาน</button>
         </div>
 
 
@@ -574,36 +575,40 @@
                 <option value="1">ห้องผ่าตัด</option>
                 <option value="2">แพทย์</option>
                 <option value="3">หัตถการ</option>
+                <option value="4">อุปกรณ์</option>
             </select>
         </div>
 
 
         <!-- ห้องผ่าตัด -->
-        <div class="col-md-2" id="col_deproom_history">
+        <div class="col-md-3" id="col_deproom_history">
             <label class="font-weight-bold text-dark">ห้องผ่าตัด</label>
             <select class="form-control f18" id="select_deproom_history"></select>
         </div>
 
         <!-- แพทย์ -->
-        <div class="col-md-2" id="col_doctor_history">
+        <div class="col-md-3" id="col_doctor_history">
             <label class="font-weight-bold text-dark">แพทย์</label>
             <select class="form-control f18" id="select_doctor_history"></select>
         </div>
 
         <!-- หัตถการ -->
-        <div class="col-md-2" id="col_procedure_history">
+        <div class="col-md-3" id="col_procedure_history">
             <label class="font-weight-bold text-dark">หัตถการ</label>
             <select class="form-control f18" id="select_procedure_history"></select>
         </div>
 
-
+        <div class="col-md-3" id="col_item_history">
+            <label class="font-weight-bold text-dark">อุปกรณ์</label>
+            <select class="form-control f18" id="select_item_history"></select>
+        </div>
 
         <div class="col-md-3" id="col_hide">
 
         </div>
-        <div class="col-md-1" id="col_hide_2">
+        <!-- <div class="col-md-1" id="col_hide_2">
 
-        </div>
+        </div> -->
         <!-- ปุ่ม Excel -->
         <div class="col-md-1">
             <label class="font-weight-bold text-dark">Excel</label>
@@ -890,7 +895,7 @@
 
         </div>
 
-        
+
 
 
     </div>
@@ -929,6 +934,160 @@
 
 
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="sell_deproom">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-6">
+
+
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group ">
+                                <label style="color:black;font-weight: 600;">วันที่</label>
+
+                                <div class="position-relative">
+                                    <input type="text" class="form-control rounded pr-5 f18" placeholder="" id="select_date_sell" data-language='en' data-date-format='dd-mm-yyyy'>
+                                    <span class="input-icon">
+                                        <i class="fa-solid fa-calendar" style="color:black;"></i>
+                                    </span>
+                                </div>
+
+
+
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <div class="form-group ">
+                                <label style="color:black;font-weight: 600;">หน่วยงาน</label>
+                                <select class="form-control f18" autocomplete="off" id="select_deproom_sell"></select>
+                            </div>
+
+
+
+                        </div>
+                        <div class="col-md-12 mt-3">
+
+                            <div class="card">
+
+                                <div class="card-body">
+                                    <table class="table table-hover " id="table_deproom_sell">
+                                        <thead style="background-color: #cdd6ff;">
+                                            <tr>
+                                                <th scope="col" class="text-left" style="width:10%;">ลำดับ</th>
+                                                <th scope="col" class="text-center" style="width:80%;">หน่วยงาน</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+
+                            <div class="row">
+
+                                <div class="col-md-12 mt-2">
+                                    <div class="form-group ">
+                                        <label style="color:black;font-weight: 600;">หน่วยงาน</label>
+                                        <select class="form-control f18" autocomplete="off" id="select_department_sell_right"></select>
+                                    </div>
+                                </div>
+
+
+
+                                <div class="col-md-6 mt-2">
+                                    <div class="form-group ">
+                                        <label style="color:black;font-weight: 600;">วันที่รับบริการ</label>
+
+                                        <div class="position-relative">
+                                            <input type="text" class="form-control rounded pr-5 f18" placeholder="" id="input_date_service_sell" data-language='en' data-date-format='dd-mm-yyyy'>
+                                            <span class="input-icon">
+                                                <i class="fa-solid fa-calendar" style="color:black;"></i>
+                                            </span>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mt-2">
+                                    <div class="form-group ">
+                                        <label style="color:black;font-weight: 600;">เวลารับบริการ</label>
+                                        <input type="time" class="form-control datepicker-here f18" id="input_time_service_sell" data-language='en' data-date-format='dd-mm-yyyy'>
+                                    </div>
+                                </div>
+
+
+
+
+
+
+
+                                <div class="col-md-6 ">
+                                    <div class="form-group ">
+                                        <label style="color:black;font-weight: 600;">สแกนจ่าย</label>
+
+                                        <div class="position-relative">
+                                            <input type="text" class="form-control rounded pr-5 f18" placeholder="" id="input_pay_sell" autocomplete="off">
+                                            <span class="input-icon">
+                                                <i class="fas fa-qrcode" style="color:black;"></i>
+                                            </span>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group ">
+                                        <label style="color:red;font-weight: 600;">สแกนคืนคลังหลักห้องผ่าตัด</label>
+
+                                        <div class="position-relative">
+                                            <input type="text" class="form-control rounded pr-5 f18" placeholder="" id="input_returnpay_sell" autocomplete="off">
+                                            <span class="input-icon">
+                                                <i class="fas fa-qrcode" style="color: #d32f2f;"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+
+
+
+                            </div>
+
+
+                            <table class="table table-hover  mt-3" id="table_deproom_DocNo_pay_sell">
+                                <thead style="background-color: #cdd6ff;">
+                                    <tr>
+                                        <th scope="col" class="text-center" id="" style="width: 10%;">ลำดับ</th>
+                                        <th scope="col" class="text-center" id="" style="width: 70%;">อุปกรณ์</th>
+                                        <th scope="col" class="text-center" id="" style="width: 10%;background-color: #9AEAD8;">จำนวน</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -1215,6 +1374,38 @@
                     </tbody>
                 </table>
             </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="myModal_Detail_item_history" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 style="color:black;font-weight:bold;" id="header_item"></h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-hover table-sm" id="table_Detail_item_history">
+                    <thead class="thead-light">
+                        <tr>
+                            <th scope="col" class="text-center" id="">เลขประจำตัวผู้ป่วย</th>
+                            <th scope="col" class="text-center" id="">แพทย์</th>
+                            <th scope="col" class="text-center" id="">หัตถการ</th>
+                            <th scope="col" class="text-center" id="">ห้องผ่าตัด</th>
+                            <th scope="col" class="text-center" id="">วันที่รับบริการ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+
+
+            </div>
+
         </div>
     </div>
 </div>

@@ -98,14 +98,13 @@
     <div class="row mt-3">
         <div class="col-md-6">
             <div class="row">
-                <div class="col-md-4"></div>
 
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <label style="color:black;font-weight: 600;">ประเภทอุปกรณ์</label>
                     <select class="form-control f18" id="select_typeItem_tracking"></select>
                 </div>
 
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <label style="color:black;font-weight: 600;">ชื่ออุปกรณ์</label>
                     <input type="text" class="form-control  f18" id="input_search_tracking" placeholder="พิมพ์ชื่อค้นหา หรือรหัสอุปกรณ์">
                 </div>
@@ -130,11 +129,8 @@
         </div>
         <div class="col-md-6">
             <div class="row">
-                <div class="col-md-4"></div>
 
-                <div class="col-md-4"> </div>
-
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <label style="color:black;font-weight: 600;">Lot</label>
                     <input type="text" class="form-control  f18" id="input_search_lot_tracking" placeholder="ค้นหา Lot. อุปกรณ์">
                 </div>

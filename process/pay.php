@@ -80,6 +80,8 @@ if (!empty($_POST['FUNC_NAME'])) {
         save_edit_hn_block($conn, $db);
     } else if ($_POST['FUNC_NAME'] == 'showDetail_item_block') {
         showDetail_item_block($conn, $db);
+    } else if ($_POST['FUNC_NAME'] == 'showDetail_item_history') {
+        showDetail_item_history($conn, $db);
     }
 }
 
@@ -1176,6 +1178,104 @@ function show_detail_history_block($conn, $db)
 
 
         $return[] = $row;
+    }
+    echo json_encode($return);
+    unset($conn);
+    die;
+}
+
+
+function showDetail_item_history($conn, $db)
+{
+    $return = array();
+    $DepID = $_SESSION['DepID'];
+    $select_item_history = $_POST['select_item_history'];
+    $select_date_history_s = $_POST['select_date_history_s'];
+    $select_date_history_l = $_POST['select_date_history_l'];
+
+
+    $select_date_history_s = explode("-", $select_date_history_s);
+    $select_date_history_s = $select_date_history_s[2] . '-' . $select_date_history_s[1] . '-' . $select_date_history_s[0];
+
+    $select_date_history_l = explode("-", $select_date_history_l);
+    $select_date_history_l = $select_date_history_l[2] . '-' . $select_date_history_l[1] . '-' . $select_date_history_l[0];
+
+
+        $query = " SELECT
+                        deproom.DocNo,
+                        DATE_FORMAT(deproom.serviceDate, '%d-%m-%Y') AS serviceDate,
+                        DATE_FORMAT( deproom.serviceDate, '%H:%i' ) AS serviceTime,
+                        deproom.hn_record_id,
+                        doctor.Doctor_Name,
+                        IFNULL(`procedure`.Procedure_TH, '') AS Procedure_TH,                        
+                        departmentroom.departmentroomname,
+                        doctor.ID AS doctor_ID,
+                        `procedure`.ID AS procedure_ID,
+                        departmentroom.id AS deproom_ID,
+                        deproom.Remark,
+                        deproom.doctor ,
+                        deproom.`procedure`,
+                        deproom.number_box
+                    FROM
+                        deproom
+                    INNER JOIN
+                        deproomdetail ON deproom.DocNo = deproomdetail.DocNo
+                    INNER JOIN
+                        deproomdetailsub ON deproomdetailsub.Deproomdetail_RowID = deproomdetail.ID
+                    INNER JOIN
+                        doctor ON doctor.ID = deproom.doctor
+                    LEFT JOIN
+                        `procedure` ON deproom.procedure = `procedure`.ID
+                    INNER JOIN
+                        departmentroom ON deproom.Ref_departmentroomid = departmentroom.id
+                    LEFT JOIN users ON users.ID = deproom.userConfirm_pay
+                    WHERE
+                        DATE(deproom.ServiceDate) BETWEEN '$select_date_history_s' AND '$select_date_history_l'
+                        AND deproom.IsCancel = 0
+                        AND deproomdetail.ItemCode = '$select_item_history'
+                    GROUP BY deproom.DocNo
+                    ORDER BY deproom.ModifyDate DESC ";
+
+
+
+
+    $meQuery = $conn->prepare($query);
+    $meQuery->execute();
+    while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+
+        if (str_contains($row['procedure'], ',')) {
+            $row['Procedure_TH'] = 'button';
+        }
+        if (str_contains($row['doctor'], ',')) {
+            $row['Doctor_Name'] = 'button';
+        }
+
+        $return['item'][] = $row;
+        $DocNo = $row['DocNo'];
+
+
+        $query2 = " SELECT
+                        COUNT(itemstock.UsageCode) AS count_itemstock
+                    FROM
+                        deproom
+                        INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
+                        INNER JOIN deproomdetailsub ON deproomdetailsub.Deproomdetail_RowID = deproomdetail.ID
+                        INNER JOIN itemstock ON itemstock.RowID = deproomdetailsub.ItemStockID 
+                    WHERE
+                        DATE( deproom.ServiceDate ) BETWEEN '$select_date_history_s' AND '$select_date_history_l'
+                        AND deproom.IsCancel = 0 
+                        AND deproom.DocNo = '$DocNo' 
+                        AND deproomdetail.ItemCode = '$select_item_history' 
+                    ORDER BY
+                        deproom.ModifyDate DESC ";
+        $meQuery2 = $conn->prepare($query2);
+        $meQuery2->execute();
+        while ($row2 = $meQuery2->fetch(PDO::FETCH_ASSOC)) {
+            $return[$DocNo][] = $row2;
+        }
+
+
+
     }
     echo json_encode($return);
     unset($conn);

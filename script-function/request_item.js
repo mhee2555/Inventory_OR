@@ -2,6 +2,9 @@ var RqDocNo_x = "";
 var RtDocNo_x = "";
 
 $(function () {
+
+
+      
   $("#customSwitch1").change(function () {
     if ($(this).is(":checked")) {
       showdetail(RqDocNo_x, RtDocNo_x, 1);
@@ -67,6 +70,10 @@ $("#select_typeItem_request").change(function () {
 
 $("#input_search_request").on("keyup", function (e) {
   show_detail_item_request();
+});
+
+$("#input_search_request_rq").on("keyup", function (e) {
+  show_detail_request_byDocNo();
 });
 
 $("#btn_clear_request").click(function () {
@@ -315,6 +322,7 @@ function show_detail_request_byDocNo() {
     data: {
       FUNC_NAME: "show_detail_request_byDocNo",
       txt_docno_request: $("#input_docnoRQ").val(),
+      input_search_request_rq: $("#input_search_request_rq").val(),
     },
     success: function (result) {
       var _tr = "";

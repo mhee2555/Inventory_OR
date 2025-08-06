@@ -40,7 +40,7 @@ class MYPDF extends TCPDF
 
             $this->SetFont('db_helvethaica_x', 'b', 16);
 
-            $this->Ln(10);
+            $this->Ln(7);
 
 
               $this->Cell(0, 10,  "รายงานสรุปการใช้อุปกรณ์กับผู้ป่วย", 0, 1, 'C');
@@ -52,7 +52,7 @@ class MYPDF extends TCPDF
 
 
             $image_file = "images/logo1.png";
-            $this->Image($image_file, 10, 10, 15, 25, 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);
+            $this->Image($image_file, 7, 5, 15, 25, 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);
 
 
 
@@ -64,7 +64,7 @@ class MYPDF extends TCPDF
     // Page footer
     public function Footer()
     {
-        $this->SetY(-25);
+        $this->SetY(-15);
         // Arial italic 8
         $this->SetFont('db_helvethaica_x', 'i', 12);
         // Page number
@@ -94,7 +94,7 @@ $pdf->SetMargins(15, PDF_MARGIN_TOP, 15);
 $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
 $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
 // set auto page breaks
-$pdf->SetAutoPageBreak(TRUE, 27);
+$pdf->SetAutoPageBreak(TRUE, 15);
 // set image scale factor
 $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 // ------------------------------------------------------------------------------
@@ -105,7 +105,7 @@ $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 // add a page
 $pdf->AddPage('P', 'A4');
 $pdf->SetFont('db_helvethaica_x', 'B', 15);
-$pdf->Ln(15);
+$pdf->Ln(8);
 
 
 $DocNo = $_GET['DocNo'];
@@ -216,7 +216,7 @@ if ($checkloopDoctor == 'loop') {
 $pdf->Cell(130, 5,   "หมายเหตุ : " . $_Remark, 0, 1, 'L');
 
 
-$pdf->Ln(5);
+$pdf->Ln(3);
 
 $pdf->SetFont('db_helvethaica_x', 'B', 18);
 

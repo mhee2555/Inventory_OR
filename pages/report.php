@@ -54,8 +54,7 @@
                             <option value="7">รายงานสต๊อกคงเหลือในคลัง</option>
                             <option value="8">สรุปผู้ป่วยเข้ารับบริการ</option>
                             <option value="9">Operating Room Inventory Tracking</option>
-
-
+                            <option value="10">Utilization medical devices of use rate</option>
                         </select>
                     </div>
                     <div class="col-md-12 mt-3" id="row_typedate">
@@ -131,13 +130,23 @@
 
                     <div class="col-md-12 mt-3" id="row_day_9">
                         <label for="" style="font-weight: 600;color:black;" class="f18">วันที่</label>
-
                         <div class="row">
                             <div class="col-md-6">
                                 <input type="text" class="form-control f18" id="select_date1_9" data-language='en' data-date-format='dd-mm-yyyy'>
                             </div>
                         </div>
+                    </div>
 
+                    <div class="col-md-12 mt-3" id="row_day_10">
+                        <label for="" style="font-weight: 600;color:black;" class="f18">วันที่</label>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <input type="text" class="form-control f18" id="select_date1_10" data-language='en' data-date-format='dd-mm-yyyy'>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control f18" id="select_date2_10" data-language='en' data-date-format='dd-mm-yyyy'>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="col-md-12 mt-3" id="row_month">

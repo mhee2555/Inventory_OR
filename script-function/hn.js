@@ -774,6 +774,15 @@ $("#btn_excel_all").click(function () {
   );
 });
 
+$("#btn_excel_cost").click(function () {
+  option = "?DocNo=" + $("#btn_Tracking").data("DocNo");
+  window.open(
+    "report/phpexcel/Report_hn_cost.php" + option,
+    "_blank"
+  );
+});
+
+
 function showDetail_Doctor(doctor) {
   $("#myModal_Doctor").modal("toggle");
 

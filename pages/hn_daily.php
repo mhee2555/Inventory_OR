@@ -124,8 +124,8 @@
                         <th scope="col" class="text-center" id="">แพทย์</th>
                         <th scope="col" class="text-center" id="">ห้องผ่าตัด</th>
                         <th scope="col" class="text-center" id="">หัตถการ</th>
-                        <th scope="col" class="text-center" id="" style='width: 10%;'>#</th>
-                        <th scope="col" class="text-center" id="" style='width: 10%;'>#</th>
+                        <th scope="col" class="text-center" id="" style='width: 13%;'>#</th>
+                        <th scope="col" class="text-center" id="" style='width: 13%;'>#</th>
                     </tr>
                 </thead>
                 <tbody>

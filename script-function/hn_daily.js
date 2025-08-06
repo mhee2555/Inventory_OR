@@ -448,12 +448,12 @@ function show_detail_daily() {
             var txt = `<button class='btn f18' style='color:#fff;font-weight: bold;background-color:#643695;width: 100%;' onclick='update_create_request(${value.ID})'>รอดำเนินการ</button>`;
           }
           if (value.isStatus == "3") {
-            var txt = `<a  class='btn f18'  href="#" style='font-weight: bold;background-color:#1cc88a;color:#fff;' )'>ดำเนินการเรียบร้อย</a>`;
+            var txt = `<a  class='btn f18'  href="#" style='font-weight: bold;background-color:#1cc88a;color:#fff;width: 100%;' )'>ดำเนินการเรียบร้อย</a>`;
             x = "hidden";
           }
 
           if (value.isCancel == "1") {
-            var txt = `<a  class='btn f18'  href="#" style='font-weight: bold;background-color:#e74a3b;color:#fff;' )'>ยกเลิก</a>`;
+            var txt = `<a  class='btn f18'  href="#" style='font-weight: bold;background-color:#e74a3b;color:#fff;width: 100%;' )'>ยกเลิก</a>`;
             x = "hidden";
           }
 

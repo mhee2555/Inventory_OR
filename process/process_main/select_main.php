@@ -35,7 +35,31 @@ if (!empty($_POST['FUNC_NAME'])) {
         select_permission($conn);
     } else if ($_POST['FUNC_NAME'] == 'select_config_menu') {
         select_config_menu($conn);
+    } else if ($_POST['FUNC_NAME'] == 'select_department') {
+        select_department($conn);
     }
+}
+
+
+function select_department($conn)
+{
+    $return = array();
+
+
+    $query = " SELECT
+                    department.ID, 
+                    department.DepName
+                FROM
+                    department ";
+
+    $meQuery = $conn->prepare($query);
+    $meQuery->execute();
+    while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+        $return[] = $row;
+    }
+    echo json_encode($return);
+    unset($conn);
+    die;
 }
 
 function select_config_menu($conn)

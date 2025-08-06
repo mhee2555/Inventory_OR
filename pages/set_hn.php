@@ -142,11 +142,13 @@
                                 </div>
 
                                 <div class="col-md-2 text-right">
-                                    <button id="btn_clear_manual" class="btn btn-block" style=" color:black; border-color:gray;font-size: 18px;margin-top: 2.1rem !important;line-height: 25px;"><i class="fa-solid fa-repeat"></i> รีเซ็ตข้อมูล</button>
+                                    <label style="color:black;font-weight: 600;">&nbsp;</label>
+                                    <button id="btn_clear_manual" class="btn btn-block" style=" color:black; border-color:gray;font-size: 18px;line-height: 25px;"><i class="fa-solid fa-repeat"></i> รีเซ็ตข้อมูล</button>
                                 </div>
 
                                 <div class="col-md-2">
-                                    <button id="btn_save_hn_manual" class="btn  btn-block" style="color:#fff;background-color:#643695;font-size: 18px;margin-top: 2.1rem !important;line-height: 25px;">บันทึก</button>
+                                    <label style="color:black;font-weight: 600;">&nbsp;</label>
+                                    <button id="btn_save_hn_manual" class="btn  btn-block" style="color:#fff;background-color:#643695;font-size: 18px;line-height: 25px;">บันทึก</button>
                                 </div>
 
                             </div>

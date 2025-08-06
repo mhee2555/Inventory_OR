@@ -108,30 +108,31 @@ $dataArray = [];
 // if ($db == 1) {
 
 $query = " SELECT
-                    DATE_FORMAT( hncode.DocDate, '%d-%m-%Y' ) AS DocDate,
-                    hncode.HnCode,
-                    hncode.number_box,
-                    departmentroom.departmentroomname,
-                    ( SELECT GROUP_CONCAT( doctor.Doctor_Name SEPARATOR ' / ' ) AS Doctor_Name FROM doctor WHERE doctor.ID IN ( hncode.doctor ) ) AS Doctor_Name,
-                    ( SELECT GROUP_CONCAT( `procedure`.Procedure_TH SEPARATOR ' / ' ) AS Procedures FROM `procedure` WHERE `procedure`.ID IN ( hncode.`procedure` ) ) AS Procedures,
-                    itemtype.TyeName,
-                    itemstock.UsageCode,
-                    item.itemname 
-                FROM
-                    hncode
-                    LEFT JOIN departmentroom ON departmentroom.id = hncode.departmentroomid
-                    LEFT JOIN hncode_detail ON hncode.DocNo = hncode_detail.DocNo
-                    LEFT JOIN itemstock ON hncode_detail.ItemStockID = itemstock.RowID
-                    LEFT JOIN item ON itemstock.ItemCode = item.itemcode
-                    LEFT JOIN itemtype ON itemtype.ID = item.itemtypeID
-                    LEFT JOIN item AS item2 ON item2.ItemCode = hncode_detail.ItemCode 
-                WHERE
-                    DATE( hncode.DocDate ) BETWEEN '$select_date_history_s' AND '$select_date_history_l'
-                    AND hncode.IsStatus = 1 
-                    AND hncode.IsCancel = 0 
-                    AND hncode_detail.IsStatus != 99 
-                ORDER BY
-                    hncode.ID ASC  ";
+                DATE_FORMAT( hncode.DocDate, '%d-%m-%Y' ) AS DocDate,
+                hncode.HnCode,
+                hncode.`procedure`,
+                hncode.number_box,
+                departmentroom.departmentroomname,
+                ( SELECT GROUP_CONCAT( doctor.Doctor_Name SEPARATOR ' , ' ) AS Doctor_Name FROM doctor WHERE FIND_IN_SET( doctor.ID, hncode.doctor ) ) AS Doctor_Name,
+                ( SELECT GROUP_CONCAT( `procedure`.Procedure_TH SEPARATOR ' , ' ) AS Procedures FROM `procedure` WHERE FIND_IN_SET( `procedure`.ID, hncode.`procedure` ) ) AS Procedures,
+                itemtype.TyeName,
+                itemstock.UsageCode,
+                item.itemname 
+            FROM
+                hncode
+                LEFT JOIN departmentroom ON departmentroom.id = hncode.departmentroomid
+                LEFT JOIN hncode_detail ON hncode.DocNo = hncode_detail.DocNo
+                LEFT JOIN itemstock ON hncode_detail.ItemStockID = itemstock.RowID
+                LEFT JOIN item ON itemstock.ItemCode = item.itemcode
+                LEFT JOIN itemtype ON itemtype.ID = item.itemtypeID
+                LEFT JOIN item AS item2 ON item2.ItemCode = hncode_detail.ItemCode 
+            WHERE
+                DATE( hncode.DocDate ) BETWEEN '$select_date_history_s' AND '$select_date_history_l'
+                AND hncode.IsStatus = 1 
+                AND hncode.IsCancel = 0 
+                AND hncode_detail.IsStatus != 99 
+            ORDER BY
+                hncode.ID ASC   ";
 
 // } else {
 //     $query = " SELECT
