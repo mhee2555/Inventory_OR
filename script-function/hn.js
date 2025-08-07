@@ -3,6 +3,32 @@ var UserName = "";
 var Userid = "";
 
 $(function () {
+  $("#row_department").hide();
+
+  $("#radio_hn").click(function () {
+    $(".tab-button").removeClass("active");
+    $(this).addClass("active");
+
+    $("#row_hn").show();
+    $("#row_department").hide();
+
+    setTimeout(() => {
+      show_detail_hn();
+    }, 500);
+  });
+
+  $("#radio_department").click(function () {
+    $(".tab-button").removeClass("active");
+    $(this).addClass("active");
+
+    $("#row_hn").hide();
+    $("#row_department").show();
+
+    setTimeout(() => {
+      show_detail_department();
+    }, 500);
+  });
+
   var d = new Date();
   var month = d.getMonth() + 1;
   var day = d.getDate();
@@ -27,6 +53,19 @@ $(function () {
   $("#select_EDate").datepicker({
     onSelect: function (date) {
       show_detail_hn();
+    },
+  });
+
+  $("#select_SDate_department").val(output);
+  $("#select_SDate_department").datepicker({
+    onSelect: function (date) {
+      show_detail_department();
+    },
+  });
+  $("#select_EDate_department").val(output);
+  $("#select_EDate_department").datepicker({
+    onSelect: function (date) {
+      show_detail_department();
     },
   });
 
@@ -57,6 +96,211 @@ $("#a_usage").click(function () {
   $("#btn_input").text("รหัสอุปกรณ์");
   $("#input_type_search").val(2);
 });
+
+
+
+function show_detail_department() {
+  $.ajax({
+    url: "process/hn.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "show_detail_department",
+      select_SDate_department: $("#select_SDate_department").val(),
+      select_EDate_department: $("#select_EDate_department").val(),
+    },
+    success: function (result) {
+      $("#table_detail_department").DataTable().destroy();
+      var ObjData = JSON.parse(result);
+      console.log(ObjData);
+      var _tr = ``;
+      if (!$.isEmptyObject(ObjData)) {
+        $.each(ObjData, function (kay, value) {
+
+          _tr +=
+            `<tr class="color2" onclick='setActive_feeddata_sell_detail("${value.DocNo}","${value.his_IsStatus}")' id="tr_${value.DocNo}"> ` +
+            `<td class="text-center">${kay + 1}</td>` +
+            `<td class="text-center" >${value.serviceDate} ${value.serviceTime}</td>` +
+            `<td class="text-center" >${value.DepName}</td>` +
+            `<td class="text-center" >${value.DocNo}</td>` +
+            ` </tr>`;
+        });
+      } else {
+      }
+      $("#table_detail_department tbody").html(_tr);
+      $("#table_detail_department ").DataTable({
+        language: {
+          emptyTable: settext("dataTables_empty"),
+          paginate: {
+            next: settext("table_itemStock_next"),
+            previous: settext("table_itemStock_previous"),
+          },
+          info:
+            settext("dataTables_Showing") +
+            " _START_ " +
+            settext("dataTables_to") +
+            " _END_ " +
+            settext("dataTables_of") +
+            " _TOTAL_ " +
+            settext("dataTables_entries") +
+            " ",
+        },
+        columnDefs: [
+          {
+            width: "5%",
+            targets: 0,
+          },
+          {
+            width: "15%",
+            targets: 1,
+          },
+          {
+            width: "15%",
+            targets: 2,
+          },
+          {
+            width: "15%",
+            targets: 3,
+          }
+        ],
+        info: false,
+        scrollX: true,
+        scrollCollapse: false,
+        visible: false,
+        searching: false,
+        lengthChange: false,
+        autoWidth: false,
+        fixedHeader: false,
+        ordering: false,
+      });
+      $("th").removeClass("sorting_asc");
+      if (_tr == "") {
+        $(".dataTables_info").text(
+          settext("dataTables_Showing") +
+            " 0 " +
+            settext("dataTables_to") +
+            " 0 " +
+            settext("dataTables_of") +
+            " 0 " +
+            settext("dataTables_entries") +
+            ""
+        );
+      }
+    },
+  });
+}
+
+function setActive_feeddata_sell_detail(DocNo,his_IsStatus) {
+  $(".color2").css("background-color", "");
+  $("#tr_" + DocNo).css("background-color", "#FEE4E2");
+
+  $("#btn_send_pay_department").data("DocNo", DocNo);
+
+  // $("#btn_Tracking").attr("disabled", false);
+
+  if (his_IsStatus == "null") {
+    $("#btn_send_pay_department").attr("disabled", false);
+    $("#edit_his_department").attr("disabled", true);
+  } else {
+    if (his_IsStatus == "2") {
+      $("#edit_his_department").attr("disabled", false);
+    } else {
+      $("#edit_his_department").attr("disabled", true);
+    }
+
+    $("#btn_send_pay_department").attr("disabled", true);
+    $("#tr_" + DocNo).css("background-color", "lightgreen");
+  }
+
+  // alert(DocNo);
+  feeddata_sell_detail(DocNo);
+}
+
+function feeddata_sell_detail(DocNo) {
+  $.ajax({
+    url: "process/hn.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "feeddata_sell_detail",
+      DocNo: DocNo,
+    },
+    success: function (result) {
+      $("#table_detail_sub_department").DataTable().destroy();
+      var ObjData = JSON.parse(result);
+      var _tr = ``;
+      if (!$.isEmptyObject(ObjData)) {
+        $.each(ObjData, function (kay, value) {
+          var user_count = "";
+   
+          var label = `<label style='color:blue;cursor:pointer;' onclick='open_LotNo("${value.serielNo}","${value.lotNo}","${value.ExpireDate}")' >${value.UsageCode}</label>`;
+
+            _tr +=
+              `<tr id='tdDetail_${value.ID}'> ` +
+              `<td class="text-center">${kay + 1}</td>` +
+              `<td class="text-left">
+                  <label style='color: lightgray;max-width: 160px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;' title='${value.TyeName}'>${value.TyeName}</label>
+              </td>` +
+              `<td class="text-center" >${label}</td>` +
+              `<td class="text-left">${value.itemname}</td>` +
+              `<td class="text-center">1</td>` +
+              ` </tr>`;
+        });
+      }
+      $("#table_detail_sub_department tbody").html(_tr);
+      $("#table_detail_sub_department").DataTable({
+        language: {
+          emptyTable: settext("dataTables_empty"),
+          paginate: {
+            next: settext("table_itemStock_next"),
+            previous: settext("table_itemStock_previous"),
+          },
+          info:
+            settext("dataTables_Showing") +
+            " _START_ " +
+            settext("dataTables_to") +
+            " _END_ " +
+            settext("dataTables_of") +
+            " _TOTAL_ " +
+            settext("dataTables_entries") +
+            " ",
+        },
+        columnDefs: [
+          {
+            width: "3%",
+            targets: 0,
+          },
+          {
+            width: "10%",
+            targets: 1,
+          },
+          {
+            width: "20%",
+            targets: 2,
+          },
+          {
+            width: "27%",
+            targets: 3,
+          },
+          {
+            width: "5%",
+            targets: 4,
+          },
+        ],
+        info: false,
+        scrollX: false,
+        scrollCollapse: false,
+        visible: false,
+        searching: false,
+        lengthChange: false,
+        fixedHeader: false,
+        ordering: false,
+      });
+
+      $("th").removeClass("sorting_asc");
+    },
+  });
+}
+
+
 
 function show_detail_hn() {
   $.ajax({
@@ -216,16 +460,14 @@ function setActive_feeddata_hncode_detail(ID, DocNo, HnCode, his_IsStatus) {
     $("#btn_send_pay").attr("disabled", false);
     $("#edit_his").attr("disabled", true);
   } else {
-    if(his_IsStatus == '2'){
+    if (his_IsStatus == "2") {
       $("#edit_his").attr("disabled", false);
-    }else{
+    } else {
       $("#edit_his").attr("disabled", true);
     }
 
     $("#btn_send_pay").attr("disabled", true);
     $("#tr_" + ID).css("background-color", "lightgreen");
-
-
   }
 
   // alert(DocNo);
@@ -674,6 +916,52 @@ $("#btn_send_his").click(function () {
 });
 // ========================================================================================HIS
 
+$("#btn_send_pay_department").click(function () {
+  Swal.fire({
+    title: "ยืนยัน",
+    text: "ยืนยัน! การส่งค่าใช้จ่าย(HIS)  ?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "ยืนยัน",
+    cancelButtonText: "ยกเลิก",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      $.ajax({
+        url: "process/hn.php",
+        type: "POST",
+        data: {
+          FUNC_NAME: "onHIS_sell",
+          DocNo: $("#btn_send_pay_department").data("DocNo"),
+        },
+        success: function (result) {
+          var link = "pages/hn_daily.php";
+          $.get(link, function (res) {
+            $(".nav-item").removeClass("active");
+            $(".nav-item").css("background-color", "");
+
+            $("#ic_search_hndata").attr(
+              "src",
+              "assets/img_project/2_icon/ic_search_hndata.png"
+            );
+            $("#menu9").css("color", "#667085");
+
+            $("#conMain").html(res);
+            history.pushState({}, "Results for `Cats`", "index.php?s=hn_daily");
+            document.title = "hn_daily";
+
+            loadScript("script-function/hn_daily.js");
+            loadScript("assets/lang/hn_daily.js");
+          });
+
+          // feeddata_waitReturn();
+        },
+      });
+    }
+  });
+});
+
 $("#btn_send_pay").click(function () {
   Swal.fire({
     title: "ยืนยัน",
@@ -776,12 +1064,8 @@ $("#btn_excel_all").click(function () {
 
 $("#btn_excel_cost").click(function () {
   option = "?DocNo=" + $("#btn_Tracking").data("DocNo");
-  window.open(
-    "report/phpexcel/Report_hn_cost.php" + option,
-    "_blank"
-  );
+  window.open("report/phpexcel/Report_hn_cost.php" + option, "_blank");
 });
-
 
 function showDetail_Doctor(doctor) {
   $("#myModal_Doctor").modal("toggle");

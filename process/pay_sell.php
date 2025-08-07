@@ -11,7 +11,161 @@ if (!empty($_POST['FUNC_NAME'])) {
         oncheck_sell($conn, $db);
     } else     if ($_POST['FUNC_NAME'] == 'show_detail_item_sell') {
         show_detail_item_sell($conn, $db);
+    } else     if ($_POST['FUNC_NAME'] == 'show_detail_department') {
+        show_detail_department($conn, $db);
+    } else     if ($_POST['FUNC_NAME'] == 'oncheck_Returnsell') {
+        oncheck_Returnsell($conn, $db);
     }
+}
+
+function oncheck_Returnsell($conn, $db)
+{
+    $return = array();
+    $input_returnpay_sell = $_POST['input_returnpay_sell'];
+    $DocNo_pay_sell = isset($_POST['DocNo_pay_sell']) ? $_POST['DocNo_pay_sell'] : '';
+    $Userid = $_SESSION['Userid'];
+    $DepID = $_SESSION['DepID'];
+    $input_date_service_sell = $_POST['input_date_service_sell'];
+    $input_time_service_sell = $_POST['input_time_service_sell'];
+    $select_department_sell_right = $_POST['select_department_sell_right'];
+
+
+
+    $input_date_service_sell = explode("-", $input_date_service_sell);
+    $input_date_service_sell = $input_date_service_sell[2] . '-' . $input_date_service_sell[1] . '-' . $input_date_service_sell[0];
+
+    $count_itemstock = 0;
+
+    $query_1 = " SELECT
+                    itemstock.ItemCode,
+                    itemstock.Isdeproom,
+                    itemstock.departmentroomid ,
+                    itemstock.RowID 
+                FROM
+                    itemstock
+                WHERE  itemstock.UsageCode = '$input_returnpay_sell' ";
+    $meQuery_1 = $conn->prepare($query_1);
+    $meQuery_1->execute();
+    while ($row_1 = $meQuery_1->fetch(PDO::FETCH_ASSOC)) {
+
+        $count_itemstock = 1;
+
+        $_ItemCode = $row_1['ItemCode'];
+        $_Isdeproom =  $row_1['Isdeproom'];
+        $_departmentroomid =  $row_1['departmentroomid'];
+        $_RowID =  $row_1['RowID'];
+
+        $DocNo_old = "";
+        $query_2 = "SELECT
+                    sell_department_detail.ID,
+                    sell_department_detail.itemCode,
+                    sell_department_detail.ItemStockID,
+                    sell_department_detail.DocNo 
+                FROM
+                    sell_department
+                    INNER JOIN sell_department_detail ON sell_department_detail.DocNo = sell_department.DocNo 
+                WHERE
+                    sell_department_detail.ItemCode = '$_ItemCode' 
+                    AND sell_department_detail.ItemStockID = '$_RowID'
+                    AND sell_department_detail.DocNo = '$DocNo_pay_sell' ";
+
+        $meQuery_2 = $conn->prepare($query_2);
+        $meQuery_2->execute();
+        while ($row_2 = $meQuery_2->fetch(PDO::FETCH_ASSOC)) {
+            $DocNo_old =  $row_2['DocNo'];
+            $ID_old =  $row_2['ID'];
+
+
+            $delete1 = "DELETE FROM sell_department_detail WHERE sell_department_detail.ID ='$ID_old' ";
+            $meQuery_d1 = $conn->prepare($delete1);
+            $meQuery_d1->execute();
+
+            $queryT = "DELETE FROM itemstock_transaction_detail  WHERE ItemStockID = '$_RowID' 
+                    AND ItemCode = '$_ItemCode' 
+                    AND departmentroomid = '$select_department_sell_right' 
+                    AND  IsStatus = '1'
+                    AND DATE(CreateDate) = '$input_date_service_sell' LIMIT 1 ";
+
+
+            $meQueryT = $conn->prepare($queryT);
+            $meQueryT->execute();
+        }
+
+
+        // =======================================================================================================================================
+
+
+    }
+
+
+    // =======================================================================================================================================
+
+
+    if ($count_itemstock == 0 || $count_itemstock == 2) {
+        echo json_encode($count_itemstock);
+        unset($conn);
+        die;
+    } else {
+        echo json_encode($return);
+        unset($conn);
+        die;
+    }
+}
+
+function show_detail_department($conn, $db)
+{
+    $return = array();
+    $select_deproom_sell = $_POST['select_deproom_sell'];
+    $select_date_sell = $_POST['select_date_sell'];
+
+    $select_date_sell = explode("-", $select_date_sell);
+    $select_date_sell = $select_date_sell[2] . '-' . $select_date_sell[1] . '-' . $select_date_sell[0];
+
+    $where = "";
+    if ($select_deproom_sell != '') {
+        $where = " AND sell_department.departmentID = '$select_deproom_sell'  ";
+    }
+
+    $query = "SELECT
+                    sell_department.departmentID,
+                    department.DepName 
+                FROM
+                    sell_department
+                    INNER JOIN department ON department.ID = sell_department.departmentID 
+                WHERE
+                    DATE(sell_department.serviceDate) = '$select_date_sell' 
+                    $where
+                GROUP BY
+                    department.DepName  ";
+
+    $meQuery = $conn->prepare($query);
+    $meQuery->execute();
+    while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+        $return['department'][] = $row;
+        $_departmentID = $row['departmentID'];
+
+        $query2 = "SELECT
+                    sell_department.DocNo,
+                    DATE(sell_department.ServiceDate) AS ServiceDate ,
+                    TIME(sell_department.ServiceDate) AS ServiceTime
+
+                FROM
+                    sell_department
+                    INNER JOIN department ON department.ID = sell_department.departmentID 
+                WHERE
+                    DATE(sell_department.serviceDate) = '$select_date_sell' 
+                    AND sell_department.departmentID = '$_departmentID'
+                GROUP BY
+                    department.DepName  ";
+        $meQuery_sub = $conn->prepare($query2);
+        $meQuery_sub->execute();
+        while ($row_sub = $meQuery_sub->fetch(PDO::FETCH_ASSOC)) {
+            $return[$_departmentID][] = $row_sub;
+        }
+    }
+    echo json_encode($return);
+    unset($conn);
+    die;
 }
 
 function show_detail_item_sell($conn, $db)
@@ -34,7 +188,7 @@ function show_detail_item_sell($conn, $db)
                     INNER JOIN sell_department_detail ON sell_department_detail.DocNo = sell_department.DocNo
                     LEFT JOIN item ON item.itemcode = sell_department_detail.itemCode 
                 WHERE
-                    sell_department_detail.DocNo = 'SD2508-00001' 
+                    sell_department_detail.DocNo = '$DocNo' 
                     AND sell_department_detail.ItemStockID IS NOT NULL 
                 GROUP BY
                     sell_department_detail.itemCode,
@@ -85,21 +239,21 @@ function oncheck_sell($conn, $db)
 
 
     $query_1 = "        SELECT
-                                    itemstock.ItemCode,
-                                    itemstock.Isdeproom,
-                                    itemstock.RowID ,
-                                    itemstock.UsageCode,
-                                    itemstock.departmentroomid ,
-                                    CASE
-                                            WHEN DATE(itemstock.ExpireDate) <= DATE(NOW()) THEN 'exp'
-                                            ELSE 'no_exp'
-                                        END AS check_exp
-                                FROM
-                                    itemstock 
-                                INNER JOIN item ON itemstock.ItemCode = item.itemcode 
-                                WHERE
-                                        itemstock.UsageCode = '$input_pay_sell' 
-                                        $wherepermission ";
+                            itemstock.ItemCode,
+                            itemstock.Isdeproom,
+                            itemstock.RowID ,
+                            itemstock.UsageCode,
+                            itemstock.departmentroomid ,
+                            CASE
+                                    WHEN DATE(itemstock.ExpireDate) <= DATE(NOW()) THEN 'exp'
+                                    ELSE 'no_exp'
+                                END AS check_exp
+                        FROM
+                            itemstock 
+                        INNER JOIN item ON itemstock.ItemCode = item.itemcode 
+                        WHERE
+                                itemstock.UsageCode = '$input_pay_sell' 
+                                $wherepermission ";
 
     // echo $query_1;
     // exit;
@@ -347,7 +501,7 @@ function oncheck_sell($conn, $db)
             // =======================================================================================================================================
             $query = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty )
                         VALUES
-                        ( $_RowID, '$_ItemCode','$input_date_service_sell$input_time_service_sell','$select_department_sell_right', $Userid,9,1 ) ";
+                        ( $_RowID, '$_ItemCode','$input_date_service_sell $input_time_service_sell' ,'$select_department_sell_right', $Userid,9,1 ) ";
             $meQuery = $conn->prepare($query);
             $meQuery->execute();
             // =======================================================================================================================================

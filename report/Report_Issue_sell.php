@@ -71,7 +71,7 @@ class MYPDF extends TCPDF
 
 
 
-            $this->Cell(0, 10,  " ใบสรุปการจ่ายอุปกรณ์ให้ผู้ป่วย ", 0, 1, 'C');
+            $this->Cell(0, 10,  " ใบขายอุปกรณ์ให้หน่วยงาน ", 0, 1, 'C');
             //   $this->Cell(0, 10,  $text_date, 0, 1, 'C');
 
 
@@ -100,7 +100,7 @@ class MYPDF extends TCPDF
                 'module_height' => 1 // height of a single module in points
             );
             // $url = 'http://10.11.9.54/Inventory_OR/pages/confirm_pay.php?doc=' . urlencode($DocNo); // หรือ link อะไรก็ได้
-            $url = 'http://192.168.2.101:8080/Inventory_OR/pages/confirm_pay.php?doc=' . urlencode($DocNo) .'&remark=issue'; // หรือ link อะไรก็ได้
+            $url = 'http://192.168.2.101:8080/Inventory_OR/pages/confirm_pay.php?doc=' . urlencode($DocNo) .'&remark=sell'; // หรือ link อะไรก็ได้
 
 
             $this->write2DBarcode($url, 'QRCODE,L', $x, $y, 80, 30, $style, 'N');
@@ -174,187 +174,73 @@ $DocNo = $_GET['DocNo'];
 $checkloopDoctor  = "";
 $_procedure = "";
 $query = "SELECT
-            CONCAT(employee1.FirstName, ' ', employee1.LastName) AS name_1,
-            CONCAT(employee2.FirstName, ' ', employee2.LastName) AS name_2,
-            DATE_FORMAT(deproom.serviceDate, '%d/%m/%Y') AS serviceDate,
-            TIME(deproom.serviceDate) AS serviceTime,
-            deproom.hn_record_id,
-            departmentroom.departmentroomname,
-            deproom.`procedure`,
-            deproom.doctor,
-            doctor.Doctor_Name,
-            doctor.Doctor_Code ,
-            deproom.number_box  ,
-            deproom.Remark 
+                sell_department.DocNo,
+                DATE_FORMAT(sell_department.ServiceDate, '%d-%m-%Y') AS serviceDate,
+                DATE_FORMAT(sell_department.ServiceDate, '%H:%i') AS serviceTime,
+                department.DepName
             FROM
-            deproom
-            LEFT JOIN users AS user1 ON deproom.UserCode = user1.ID
-            LEFT JOIN users AS user2 ON deproom.UserPay = user2.ID
-            LEFT JOIN employee AS employee1 ON user1.EmpCode = employee1.EmpCode
-            LEFT JOIN employee AS employee2 ON user2.EmpCode = employee2.EmpCode
-            LEFT JOIN departmentroom ON deproom.Ref_departmentroomid = departmentroom.id
-            LEFT JOIN doctor ON deproom.doctor = doctor.ID 
+                sell_department
+                INNER JOIN department ON department.ID = sell_department.departmentID 
             WHERE
-            deproom.DocNo = '$DocNo' ";
+                sell_department.DocNo = '$DocNo'
+            GROUP BY
+                department.DepName 
+             ";
 
 
 $meQuery = $conn->prepare($query);
 $meQuery->execute();
 while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
-    $_name1 = $row['name_1'];
-    $_name2 = $row['name_2'];
+    $DepName = $row['DepName'];
     $_serviceDate = $row['serviceDate'];
-    $_hn_record_id = $row['hn_record_id'];
-    $_procedure = $row['procedure'];
-    $_doctor = $row['doctor'];
     $_serviceTime = $row['serviceTime'];
-    $_departmentroomname = $row['departmentroomname'];
-    $number_box = $row['number_box'];
-    $Remark = $row['Remark'];
-
-    $_Doctor_Name = $row['Doctor_Name'];
-    $_Doctor_Code = $row['Doctor_Code'];
-
-    if ($_hn_record_id == '') {
-        $_hn_record_id = $number_box;
-    }
-
-    if (str_contains($row['doctor'], ',')) {
-        $checkloopDoctor = 'loop';
-    }
 }
 
 
-$select = " SELECT GROUP_CONCAT(Procedure_TH SEPARATOR ', ') AS procedure_ids FROM `procedure` WHERE `procedure`.ID IN( $_procedure )  ";
-$meQuery_select = $conn->prepare($select);
-$meQuery_select->execute();
-while ($row_select = $meQuery_select->fetch(PDO::FETCH_ASSOC)) {
-    $_procedure_ids = $row_select['procedure_ids'];
-}
 
+$pdf->Cell(60, 5,  '', 0, 1, 'L');
+$pdf->Cell(60, 5,  '', 0, 1, 'L');
 
-$pdf->Cell(60, 5,  "เลข HN Code : " . $_hn_record_id, 0, 0, 'L');
-$pdf->Cell(50, 5,  "ชื่อ : - ", 0, 1, 'C');
-
+$pdf->Cell(60, 5,  "แผนก : " . $DepName, 0, 1, 'L');
 $pdf->Cell(130, 5,  "วันที่เข้ารับบริการ : " . $_serviceDate, 0, 1, 'L');
 $pdf->Cell(130, 5,  "เวลาเข้ารับบริการ : " . $_serviceTime, 0, 1, 'L');
 
 
-$pdf->SetFillColor(255, 255, 255);
-$pdf->MultiCell(180, 5, "Procedure : " . $_procedure_ids, 0, 'L', 0, 1);
 
-
-$pdf->Cell(130, 5,  "หมายเหตุ : " . $Remark, 0, 1, 'L');
-
-// $pdf->Cell(130, 5,  "หัตถการ : " . $_procedure_ids, 0, 1, 'L');
-
-$pdf->Cell(130, 5,  "แพทย์", 0, 1, 'L');
-
-if ($checkloopDoctor == 'loop') {
-
-    $_doctor = explode(",", $_doctor);
-
-    foreach ($_doctor as $key => $value) {
-
-        $query_D = "SELECT
-                    doctor.ID,
-                    doctor.Doctor_Name ,
-                    doctor.Doctor_Code 
-                FROM
-                    doctor
-                WHERE doctor.ID = $value
-                    
-                ORDER BY Doctor_Name ASC  ";
-
-
-        $meQuery_D = $conn->prepare($query_D);
-        $meQuery_D->execute();
-        while ($row_D = $meQuery_D->fetch(PDO::FETCH_ASSOC)) {
-            $_Doctor_Name = $row_D['Doctor_Name'];
-            $_Doctor_Code = $row_D['Doctor_Code'];
-        }
-
-
-        $pdf->Cell(50, 5, ($key + 1) . ". " . $_Doctor_Name, 0, 1, 'L');
-    }
-} else {
-    $pdf->Cell(50, 5,  "1. " . $_Doctor_Name, 0, 1, 'L');
-}
-
-
-$pdf->Ln(5);
+$pdf->Ln(10);
 
 $pdf->SetFont('db_helvethaica_x', 'B', 18);
 
 $html = '<table cellspacing="0" cellpadding="1" border="1" >
 <thead><tr style="font-size:18px;color:#fff;background-color:#663399;">
 <th width="12 %" align="center">Code</th>
-<th width="30 %" align="center">BarCode</th>
-<th width="50 %"  align="center">Name</th>
+<th width="80 %"  align="center">Name</th>
 <th width="10 %" align="center">Qty</th>
 </tr> </thead>';
 
 
-// $type_date = $_GET['type_date'];
-// $date1 = $_GET['date1'];
-// $date2 = $_GET['date2'];
-// $month1 = $_GET['month1'];
-// $month2 = $_GET['month2'];
-// $checkday = $_GET['checkday'];
-// $checkmonth = $_GET['checkmonth'];
 
-
-// if($type_date == 1){
-
-//     if($checkday == 1){
-//         $date1 = explode("-", $date1);
-//         $date1 = $date1[2] . '-' . $date1[1] . '-' . $date1[0];
-
-//         $where_date = "WHERE DATE(itemstock.LastCabinetModify) = '$date1'  ";
-//     }else{
-//         $date1 = explode("-", $date1);
-//         $date1 = $date1[2] . '-' . $date1[1] . '-' . $date1[0];
-//         $date2 = explode("-", $date2);
-//         $date2 = $date2[2] . '-' . $date2[1] . '-' . $date2[0];
-
-//         $where_date = "WHERE DATE(itemstock.LastCabinetModify) BETWEEN '$date1' 	AND '$date2' ";
-
-//     }
-// }
-// if($type_date == 2){
-
-//     if($checkmonth == 1){
-//     }else{
-//     }
-// }
 
 $count = 1;
-$query = "SELECT
-            item.itemname,
-            item.itemcode2,
-            deproomdetail.ID,
-            SUM(deproomdetail.Qty) AS cnt,
-            (SELECT COUNT(deproomdetailsub.ID) FROM deproomdetailsub WHERE deproomdetailsub.Deproomdetail_RowID = deproomdetail.ID) AS cnt_pay,
-            itemtype.TyeName
-            FROM
-            deproom
-            INNER JOIN
-            deproomdetail ON deproom.DocNo = deproomdetail.DocNo
-            INNER JOIN
-            item ON deproomdetail.ItemCode = item.itemcode
-            INNER JOIN
-            itemtype ON item.itemtypeID = itemtype.ID
-            WHERE
-            deproom.DocNo = '$DocNo'
-            AND deproom.IsCancel = 0
-            AND deproomdetail.IsCancel = 0
-            GROUP BY
-            item.itemname,
-            item.itemcode2,
-            deproomdetail.ID,
-            itemtype.TyeName
-            ORDER BY
-            item.itemname ASC  ";
+    $query = " SELECT
+                    sell_department_detail.ItemStockID,
+                    sell_department_detail.itemCode,
+                    item.itemcode2,
+                    item.itemname,
+                    item.warehouseID,
+                    COUNT( sell_department_detail.ItemStockID ) AS item_count 
+                FROM
+                    sell_department
+                    INNER JOIN sell_department_detail ON sell_department_detail.DocNo = sell_department.DocNo
+                    LEFT JOIN item ON item.itemcode = sell_department_detail.itemCode 
+                WHERE
+                    sell_department_detail.DocNo = '$DocNo' 
+                    AND sell_department_detail.ItemStockID IS NOT NULL 
+                GROUP BY
+                    sell_department_detail.itemCode,
+                    item.itemname 
+                ORDER BY
+                    item_count DESC  ";
 
 $meQuery1 = $conn->prepare($query);
 $meQuery1->execute();
@@ -362,64 +248,12 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
 
     $pdf->SetFont('db_helvethaica_x', 'B', 18);
 
-    $style = array(
-        'position' => '',
-        'align' => 'S',
-        'stretch' => false,
-        'fitwidth' => false,
-        'cellfitalign' => '',
-        'border' => false,
-        'hpadding' => 0,
-        'vpadding' => 0,
-        'fgcolor' => array(0, 0, 0),
-        'bgcolor' => false,
-        'text' => true,
-        'font' => 'helvetica',
-        'fontsize' => 4,
-        'stretchtext' => 4
-    );
-
-    // $params = $pdf->serializeTCPDFtagParameters(array(
-    //     $Result_Detail['itemcode'], 'C39', '', '', 53, 9, 0.4, $style, 'N'  // เปลี่ยนจาก 8 เป็น 12
-    // ));
-    // $itemcode_upper = strtoupper($Result_Detail['itemcode2']);
-
-    // $itemcode = strtoupper(preg_replace('/[^A-Z0-9 \-.\$\/\+\%]/', '', $Result_Detail['itemcode2']));
-
-    $params = $pdf->serializeTCPDFtagParameters(array(
-        $Result_Detail['itemcode2'],
-        'C128',
-        '',
-        '',
-        50,
-        10,
-        0.4,
-        array(
-            'position' => 'S',
-            'border' => false,
-            'padding' => 0,
-            'fgcolor' => array(0, 0, 0),
-            'bgcolor' => array(255, 255, 255),
-            'text' => true,
-            'font' => 'thsarabunnew',  // ถ้าใช้ข้อความภาษาไทยประกอบ
-            'fontsize' => 10,
-            'stretchtext' => 1
-        ),
-        'N'
-    ));
-
-    // $params = $pdf->serializeTCPDFtagParameters(array($itemcode, 'C128', '', '', 50, 10, 0.4, array('position' => 'S', 'border' => false, 'padding' => 0, 'fgcolor' => array(0, 0, 0), 'bgcolor' => array(255, 255, 255), 'text' => true, 'font' => 'helvetica', 'fontsize' => 8, 'stretchtext' => 1), 'N'));
-
-    if ($Result_Detail['cnt_pay'] > 0) {
         $html .= '<tr nobr="true" style="font-size:18px;height:30px;">';
         $html .=   '<td width="12 %" align="center" style="line-height:40px;vertical-align: middle;"> ' . $Result_Detail['itemcode2'] . '</td>';
-        $html .=   '<td width="30 %" align="center" style="vertical-align: bottom; padding: 0px;"><tcpdf method="write1DBarcode" params="' . $params . '" /></td>';
-        // $html .=   '<td width="36 %" align="center"> ' . $Result_Detail['itemcode'] . '</td>';
-        $html .=   '<td width="50 %" align="left"  style="line-height:40px;vertical-align: middle;"> ' . $Result_Detail['itemname'] . '</td>';
-        $html .=   '<td width="10 %" align="center" style="line-height:40px;vertical-align: middle;">' . $Result_Detail['cnt_pay'] . '</td>';
+        $html .=   '<td width="80 %" align="left"  style="line-height:40px;vertical-align: middle;"> ' . $Result_Detail['itemname'] . '</td>';
+        $html .=   '<td width="10 %" align="center" style="line-height:40px;vertical-align: middle;">' . $Result_Detail['item_count'] . '</td>';
         $html .=  '</tr>';
         $count++;
-    }
 }
 
 

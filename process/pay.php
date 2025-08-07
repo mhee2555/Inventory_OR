@@ -957,107 +957,144 @@ function cancel_item_byDocNo($conn, $db)
 {
     $return = array();
     $txt_docno_request = $_POST['txt_docno_request'];
+    $Remark = $_POST['Remark'];
     $Userid = $_SESSION['Userid'];
 
+    if ($Remark == 'sell') {
+        $sql1 = " UPDATE sell_department SET IsCancel = 1 , ModifyDate = NOW()  WHERE DocNo = '$txt_docno_request' ";
+        $meQuery1 = $conn->prepare($sql1);
+        $meQuery1->execute();
 
-    $insert_log = "INSERT INTO log_activity_users (itemCode, qty, isStatus, DocNo, userID, createAt) 
+
+
+        $query = "DELETE FROM itemstock_transaction_detail  WHERE ItemStockID IN (   SELECT
+                                                                sell_department_detail.ItemStockID 
+                                                            FROM
+                                                                sell_department_detail
+                                                            WHERE sell_department_detail.DocNo = '$txt_docno_request'  )
+        AND departmentroomid = (SELECT departmentID FROM sell_department WHERE sell_department.DocNo = '$txt_docno_request'  ) 
+        AND  IsStatus = '9'
+        AND DATE(CreateDate) = (  SELECT
+                                        DATE( sell_department.serviceDate ) 
+                                    FROM
+                                        sell_department
+                                    WHERE
+                                        sell_department.DocNo = '$txt_docno_request'  ) ";
+
+        $meQuery = $conn->prepare($query);
+        $meQuery->execute();
+
+
+
+        $sql3 = "DELETE sell_department_detail
+                FROM sell_department_detail
+            WHERE sell_department_detail.DocNo = '$txt_docno_request' ";
+
+        $meQuery3 = $conn->prepare($sql3);
+        $meQuery3->execute();
+        
+    } else {
+        $insert_log = "INSERT INTO log_activity_users (itemCode, qty, isStatus, DocNo, userID, createAt) 
                         VALUES ('', :qty, :isStatus, :DocNo, :Userid, NOW())";
 
-    $meQuery_log = $conn->prepare($insert_log);
+        $meQuery_log = $conn->prepare($insert_log);
 
-    $meQuery_log->bindValue(':qty', 0, PDO::PARAM_INT);
-    $meQuery_log->bindValue(':isStatus', 9, PDO::PARAM_INT);
-    $meQuery_log->bindParam(':DocNo', $txt_docno_request);
-    $meQuery_log->bindParam(':Userid', $Userid);
+        $meQuery_log->bindValue(':qty', 0, PDO::PARAM_INT);
+        $meQuery_log->bindValue(':isStatus', 9, PDO::PARAM_INT);
+        $meQuery_log->bindParam(':DocNo', $txt_docno_request);
+        $meQuery_log->bindParam(':Userid', $Userid);
 
 
-    $meQuery_log->execute();
+        $meQuery_log->execute();
 
-    if ($db == 1) {
-        $sql1 = " UPDATE deproom SET IsCancel = 1 , ModifyDate = NOW()  WHERE DocNo = '$txt_docno_request' ";
-        $sql_hn = " UPDATE hncode SET IsCancel = 1 WHERE DocNo_SS = '$txt_docno_request' ";
-        $sql_his = " UPDATE his SET IsCancel = 1 WHERE DocNo_deproom = '$txt_docno_request' ";
-        $sql_set_hn = " UPDATE set_hn SET IsCancel = 1 WHERE DocNo_deproom = '$txt_docno_request' ";
-    } else {
-        $sql1 = " UPDATE deproom SET IsCancel = 1 , ModifyDate = GETDATE()  WHERE DocNo = '$txt_docno_request' ";
-        $sql_hn = " UPDATE hncode SET IsCancel = 1 WHERE DocNo_SS = '$txt_docno_request' ";
-        $sql_set_hn = " UPDATE set_hn SET IsCancel = 1 WHERE DocNo_deproom = '$txt_docno_request' ";
-    }
+        if ($db == 1) {
+            $sql1 = " UPDATE deproom SET IsCancel = 1 , ModifyDate = NOW()  WHERE DocNo = '$txt_docno_request' ";
+            $sql_hn = " UPDATE hncode SET IsCancel = 1 WHERE DocNo_SS = '$txt_docno_request' ";
+            $sql_his = " UPDATE his SET IsCancel = 1 WHERE DocNo_deproom = '$txt_docno_request' ";
+            $sql_set_hn = " UPDATE set_hn SET IsCancel = 1 WHERE DocNo_deproom = '$txt_docno_request' ";
+        } else {
+            $sql1 = " UPDATE deproom SET IsCancel = 1 , ModifyDate = GETDATE()  WHERE DocNo = '$txt_docno_request' ";
+            $sql_hn = " UPDATE hncode SET IsCancel = 1 WHERE DocNo_SS = '$txt_docno_request' ";
+            $sql_set_hn = " UPDATE set_hn SET IsCancel = 1 WHERE DocNo_deproom = '$txt_docno_request' ";
+        }
 
-    $meQuery1 = $conn->prepare($sql1);
-    $meQuery1->execute();
+        $meQuery1 = $conn->prepare($sql1);
+        $meQuery1->execute();
 
-    $meQuery_hn = $conn->prepare($sql_hn);
-    $meQuery_hn->execute();
+        $meQuery_hn = $conn->prepare($sql_hn);
+        $meQuery_hn->execute();
 
-    $meQuery_his = $conn->prepare($sql_his);
-    $meQuery_his->execute();
+        $meQuery_his = $conn->prepare($sql_his);
+        $meQuery_his->execute();
 
-    $meQuery_set_hn = $conn->prepare($sql_set_hn);
-    $meQuery_set_hn->execute();
+        $meQuery_set_hn = $conn->prepare($sql_set_hn);
+        $meQuery_set_hn->execute();
 
-    $query = "DELETE FROM itemstock_transaction_detail  WHERE ItemStockID IN (   SELECT
+        $query = "DELETE FROM itemstock_transaction_detail  WHERE ItemStockID IN (   SELECT
                                                                 deproomdetailsub.ItemStockID 
                                                             FROM
                                                                 deproomdetail
                                                                 INNER JOIN deproomdetailsub ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID
                                                             WHERE deproomdetail.DocNo = '$txt_docno_request'  )
-    AND departmentroomid = (SELECT Ref_departmentroomid FROM deproom WHERE deproom.DocNo = '$txt_docno_request'  ) 
-    AND  IsStatus = '1'
-    AND DATE(CreateDate) = (  SELECT
-                                    DATE( deproomdetailsub.PayDate ) 
-                                FROM
-                                    deproom
-                                    INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
-                                    INNER JOIN deproomdetailsub ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID 
-                                WHERE
-                                    deproom.DocNo = '$txt_docno_request' 
-                                GROUP BY
-                                    deproom.DocNo  ) ";
+        AND departmentroomid = (SELECT Ref_departmentroomid FROM deproom WHERE deproom.DocNo = '$txt_docno_request'  ) 
+        AND  IsStatus = '1'
+        AND DATE(CreateDate) = (  SELECT
+                                        DATE( deproomdetailsub.PayDate ) 
+                                    FROM
+                                        deproom
+                                        INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
+                                        INNER JOIN deproomdetailsub ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID 
+                                    WHERE
+                                        deproom.DocNo = '$txt_docno_request' 
+                                    GROUP BY
+                                        deproom.DocNo  ) ";
 
-    $meQuery = $conn->prepare($query);
-    $meQuery->execute();
+        $meQuery = $conn->prepare($query);
+        $meQuery->execute();
 
 
-    $sql2 = "UPDATE itemstock  SET Isdeproom = 0 ,  departmentroomid = '35'  WHERE RowID IN (   SELECT
+        $sql2 = "UPDATE itemstock  SET Isdeproom = 0 ,  departmentroomid = '35'  WHERE RowID IN (   SELECT
                                                                                                     deproomdetailsub.ItemStockID 
                                                                                                 FROM
                                                                                                     deproomdetail
                                                                                                     INNER JOIN deproomdetailsub ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID
                                                                                                 WHERE deproomdetail.DocNo = '$txt_docno_request'  ) ";
-    $meQuery2 = $conn->prepare($sql2);
-    $meQuery2->execute();
+        $meQuery2 = $conn->prepare($sql2);
+        $meQuery2->execute();
 
 
-    $sql3 = "DELETE deproomdetailsub
+        $sql3 = "DELETE deproomdetailsub
                 FROM deproomdetailsub
             INNER JOIN deproomdetail ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID
             WHERE deproomdetail.DocNo = '$txt_docno_request' ";
 
-    // $sql3 = " DELETE FROM deproomdetailsub WHERE deproomdetailsub.ID IN ( SELECT
-    //                                                                             deproomdetailsub.ID 
-    //                                                                         FROM
-    //                                                                             deproomdetail
-    //                                                                             INNER JOIN deproomdetailsub ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID
-    //                                                                         WHERE deproomdetail.DocNo = '$txt_docno_request'  )  ";
+        // $sql3 = " DELETE FROM deproomdetailsub WHERE deproomdetailsub.ID IN ( SELECT
+        //                                                                             deproomdetailsub.ID 
+        //                                                                         FROM
+        //                                                                             deproomdetail
+        //                                                                             INNER JOIN deproomdetailsub ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID
+        //                                                                         WHERE deproomdetail.DocNo = '$txt_docno_request'  )  ";
 
-    $meQuery3 = $conn->prepare($sql3);
-    $meQuery3->execute();
-
-
+        $meQuery3 = $conn->prepare($sql3);
+        $meQuery3->execute();
 
 
-    $sql4 = " DELETE FROM deproomdetail WHERE DocNo = '$txt_docno_request' ";
-    $meQuery4 = $conn->prepare($sql4);
-    $meQuery4->execute();
 
 
-    $sql5 = "DELETE hncode_detail
+        $sql4 = " DELETE FROM deproomdetail WHERE DocNo = '$txt_docno_request' ";
+        $meQuery4 = $conn->prepare($sql4);
+        $meQuery4->execute();
+
+
+        $sql5 = "DELETE hncode_detail
                 FROM hncode_detail
             INNER JOIN hncode ON hncode.DocNo = hncode_detail.DocNo
             WHERE hncode.DocNo_SS = '$txt_docno_request' ";
-    $meQuery5 = $conn->prepare($sql5);
-    $meQuery5->execute();
+        $meQuery5 = $conn->prepare($sql5);
+        $meQuery5->execute();
+    }
+
+
 
 
 
@@ -1201,7 +1238,7 @@ function showDetail_item_history($conn, $db)
     $select_date_history_l = $select_date_history_l[2] . '-' . $select_date_history_l[1] . '-' . $select_date_history_l[0];
 
 
-        $query = " SELECT
+    $query = " SELECT
                         deproom.DocNo,
                         DATE_FORMAT(deproom.serviceDate, '%d-%m-%Y') AS serviceDate,
                         DATE_FORMAT( deproom.serviceDate, '%H:%i' ) AS serviceTime,
@@ -1273,9 +1310,6 @@ function showDetail_item_history($conn, $db)
         while ($row2 = $meQuery2->fetch(PDO::FETCH_ASSOC)) {
             $return[$DocNo][] = $row2;
         }
-
-
-
     }
     echo json_encode($return);
     unset($conn);
@@ -1306,20 +1340,26 @@ function show_detail_history($conn, $db)
     // }
 
     $whereP = "";
+    $whereP2 = "";
     if ($select_procedure_history != "") {
         // $select_procedure_history = implode(",", $select_procedure_history);
         // $whereP = " AND  FIND_IN_SET('$select_procedure_history', deproom.`procedure`) ";
         $whereP = "  AND deproom.`procedure` = '$select_procedure_history'  ";
+        $whereP2 = " AND  department.DepName LIKE '%$input_hn_history%'  ";
     }
     $whereD = "";
+    $whereD2 = "";
     if ($select_doctor_history != "") {
         // $select_doctor_history = implode(",", $select_doctor_history);
         $whereD = "  AND deproom.`doctor` = '$select_doctor_history'  ";
+        $whereD2 = " AND  department.DepName LIKE '%$input_hn_history%'  ";
     }
 
     $whereHN = "";
+    $whereHN2 = "";
     if ($input_hn_history != "") {
         $whereHN = "  AND  ( deproom.hn_record_id LIKE '%$input_hn_history%' OR deproom.number_box LIKE '%$input_hn_history%' )  ";
+        $whereHN2 = " AND  department.DepName LIKE '%$input_hn_history%' ";
     }
 
 
@@ -1328,53 +1368,123 @@ function show_detail_history($conn, $db)
 
 
         $whereR = "";
+        $whereR2 = "";
         if ($select_deproom_history != "") {
             $whereR = " AND deproom.Ref_departmentroomid = '$select_deproom_history' ";
+            $whereR2 = " AND  department.DepName LIKE '%$input_hn_history%'  ";
         }
 
-
-
-        $query = " SELECT
+        $query = "SELECT
                         deproom.DocNo,
-                        DATE_FORMAT(deproom.serviceDate, '%d-%m-%Y') AS serviceDate,
+                        DATE_FORMAT( deproom.serviceDate, '%d-%m-%Y' ) AS serviceDate,
                         DATE_FORMAT( deproom.serviceDate, '%H:%i' ) AS serviceTime,
-                        DATE_FORMAT(deproom.CreateDate, '%d-%m-%Y') AS CreateDate,
-                        COUNT(deproomdetailsub.ID) AS cnt_pay,
+                        DATE_FORMAT( deproom.CreateDate, '%d-%m-%Y' ) AS CreateDate,
+                        COUNT( deproomdetailsub.ID ) AS cnt_pay,
                         deproom.hn_record_id,
                         doctor.Doctor_Name,
-                        IFNULL(`procedure`.Procedure_TH, '') AS Procedure_TH,                        
+                        IFNULL( `procedure`.Procedure_TH, '' ) AS Procedure_TH,
                         departmentroom.departmentroomname,
                         doctor.ID AS doctor_ID,
                         `procedure`.ID AS procedure_ID,
                         departmentroom.id AS deproom_ID,
                         deproom.Remark,
-                        deproom.doctor ,
+                        deproom.doctor,
                         deproom.`procedure`,
                         deproom.number_box,
-                        employee.FirstName
+                        employee.FirstName 
                     FROM
                         deproom
-                    LEFT JOIN
-                        deproomdetail ON deproom.DocNo = deproomdetail.DocNo
-                    LEFT JOIN
-                        deproomdetailsub ON deproomdetailsub.Deproomdetail_RowID = deproomdetail.ID
-                    INNER JOIN
-                        doctor ON doctor.ID = deproom.doctor
-                    LEFT JOIN
-                        `procedure` ON deproom.procedure = `procedure`.ID
-                    INNER JOIN
-                        departmentroom ON deproom.Ref_departmentroomid = departmentroom.id
-                    LEFT JOIN users ON users.ID = deproom.userConfirm_pay
-	                LEFT JOIN employee ON employee.EmpCode = users.EmpCode
+                        LEFT JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
+                        LEFT JOIN deproomdetailsub ON deproomdetailsub.Deproomdetail_RowID = deproomdetail.ID
+                        INNER JOIN doctor ON doctor.ID = deproom.doctor
+                        LEFT JOIN `procedure` ON deproom.PROCEDURE = `procedure`.ID
+                        INNER JOIN departmentroom ON deproom.Ref_departmentroomid = departmentroom.id
+                        LEFT JOIN users ON users.ID = deproom.userConfirm_pay
+                        LEFT JOIN employee ON employee.EmpCode = users.EmpCode 
                     WHERE
-                        DATE(deproom.CreateDate) BETWEEN '$select_date_history_s' AND '$select_date_history_l'
-                        AND deproom.IsCancel = 0
-                        $whereD
-                        $whereP
-                        $whereR
-                        $whereHN
-                    GROUP BY deproom.DocNo
-                    ORDER BY deproom.ModifyDate DESC ";
+                        DATE( deproom.CreateDate ) BETWEEN '$select_date_history_s' AND '$select_date_history_l'
+                        AND deproom.IsCancel = 0 
+                         $whereD
+                         $whereP
+                         $whereR
+                         $whereHN
+                    GROUP BY
+                        deproom.DocNo UNION ALL
+                    SELECT
+                        CAST( sell_department.DocNo AS CHAR ) AS DocNo,
+                        DATE_FORMAT( sell_department.ServiceDate, '%d-%m-%Y' ) AS serviceDate,
+                        DATE_FORMAT( sell_department.ServiceDate, '%H:%i' ) AS serviceTime,
+                        DATE_FORMAT( sell_department.ServiceDate, '%d-%m-%Y' ) AS CreateDate,
+                        0 AS cnt_pay,
+                        department.DepName AS hn_record_id,
+                        '' AS Doctor_Name,
+                        '' AS Procedure_TH,
+                        '' AS departmentroomname,
+                        '' AS doctor_ID,
+                        '' AS procedure_ID,
+                        sell_department.departmentID AS deproom_ID,
+                        'sell' AS Remark,
+                        '' AS doctor,
+                        '' AS `procedure`,
+                        '' AS number_box,
+                        '' AS FirstName 
+                    FROM
+                        sell_department
+                        INNER JOIN department ON department.ID = sell_department.departmentID 
+                    WHERE
+                        DATE( sell_department.serviceDate ) BETWEEN '$select_date_history_s' AND '$select_date_history_l'
+                        $whereHN2
+                        $whereP2
+                        $whereD2
+                        $whereR2
+                    GROUP BY
+                        department.DepName 
+                    ORDER BY
+                        serviceDate DESC; ";
+
+
+        // $query = " SELECT
+        //                 deproom.DocNo,
+        //                 DATE_FORMAT(deproom.serviceDate, '%d-%m-%Y') AS serviceDate,
+        //                 DATE_FORMAT( deproom.serviceDate, '%H:%i' ) AS serviceTime,
+        //                 DATE_FORMAT(deproom.CreateDate, '%d-%m-%Y') AS CreateDate,
+        //                 COUNT(deproomdetailsub.ID) AS cnt_pay,
+        //                 deproom.hn_record_id,
+        //                 doctor.Doctor_Name,
+        //                 IFNULL(`procedure`.Procedure_TH, '') AS Procedure_TH,                        
+        //                 departmentroom.departmentroomname,
+        //                 doctor.ID AS doctor_ID,
+        //                 `procedure`.ID AS procedure_ID,
+        //                 departmentroom.id AS deproom_ID,
+        //                 deproom.Remark,
+        //                 deproom.doctor ,
+        //                 deproom.`procedure`,
+        //                 deproom.number_box,
+        //                 employee.FirstName
+        //             FROM
+        //                 deproom
+        //             LEFT JOIN
+        //                 deproomdetail ON deproom.DocNo = deproomdetail.DocNo
+        //             LEFT JOIN
+        //                 deproomdetailsub ON deproomdetailsub.Deproomdetail_RowID = deproomdetail.ID
+        //             INNER JOIN
+        //                 doctor ON doctor.ID = deproom.doctor
+        //             LEFT JOIN
+        //                 `procedure` ON deproom.procedure = `procedure`.ID
+        //             INNER JOIN
+        //                 departmentroom ON deproom.Ref_departmentroomid = departmentroom.id
+        //             LEFT JOIN users ON users.ID = deproom.userConfirm_pay
+        //             LEFT JOIN employee ON employee.EmpCode = users.EmpCode
+        //             WHERE
+        //                 DATE(deproom.CreateDate) BETWEEN '$select_date_history_s' AND '$select_date_history_l'
+        //                 AND deproom.IsCancel = 0
+        //                 $whereD
+        //                 $whereP
+        //                 $whereR
+        //                 $whereHN
+        //             GROUP BY deproom.DocNo
+        //             ORDER BY deproom.ModifyDate DESC ";
+
     } else {
 
         $whereD = "";

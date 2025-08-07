@@ -15,6 +15,10 @@ if (!empty($_POST['FUNC_NAME'])) {
         onHIS($conn, $db);
     } else  if ($_POST['FUNC_NAME'] == 'check_usage') {
         check_usage($conn, $db);
+    } else  if ($_POST['FUNC_NAME'] == 'show_detail_department') {
+        show_detail_department($conn, $db);
+    } else  if ($_POST['FUNC_NAME'] == 'feeddata_sell_detail') {
+        feeddata_sell_detail($conn, $db);
     }
 }
 function check_usage($conn, $db)
@@ -68,6 +72,57 @@ function check_usage($conn, $db)
     die;
 }
 
+
+
+function onHIS_sell($conn, $db)
+{
+    $return = array();
+    $DocNo = $_POST['DocNo'];
+
+    $checkSql = "SELECT COUNT(*) FROM his WHERE DocNo = ?";
+    $stmtCheck = $conn->prepare($checkSql);
+    $stmtCheck->execute([$DocNo]);
+    $exists = $stmtCheck->fetchColumn();
+
+    if ($exists == 0) {
+        $Q1 = "INSERT INTO his ( DocNo, DocDate, HnCode, UserCode, IsStatus, IsCancel ) SELECT
+                    DocNo,
+                    serviceDate,
+                    departmentID,
+                    userID,
+                    0,
+                    0
+                FROM
+                    sell_department 
+                WHERE
+                    sell_department.DocNo = '$DocNo' ";
+
+        $Q2 = "INSERT INTO his_detail ( DocNo , Qty , ItemCode ) 
+                    SELECT
+                        DocNo,
+                        COUNT( sell_department_detail.ID ),
+                        itemstock.ItemCode 
+                    FROM
+                        sell_department_detail
+                        INNER JOIN itemstock ON sell_department_detail.ItemStockID = itemstock.RowID 
+                    WHERE
+                        sell_department_detail.DocNo = '$DocNo' 
+                    GROUP BY
+                        itemstock.ItemCode  ";
+
+        $meQuery1 = $conn->prepare($Q1);
+        $meQuery1->execute();
+
+        $meQuery2 = $conn->prepare($Q2);
+        $meQuery2->execute();
+    }
+
+
+    echo json_encode($return);
+    unset($conn);
+    die;
+}
+
 function onHIS($conn, $db)
 {
     $return = array();
@@ -78,45 +133,45 @@ function onHIS($conn, $db)
     $stmtCheck->execute([$DocNo]);
     $exists = $stmtCheck->fetchColumn();
 
-if ($exists == 0) {
-    $Q1 = "INSERT INTO his ( DocNo, DocDate, HnCode, UserCode, IsStatus, IsCancel, `procedure`, doctor, departmentroomid, number_box , DocNo_deproom) SELECT
-                DocNo,
-                DocDate,
-                HnCode,
-                UserCode,
-                0,
-                IsCancel,
-                `procedure`,
-                doctor,
-                departmentroomid,
-                number_box ,
-                DocNo_SS 
-            FROM
-                hncode 
-            WHERE
-                hncode.DocNo = '$DocNo' ";
-
-    $Q2 = "INSERT INTO his_detail ( DocNo , Qty , ItemCode ) 
-                SELECT
+    if ($exists == 0) {
+        $Q1 = "INSERT INTO his ( DocNo, DocDate, HnCode, UserCode, IsStatus, IsCancel, `procedure`, doctor, departmentroomid, number_box , DocNo_deproom) SELECT
                     DocNo,
-                    SUM( hncode_detail.Qty ),
-                    itemstock.ItemCode 
+                    DocDate,
+                    HnCode,
+                    UserCode,
+                    0,
+                    IsCancel,
+                    `procedure`,
+                    doctor,
+                    departmentroomid,
+                    number_box ,
+                    DocNo_SS 
                 FROM
-                    hncode_detail
-                    INNER JOIN itemstock ON hncode_detail.ItemStockID = itemstock.RowID 
+                    hncode 
                 WHERE
-                    hncode_detail.DocNo = '$DocNo' 
-                    AND hncode_detail.IsStatus != 99 
-                    AND hncode_detail.Qty > 0 
-                GROUP BY
-                    itemstock.ItemCode  ";
+                    hncode.DocNo = '$DocNo' ";
 
-    $meQuery1 = $conn->prepare($Q1);
-    $meQuery1->execute();
+        $Q2 = "INSERT INTO his_detail ( DocNo , Qty , ItemCode ) 
+                    SELECT
+                        DocNo,
+                        SUM( hncode_detail.Qty ),
+                        itemstock.ItemCode 
+                    FROM
+                        hncode_detail
+                        INNER JOIN itemstock ON hncode_detail.ItemStockID = itemstock.RowID 
+                    WHERE
+                        hncode_detail.DocNo = '$DocNo' 
+                        AND hncode_detail.IsStatus != 99 
+                        AND hncode_detail.Qty > 0 
+                    GROUP BY
+                        itemstock.ItemCode  ";
 
-    $meQuery2 = $conn->prepare($Q2);
-    $meQuery2->execute();
-}
+        $meQuery1 = $conn->prepare($Q1);
+        $meQuery1->execute();
+
+        $meQuery2 = $conn->prepare($Q2);
+        $meQuery2->execute();
+    }
 
 
     echo json_encode($return);
@@ -214,6 +269,45 @@ function feeddata_hncode($conn, $db)
 
 
     // echo $query;
+    $meQuery = $conn->prepare($query);
+    $meQuery->execute();
+    while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+        $return[] = $row;
+    }
+    echo json_encode($return);
+    unset($conn);
+    die;
+}
+
+
+function feeddata_sell_detail($conn, $db)
+{
+    $return = array();
+    $deproom = $_SESSION['deproom'];
+    $DocNo = $_POST['DocNo'];
+
+
+        $query = " SELECT
+                        item.itemname,
+                        item.LimitUse,
+                        itemtype.TyeName,
+                        itemstock.UsageCode,
+                        item.itemcode,
+                        DATE_FORMAT(sell_department.ServiceDate, '%d-%m-%Y') AS DocDate,
+                        itemstock.serielNo,
+                        itemstock.lotNo,
+                        DATE_FORMAT( itemstock.ExpireDate, '%d-%m-%Y' ) AS ExpireDate
+                    FROM
+                        sell_department
+                    INNER JOIN sell_department_detail ON sell_department.DocNo = sell_department_detail.DocNo
+                    LEFT JOIN itemstock ON sell_department_detail.ItemStockID = itemstock.RowID
+                    LEFT JOIN item ON itemstock.ItemCode = item.itemcode
+                    LEFT JOIN itemtype ON itemtype.ID = item.itemtypeID
+                    WHERE
+                         sell_department.DocNo = '$DocNo'  ";
+   
+
+
     $meQuery = $conn->prepare($query);
     $meQuery->execute();
     while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
@@ -356,6 +450,51 @@ function feeddata_hncode_detail($conn, $db)
     unset($conn);
     die;
 }
+
+
+
+function show_detail_department($conn, $db)
+{
+    $return = array();
+    $deproom = $_SESSION['deproom'];
+
+    $select_SDate = $_POST['select_SDate_department'];
+    $select_SDate = explode("-", $select_SDate);
+    $select_SDate = $select_SDate[2] . '-' . $select_SDate[1] . '-' . $select_SDate[0];
+
+    $select_EDate = $_POST['select_EDate_department'];
+    $select_EDate = explode("-", $select_EDate);
+    $select_EDate = $select_EDate[2] . '-' . $select_EDate[1] . '-' . $select_EDate[0];
+
+        $query = "SELECT
+                        his.IsStatus AS his_IsStatus,
+                        sell_department.departmentID,
+                        department.DepName ,
+                        sell_department.DocNo ,
+                        DATE_FORMAT(sell_department.ServiceDate, '%d-%m-%Y') AS serviceDate,
+                        DATE_FORMAT(sell_department.ServiceDate, '%H:%i') AS serviceTime
+                    FROM
+                        sell_department
+                        LEFT JOIN his ON his.DocNo = sell_department.DocNo
+                        INNER JOIN department ON department.ID = sell_department.departmentID 
+                    WHERE
+                        DATE(sell_department.serviceDate) BETWEEN '$select_SDate'  AND '$select_EDate' 
+                    GROUP BY
+                        department.DepName  ";
+    
+
+    // echo $query;
+    $meQuery = $conn->prepare($query);
+    $meQuery->execute();
+    while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+        $return[] = $row;
+    }
+    echo json_encode($return);
+    unset($conn);
+    die;
+}
+
+
 function show_detail_hn($conn, $db)
 {
     $return = array();

@@ -40,9 +40,23 @@
 
 </div>
 
+<div class="row mt-3">
+    <div class=" col-md-12 col-lg-9">
+
+        <div class="tab-button-group">
+            <button class="tab-button active" id="radio_hn">สืบค้นข้อมูล คนไข้</button>
+            <button class="tab-button" id="radio_department">สืบค้นข้อมูล หน่วยงาน</button>
+        </div>
+    </div>
+</div>
+
+
+
 <hr>
 
-<div class="row">
+
+
+<div id="row_hn" class="row">
     <div class="col-md-6">
         <div class="row ">
             <div class="col-md-6">
@@ -160,6 +174,104 @@
                                     <th scope="col" class="text-center" style="width: 10%;" id="td_no2">ลำดับ</th>
                                     <th scope="col" class="text-center" style="width: 15%;" id="td_date2">ประเภท</th>
                                     <!-- <th scope="col" class="text-center" style="width: 20%;" id="td_usage">จำนวนการใช้งาน</th> -->
+                                    <th scope="col" class="text-center" id="td_item">รหัสอุปกรณ์</th>
+                                    <th scope="col" class="text-center" id="td_item">อุปกรณ์</th>
+                                    <th scope="col" class="text-center" id="">จำนวน</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="row_department" class="row">
+    <div class="col-md-6">
+        <div class="row ">
+            <div class="col-md-6">
+                <label for="" id="lang_text_date1" style="font-weight: 600;color:black;">วันที่</label>
+
+
+                <div class="position-relative">
+                    <input type="text" class="form-control rounded pr-5 f18" placeholder="" id="select_SDate_department" data-language='en' data-date-format='dd-mm-yyyy'>
+                    <span class="input-icon">
+                        <i class="fa-solid fa-calendar" style="color:black;"></i>
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label for="" id="lang_text_date2" style="font-weight: 600;color:black;">วันที่</label>
+
+                <div class="position-relative">
+                    <input type="text" class="form-control rounded pr-5 f18" placeholder="" id="select_EDate_department" data-language='en' data-date-format='dd-mm-yyyy'>
+                    <span class="input-icon">
+                        <i class="fa-solid fa-calendar" style="color:black;"></i>
+                    </span>
+                </div>
+            </div>
+
+            <div class="col-md-12 col-lg-12 mt-2">
+
+                <div class="row">
+                    <div class="col-md-12 ">
+                        <table class="table table-hover  " id="table_detail_department">
+                            <thead class="table-active sticky-top">
+                                <tr>
+                                    <th scope="col" style="width: 5%; text-align: center;" id="">ลำดับ</th>
+                                    <th scope="col" class="text-center" id="">วันที่</th>
+                                    <th scope="col" class="text-center" id="">หน่วยงาน</th>
+                                    <th scope="col" class="text-center" id="">เลขที่เอกสาร</th>
+                                </tr>
+
+                            </thead>
+                            <tbody style="line-height: 40px;">
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mt-4">
+        <div class="row ">
+            <div class="col-md-2">
+
+                <div class="dropdown">
+                    <button style="background-color: #643695;color:white;" class=" f18 btn  dropdown-toggle btn-block" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        รายงาน
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="z-index: 9999;">
+                        <a class="dropdown-item" href="#" id="btn_excel_cost_department" style="color: green;">Excel ค่าใช้จ่าย</a>
+                        <a class="dropdown-item" href="#" id="btn_excel_all_department" style="color: green;">Excel All</a>
+                        <a class="dropdown-item" href="#" id="btn_cost_department" style="color: #643695;">สรุปค่าใช้จ่าย</a>
+                        <a class="dropdown-item" href="#" id="btn_Tracking_department" style="color: #643695;">Medical Instrument Tracking</a>
+                        <a class="dropdown-item" href="#" id="btn_use_department" style="color: #643695;">สรุปการใช้อุปกรณ์กับผู้ป่วย</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 pl-0">
+                <button class="btn btn-success f18" id="edit_his_department" disabled>แก้ไขอุปกรณ์</button>
+            </div>
+
+            <div class="col-md-6 text-right">
+                <button class="btn btn-success" id="btn_send_pay_department" disabled>ยืนยันการส่งค่าใข้จ่าย (HIS)</button>
+            </div>
+
+            <div class="col-md-12 col-lg-12 mt-2">
+                <div class="row">
+                    <div class="col-md-12 " id="div_detailleft1">
+                        <table class="table table-hover  " id="table_detail_sub_department">
+                            <thead class="table-active sticky-top">
+                                <tr>
+                                    <th scope="col" class="text-center" style="width: 10%;" id="td_no2">ลำดับ</th>
+                                    <th scope="col" class="text-center" style="width: 15%;" id="td_date2">ประเภท</th>
                                     <th scope="col" class="text-center" id="td_item">รหัสอุปกรณ์</th>
                                     <th scope="col" class="text-center" id="td_item">อุปกรณ์</th>
                                     <th scope="col" class="text-center" id="">จำนวน</th>

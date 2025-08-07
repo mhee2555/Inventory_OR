@@ -3,6 +3,7 @@ date_default_timezone_set("Asia/Bangkok");
 
 
 $doc = $_GET['doc'];
+$remark = $_GET['remark'];
 
 
 
@@ -31,7 +32,7 @@ $doc = $_GET['doc'];
                         <img src="../assets/img_project/confrim_pay.png" alt="package" width="200" class="mb-4">
 
                         <div class="text-left mx-auto" style="max-width: 400px;">
-                            <p style="color: black;"><strong>HN Code :</strong> <label for="" id="text_hn"></label></p>
+                            <p style="color: black;"><strong id="text_change_hn">HN Code :</strong> <label for="" id="text_hn"></label></p>
                             <p style="color: black;" id="text_doctor"></p>
                             <p style="color: black;" id="text_procedure"></p>
 
@@ -118,12 +119,13 @@ $doc = $_GET['doc'];
     <script>
         $(function() {
             var doc = '<?php echo $doc; ?>';
+            var remark = '<?php echo $remark; ?>';
 
-            show_detail(doc);
+            show_detail(doc, remark);
             set_users();
 
             setTimeout(() => {
-                check_hn(doc);
+                check_hn(doc, remark);
             }, 500);
             $("#select_users").select2();
 
@@ -161,7 +163,7 @@ $doc = $_GET['doc'];
 
         });
 
-        function show_detail(doc) {
+        function show_detail(doc, remark) {
 
             $.ajax({
                 url: "../process/confirm_pay.php",
@@ -169,6 +171,7 @@ $doc = $_GET['doc'];
                 data: {
                     FUNC_NAME: "show_detail",
                     doc: doc,
+                    remark: remark,
                 },
                 success: function(result) {
                     var _tr = "";
@@ -178,7 +181,7 @@ $doc = $_GET['doc'];
                     if (!$.isEmptyObject(ObjData)) {
                         $.each(ObjData, function(kay, value) {
 
-                _tr += `<tr>
+                            _tr += `<tr>
                             <td class="f18 text-center">${value.itemcode2}</td>
                             <td class="f18 text-left">${value.itemname}</td>
                             <td class="f18 text-center">${value.cnt_pay}</td>
@@ -193,6 +196,7 @@ $doc = $_GET['doc'];
 
         function onUpdateConfirm() {
             var doc = '<?php echo $doc; ?>';
+            var remark = '<?php echo $remark; ?>';
 
 
             $.ajax({
@@ -201,6 +205,7 @@ $doc = $_GET['doc'];
                 data: {
                     'FUNC_NAME': 'onUpdateConfirm',
                     'doc': doc,
+                    'remark': remark,
                     'select_users': $("#select_users").val(),
                 },
                 error: function(result) {
@@ -223,7 +228,7 @@ $doc = $_GET['doc'];
             });
         }
 
-        function check_hn(doc) {
+        function check_hn(doc, remark) {
 
 
             $.ajax({
@@ -232,6 +237,7 @@ $doc = $_GET['doc'];
                 data: {
                     'FUNC_NAME': 'check_hn',
                     'doc': doc,
+                    'remark': remark,
                 },
                 error: function(result) {
                     console.log(result);
@@ -242,33 +248,46 @@ $doc = $_GET['doc'];
                     if (!$.isEmptyObject(ObjData)) {
                         $.each(ObjData, function(kay, value) {
 
-                            if (value.Procedure_TH == "button") {
-                                value.Procedure_TH = `<a class="text-primary" style="cursor:pointer;" onclick='showDetail_Procedure("${value.procedure}")'>หัตถการ</a>`;
 
-                                var procedure = `<strong>หัตถการ :</strong> <a >${value.Procedure_TH}</a>`;
+                            if (remark == 'sell') {
+
+                                $("#text_change_hn").text('แผนก : ');
+                                $("#text_hn").text(value.DepName);
+                                if (value.IsConfirm_pay == 1) {
+                                    $("#btn_save_item").attr('hidden', true);
+                                }
+                                $('#select_users').val(value.userConfirm_pay).trigger('change');
                             } else {
-                                var procedure = `<strong>หัตถการ :</strong> <label >${value.Procedure_TH}</label>`;
-                            }
-                            if (value.Doctor_Name == "button") {
-                                value.Doctor_Name = `<a class="text-primary" style="cursor:pointer;" onclick='showDetail_Doctor("${value.doctor}")'>แพทย์</a>`;
+                                if (value.Procedure_TH == "button") {
+                                    value.Procedure_TH = `<a class="text-primary" style="cursor:pointer;" onclick='showDetail_Procedure("${value.procedure}")'>หัตถการ</a>`;
 
-                                var doctor = `<strong>แพทย์ :</strong> <a >${value.Doctor_Name}</a>`;
-                            } else {
-                                var doctor = `<strong>แพทย์ :</strong> <label>${value.Doctor_Name}</label>`;
+                                    var procedure = `<strong>หัตถการ :</strong> <a >${value.Procedure_TH}</a>`;
+                                } else {
+                                    var procedure = `<strong>หัตถการ :</strong> <label >${value.Procedure_TH}</label>`;
+                                }
+                                if (value.Doctor_Name == "button") {
+                                    value.Doctor_Name = `<a class="text-primary" style="cursor:pointer;" onclick='showDetail_Doctor("${value.doctor}")'>แพทย์</a>`;
+
+                                    var doctor = `<strong>แพทย์ :</strong> <a >${value.Doctor_Name}</a>`;
+                                } else {
+                                    var doctor = `<strong>แพทย์ :</strong> <label>${value.Doctor_Name}</label>`;
+                                }
+
+                                if (value.hn_record_id == '') {
+                                    value.hn_record_id = value.number_box;
+                                }
+                                if (value.IsConfirm_pay == 1) {
+                                    $("#btn_save_item").attr('hidden', true);
+                                }
+
+                                $('#select_users').val(value.userConfirm_pay).trigger('change');
+                                $("#text_hn").text(value.hn_record_id);
+                                $("#text_doctor").html(doctor);
+                                $("#text_doctor").html(doctor);
+                                $("#text_procedure").html(procedure);
                             }
 
-                            if (value.hn_record_id == '') {
-                                value.hn_record_id = value.number_box;
-                            }
-                            if (value.IsConfirm_pay == 1) {
-                                $("#btn_save_item").attr('hidden', true);
-                            }
 
-                            $('#select_users').val(value.userConfirm_pay).trigger('change');
-                            $("#text_hn").text(value.hn_record_id);
-                            $("#text_doctor").html(doctor);
-                            $("#text_doctor").html(doctor);
-                            $("#text_procedure").html(procedure);
                         });
                     }
                 }

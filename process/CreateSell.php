@@ -61,15 +61,15 @@ function createDocNoSell($conn, $S_UserId, $IsStatus, $department, $ServiceDate,
 
 
         $sql = "INSERT INTO sell_department (
-            DocNo, IsStatus, IsCancel, serviceDate, CreateDate, ModifyDate, userID 
+            DocNo, departmentID, IsCancel, serviceDate, CreateDate, ModifyDate, userID 
         ) VALUES (
-            :DocNo, :IsStatus, 0, CONCAT(:serviceDate, ' ', :ServiceTime), NOW(), NOW(), :userID 
+            :DocNo, :departmentID, 0, CONCAT(:serviceDate, ' ', :ServiceTime), NOW(), NOW(), :userID 
         )";
 
         $stmt = $conn->prepare($sql);
         $stmt->execute([
             ':DocNo' => $_DocNo,
-            ':IsStatus' => $department,
+            ':departmentID' => $department,
             ':serviceDate' => $ServiceDate,
             ':ServiceTime' => $ServiceTime,
             ':userID' => $S_UserId

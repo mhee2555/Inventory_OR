@@ -982,7 +982,7 @@
                                     <table class="table table-hover " id="table_deproom_sell">
                                         <thead style="background-color: #cdd6ff;">
                                             <tr>
-                                                <th scope="col" class="text-left" style="width:10%;">ลำดับ</th>
+                                                <th scope="col" class="text-center" style="width:10%;"></th>
                                                 <th scope="col" class="text-center" style="width:80%;">หน่วยงาน</th>
                                             </tr>
                                         </thead>
