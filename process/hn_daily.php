@@ -139,32 +139,35 @@ function show_detail_his_docno($conn, $db)
                 his.HnCode,
                 his.number_box,
                 DATE_FORMAT( his.DocDate, '%d-%m-%Y' ) AS createAt,
-                -- his.createAt,
                 his.doctor,
                 his.departmentroomid,
                 his.`procedure`,
-                doctor.Doctor_Name,
+                IFNULL( doctor.Doctor_Name, '' ) AS Doctor_Name,
                 IFNULL( `procedure`.Procedure_TH, '' ) AS Procedure_TH,
                 departmentroom.departmentroomname,
-	            SUM( his_detail.add_Qty ) AS add_Qty,
-	            SUM( his_detail.delete_Qty ) AS delete_Qty,
-	            his.isCancel
+                SUM( his_detail.add_Qty ) AS add_Qty,
+                SUM( his_detail.delete_Qty ) AS delete_Qty,
+                his.isCancel,
+                department.DepName 
             FROM
                 his
-                INNER JOIN doctor ON doctor.ID = his.doctor
+                LEFT JOIN doctor ON doctor.ID = his.doctor
                 LEFT JOIN `procedure` ON his.`procedure` = `procedure`.ID
-                INNER JOIN departmentroom ON his.departmentroomid = departmentroom.id 
-                INNER JOIN his_detail ON his.DocNo = his_detail.DocNo 
-                AND DATE( his.DocDate ) = '$select_his_Date'
-                AND  ( his.isStatus = 1 OR his.isStatus = 2 OR his.isStatus = 3)
-                GROUP BY
-	                his.DocNo ";
+                LEFT JOIN departmentroom ON his.departmentroomid = departmentroom.id
+                INNER JOIN his_detail ON his.DocNo = his_detail.DocNo
+                LEFT JOIN department ON department.ID = his.HnCode 
+            WHERE
+                     DATE( his.DocDate ) = '$select_his_Date'
+                AND ( his.isStatus = 1 OR his.isStatus = 2 OR his.isStatus = 3 ) 
+            GROUP BY
+                his.DocNo ";
 
     $meQ1 = $conn->prepare($Q1);
     $meQ1->execute();
     while ($rowQ1 = $meQ1->fetch(PDO::FETCH_ASSOC)) {
 
         $_HnCode = $rowQ1['HnCode'];
+        $_DepName = $rowQ1['DepName'];
         if ($_HnCode == "") {
             $rowQ1['HnCode'] = $rowQ1['number_box'];
         }
@@ -175,6 +178,11 @@ function show_detail_his_docno($conn, $db)
         if (str_contains($rowQ1['doctor'], ',')) {
             $rowQ1['Doctor_Name'] = 'button';
         }
+
+        if ($_DepName != null) {
+            $rowQ1['HnCode'] = $rowQ1['DepName'];
+        }
+
 
 
         $return[] = $rowQ1;
@@ -258,8 +266,6 @@ function update_create_request($conn, $db)
         $remark = $row['remark'];
         $serviceDate = $row['serviceDate'];
         $serviceTime = $row['serviceTime'];
-
-
     }
 
 
@@ -287,8 +293,8 @@ function update_create_request($conn, $db)
     $meQuery->execute();
     while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
 
-         $_itemcode = $row['itemcode'] ;
-         $_qty = $row['qty'] ;
+        $_itemcode = $row['itemcode'];
+        $_qty = $row['qty'];
 
 
         $queryInsert = "INSERT INTO deproomdetail ( DocNo, ItemCode, Qty, IsStatus, PayDate, IsCancel, ModifyUser, ModifyTime , IsStart  , IsQtyStart  )
@@ -449,7 +455,15 @@ function show_detail_refrain($conn, $db)
     $select_date1_search = explode("-", $select_date1_search1);
     $select_date1_search = $select_date1_search[2] . '-' . $select_date1_search[1] . '-' . $select_date1_search[0];
 
+    $check_Box = $_POST['check_Box'];
 
+    $whereDate = "";
+    if ($check_Box == 0) {
+        $whereDate = "AND  DATE( set_hn.createAt ) = '$select_date1_search'  ";
+    }
+    if ($check_Box == 1) {
+        $whereDate = " ";
+    }
 
 
     $Q1 = " SELECT
@@ -470,8 +484,9 @@ function show_detail_refrain($conn, $db)
                 INNER JOIN doctor ON doctor.ID = set_hn.doctor
                 LEFT JOIN `procedure` ON set_hn.`procedure` = `procedure`.ID
                 INNER JOIN departmentroom ON set_hn.departmentroomid = departmentroom.id 
-                AND DATE( set_hn.createAt ) = '$select_date1_search'
-                AND  set_hn.isStatus = 9 
+            WHERE
+                 set_hn.isStatus = 9 
+                 $whereDate
                 AND  set_hn.isCancel = 0 ";
 
     $meQ1 = $conn->prepare($Q1);

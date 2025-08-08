@@ -31,6 +31,9 @@ $(function () {
     "-" +
     year;
 
+
+
+
   $("#input_time_service_manual").val(currentTime);
 
   $("#input_time_service_editHN").val(currentTime);
@@ -2281,20 +2284,10 @@ function showDetail_item_history() {
                       <td class="text-left" style="max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title='${title}'>${value.Procedure_TH}</td>
                       <td class="text-left" style="max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title='${value.departmentroomname}'>${value.departmentroomname}</td>
                       <td class="text-center">${value.serviceDate} ${value.serviceTime}</td>
+                      <td class="text-center">${value.count_itemstock}</td>
                       </tr>`;
 
-          $.each(ObjData[value.DocNo], function (kayD1, valueD1) {
 
-            var style = "";
-            if (valueD1.check_exp == 'exp') {
-              style = "style='color:red;' ";
-            }
-
-            detail += `<tr class='trDetail_item_${kay}' hidden>
-              <td class="text-center" colspan="5">จำนวน ${valueD1.count_itemstock} รายการ </td>
-              </tr>`;
-
-          });
 
 
 
@@ -2344,7 +2337,7 @@ $("#select_procedure_history_block").change(function (e) {
 $("#select_typeSearch_history_block").change(function (e) {
   $("#select_deproom_history_block").val("").trigger("change");
   $("#select_doctor_history_block").val("").trigger("change");
-  $("#select_deproom_history_block").val("").trigger("change");
+  $("#select_procedure_history_block").val("").trigger("change");
 
   if ($(this).val() == "") {
     $("#col_deproom_history_block").attr("hidden", true);
@@ -2387,6 +2380,9 @@ $("#select_typeSearch_history_block").change(function (e) {
 
 
 $("#checkbox_filter").change(function () {
+  $("#select_deproom_history_block").val("").trigger("change");
+  $("#select_doctor_history_block").val("").trigger("change");
+  $("#select_procedure_history_block").val("").trigger("change");
   setTimeout(() => {
     show_detail_history_block();
   }, 500);
@@ -2826,7 +2822,7 @@ function show_detail_history() {
             var hidden = `<button class=' btn f18 btn-primary ' style='color:#fff;width:80%;'>รอดำเนินการ</button>`;
           }
 
-          if(value.Remark == 'sell'){
+          if (value.Remark == 'sell') {
             var hidden = `<button  class=' btn f18' style='background-color:#643695;color:#fff;width:80%;' onclick='show_Report("${value.DocNo}","${value.Remark}")'>รายงาน</button>`;
           }
 
@@ -2951,11 +2947,11 @@ $("#btn_show_report").click(function () {
   );
 });
 
-function show_Report(DocNo,Remark) {
+function show_Report(DocNo, Remark) {
   option = "?DocNo=" + DocNo;
-  if(Remark == 'sell'){
+  if (Remark == 'sell') {
     window.open("report/Report_Issue_sell.php" + option, "_blank");
-  }else{
+  } else {
     window.open("report/Report_Issue.php" + option, "_blank");
   }
 }
@@ -2971,7 +2967,7 @@ function showLoading() {
   });
 }
 
-function cancel_item_byDocNo(DocNo,Remark) {
+function cancel_item_byDocNo(DocNo, Remark) {
   Swal.fire({
     title: "ยืนยัน",
     text: "ยืนยัน! การยกเลิก?",
@@ -3588,6 +3584,39 @@ $("#select_deproom_sell").change(function (e) {
   show_detail_department();
 });
 
+var preventTrigger = false;
+
+$("#select_department_sell_right").change(function (e) {
+
+  if (preventTrigger) return; // ออกจาก function ทันที
+
+  $("#input_pay_sell").data("docno", '');
+  $("#table_deproom_DocNo_pay_sell tbody").html("");
+
+  var now = new Date();
+  var hours = String(now.getHours()).padStart(2, "0");
+  var minutes = String(now.getMinutes()).padStart(2, "0");
+  var currentTime = hours + ":" + minutes;
+
+  var d = new Date();
+  var month = d.getMonth() + 1;
+  var day = d.getDate();
+  var year = d.getFullYear();
+  var output =
+    (("" + day).length < 2 ? "0" : "") +
+    day +
+    "-" +
+    (("" + month).length < 2 ? "0" : "") +
+    month +
+    "-" +
+    year;
+
+
+  $("#input_time_service_sell").val(currentTime);
+  $("#input_date_service_sell").val(output);
+
+});
+
 
 function oncheck_Returnsell(input_returnpay_sell) {
   // if ($("#input_Hn_pay").data("docno") == "") {
@@ -3616,6 +3645,7 @@ function oncheck_Returnsell(input_returnpay_sell) {
       } else {
         var ObjData = JSON.parse(result);
         show_detail_item_sell();
+        show_detail_department();
       }
       $("#input_returnpay_sell").val("");
     },
@@ -3659,6 +3689,8 @@ function oncheck_sell(input_pay_sell) {
           let docNo = JSON.parse(result);
           $("#input_pay_sell").data("docno", docNo);
           show_detail_item_sell();
+          show_detail_department();
+
           // alert(docNo);
           // var ObjData = JSON.parse(result);
           // if (!$.isEmptyObject(ObjData)) {
@@ -3794,7 +3826,9 @@ function setActive_department(DocNo, departmentID, ServiceDate, ServiceTime) {
   $("#input_pay_sell").data("docno", DocNo);
   $("#input_pay_sell").data("docno", DocNo);
   $("#input_pay_sell").data("docno", DocNo);
+  preventTrigger = true;
   $("#select_department_sell_right").val(departmentID).trigger("change");
+  preventTrigger = false;
   $("#input_date_service_sell").val(ServiceDate);
   $("#input_time_service_sell").val(ServiceTime);
   show_detail_item_sell();

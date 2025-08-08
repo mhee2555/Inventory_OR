@@ -249,9 +249,8 @@
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="z-index: 9999;">
                         <a class="dropdown-item" href="#" id="btn_excel_cost_department" style="color: green;">Excel ค่าใช้จ่าย</a>
                         <a class="dropdown-item" href="#" id="btn_excel_all_department" style="color: green;">Excel All</a>
-                        <a class="dropdown-item" href="#" id="btn_cost_department" style="color: #643695;">สรุปค่าใช้จ่าย</a>
+                        <a class="dropdown-item" href="#" id="btn_cost_department" style="color: #643695;">สรุปขายให้หน่วยงาน</a>
                         <a class="dropdown-item" href="#" id="btn_Tracking_department" style="color: #643695;">Medical Instrument Tracking</a>
-                        <a class="dropdown-item" href="#" id="btn_use_department" style="color: #643695;">สรุปการใช้อุปกรณ์กับผู้ป่วย</a>
                     </div>
                 </div>
             </div>

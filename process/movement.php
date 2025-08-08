@@ -269,6 +269,7 @@ function selection_item_normal($conn, $db)
                 WHERE
                         ( item.itemname LIKE '%$input_search%' OR item.itemcode LIKE '%$input_search%' ) 
                    AND item.SpecialID = '1' 
+                   AND item.IsCancel = '0' 
                    $wherepermission
                 GROUP BY
                     item.itemname,
@@ -593,6 +594,7 @@ function selection_item_rfid($conn, $db)
                 WHERE
                         ( item.itemname LIKE '%$input_search%' OR item.itemcode LIKE '%$input_search%' ) 
                    AND item.SpecialID = '0' 
+                   AND item.IsCancel = '0' 
                    $wherepermission
                 GROUP BY
                     item.itemname,
@@ -974,6 +976,7 @@ function selection_item($conn, $db)
                 WHERE
                         ( item.itemname LIKE '%$input_search%' OR item.itemcode LIKE '%$input_search%' ) 
                    AND item.SpecialID = '2' 
+                   AND item.IsCancel = '0' 
                    $wherepermission
                 GROUP BY
                     item.itemname,

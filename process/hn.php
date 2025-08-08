@@ -19,6 +19,8 @@ if (!empty($_POST['FUNC_NAME'])) {
         show_detail_department($conn, $db);
     } else  if ($_POST['FUNC_NAME'] == 'feeddata_sell_detail') {
         feeddata_sell_detail($conn, $db);
+    } else  if ($_POST['FUNC_NAME'] == 'onHIS_sell') {
+        onHIS_sell($conn, $db);
     }
 }
 function check_usage($conn, $db)
@@ -109,6 +111,8 @@ function onHIS_sell($conn, $db)
                         sell_department_detail.DocNo = '$DocNo' 
                     GROUP BY
                         itemstock.ItemCode  ";
+
+    
 
         $meQuery1 = $conn->prepare($Q1);
         $meQuery1->execute();

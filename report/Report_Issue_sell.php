@@ -184,8 +184,7 @@ $query = "SELECT
             WHERE
                 sell_department.DocNo = '$DocNo'
             GROUP BY
-                department.DepName 
-             ";
+                department.DepName   ";
 
 
 $meQuery = $conn->prepare($query);

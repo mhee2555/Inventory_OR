@@ -406,7 +406,9 @@ if (!isset($_SESSION['UserName'])) {
         if (RefDepID == '36DEN') {
             $("#save_ex_soon_Button").attr('disabled', true);
         }
-
+        if(time_out == ""){
+            time_out = 99999;
+        }
         $("#input_time_out").val(time_out);
         $("#input_exsoon").val(GN_WarningExpiringSoonDay);
 

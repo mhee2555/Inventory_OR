@@ -176,20 +176,20 @@ function show_detail_department() {
       if (_tr == "") {
         $(".dataTables_info").text(
           settext("dataTables_Showing") +
-            " 0 " +
-            settext("dataTables_to") +
-            " 0 " +
-            settext("dataTables_of") +
-            " 0 " +
-            settext("dataTables_entries") +
-            ""
+          " 0 " +
+          settext("dataTables_to") +
+          " 0 " +
+          settext("dataTables_of") +
+          " 0 " +
+          settext("dataTables_entries") +
+          ""
         );
       }
     },
   });
 }
 
-function setActive_feeddata_sell_detail(DocNo,his_IsStatus) {
+function setActive_feeddata_sell_detail(DocNo, his_IsStatus) {
   $(".color2").css("background-color", "");
   $("#tr_" + DocNo).css("background-color", "#FEE4E2");
 
@@ -202,7 +202,7 @@ function setActive_feeddata_sell_detail(DocNo,his_IsStatus) {
     $("#edit_his_department").attr("disabled", true);
   } else {
     if (his_IsStatus == "2") {
-      $("#edit_his_department").attr("disabled", false);
+      $("#edit_his_department").attr("disabled", true);
     } else {
       $("#edit_his_department").attr("disabled", true);
     }
@@ -230,19 +230,19 @@ function feeddata_sell_detail(DocNo) {
       if (!$.isEmptyObject(ObjData)) {
         $.each(ObjData, function (kay, value) {
           var user_count = "";
-   
+
           var label = `<label style='color:blue;cursor:pointer;' onclick='open_LotNo("${value.serielNo}","${value.lotNo}","${value.ExpireDate}")' >${value.UsageCode}</label>`;
 
-            _tr +=
-              `<tr id='tdDetail_${value.ID}'> ` +
-              `<td class="text-center">${kay + 1}</td>` +
-              `<td class="text-left">
+          _tr +=
+            `<tr id='tdDetail_${value.ID}'> ` +
+            `<td class="text-center">${kay + 1}</td>` +
+            `<td class="text-left">
                   <label style='color: lightgray;max-width: 160px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;' title='${value.TyeName}'>${value.TyeName}</label>
               </td>` +
-              `<td class="text-center" >${label}</td>` +
-              `<td class="text-left">${value.itemname}</td>` +
-              `<td class="text-center">1</td>` +
-              ` </tr>`;
+            `<td class="text-center" >${label}</td>` +
+            `<td class="text-left">${value.itemname}</td>` +
+            `<td class="text-center">1</td>` +
+            ` </tr>`;
         });
       }
       $("#table_detail_sub_department tbody").html(_tr);
@@ -402,13 +402,13 @@ function show_detail_hn() {
       if (_tr == "") {
         $(".dataTables_info").text(
           settext("dataTables_Showing") +
-            " 0 " +
-            settext("dataTables_to") +
-            " 0 " +
-            settext("dataTables_of") +
-            " 0 " +
-            settext("dataTables_entries") +
-            ""
+          " 0 " +
+          settext("dataTables_to") +
+          " 0 " +
+          settext("dataTables_of") +
+          " 0 " +
+          settext("dataTables_entries") +
+          ""
         );
       }
     },
@@ -615,19 +615,15 @@ $("#input_return_item_his").keypress(function (e) {
           }
 
           // เพิ่มรายการอุปกรณ์ที่พบลงในตาราง table_return_his
-          var newRowHtml = `<tr data-usagecode="${usageCode}" data-itemcode="${
-            item.item_code || ""
-          }">
-                                          <td style='max-width: 180px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>${
-                                            item.item_name ||
-                                            "ไม่ระบุชื่ออุปกรณ์"
-                                          }</td>
-                                          <td>${
-                                            usageCode || "ไม่ระบุชื่ออุปกรณ์"
-                                          }</td>
-                                          <td class='text-center'>${
-                                            item.quantity || 1
-                                          }</td>
+          var newRowHtml = `<tr data-usagecode="${usageCode}" data-itemcode="${item.item_code || ""
+            }">
+                                          <td style='max-width: 180px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>${item.item_name ||
+            "ไม่ระบุชื่ออุปกรณ์"
+            }</td>
+                                          <td>${usageCode || "ไม่ระบุชื่ออุปกรณ์"
+            }</td>
+                                          <td class='text-center'>${item.quantity || 1
+            }</td>
                                           <td class="text-center">
                                               <button type="button" class="btn btn-danger btn-sm remove-returned-item">X</button>
                                           </td>
@@ -1063,8 +1059,61 @@ $("#btn_excel_all").click(function () {
 });
 
 $("#btn_excel_cost").click(function () {
-  option = "?DocNo=" + $("#btn_Tracking").data("DocNo");
-  window.open("report/phpexcel/Report_hn_cost.php" + option, "_blank");
+
+  if ($("#btn_Tracking").data("DocNo") != undefined) {
+    option = "?DocNo=" + $("#btn_Tracking").data("DocNo");
+    window.open("report/phpexcel/Report_hn_cost.php" + option, "_blank");
+  } else {
+    Swal.fire("ล้มเหลว", "กรุณาเลือกรายการ", "error");
+  }
+
+
+
+});
+
+
+
+
+
+
+$("#btn_Tracking_department").click(function () {
+  if ($("#btn_send_pay_department").data("DocNo") != undefined) {
+    option = "?DocNo=" + $("#btn_send_pay_department").data("DocNo");
+    window.open(
+      "report/Report_Medical_Instrument_Tracking_sell.php" + option,
+      "_blank"
+    );
+  } else {
+    Swal.fire("ล้มเหลว", "กรุณาเลือกรายการ", "error");
+  }
+});
+
+$("#btn_cost_department").click(function () {
+  if ($("#btn_send_pay_department").data("DocNo") != undefined) {
+    option = "?DocNo=" + $("#btn_send_pay_department").data("DocNo");
+    window.open("report/Report_Patient_Cost_Summary_sell.php" + option, "_blank");
+  } else {
+    Swal.fire("ล้มเหลว", "กรุณาเลือกรายการ", "error");
+  }
+});
+
+$("#btn_excel_all_department").click(function () {
+  option =
+    "?select_SDate=" +
+    $("#select_SDate_department").val() +
+    "&select_EDate=" +
+    $("#select_EDate_department").val() +
+    "&Userid=" +
+    Userid;
+  window.open(
+    "report/phpexcel/Report_Medical_Instrument_Tracking_sell.php" + option,
+    "_blank"
+  );
+});
+
+$("#btn_excel_cost_department").click(function () {
+  option = "?DocNo=" + $("#btn_send_pay_department").data("DocNo");
+  window.open("report/phpexcel/Report_hn_cost_sell.php" + option, "_blank");
 });
 
 function showDetail_Doctor(doctor) {
@@ -1440,4 +1489,12 @@ function set_date() {
     year;
 
   return output;
+}
+
+function settext(key) {
+  if (localStorage.lang == "en") {
+    return en[key];
+  } else {
+    return th[key];
+  }
 }

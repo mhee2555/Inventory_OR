@@ -128,29 +128,38 @@
 
         </div>
         <div class="col-md-6">
-            <div class="row">
+            <div class="form-row align-items-end flex-wrap">
+
 
                 <div class="col-md-6">
                     <label style="color:black;font-weight: 600;">Lot</label>
                     <input type="text" class="form-control  f18" id="input_search_lot_tracking" placeholder="ค้นหา Lot. อุปกรณ์">
                 </div>
 
-
-                <div class="col-md-12 mt-2">
-                    <table class="table table-hover " id="table_lot_tracking">
-                        <thead c style="background-color: #cdd6ff;">
-                            <tr>
-                                <th scope="col" class="text-center" id="">Lot. อุปกรณ์</th>
-                                <th scope="col" class="text-center" id="">จำนวน</th>
-                                <th scope="col" class="text-center" id="">#</th>
-                                <th scope="col" class="text-center" id=""></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
+                <div class="col-md-6 text-right">
+                    <label style="color:rgb(100, 54, 149);font-weight: 600;" id="text_itemname"></label>
                 </div>
+
+
+
             </div>
+
+
+
+            <table class="table table-hover " id="table_lot_tracking">
+                <thead c style="background-color: #cdd6ff;">
+                    <tr>
+                        <th scope="col" class="text-center" id="">Lot. อุปกรณ์</th>
+                        <th scope="col" class="text-center" id="">จำนวน</th>
+                        <th scope="col" class="text-center" id="">#</th>
+                        <th scope="col" class="text-center" id=""></th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+
+
         </div>
         <div class="col-md-12 mt-3">
             <div class="row">

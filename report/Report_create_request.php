@@ -276,10 +276,12 @@ class MYPDF extends TCPDF
             $this->SetX(90);
     
             $this->Cell(20, 1,   'วันและเวลาขอเบิก : ' . "", 0, 0, 'R');
-            $this->Cell(15, 2,  "$_serviceDate", 0, 0, 'R');
+            $this->Cell(15, 2,  "$_serviceDate", 0, 1, 'R');
             // $this->Cell(1, 9,  "         " . $Facdate . "  เวลา   " . $FacTime, 0, 0, 'L');
             // $this->Cell(90, 10,   'วันที่' . "", 0, 0, 'L');
-
+            
+            $this->SetY(-15);
+            $this->Cell(210, 10,  "หน้า" . $this->getAliasNumPage() . '/' . $this->getAliasNbPages(), 0, 0, 'R');
         }else{
             
             // $this->SetX(10);
@@ -291,7 +293,8 @@ class MYPDF extends TCPDF
             // $this->Cell(20, 1,   'วันและเวลา : ' . "", 0, 0, 'R');
             // $this->Cell(15, 2,  "$_serviceDate", 0, 0, 'R');
 
-            $this->Cell(270, 1,  "หน้า" . $this->getAliasNumPage() . '/' . $this->getAliasNbPages(), 0, 0, 'C');
+            $this->SetY(-15);
+            $this->Cell(210, 10,  "หน้า" . $this->getAliasNumPage() . '/' . $this->getAliasNbPages(), 0, 0, 'R');
         }
 
 
@@ -387,7 +390,7 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
     // ถ้าเปลี่ยนประเภท ให้ใส่หัวกลุ่ม
     if ($currentType != $itemType) {
         $currentType = $itemType;
-        $html .= '<tr style="font-weight:bold;font-size:13px;" align="center">
+        $html .= '<tr style="font-weight:bold;font-size:13px;background-color:#f1e9f9;" align="center;">
                     <td colspan="3" >' . htmlspecialchars($itemType, ENT_QUOTES, 'UTF-8') . '</td>
                   </tr>';
     }

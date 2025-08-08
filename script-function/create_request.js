@@ -763,8 +763,7 @@ function show_detail_request_byDocNo() {
           _tr += `<tr tr_${value.ID}>
                       <td class='text-center'>${kay + 1}</td>
                       <td>${value.itemname}</td>
-                      <td class='text-center'>${value.TyeName}</td>
-                      <td class='text-center'><input type="number" onblur="updateDetail_qty(${
+                      <td class='text-center'><input type="text" onblur="updateDetail_qty(${
                         value.ID
                       },'${
             value.itemcode
@@ -772,7 +771,7 @@ function show_detail_request_byDocNo() {
             value.ID
           }" data-id='${value.ID}' value='${value.cnt}'> </td>
                       <td class='text-center'>
-                      <img src="assets/img_project/1_icon/ic_trash-1.png" style='width:60%;cursor:pointer;' onclick='delete_request_byItem(${
+                      <img src="assets/img_project/1_icon/ic_trash-1.png" style='width:50%;cursor:pointer;' onclick='delete_request_byItem(${
                         value.ID
                       })'>
                       </td>
@@ -805,20 +804,16 @@ function show_detail_request_byDocNo() {
             targets: 0,
           },
           {
-            width: "45%",
+            width: "60%",
             targets: 1,
           },
           {
-            width: "25%",
+            width: "15%",
             targets: 2,
           },
           {
-            width: "15%",
+            width: "30%",
             targets: 3,
-          },
-          {
-            width: "20%",
-            targets: 4,
           },
         ],
         info: false,
@@ -1097,7 +1092,7 @@ function show_detail_history() {
             var edit_id = ``;
 
             if (value.IsStart == null) {
-              var showreport = `<button disabled class='btn f18 btn-secondary' onclick='show_Report("${value.DocNo}")')'>ถูกสแกนจ่าย</button>`;
+              var showreport = `<button disabled class='btn f18 btn-success' onclick='show_Report("${value.DocNo}")')'>ถูกสแกนจ่าย</button>`;
             } else {
               var showreport = `<button  class='btn f18 btn-success' onclick='show_Report("${value.DocNo}")')'>ถูกสแกนจ่าย</button>`;
             }

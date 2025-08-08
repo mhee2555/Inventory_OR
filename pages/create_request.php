@@ -242,7 +242,6 @@
                                     <tr>
                                         <th scope="col" class="text-center" id="">ลำดับ</th>
                                         <th scope="col" class="text-center" id="">อุปกรณ์</th>
-                                        <th scope="col" class="text-center" id="">ลักษณะการใช้งาน</th>
                                         <th scope="col" class="text-center" id="">จำนวน</th>
                                         <th scope="col" class="text-center" id="">ลบ</th>
                                     </tr>
@@ -265,7 +264,145 @@
 </div>
 
 <div id="history_create_request">
-    <div class="row mr-0 ml-0">
+
+    <div class="form-row align-items-end flex-wrap">
+        <div class="col-md-5">
+            <label class="font-weight-bold text-dark">วันที่</label>
+            <div class="form-row">
+                <div class="col">
+
+                    <div class="position-relative">
+                        <input type="text" class="form-control rounded pr-5 f18" placeholder="" id="select_date_history_s" data-language='en' data-date-format='dd-mm-yyyy'>
+                        <span class="input-icon">
+                            <i class="fa-solid fa-calendar" style="color:black;"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="col">
+
+                    <div class="position-relative">
+                        <input type="text" class="form-control rounded pr-5 f18" placeholder="" id="select_date_history_l" data-language='en' data-date-format='dd-mm-yyyy'>
+                        <span class="input-icon">
+                            <i class="fa-solid fa-calendar" style="color:black;"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <div class="col-md-3">
+            <label class="font-weight-bold text-dark">เงื่อนไข</label>
+            <select class="form-control f18" id="select_typeSearch_history">
+                <option value="">กรุณาเลือกประเภทการค้นหา</option>
+                <option value="1">ห้องผ่าตัด</option>
+                <option value="2">แพทย์</option>
+                <option value="3">หัตถการ</option>
+            </select>
+        </div>
+
+
+        <div class="col-md-3" id="col_deproom_history">
+            <label class="font-weight-bold text-dark">ห้องผ่าตัด</label>
+            <select class="form-control f18" id="select_deproom_history"></select>
+        </div>
+
+        <div class="col-md-3" id="col_doctor_history">
+            <label class="font-weight-bold text-dark">แพทย์</label>
+            <select class="form-control f18" id="select_doctor_history"></select>
+        </div>
+
+        <div class="col-md-3" id="col_procedure_history">
+            <label class="font-weight-bold text-dark">หัตถการ</label>
+            <select class="form-control f18" id="select_procedure_history"></select>
+        </div>
+
+
+        <div class="col-md-3" id="col_hide">
+
+        </div>
+
+        <div class="col-md-1 text-right">
+            <button class="btn btn-outline-success" id="btn_show_report" style="font-size: 18px;width: 120px;"><i class="fa-solid fa-file-excel"></i> EXCEL</button>
+        </div>
+
+
+    </div>
+
+    <div class="form-row align-items-end flex-wrap">
+        <div class="col-md-4">
+
+        </div>
+        <div class="col-md-2">
+
+        </div>
+
+        <div class="col-md-2">
+            <div class="row mt-2">
+                <div class="col-md-12" style="display: ruby;" id="row_doctor_history">
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <div class="row mt-2">
+                <div class="col-md-12" style="display: ruby;" id="row_procedure_history">
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-1">
+
+        </div>
+
+        <div class="col-md-1">
+
+        </div>
+
+
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-12 mt-3">
+
+                    <div class="card">
+
+                        <div class="card-body">
+                            <table class="table table-hover " id="table_history">
+                                <thead style="background-color: #cdd6ff;">
+                                    <tr>
+                                        <th scope="col" class="text-center" id="">ลำดับ</th>
+                                        <th scope="col" class="text-center" id="">วันที่รับบริการ</th>
+                                        <th scope="col" class="text-center" id="">เลขประจำตัวผู้ป่วย</th>
+                                        <th scope="col" class="text-center" id="">แพทย์</th>
+                                        <th scope="col" class="text-center" id="">หัตถการ</th>
+                                        <th scope="col" class="text-center" id="">ห้องผ่าตัด</th>
+                                        <th scope="col" class="text-center" id="">แก้ไข</th>
+                                        <th scope="col" class="text-center" id="">รายงานขอเบิก</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- <div class="row mr-0 ml-0">
         <div class="col-md-12 ">
             <div class="row mr-0 ml-0">
                 <div class="col-md-4">
@@ -273,23 +410,12 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <label style="color:black;font-weight: 600;">วันที่เริ่ม</label>
-
-
-
                                 <div class="position-relative">
                                     <input type="text" class="form-control rounded pr-5 f18" placeholder="" id="select_date_history_s" data-language='en' data-date-format='dd-mm-yyyy'>
                                     <span class="input-icon">
                                         <i class="fa-solid fa-calendar" style="color:black;"></i>
                                     </span>
                                 </div>
-
-                                <!-- 
-                                <div class="input-group">
-                                    <input type="text" class="form-control datepicker-here f18" id="select_date_history_s" data-language='en' data-date-format='dd-mm-yyyy'>
-                                    <div class="input-group-append">
-                                        <div class="input-group-text bg-light" style="font-size: 20px;font-weight: bold;"><i class="fa-regular fa-calendar-days"></i></div>
-                                    </div>
-                                </div> -->
                             </div>
                             <div class="col-md-6">
                                 <label style="color:black;font-weight: 600;">วันที่สิ้นสุด</label>
@@ -302,12 +428,7 @@
                                     </span>
                                 </div>
 
-                                <!-- <div class="input-group">
-                                    <input type="text" class="form-control datepicker-here f18" id="select_date_history_l" data-language='en' data-date-format='dd-mm-yyyy'>
-                                    <div class="input-group-append">
-                                        <div class="input-group-text bg-light" style="font-size: 20px;font-weight: bold;"><i class="fa-regular fa-calendar-days"></i></div>
-                                    </div>
-                                </div> -->
+
                             </div>
                         </div>
                     </div>
@@ -368,8 +489,6 @@
 
                 <div class="col-md-2">
                     <div class="form-group ">
-                        <label style="color:black;font-weight: 600;">Excel</label>
-                        <br>
                         <button class="btn  btn-block" style="border-color: gray;color:green;font-weight: bold;" id="btn_show_report"><i class="fa-solid fa-file-excel"></i> EXCEL</button>
                     </div>
                 </div>
@@ -405,7 +524,7 @@
 
             </div>
         </div>
-    </div>
+    </div> -->
 </div>
 </div>
 

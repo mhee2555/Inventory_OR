@@ -520,8 +520,7 @@
 <div id="history_pay">
 
     <div class="form-row align-items-end flex-wrap">
-        <!-- วันที่ -->
-        <div class="col-md-4">
+        <div class="col-md-5">
             <label class="font-weight-bold text-dark">วันที่</label>
             <div class="form-row">
                 <div class="col">
@@ -532,13 +531,6 @@
                             <i class="fa-solid fa-calendar" style="color:black;"></i>
                         </span>
                     </div>
-
-                    <!-- <div class="input-group">
-                        <input type="text" class="form-control datepicker-here f18" id="select_date_history_S" data-language='en' data-date-format='dd-mm-yyyy'>
-                        <div class="input-group-append">
-                            <div class="input-group-text bg-light"><i class="fa-regular fa-calendar-days"></i></div>
-                        </div>
-                    </div> -->
                 </div>
                 <div class="col">
 
@@ -548,21 +540,13 @@
                             <i class="fa-solid fa-calendar" style="color:black;"></i>
                         </span>
                     </div>
-
-                    <!-- <div class="input-group">
-                        <input type="text" class="form-control datepicker-here f18" id="select_date_history_L" data-language='en' data-date-format='dd-mm-yyyy'>
-                        <div class="input-group-append">
-                            <div class="input-group-text bg-light"><i class="fa-regular fa-calendar-days"></i></div>
-                        </div>
-                    </div> -->
                 </div>
             </div>
         </div>
 
 
+    
 
-
-        <!-- เลขประจำตัวผู้ป่วย -->
         <div class="col-md-2">
             <label class="font-weight-bold text-dark">HN</label>
             <input type="text" class="form-control f18" id="input_hn_history">
@@ -580,55 +564,45 @@
         </div>
 
 
-        <!-- ห้องผ่าตัด -->
-        <div class="col-md-3" id="col_deproom_history">
+        <div class="col-md-2" id="col_deproom_history">
             <label class="font-weight-bold text-dark">ห้องผ่าตัด</label>
             <select class="form-control f18" id="select_deproom_history"></select>
         </div>
 
-        <!-- แพทย์ -->
-        <div class="col-md-3" id="col_doctor_history">
+        <div class="col-md-2" id="col_doctor_history">
             <label class="font-weight-bold text-dark">แพทย์</label>
             <select class="form-control f18" id="select_doctor_history"></select>
         </div>
 
-        <!-- หัตถการ -->
-        <div class="col-md-3" id="col_procedure_history">
+        <div class="col-md-2" id="col_procedure_history">
             <label class="font-weight-bold text-dark">หัตถการ</label>
             <select class="form-control f18" id="select_procedure_history"></select>
         </div>
 
-        <div class="col-md-3" id="col_item_history">
+        <div class="col-md-2" id="col_item_history">
             <label class="font-weight-bold text-dark">อุปกรณ์</label>
             <select class="form-control f18" id="select_item_history"></select>
         </div>
 
-        <div class="col-md-3" id="col_hide">
+        <div class="col-md-2" id="col_hide">
 
         </div>
-        <!-- <div class="col-md-1" id="col_hide_2">
-
-        </div> -->
-        <!-- ปุ่ม Excel -->
-        <div class="col-md-1">
-            <label class="font-weight-bold text-dark">Excel</label>
-            <button class="btn btn-outline-success btn-block" id="btn_show_report"><i class="fa-solid fa-file-excel"></i> EXCEL</button>
+  
+        <div class="col-md-1 text-right">
+            <button class="btn btn-outline-success" id="btn_show_report" style="font-size: 18px;width: 120px;"><i class="fa-solid fa-file-excel"></i> EXCEL</button>
         </div>
 
 
     </div>
 
     <div class="form-row align-items-end flex-wrap">
-        <!-- วันที่ -->
         <div class="col-md-4">
 
         </div>
-        <!-- ห้องผ่าตัด -->
         <div class="col-md-2">
 
         </div>
 
-        <!-- แพทย์ -->
         <div class="col-md-2">
             <div class="row mt-2">
                 <div class="col-md-12" style="display: ruby;" id="row_doctor_history">
@@ -636,7 +610,6 @@
             </div>
         </div>
 
-        <!-- หัตถการ -->
         <div class="col-md-2">
             <div class="row mt-2">
                 <div class="col-md-12" style="display: ruby;" id="row_procedure_history">
@@ -644,12 +617,10 @@
             </div>
         </div>
 
-        <!-- เลขประจำตัวผู้ป่วย -->
         <div class="col-md-1">
 
         </div>
 
-        <!-- ปุ่ม Excel -->
         <div class="col-md-1">
 
         </div>
@@ -1397,6 +1368,7 @@
                             <th scope="col" class="text-center" id="">หัตถการ</th>
                             <th scope="col" class="text-center" id="">ห้องผ่าตัด</th>
                             <th scope="col" class="text-center" id="">วันที่รับบริการ</th>
+                            <th scope="col" class="text-center" id="">จำนวน</th>
                         </tr>
                     </thead>
                     <tbody>

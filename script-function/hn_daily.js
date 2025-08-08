@@ -50,8 +50,8 @@ $(function () {
 
   show_detail_daily();
   $("#radio_daily").click(function () {
-      $('.tab-button').removeClass('active');
-      $(this).addClass('active');
+    $(".tab-button").removeClass("active");
+    $(this).addClass("active");
 
     $("#row_daily").show();
     $("#row_refrain").hide();
@@ -60,8 +60,8 @@ $(function () {
   });
 
   $("#radio_refrain").click(function () {
-      $('.tab-button').removeClass('active');
-      $(this).addClass('active');
+    $(".tab-button").removeClass("active");
+    $(this).addClass("active");
 
     $("#row_refrain").show();
     $("#row_daily").hide();
@@ -71,8 +71,8 @@ $(function () {
   });
 
   $("#radio_his").click(function () {
-      $('.tab-button').removeClass('active');
-      $(this).addClass('active');
+    $(".tab-button").removeClass("active");
+    $(this).addClass("active");
 
     $("#row_refrain").hide();
     $("#row_daily").hide();
@@ -213,11 +213,11 @@ function show_detail_his_docno() {
   });
 }
 
-function setActive_his(ID, IsStatus,isCancel,add_Qty,delete_Qty) {
+function setActive_his(ID, IsStatus, isCancel, add_Qty, delete_Qty) {
   $(".color").css("background-color", "");
   $("#tr_" + ID).css("background-color", "#FEE4E2");
 
-  if (IsStatus == 1 || ( add_Qty > 0 || delete_Qty > 0 && IsStatus == 2 ) ) {
+  if (IsStatus == 1 || add_Qty > 0 || (delete_Qty > 0 && IsStatus == 2)) {
     $("#btn_send_pay").attr("disabled", false);
     $("#btn_send_pay").data("id", ID);
   } else {
@@ -290,7 +290,12 @@ function show_detail_his(ID, IsStatus) {
       }
 
       // $("#price_xx").text(parseFloat(QQ).toFixed(2));
-      $("#price_xx").text(parseFloat(QQ).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+      $("#price_xx").text(
+        parseFloat(QQ).toLocaleString(undefined, {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })
+      );
 
       $("#table_detail_his tbody").html(_tr);
 
@@ -316,13 +321,26 @@ function updateDetail_qty(ID, itemcode) {
   });
 }
 
+$("#checkbox_filter_refrain").change(function () {
+  setTimeout(() => {
+    show_detail_refrain();
+  }, 500);
+});
+
 function show_detail_refrain() {
+  if ($("#checkbox_filter_refrain").is(":checked")) {
+    var check_Box = 1;
+  } else {
+    var check_Box = 0;
+  }
+
   $.ajax({
     url: "process/hn_daily.php",
     type: "POST",
     data: {
       FUNC_NAME: "show_detail_refrain",
       select_date1_search2: $("#select_date1_search2").val(),
+      check_Box: check_Box,
     },
     success: function (result) {
       var _tr = "";

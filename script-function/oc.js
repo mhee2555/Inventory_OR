@@ -59,7 +59,7 @@ function show_detail_item() {
           _tr += `<tr id="tr_${value.itemcode}" class="clear_bg">
                       <td class='text-left'>${value.TyeName}</td>
                       <td class='text-left'>${value.Item_name}</td>
-                      <td class='text-center'><button class='btn-block btn btn-primary' style='color:#fff;font-weight:bold;cursor:pointer;' onclick="set_detail_lot('${value.itemcode}')">เลือก</button></td>
+                      <td class='text-center'><button class='btn-block btn btn-primary' style='color:#fff;font-weight:bold;cursor:pointer;' onclick="set_detail_lot('${value.itemcode}','${value.Item_name}')">เลือก</button></td>
                    </tr>`;
         });
       }
@@ -490,9 +490,13 @@ function show_detail_itemstock() {
   });
 }
 
-function set_detail_lot(itemcode) {
+function set_detail_lot(itemcode,Item_name) {
   $(".clear_bg").css("background-color", "");
   $("#tr_" + itemcode).css("background-color", "rgb(239, 248, 255)");
+  $("#text_itemname").text(Item_name);
+
+
+  
 
   show_detail_lot(itemcode);
 }

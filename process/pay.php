@@ -1252,7 +1252,8 @@ function showDetail_item_history($conn, $db)
                         deproom.Remark,
                         deproom.doctor ,
                         deproom.`procedure`,
-                        deproom.number_box
+                        deproom.number_box ,
+                        COUNT(deproomdetailsub.ID) AS count_itemstock
                     FROM
                         deproom
                     INNER JOIN
@@ -1291,25 +1292,25 @@ function showDetail_item_history($conn, $db)
         $DocNo = $row['DocNo'];
 
 
-        $query2 = " SELECT
-                        COUNT(itemstock.UsageCode) AS count_itemstock
-                    FROM
-                        deproom
-                        INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
-                        INNER JOIN deproomdetailsub ON deproomdetailsub.Deproomdetail_RowID = deproomdetail.ID
-                        INNER JOIN itemstock ON itemstock.RowID = deproomdetailsub.ItemStockID 
-                    WHERE
-                        DATE( deproom.ServiceDate ) BETWEEN '$select_date_history_s' AND '$select_date_history_l'
-                        AND deproom.IsCancel = 0 
-                        AND deproom.DocNo = '$DocNo' 
-                        AND deproomdetail.ItemCode = '$select_item_history' 
-                    ORDER BY
-                        deproom.ModifyDate DESC ";
-        $meQuery2 = $conn->prepare($query2);
-        $meQuery2->execute();
-        while ($row2 = $meQuery2->fetch(PDO::FETCH_ASSOC)) {
-            $return[$DocNo][] = $row2;
-        }
+        // $query2 = " SELECT
+        //                 COUNT(itemstock.UsageCode) AS count_itemstock
+        //             FROM
+        //                 deproom
+        //                 INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
+        //                 INNER JOIN deproomdetailsub ON deproomdetailsub.Deproomdetail_RowID = deproomdetail.ID
+        //                 INNER JOIN itemstock ON itemstock.RowID = deproomdetailsub.ItemStockID 
+        //             WHERE
+        //                 DATE( deproom.ServiceDate ) BETWEEN '$select_date_history_s' AND '$select_date_history_l'
+        //                 AND deproom.IsCancel = 0 
+        //                 AND deproom.DocNo = '$DocNo' 
+        //                 AND deproomdetail.ItemCode = '$select_item_history' 
+        //             ORDER BY
+        //                 deproom.ModifyDate DESC ";
+        // $meQuery2 = $conn->prepare($query2);
+        // $meQuery2->execute();
+        // while ($row2 = $meQuery2->fetch(PDO::FETCH_ASSOC)) {
+        //     $return[$DocNo][] = $row2;
+        // }
     }
     echo json_encode($return);
     unset($conn);
