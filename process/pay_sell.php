@@ -146,7 +146,7 @@ function show_detail_department($conn, $db)
 
         $query2 = "SELECT
                     sell_department.DocNo,
-                    DATE(sell_department.ServiceDate) AS ServiceDate ,
+                    DATE_FORMAT( sell_department.ServiceDate, '%d-%m-%Y' ) AS ServiceDate ,
                     TIME(sell_department.ServiceDate) AS ServiceTime
 
                 FROM
@@ -222,6 +222,7 @@ function oncheck_sell($conn, $db)
     $input_date_service_sell = explode("-", $input_date_service_sell);
     $input_date_service_sell = $input_date_service_sell[2] . '-' . $input_date_service_sell[1] . '-' . $input_date_service_sell[0];
 
+    
     $count_new_item_itemcode = 0;
 
 
@@ -504,6 +505,9 @@ function oncheck_sell($conn, $db)
                         ( $_RowID, '$_ItemCode','$input_date_service_sell $input_time_service_sell' ,'$select_department_sell_right', $Userid,9,1 ) ";
             $meQuery = $conn->prepare($query);
             $meQuery->execute();
+
+            // echo $query;
+            // exit;
             // =======================================================================================================================================
 
 

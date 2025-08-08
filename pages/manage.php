@@ -341,15 +341,15 @@
                             <div class="col-md-6 mt-3">
                                 <select class="form-control f18" id="select_user_rfid" disabled>
                                     <option value="">RFID</option>
-                                    <option value="1">True</option>
-                                    <option value="0">False</option>
+                                    <option value="1">ลงทะเบียน</option>
+                                    <option value="0">ไม่ได้ลงทะเบียน</option>
                                 </select>
                             </div>
                             <div class="col-md-6 mt-3">
                                 <select class="form-control f18" id="select_user_weighing" disabled>
                                     <option value="">Weighing</option>
-                                    <option value="1">True</option>
-                                    <option value="0">False</option>
+                                    <option value="1">ลงทะเบียน</option>
+                                    <option value="0">ไม่ได้ลงทะเบียน</option>
                                 </select>
                             </div>
                             <div class="col-md-12 mt-3" hidden>

@@ -421,7 +421,7 @@ function saveDeproom($conn)
 
     $count_id = 0;
 
-    if ($input_IDDeproom == "") {
+    // if ($input_IDDeproom == "") {
         $check_d = "    SELECT id 
                             FROM   departmentroom 
                             WHERE departmentroomname_sub = '$input_DeproomName_sub' ";
@@ -430,7 +430,7 @@ function saveDeproom($conn)
         while ($row_d = $meQuery_d->fetch(PDO::FETCH_ASSOC)) {
             $count_id++;
         }
-    }
+    // }
 
 
 
@@ -657,7 +657,7 @@ function feeddata_detailUser($conn, $db)
                     e.FirstName,
                     e.LastName,
                     u.UserName,
-                    u.`Password`,
+                    u.`Password` AS xxx,
                     u.IsCancel,
                     u.DeptID,
                 CASE
@@ -707,7 +707,7 @@ function saveDoctor($conn)
 
 
     $count_id = 0;
-    if ($input_IDdoctor == "") {
+    // if ($input_IDdoctor == "") {
         $check_d = "    SELECT ID
                         FROM   doctor 
                         WHERE Doctor_Name = '$input_doctorth' ";
@@ -716,7 +716,7 @@ function saveDoctor($conn)
         while ($row_d = $meQuery_d->fetch(PDO::FETCH_ASSOC)) {
             $count_id++;
         }
-    }
+    // }
 
     if ($count_id == 0) {
         if ($input_IDdoctor == "") {
@@ -784,7 +784,7 @@ function saveProcedure($conn)
 
 
     $count_id = 0;
-    if ($input_IDProcedure == "") {
+    // if ($input_IDProcedure == "") {
         $check_d = "    SELECT ID
                         FROM   `procedure` 
                         WHERE Procedure_TH = '$input_Procedure' ";
@@ -793,7 +793,7 @@ function saveProcedure($conn)
         while ($row_d = $meQuery_d->fetch(PDO::FETCH_ASSOC)) {
             $count_id++;
         }
-    }
+    // }
 
 
     if ($count_id == 0) {

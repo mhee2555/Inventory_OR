@@ -862,7 +862,7 @@ function feeddata_detailUser() {
                         value.cabinet_ids
                       }","${value.ID}","${value.EmpCode}","${
             value.FirstName
-          }","${value.LastName}","${value.UserName}","${value.Password}","${
+          }","${value.LastName}","${value.UserName}","${value.xxx}","${
             value.IsCancel
           }","${value.permission}","${
             value.IsAdmin

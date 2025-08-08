@@ -231,10 +231,24 @@ $sheet2->mergeCells('A7:B7'); // หัวข้อ "SUDs"
 
 
 
+$Userid = $_GET['Userid'];
+
+$_FirstName = "";
+$user = "SELECT
+	employee.FirstName 
+FROM
+	users
+	INNER JOIN employee ON users.EmpCode = employee.EmpCode
+WHERE users.ID = '$Userid' ";
+$meQuery_user = $conn->prepare($user);
+$meQuery_user->execute();
+while ($row_user = $meQuery_user->fetch(PDO::FETCH_ASSOC)) {
+    $_FirstName = $row_user['FirstName'];
+}
+
 // --- ใส่ข้อมูล ---
 
-
-$sheet2->setCellValue('B1', 'พิมพ์โดย poseMA');
+$sheet->setCellValue('A2', 'พิมพ์โดย ' . $_FirstName);
 $sheet2->setCellValue('B4', 'วันที่พิมพ์ ' . date('d/m/Y') . ' ' . date('H:i:s'));
 $sheet2->getStyle('B1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
 $sheet2->getStyle('B4')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
@@ -372,8 +386,24 @@ $sheet2->mergeCells('A7:B7'); // หัวข้อ "SUDs"
 
 // --- ใส่ข้อมูล ---
 
+$Userid = $_GET['Userid'];
 
-$sheet2->setCellValue('B1', 'พิมพ์โดย poseMA');
+$_FirstName = "";
+$user = "SELECT
+	employee.FirstName 
+FROM
+	users
+	INNER JOIN employee ON users.EmpCode = employee.EmpCode
+WHERE users.ID = '$Userid' ";
+$meQuery_user = $conn->prepare($user);
+$meQuery_user->execute();
+while ($row_user = $meQuery_user->fetch(PDO::FETCH_ASSOC)) {
+    $_FirstName = $row_user['FirstName'];
+}
+
+// --- ใส่ข้อมูล ---
+
+$sheet->setCellValue('B1', 'พิมพ์โดย ' . $_FirstName);
 $sheet2->setCellValue('B4', 'วันที่พิมพ์ ' . date('d/m/Y') . ' ' . date('H:i:s'));
 $sheet2->getStyle('B1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
 $sheet2->getStyle('B4')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);

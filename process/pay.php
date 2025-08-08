@@ -525,11 +525,11 @@ function feeddata_waitReturn($conn, $db)
     $IsAdmin = $_SESSION['IsAdmin'];
 
     $return = [];
-    if ($IsAdmin == 1) {
-        $where = "";
-    } else {
-        $where = " AND itemstock.return_userID  = '$Userid' ";
-    }
+    // if ($IsAdmin == 1) {
+    //     $where = "";
+    // } else {
+    //     $where = "  ";
+    // }
 
     $query = " SELECT
                         item.itemname,
@@ -541,7 +541,7 @@ function feeddata_waitReturn($conn, $db)
                         item ON itemstock.ItemCode = item.itemcode
                     WHERE
                         itemstock.IsCross = 9
-                       $where
+                       AND itemstock.return_userID  = '$Userid'
                     GROUP BY
 	                    item.itemname  
                     ORDER BY itemstock.ReturnDate DESC ";
@@ -1434,6 +1434,7 @@ function show_detail_history($conn, $db)
                         INNER JOIN department ON department.ID = sell_department.departmentID 
                     WHERE
                         DATE( sell_department.serviceDate ) BETWEEN '$select_date_history_s' AND '$select_date_history_l'
+                        AND sell_department.IsCancel = 0
                         $whereHN2
                         $whereP2
                         $whereD2

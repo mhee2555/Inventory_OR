@@ -1112,8 +1112,15 @@ $("#btn_excel_all_department").click(function () {
 });
 
 $("#btn_excel_cost_department").click(function () {
-  option = "?DocNo=" + $("#btn_send_pay_department").data("DocNo");
-  window.open("report/phpexcel/Report_hn_cost_sell.php" + option, "_blank");
+
+  if ($("#btn_send_pay_department").data("DocNo") != undefined) {
+    option = "?DocNo=" + $("#btn_send_pay_department").data("DocNo");
+    window.open("report/phpexcel/Report_hn_cost_sell.php" + option, "_blank");
+  } else {
+    Swal.fire("ล้มเหลว", "กรุณาเลือกรายการ", "error");
+  }
+
+
 });
 
 function showDetail_Doctor(doctor) {

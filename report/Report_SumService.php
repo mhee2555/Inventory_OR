@@ -175,6 +175,7 @@ $query = "SELECT
             $where_date  
             AND deproom.DocNo NOT IN (SELECT set_hn.DocNo_deproom FROM set_hn WHERE DATE( set_hn.serviceDate ) = '$date1' AND set_hn.isStatus = 9  )
             AND deproom.IsCancel = 0
+            AND deproom.IsBlock = 0
             GROUP BY deproom.DocNo";
 
 

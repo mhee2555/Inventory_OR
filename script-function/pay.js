@@ -3619,11 +3619,17 @@ $("#select_department_sell_right").change(function (e) {
 
 
 function oncheck_Returnsell(input_returnpay_sell) {
-  // if ($("#input_Hn_pay").data("docno") == "") {
-  //   showDialogFailed("กรุณาเลือกห้องผ่าตัด");
-  //   $("#input_returnpay").val("");
-  //   return;
-  // }
+
+  if ($("#select_department_sell_right").val() == "") {
+    showDialogFailed("กรุณาเลือกหน่วยงาน");
+    $("#input_pay_sell").val("");
+    return;
+  }
+  if ($("#input_date_service_sell").val() == "") {
+    showDialogFailed("กรุณาเลือกวันที่");
+    $("#input_pay_sell").val("");
+    return;
+  }
 
   $.ajax({
     url: "process/pay_sell.php",
@@ -3656,11 +3662,16 @@ function oncheck_Returnsell(input_returnpay_sell) {
 
 
 function oncheck_sell(input_pay_sell) {
-  // if ($("#input_Hn_pay").data("docno") == "") {
-  //   showDialogFailed("กรุณาเลือกห้องผ่าตัด");
-  //   $("#input_pay_sell").val("");
-  //   return;
-  // }
+  if ($("#select_department_sell_right").val() == "") {
+    showDialogFailed("กรุณาเลือกหน่วยงาน");
+    $("#input_pay_sell").val("");
+    return;
+  }
+  if ($("#input_date_service_sell").val() == "") {
+    showDialogFailed("กรุณาเลือกวันที่");
+    $("#input_pay_sell").val("");
+    return;
+  }
   setTimeout(() => {
     $.ajax({
       url: "process/pay_sell.php",
