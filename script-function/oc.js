@@ -493,7 +493,11 @@ function show_detail_itemstock() {
 function set_detail_lot(itemcode,Item_name) {
   $(".clear_bg").css("background-color", "");
   $("#tr_" + itemcode).css("background-color", "rgb(239, 248, 255)");
-  $("#text_itemname").text(Item_name);
+
+  $("#text_itemname").empty()
+    .append($('<span>').text('ชื่ออุปกรณ์ : ').css('color', 'black'))
+    .append($('<span>').text(Item_name).css('color', 'rgb(100, 54, 149)'));
+
 
 
   

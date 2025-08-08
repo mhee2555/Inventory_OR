@@ -192,7 +192,12 @@
 <div id="row_department" class="row">
     <div class="col-md-6">
         <div class="row ">
-            <div class="col-md-6">
+            <div class="col-md-12">
+                <label style="color:black;font-weight: 600;">หน่วยงาน</label>
+                <select class="form-control f18" autocomplete="off" id="select_deproom_sell"></select>
+            </div>
+
+            <div class="col-md-6 mt-2">
                 <label for="" id="lang_text_date1" style="font-weight: 600;color:black;">วันที่</label>
 
 
@@ -203,7 +208,7 @@
                     </span>
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6 mt-2">
                 <label for="" id="lang_text_date2" style="font-weight: 600;color:black;">วันที่</label>
 
                 <div class="position-relative">

@@ -520,11 +520,11 @@
 <div id="history_pay">
 
     <div class="form-row align-items-end flex-wrap">
-        <div class="col-md-5">
-            <label class="font-weight-bold text-dark">วันที่</label>
+        <div class="col-md-11">
             <div class="form-row">
-                <div class="col">
 
+                <div class="col">
+                    <label class="font-weight-bold text-dark">วันที่เริ่ม</label>
                     <div class="position-relative">
                         <input type="text" class="form-control rounded pr-5 f18" placeholder="" id="select_date_history_S" data-language='en' data-date-format='dd-mm-yyyy'>
                         <span class="input-icon">
@@ -533,7 +533,7 @@
                     </div>
                 </div>
                 <div class="col">
-
+                    <label class="font-weight-bold text-dark">วันที่สิ้นสุด</label>
                     <div class="position-relative">
                         <input type="text" class="form-control rounded pr-5 f18" placeholder="" id="select_date_history_L" data-language='en' data-date-format='dd-mm-yyyy'>
                         <span class="input-icon">
@@ -541,13 +541,57 @@
                         </span>
                     </div>
                 </div>
+
+
+                <div class="col">
+                    <div class="position-relative">
+                    <label class="font-weight-bold text-dark">HN</label>
+                    <input type="text" class="form-control f18" id="input_hn_history">
+                    </div>
+                </div>
+
+                <div class="col">
+                    <label class="font-weight-bold text-dark">เงื่อนไข</label>
+                    <select class="form-control f18" id="select_typeSearch_history">
+                        <option value="">กรุณาเลือกประเภทการค้นหา</option>
+                        <option value="1">ห้องผ่าตัด</option>
+                        <option value="2">แพทย์</option>
+                        <option value="3">หัตถการ</option>
+                        <option value="4">อุปกรณ์</option>
+                    </select>
+                </div>
+
+
+                <div class="col" id="col_deproom_history">
+                    <label class="font-weight-bold text-dark">ห้องผ่าตัด</label>
+                    <select class="form-control f18" id="select_deproom_history"></select>
+                </div>
+
+                <div class="col" id="col_doctor_history">
+                    <label class="font-weight-bold text-dark">แพทย์</label>
+                    <select class="form-control f18" id="select_doctor_history"></select>
+                </div>
+
+                <div class="col" id="col_procedure_history">
+                    <label class="font-weight-bold text-dark">หัตถการ</label>
+                    <select class="form-control f18" id="select_procedure_history"></select>
+                </div>
+
+                <div class="col" id="col_item_history">
+                    <label class="font-weight-bold text-dark">อุปกรณ์</label>
+                    <select class="form-control f18" id="select_item_history"></select>
+                </div>
+
+
+
+
             </div>
         </div>
 
 
-    
 
-        <div class="col-md-2">
+
+        <!-- <div class="col-md-2">
             <label class="font-weight-bold text-dark">HN</label>
             <input type="text" class="form-control f18" id="input_hn_history">
         </div>
@@ -586,7 +630,7 @@
 
         <div class="col-md-2" id="col_hide">
 
-        </div>
+        </div> -->
   
         <div class="col-md-1 text-right">
             <button class="btn btn-outline-success" id="btn_show_report" style="font-size: 18px;width: 120px;"><i class="fa-solid fa-file-excel"></i> EXCEL</button>

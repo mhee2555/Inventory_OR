@@ -23,9 +23,10 @@ $(function () {
 
     $("#row_hn").hide();
     $("#row_department").show();
-
+      select_department();
     setTimeout(() => {
       show_detail_department();
+      $("#select_deproom_sell").select2();
     }, 500);
   });
 
@@ -98,6 +99,10 @@ $("#a_usage").click(function () {
 });
 
 
+$("#select_deproom_sell").change(function (e) {
+  show_detail_department();
+});
+
 
 function show_detail_department() {
   $.ajax({
@@ -107,6 +112,7 @@ function show_detail_department() {
       FUNC_NAME: "show_detail_department",
       select_SDate_department: $("#select_SDate_department").val(),
       select_EDate_department: $("#select_EDate_department").val(),
+      select_deproom_sell: $("#select_deproom_sell").val(),
     },
     success: function (result) {
       $("#table_detail_department").DataTable().destroy();
@@ -1294,6 +1300,29 @@ function open_LotNo(serielNo, lotNo, ExpireDate) {
   $("#lot_no").val(lotNo);
   $("#seriel_no").val(serielNo);
   $("#exp_lot").val(ExpireDate);
+}
+
+function select_department() {
+  $.ajax({
+    url: "process/process_main/select_main.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "select_department",
+    },
+    success: function (result) {
+      var ObjData = JSON.parse(result);
+      console.log(ObjData);
+      var option = `<option value="" selected>กรุณาเลือกหน่วยงาน</option>`;
+      if (!$.isEmptyObject(ObjData)) {
+        $.each(ObjData, function (kay, value) {
+          option += `<option value="${value.ID}" >${value.DepName}</option>`;
+        });
+      } else {
+        option = `<option value="0">ไม่มีข้อมูล</option>`;
+      }
+      $("#select_deproom_sell").html(option);
+    },
+  });
 }
 
 function session() {

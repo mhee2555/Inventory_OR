@@ -1239,41 +1239,73 @@ function showDetail_item_history($conn, $db)
 
 
     $query = " SELECT
-                        deproom.DocNo,
-                        DATE_FORMAT(deproom.serviceDate, '%d-%m-%Y') AS serviceDate,
-                        DATE_FORMAT( deproom.serviceDate, '%H:%i' ) AS serviceTime,
-                        deproom.hn_record_id,
-                        doctor.Doctor_Name,
-                        IFNULL(`procedure`.Procedure_TH, '') AS Procedure_TH,                        
-                        departmentroom.departmentroomname,
-                        doctor.ID AS doctor_ID,
-                        `procedure`.ID AS procedure_ID,
-                        departmentroom.id AS deproom_ID,
-                        deproom.Remark,
-                        deproom.doctor ,
-                        deproom.`procedure`,
-                        deproom.number_box ,
-                        COUNT(deproomdetailsub.ID) AS count_itemstock
-                    FROM
-                        deproom
-                    INNER JOIN
-                        deproomdetail ON deproom.DocNo = deproomdetail.DocNo
-                    INNER JOIN
-                        deproomdetailsub ON deproomdetailsub.Deproomdetail_RowID = deproomdetail.ID
-                    INNER JOIN
-                        doctor ON doctor.ID = deproom.doctor
-                    LEFT JOIN
-                        `procedure` ON deproom.procedure = `procedure`.ID
-                    INNER JOIN
-                        departmentroom ON deproom.Ref_departmentroomid = departmentroom.id
-                    LEFT JOIN users ON users.ID = deproom.userConfirm_pay
-                    WHERE
-                        DATE(deproom.ServiceDate) BETWEEN '$select_date_history_s' AND '$select_date_history_l'
-                        AND deproom.IsCancel = 0
-                        AND deproomdetail.ItemCode = '$select_item_history'
-                    GROUP BY deproom.DocNo
-                    ORDER BY deproom.ModifyDate DESC ";
+                    deproom.DocNo,
+                    DATE_FORMAT(deproom.serviceDate, '%d-%m-%Y') AS serviceDate,
+                    DATE_FORMAT( deproom.serviceDate, '%H:%i' ) AS serviceTime,
+                    deproom.hn_record_id,
+                    doctor.Doctor_Name,
+                    IFNULL(`procedure`.Procedure_TH, '') AS Procedure_TH,                        
+                    departmentroom.departmentroomname,
+                    doctor.ID AS doctor_ID,
+                    `procedure`.ID AS procedure_ID,
+                    departmentroom.id AS deproom_ID,
+                    deproom.Remark,
+                    deproom.doctor,
+                    deproom.`procedure`,
+                    deproom.number_box,
+                    COUNT(deproomdetailsub.ID) AS count_itemstock
+                FROM
+                    deproom
+                INNER JOIN
+                    deproomdetail ON deproom.DocNo = deproomdetail.DocNo
+                INNER JOIN
+                    deproomdetailsub ON deproomdetailsub.Deproomdetail_RowID = deproomdetail.ID
+                INNER JOIN
+                    doctor ON doctor.ID = deproom.doctor
+                LEFT JOIN
+                    `procedure` ON deproom.procedure = `procedure`.ID
+                INNER JOIN
+                    departmentroom ON deproom.Ref_departmentroomid = departmentroom.id
+                LEFT JOIN users ON users.ID = deproom.userConfirm_pay
+                WHERE
+                    DATE(deproom.ServiceDate) BETWEEN  '$select_date_history_s' AND '$select_date_history_l'
+                    AND deproom.IsCancel = 0
+                    AND deproomdetail.ItemCode = '$select_item_history'
+                GROUP BY deproom.DocNo
 
+                UNION ALL
+
+                SELECT
+                    sell_department.DocNo,
+                    DATE_FORMAT(sell_department.serviceDate, '%d-%m-%Y') AS serviceDate,
+                    DATE_FORMAT(sell_department.serviceDate, '%H:%i') AS serviceTime,
+                    department.DepName AS hn_record_id,
+                    '' AS Doctor_Name,
+                    '' AS Procedure_TH,
+                    '' AS  departmentroomname,
+                    0 AS doctor_ID,
+                    0 AS procedure_ID,
+                    sell_department.departmentID AS deproom_ID,
+                    'Sell Department' AS Remark,
+                    0 AS doctor,
+                    0 AS `procedure`,
+                    0 AS number_box,
+                    COUNT(sell_department_detail.ID) AS count_itemstock
+                FROM
+                    sell_department
+                INNER JOIN
+                    sell_department_detail ON sell_department.DocNo = sell_department_detail.DocNo
+                INNER JOIN
+                    department ON sell_department.departmentID = department.ID
+                LEFT JOIN
+                    itemstock ON sell_department_detail.ItemStockID = itemstock.RowID
+                WHERE
+                    DATE(sell_department.serviceDate) BETWEEN '$select_date_history_s' AND '$select_date_history_l'
+                    AND sell_department.IsCancel = 0
+                    AND sell_department_detail.ItemCode = '$select_item_history'
+                GROUP BY sell_department.DocNo
+
+                ORDER BY serviceDate DESC ";
 
 
 

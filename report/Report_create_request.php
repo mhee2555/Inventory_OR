@@ -46,7 +46,7 @@ class MYPDF extends TCPDF
                                 DATE_FORMAT(deproom.serviceDate, '%H:%i') AS serviceTime,
                                 deproom.hn_record_id,
                                 doctor.Doctor_Name,
-                                `procedure`.Procedure_TH,
+                                ( SELECT GROUP_CONCAT( `procedure`.Procedure_TH SEPARATOR ' , ' ) AS Procedures FROM `procedure` WHERE FIND_IN_SET( `procedure`.ID, deproom.`procedure` ) ) AS Procedure_TH,
                                 departmentroom.departmentroomname,
                                 doctor.ID AS doctor_ID,
                                 `procedure`.ID AS procedure_ID,
@@ -390,7 +390,7 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
     // ถ้าเปลี่ยนประเภท ให้ใส่หัวกลุ่ม
     if ($currentType != $itemType) {
         $currentType = $itemType;
-        $html .= '<tr style="font-weight:bold;font-size:13px;background-color:#f1e9f9;" align="center;">
+        $html .= '<tr style="font-weight:bold;font-size:13px;background-color:rgb(100, 54, 149);color:#fff;" align="center;">
                     <td colspan="3" >' . htmlspecialchars($itemType, ENT_QUOTES, 'UTF-8') . '</td>
                   </tr>';
     }

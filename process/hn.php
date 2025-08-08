@@ -470,6 +470,12 @@ function show_detail_department($conn, $db)
     $select_EDate = explode("-", $select_EDate);
     $select_EDate = $select_EDate[2] . '-' . $select_EDate[1] . '-' . $select_EDate[0];
 
+    $select_deproom_sell = $_POST['select_deproom_sell'];
+
+    $whereD = "";
+    if($select_deproom_sell != ""){
+        $whereD = "AND department.ID = '$select_deproom_sell' ";
+    }
         $query = "SELECT
                         his.IsStatus AS his_IsStatus,
                         sell_department.departmentID,
@@ -483,6 +489,7 @@ function show_detail_department($conn, $db)
                         INNER JOIN department ON department.ID = sell_department.departmentID 
                     WHERE
                         DATE(sell_department.serviceDate) BETWEEN '$select_SDate'  AND '$select_EDate' 
+                        $whereD
                     GROUP BY
                         department.DepName  ";
     

@@ -319,16 +319,16 @@ $(function () {
     $("#select_typeSearch_history").val('');
 
     if (!$("#select_deproom_history").hasClass("select2-hidden-accessible")) {
-      $("#select_deproom_history").select2();
+      // $("#select_deproom_history").select2();
     }
     if (!$("#select_doctor_history").hasClass("select2-hidden-accessible")) {
-      $("#select_doctor_history").select2();
+      // $("#select_doctor_history").select2();
     }
     if (!$("#select_procedure_history").hasClass("select2-hidden-accessible")) {
-      $("#select_procedure_history").select2();
+      // $("#select_procedure_history").select2();
     }
     if (!$("#select_item_history").hasClass("select2-hidden-accessible")) {
-      $("#select_item_history").select2();
+      // $("#select_item_history").select2();
     }
 
     setTimeout(() => {
@@ -2206,6 +2206,10 @@ $("#select_typeSearch_history").change(function (e) {
     $("#col_item_history").attr("hidden", true);
     $("#col_hide").attr("hidden", true);
     // $("#col_hide_2").attr("hidden", false);
+
+    setTimeout(() => {
+      $("#select_deproom_history").select2();
+    }, 300);
   }
   if ($(this).val() == "2") {
     $("#col_deproom_history").attr("hidden", true);
@@ -2214,6 +2218,10 @@ $("#select_typeSearch_history").change(function (e) {
     $("#col_item_history").attr("hidden", true);
     $("#col_hide").attr("hidden", true);
     // $("#col_hide_2").attr("hidden", false);
+    setTimeout(() => {
+      $("#select_doctor_history").select2();
+    }, 300);
+
   }
   if ($(this).val() == "3") {
     $("#col_deproom_history").attr("hidden", true);
@@ -2222,6 +2230,10 @@ $("#select_typeSearch_history").change(function (e) {
     $("#col_item_history").attr("hidden", true);
     $("#col_hide").attr("hidden", true);
     // $("#col_hide_2").attr("hidden", false);
+
+    setTimeout(() => {
+      $("#select_procedure_history").select2();
+    }, 300);
   }
   if ($(this).val() == "4") {
     $("#col_deproom_history").attr("hidden", true);
@@ -2230,10 +2242,18 @@ $("#select_typeSearch_history").change(function (e) {
     $("#col_item_history").attr("hidden", false);
     $("#col_hide").attr("hidden", true);
     // $("#col_hide_2").attr("hidden", false);yy
+
+    setTimeout(() => {
+      $("#select_item_history").select2();
+    }, 300);
   }
 });
 
+
+
 $("#select_item_history").change(function (e) {
+
+
 
   if ($("#select_item_history").val() != "") {
     $("#myModal_Detail_item_history").modal('toggle');
@@ -2241,7 +2261,7 @@ $("#select_item_history").change(function (e) {
     let selectedText = $("#select_item_history option:selected").text();
 
     $("#header_item").text(selectedText);
-
+    $("#select_item_history").val("").trigger("change");
     showDetail_item_history();
   }
 });
@@ -2383,6 +2403,16 @@ $("#checkbox_filter").change(function () {
   $("#select_deproom_history_block").val("").trigger("change");
   $("#select_doctor_history_block").val("").trigger("change");
   $("#select_procedure_history_block").val("").trigger("change");
+  $("#select_typeSearch_history_block").val("");
+
+  
+
+  $("#col_deproom_history_block").attr("hidden", true);
+  $("#col_doctor_history_block").attr("hidden", true);
+  $("#col_procedure_history_block").attr("hidden", true);
+
+  $("#col_hide_2_block").attr("hidden", true);
+  $("#col_hide_block").attr("hidden", false);
   setTimeout(() => {
     show_detail_history_block();
   }, 500);
@@ -3809,12 +3839,13 @@ function show_detail_department() {
                       <td class='text-center'>                      
                         <i class="fa-solid fa-chevron-up" style='font-size:20px;cursor:pointer;' id='open_${value.departmentID}' value='0' onclick='open_depertment_sell("${value.departmentID}")'></i>
                       </td>
-                      <td class='text-center'>${value.DepName}</td>
+                      <td class="f24 text-left" style='font-weight:bold;'>${value.DepName}</td>
                    </tr>`;
 
           $.each(ObjData[value.departmentID], function (kay2, value2) {
-            _tr += `<tr style='cursor:pointer;' class='tr_${value.departmentID} all111'  onclick="setActive_department('${value2.DocNo}','${value.departmentID}','${value2.ServiceDate}','${value2.ServiceTime}')" id='trbg_department_${value2.DocNo}'>
-                      <td class='text-center' colspan="2">${value2.DocNo}</td>
+            _tr += `<tr style='cursor:pointer;' class='tr_${value.departmentID} all111'   id='trbg_department_${value2.DocNo}'>
+                      <td class='text-center' > <input  type="checkbox" id="checkbox2_${value2.DocNo}" onclick="setActive_department('${value2.DocNo}','${value.departmentID}','${value2.ServiceDate}','${value2.ServiceTime}')" class="ml-4 form-check-input position-static clear_checkbox2"  style="width: 20px;height: 20px;accent-color: #9A53FF;"></input></td>
+                      <td class='text-left' >${value2.DocNo}</td>
                    </tr>`;
           });
 
@@ -3830,6 +3861,9 @@ function show_detail_department() {
 }
 
 function setActive_department(DocNo, departmentID, ServiceDate, ServiceTime) {
+
+  $(".clear_checkbox2").prop("checked", false);
+  $("#checkbox2_" + DocNo).prop("checked", true);
   $(".all111").css("background-color", "");
   $("#trbg_department_" + DocNo).css("background-color", "rgb(249, 245, 255)");
 
