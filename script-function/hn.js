@@ -471,6 +471,7 @@ function setActive_feeddata_hncode_detail(ID, DocNo, HnCode, his_IsStatus) {
     } else {
       $("#edit_his").attr("disabled", true);
     }
+    $("#edit_his").data("his_status", his_IsStatus);
 
     $("#btn_send_pay").attr("disabled", true);
     $("#tr_" + ID).css("background-color", "lightgreen");
@@ -481,6 +482,25 @@ function setActive_feeddata_hncode_detail(ID, DocNo, HnCode, his_IsStatus) {
 }
 // ========================================================================================HIS
 $("#edit_his").click(function () {
+
+    var his_IsStatus = $("#edit_his").data("his_status");
+
+
+    if (his_IsStatus == "null") {
+    $("#edit_his").attr("disabled", true);
+      return;
+  } else {
+    if (his_IsStatus == "2") {
+    } else {
+      $("#edit_his").attr("disabled", true);
+      return;
+    }
+  }
+  if(his_IsStatus == ""){
+      $("#edit_his").attr("disabled", true);
+      return;
+  }
+  
   $("#myCustomModal").modal("toggle");
   $("#table_add_his tbody").empty();
   $("#table_return_his tbody").empty();
@@ -1338,8 +1358,7 @@ function session() {
       Permission_name = ObjData.Permission_name;
       Userid = ObjData.Userid;
 
-      $("#input_Deproom_Main").val(Permission_name);
-      $("#input_Name_Main").val(UserName);
+      
     },
   });
 }

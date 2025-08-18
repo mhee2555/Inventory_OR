@@ -25,6 +25,63 @@
 <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/css/dropify.css" integrity="sha512-In/+MILhf6UMDJU4ZhDL0R0fEpsp4D3Le23m6+ujDWXwl3whwpucJG1PEmI3B07nyJx+875ccs+yX2CqQJUxUw==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
 
 <style>
+
+
+
+/* ให้ Sidebar สูงเต็ม body */
+#accordionSidebar {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ส่วนเมนูเลื่อน scroll ได้ */
+.sb-sidenav-menu {
+  flex: 1 1 auto;
+  overflow-y: auto;
+}
+
+/* ปุ่ม logout ติดล่าง */
+#li_logout {
+  background: #194185;
+  padding: 10px;
+  text-align: center;
+}
+
+    #table_DepRoom_rfid_movement thead th:nth-child(-n+7),
+    #table_DepRoom_rfid_movement tbody td:nth-child(-n+7) {
+        min-width: 80px;
+        /* ปรับค่าตามจริงของแต่ละคอลัมน์ */
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+
+    #table_DepRoom_movement thead th:nth-child(-n+7),
+    #table_DepRoom_movement tbody td:nth-child(-n+7) {
+        min-width: 80px;
+        /* ปรับค่าตามจริงของแต่ละคอลัมน์ */
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+
+    #table_DepRoom_normal_movement thead th:nth-child(-n+7),
+    #table_DepRoom_normal_movement tbody td:nth-child(-n+7) {
+        min-width: 80px;
+        /* ปรับค่าตามจริงของแต่ละคอลัมน์ */
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+
+
+    /* th:nth-child(1),
+    td:nth-child(1) {
+        min-width: 50px !important;
+    } */
+
     .position-relative {
         width: 100%;
         /* ปรับขนาดตามต้องการ */

@@ -1,6 +1,8 @@
 var GN_WarningExpiringSoonDay = "";
 var departmentroomname = "";
 var UserName = "";
+var display = "";
+
 $(function () {
   session();
 
@@ -245,7 +247,11 @@ $("#btn_damage").on("click", function (e) {
 
     $("#ic_mainpage").attr("src", "assets/img_project/3_icon/ic_mainpage.png");
     $("#li_main").addClass("active");
-    $("#li_main").css("background-color", "#643695");
+    if (display == 2) {
+      $("#li_main").css("background-color", "rgb(60, 32, 90)");
+    } else {
+      $("#li_main").css("background-color", "#643695");
+    }
 
     $("#conMain").html(res);
     history.pushState({}, "Results for `Cats`", "index.php?s=damaged");
@@ -264,7 +270,11 @@ $("#btn_nouse").on("click", function (e) {
 
     $("#ic_mainpage").attr("src", "assets/img_project/3_icon/ic_mainpage.png");
     $("#li_main").addClass("active");
-    $("#li_main").css("background-color", "#643695");
+    if (display == 2) {
+      $("#li_main").css("background-color", "rgb(60, 32, 90)");
+    } else {
+      $("#li_main").css("background-color", "#643695");
+    }
 
     $("#conMain").html(res);
     history.pushState({}, "Results for `Cats`", "index.php?s=nouse");
@@ -283,7 +293,11 @@ $("#btn_oc").on("click", function (e) {
 
     $("#ic_mainpage").attr("src", "assets/img_project/3_icon/ic_mainpage.png");
     $("#li_main").addClass("active");
-    $("#li_main").css("background-color", "#643695");
+    if (display == 2) {
+      $("#li_main").css("background-color", "rgb(60, 32, 90)");
+    } else {
+      $("#li_main").css("background-color", "#643695");
+    }
 
     $("#conMain").html(res);
     history.pushState({}, "Results for `Cats`", "index.php?s=oc");
@@ -302,7 +316,11 @@ $("#btn_request_item").on("click", function (e) {
 
     $("#ic_mainpage").attr("src", "assets/img_project/3_icon/ic_mainpage.png");
     $("#li_main").addClass("active");
-    $("#li_main").css("background-color", "#643695");
+    if (display == 2) {
+      $("#li_main").css("background-color", "rgb(60, 32, 90)");
+    } else {
+      $("#li_main").css("background-color", "#643695");
+    }
 
     $("#conMain").html(res);
     history.pushState({}, "Results for `Cats`", "index.php?s=request_item");
@@ -322,7 +340,11 @@ $("#btn_hn").on("click", function (e) {
 
     $("#ic_mainpage").attr("src", "assets/img_project/3_icon/ic_mainpage.png");
     $("#li_main").addClass("active");
-    $("#li_main").css("background-color", "#643695");
+    if (display == 2) {
+      $("#li_main").css("background-color", "rgb(60, 32, 90)");
+    } else {
+      $("#li_main").css("background-color", "#643695");
+    }
 
     $("#conMain").html(res);
     history.pushState({}, "Results for `Cats`", "index.php?s=hn_daily");
@@ -341,7 +363,12 @@ $("#btn_borrow").on("click", function (e) {
 
     $("#ic_mainpage").attr("src", "assets/img_project/3_icon/ic_mainpage.png");
     $("#li_main").addClass("active");
-    $("#li_main").css("background-color", "#643695");
+
+    if (display == 2) {
+      $("#li_main").css("background-color", "rgb(60, 32, 90)");
+    } else {
+      $("#li_main").css("background-color", "#643695");
+    }
 
     $("#conMain").html(res);
     history.pushState({}, "Results for `Cats`", "index.php?s=borrow");
@@ -359,7 +386,11 @@ $("#btn_receive_stock").on("click", function (e) {
 
     $("#ic_mainpage").attr("src", "assets/img_project/3_icon/ic_mainpage.png");
     $("#li_main").addClass("active");
-    $("#li_main").css("background-color", "#643695");
+    if (display == 2) {
+      $("#li_main").css("background-color", "rgb(60, 32, 90)");
+    } else {
+      $("#li_main").css("background-color", "#643695");
+    }
 
     $("#conMain").html(res);
     history.pushState({}, "Results for `Cats`", "index.php?s=recieve_stock");
@@ -377,7 +408,11 @@ $("#btn_ex").on("click", function (e) {
 
     $("#ic_mainpage").attr("src", "assets/img_project/3_icon/ic_mainpage.png");
     $("#li_main").addClass("active");
-    $("#li_main").css("background-color", "#643695");
+    if (display == 2) {
+      $("#li_main").css("background-color", "rgb(60, 32, 90)");
+    } else {
+      $("#li_main").css("background-color", "#643695");
+    }
     $("#conMain").html(res);
     history.pushState({}, "Results for `Cats`", "index.php?s=ex");
     document.title = "ex";
@@ -395,7 +430,11 @@ $("#btn_exsoon").on("click", function (e) {
 
     $("#ic_mainpage").attr("src", "assets/img_project/3_icon/ic_mainpage.png");
     $("#li_main").addClass("active");
-    $("#li_main").css("background-color", "#643695");
+    if (display == 2) {
+      $("#li_main").css("background-color", "rgb(60, 32, 90)");
+    } else {
+      $("#li_main").css("background-color", "#643695");
+    }
 
     $("#conMain").html(res);
     history.pushState({}, "Results for `Cats`", "index.php?s=ex");
@@ -414,7 +453,11 @@ $("#btn_use_deproom").on("click", function (e) {
 
     $("#ic_mainpage").attr("src", "assets/img_project/3_icon/ic_mainpage.png");
     $("#li_main").addClass("active");
-    $("#li_main").css("background-color", "#643695");
+    if (display == 2) {
+      $("#li_main").css("background-color", "rgb(60, 32, 90)");
+    } else {
+      $("#li_main").css("background-color", "#643695");
+    }
 
     $("#conMain").html(res);
     history.pushState({}, "Results for `Cats`", "index.php?s=use_deproom");
@@ -463,6 +506,7 @@ function session() {
       UserName = ObjData.UserName;
       deproom = ObjData.deproom;
       RefDepID = ObjData.RefDepID;
+      display = ObjData.display;
     },
   });
 }

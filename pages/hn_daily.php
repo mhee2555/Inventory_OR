@@ -1,44 +1,3 @@
-<div>
-
-
-    <div class="container-fluid">
-        <div class="row justify-content-end mt-3">
-            <div class="col-auto">
-                <div class="input-group" style="background-color: #f1f3fb; border-radius: 10px; border: 1px solid #dce0eb; overflow: hidden;">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"
-                            style="border: none; background-color: white; font-weight: bold; border-right: 1px solid #dce0eb;">
-                            สิทธิ์การเข้าใช้งาน :
-                        </span>
-                    </div>
-                    <input type="text" class="form-control font-weight-bold"
-                        id="input_Deproom_Main" disabled
-                        style="background-color: #f1f3fb; border: none; color: #000;">
-                </div>
-            </div>
-
-            <div class="col-auto ml-2">
-                <div class="input-group" style="background-color: #f1f3fb; border-radius: 10px; border: 1px solid #dce0eb; overflow: hidden;">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"
-                            style="border: none; background-color: white; font-weight: bold; border-right: 1px solid #dce0eb;">
-                            ชื่อผู้ใช้งาน :
-                        </span>
-                    </div>
-                    <input type="text" class="form-control font-weight-bold"
-                        id="input_Name_Main" disabled
-                        style="background-color: #f1f3fb; border: none; color: #000;">
-                </div>
-            </div>
-        </div>
-    </div>
-
-</div>
-
-<hr>
-
-
-
 <div class="row mt-3">
     <div class=" col-md-12 col-lg-9  ">
 
@@ -83,6 +42,13 @@
                 <label class="form-check-label f18 ml-4 mt-1" for="checkbox_filter" style="color:black;font-weight:bold;">แสดงเอกสารคงค้าง</label>
             </div>
         </div>
+
+        <div class="col-md-3 text-right" style="margin-top: 38px;">
+            <button class="btn btn-success f18" id="btn_Show_Report1">รายงาน1</button>
+            <button class="btn btn-success f18" id="btn_Show_Report2">รายงาน2</button>
+        </div>
+
+
     </div>
     <div class="row mt-2">
 
@@ -206,7 +172,7 @@
                         <thead class="table-active sticky-top">
                             <tr>
                                 <th scope="col" class="text-center" id="">วันที่</th>
-                                <th scope="col" class="text-center" id="">HN Number</th>
+                                <th scope="col" class="text-center" id="">เลขประจำตัวผู้ป่วย</th>
                                 <th scope="col" class="text-center" id="">แพทย์</th>
                                 <th scope="col" class="text-center" id="">หัตถการ</th>
                                 <th scope="col" class="text-center" id="" style="width: 23%;">สถานะ</th>

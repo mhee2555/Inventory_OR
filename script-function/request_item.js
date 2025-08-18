@@ -4,7 +4,7 @@ var RtDocNo_x = "";
 $(function () {
 
 
-      
+
   $("#customSwitch1").change(function () {
     if ($(this).is(":checked")) {
       showdetail(RqDocNo_x, RtDocNo_x, 1);
@@ -58,9 +58,14 @@ $(function () {
   session();
   show_detail_item_request();
 
+
+
+
   if (localStorage.request_item == 1) {
     $("#radio_receive").click();
     localStorage.removeItem("request_item");
+  }else{
+    $("#select_typeItem_request").select2();
   }
 });
 
@@ -82,6 +87,8 @@ $("#btn_clear_request").click(function () {
   $("#input_docnoRQ").val("");
 
   select_type();
+
+
   show_detail_item_request();
 });
 
@@ -216,6 +223,7 @@ function show_detail_item_request() {
             targets: 4,
           },
         ],
+        autoWidth: false,
         info: false,
         scrollX: false,
         scrollCollapse: false,
@@ -229,13 +237,13 @@ function show_detail_item_request() {
       if (_tr == "") {
         $(".dataTables_info").text(
           settext("dataTables_Showing") +
-            " 0 " +
-            settext("dataTables_to") +
-            " 0 " +
-            settext("dataTables_of") +
-            " 0 " +
-            settext("dataTables_entries") +
-            ""
+          " 0 " +
+          settext("dataTables_to") +
+          " 0 " +
+          settext("dataTables_of") +
+          " 0 " +
+          settext("dataTables_entries") +
+          ""
         );
       }
 
@@ -384,13 +392,13 @@ function show_detail_request_byDocNo() {
       if (_tr == "") {
         $(".dataTables_info").text(
           settext("dataTables_Showing") +
-            " 0 " +
-            settext("dataTables_to") +
-            " 0 " +
-            settext("dataTables_of") +
-            " 0 " +
-            settext("dataTables_entries") +
-            ""
+          " 0 " +
+          settext("dataTables_to") +
+          " 0 " +
+          settext("dataTables_of") +
+          " 0 " +
+          settext("dataTables_entries") +
+          ""
         );
       }
 
@@ -412,6 +420,8 @@ function set_menu() {
     $("#row_request").show();
     $("#row_receive").hide();
     $("#row_history").hide();
+
+    $("#select_typeItem_request").select2();
   });
 
   $("#radio_receive").click(function () {
@@ -457,9 +467,7 @@ function select_type() {
         option = `<option value="0">ไม่มีข้อมูล</option>`;
       }
       $("#select_typeItem_request").html(option);
-      $("#select_typeItem_request").select2();
 
-      $("#select_typeItem_request").html(option);
     },
   });
 }
@@ -476,8 +484,7 @@ function session() {
       RefDepID = ObjData.RefDepID;
       Permission_name = ObjData.Permission_name;
 
-      $("#input_Deproom_Main").val(Permission_name);
-      $("#input_Name_Main").val(UserName);
+
     },
   });
 }
@@ -527,7 +534,7 @@ function show_Report(RqDocNo, RtDocNo) {
   window.open("report/request_item.php" + option, "_blank");
 }
 
-$("#customSwitch1").click(function () {});
+$("#customSwitch1").click(function () { });
 
 function showdetail_popup(RqDocNo, RtDocNo) {
   RqDocNo_x = RqDocNo;

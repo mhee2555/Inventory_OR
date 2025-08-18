@@ -1,5 +1,10 @@
         <!-- Sidebar -->
-        <ul class="navbar-nav sidebar sidebar-dark accordion " id="accordionSidebar" style="overflow-y: auto;border: 2px solid #D0D5DD;">
+        <!-- <ul class="navbar-nav sidebar sidebar-dark accordion " id="accordionSidebar" style="overflow-y: auto;border: 2px solid #D0D5DD;"> -->
+        <ul class="navbar-nav sidebar sidebar-dark accordion " id="accordionSidebar" style="height: 100%; display: flex; flex-direction: column; border: 2px solid #D0D5DD;">
+
+
+            <!-- Sidebar - Brand -->
+
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
                 <div class="sidebar-brand-text mx-3 color_menu">
@@ -15,7 +20,8 @@
             <p style="text-align: center;color: white;" class="mb-0 f14" >
                <span id="span_site">Sriphat Medical Center Chiang Mai</span>
             </p> -->
-            <div class="sb-sidenav-menu" id="mydiv" style="flex-grow:1;overflow-y: auto;max-height: 1000px;flex-grow:1;">
+
+            <div class="sb-sidenav-menu" id="mydiv">
                 <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_main">
                     <a class="collapse-item" href="pages/main.php" style="color: black;font-size: 16px;" id="a_main">
                         <img id="ic_mainpage" style="width: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;">
@@ -161,6 +167,13 @@
                         <label style="font-size: 17px;color: #667085;" class="color_menu" id="menu17">กำหนดสิทธิการเข้าถึง</label>
                     </a>
                 </li>
+                <!-- 
+                <li class="nav-item collapse-inner rounded mt-3 text-center" id="li_permission" style="margin-bottom: 0rem;">
+                    <div style="padding: 10px; text-align: center;background: #194185; " id="li_logout">
+                        <i class="fa-solid fa-right-from-bracket" style="color: #ffff;font-size: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;"></i>
+                        <label style="font-size: 20px;color: white;" id="menu_logout">ออกจากระบบ</label>
+                    </div>
+                </li> -->
 
 
 
@@ -169,8 +182,7 @@
 
 
 
-
-                <hr class="sidebar-divider d-none d-md-block">
+                <!-- <hr class="sidebar-divider d-none d-md-block"> -->
 
 
 
@@ -194,10 +206,18 @@
 
             </div>
 
-            <div style="padding: 10px; text-align: center;background: #194185; " id="li_logout">
-                <i class="fa-solid fa-right-from-bracket" style="color: #ffff;font-size: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;"></i>
+            
+
+            <div id="li_logout" >
+                <i class="fa-solid fa-right-from-bracket"
+                    style="color: #ffff;font-size: 65px;margin: auto;"></i>
                 <label style="font-size: 20px;color: white;" id="menu_logout">ออกจากระบบ</label>
             </div>
+
+            <!-- <div style="padding: 10px; text-align: center;background: #194185;  position: sticky;bottom: 0; z-index: 10;  " id="li_logout">
+                <i class="fa-solid fa-right-from-bracket" style="color: #ffff;font-size: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;"></i>
+                <label style="font-size: 20px;color: white;" id="menu_logout">ออกจากระบบ</label>
+            </div> -->
 
 
             <!-- <div class="sb-sidenav-footer">

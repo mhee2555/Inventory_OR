@@ -129,28 +129,53 @@ function showDetail_Permission($conn, $db)
 
 
     $query = "SELECT
-                permission.Permission,
-                item.warehouseID,
-                SUM(CASE WHEN deproomdetail.IsRequest = 0 THEN deproomdetail.Qty ELSE 0 END) AS cnt,
-                SUM(IFNULL( subs.total_qty_weighing, 0 )) AS cnt_pay,
-                SUM(
-                CASE
-                    WHEN IFNULL(( SELECT SUM( deproomdetailsub.qty_weighing ) FROM deproomdetailsub WHERE deproomdetailsub.Deproomdetail_RowID = deproomdetail.ID ), 0 ) < deproomdetail.Qty THEN
-                    1 ELSE 0 
-                    END 
-                    ) AS cnt_over 
-                FROM
-                    deproom
-                    INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
-                    INNER JOIN item ON deproomdetail.ItemCode = item.itemcode
-                    INNER JOIN permission ON permission.PmID = item.warehouseID
-                    LEFT JOIN ( SELECT Deproomdetail_RowID, SUM( qty_weighing ) AS total_qty_weighing FROM deproomdetailsub GROUP BY Deproomdetail_RowID ) AS subs ON subs.Deproomdetail_RowID = deproomdetail.ID 
-                WHERE
-                    deproom.DocNo = '$DocNo' 
-                    AND deproom.IsCancel = 0 
-                    AND deproomdetail.IsCancel = 0 
-            GROUP BY
-                item.warehouseID; ";
+    permission.Permission,
+    item.warehouseID,
+
+    -- จำนวนรายการทั้งหมดที่ IsRequest = 0
+    SUM(CASE
+        WHEN deproomdetail.IsRequest = 0 THEN deproomdetail.Qty
+        ELSE 0
+    END) AS cnt,
+
+    -- จำนวนที่ชั่งน้ำหนักรวม (จาก subquery รวม)
+    (
+        SELECT SUM(subs.qty_weighing)
+        FROM deproomdetailsub subs
+        WHERE subs.Deproomdetail_RowID IN (
+            SELECT d.ID
+            FROM deproomdetail d
+            INNER JOIN deproom dp ON d.DocNo = dp.DocNo
+            WHERE dp.DocNo = '$DocNo'
+              AND dp.IsCancel = 0
+              AND d.IsCancel = 0
+        )
+    ) AS cnt_pay,
+
+    -- นับว่ารายการไหนยังไม่ครบ (over)
+    SUM(
+        CASE
+            WHEN IFNULL((
+                SELECT SUM(subs.qty_weighing)
+                FROM deproomdetailsub subs
+                WHERE subs.Deproomdetail_RowID = deproomdetail.ID
+            ), 0) < deproomdetail.Qty THEN 1
+            ELSE 0
+        END
+    ) AS cnt_over
+
+FROM deproom
+INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
+INNER JOIN item ON deproomdetail.ItemCode = item.itemcode
+INNER JOIN permission ON permission.PmID = item.warehouseID
+
+WHERE
+    deproom.DocNo = '$DocNo'
+    AND deproom.IsCancel = 0
+    AND deproomdetail.IsCancel = 0
+
+GROUP BY item.warehouseID;
+";
 
     // echo $query;
     $meQuery = $conn->prepare($query);
@@ -992,7 +1017,6 @@ function cancel_item_byDocNo($conn, $db)
 
         $meQuery3 = $conn->prepare($sql3);
         $meQuery3->execute();
-        
     } else {
         $insert_log = "INSERT INTO log_activity_users (itemCode, qty, isStatus, DocNo, userID, createAt) 
                         VALUES ('', :qty, :isStatus, :DocNo, :Userid, NOW())";
@@ -1359,6 +1383,8 @@ function show_detail_history($conn, $db)
     $input_hn_history = $_POST['input_hn_history'];
     $select_doctor_history = $_POST['select_doctor_history'];
     $select_procedure_history = $_POST['select_procedure_history'];
+    $select_deproom_sell_history = $_POST['select_deproom_sell_history'];
+    $select_typeSearch_history = $_POST['select_typeSearch_history'];
 
 
     $select_date_history_s = explode("-", $select_date_history_s);
@@ -1378,14 +1404,14 @@ function show_detail_history($conn, $db)
         // $select_procedure_history = implode(",", $select_procedure_history);
         // $whereP = " AND  FIND_IN_SET('$select_procedure_history', deproom.`procedure`) ";
         $whereP = "  AND deproom.`procedure` = '$select_procedure_history'  ";
-        $whereP2 = " AND  department.DepName LIKE '%$input_hn_history%'  ";
+        $whereP2 = " AND  department.DepName LIKE '%$select_procedure_history%'  ";
     }
     $whereD = "";
     $whereD2 = "";
     if ($select_doctor_history != "") {
         // $select_doctor_history = implode(",", $select_doctor_history);
         $whereD = "  AND deproom.`doctor` = '$select_doctor_history'  ";
-        $whereD2 = " AND  department.DepName LIKE '%$input_hn_history%'  ";
+        $whereD2 = " AND  department.DepName LIKE '%$select_doctor_history%'  ";
     }
 
     $whereHN = "";
@@ -1404,8 +1430,20 @@ function show_detail_history($conn, $db)
         $whereR2 = "";
         if ($select_deproom_history != "") {
             $whereR = " AND deproom.Ref_departmentroomid = '$select_deproom_history' ";
-            $whereR2 = " AND  department.DepName LIKE '%$input_hn_history%'  ";
+            $whereR2 = " AND  department.DepName LIKE '%$select_deproom_history%'  ";
         }
+
+        $whereDD = "";
+        $whereDD2 = "";
+        if ($select_deproom_sell_history != "") {
+            $whereDD = " AND departmentroom.departmentroomname LIKE '%$select_deproom_sell_history%' ";
+            $whereDD2 = " AND  sell_department.departmentID = '$select_deproom_sell_history'  ";
+        }
+
+        if ($select_typeSearch_history == 5) {
+            $whereDD = " AND departmentroom.departmentroomname LIKE '%sdsds%' ";
+        }
+
 
         $query = "SELECT
                         deproom.DocNo,
@@ -1441,6 +1479,7 @@ function show_detail_history($conn, $db)
                          $whereP
                          $whereR
                          $whereHN
+                         $whereDD
                     GROUP BY
                         deproom.DocNo UNION ALL
                     SELECT
@@ -1471,10 +1510,12 @@ function show_detail_history($conn, $db)
                         $whereP2
                         $whereD2
                         $whereR2
+                        $whereDD2
                     GROUP BY
-                        department.DepName 
+                        sell_department.DocNo 
                     ORDER BY
                         serviceDate DESC; ";
+
 
 
         // $query = " SELECT

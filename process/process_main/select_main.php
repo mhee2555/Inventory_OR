@@ -50,7 +50,8 @@ function select_department($conn)
                     department.ID, 
                     department.DepName
                 FROM
-                    department ";
+                    department 
+                WHERE department.IsAutomaticPayout = 0 ";
 
     $meQuery = $conn->prepare($query);
     $meQuery->execute();
@@ -490,13 +491,14 @@ function select_item($conn)
     $permission = $_SESSION['permission'];
     $wherepermission = "";
     if ($permission != '5') {
-        $wherepermission = " WHERE item.warehouseID = $permission ";
+        $wherepermission = " AND item.warehouseID = $permission ";
     }
 
     $query = "SELECT item.itemcode,
                      item.itemname
               FROM 
                     item  
+              WHERE item.IsCancel = '0' 
                $wherepermission
             ORDER BY item.itemname ASC ";
 

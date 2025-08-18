@@ -1,44 +1,4 @@
-<div>
 
-
-
-
-
-    <div class="container-fluid">
-        <div class="row justify-content-end mt-3">
-            <div class="col-auto">
-                <div class="input-group" style="background-color: #f1f3fb; border-radius: 10px; border: 1px solid #dce0eb; overflow: hidden;">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"
-                            style="border: none; background-color: white; font-weight: bold; border-right: 1px solid #dce0eb;">
-                            สิทธิ์การเข้าใช้งาน :
-                        </span>
-                    </div>
-                    <input type="text" class="form-control font-weight-bold"
-                        id="input_Deproom_Main" disabled
-                        style="background-color: #f1f3fb; border: none; color: #000;">
-                </div>
-            </div>
-
-            <div class="col-auto ml-2">
-                <div class="input-group" style="background-color: #f1f3fb; border-radius: 10px; border: 1px solid #dce0eb; overflow: hidden;">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"
-                            style="border: none; background-color: white; font-weight: bold; border-right: 1px solid #dce0eb;">
-                            ชื่อผู้ใช้งาน :
-                        </span>
-                    </div>
-                    <input type="text" class="form-control font-weight-bold"
-                        id="input_Name_Main" disabled
-                        style="background-color: #f1f3fb; border: none; color: #000;">
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-
-</div>
 
 <div class="row mt-3">
     <div class=" col-md-12 col-lg-9">
@@ -102,7 +62,7 @@
                         <button id="btn_input" class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="font-size: 18px !important;">เลข HN Number</button>
                         <input type="text" class="form-control" id="input_type_search" hidden>
                         <div class="dropdown-menu" style="font-size: 18px !important;z-index: 9999;">
-                            <a class="dropdown-item" href="#" id="a_hnxxx">เลข HN Number</a>
+                            <a class="dropdown-item" href="#" id="a_hnxxx">เลขประจำตัวผู้ป่วย</a>
                             <a class="dropdown-item" href="#" id="a_usage">รหัสอุปกรณ์</a>
                         </div>
                     </div>
@@ -118,7 +78,7 @@
                                 <tr>
                                     <th scope="col" style="width: 5%; text-align: center;" id="td_no">ลำดับ</th>
                                     <th scope="col" class="text-center" id="td_date">วันที่</th>
-                                    <th scope="col" class="text-center" id="td_hn">HN Number</th>
+                                    <th scope="col" class="text-center" id="td_hn">เลขประจำตัวผู้ป่วย</th>
                                     <th scope="col" class="text-center" id="td_roomcheck">ห้องผ่าตัด</th>
                                     <th scope="col" class="text-center" id="td_doctor">แพทย์</th>
                                     <th scope="col" class="text-center" id="td_procedure">หัตถการ</th>

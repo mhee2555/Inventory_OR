@@ -42,14 +42,16 @@ class MYPDF extends TCPDF
         $this->SetFont('db_helvethaica_x', 'b', 22);
         $DocNo = $_GET['DocNo'];
 
-        if($db == 1){
+        if ($db == 1) {
             $query = " SELECT 
                             hncode.HnCode,
                             hncode.number_box,
                             DATE_FORMAT(deproom.serviceDate, '%d/%m/%Y') AS date1,
                             DATE_FORMAT(deproom.serviceDate, '%H:%i') AS time1,
-                            `procedure`.Procedure_EN AS Procedure_TH,
-                            doctor.Doctor_Name_EN AS Doctor_Name,
+                            -- `procedure`.Procedure_EN AS Procedure_TH,
+                            -- doctor.Doctor_Name_EN AS Doctor_Name,
+                             ( SELECT GROUP_CONCAT( `doctor`.Doctor_Name SEPARATOR ' , ' ) AS Doctor_Name FROM `doctor` WHERE FIND_IN_SET( `doctor`.ID, deproom.`doctor` ) ) AS Doctor_Name,
+                             ( SELECT GROUP_CONCAT( `procedure`.Procedure_TH SEPARATOR ' , ' ) AS Procedures FROM `procedure` WHERE FIND_IN_SET( `procedure`.ID, deproom.`procedure` ) ) AS Procedure_TH,
                             departmentroom.departmentroomname_EN ,
                             deproom.Remark
                         FROM 
@@ -60,7 +62,7 @@ class MYPDF extends TCPDF
                             INNER JOIN deproom ON deproom.DocNo = hncode.DocNo_SS
                         WHERE 
                             hncode.DocNo = '$DocNo' ";
-        }else{
+        } else {
             $query = " SELECT
                             hncode.HnCode,
                             FORMAT(hncode.ModifyDate , 'dd/MM/yyyy') AS date1,
@@ -75,15 +77,15 @@ class MYPDF extends TCPDF
                             INNER JOIN dbo.departmentroom ON hncode.departmentroomid = departmentroom.id
                         WHERE  hncode.DocNo = '$DocNo' ";
         }
- 
+
         $meQuery1 = $conn->prepare($query);
         $meQuery1->execute();
         while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
-            
+
             $number_box =   $Result_Detail['number_box'];
             $HnCode =   $Result_Detail['HnCode'];
 
-            if($HnCode == ""){
+            if ($HnCode == "") {
                 $HnCode = $number_box;
             }
             $_Remark =   $Result_Detail['Remark'];
@@ -270,7 +272,7 @@ $html = '<table border="1" cellpadding="4" cellspacing="0" align="center">
 
 $count = 1;
 
-if($db == 1){
+if ($db == 1) {
     $Sql_Detail = "SELECT
                         hncode.ID,
                         item.itemname,
@@ -305,7 +307,7 @@ if($db == 1){
                         AND hncode.DocNo = '$DocNo'
                     ORDER BY
                         hncode.ID ASC ";
-}else{
+} else {
     $Sql_Detail = "SELECT
     hncode.ID,
     item.itemname,
@@ -348,11 +350,11 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
 
 
     // $file = "images/LOGO_bkx.png";
-    if($Result_Detail['UsageCode'] == null){
+    if ($Result_Detail['UsageCode'] == null) {
         $usageCode = $Result_Detail['itemcode2'];
         $itemname = $Result_Detail['itemname2'];
         $file = 'images/temp_qrcode_' . $usageCode . '.png';  // สร้างชื่อไฟล์ QR Code แบบไม่ซ้ำกัน
-    }else{
+    } else {
         $usageCode = $Result_Detail['UsageCode'];
         $itemname = $Result_Detail['itemname'];
         $file = 'images/temp_qrcode_' . $usageCode . '.png';  // สร้างชื่อไฟล์ QR Code แบบไม่ซ้ำกัน
@@ -368,7 +370,7 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
     // Generates QR Code and Save as PNG
     QRcode::png($usageCode, $file, $ecc, $pixel_size, $frame_size);
 
-  
+
 
     $html .= '<tr nobr="true" style="font-size:13px;"  >';
     $html .=   '<td width="5%"  style="vertical-align: middle;height: 50px;">' . htmlspecialchars($count) . '</td>';

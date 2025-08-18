@@ -1,36 +1,4 @@
-<div>
 
-
-
-
-
-
-    <div class="row">
-        <div class="col-md-6">
-        </div>
-        <div class="col-lg-3 mt-3 text-right">
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <div class="input-group-text" id="lang_text_roomcheck" style="    background-color: white;border: none;">สิทธิ์การเข้าใช้งาน : </div>
-                </div>
-                <input type="text" class="form-control f18" id="input_Deproom_Main" disabled value="" style="font-weight: bold;">
-            </div>
-        </div>
-        <div class="col-lg-3 mt-3 text-right">
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <div class="input-group-text" id="lang_text_username" style="    background-color: white;border: none;">ชื่อผู้ใช้งาน : </div>
-                </div>
-                <input type="text" class="form-control f18" id="input_Name_Main" disabled value="" style="font-weight: bold;">
-            </div>
-        </div>
-    </div>
-
-
-
-</div>
-
-<hr>
 
 
 <div class="row">

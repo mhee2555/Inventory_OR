@@ -203,6 +203,7 @@ $(function () {
         }
       } else {
         $("#btn_excel").attr("hidden", false);
+        $("#btn_png").attr("hidden", true);
 
 
         if ($(this).val() == 10) {
@@ -794,8 +795,7 @@ function session() {
       Permission_name = ObjData.Permission_name;
       Userid = ObjData.Userid;
 
-      $("#input_Deproom_Main").val(Permission_name);
-      $("#input_Name_Main").val(UserName);
+      
     },
   });
 }

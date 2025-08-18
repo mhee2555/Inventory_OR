@@ -6,6 +6,25 @@ require('../../config/db.php');
 require('../../connect/connect.php');
 require('../Class.php');
 
+
+$whereR = "";
+$select_deproom_history = $_GET['select_deproom_history'];
+if ($select_deproom_history!= "") {
+    $whereR = " AND deproom.Ref_departmentroomid = '$select_deproom_history' ";
+}
+
+$whereD = "";
+$select_doctor_history = $_GET['select_doctor_history'];
+if ($select_doctor_history!= "") {
+    $whereD = "  AND deproom.`doctor` = '$select_doctor_history'  ";
+}
+
+$whereP = "";
+$select_procedure_history = $_GET['select_procedure_history'];
+if ($select_procedure_history!= "") {
+    $whereP = "  AND deproom.`procedure` = '$select_procedure_history'  ";
+}
+
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
@@ -93,6 +112,11 @@ $select_date_history_l = $select_date_history_l[2] . '-' . $select_date_history_
 $dataArray = [];
 
 
+
+
+
+
+
 if ($db == 1) {
     $query = " SELECT
                     item.itemname,
@@ -108,6 +132,9 @@ if ($db == 1) {
                     AND deproom.IsCancel = 0 
                     AND deproomdetail.IsCancel = 0 
                     AND item.SpecialID = '0' 
+                    $whereD
+                    $whereP
+                    $whereR
                     AND deproomdetailsub.ItemStockID IS NOT NULL 
                 GROUP BY
                     item.itemname,
@@ -204,16 +231,16 @@ $sheet->getStyle('B8:B' . ($row - 1))->applyFromArray($styleArray_Center);
 $sheet->getStyle('A8')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 // --- จัดรูปแบบความกว้างของคอลัมน์ ---
 $sheet->getColumnDimension('A')->setWidth(40); // คอลัมน์ A กว้างขึ้น
-$sheet->getColumnDimension('B')->setWidth(15); // คอลัมน์ B ปรับอัตโนมัติ
+$sheet->getColumnDimension('B')->setWidth(25); // คอลัมน์ B ปรับอัตโนมัติ
 $sheet->getColumnDimension('C')->setWidth(15); // คอลัมน์ B ปรับอัตโนมัติ
 // ====================================================================================================
 
 // สร้างไฟล์ Excel
 $sheet2 = $spreadsheet->createSheet();
-$sheet2->setTitle("lotincabinet");
+$sheet2->setTitle("Weighing");
 
 // --- ใส่โลโก้ ---
-$sheet2->mergeCells('A1:A5');
+// $sheet2->mergeCells('A1:A5');
 $drawing = new Drawing();
 $drawing->setName('Logo');
 $drawing->setPath('logo.png'); // เปลี่ยนเป็นไฟล์โลโก้ของคุณ
@@ -225,10 +252,9 @@ $drawing->setWorksheet($sheet2);
 
 
 // --- ผสานเซลล์ ---
-$sheet2->mergeCells('B1:C3'); // พิมพ์โดย poseMA
-$sheet2->mergeCells('B4:C5'); // วันที่พิมพ์
-$sheet2->mergeCells('A7:B7'); // หัวข้อ "SUDs"
-
+$sheet2->mergeCells('A2:B2'); // พิมพ์โดย poseMA
+$sheet2->mergeCells('A4:B4'); // วันที่พิมพ์
+$sheet2->mergeCells('A6:B6'); // เวลา
 
 
 $Userid = $_GET['Userid'];
@@ -248,15 +274,18 @@ while ($row_user = $meQuery_user->fetch(PDO::FETCH_ASSOC)) {
 
 // --- ใส่ข้อมูล ---
 
-$sheet->setCellValue('A2', 'พิมพ์โดย ' . $_FirstName);
-$sheet2->setCellValue('B4', 'วันที่พิมพ์ ' . date('d/m/Y') . ' ' . date('H:i:s'));
-$sheet2->getStyle('B1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
-$sheet2->getStyle('B4')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+$sheet2->setCellValue('A2', 'พิมพ์โดย ' . $_FirstName);
+$sheet2->setCellValue('A4', 'วันที่พิมพ์ ' . date('d/m/Y') . ' ' . date('H:i:s'));
+$sheet2->setCellValue('A6', $text_date);
+
+$sheet2->getStyle('A2')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+$sheet2->getStyle('A4')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+$sheet2->getStyle('A6')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
 
 
 
 // --- หัวตาราง ---
-$sheet2->setCellValue('A7', 'items lotincabinet'); // หัวข้อ
+$sheet2->setCellValue('A7', 'Weighing'); // หัวข้อ
 $sheet2->setCellValue('A8', 'ชื่อเครื่องมือ');
 $sheet2->setCellValue('B8', 'จำนวน');
 
@@ -286,6 +315,9 @@ $query = " SELECT
                 AND deproom.IsCancel = 0 
                 AND deproomdetail.IsCancel = 0 
                 AND item.SpecialID = '2' 
+                $whereD
+                $whereP
+                $whereR
             GROUP BY
                 item.itemname,
                 item.itemcode 
@@ -347,7 +379,7 @@ $sheet2->getStyle('A8')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CEN
 $sheet2->getStyle('B8:B' . ($row - 1))->applyFromArray($styleArray_Center);
 // --- จัดรูปแบบความกว้างของคอลัมน์ ---
 $sheet2->getColumnDimension('A')->setWidth(40); // คอลัมน์ A กว้างขึ้น
-$sheet2->getColumnDimension('B')->setWidth(15); // คอลัมน์ B ปรับอัตโนมัติ
+$sheet2->getColumnDimension('B')->setWidth(25); // คอลัมน์ B ปรับอัตโนมัติ
 $sheet2->getColumnDimension('C')->setWidth(15); // คอลัมน์ B ปรับอัตโนมัติ
 
 
@@ -366,7 +398,7 @@ $sheet2 = $spreadsheet->createSheet();
 $sheet2->setTitle("อุปกรณ์ปกติ");
 
 // --- ใส่โลโก้ ---
-$sheet2->mergeCells('A1:A5');
+// $sheet2->mergeCells('A1:A5');
 $drawing = new Drawing();
 $drawing->setName('Logo');
 $drawing->setPath('logo.png'); // เปลี่ยนเป็นไฟล์โลโก้ของคุณ
@@ -378,9 +410,9 @@ $drawing->setWorksheet($sheet2);
 
 
 // --- ผสานเซลล์ ---
-$sheet2->mergeCells('B1:C3'); // พิมพ์โดย poseMA
-$sheet2->mergeCells('B4:C5'); // วันที่พิมพ์
-$sheet2->mergeCells('A7:B7'); // หัวข้อ "SUDs"
+$sheet2->mergeCells('A2:B2'); // พิมพ์โดย poseMA
+$sheet2->mergeCells('A4:B4'); // วันที่พิมพ์
+$sheet2->mergeCells('A6:B6'); // เวลา
 
 
 
@@ -403,11 +435,14 @@ while ($row_user = $meQuery_user->fetch(PDO::FETCH_ASSOC)) {
 
 // --- ใส่ข้อมูล ---
 
-$sheet->setCellValue('B1', 'พิมพ์โดย ' . $_FirstName);
-$sheet2->setCellValue('B4', 'วันที่พิมพ์ ' . date('d/m/Y') . ' ' . date('H:i:s'));
-$sheet2->getStyle('B1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
-$sheet2->getStyle('B4')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
 
+$sheet2->setCellValue('A2', 'พิมพ์โดย ' . $_FirstName);
+$sheet2->setCellValue('A4', 'วันที่พิมพ์ ' . date('d/m/Y') . ' ' . date('H:i:s'));
+$sheet2->setCellValue('A6', $text_date);
+
+$sheet2->getStyle('A2')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+$sheet2->getStyle('A4')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+$sheet2->getStyle('A6')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
 
 
 // --- หัวตาราง ---
@@ -441,6 +476,9 @@ $query = " SELECT
                 AND deproom.IsCancel = 0 
                 AND deproomdetail.IsCancel = 0 
                 AND item.SpecialID = '1' 
+                $whereD
+                $whereP
+                $whereR
             GROUP BY
                 item.itemname,
                 item.itemcode 
@@ -502,7 +540,7 @@ $sheet2->getStyle('A8')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CEN
 $sheet2->getStyle('B8:B' . ($row - 1))->applyFromArray($styleArray_Center);
 // --- จัดรูปแบบความกว้างของคอลัมน์ ---
 $sheet2->getColumnDimension('A')->setWidth(40); // คอลัมน์ A กว้างขึ้น
-$sheet2->getColumnDimension('B')->setWidth(15); // คอลัมน์ B ปรับอัตโนมัติ
+$sheet2->getColumnDimension('B')->setWidth(25); // คอลัมน์ B ปรับอัตโนมัติ
 $sheet2->getColumnDimension('C')->setWidth(15); // คอลัมน์ B ปรับอัตโนมัติ
 
 

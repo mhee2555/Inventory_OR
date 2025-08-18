@@ -705,6 +705,8 @@ function saveUser() {
         showDialogFailed("รหัสพนักงานซ้ำ");
       } else if (result == "2") {
         showDialogFailed("UserNameซ้ำ");
+      } else if (result == "3") {
+        showDialogFailed("รหัสพนักงานซ้ำ หรือ UserNameซ้ำ");
       } else {
         showDialogSuccess(result);
         feeddata_detailUser();
@@ -991,7 +993,7 @@ function saveDeproom() {
     },
     success: function (result) {
       if (result == "xxxx") {
-        showDialogFailed("ตัวย่อซ้ำ");
+        showDialogFailed("ชื่อ ซ้ำ");
       } else {
         showDialogSuccess(result);
         feeddata_detailDeproom();
@@ -1219,8 +1221,7 @@ function session() {
       RefDepID = ObjData.RefDepID;
       Permission_name = ObjData.Permission_name;
 
-      $("#input_Deproom_Main").val(Permission_name);
-      $("#input_Name_Main").val(UserName);
+      
     },
   });
 }
@@ -2388,6 +2389,28 @@ $("#input_search_request").keyup(function () {
   show_detail_item();
 });
 
+
+
+
+$("#select_deproom_routine").change(function () {
+  if ($("#routine_id").val() != "") {
+    $.ajax({
+      url: "process/manage.php",
+      type: "POST",
+      data: {
+        FUNC_NAME: "save_deproom_routine",
+        deproom_routine: $("#select_deproom_routine").val(),
+        routine_id: $("#routine_id").val(),
+      },
+      success: function (result) {
+        
+      },
+    });
+  } else {
+    show_detail_request_byDocNo_change();
+  }
+});
+
 $("#select_procedure_routine").change(function () {
   if ($("#routine_id").val() != "") {
     $.ajax({
@@ -2398,7 +2421,9 @@ $("#select_procedure_routine").change(function () {
         procedure_routine: $("#select_procedure_routine").val(),
         routine_id: $("#routine_id").val(),
       },
-      success: function (result) {},
+      success: function (result) {
+        
+      },
     });
   } else {
     show_detail_request_byDocNo_change();

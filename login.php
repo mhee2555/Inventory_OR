@@ -195,6 +195,12 @@
             })
 
 
+            $("#input_UserName, #input_PassWord").keypress(function(e) {
+                if (e.which == 13) {
+                    LoginUser();
+                }
+            });
+
             $('#input_Scan').keypress(function(e) {
                 if (e.which == 13) {
                     LoginUser();
@@ -310,7 +316,7 @@
 
                         });
                     } else {
-                        text = "ผู้ใช้หรือรหัสผ่านผิด";
+                        text = "ชื่อผู้เข้าใช้งานหรือรหัสผ่านไม่ถูกต้อง";
                         showDialogFailed(text);
 
                         $("#input_Scan").val("");

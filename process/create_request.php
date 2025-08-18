@@ -90,9 +90,11 @@ function check_routine($conn, $db)
                 FROM
                     routine_detail
                     INNER JOIN routine ON routine_detail.routine_id = routine.id 
+                    INNER JOIN item ON item.itemcode = routine_detail.itemcode 
                 WHERE
                     routine.doctor = '$doctor_Array' 
                     AND routine.proceduce = '$procedure_id_Array' 
+                    AND item.IsCancel = '0' 
                     AND routine.departmentroomid = '$select_deproom_request' ";
     $meQuery = $conn->prepare($select);
     $meQuery->execute();
@@ -582,6 +584,7 @@ function show_detail_history($conn, $db)
                         DATE_FORMAT( deproom.serviceDate, '%d-%m-%Y' ) AS serviceDate,
                         DATE_FORMAT( deproom.serviceDate, '%H:%i' ) AS serviceTime,
                         deproom.hn_record_id,
+                        deproom.number_box,
                         doctor.Doctor_Name,
                         IFNULL( `procedure`.Procedure_TH, '' ) AS Procedure_TH,
                         departmentroom.departmentroomname,
@@ -592,7 +595,7 @@ function show_detail_history($conn, $db)
                         deproom.doctor,
                         deproom.`procedure` ,
                         deproomdetailsub.ID  AS cnt_id,
-                        deproomdetail.IsStart 
+                        SUM( CASE WHEN deproomdetail.IsStart = 1 AND deproomdetailsub.ID IS NOT NULL THEN 1 ELSE 0 END ) AS cnt_start_with_sub
                     FROM
                         deproom
                         INNER JOIN doctor ON doctor.ID = deproom.doctor

@@ -30,9 +30,9 @@ $(function () {
   // Set the value of the input
   $("#select_time_request").val(currentTime);
 
-  // $("#select_date_request").val(set_date());
+  $("#select_date_request").val(set_date());
   $("#select_date_request").datepicker({
-    onSelect: function (date) {},
+    onSelect: function (date) { },
   });
   $("#select_date_history_s").val(output);
   $("#select_date_history_s").datepicker({
@@ -128,7 +128,6 @@ $(function () {
     $("#col_hide").attr("hidden", false);
   });
 
-  show_detail_item_request();
   select_deproom();
   select_procedure();
   select_doctor();
@@ -202,6 +201,7 @@ $(function () {
   });
 
   set_hn();
+  show_detail_item_request();
 });
 
 function set_hn() {
@@ -376,7 +376,7 @@ $("#btn_routine").click(function () {
   qty_array = [];
   itemcode_array = [];
 
-  if ($("#input_hn_request").val() == "") {
+  if ($("#input_hn_request").val().trim() == "") {
     showDialogFailed("กรุณากรอก HN Number");
     return;
   }
@@ -532,11 +532,11 @@ $("#btn_clear_request").click(function () {
   select_doctor();
 });
 
-$("#input_hn_request").on("keyup", function (e) {
-  if (e.keyCode == 32) {
-    $("#input_hn_request").val("");
-  }
-});
+// $("#input_hn_request").on("keyup", function (e) {
+//   if (e.keyCode == 32) {
+//     $("#input_hn_request").val("");
+//   }
+// });
 
 $("#input_search_request").on("keyup", function (e) {
   show_detail_item_request();
@@ -547,7 +547,7 @@ $("#btn_confirm_send_request").click(function () {
     showDialogFailed("กรุณากรอก เพิ่มรายการ");
     return;
   }
-  if ($("#input_hn_request").val() == "") {
+  if ($("#input_hn_request").val().trim() == "") {
     showDialogFailed("กรุณากรอก HN Number");
     return;
   }
@@ -615,6 +615,7 @@ function show_detail_item_request() {
     },
     success: function (result) {
       var _tr = "";
+      $("#table_item_request tbody").html("");
       $("#table_item_request").DataTable().destroy();
       var ObjData = JSON.parse(result);
       if (!$.isEmptyObject(ObjData)) {
@@ -622,12 +623,8 @@ function show_detail_item_request() {
           _tr += `<tr>
                       <td class='text-center' >${kay + 1}</td>
                       <td>${value.Item_name}</td>
-                      <td class='text-left'> <label style='color: lightgray;max-width: 240px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;' title='${
-                        value.TyeName
-                      }'>${value.TyeName}</label> </td>
-                      <td class='text-center'><input type='text' class='numonly form-control loop_qty_request text-center' data-itemcode="${
-                        value.itemcode
-                      }"></td>
+                      <td class='text-left'> <label style='color: lightgray;max-width: 240px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;' title='${value.TyeName}'>${value.TyeName}</label> </td>
+                      <td class='text-center'><input type='text' class='numonly form-control loop_qty_request text-center' data-itemcode="${value.itemcode}"></td>
                    </tr>`;
         });
       }
@@ -669,6 +666,7 @@ function show_detail_item_request() {
             targets: 3,
           },
         ],
+        autoWidth: false,
         info: false,
         scrollX: false,
         scrollCollapse: false,
@@ -682,13 +680,13 @@ function show_detail_item_request() {
       if (_tr == "") {
         $(".dataTables_info").text(
           settext("dataTables_Showing") +
-            " 0 " +
-            settext("dataTables_to") +
-            " 0 " +
-            settext("dataTables_of") +
-            " 0 " +
-            settext("dataTables_entries") +
-            ""
+          " 0 " +
+          settext("dataTables_to") +
+          " 0 " +
+          settext("dataTables_of") +
+          " 0 " +
+          settext("dataTables_entries") +
+          ""
         );
       }
 
@@ -763,17 +761,13 @@ function show_detail_request_byDocNo() {
           _tr += `<tr tr_${value.ID}>
                       <td class='text-center'>${kay + 1}</td>
                       <td>${value.itemname}</td>
-                      <td class='text-center'><input type="text" onblur="updateDetail_qty(${
-                        value.ID
-                      },'${
-            value.itemcode
-          }')" class="form-control text-center qty_loop numonly" id="qty_item_${
-            value.ID
-          }" data-id='${value.ID}' value='${value.cnt}'> </td>
+                      <td class='text-center'><input type="text" onblur="updateDetail_qty(${value.ID
+            },'${value.itemcode
+            }')" class="form-control text-center qty_loop numonly" id="qty_item_${value.ID
+            }" data-id='${value.ID}' value='${value.cnt}'> </td>
                       <td class='text-center'>
-                      <img src="assets/img_project/1_icon/ic_trash-1.png" style='width:50%;cursor:pointer;' onclick='delete_request_byItem(${
-                        value.ID
-                      })'>
+                      <img src="assets/img_project/1_icon/ic_trash-1.png" style='width:50%;cursor:pointer;' onclick='delete_request_byItem(${value.ID
+            })'>
                       </td>
                    </tr>`;
         });
@@ -829,13 +823,13 @@ function show_detail_request_byDocNo() {
       if (_tr == "") {
         $(".dataTables_info").text(
           settext("dataTables_Showing") +
-            " 0 " +
-            settext("dataTables_to") +
-            " 0 " +
-            settext("dataTables_of") +
-            " 0 " +
-            settext("dataTables_entries") +
-            ""
+          " 0 " +
+          settext("dataTables_to") +
+          " 0 " +
+          settext("dataTables_of") +
+          " 0 " +
+          settext("dataTables_entries") +
+          ""
         );
       }
 
@@ -858,7 +852,7 @@ function updateDetail_qty(ID, itemcode) {
       txt_docno_request: $("#txt_docno_request").val(),
       qty: $("#qty_item_" + ID).val(),
     },
-    success: function (result) {},
+    success: function (result) { },
   });
 }
 
@@ -876,7 +870,7 @@ function add_request_qty(ID) {
       ID: ID,
       qty: qty,
     },
-    success: function (result) {},
+    success: function (result) { },
   });
 }
 
@@ -898,7 +892,7 @@ function delete_request_qty(ID) {
       ID: ID,
       qty: qty,
     },
-    success: function (result) {},
+    success: function (result) { },
   });
 }
 
@@ -1091,31 +1085,30 @@ function show_detail_history() {
           } else {
             var edit_id = ``;
 
-            if (value.IsStart == null) {
-              var showreport = `<button disabled class='btn f18 btn-success' onclick='show_Report("${value.DocNo}")')'>ถูกสแกนจ่าย</button>`;
+            if (value.cnt_start_with_sub > 0) {
+              var showreport = `<button  class='btn f18 btn-success' onclick='show_Report("${value.DocNo}")')'>ถูกสแกนจ่าย</button>`;
             } else {
               var showreport = `<button  class='btn f18 btn-success' onclick='show_Report("${value.DocNo}")')'>ถูกสแกนจ่าย</button>`;
             }
+          }
+
+          if (value.hn_record_id == "") {
+            value.hn_record_id = value.number_box;
           }
           //  <td hidden class='text-center'><button class='btn-block btn btn-outline-danger f18' onclick='cancel_item_byDocNo("${value.DocNo
           //       }")' >ยกเลิก</button></td>
           _tr += `<tr>
                       <td class='text-center'>${kay + 1}</td>
-                      <td class='text-center'>${value.serviceDate} ${
-            value.serviceTime
-          }</td>
-                      <td class='text-center' style='max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>${
-                        value.hn_record_id
-                      }</td>
-                      <td class='text-left' style='max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>${
-                        value.Doctor_Name
-                      }</td>
-                      <td class='text-left' style='max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;' ${title}>${
-            value.Procedure_TH
-          }</td>
-                      <td class='text-left' style='max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>${
-                        value.departmentroomname
-                      }</td>
+                      <td class='text-center'>${value.serviceDate} ${value.serviceTime
+            }</td>
+                      <td class='text-center' style='max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>${value.hn_record_id
+            }</td>
+                      <td class='text-left' style='max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>${value.Doctor_Name
+            }</td>
+                      <td class='text-left' style='max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;' ${title}>${value.Procedure_TH
+            }</td>
+                      <td class='text-left' style='max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>${value.departmentroomname
+            }</td>
                       <td class='text-center'>${edit_id}</td>
                
                       <td class='text-center'>${showreport}</td>
@@ -1189,13 +1182,13 @@ function show_detail_history() {
       if (_tr == "") {
         $(".dataTables_info").text(
           settext("dataTables_Showing") +
-            " 0 " +
-            settext("dataTables_to") +
-            " 0 " +
-            settext("dataTables_of") +
-            " 0 " +
-            settext("dataTables_entries") +
-            ""
+          " 0 " +
+          settext("dataTables_to") +
+          " 0 " +
+          settext("dataTables_of") +
+          " 0 " +
+          settext("dataTables_entries") +
+          ""
         );
       }
     },
@@ -1627,8 +1620,7 @@ function session() {
       Permission_name = ObjData.Permission_name;
       Userid = ObjData.Userid;
 
-      $("#input_Deproom_Main").val(Permission_name);
-      $("#input_Name_Main").val(UserName);
+
     },
   });
 }

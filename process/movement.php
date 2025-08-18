@@ -62,18 +62,18 @@ function show_restock($conn, $db)
         $count_itemstock = 0;
 
         $query = "DELETE FROM itemstock_transaction_detail  WHERE ItemStockID = '$_RowID'  ";
-         $meQuery = $conn->prepare($query);
-            $meQuery->execute();
+        $meQuery = $conn->prepare($query);
+        $meQuery->execute();
 
 
         // $query_2 = "SELECT
         //                     deproomdetailsub.ID ,
         //                     hncode_detail.ID AS hndetail_ID,
-	    //                     deproomdetail.ItemCode,
-	    //                     deproomdetail.DocNo,
-	    //                     DATE(deproom.serviceDate) AS ModifyDate,
-	    //                     deproom.number_box,
-	    //                     deproom.hn_record_id
+        //                     deproomdetail.ItemCode,
+        //                     deproomdetail.DocNo,
+        //                     DATE(deproom.serviceDate) AS ModifyDate,
+        //                     deproom.number_box,
+        //                     deproom.hn_record_id
         //                 FROM
         //                     deproom
         //                     INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
@@ -84,7 +84,7 @@ function show_restock($conn, $db)
         //                     deproomdetailsub.ItemStockID = '$_RowID' 
         //                     AND hncode_detail.ItemStockID = '$_RowID' 
         //                 ORDER BY
-	    //                     deproomdetailsub.ID DESC LIMIT 1 ";
+        //                     deproomdetailsub.ID DESC LIMIT 1 ";
         // // echo $query_2;
         // // exit;
         // $meQuery_2 = $conn->prepare($query_2);
@@ -229,65 +229,72 @@ function selection_item_normal($conn, $db)
         $wherepermission = " AND item.warehouseID = $permission ";
     }
 
-    $Q1 = "SELECT
-                sub.itemname,
-                sub.itemcode,
-                sub.stock_max,
-                sub.stock_min,
-                sub.stock_balance,
-                ( sub.cnt - sub.cnt_pay ) AS calculated_balance,
-                sub.cnt,
-                sub.cnt_pay,
-                sub.cnt_cssd,
-                sub.balance,
-                sub.damage 
-            FROM
-                (
-                SELECT
-                    item.itemname,
-                    item.itemcode,
-                    item.stock_max,
-                    item.stock_min,
-                    item.stock_balance,
-                    COUNT( itemstock.RowID ) AS cnt,
-                    ( SELECT COUNT( ID ) FROM itemstock_transaction_detail WHERE ItemCode = item.itemcode AND IsStatus = 1 ) AS cnt_pay,
-                    ( SELECT COUNT( ID ) FROM itemstock_transaction_detail WHERE ItemCode = item.itemcode AND IsStatus = 7 ) AS cnt_cssd,
-                    (
-                    SELECT
-                        COUNT( RowID ) 
-                    FROM
-                        itemstock 
-                    WHERE
-                        ItemCode = item.itemcode 
-                        AND ( IsDamage = 0 OR IsDamage IS NULL ) 
-                        AND Isdeproom NOT IN ( 1, 2, 3, 4, 5, 6, 7, 8, 9 ) 
-                    ) AS balance,
-                    ( SELECT COUNT( RowID ) FROM itemstock WHERE ItemCode = item.itemcode AND ( IsDamage = 1 OR IsDamage = 2 ) ) AS damage 
-                FROM
-                    item
-                    LEFT JOIN itemstock ON itemstock.ItemCode = item.itemcode 
-                WHERE
-                        ( item.itemname LIKE '%$input_search%' OR item.itemcode LIKE '%$input_search%' ) 
-                   AND item.SpecialID = '1' 
-                   AND item.IsCancel = '0' 
-                   $wherepermission
-                GROUP BY
-                    item.itemname,
-                    item.itemcode,
-                    item.stock_max,
-                    item.stock_min,
-                    item.stock_balance 
-                ) AS sub 
-            ORDER BY
-            CASE
-                    
-                    WHEN ( sub.cnt - sub.cnt_pay ) < sub.stock_min THEN
-                    0 ELSE 1 
-                END,
-                sub.cnt DESC ,
-                sub.itemname; ";
+    $Q1 = "      SELECT
+                    i.itemname,
+                    i.itemcode,
+                    i.stock_max,
+                    i.stock_min,
+                    i.stock_balance,
+                    (IFNULL(s.cnt, 0) - IFNULL(tp.cnt_pay, 0)) AS calculated_balance,
+                    IFNULL(s.cnt, 0) AS cnt,
+                    IFNULL(tp.cnt_pay, 0) AS cnt_pay,
+                    IFNULL(tc.cnt_cssd, 0) AS cnt_cssd,
+                    IFNULL(sb.balance, 0) AS balance,
+                    IFNULL(dm.damage, 0) AS damage
 
-    // echo $Q1 ;
+                FROM item i
+
+                -- นับทั้งหมดใน itemstock
+                LEFT JOIN (
+                    SELECT ItemCode, COUNT(*) AS cnt
+                    FROM itemstock
+                    GROUP BY ItemCode
+                ) s ON s.ItemCode = i.itemcode
+
+                -- นับจำนวนที่ถูกจ่าย
+                LEFT JOIN (
+                    SELECT ItemCode, COUNT(*) AS cnt_pay
+                    FROM itemstock_transaction_detail
+                    WHERE IsStatus = 1
+                    GROUP BY ItemCode
+                ) tp ON tp.ItemCode = i.itemcode
+
+                -- นับที่ cssd
+                LEFT JOIN (
+                    SELECT ItemCode, COUNT(*) AS cnt_cssd
+                    FROM itemstock_transaction_detail
+                    WHERE IsStatus = 7
+                    GROUP BY ItemCode
+                ) tc ON tc.ItemCode = i.itemcode
+
+                -- นับ balance ตามเงื่อนไข
+                LEFT JOIN (
+                    SELECT ItemCode, COUNT(*) AS balance
+                    FROM itemstock
+                    WHERE (IsDamage = 0 OR IsDamage IS NULL)
+                    AND Isdeproom NOT IN (1,2,3,4,5,6,7,8,9)
+                    GROUP BY ItemCode
+                ) sb ON sb.ItemCode = i.itemcode
+
+                -- นับ damage
+                LEFT JOIN (
+                    SELECT ItemCode, COUNT(*) AS damage
+                    FROM itemstock
+                    WHERE IsDamage IN (1, 2)
+                    GROUP BY ItemCode
+                ) dm ON dm.ItemCode = i.itemcode
+
+                WHERE
+                    (i.itemname LIKE '%$input_search%' OR i.itemcode LIKE '%$input_search%')
+                    AND i.SpecialID = '1'
+                    AND i.IsCancel = '0'
+
+                ORDER BY
+                    CASE WHEN (IFNULL(s.cnt, 0) - IFNULL(tp.cnt_pay, 0)) < i.stock_min THEN 0 ELSE 1 END,
+                    s.cnt DESC,
+                    i.itemname ";
+
+
 
 
     // $Q1 = " SELECT
@@ -371,6 +378,49 @@ function selection_item_normal($conn, $db)
         $return['detail'][] = $row;
     }
 
+    if ($db == 1) {
+        $query2 = "SELECT
+                        itemstock_transaction_detail.ItemCode,
+                        COUNT(itemstock_transaction_detail.ID) AS Qty,
+                        itemstock_transaction_detail.departmentroomid
+                    FROM
+                        itemstock_transaction_detail
+                    WHERE
+                        itemstock_transaction_detail.ItemCode IN $whereItem
+                        AND DATE(itemstock_transaction_detail.CreateDate) = '$select_date1'
+                        AND itemstock_transaction_detail.IsStatus = 9
+                    GROUP BY
+                        itemstock_transaction_detail.departmentroomid,
+                        itemstock_transaction_detail.ItemCode
+                    ORDER BY
+                        itemstock_transaction_detail.departmentroomid ASC ";
+    } else {
+        $query2 = "SELECT 
+                            itemstock_transaction_detail.ItemCode ,
+                    COUNT ( itemstock_transaction_detail.ID ) AS Qty ,
+                            itemstock_transaction_detail.departmentroomid 
+                    FROM
+                        itemstock_transaction_detail 
+                    WHERE
+                        itemstock_transaction_detail.ItemCode IN $whereItem
+                    AND CONVERT(DATE,itemstock_transaction_detail.CreateDate) = '$select_date1' 
+                    AND itemstock_transaction_detail.IsStatus = 9 
+                    GROUP BY
+                        itemstock_transaction_detail.departmentroomid ,
+                        itemstock_transaction_detail.ItemCode 
+                    ORDER BY
+                        itemstock_transaction_detail.departmentroomid ASC  ";
+    }
+
+
+
+    $meQuery2 = $conn->prepare($query2);
+    $meQuery2->execute();
+    while ($row2 = $meQuery2->fetch(PDO::FETCH_ASSOC)) {
+        $return['detailDepID'][] = $row2;
+    }
+
+
 
 
 
@@ -430,6 +480,23 @@ function selection_departmentRoom_normal($conn, $db)
             $return[$_ID][] = $row;
         }
     }
+
+    $query = " SELECT
+                            department.ID, 
+                            department.DepName
+                        FROM
+                            department  
+                        WHERE department.IsAutomaticPayout = 0  
+                            ORDER BY department.ID ";
+
+    $meQuery = $conn->prepare($query);
+    $meQuery->execute();
+    while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+        $return['depname'][] = $row;
+    }
+
+
+
     echo json_encode($return);
     unset($conn);
     die;
@@ -485,6 +552,22 @@ function selection_departmentRoom_rfid($conn, $db)
             $return[$_ID][] = $row;
         }
     }
+
+
+    $query = " SELECT
+                            department.ID, 
+                            department.DepName
+                        FROM
+                            department  
+                        WHERE department.IsAutomaticPayout = 0  
+                            ORDER BY department.ID ";
+
+    $meQuery = $conn->prepare($query);
+    $meQuery->execute();
+    while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+        $return['depname'][] = $row;
+    }
+
     echo json_encode($return);
     unset($conn);
     die;
@@ -555,62 +638,74 @@ function selection_item_rfid($conn, $db)
     }
 
     $Q1 = "SELECT
-                sub.itemname,
-                sub.itemcode,
-                sub.stock_max,
-                sub.stock_min,
-                sub.stock_balance,
-                ( sub.cnt - sub.cnt_pay ) AS calculated_balance,
-                sub.cnt,
-                sub.cnt_pay,
-                sub.cnt_cssd,
-                sub.balance,
-                sub.damage 
-            FROM
-                (
-                SELECT
-                    item.itemname,
-                    item.itemcode,
-                    item.stock_max,
-                    item.stock_min,
-                    item.stock_balance,
-                    COUNT( itemstock.RowID ) AS cnt,
-                    ( SELECT COUNT( ID ) FROM itemstock_transaction_detail WHERE ItemCode = item.itemcode AND IsStatus = 1 ) AS cnt_pay,
-                    ( SELECT COUNT( ID ) FROM itemstock_transaction_detail WHERE ItemCode = item.itemcode AND IsStatus = 7 ) AS cnt_cssd,
-                    (
-                    SELECT
-                        COUNT( RowID ) 
-                    FROM
-                        itemstock 
-                    WHERE
-                        ItemCode = item.itemcode 
-                        AND ( IsDamage = 0 OR IsDamage IS NULL ) 
-                        AND Isdeproom NOT IN ( 1, 2, 3, 4, 5, 6, 7, 8, 9 ) 
-                    ) AS balance,
-                    ( SELECT COUNT( RowID ) FROM itemstock WHERE ItemCode = item.itemcode AND ( IsDamage = 1 OR IsDamage = 2 ) ) AS damage 
-                FROM
-                    item
-                    LEFT JOIN itemstock ON itemstock.ItemCode = item.itemcode 
-                WHERE
-                        ( item.itemname LIKE '%$input_search%' OR item.itemcode LIKE '%$input_search%' ) 
-                   AND item.SpecialID = '0' 
-                   AND item.IsCancel = '0' 
-                   $wherepermission
-                GROUP BY
-                    item.itemname,
-                    item.itemcode,
-                    item.stock_max,
-                    item.stock_min,
-                    item.stock_balance 
-                ) AS sub 
+                i.itemname,
+                i.itemcode,
+                i.stock_max,
+                i.stock_min,
+                i.stock_balance,
+                (IFNULL(s.cnt, 0) - IFNULL(tp.cnt_pay, 0)) AS calculated_balance,
+                IFNULL(s.cnt, 0) AS cnt,
+                IFNULL(tp.cnt_pay, 0) AS cnt_pay,
+                IFNULL(tc.cnt_cssd, 0) AS cnt_cssd,
+                IFNULL(sb.balance, 0) AS balance,
+                IFNULL(dm.damage, 0) AS damage
+
+            FROM item i
+
+            -- JOIN นับ stock ทั้งหมด
+            LEFT JOIN (
+                SELECT ItemCode, COUNT(*) AS cnt
+                FROM itemstock
+                GROUP BY ItemCode
+            ) s ON s.ItemCode = i.itemcode
+
+            -- JOIN นับจ่าย (IsStatus = 1)
+            LEFT JOIN (
+                SELECT ItemCode, COUNT(*) AS cnt_pay
+                FROM itemstock_transaction_detail
+                WHERE IsStatus = 1
+                GROUP BY ItemCode
+            ) tp ON tp.ItemCode = i.itemcode
+
+            -- JOIN cssd (IsStatus = 7)
+            LEFT JOIN (
+                SELECT ItemCode, COUNT(*) AS cnt_cssd
+                FROM itemstock_transaction_detail
+                WHERE IsStatus = 7
+                GROUP BY ItemCode
+            ) tc ON tc.ItemCode = i.itemcode
+
+            -- JOIN balance (ของดีที่ยังไม่ออก)
+            LEFT JOIN (
+                SELECT ItemCode, COUNT(*) AS balance
+                FROM itemstock
+                WHERE (IsDamage = 0 OR IsDamage IS NULL)
+                AND Isdeproom NOT IN (1,2,3,4,5,6,7,8,9)
+                GROUP BY ItemCode
+            ) sb ON sb.ItemCode = i.itemcode
+
+            -- JOIN damage
+            LEFT JOIN (
+                SELECT ItemCode, COUNT(*) AS damage
+                FROM itemstock
+                WHERE IsDamage IN (1, 2)
+                GROUP BY ItemCode
+            ) dm ON dm.ItemCode = i.itemcode
+
+            -- เงื่อนไข
+            WHERE
+                (i.itemname LIKE '%$input_search%' OR i.itemcode LIKE '%$input_search%')
+                AND i.SpecialID = '0'
+                AND i.IsCancel = '0'
+                $wherepermission
+
             ORDER BY
-            CASE
-                    
-                    WHEN ( sub.cnt - sub.cnt_pay ) < sub.stock_min THEN
-                    0 ELSE 1 
+                CASE
+                    WHEN (IFNULL(s.cnt, 0) - IFNULL(tp.cnt_pay, 0)) < i.stock_min THEN 0
+                    ELSE 1
                 END,
-                sub.cnt DESC ,
-                sub.itemname; ";
+                s.cnt DESC,
+                i.itemname  ";
 
     // $Q1 = " SELECT
     //             item.itemname,
@@ -694,6 +789,48 @@ function selection_item_rfid($conn, $db)
     $meQuery->execute();
     while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
         $return['detail'][] = $row;
+    }
+
+    if ($db == 1) {
+        $query2 = "SELECT
+                        itemstock_transaction_detail.ItemCode,
+                        COUNT(itemstock_transaction_detail.ID) AS Qty,
+                        itemstock_transaction_detail.departmentroomid
+                    FROM
+                        itemstock_transaction_detail
+                    WHERE
+                        itemstock_transaction_detail.ItemCode IN $whereItem
+                        AND DATE(itemstock_transaction_detail.CreateDate) = '$select_date1'
+                        AND itemstock_transaction_detail.IsStatus = 9
+                    GROUP BY
+                        itemstock_transaction_detail.departmentroomid,
+                        itemstock_transaction_detail.ItemCode
+                    ORDER BY
+                        itemstock_transaction_detail.departmentroomid ASC ";
+    } else {
+        $query2 = "SELECT 
+                            itemstock_transaction_detail.ItemCode ,
+                    COUNT ( itemstock_transaction_detail.ID ) AS Qty ,
+                            itemstock_transaction_detail.departmentroomid 
+                    FROM
+                        itemstock_transaction_detail 
+                    WHERE
+                        itemstock_transaction_detail.ItemCode IN $whereItem
+                    AND CONVERT(DATE,itemstock_transaction_detail.CreateDate) = '$select_date1' 
+                    AND itemstock_transaction_detail.IsStatus = 9 
+                    GROUP BY
+                        itemstock_transaction_detail.departmentroomid ,
+                        itemstock_transaction_detail.ItemCode 
+                    ORDER BY
+                        itemstock_transaction_detail.departmentroomid ASC  ";
+    }
+
+
+
+    $meQuery2 = $conn->prepare($query2);
+    $meQuery2->execute();
+    while ($row2 = $meQuery2->fetch(PDO::FETCH_ASSOC)) {
+        $return['detailDepID'][] = $row2;
     }
 
 
@@ -861,6 +998,22 @@ function selection_departmentRoom($conn, $db)
             $return[$_ID][] = $row;
         }
     }
+
+    $query = " SELECT
+                    department.ID, 
+                    department.DepName
+                FROM
+                    department  
+                WHERE department.IsAutomaticPayout = 0  
+                    ORDER BY department.ID ";
+
+    $meQuery = $conn->prepare($query);
+    $meQuery->execute();
+    while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+        $return['depname'][] = $row;
+    }
+
+
     echo json_encode($return);
     unset($conn);
     die;
@@ -937,62 +1090,74 @@ function selection_item($conn, $db)
     }
 
     $Q1 = "SELECT
-                sub.itemname,
-                sub.itemcode,
-                sub.stock_max,
-                sub.stock_min,
-                sub.stock_balance,
-                ( sub.cnt - sub.cnt_pay ) AS calculated_balance,
-                sub.cnt,
-                sub.cnt_pay,
-                sub.cnt_cssd,
-                sub.balance,
-                sub.damage 
-            FROM
-                (
-                SELECT
-                    item.itemname,
-                    item.itemcode,
-                    item.stock_max,
-                    item.stock_min,
-                    item.stock_balance,
-                    COUNT( itemstock.RowID ) AS cnt,
-                    ( SELECT COUNT( ID ) FROM itemstock_transaction_detail WHERE ItemCode = item.itemcode AND IsStatus = 1 ) AS cnt_pay,
-                    ( SELECT COUNT( ID ) FROM itemstock_transaction_detail WHERE ItemCode = item.itemcode AND IsStatus = 7 ) AS cnt_cssd,
-                    (
-                    SELECT
-                        COUNT( RowID ) 
-                    FROM
-                        itemstock 
-                    WHERE
-                        ItemCode = item.itemcode 
-                        AND ( IsDamage = 0 OR IsDamage IS NULL ) 
-                        AND Isdeproom NOT IN ( 1, 2, 3, 4, 5, 6, 7, 8, 9 ) 
-                    ) AS balance,
-                    ( SELECT COUNT( RowID ) FROM itemstock WHERE ItemCode = item.itemcode AND ( IsDamage = 1 OR IsDamage = 2 ) ) AS damage 
-                FROM
-                    item
-                    LEFT JOIN itemstock ON itemstock.ItemCode = item.itemcode  
-                WHERE
-                        ( item.itemname LIKE '%$input_search%' OR item.itemcode LIKE '%$input_search%' ) 
-                   AND item.SpecialID = '2' 
-                   AND item.IsCancel = '0' 
-                   $wherepermission
-                GROUP BY
-                    item.itemname,
-                    item.itemcode,
-                    item.stock_max,
-                    item.stock_min,
-                    item.stock_balance 
-                ) AS sub 
+                i.itemname,
+                i.itemcode,
+                i.stock_max,
+                i.stock_min,
+                i.stock_balance,
+                (IFNULL(s.cnt, 0) - IFNULL(tp.cnt_pay, 0)) AS calculated_balance,
+                IFNULL(s.cnt, 0) AS cnt,
+                IFNULL(tp.cnt_pay, 0) AS cnt_pay,
+                IFNULL(tc.cnt_cssd, 0) AS cnt_cssd,
+                IFNULL(sb.balance, 0) AS balance,
+                IFNULL(dm.damage, 0) AS damage
+
+            FROM item i
+
+            -- JOIN นับ stock ทั้งหมด
+            LEFT JOIN (
+                SELECT ItemCode, COUNT(*) AS cnt
+                FROM itemstock
+                GROUP BY ItemCode
+            ) s ON s.ItemCode = i.itemcode
+
+            -- JOIN นับจ่าย
+            LEFT JOIN (
+                SELECT ItemCode, COUNT(*) AS cnt_pay
+                FROM itemstock_transaction_detail
+                WHERE IsStatus = 1
+                GROUP BY ItemCode
+            ) tp ON tp.ItemCode = i.itemcode
+
+            -- JOIN cssd
+            LEFT JOIN (
+                SELECT ItemCode, COUNT(*) AS cnt_cssd
+                FROM itemstock_transaction_detail
+                WHERE IsStatus = 7
+                GROUP BY ItemCode
+            ) tc ON tc.ItemCode = i.itemcode
+
+            -- JOIN balance (ยังไม่จ่าย + ไม่เสีย)
+            LEFT JOIN (
+                SELECT ItemCode, COUNT(*) AS balance
+                FROM itemstock
+                WHERE (IsDamage = 0 OR IsDamage IS NULL)
+                AND Isdeproom NOT IN (1,2,3,4,5,6,7,8,9)
+                GROUP BY ItemCode
+            ) sb ON sb.ItemCode = i.itemcode
+
+            -- JOIN damage
+            LEFT JOIN (
+                SELECT ItemCode, COUNT(*) AS damage
+                FROM itemstock
+                WHERE IsDamage IN (1, 2)
+                GROUP BY ItemCode
+            ) dm ON dm.ItemCode = i.itemcode
+
+            -- เงื่อนไข
+            WHERE
+                (i.itemname LIKE '%$input_search%' OR i.itemcode LIKE '%$input_search%')
+                AND i.SpecialID = '2'
+                AND i.IsCancel = '0'
+                $wherepermission
+
             ORDER BY
-            CASE
-                    
-                    WHEN ( sub.cnt - sub.cnt_pay ) < sub.stock_min THEN
-                    0 ELSE 1 
+                CASE
+                    WHEN (IFNULL(s.cnt, 0) - IFNULL(tp.cnt_pay, 0)) < i.stock_min THEN 0
+                    ELSE 1
                 END,
-                sub.cnt DESC,
-                sub.itemname; ";
+                s.cnt DESC,
+                i.itemname  ";
 
     // $Q1 = " SELECT
     //             item.itemname,
@@ -1081,6 +1246,48 @@ function selection_item($conn, $db)
         $return['detail'][] = $row;
     }
 
+
+    if ($db == 1) {
+        $query2 = "SELECT
+                        itemstock_transaction_detail.ItemCode,
+                        COUNT(itemstock_transaction_detail.ID) AS Qty,
+                        itemstock_transaction_detail.departmentroomid
+                    FROM
+                        itemstock_transaction_detail
+                    WHERE
+                        itemstock_transaction_detail.ItemCode IN $whereItem
+                        AND DATE(itemstock_transaction_detail.CreateDate) = '$select_date1'
+                        AND itemstock_transaction_detail.IsStatus = 9
+                    GROUP BY
+                        itemstock_transaction_detail.departmentroomid,
+                        itemstock_transaction_detail.ItemCode
+                    ORDER BY
+                        itemstock_transaction_detail.departmentroomid ASC ";
+    } else {
+        $query2 = "SELECT 
+                            itemstock_transaction_detail.ItemCode ,
+                    COUNT ( itemstock_transaction_detail.ID ) AS Qty ,
+                            itemstock_transaction_detail.departmentroomid 
+                    FROM
+                        itemstock_transaction_detail 
+                    WHERE
+                        itemstock_transaction_detail.ItemCode IN $whereItem
+                    AND CONVERT(DATE,itemstock_transaction_detail.CreateDate) = '$select_date1' 
+                    AND itemstock_transaction_detail.IsStatus = 9 
+                    GROUP BY
+                        itemstock_transaction_detail.departmentroomid ,
+                        itemstock_transaction_detail.ItemCode 
+                    ORDER BY
+                        itemstock_transaction_detail.departmentroomid ASC  ";
+    }
+
+
+
+    $meQuery2 = $conn->prepare($query2);
+    $meQuery2->execute();
+    while ($row2 = $meQuery2->fetch(PDO::FETCH_ASSOC)) {
+        $return['detailDepID'][] = $row2;
+    }
 
 
 

@@ -61,8 +61,9 @@ while ($Result_CC = $meQueryCC->fetch(PDO::FETCH_ASSOC)) {
         DATE_FORMAT(deproom.serviceDate, '%d/%m/%Y') AS date1,
         DATE_FORMAT(deproom.serviceDate, '%H:%i') AS time1,
         hncode.`procedure`,
-        doctor.Doctor_Name_EN AS Doctor_Name,
         departmentroom.departmentroomname_EN,
+        ( SELECT GROUP_CONCAT( `doctor`.Doctor_Name SEPARATOR ' , ' ) AS Doctor_Name FROM `doctor` WHERE FIND_IN_SET( `doctor`.ID, deproom.`doctor` ) ) AS Doctor_Name,
+        ( SELECT GROUP_CONCAT( `procedure`.Procedure_TH SEPARATOR ' , ' ) AS Procedures FROM `procedure` WHERE FIND_IN_SET( `procedure`.ID, deproom.`procedure` ) ) AS Procedure_TH,
         deproom.Remark
         FROM hncode
         LEFT JOIN `procedure` ON hncode.`procedure` = `procedure`.ID
@@ -82,16 +83,10 @@ while ($Result_CC = $meQueryCC->fetch(PDO::FETCH_ASSOC)) {
         $procedure = $Result_Detail['procedure'];
         $Doctor_Name = $Result_Detail['Doctor_Name'];
         $departmentroomname_EN = $Result_Detail['departmentroomname_EN'];
+        $_Procedure_TH = $Result_Detail['Procedure_TH'];
     }
 
-    $_Procedure_TH = "";
-    $query_P = "SELECT GROUP_CONCAT(Procedure_TH SEPARATOR ', ') AS procedure_ids 
-                FROM `procedure` WHERE `procedure`.ID IN ($procedure)";
-    $meQuery_P = $conn->prepare($query_P);
-    $meQuery_P->execute();
-    while ($row_P = $meQuery_P->fetch(PDO::FETCH_ASSOC)) {
-        $_Procedure_TH .= $row_P['procedure_ids'];
-    }
+
 
     // Top Boxes
     $pdf->SetX(5);

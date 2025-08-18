@@ -1,37 +1,4 @@
-<div>
-    <div class="container-fluid">
-        <div class="row justify-content-end mt-3">
-            <div class="col-auto">
-                <div class="input-group" style="background-color: #f1f3fb; border-radius: 10px; border: 1px solid #dce0eb; overflow: hidden;">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"
-                            style="border: none; background-color: white; font-weight: bold; border-right: 1px solid #dce0eb;">
-                            สิทธิ์การเข้าใช้งาน :
-                        </span>
-                    </div>
-                    <input type="text" class="form-control font-weight-bold"
-                        id="input_Deproom_Main" disabled
-                        style="background-color: #f1f3fb; border: none; color: #000;">
-                </div>
-            </div>
 
-            <div class="col-auto ml-2">
-                <div class="input-group" style="background-color: #f1f3fb; border-radius: 10px; border: 1px solid #dce0eb; overflow: hidden;">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"
-                            style="border: none; background-color: white; font-weight: bold; border-right: 1px solid #dce0eb;">
-                            ชื่อผู้ใช้งาน :
-                        </span>
-                    </div>
-                    <input type="text" class="form-control font-weight-bold"
-                        id="input_Name_Main" disabled
-                        style="background-color: #f1f3fb; border: none; color: #000;">
-                </div>
-            </div>
-        </div>
-    </div>
-
-</div>
 
 
 
@@ -545,7 +512,7 @@
 
                 <div class="col">
                     <div class="position-relative">
-                    <label class="font-weight-bold text-dark">HN</label>
+                    <label class="font-weight-bold text-dark">เลขประจำตัวผู้ป่วย</label>
                     <input type="text" class="form-control f18" id="input_hn_history">
                     </div>
                 </div>
@@ -558,6 +525,7 @@
                         <option value="2">แพทย์</option>
                         <option value="3">หัตถการ</option>
                         <option value="4">อุปกรณ์</option>
+                        <option value="5">หน่วยงาน</option>
                     </select>
                 </div>
 
@@ -582,7 +550,10 @@
                     <select class="form-control f18" id="select_item_history"></select>
                 </div>
 
-
+                <div class="col" id="col_department_history">
+                    <label class="font-weight-bold text-dark">หน่วยงาน</label>
+                    <select class="form-control f18" id="select_deproom_sell_history"></select>
+                </div>
 
 
             </div>

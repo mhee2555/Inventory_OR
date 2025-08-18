@@ -27,6 +27,7 @@ $display = $_SESSION['display'];
 $EmpCode = $_SESSION['EmpCode'];
 $time_out = $_SESSION['time_out'];
 $GN_WarningExpiringSoonDay = $_SESSION['GN_WarningExpiringSoonDay'];
+$Permission_name = $_SESSION['Permission_name'];
 
 
 if (!isset($_SESSION['UserName'])) {
@@ -60,30 +61,23 @@ if (!isset($_SESSION['UserName'])) {
 
 <body id="page-top"></body>
 
-<!-- Page Wrapper -->
-<div id="wrapper">
+<div id="wrapper" style="display: flex; height: 100vh; overflow: hidden;">
+  
+  <!-- Sidebar -->
+  <?php require("layout/menu.php"); ?>
 
-    <?php require("layout/menu.php"); ?>
+  <!-- Main Content -->
+  <div id="content-wrapper" class="d-flex flex-column" style="flex: 1; overflow: hidden;">
+    
+    <div id="content" style="background-color: white; flex: 1; overflow-y: auto;">
+      <?php require("layout/header.php"); ?>
 
-    <div id="content-wrapper" class="d-flex flex-column">
-        <div id="content" style="background-color: white;">
-
-            <?php require("layout/header.php"); ?>
-
-
-            <div class="container-fluid" id="conMain" style="background-color: white;">
-
-            </div>
-
-
-
-
-
-        </div>
+      <div class="container-fluid" id="conMain" style="background-color: white;">
+        <!-- เนื้อหา -->
+      </div>
     </div>
 
-    <!-- Main Content -->
-
+  </div>
 </div>
 
 
@@ -406,7 +400,7 @@ if (!isset($_SESSION['UserName'])) {
         if (RefDepID == '36DEN') {
             $("#save_ex_soon_Button").attr('disabled', true);
         }
-        if(time_out == ""){
+        if (time_out == "") {
             time_out = 99999;
         }
         $("#input_time_out").val(time_out);
@@ -473,8 +467,17 @@ if (!isset($_SESSION['UserName'])) {
             var link = 'pages/borrow.php';
 
             $.get(link, function(res) {
+                if (display == '3') {
+                    $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
+                } else {
+                    $("#ic_mainpage").attr("src", "assets/img_project/3_icon/ic_mainpage.png");
+                }
+                if (display == 2) {
+                    $("#li_main").css("background-color", "rgb(60, 32, 90)");
+                } else {
+                    $("#li_main").css("background-color", "#643695");
+                }
 
-                $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
                 $("#menu1").css('color', '#667085');
 
                 $("#conMain").html(res);
@@ -492,7 +495,18 @@ if (!isset($_SESSION['UserName'])) {
 
             $.get(link, function(res) {
 
-                $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
+                // $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
+                if (display == '3') {
+                    $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
+                } else {
+                    $("#ic_mainpage").attr("src", "assets/img_project/3_icon/ic_mainpage.png");
+                }
+                if (display == 2) {
+                    $("#li_main").css("background-color", "rgb(60, 32, 90)");
+                } else {
+                    $("#li_main").css("background-color", "#643695");
+                }
+
                 $("#menu1").css('color', '#667085');
 
                 $("#conMain").html(res);
@@ -510,7 +524,19 @@ if (!isset($_SESSION['UserName'])) {
 
             $.get(link, function(res) {
 
-                $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
+                // $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
+
+                if (display == '3') {
+                    $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
+                } else {
+                    $("#ic_mainpage").attr("src", "assets/img_project/3_icon/ic_mainpage.png");
+                }
+                if (display == 2) {
+                    $("#li_main").css("background-color", "rgb(60, 32, 90)");
+                } else {
+                    $("#li_main").css("background-color", "#643695");
+                }
+
                 $("#menu1").css('color', '#667085');
 
                 $("#conMain").html(res);
@@ -528,7 +554,19 @@ if (!isset($_SESSION['UserName'])) {
 
             $.get(link, function(res) {
 
-                $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
+                // $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
+
+                if (display == '3') {
+                    $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
+                } else {
+                    $("#ic_mainpage").attr("src", "assets/img_project/3_icon/ic_mainpage.png");
+                }
+                if (display == 2) {
+                    $("#li_main").css("background-color", "rgb(60, 32, 90)");
+                } else {
+                    $("#li_main").css("background-color", "#643695");
+                }
+
                 $("#menu1").css('color', '#667085');
 
                 $("#conMain").html(res);
@@ -1865,7 +1903,7 @@ if (!isset($_SESSION['UserName'])) {
         function startIdleTimer() {
 
             var time_out = '<?php echo $time_out; ?>';
-            if(time_out == 0){
+            if (time_out == 0) {
                 time_out = 999999;
             }
             let seconds = time_out * 60;

@@ -28,7 +28,7 @@ $(function () {
 
   $("#input_date_service_manual").val(output);
   $("#input_date_service_manual").datepicker({
-    onSelect: function (date) {},
+    onSelect: function (date) { },
   });
 
   $("#select_date1_search").val(output);
@@ -48,8 +48,8 @@ $(function () {
   $("#input_time_service_manual").val(currentTime);
 
   $("#radio_set_hn").click(function () {
-      $('.tab-button').removeClass('active');
-      $(this).addClass('active');
+    $('.tab-button').removeClass('active');
+    $(this).addClass('active');
 
     $("#set_hn").show();
     $("#history").hide();
@@ -58,8 +58,8 @@ $(function () {
   });
 
   $("#radio_history").click(function () {
-      $('.tab-button').removeClass('active');
-      $(this).addClass('active');
+    $('.tab-button').removeClass('active');
+    $(this).addClass('active');
 
     $("#set_hn").hide();
     $("#history").show();
@@ -88,15 +88,15 @@ function show_detail_history() {
     },
     success: function (result) {
       var _tr = "";
-      // $("#table_deproom_pay").DataTable().destroy();
-      $("#table_history tbody").html("");
+      $("#table_history").DataTable().destroy();
+      // $("#table_history tbody").html("");
       var ObjData = JSON.parse(result);
       if (!$.isEmptyObject(ObjData)) {
         $.each(ObjData, function (kay, value) {
           if (value.Procedure_TH == "button") {
             var title = '';
             value.Procedure_TH = `<a class="text-primary" style="cursor:pointer;" onclick='showDetail_Procedure("${value.procedure}")'>หัตถการ</a>`;
-          }else{
+          } else {
             var title = `title='${value.Procedure_TH}' `;
           }
           if (value.Doctor_Name == "button") {
@@ -115,24 +115,89 @@ function show_detail_history() {
           _tr += `<tr>
                       <td class="f18 text-center" style='line-height: 35px;'>${kay + 1}</td>
                       <td class="f18 text-center" style='line-height: 35px;'>${value.hncode}</td>
-                      <td class="f18 text-center" style='line-height: 35px;'>${value.serviceDate} ${
-            value.serviceTime
-          }</td>
+                      <td class="f18 text-center" style='line-height: 35px;'>${value.serviceDate} ${value.serviceTime}</td>
                       <td class="f18 text-left" style='line-height: 35px;'>${value.Doctor_Name}</td>
-                      <td class="f18 text-left" style='line-height: 35px;'>${ value.departmentroomname }</td>
+                      <td class="f18 text-left" style='line-height: 35px;'>${value.departmentroomname}</td>
                       <td class="f18 text-left" style="line-height: 35px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 300px;" ${title}>${value.Procedure_TH}</td>
-                      <td class="f18 text-center" style='width:10%;'><button ${hidden} class='btn btn-primary' style='width:70%;' onclick='showdetail("${
-            value.ID
-          }","${value.hncode}","${value.serviceDate}","${value.serviceTime}","${
-            value.doctor
-          }","${value.procedure}","${value.departmentroomid}","${
-            value.remark
-          }")'>แก้ไข</button></td>
+                      <td class="f18 text-center" style='width:10%;'><button ${hidden} class='btn btn-primary' style='width:70%;' onclick='showdetail("${value.ID
+            }","${value.hncode}","${value.serviceDate}","${value.serviceTime}","${value.doctor
+            }","${value.procedure}","${value.departmentroomid}","${value.remark
+            }")'>แก้ไข</button></td>
                    </tr>`;
         });
       }
 
       $("#table_history tbody").html(_tr);
+      $("#table_history").DataTable({
+        language: {
+          emptyTable: settext("dataTables_empty"),
+          paginate: {
+            next: settext("table_itemStock_next"),
+            previous: settext("table_itemStock_previous"),
+          },
+          search: settext("btn_Search"),
+          info:
+            settext("dataTables_Showing") +
+            " _START_ " +
+            settext("dataTables_to") +
+            " _END_ " +
+            settext("dataTables_of") +
+            " _TOTAL_ " +
+            settext("dataTables_entries") +
+            " ",
+        },
+        columnDefs: [
+          {
+            width: "3%",
+            targets: 0,
+          },
+          {
+            width: "5%",
+            targets: 1,
+          },
+          {
+            width: "8%",
+            targets: 2,
+          },
+          {
+            width: "8%",
+            targets: 3,
+          },
+          {
+            width: "8%",
+            targets: 4,
+          },
+          {
+            width: "5%",
+            targets: 5,
+          },
+          {
+            width: "5%",
+            targets: 6,
+          }
+        ],
+        info: false,
+        scrollX: false,
+        scrollCollapse: false,
+        visible: false,
+        searching: false,
+        lengthChange: false,
+        fixedHeader: false,
+        ordering: false,
+      });
+      $("th").removeClass("sorting_asc");
+      if (_tr == "") {
+        $(".dataTables_info").text(
+          settext("dataTables_Showing") +
+          " 0 " +
+          settext("dataTables_to") +
+          " 0 " +
+          settext("dataTables_of") +
+          " 0 " +
+          settext("dataTables_entries") +
+          ""
+        );
+      }
     },
   });
 }
@@ -165,6 +230,11 @@ function showdetail(
   $("#input_time_service_manual").val(serviceTime);
   $("#select_deproom_manual").val(departmentroomid).trigger("change");
   $("#input_remark_manual").val(remark);
+
+  $(".clear_doctor").attr("hidden", true);
+  doctor_Array = [];
+  $(".clear_procedure").attr("hidden", true);
+  procedure_id_Array = [];
 
   $.ajax({
     url: "process/pay.php",
@@ -202,7 +272,7 @@ function showdetail(
         $.each(ObjData, function (kay, value) {
           procedure_id_Array.push(value.ID.toString());
 
-          _row += `       <div  class='div_${value.ID} pl-3 clear_doctor' onclick='DeleteDoctor(${value.ID})'>
+          _row += `       <div  class='div_${value.ID} pl-3 clear_procedure' onclick='DeleteDoctor(${value.ID})'>
                               <label for="" class="custom-label">${value.Procedure_TH}</label>
                           </div> `;
         });
@@ -299,7 +369,7 @@ $("#btn_clear_manual").click(function () {
 });
 
 $("#btn_save_hn_manual").click(function () {
-  if ($("#input_Hn_pay_manual").val() == "") {
+  if ($("#input_Hn_pay_manual").val().trim() == "") {
     showDialogFailed("กรุณากรอก เลขประจำตัวคนไข้");
     return;
   }
@@ -307,6 +377,17 @@ $("#btn_save_hn_manual").click(function () {
     showDialogFailed("กรุณากรอก วันที่");
     return;
   }
+
+  // ตรวจสอบ format dd-MM-yyyy แบบง่าย
+  var dateValue = $("#input_date_service_manual").val().trim();
+  var datePattern = /^(\d{2})-(\d{2})-(\d{4})$/;
+
+  if (!datePattern.test(dateValue)) {
+    showDialogFailed("format วันที่ไม่ถูกต้อง");
+    $("#input_pay_sell").val("");
+    return;
+  }
+
   if (doctor_Array.length === 0) {
     showDialogFailed("กรุณาเลือกแพทย์");
     return;
@@ -337,7 +418,7 @@ $("#btn_save_hn_manual").click(function () {
         data: {
           FUNC_NAME: "save_hn",
           input_Hn_ID: $("#input_Hn_ID").val(),
-          input_Hn_pay_manual: $("#input_Hn_pay_manual").val(),
+          input_Hn_pay_manual: $("#input_Hn_pay_manual").val().trim(),
           input_date_service_manual: $("#input_date_service_manual").val(),
           input_time_service_manual: $("#input_time_service_manual").val(),
           input_remark_manual: $("#input_remark_manual").val(),
@@ -598,8 +679,7 @@ function session() {
       RefDepID = ObjData.RefDepID;
       Permission_name = ObjData.Permission_name;
 
-      $("#input_Deproom_Main").val(Permission_name);
-      $("#input_Name_Main").val(UserName);
+
     },
   });
 }

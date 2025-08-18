@@ -490,8 +490,9 @@ function show_detail_department($conn, $db)
                     WHERE
                         DATE(sell_department.serviceDate) BETWEEN '$select_SDate'  AND '$select_EDate' 
                         $whereD
+                        AND sell_department.IsCancel = 0
                     GROUP BY
-                        department.DepName  ";
+                        sell_department.DocNo  ";
     
 
     // echo $query;

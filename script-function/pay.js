@@ -139,6 +139,27 @@ $(function () {
   });
 
   $("#btn_clear_manual").click(function () {
+
+    var now = new Date();
+    var hours = String(now.getHours()).padStart(2, "0");
+    var minutes = String(now.getMinutes()).padStart(2, "0");
+    var currentTime = hours + ":" + minutes;
+
+    var d = new Date();
+    var month = d.getMonth() + 1;
+    var day = d.getDate();
+    var year = d.getFullYear();
+    var output =
+      (("" + day).length < 2 ? "0" : "") +
+      day +
+      "-" +
+      (("" + month).length < 2 ? "0" : "") +
+      month +
+      "-" +
+      year;
+
+
+
     $("#input_Hn_pay_manual").val("");
     $("#input_box_pay_manual").val("");
 
@@ -146,6 +167,8 @@ $(function () {
     $("#input_Hn_pay_manual").attr("disabled", false);
 
     $("#input_date_service_manual").val(output);
+    $("#input_time_service_manual").val(currentTime);
+
     $("#select_doctor_manual").val("").trigger("change");
     $("#select_deproom_manual").val("").trigger("change");
     $("#select_procedure_manual").val("").trigger("change");
@@ -372,6 +395,8 @@ $(function () {
     $("#col_doctor_history").attr("hidden", true);
     $("#col_procedure_history").attr("hidden", true);
     $("#col_item_history").attr("hidden", true);
+    $("#col_department_history").attr("hidden", true);
+
     // $("#col_hide_2").attr("hidden", true);
     $("#col_hide").attr("hidden", false);
   });
@@ -653,6 +678,12 @@ $("#btn_edit_hn").click(function () {
 });
 
 $("#btn_save_edit_hn").click(function () {
+
+  if ($("#input_Hn_pay_editHN").val().trim() == "" && $("#input_box_pay_editHN").val().trim() == "") {
+    showDialogFailed("กรุณากรอก เลขที่กล่อง หรือ HN Code");
+    return;
+  }
+
   if (doctor_edit_hn_Array.length == 0) {
     showDialogFailed('กรุณาเลือกแพทย์');
     return;
@@ -1489,10 +1520,7 @@ function oncheck_pay_rfid_manual() {
 }
 
 function oncheck_pay_manual(input_pay_manual) {
-  if (
-    $("#input_Hn_pay_manual").val() == "" &&
-    $("#input_box_pay_manual").val() == ""
-  ) {
+  if ($("#input_Hn_pay_manual").val().trim() == "" && $("#input_box_pay_manual").val().trim() == "") {
     showDialogFailed("กรุณากรอก เลขที่กล่อง หรือ HN Code");
     $("#input_pay_manual").val("");
     return;
@@ -1504,7 +1532,17 @@ function oncheck_pay_manual(input_pay_manual) {
     return;
   }
 
-  if ($("#input_pay_manual").val() == "") {
+  // ตรวจสอบ format dd-MM-yyyy แบบง่าย
+  var dateValue = $("#input_date_service_manual").val().trim();
+  var datePattern = /^(\d{2})-(\d{2})-(\d{4})$/;
+
+  if (!datePattern.test(dateValue)) {
+    showDialogFailed("format วันที่ไม่ถูกต้อง");
+    $("#input_pay_sell").val("");
+    return;
+  }
+
+  if ($("#input_pay_manual").val().trim() == "") {
     showDialogFailed("กรุณาเลือกรายการ");
     $("#input_pay_manual").val("");
 
@@ -2173,29 +2211,45 @@ function show_detail_item_ByDocNo_manual() {
   });
 }
 
+var preventTrigger = false;
+
 // history
 $("#select_deproom_history").change(function (e) {
+  if (preventTrigger) return; // ออกจาก function ทันที
   show_detail_history();
 });
 $("#select_doctor_history").change(function (e) {
+  if (preventTrigger) return; // ออกจาก function ทันที
   show_detail_history();
 });
 $("#select_procedure_history").change(function (e) {
+  if (preventTrigger) return; // ออกจาก function ทันที
+  show_detail_history();
+});
+$("#select_deproom_sell_history").change(function (e) {
+  if (preventTrigger) return; // ออกจาก function ทันที
   show_detail_history();
 });
 
+
 $("#select_typeSearch_history").change(function (e) {
+  preventTrigger = true;
   $("#select_deproom_history").val("").trigger("change");
   $("#select_doctor_history").val("").trigger("change");
   $("#select_procedure_history").val("").trigger("change");
   $("#select_item_history").val("").trigger("change");
+  $("#select_deproom_sell_history").val("").trigger("change");
+  preventTrigger = false;
 
+
+  show_detail_history();
 
   if ($(this).val() == "") {
     $("#col_deproom_history").attr("hidden", true);
     $("#col_doctor_history").attr("hidden", true);
     $("#col_procedure_history").attr("hidden", true);
     $("#col_item_history").attr("hidden", true);
+    $("#col_department_history").attr("hidden", true);
     $("#col_hide").attr("hidden", false);
     // $("#col_hide_2").attr("hidden", true);
   }
@@ -2204,6 +2258,7 @@ $("#select_typeSearch_history").change(function (e) {
     $("#col_doctor_history").attr("hidden", true);
     $("#col_procedure_history").attr("hidden", true);
     $("#col_item_history").attr("hidden", true);
+    $("#col_department_history").attr("hidden", true);
     $("#col_hide").attr("hidden", true);
     // $("#col_hide_2").attr("hidden", false);
 
@@ -2216,6 +2271,7 @@ $("#select_typeSearch_history").change(function (e) {
     $("#col_doctor_history").attr("hidden", false);
     $("#col_procedure_history").attr("hidden", true);
     $("#col_item_history").attr("hidden", true);
+    $("#col_department_history").attr("hidden", true);
     $("#col_hide").attr("hidden", true);
     // $("#col_hide_2").attr("hidden", false);
     setTimeout(() => {
@@ -2228,6 +2284,7 @@ $("#select_typeSearch_history").change(function (e) {
     $("#col_doctor_history").attr("hidden", true);
     $("#col_procedure_history").attr("hidden", false);
     $("#col_item_history").attr("hidden", true);
+    $("#col_department_history").attr("hidden", true);
     $("#col_hide").attr("hidden", true);
     // $("#col_hide_2").attr("hidden", false);
 
@@ -2240,11 +2297,26 @@ $("#select_typeSearch_history").change(function (e) {
     $("#col_doctor_history").attr("hidden", true);
     $("#col_procedure_history").attr("hidden", true);
     $("#col_item_history").attr("hidden", false);
+    $("#col_department_history").attr("hidden", true);
     $("#col_hide").attr("hidden", true);
     // $("#col_hide_2").attr("hidden", false);yy
 
     setTimeout(() => {
       $("#select_item_history").select2();
+    }, 300);
+  }
+
+  if ($(this).val() == "5") {
+    $("#col_deproom_history").attr("hidden", true);
+    $("#col_doctor_history").attr("hidden", true);
+    $("#col_procedure_history").attr("hidden", true);
+    $("#col_item_history").attr("hidden", true);
+    $("#col_department_history").attr("hidden", false);
+    $("#col_hide").attr("hidden", true);
+    // $("#col_hide_2").attr("hidden", false);yy
+
+    setTimeout(() => {
+      $("#select_deproom_sell_history").select2();
     }, 300);
   }
 });
@@ -2261,8 +2333,10 @@ $("#select_item_history").change(function (e) {
     let selectedText = $("#select_item_history option:selected").text();
 
     $("#header_item").text(selectedText);
-    $("#select_item_history").val("").trigger("change");
     showDetail_item_history();
+
+
+
   }
 });
 
@@ -2316,7 +2390,10 @@ function showDetail_item_history() {
         });
         $("#table_Detail_item_history tbody").html(detail);
 
-
+        setTimeout(() => {
+          $("#select_item_history").val("");
+          $("#select2-select_item_history-container").text("กรุณาเลือกอุปกรณ์");
+        }, 1000);
 
       }
 
@@ -2405,7 +2482,7 @@ $("#checkbox_filter").change(function () {
   $("#select_procedure_history_block").val("").trigger("change");
   $("#select_typeSearch_history_block").val("");
 
-  
+
 
   $("#col_deproom_history_block").attr("hidden", true);
   $("#col_doctor_history_block").attr("hidden", true);
@@ -2458,7 +2535,9 @@ function show_detail_history_block() {
           }
 
           if (value.hn_record_id == "") {
-            value.hn_record_id = value.number_box;
+            var hn_record_idx = value.number_box;
+          }else{
+            var hn_record_idx = value.hn_record_id;
           }
           if (value.FirstName == null) {
             value.FirstName = "";
@@ -2468,7 +2547,7 @@ function show_detail_history_block() {
                       <td class='text-center'>${kay + 1}</td>
                       <td class='text-center'>${value.serviceDate} ${value.serviceTime
             }</td>
-                      <td class='text-center' style='max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>${value.hn_record_id}</td>
+                      <td class='text-center' style='max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>${hn_record_idx}</td>
                       <td class='text-left' style='max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>${value.Doctor_Name}</td>
                       <td class='text-left' style='max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;' ${title}>${value.Procedure_TH}</td>
                       <td class='text-left' style='max-width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>${value.departmentroomname}</td>
@@ -2827,6 +2906,8 @@ function show_detail_history() {
       input_hn_history: $("#input_hn_history").val(),
       select_doctor_history: $("#select_doctor_history").val(),
       select_procedure_history: $("#select_procedure_history").val(),
+      select_deproom_sell_history: $("#select_deproom_sell_history").val(),
+      select_typeSearch_history: $("#select_typeSearch_history").val(),
       // select_doctor_history: doctor_Array,
       // select_procedure_history: procedure_id_Array,
     },
@@ -2966,11 +3047,27 @@ function show_detail_history() {
 }
 
 $("#btn_show_report").click(function () {
+
+  // ตรวจสอบว่า DataTable มีข้อมูลหรือไม่
+  var table = $("#table_history").DataTable();
+  var rowCount = table.rows().count();
+
+  if (rowCount === 0) {
+    showDialogFailed("ไม่มีข้อมูล ประวัติการจ่ายอุปกรณ์");
+    return;
+  }
+
   option =
     "?select_date_history_s=" +
     $("#select_date_history_S").val() +
     "&select_date_history_l=" +
-    $("#select_date_history_L").val();
+    $("#select_date_history_L").val() +
+    "&select_deproom_history=" +
+    $("#select_deproom_history").val() +
+    "&select_doctor_history=" +
+    $("#select_doctor_history").val() +
+    "&select_procedure_history=" +
+    $("#select_procedure_history").val();
   window.open(
     "report/phpexcel/Report_Issue_Order_HN.php" + option + "&Userid=" + Userid,
     "_blank"
@@ -3108,7 +3205,7 @@ function select_department() {
       }
       $("#select_deproom_sell").html(option);
       $("#select_department_sell_right").html(option);
-
+      $("#select_deproom_sell_history").html(option);
     },
   });
 }
@@ -3702,6 +3799,17 @@ function oncheck_sell(input_pay_sell) {
     $("#input_pay_sell").val("");
     return;
   }
+
+  // ตรวจสอบ format dd-MM-yyyy แบบง่าย
+  var dateValue = $("#input_date_service_sell").val().trim();
+  var datePattern = /^(\d{2})-(\d{2})-(\d{4})$/;
+
+  if (!datePattern.test(dateValue)) {
+    showDialogFailed("format วันที่ไม่ถูกต้อง");
+    $("#input_pay_sell").val("");
+    return;
+  }
+
   setTimeout(() => {
     $.ajax({
       url: "process/pay_sell.php",
@@ -3727,10 +3835,22 @@ function oncheck_sell(input_pay_sell) {
           showDialogFailed("รหัสใช้งานหมดอายุไม่สามารถสแกนใช้งานได้");
         } else {
 
-          let docNo = JSON.parse(result);
-          $("#input_pay_sell").data("docno", docNo);
-          show_detail_item_sell();
-          show_detail_department();
+          if($("#input_pay_sell").data("docno") != ""){
+            $("#checkbox2_" + $("#input_pay_sell").data("docno")).prop("checked", true);
+            show_detail_item_sell();
+          }else{
+            let docNo = JSON.parse(result);
+            $("#input_pay_sell").data("docno", docNo);
+            show_detail_item_sell();
+            show_detail_department();
+
+            setTimeout(() => {
+              $("#checkbox2_" + docNo).prop("checked", true);
+            }, 500);
+          }
+
+
+
 
           // alert(docNo);
           // var ObjData = JSON.parse(result);
@@ -3837,7 +3957,7 @@ function show_detail_department() {
 
           _tr += `<tr id='trbg_${value.departmentID}'>
                       <td class='text-center'>                      
-                        <i class="fa-solid fa-chevron-up" style='font-size:20px;cursor:pointer;' id='open_${value.departmentID}' value='0' onclick='open_depertment_sell("${value.departmentID}")'></i>
+                        <i class="fa-solid fa-chevron-up" style='font-size:20px;cursor:pointer;rotate: 180deg;' id='open_${value.departmentID}' value='0' onclick='open_depertment_sell("${value.departmentID}")'></i>
                       </td>
                       <td class="f24 text-left" style='font-weight:bold;'>${value.DepName}</td>
                    </tr>`;
@@ -3853,7 +3973,7 @@ function show_detail_department() {
       }
 
       $("#table_deproom_sell tbody").html(_tr);
-      $(".all111").hide();
+      $(".all111").show();
 
 
     },
@@ -3868,8 +3988,6 @@ function setActive_department(DocNo, departmentID, ServiceDate, ServiceTime) {
   $("#trbg_department_" + DocNo).css("background-color", "rgb(249, 245, 255)");
 
 
-  $("#input_pay_sell").data("docno", DocNo);
-  $("#input_pay_sell").data("docno", DocNo);
   $("#input_pay_sell").data("docno", DocNo);
   preventTrigger = true;
   $("#select_department_sell_right").val(departmentID).trigger("change");
@@ -4112,8 +4230,7 @@ function session() {
       Permission_name = ObjData.Permission_name;
       Userid = ObjData.Userid;
 
-      $("#input_Deproom_Main").val(Permission_name);
-      $("#input_Name_Main").val(UserName);
+
     },
   });
 }

@@ -593,6 +593,7 @@ function showDetailSub_itemSuds(itemname, UsageCode) {
 
 function selection_departmentRoom() {
   depRoom = [];
+  depID = [];
   $.ajax({
     url: "process/movement.php",
     type: "POST",
@@ -641,8 +642,33 @@ function selection_departmentRoom() {
       } else {
       }
 
+
+
+
+      // tr += `<th style="text-wrap: nowrap;" class='text-center' rowspan="2" id="td_all">รวม</th>`;
+
+
+
+      var coldp = 0;
+      $.each(ObjData["depname"], function (kay3, value3) {
+        coldp++;
+        tr2 += `<th style="text-wrap: nowrap;background-color: darkgray;" class='text-center' >${value3.DepName}</th>`;
+        depID.push(value3.ID);
+      });
+
+
+      tr += `<th style="text-wrap: nowrap;background-color: darkgray;" class='text-center'  colspan="${coldp}">แผนก</th>`;
+
       tr += `<th style="text-wrap: nowrap;" class='text-center' rowspan="2" id="td_all">รวม</th>`;
+
+
       $("#tr_TableDephead").html(tr);
+
+
+
+      $("#tr_TableDep").html(tr2);
+
+
     },
   });
 }
@@ -659,8 +685,8 @@ function selection_item() {
     },
     success: function (result) {
       var ObjData = JSON.parse(result);
-      $('#table_DepRoom').DataTable().destroy();
-      $("#table_DepRoom tbody").html("");
+      $('#table_DepRoom_movement').DataTable().destroy();
+      $("#table_DepRoom_movement tbody").html("");
       console.log(ObjData);
       var tr = ``;
       // var tr = ``;
@@ -684,7 +710,7 @@ function selection_item() {
             value.cnt = value.stock_balance;
           }
 
-          tr += `<tr>f
+          tr += `<tr>
                                   <td class='text-center' style="text-wrap: nowrap;">${kay + 1
             }</td>
                                   <td style="text-wrap: nowrap;${color}" >${value.itemname
@@ -717,15 +743,45 @@ function selection_item() {
             }
           });
 
+          // tr += `<td class='text-center' style="text-wrap: nowrap;">${sumcount}</</td>`;
+
+          $.each(depID, function (keydepID, valuedepID) {
+            // console.log(valuedepID);
+
+            var checkcountDepID = 0;
+            $.each(ObjData["detailDepID"], function (kay3, value3) {
+              if (value3.ItemCode == value.itemcode) {
+                if (valuedepID == value3.departmentroomid) {
+
+                  tr += `<td class='text-center' style="text-wrap: nowrap;background-color: gold;">${value3.Qty}</</td>`;
+                  sumcount += parseInt(value3.Qty);
+                  checkcountDepID = 1;
+                }
+              }
+            });
+            if (checkcountDepID == 0) {
+              tr += `<td class='text-center' style="text-wrap: nowrap;">0</</td>`;
+            }
+          });
+
           tr += `<td class='text-center' style="text-wrap: nowrap;">${sumcount}</</td>`;
+
 
           tr += `</tr>`;
         });
       } else {
       }
 
-      $("#table_DepRoom tbody").html(tr);
-      $('#table_DepRoom').DataTable({
+
+
+
+      $("#table_DepRoom_movement tbody").html(tr);
+      // ถ้าถูก init มาก่อนแล้ว ให้ destroy ก่อน
+      if ($.fn.DataTable.isDataTable('#table_DepRoom_movement')) {
+        $('#table_DepRoom_movement').DataTable().destroy();
+      }
+
+      const tbl = $('#table_DepRoom_movement').DataTable({
         language: {
           emptyTable: settext("dataTables_empty"),
           paginate: {
@@ -734,27 +790,57 @@ function selection_item() {
           },
           info: settext("dataTables_Showing") + " _START_ " + settext("dataTables_to") + " _END_ " + settext("dataTables_of") + " _TOTAL_ " + settext("dataTables_entries") + " ",
         },
-        columnDefs: [{
-          width: '10%',
-          targets: 0
-        }],
-        info: true,
+
+        autoWidth: false,          // ให้เราคุม width เอง
         scrollX: true,
         scrollCollapse: true,
-        fixedColumns: {
-          leftColumns: 7,
-          rightColumns: 0
-        },
+        scrollY: '800px',
+        fixedColumns: { leftColumns: 7, rightColumns: 0 },
+        fixedHeader: true,
+
         paging: true,
         pageLength: 15,
-        scrollY: 800,
-        visible: false,
         searching: false,
         lengthChange: false,
-        fixedHeader: true,
-        ordering: false
+        ordering: false,
+        info: true,
+
+        columnDefs: [
+          { targets: 0, width: '50px' },
+          { targets: 1, width: '250px' },
+          { targets: 2, width: '100px' },
+          { targets: 3, width: '120px' },
+          { targets: 4, width: '110px' },
+          { targets: 5, width: '80px' },  // Max
+          { targets: 6, width: '80px' }   // Min  ⇒ เท่ากับคอลัมน์ 5
+        ],
+        initComplete: function () {
+          const api = this.api();
+          api.columns.adjust();
+          if (api.fixedColumns && api.fixedColumns().relayout) api.fixedColumns().relayout();
+        },
+        drawCallback: function () {
+          const api = this.api();
+          api.columns.adjust();
+          if (api.fixedColumns && api.fixedColumns().relayout) api.fixedColumns().relayout();
+        }
       });
 
+      // ถ้าตารางเพิ่งถูกโชว์ (เช่น อยู่ในแท็บ) ให้ sync อีกรอบ
+      setTimeout(() => {
+        tbl.columns.adjust().draw(false);
+        if (tbl.fixedColumns && tbl.fixedColumns().relayout) {
+          tbl.fixedColumns().relayout();
+        }
+      }, 0);
+
+      // ช่วยเวลา resize
+      $(window).on('resize', () => {
+        tbl.columns.adjust();
+        if (tbl.fixedColumns && tbl.fixedColumns().relayout) {
+          tbl.fixedColumns().relayout();
+        }
+      });
       $('th').removeClass('sorting_asc');
       if (tr == "") {
         $('.dataTables_info').text(settext("dataTables_Showing") + ' 0 ' + settext("dataTables_to") + ' 0 ' + settext("dataTables_of") + ' 0 ' + settext("dataTables_entries") + '');
@@ -773,8 +859,7 @@ function session() {
       UserName = ObjData.UserName;
       Permission_name = ObjData.Permission_name;
 
-      $("#input_Deproom_Main").val(Permission_name);
-      $("#input_Name_Main").val(UserName);
+
     },
   });
 }
@@ -941,6 +1026,7 @@ function select_item() {
 
 function selection_departmentRoom_rfid() {
   depRoom = [];
+  depID = [];
   $.ajax({
     url: "process/movement.php",
     type: "POST",
@@ -989,8 +1075,29 @@ function selection_departmentRoom_rfid() {
       } else {
       }
 
+      // tr += `<th style="text-wrap: nowrap;" class='text-center' rowspan="2" id="td_all">รวม</th>`;
+
+
+
+      var coldp = 0;
+      $.each(ObjData["depname"], function (kay3, value3) {
+        coldp++;
+        tr2 += `<th style="text-wrap: nowrap;background-color: darkgray;" class='text-center'  >${value3.DepName}</th>`;
+        depID.push(value3.ID);
+      });
+
+
+      tr += `<th style="text-wrap: nowrap;background-color: darkgray;" class='text-center'  colspan="${coldp}" >แผนก</th>`;
+
+
       tr += `<th style="text-wrap: nowrap;" class='text-center' rowspan="2" id="td_all">รวม</th>`;
+
+
       $("#tr_TableDephead_rfid").html(tr);
+
+
+
+      $("#tr_TableDep_rfid").html(tr2);
     },
   });
 }
@@ -1006,8 +1113,8 @@ function selection_item_rfid() {
     },
     success: function (result) {
       var ObjData = JSON.parse(result);
-      $('#table_DepRoom_rfid').DataTable().destroy();
-      $("#table_DepRoom_rfid tbody").html("");
+      $('#table_DepRoom_rfid_movement').DataTable().destroy();
+      $("#table_DepRoom_rfid_movement tbody").html("");
       console.log(ObjData);
       var tr = ``;
       // var tr = ``;
@@ -1064,15 +1171,51 @@ function selection_item_rfid() {
             }
           });
 
+          // tr += `<td class='text-center' style="text-wrap: nowrap;">${sumcount}</</td>`;
+
+
+
+          // var sumcount2 = 0;
+          $.each(depID, function (keydepID, valuedepID) {
+            // console.log(valuedepID);
+
+            var checkcountDepID = 0;
+            $.each(ObjData["detailDepID"], function (kay3, value3) {
+              if (value3.ItemCode == value.itemcode) {
+                if (valuedepID == value3.departmentroomid) {
+
+                  tr += `<td class='text-center' style="text-wrap: nowrap;background-color: gold;">${value3.Qty}</</td>`;
+                  sumcount += parseInt(value3.Qty);
+                  checkcountDepID = 1;
+                }
+              }
+            });
+            if (checkcountDepID == 0) {
+              tr += `<td class='text-center' style="text-wrap: nowrap;">0</</td>`;
+            }
+          });
+
           tr += `<td class='text-center' style="text-wrap: nowrap;">${sumcount}</</td>`;
+
+
+
+
+
+
+
 
           tr += `</tr>`;
         });
       } else {
       }
 
-      $("#table_DepRoom_rfid tbody").html(tr);
-      $('#table_DepRoom_rfid').DataTable({
+      $("#table_DepRoom_rfid_movement tbody").html(tr);
+      // ถ้าถูก init มาก่อนแล้ว ให้ destroy ก่อน
+      if ($.fn.DataTable.isDataTable('#table_DepRoom_rfid_movement')) {
+        $('#table_DepRoom_rfid').DataTable().destroy();
+      }
+
+      const tbl = $('#table_DepRoom_rfid_movement').DataTable({
         language: {
           emptyTable: settext("dataTables_empty"),
           paginate: {
@@ -1081,26 +1224,60 @@ function selection_item_rfid() {
           },
           info: settext("dataTables_Showing") + " _START_ " + settext("dataTables_to") + " _END_ " + settext("dataTables_of") + " _TOTAL_ " + settext("dataTables_entries") + " ",
         },
-        columnDefs: [{
-          width: '10%',
-          targets: 0
-        }],
-        info: true,
+
+        autoWidth: false,          // ให้เราคุม width เอง
         scrollX: true,
         scrollCollapse: true,
-        fixedColumns: {
-          leftColumns: 7,
-          rightColumns: 0
-        },
+        scrollY: '800px',
+        fixedColumns: { leftColumns: 7, rightColumns: 0 },
+        fixedHeader: true,
+
         paging: true,
         pageLength: 15,
-        scrollY: 800,
-        visible: false,
         searching: false,
         lengthChange: false,
-        fixedHeader: true,
-        ordering: false
+        ordering: false,
+        info: true,
+
+        columnDefs: [
+          { targets: 0, width: '50px' },
+          { targets: 1, width: '250px' },
+          { targets: 2, width: '100px' },
+          { targets: 3, width: '120px' },
+          { targets: 4, width: '110px' },
+          { targets: 5, width: '80px' },  // Max
+          { targets: 6, width: '80px' }   // Min  ⇒ เท่ากับคอลัมน์ 5
+        ],
+        initComplete: function () {
+          const api = this.api();
+          api.columns.adjust();
+          if (api.fixedColumns && api.fixedColumns().relayout) api.fixedColumns().relayout();
+        },
+        drawCallback: function () {
+          const api = this.api();
+          api.columns.adjust();
+          if (api.fixedColumns && api.fixedColumns().relayout) api.fixedColumns().relayout();
+        }
       });
+
+      // ถ้าตารางเพิ่งถูกโชว์ (เช่น อยู่ในแท็บ) ให้ sync อีกรอบ
+      setTimeout(() => {
+        tbl.columns.adjust().draw(false);
+        if (tbl.fixedColumns && tbl.fixedColumns().relayout) {
+          tbl.fixedColumns().relayout();
+        }
+      }, 0);
+
+      // ช่วยเวลา resize
+      $(window).on('resize', () => {
+        tbl.columns.adjust();
+        if (tbl.fixedColumns && tbl.fixedColumns().relayout) {
+          tbl.fixedColumns().relayout();
+        }
+      });
+
+
+
 
       $('th').removeClass('sorting_asc');
       if (tr == "") {
@@ -1112,6 +1289,7 @@ function selection_item_rfid() {
 
 function selection_departmentRoom_normal() {
   depRoom = [];
+  depID = [];
   $.ajax({
     url: "process/movement.php",
     type: "POST",
@@ -1160,8 +1338,29 @@ function selection_departmentRoom_normal() {
       } else {
       }
 
+      // tr += `<th style="text-wrap: nowrap;" class='text-center' rowspan="2" id="td_all">รวม</th>`;
+
+
+
+      var coldp = 0;
+      $.each(ObjData["depname"], function (kay3, value3) {
+        coldp++;
+        tr2 += `<th style="text-wrap: nowrap;background-color: darkgray;" class='text-center'  >${value3.DepName}</th>`;
+        depID.push(value3.ID);
+      });
+
+
+      tr += `<th style="text-wrap: nowrap;background-color: darkgray;" class='text-center'  colspan="${coldp}"  >แผนก</th>`;
+
+
       tr += `<th style="text-wrap: nowrap;" class='text-center' rowspan="2" id="td_all">รวม</th>`;
+
+
       $("#tr_TableDephead_normal").html(tr);
+
+
+
+      $("#tr_TableDep_normal").html(tr2);
     },
   });
 }
@@ -1177,8 +1376,8 @@ function selection_item_normal() {
     },
     success: function (result) {
       var ObjData = JSON.parse(result);
-      $('#table_DepRoom_normal').DataTable().destroy();
-      $("#table_DepRoom_normal tbody").html("");
+      $('#table_DepRoom_normal_movement').DataTable().destroy();
+      $("#table_DepRoom_normal_movement tbody").html("");
       console.log(ObjData);
       var tr = ``;
       // var tr = ``;
@@ -1232,15 +1431,44 @@ function selection_item_normal() {
             }
           });
 
+          // tr += `<td class='text-center' style="text-wrap: nowrap;">${sumcount}</</td>`;
+
+          // var sumcount2 = 0;
+          $.each(depID, function (keydepID, valuedepID) {
+            // console.log(valuedepID);
+
+            var checkcountDepID = 0;
+            $.each(ObjData["detailDepID"], function (kay3, value3) {
+              if (value3.ItemCode == value.itemcode) {
+                if (valuedepID == value3.departmentroomid) {
+
+                  tr += `<td class='text-center' style="text-wrap: nowrap;background-color: gold;">${value3.Qty}</</td>`;
+                  sumcount += parseInt(value3.Qty);
+                  checkcountDepID = 1;
+                }
+              }
+            });
+            if (checkcountDepID == 0) {
+              tr += `<td class='text-center' style="text-wrap: nowrap;">0</</td>`;
+            }
+          });
+
           tr += `<td class='text-center' style="text-wrap: nowrap;">${sumcount}</</td>`;
+
+
 
           tr += `</tr>`;
         });
       } else {
       }
 
-      $("#table_DepRoom_normal tbody").html(tr);
-      $('#table_DepRoom_normal').DataTable({
+      $("#table_DepRoom_normal_movement tbody").html(tr);
+      // ถ้าถูก init มาก่อนแล้ว ให้ destroy ก่อน
+      if ($.fn.DataTable.isDataTable('#table_DepRoom_movement')) {
+        $('#table_DepRoom_normal_movement').DataTable().destroy();
+      }
+
+      const tbl = $('#table_DepRoom_normal_movement').DataTable({
         language: {
           emptyTable: settext("dataTables_empty"),
           paginate: {
@@ -1249,25 +1477,56 @@ function selection_item_normal() {
           },
           info: settext("dataTables_Showing") + " _START_ " + settext("dataTables_to") + " _END_ " + settext("dataTables_of") + " _TOTAL_ " + settext("dataTables_entries") + " ",
         },
-        columnDefs: [{
-          width: '10%',
-          targets: 0
-        }],
-        info: true,
+
+        autoWidth: false,          // ให้เราคุม width เอง
         scrollX: true,
         scrollCollapse: true,
-        fixedColumns: {
-          leftColumns: 7,
-          rightColumns: 0
-        },
+        scrollY: '800px',
+        fixedColumns: { leftColumns: 7, rightColumns: 0 },
+        fixedHeader: true,
+
         paging: true,
         pageLength: 15,
-        scrollY: 800,
-        visible: false,
         searching: false,
         lengthChange: false,
-        fixedHeader: true,
-        ordering: false
+        ordering: false,
+        info: true,
+
+        columnDefs: [
+          { targets: 0, width: '50px' },
+          { targets: 1, width: '250px' },
+          { targets: 2, width: '100px' },
+          { targets: 3, width: '120px' },
+          { targets: 4, width: '110px' },
+          { targets: 5, width: '80px' },  // Max
+          { targets: 6, width: '80px' }   // Min  ⇒ เท่ากับคอลัมน์ 5
+        ],
+        initComplete: function () {
+          const api = this.api();
+          api.columns.adjust();
+          if (api.fixedColumns && api.fixedColumns().relayout) api.fixedColumns().relayout();
+        },
+        drawCallback: function () {
+          const api = this.api();
+          api.columns.adjust();
+          if (api.fixedColumns && api.fixedColumns().relayout) api.fixedColumns().relayout();
+        }
+      });
+
+      // ถ้าตารางเพิ่งถูกโชว์ (เช่น อยู่ในแท็บ) ให้ sync อีกรอบ
+      setTimeout(() => {
+        tbl.columns.adjust().draw(false);
+        if (tbl.fixedColumns && tbl.fixedColumns().relayout) {
+          tbl.fixedColumns().relayout();
+        }
+      }, 0);
+
+      // ช่วยเวลา resize
+      $(window).on('resize', () => {
+        tbl.columns.adjust();
+        if (tbl.fixedColumns && tbl.fixedColumns().relayout) {
+          tbl.fixedColumns().relayout();
+        }
       });
 
       $('th').removeClass('sorting_asc');

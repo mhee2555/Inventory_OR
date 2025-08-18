@@ -1,42 +1,4 @@
-<div>
 
-
-
-    <div class="container-fluid">
-        <div class="row justify-content-end mt-3">
-            <div class="col-auto">
-                <div class="input-group" style="background-color: #f1f3fb; border-radius: 10px; border: 1px solid #dce0eb; overflow: hidden;">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"
-                            style="border: none; background-color: white; font-weight: bold; border-right: 1px solid #dce0eb;">
-                            สิทธิ์การเข้าใช้งาน :
-                        </span>
-                    </div>
-                    <input type="text" class="form-control font-weight-bold"
-                        id="input_Deproom_Main" disabled
-                        style="background-color: #f1f3fb; border: none; color: #000;">
-                </div>
-            </div>
-
-            <div class="col-auto ml-2">
-                <div class="input-group" style="background-color: #f1f3fb; border-radius: 10px; border: 1px solid #dce0eb; overflow: hidden;">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"
-                            style="border: none; background-color: white; font-weight: bold; border-right: 1px solid #dce0eb;">
-                            ชื่อผู้ใช้งาน :
-                        </span>
-                    </div>
-                    <input type="text" class="form-control font-weight-bold"
-                        id="input_Name_Main" disabled
-                        style="background-color: #f1f3fb; border: none; color: #000;">
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-
-</div>
 
 <div class="row mb-3 mt-4">
     <div class="col-md-6">
@@ -90,7 +52,7 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-12">
-                                <input type="text" class="form-control" id="input_doctorth" autocomplete="off" placeholder="ชื่อแพทย์ ภาษาไทย">
+                                <input type="text" class="form-control f18" id="input_doctorth" autocomplete="off" placeholder="ชื่อแพทย์ ภาษาไทย">
                             </div>
                             <div class="col-md-12 mt-3" hidden>
                                 <input type="text" class="form-control" id="input_IDdoctor" autocomplete="off">
@@ -154,7 +116,7 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-12 mt-2">
-                                <input type="text" class="form-control" id="input_Procedure" autocomplete="off" placeholder="หัตถการ">
+                                <input type="text" class="form-control f18" id="input_Procedure" autocomplete="off" placeholder="หัตถการ">
                             </div>
                             <div class="col-md-12 mt-3" hidden>
                                 <input type="text" class="form-control" id="input_IDProcedure" autocomplete="off">
@@ -218,13 +180,13 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-12 mt-2">
-                                <input type="text" class="form-control" id="input_DeproomNameTH" autocomplete="off" placeholder="ชื่อห้อง ไทย">
+                                <input type="text" class="form-control f18" id="input_DeproomNameTH" autocomplete="off" placeholder="ชื่อห้อง ไทย">
                             </div>
                             <div class="col-md-12 mt-2">
-                                <input type="text" class="form-control" id="input_DeproomNameEN" autocomplete="off" placeholder="ชื่อห้อง อังกฤษ">
+                                <input type="text" class="form-control f18" id="input_DeproomNameEN" autocomplete="off" placeholder="ชื่อห้อง อังกฤษ">
                             </div>
                             <div class="col-md-12 mt-2">
-                                <input type="text" class="form-control" id="input_DeproomName_sub" autocomplete="off" placeholder="ตัวย่อ">
+                                <input type="text" class="form-control f18" id="input_DeproomName_sub" autocomplete="off" placeholder="ตัวย่อ">
                             </div>
                             <div class="col-md-12 mt-3">
                                 <select name="" id="input_DeproomFloor" class="form-control" style="font-size:20px;">
@@ -321,19 +283,19 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-12 mt-2">
-                                <input type="text" class="form-control" id="input_empcodeUser" autocomplete="off" placeholder="รหัสพนักงาน">
+                                <input type="text" class="form-control f18" id="input_empcodeUser" autocomplete="off" placeholder="รหัสพนักงาน">
                             </div>
                             <div class="col-md-12 mt-2">
-                                <input type="text" class="form-control" id="input_nameUser" autocomplete="off" placeholder="ชื่อ">
+                                <input type="text" class="form-control f18" id="input_nameUser" autocomplete="off" placeholder="ชื่อ">
                             </div>
                             <div class="col-md-12 mt-3">
-                                <input type="text" class="form-control" id="input_lastUser" autocomplete="off" placeholder="นามสกุล">
+                                <input type="text" class="form-control f18" id="input_lastUser" autocomplete="off" placeholder="นามสกุล">
                             </div>
                             <div class="col-md-12 mt-3">
-                                <input type="text" class="form-control" id="input_userName" autocomplete="off" placeholder="UserName">
+                                <input type="text" class="form-control f18" id="input_userName" autocomplete="off" placeholder="UserName">
                             </div>
                             <div class="col-md-12 mt-3">
-                                <input type="text" class="form-control" id="input_passWord" autocomplete="off" placeholder="Password">
+                                <input type="text" class="form-control f18" id="input_passWord" autocomplete="off" placeholder="Password">
                             </div>
                             <div class="col-md-12 mt-3">
                                 <select class="form-control f18" id="select_permission"></select>

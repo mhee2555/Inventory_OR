@@ -45,19 +45,13 @@ class MYPDF extends TCPDF
                                 DATE_FORMAT(deproom.serviceDate, '%d-%m-%Y') AS serviceDate,
                                 DATE_FORMAT(deproom.serviceDate, '%H:%i') AS serviceTime,
                                 deproom.hn_record_id,
-                                doctor.Doctor_Name,
+                                ( SELECT GROUP_CONCAT( `doctor`.Doctor_Name SEPARATOR ' , ' ) AS Doctor_Name FROM `doctor` WHERE FIND_IN_SET( `doctor`.ID, deproom.`doctor` ) ) AS Doctor_Name,
                                 ( SELECT GROUP_CONCAT( `procedure`.Procedure_TH SEPARATOR ' , ' ) AS Procedures FROM `procedure` WHERE FIND_IN_SET( `procedure`.ID, deproom.`procedure` ) ) AS Procedure_TH,
                                 departmentroom.departmentroomname,
-                                doctor.ID AS doctor_ID,
-                                `procedure`.ID AS procedure_ID,
                                 departmentroom.id AS deproom_ID,
                                 deproom.Remark
                             FROM
                                 deproom
-                            INNER JOIN
-                                doctor ON doctor.ID = deproom.doctor
-                            LEFT JOIN
-                                `procedure` ON deproom.`procedure` = `procedure`.ID
                             INNER JOIN
                                 departmentroom ON deproom.Ref_departmentroomid = departmentroom.id
                             WHERE
@@ -343,7 +337,7 @@ $DocNo = $_GET['DocNo'];
 
 $html = '    
     <table cellspacing="0" cellpadding="1" border="1" >
-    <thead><tr style="font-size:13px;">
+    <thead><tr style="font-size:13px;background-color:rgb(100, 54, 149);color:#fff;">
     <th width="15 %" align="center">Code</th>
     <th width="70 %" align="center">Description</th>
     <th width="15 %" align="center">เบิก</th></thead>
@@ -390,7 +384,7 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
     // ถ้าเปลี่ยนประเภท ให้ใส่หัวกลุ่ม
     if ($currentType != $itemType) {
         $currentType = $itemType;
-        $html .= '<tr style="font-weight:bold;font-size:13px;background-color:rgb(100, 54, 149);color:#fff;" align="center;">
+        $html .= '<tr style="font-weight:bold;font-size:13px;background-color:#f1e9f9;" align="center;">
                     <td colspan="3" >' . htmlspecialchars($itemType, ENT_QUOTES, 'UTF-8') . '</td>
                   </tr>';
     }

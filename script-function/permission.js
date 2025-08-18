@@ -1,24 +1,26 @@
 var userList = [];
 
 $(function () {
+
+
   session();
   select_users();
 
   $("#selectUser").change(function () {
     var selectedID = $(this).val();
-    var selectedUser = userList.find((user) => String(user.ID) === String(selectedID) );
+    var selectedUser = userList.find((user) => String(user.ID) === String(selectedID));
 
     console.log(selectedUser);
     if (selectedUser) {
 
       console.log(selectedUser);
       // สมมุติว่ามีช่องแสดงผลข้อมูลใน DOM ที่ต้องการแสดง
-      $("#name_users").text( selectedUser.FirstName +" " +selectedUser.LastName +" ( " +selectedUser.EmpCode +" ) " );
+      $("#name_users").text(selectedUser.FirstName + " " + selectedUser.LastName + " ( " + selectedUser.EmpCode + " ) ");
       $("#permission_users").text(selectedUser.Permission);
 
       if (selectedUser.IsAdmin == 1) {
 
-      $(".clear_checkbox").prop("checked", true);
+        $(".clear_checkbox").prop("checked", true);
         $(".clear_checkbox").prop("disabled", true);
 
         var xx = "Admin";
@@ -51,8 +53,15 @@ $(function () {
       $("#admin_users").text("");
       $("#input_userID").val("");
       $(".clear_checkbox").prop("checked", false);
+      $(".clear_checkbox").prop("disabled", true);
     }
+
+
   });
+
+
+  $(".clear_checkbox").prop("disabled", true);
+
 });
 
 function session() {
@@ -67,8 +76,7 @@ function session() {
       RefDepID = ObjData.RefDepID;
       Permission_name = ObjData.Permission_name;
 
-      $("#input_Deproom_Main").val(Permission_name);
-      $("#input_Name_Main").val(UserName);
+
     },
   });
 }
@@ -193,7 +201,7 @@ $("#main").change(function () {
         number: number,
         menu: "main",
       },
-      success: function (result) {},
+      success: function (result) { },
     });
   }
 });
@@ -213,7 +221,7 @@ $("#recieve_stock").change(function () {
         number: number,
         menu: "recieve_stock",
       },
-      success: function (result) {},
+      success: function (result) { },
     });
   }
 });
@@ -233,7 +241,7 @@ $("#create_request").change(function () {
         number: number,
         menu: "create_request",
       },
-      success: function (result) {},
+      success: function (result) { },
     });
   }
 });
@@ -253,7 +261,7 @@ $("#request_item").change(function () {
         number: number,
         menu: "request_item",
       },
-      success: function (result) {},
+      success: function (result) { },
     });
   }
 });
@@ -273,7 +281,7 @@ $("#set_hn").change(function () {
         number: number,
         menu: "set_hn",
       },
-      success: function (result) {},
+      success: function (result) { },
     });
   }
 });
@@ -293,7 +301,7 @@ $("#pay").change(function () {
         number: number,
         menu: "pay",
       },
-      success: function (result) {},
+      success: function (result) { },
     });
   }
 });
@@ -313,7 +321,7 @@ $("#hn").change(function () {
         number: number,
         menu: "hn",
       },
-      success: function (result) {},
+      success: function (result) { },
     });
   }
 });
@@ -333,7 +341,7 @@ $("#movement").change(function () {
         number: number,
         menu: "movement",
       },
-      success: function (result) {},
+      success: function (result) { },
     });
   }
 });
@@ -342,6 +350,20 @@ $("#manage").change(function () {
     var number = 1;
   } else {
     var number = 0;
+  }
+
+
+  if (number = 1) {
+    if ($("#admin_users").text() == 'User') {
+      Swal.fire({
+        title: 'ล้มเหลว',
+        text: 'User ไม่สามารถแก้ไข เมนูนี้ได้',
+        icon: "error",
+      });
+      $(this).prop("checked", false);
+      $(this).prop("disabled", true);
+      return;
+    }
   }
   if ($("#input_userID").val() != "") {
     $.ajax({
@@ -353,7 +375,7 @@ $("#manage").change(function () {
         number: number,
         menu: "manage",
       },
-      success: function (result) {},
+      success: function (result) { },
     });
   }
 });
@@ -373,7 +395,7 @@ $("#report").change(function () {
         number: number,
         menu: "report",
       },
-      success: function (result) {},
+      success: function (result) { },
     });
   }
 });
@@ -383,6 +405,21 @@ $("#permission").change(function () {
   } else {
     var number = 0;
   }
+
+  if (number = 1) {
+    if ($("#admin_users").text() == 'User') {
+      Swal.fire({
+        title: 'ล้มเหลว',
+        text: 'User ไม่สามารถแก้ไข เมนูนี้ได้',
+        icon: "error",
+      });
+      $(this).prop("checked", false);
+      $(this).prop("disabled", true);
+      return;
+    }
+  }
+
+
   if ($("#input_userID").val() != "") {
     $.ajax({
       url: "process/permission.php",
@@ -393,7 +430,7 @@ $("#permission").change(function () {
         number: number,
         menu: "permission",
       },
-      success: function (result) {},
+      success: function (result) { },
     });
   }
 });

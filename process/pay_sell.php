@@ -134,6 +134,7 @@ function show_detail_department($conn, $db)
                     INNER JOIN department ON department.ID = sell_department.departmentID 
                 WHERE
                     DATE(sell_department.serviceDate) = '$select_date_sell' 
+                    AND sell_department.IsCancel = 0
                     $where
                 GROUP BY
                     department.DepName  ";
@@ -155,8 +156,9 @@ function show_detail_department($conn, $db)
                 WHERE
                     DATE(sell_department.serviceDate) = '$select_date_sell' 
                     AND sell_department.departmentID = '$_departmentID'
+                    AND sell_department.IsCancel = 0
                 GROUP BY
-                    department.DepName  ";
+                    sell_department.DocNo  ";
         $meQuery_sub = $conn->prepare($query2);
         $meQuery_sub->execute();
         while ($row_sub = $meQuery_sub->fetch(PDO::FETCH_ASSOC)) {

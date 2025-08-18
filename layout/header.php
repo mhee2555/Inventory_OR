@@ -14,12 +14,41 @@
       <button class="btn cleardisplay ml-1" style="font-size: 16px; color: #1D2939; font-weight: bold;" id="display-3">กก</button>
     </div>
 
-    <!-- ฝั่งขวา: ตั้งค่า + ภาษา -->
+    <!-- ฝั่งขวา: Input เพิ่มเติม + ตั้งค่า + ภาษา -->
     <div class="d-flex align-items-center">
-      <!-- ปุ่มตั้งค่า -->
+      
+      <!-- 🔍 Input 1: ค้นหา (แบบ input-group) -->
+      <div class="input-group mr-3" style="width: 280px; background-color: #f1f3fb; border-radius: 10px; border: 1px solid #dce0eb; overflow: hidden;">
+        <div class="input-group-prepend">
+          <span class="input-group-text" style="border: none; background-color: white; font-weight: bold; border-right: 1px solid #dce0eb; font-size: 14px;">
+            สิทธิ์การเข้าใช้งาน :
+          </span>
+        </div>
+        <input type="text" class="form-control font-weight-bold" 
+               id="search-input" 
+               placeholder="ค้นหาข้อมูล"
+               value="<?php echo $Permission_name ?>"
+               style="background-color: #f1f3fb; border: none; color: #000; font-size: 14px;">
+      </div>
+
+      <!-- 📋 Input 2: ประเภท (แบบ input-group + select) -->
+      <div class="input-group mr-3" style="width: 280px; background-color: #f1f3fb; border-radius: 10px; border: 1px solid #dce0eb; overflow: hidden;">
+        <div class="input-group-prepend">
+          <span class="input-group-text" style="border: none; background-color: white; font-weight: bold; border-right: 1px solid #dce0eb; font-size: 14px;">
+            ชื่อผู้ใช้งาน :
+          </span>
+        </div>
+        <input type="text" class="form-control font-weight-bold" 
+               id="search-input" 
+               placeholder="ค้นหาข้อมูล"
+               value="<?php echo $UserName ?>"
+               style="background-color: #f1f3fb; border: none; color: #000; font-size: 14px;">
+      </div>
+
+      <!-- ⚙️ ปุ่มตั้งค่า -->
       <i class="fa-solid fa-gear mr-3" style="font-size: 25px; cursor: pointer;" id="btn_setting_timeout"></i>
 
-      <!-- Dropdown ภาษา -->
+      <!-- 🌐 Dropdown ภาษา -->
       <div class="dropdown" hidden>
         <button class="btn dropdown-toggle" type="button" data-toggle="dropdown" style="background-color: white;">
           <img src="assets/icon_ui/orter/ic_thailand.png" alt="" style="width: 20%;" class="pr-2">

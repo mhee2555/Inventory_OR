@@ -263,6 +263,12 @@ function set_tracking(lotNo, itemcode, txt_check) {
           success: function (result) {
             showDialogSuccess("บันทึกสำเร็จ");
             show_detail_lot(itemcode);
+            $("#input_lot_detail").val("");
+
+            setTimeout(() => {
+             $("#table_lot_detail").DataTable().destroy();
+             $("#table_lot_detail tbody").html("");
+            }, 1000);
           },
         });
       }
@@ -293,7 +299,13 @@ function set_tracking(lotNo, itemcode, txt_check) {
           },
           success: function (result) {
             showDialogSuccess("บันทึกสำเร็จ");
-            show_detail_lot(itemcode);
+                        show_detail_lot(itemcode);
+            $("#input_lot_detail").val("");
+
+            setTimeout(() => {
+             $("#table_lot_detail").DataTable().destroy();
+              $("#table_lot_detail tbody").html("");
+            }, 1000);
           },
         });
       }
@@ -678,8 +690,7 @@ function session() {
       RefDepID = ObjData.RefDepID;
       Permission_name = ObjData.Permission_name;
 
-      $("#input_Deproom_Main").val(Permission_name);
-      $("#input_Name_Main").val(UserName);
+      
     },
   });
 }
