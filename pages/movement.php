@@ -452,7 +452,7 @@
                     <table class="table table-hover " id="table_item_restock">
                         <thead style="background-color: #cdd6ff;">
                             <tr>
-                                <th scope="col" class="text-center" id="">ItemCode</th>
+                                <th scope="col" class="text-center" id="">รหัสอุปกรณ์</th>
                                 <th scope="col" class="text-center" id="">อุปกรณ์</th>
                                 <th scope="col" class="text-center" id="">รหัสใช้งาน</th>
                                 <th scope="col" class="text-center" id="">สถานะ</th>

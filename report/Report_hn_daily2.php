@@ -25,7 +25,7 @@ class MYPDF extends TCPDF
         require('../connect/connect.php');
         $datetime = new DatetimeTH();
         // date th
-        $printdate = date('d') . " " . $datetime->getTHmonth(date('F')) . " พ.ศ. " . $datetime->getTHyear(date('Y'));
+        $printdate = date('d') . " " . $datetime->getTHmonth(date('F'))  . " " . date('Y');
 
 
         $image_file = "images/logo2.jpg";
@@ -116,6 +116,7 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
     $Doctor_Name = $Result_Detail['Doctor_Name'];
     $Procedure_TH = $Result_Detail['Procedure_TH'];
     $hncode = $Result_Detail['hncode'];
+    $DocNo_deproom = $Result_Detail['DocNo_deproom'];
 
     $Procedure_TH = mb_strimwidth($Procedure_TH, 0, 60, '…', 'UTF-8');
 
@@ -178,7 +179,7 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
     // output the HTML content
 
 
-    $DocNo = 'xxx';
+    $DocNo = $DocNo_deproom;
     $x = 160; // คงที่ตามที่คุณอยากได้
     $y = 12;
 

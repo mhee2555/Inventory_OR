@@ -196,6 +196,7 @@ function click_menu() {
     $("#row_procedure_").hide();
     $("#row_deproom_").hide();
     $("#row_users").hide();
+    $("#row_department").hide();
 
     feeddata_detailDoctor();
   });
@@ -208,6 +209,7 @@ function click_menu() {
     $("#row_procedure_").show();
     $("#row_deproom_").hide();
     $("#row_users").hide();
+    $("#row_department").hide();
 
     feeddata_detailProcedure();
   });
@@ -220,6 +222,7 @@ function click_menu() {
     $("#row_procedure_").hide();
     $("#row_deproom_").show();
     $("#row_users").hide();
+    $("#row_department").hide();
 
     select_floor();
     feeddata_detailDeproom();
@@ -233,6 +236,7 @@ function click_menu() {
     $("#row_procedure_").hide();
     $("#row_deproom_").hide();
     $("#row_users").show();
+    $("#row_department").hide();
 
     select_permission();
     feeddata_detailUser();
@@ -446,10 +450,15 @@ function feeddata_detailDoctor() {
 
 
 $("#btn_savedepartment").click(function () {
-  if ($("#input_department").val().trim() == "") {
-    showDialogFailed("กรุณากรอกแผนก");
+  if ($("#input_departmentthai").val().trim() == "") {
+    showDialogFailed("กรุณากรอกแผนก ไทย");
     return;
   }
+  if ($("#input_departmenteng").val().trim() == "") {
+    showDialogFailed("กรุณากรอกแผนก อังกฤษ");
+    return;
+  }
+  
   saveDepartment();
 });
 
@@ -473,7 +482,8 @@ function saveDepartment() {
     type: "POST",
     data: {
       FUNC_NAME: "saveDepartment",
-      input_department: $("#input_department").val(),
+      input_departmentthai: $("#input_departmentthai").val(),
+      input_departmenteng: $("#input_departmenteng").val(),
       input_IDdepartment: $("#input_IDdepartment").val(),
       IsCancel: IsCancel,
     },
@@ -486,7 +496,8 @@ function saveDepartment() {
         showDialogSuccess("บันทึกสำเร็จ");
       }
 
-      $("#input_department").val("");
+      $("#input_departmentthai").val("");
+      $("#input_departmenteng").val("");
       $("#input_IDdepartment").val("");
     },
   });
@@ -524,8 +535,9 @@ function saveProcedure() {
 }
 
 
-function editDepartment(ID, name, IsCancel) {
-  $("#input_department").val(name);
+function editDepartment(ID, name, name2, IsCancel) {
+  $("#input_departmentthai").val(name2);
+  $("#input_departmenteng").val(name);
   $("#input_IDdepartment").val(ID);
 
   if (IsCancel == "Active") {
@@ -605,7 +617,8 @@ function deleteDepartment(ID) {
 
 
 $("#btn_cleardepartment").click(function () {
-  $("#input_department").val("");
+  $("#input_departmentthai").val("");
+  $("#input_departmenteng").val("");
   $("#input_IDdepartment").val("");
 });
 
@@ -762,11 +775,12 @@ function feeddata_detailDepartment() {
           _tr +=
             `<tr> ` +
             `<td class="text-center">${kay + 1}</td>` +
+            `<td class="text-left">${value.DepName2}</td>` +
             `<td class="text-left">${value.DepName}</td>` +
             `<td class="text-center"><button class='btn' ${bg}>  ${value.IsCancel} </button></td>` +
             `<td class="text-center">
             
-                       <button class="btn btn-outline-dark f18 edit-btn mr-4" data-id="${value.ID}" data-name="${value.DepName}" data-active="${value.IsCancel}" > <i class="fa-regular fa-pen-to-square"></i> แก้ไข</button>
+                       <button class="btn btn-outline-dark f18 edit-btn mr-4" data-id="${value.ID}" data-name2="${value.DepName2}"  data-name="${value.DepName}" data-active="${value.IsCancel}" > <i class="fa-regular fa-pen-to-square"></i> แก้ไข</button>
                        <button  class="btn btn-outline-danger f18 ml-4" onclick='deleteDepartment(${value.ID})'><i class="fa-solid fa-trash-can"></i></button> 
             
             
@@ -780,8 +794,9 @@ function feeddata_detailDepartment() {
           btn.addEventListener("click", () => {
             const id = btn.dataset.id;
             const name = btn.dataset.name;
+            const name2 = btn.dataset.name2;
             const IsCancel = btn.dataset.active;
-            editDepartment(id, name, IsCancel);
+            editDepartment(id, name, name2, IsCancel);
           });
         });
       }
@@ -812,16 +827,20 @@ function feeddata_detailDepartment() {
             targets: 0,
           },
           {
-            width: "40%",
+            width: "20%",
             targets: 1,
           },
           {
-            width: "10%",
+            width: "20%",
             targets: 2,
           },
           {
-            width: "20%",
+            width: "10%",
             targets: 3,
+          },
+          {
+            width: "20%",
+            targets: 4,
           },
         ],
         info: false,
@@ -850,8 +869,9 @@ function feeddata_detailDepartment() {
       $("#table_detaildepartment").on("click", ".edit-btn", function () {
         const id = $(this).data("id");
         const name = $(this).data("name");
+        const name2 = $(this).data("name2");
         const IsCancel = $(this).data("active");
-        editDepartment(id, name, IsCancel);
+        editDepartment(id, name, name2, IsCancel);
       });
     },
   });

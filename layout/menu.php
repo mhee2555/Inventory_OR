@@ -164,7 +164,7 @@
                 <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_permission">
                     <a class="collapse-item" href="pages/permission.php" style="color: black;font-size: 16px;" id="a_permission">
                         <img id="ic_permission" style="width: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;">
-                        <label style="font-size: 17px;color: #667085;" class="color_menu" id="menu17">กำหนดสิทธิการเข้าถึง</label>
+                        <label style="font-size: 20px;color: #667085;" class="color_menu" id="menu17">กำหนดสิทธิการเข้าถึง</label>
                     </a>
                 </li>
                 <!-- 

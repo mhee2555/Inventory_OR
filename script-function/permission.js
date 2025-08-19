@@ -18,6 +18,8 @@ $(function () {
       $("#name_users").text(selectedUser.FirstName + " " + selectedUser.LastName + " ( " + selectedUser.EmpCode + " ) ");
       $("#permission_users").text(selectedUser.Permission);
 
+
+
       if (selectedUser.IsAdmin == 1) {
 
         $(".clear_checkbox").prop("checked", true);
@@ -56,6 +58,7 @@ $(function () {
       $(".clear_checkbox").prop("disabled", true);
     }
 
+       $("#main").prop("disabled", true);
 
   });
 

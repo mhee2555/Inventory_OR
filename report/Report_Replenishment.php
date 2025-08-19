@@ -305,6 +305,7 @@ if ($type_date == 2) {
     }
 }
 
+$pdf->SetY(20);
 
 $pdf->SetFont('db_helvethaica_x', 'b', 16);
 

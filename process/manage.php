@@ -1069,7 +1069,9 @@ function deleteProcedure($conn)
 
 function saveDepartment($conn)
 {
-    $input_department = $_POST['input_department'];
+    $input_departmentthai = $_POST['input_departmentthai'];
+    $input_departmenteng = $_POST['input_departmenteng'];
+
     $input_IDdepartment = $_POST['input_IDdepartment'];
     $IsCancel = $_POST['IsCancel'];
 
@@ -1079,7 +1081,7 @@ function saveDepartment($conn)
     // if ($input_IDProcedure == "") {
     $check_d = "    SELECT ID
                         FROM   department 
-                        WHERE DepName = '$input_department' ";
+                        WHERE DepName = '$input_departmenteng' OR DepName2 = '$input_departmentthai'  ";
     $meQuery_d = $conn->prepare($check_d);
     $meQuery_d->execute();
     while ($row_d = $meQuery_d->fetch(PDO::FETCH_ASSOC)) {
@@ -1090,11 +1092,11 @@ function saveDepartment($conn)
 
     if ($count_id == 0) {
         if ($input_IDdepartment == "") {
-            $stmt = $conn->prepare("INSERT INTO department  (DepName , IsCancel) VALUES (?, ?)");
-            $stmt->execute([$input_department, $IsCancel]);
+            $stmt = $conn->prepare("INSERT INTO department  (DepName  , DepName2 , IsCancel) VALUES (?, ?)");
+            $stmt->execute([$input_departmenteng, $input_departmentthai, $IsCancel]);
         } else {
-            $stmt = $conn->prepare("UPDATE `department` SET DepName = ? , IsCancel = ? WHERE ID = ?");
-            $stmt->execute([$input_department,  $IsCancel, $input_IDdepartment]);
+            $stmt = $conn->prepare("UPDATE `department` SET DepName = ? , DepName2 = ? , IsCancel = ? WHERE ID = ?");
+            $stmt->execute([$input_departmenteng, $input_departmentthai,  $IsCancel, $input_IDdepartment]);
         }
         echo "insert success";
         unset($conn);
@@ -1177,6 +1179,7 @@ function  feeddata_detailDepartment($conn, $db)
     $query = " SELECT
                      department.ID,
                      department.DepName,
+                     department.DepName2,
                      department.IsCancel
                 FROM
                      department 

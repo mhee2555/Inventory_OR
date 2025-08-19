@@ -429,7 +429,10 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-12 mt-2">
-                                <input type="text" class="form-control f18" id="input_department" autocomplete="off" placeholder="แผนก">
+                                <input type="text" class="form-control f18" id="input_departmentthai" autocomplete="off" placeholder="แผนก ไทย">
+                            </div>
+                            <div class="col-md-12 mt-2">
+                                <input type="text" class="form-control f18" id="input_departmenteng" autocomplete="off" placeholder="แผนก อังกฤษ">
                             </div>
                             <div class="col-md-12 mt-3" hidden>
                                 <input type="text" class="form-control" id="input_IDdepartment" autocomplete="off">
@@ -470,7 +473,8 @@
                             <thead class="thead-light">
                                 <tr>
                                     <th scope="col" id="td_numberPro" class="text-center" class="text-center">ลำดับ</th>
-                                    <th scope="col" style="width: 20%;" class="text-center" id="td_namedepartment">แผนก</th>
+                                    <th scope="col" style="width: 20%;" class="text-center" id="td_namedepartment">แผนก ไทย</th>
+                                    <th scope="col" style="width: 20%;" class="text-center" id="td_namedepartment">แผนก อังกฤษ</th>
                                     <th scope="col" style="width: 20%;" class="text-center" id="">สถานะ</th>
                                     <th scope="col" style="width: 20%;" class="text-center">#</th>
                                 </tr>

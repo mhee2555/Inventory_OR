@@ -465,7 +465,7 @@
                                 <th scope="col" class="text-center" id="">รหัสอุปกรณ์</th>
                                 <th scope="col" class="text-center" id="">อุปกรณ์</th>
                                 <th scope="col" class="text-center" id="">ผู้คืน</th>
-                                <th scope="col" class="text-center" id="">HN</th>
+                                <th scope="col" class="text-center" id="">เลขประจำตัวผู้ป่วย</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -817,7 +817,7 @@
 
         <!-- เลขประจำตัวผู้ป่วย -->
         <div class="col-md-2">
-            <label class="font-weight-bold text-dark">HN</label>
+            <label class="font-weight-bold text-dark">เลขประจำตัวผู้ป่วย</label>
             <input type="text" class="form-control f18" id="input_hn_history_block">
         </div>
 
