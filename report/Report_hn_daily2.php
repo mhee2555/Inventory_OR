@@ -96,6 +96,7 @@ $query = "SELECT
             deproom
             INNER JOIN departmentroom ON deproom.departmentroomid = departmentroom.id 
             AND DATE( deproom.serviceDate ) = '$select_date1_search' 
+            AND deproom.DocNo NOT IN (SELECT set_hn.DocNo_deproom FROM set_hn WHERE DATE( set_hn.serviceDate ) = '$select_date1_search' AND set_hn.isCancel = 1  AND DocNo_deproom IS NOT NULL  )
             AND NOT deproom.isStatus = 9 
         ORDER BY
             deproom.serviceDate ASC;  ";
