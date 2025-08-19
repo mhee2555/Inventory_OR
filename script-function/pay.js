@@ -2536,7 +2536,7 @@ function show_detail_history_block() {
 
           if (value.hn_record_id == "") {
             var hn_record_idx = value.number_box;
-          }else{
+          } else {
             var hn_record_idx = value.hn_record_id;
           }
           if (value.FirstName == null) {
@@ -3045,6 +3045,96 @@ function show_detail_history() {
     },
   });
 }
+
+
+
+$("#btn_Show_Report1_modal").click(function () {
+
+  if ($("#dateInput").val() == "") {
+    showDialogFailed("กรุณาเลือกวันที่");
+    return;
+  }
+
+  option =
+    "?select_date1_search1=" +
+    $("#dateInput").val();
+  window.open("report/Report_hn_daily1.php" + option, "_blank");
+});
+
+$("#btn_Show_Report2_modal").click(function () {
+
+  if ($("#dateInput2").val() == "") {
+    showDialogFailed("กรุณาเลือกวันที่");
+    return;
+  }
+
+
+  option =
+    "?select_date1_search1=" +
+    $("#dateInput2").val();
+  window.open("report/Report_hn_daily2.php" + option, "_blank");
+});
+
+
+$("#btn_Show_Report1").click(function () {
+
+  var now = new Date();
+  var hours = String(now.getHours()).padStart(2, "0");
+  var minutes = String(now.getMinutes()).padStart(2, "0");
+  var currentTime = hours + ":" + minutes;
+
+  var d = new Date();
+  var month = d.getMonth() + 1;
+  var day = d.getDate();
+  var year = d.getFullYear();
+  var output =
+    (("" + day).length < 2 ? "0" : "") +
+    day +
+    "-" +
+    (("" + month).length < 2 ? "0" : "") +
+    month +
+    "-" +
+    year;
+
+  $("#dateInput").datepicker({
+    onSelect: function (date) { },
+  });
+
+  $("#dateInput").val(output);
+
+  $("#dateModal").modal('toggle');
+
+});
+
+$("#btn_Show_Report2").click(function () {
+  var now = new Date();
+  var hours = String(now.getHours()).padStart(2, "0");
+  var minutes = String(now.getMinutes()).padStart(2, "0");
+  var currentTime = hours + ":" + minutes;
+
+  var d = new Date();
+  var month = d.getMonth() + 1;
+  var day = d.getDate();
+  var year = d.getFullYear();
+  var output =
+    (("" + day).length < 2 ? "0" : "") +
+    day +
+    "-" +
+    (("" + month).length < 2 ? "0" : "") +
+    month +
+    "-" +
+    year;
+
+  $("#dateInput2").datepicker({
+    onSelect: function (date) { },
+  });
+
+  $("#dateInput2").val(output);
+
+  $("#dateModal2").modal('toggle');
+});
+
+
 
 $("#btn_show_report").click(function () {
 
@@ -3835,10 +3925,10 @@ function oncheck_sell(input_pay_sell) {
           showDialogFailed("รหัสใช้งานหมดอายุไม่สามารถสแกนใช้งานได้");
         } else {
 
-          if($("#input_pay_sell").data("docno") != ""){
+          if ($("#input_pay_sell").data("docno") != "") {
             $("#checkbox2_" + $("#input_pay_sell").data("docno")).prop("checked", true);
             show_detail_item_sell();
-          }else{
+          } else {
             let docNo = JSON.parse(result);
             $("#input_pay_sell").data("docno", docNo);
             show_detail_item_sell();

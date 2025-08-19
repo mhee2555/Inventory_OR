@@ -26,7 +26,7 @@ class MYPDF extends TCPDF
         require('../connect/connect.php');
         $datetime = new DatetimeTH();
         // date th
-        $printdate = date('d') . " " . $datetime->getTHmonth(date('F')) . " พ.ศ. " . $datetime->getTHyear(date('Y'));
+        $printdate = date('d') . " " . $datetime->getTHmonth(date('F'))  . " " . date('Y');
 
         // Set font
         $this->SetFont('db_helvethaica_x', '', 14);
@@ -115,7 +115,7 @@ function createPDF($conn, $date1)
 
     $datetime = new DatetimeTH();
     $date1_array = explode("-", $date1);
-    $text_date = "วันที่ : " . $date1_array[0] . " " . $datetime->getTHmonthFromnum($date1_array[1]) . " " . " พ.ศ." . " " . ($date1_array[2] + 543);
+    $text_date = "วันที่ : " . $date1_array[0] . " " . $datetime->getTHmonthFromnum($date1_array[1])  . " " . date('Y');
 
     $pdf->SetY(20);
     $pdf->SetFont('db_helvethaica_x', 'b', 16);

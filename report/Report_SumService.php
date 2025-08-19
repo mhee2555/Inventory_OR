@@ -27,7 +27,7 @@ class MYPDF extends TCPDF
         require('../connect/connect.php');
         $datetime = new DatetimeTH();
         // date th
-        $printdate = date('d') . " " . $datetime->getTHmonth(date('F')) . " พ.ศ. " . $datetime->getTHyear(date('Y'));
+        $printdate = date('d') . " " . $datetime->getTHmonth(date('F'))  . " " . date('Y');
 
 
 
@@ -104,7 +104,7 @@ $datetime = new DatetimeTH();
 $date1 = $_GET['date1'];
 
 $date1 = explode("-", $date1);
-$text_date = "วันที่ : " . $date1[0] . " " . $datetime->getTHmonthFromnum($date1[1]) . " " . " พ.ศ." . " " . ($date1[2] + 543);
+$text_date = "วันที่ : " . $date1[0] . " " . $datetime->getTHmonthFromnum($date1[1])  . " " . date('Y');
 
 
 

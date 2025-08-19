@@ -51,6 +51,12 @@ if (!empty($_POST['FUNC_NAME'])) {
         updateDetail_qty($conn, $db);
     }else if ($_POST['FUNC_NAME'] == 'save_deproom_routine') {
         save_deproom_routine($conn, $db);
+    }else if ($_POST['FUNC_NAME'] == 'feeddata_detailDepartment') {
+        feeddata_detailDepartment($conn, $db);
+    }else if ($_POST['FUNC_NAME'] == 'deleteDepartment') {
+        deleteDepartment($conn, $db);
+    }else if ($_POST['FUNC_NAME'] == 'saveDepartment') {
+        saveDepartment($conn, $db);
     }
 }
 
@@ -1034,6 +1040,20 @@ function feeddata_detailDoctor($conn, $db)
     die;
 }
 
+
+function deleteDepartment($conn)
+{
+    $ID = $_POST['ID'];
+
+    $query = "DELETE FROM department WHERE ID = '$ID' ";
+
+    $meQuery = $conn->prepare($query);
+    $meQuery->execute();
+    echo "delete success";
+    unset($conn);
+    die;
+}
+
 function deleteProcedure($conn)
 {
     $ID = $_POST['ID'];
@@ -1045,6 +1065,45 @@ function deleteProcedure($conn)
     echo "delete success";
     unset($conn);
     die;
+}
+
+function saveDepartment($conn)
+{
+    $input_department = $_POST['input_department'];
+    $input_IDdepartment = $_POST['input_IDdepartment'];
+    $IsCancel = $_POST['IsCancel'];
+
+
+
+    $count_id = 0;
+    // if ($input_IDProcedure == "") {
+    $check_d = "    SELECT ID
+                        FROM   department 
+                        WHERE DepName = '$input_department' ";
+    $meQuery_d = $conn->prepare($check_d);
+    $meQuery_d->execute();
+    while ($row_d = $meQuery_d->fetch(PDO::FETCH_ASSOC)) {
+        $count_id++;
+    }
+    // }
+
+
+    if ($count_id == 0) {
+        if ($input_IDdepartment == "") {
+            $stmt = $conn->prepare("INSERT INTO department  (DepName , IsCancel) VALUES (?, ?)");
+            $stmt->execute([$input_department, $IsCancel]);
+        } else {
+            $stmt = $conn->prepare("UPDATE `department` SET DepName = ? , IsCancel = ? WHERE ID = ?");
+            $stmt->execute([$input_department,  $IsCancel, $input_IDdepartment]);
+        }
+        echo "insert success";
+        unset($conn);
+        die;
+    } else {
+        echo "xxxx";
+        unset($conn);
+        die;
+    }
 }
 
 function saveProcedure($conn)
@@ -1086,6 +1145,7 @@ function saveProcedure($conn)
     }
 }
 
+
 function feeddata_detailProcedure($conn, $db)
 {
     $return = array();
@@ -1097,6 +1157,30 @@ function feeddata_detailProcedure($conn, $db)
                      `procedure`.IsActive
                 FROM
                      `procedure`  ";
+
+    $meQuery = $conn->prepare($query);
+    $meQuery->execute();
+    while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+        $return[] = $row;
+    }
+    echo json_encode($return);
+    unset($conn);
+    die;
+}
+
+
+function  feeddata_detailDepartment($conn, $db)
+{
+    $return = array();
+
+
+    $query = " SELECT
+                     department.ID,
+                     department.DepName,
+                     department.IsCancel
+                FROM
+                     department 
+                WHERE IsAutomaticPayout = 0  ";
 
     $meQuery = $conn->prepare($query);
     $meQuery->execute();

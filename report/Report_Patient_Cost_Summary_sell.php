@@ -25,7 +25,7 @@ class MYPDF extends TCPDF
         require('../connect/connect.php');
         $datetime = new DatetimeTH();
         // date th
-        $printdate = date('d') . " " . $datetime->getTHmonth(date('F')) . " พ.ศ. " . $datetime->getTHyear(date('Y'));
+        $printdate = date('d') . " " . $datetime->getTHmonth(date('F'))  . " " . date('Y');
 
 
 
@@ -214,7 +214,7 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
 $html .= '<tr nobr="true" style="font-size:15px;">';
 $html .=   '<td width="55 %" align="center" rowspan="2">Grand Total</td>';
 $html .=   '<td width="10 %" align="center">' . number_format($sum_all1) . '</td>';
-$html .=   '<td width="17.5 %" align="right">' . number_format($sum_all2,2) . '</td>';
+$html .=   '<td width="17.5 %" align="right"></td>';
 $html .=   '<td width="17.5 %" align="right">' . number_format($sum_all3,2) . '</td>';
 $html .=  '</tr>';
 

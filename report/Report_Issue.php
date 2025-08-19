@@ -240,8 +240,7 @@ $pdf->Cell(130, 5,  "วันที่เข้ารับบริการ :
 $pdf->Cell(130, 5,  "เวลาเข้ารับบริการ : " . $_serviceTime, 0, 1, 'L');
 
 
-$pdf->SetFillColor(255, 255, 255);
-$pdf->MultiCell(180, 5, "Procedure : " . $_procedure_ids, 0, 'L', 0, 1);
+
 
 
 $pdf->Cell(130, 5,  "หมายเหตุ : " . $Remark, 0, 1, 'L');
@@ -281,6 +280,9 @@ if ($checkloopDoctor == 'loop') {
     $pdf->Cell(50, 5,  "1. " . $_Doctor_Name, 0, 1, 'L');
 }
 
+
+$pdf->SetFillColor(255, 255, 255);
+$pdf->MultiCell(180, 5, "Procedure : " . $_procedure_ids, 0, 'L', 0, 1);
 
 $pdf->Ln(5);
 

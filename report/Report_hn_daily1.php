@@ -152,23 +152,24 @@ $select_date1_search = $select_date1_search[2] . '-' . $select_date1_search[1] .
 $count = 1;
 
 $query = "SELECT
-                set_hn.ID,
-                set_hn.isStatus,
-                set_hn.hncode,
-                DATE(set_hn.serviceDate) AS serviceDate,
-                DATE_FORMAT(TIME(set_hn.serviceDate), '%H:%i') AS serviceTime,
-                set_hn.departmentroomid,
-                set_hn.remark,
-                departmentroom.departmentroomname,
-                set_hn.isCancel,
-                ( SELECT GROUP_CONCAT( `doctor`.Doctor_Name SEPARATOR ' , ' ) AS Doctor_Name FROM `doctor` WHERE FIND_IN_SET( `doctor`.ID, set_hn.doctor ) ) AS Doctor_Name,
-                ( SELECT GROUP_CONCAT( `procedure`.Procedure_TH SEPARATOR ' , ' ) AS Procedures FROM `procedure` WHERE FIND_IN_SET( `procedure`.ID, set_hn.`procedure` ) ) AS Procedure_TH
-            FROM
-                set_hn
-                INNER JOIN departmentroom ON set_hn.departmentroomid = departmentroom.id 
-                AND DATE( set_hn.createAt ) = '$select_date1_search'  
-                AND NOT set_hn.isStatus = 9
-            ORDER BY set_hn.serviceDate ASC  ";
+            deproom.ID,
+            deproom.isStatus,
+            deproom.hn_record_id AS hncode,
+            DATE( deproom.serviceDate ) AS serviceDate,
+            DATE_FORMAT( TIME( deproom.serviceDate ), '%H:%i' ) AS serviceTime,
+            deproom.departmentroomid,
+            deproom.remark,
+            departmentroom.departmentroomname,
+            deproom.isCancel,
+            ( SELECT GROUP_CONCAT( doctor.Doctor_Name SEPARATOR ' , ' ) FROM doctor WHERE FIND_IN_SET( doctor.ID, deproom.doctor ) ) AS Doctor_Name,
+            ( SELECT GROUP_CONCAT( `procedure`.Procedure_TH SEPARATOR ' , ' ) FROM `procedure` WHERE FIND_IN_SET( `procedure`.ID, deproom.`procedure` ) ) AS Procedure_TH 
+        FROM
+            deproom
+            INNER JOIN departmentroom ON deproom.departmentroomid = departmentroom.id 
+            AND DATE( deproom.serviceDate ) = '$select_date1_search' 
+            AND NOT deproom.isStatus = 9 
+        ORDER BY
+            deproom.serviceDate ASC; ";
 
 $meQuery1 = $conn->prepare($query);
 $meQuery1->execute();
@@ -185,7 +186,7 @@ $hncode = $Result_Detail['hncode'];
 
 
 
-$html .= '<tr nobr="true" style="font-size:15px;">';
+$html .= '<tr nobr="true" style="font-size:18px;">';
 $html .=   '<td width="10 %" align="center" > ' . $count . '</td>';
 $html .=   '<td width="20 %" align="center" > ' . $serviceTime . '</td>';
 $html .=   '<td width="30 %" align="left" >' . $Procedure_TH . '</td>';

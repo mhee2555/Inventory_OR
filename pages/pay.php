@@ -1,8 +1,3 @@
-
-
-
-
-
 <div class="row mt-3">
     <div class=" col-md-12 col-lg-9">
 
@@ -487,7 +482,7 @@
 <div id="history_pay">
 
     <div class="form-row align-items-end flex-wrap">
-        <div class="col-md-11">
+        <div class="col-md-8">
             <div class="form-row">
 
                 <div class="col">
@@ -512,8 +507,8 @@
 
                 <div class="col">
                     <div class="position-relative">
-                    <label class="font-weight-bold text-dark">เลขประจำตัวผู้ป่วย</label>
-                    <input type="text" class="form-control f18" id="input_hn_history">
+                        <label class="font-weight-bold text-dark">เลขประจำตัวผู้ป่วย</label>
+                        <input type="text" class="form-control f18" id="input_hn_history">
                     </div>
                 </div>
 
@@ -560,6 +555,32 @@
         </div>
 
 
+        <div class="col-md-4 text-right">
+            <div class="form-row">
+                <div class="col">
+                    <button class="btn btn-outline-danger " style="font-size: 18px;width:100%;" id="btn_Show_Report1">สรุปเคสประจำวัน</button>
+                </div>
+                <div class="col">
+                    <button class="btn btn-outline-danger " style="font-size: 18px;width:100%;" id="btn_Show_Report2">ใบติดหน้ากล่อง</button>
+                </div>
+                <div class="col">
+                    <button class="btn btn-outline-success" id="btn_show_report" style="font-size: 18px;width:100%;"><i class="fa-solid fa-file-excel"></i> EXCEL</button>
+                </div>
+
+
+
+            </div>
+        </div>
+
+
+
+        <!-- <div class="col-md-2 text-right">
+        </div>
+
+        <div class="col-md-1 text-right">
+        </div>
+        <div class="col-md-1 text-right">
+        </div> -->
 
 
         <!-- <div class="col-md-2">
@@ -602,10 +623,12 @@
         <div class="col-md-2" id="col_hide">
 
         </div> -->
-  
-        <div class="col-md-1 text-right">
-            <button class="btn btn-outline-success" id="btn_show_report" style="font-size: 18px;width: 120px;"><i class="fa-solid fa-file-excel"></i> EXCEL</button>
-        </div>
+
+
+
+
+
+
 
 
     </div>
@@ -1394,5 +1417,56 @@
             </div>
 
         </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="dateModal" tabindex="-1" role="dialog" aria-labelledby="dateModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <form id="dateForm" class="modal-content needs-validation" novalidate>
+            <div class="modal-header">
+                <h5 class="modal-title" id="dateModalLabel">เลือกวันที่</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="ปิด">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="dateInput" style="color:black;">วันที่</label>
+                    <input type="text" class="form-control rounded pr-5 f18" placeholder="" id="dateInput" data-language='en' data-date-format='dd-mm-yyyy'>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn-danger btn f18" data-dismiss="modal">ยกเลิก</button>
+                <button type="button" class="btn-success btn f18" id="btn_Show_Report1_modal">ยืนยัน</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal fade" id="dateModal2" tabindex="-1" role="dialog" aria-labelledby="dateModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <form id="dateForm" class="modal-content needs-validation" novalidate>
+            <div class="modal-header">
+                <h5 class="modal-title" id="dateModalLabel">เลือกวันที่</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="ปิด">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="dateInput" style="color:black;">วันที่</label>
+                    <input type="text" class="form-control rounded pr-5 f18" placeholder="" id="dateInput2" data-language='en' data-date-format='dd-mm-yyyy'>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn-danger btn f18" data-dismiss="modal">ยกเลิก</button>
+                <button type="button" class="btn-success btn f18" id="btn_Show_Report2_modal">ยืนยัน</button>
+            </div>
+        </form>
     </div>
 </div>

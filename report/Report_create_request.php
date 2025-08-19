@@ -140,9 +140,9 @@ class MYPDF extends TCPDF
 
 
             $image_file = "images/logo1.png";
-            $this->Image($image_file, 12, 25, 15, 18, 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);
+            $this->Image($image_file, 13, 22, 13, 22, 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);
 
-                        $this->Ln(23);
+            $this->Ln(25);
             $this->SetFillColor(255, 255, 255);
             $this->SetFont('db_helvethaica_x', 'b', 12);
             $this->MultiCell(200, 9,  "    หัตถการ : " . $_Procedure_TH, 1, 1, 'L');
@@ -337,7 +337,7 @@ $DocNo = $_GET['DocNo'];
 
 $html = '    
     <table cellspacing="0" cellpadding="1" border="1" >
-    <thead><tr style="font-size:13px;background-color:rgb(100, 54, 149);color:#fff;">
+    <thead><tr style="font-size:14px;background-color:#5A3187;color:#fff;">
     <th width="15 %" align="center">Code</th>
     <th width="70 %" align="center">Description</th>
     <th width="15 %" align="center">เบิก</th></thead>
@@ -381,15 +381,19 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
     $itemCount = $Result_Detail['cnt'];
     $itemcode2 = $Result_Detail['itemcode2'];
 
+    $pdf->SetFont('db_helvethaica_x', '', 18);
     // ถ้าเปลี่ยนประเภท ให้ใส่หัวกลุ่ม
     if ($currentType != $itemType) {
         $currentType = $itemType;
-        $html .= '<tr style="font-weight:bold;font-size:13px;background-color:#f1e9f9;" align="center;">
+        $html .= '<tr style="font-size:14px;" align="center;">
                     <td colspan="3" >' . htmlspecialchars($itemType, ENT_QUOTES, 'UTF-8') . '</td>
                   </tr>';
     }
 
-    $html .= '<tr style="font-size:13px;">
+    
+    $pdf->SetFont('db_helvethaica_x_bd', 'B', 18);
+
+    $html .= '<tr style="font-size:14px;background-color:#FE9F60;">
                 <td width="15 %" align="center">' . htmlspecialchars($itemcode2, ENT_QUOTES, 'UTF-8') . '</td>
                 <td width="70 %">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . htmlspecialchars($itemName, ENT_QUOTES, 'UTF-8') . '</td>
                 <td width="15 %" align="center">' . $itemCount . '</td>

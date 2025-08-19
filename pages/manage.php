@@ -1,5 +1,3 @@
-
-
 <div class="row mb-3 mt-4">
     <div class="col-md-6">
 
@@ -22,13 +20,14 @@
 <div id="row_manage">
 
     <div class="row mb-3 mt-4">
-        <div class="col-md-6">
+        <div class="col-md-6" style="z-index: 10;">
 
             <div class="tab-button-group">
                 <button class="tab-button2 active" id="radio1">เพิ่มแพทย์</button>
                 <button class="tab-button2" id="radio2">เพิ่มหัตถการ</button>
                 <button class="tab-button2" id="radio3">เพิ่มห้องผ่าตัด</button>
                 <button class="tab-button2" id="radio4">เพิ่ม User</button>
+                <button class="tab-button2" id="radio5">เพิ่ม แผนก</button>
             </div>
 
 
@@ -409,6 +408,70 @@
                                     <th scope="col" style="width: 20%;" class="text-center" id="td_username">RFID</th>
                                     <th scope="col" style="width: 20%;" class="text-center" id="td_password">Weighing</th>
                                     <th scope="col" style="width: 20%;" class="text-center" id="td_statususer">สถานะ</th>
+                                    <th scope="col" style="width: 20%;" class="text-center">#</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="mt-3" id="row_department">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <label id="modal_adddepartment" style="color:black;">เพิ่มแผนก</label>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12 mt-2">
+                                <input type="text" class="form-control f18" id="input_department" autocomplete="off" placeholder="แผนก">
+                            </div>
+                            <div class="col-md-12 mt-3" hidden>
+                                <input type="text" class="form-control" id="input_IDdepartment" autocomplete="off">
+                            </div>
+                            <div class="col-md-12 mt-3">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label for="" style="color:black;" id="radio_statusdepartment">สถานะ</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="form-check-inline">
+                                            <label class="form-check-label" style="color:black;">
+                                                <input type="radio" class="form-check-input" name="radio_statusdepartment" id="radio_statusdepartment1" checked>Active
+                                            </label>
+                                        </div>
+                                        <div class="form-check-inline">
+                                            <label class="form-check-label" style="color:black;">
+                                                <input type="radio" class="form-check-input" name="radio_statusdepartment" id="radio_statusdepartment2">InActive
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 mt-3 text-right">
+                                <button type="button" class="btn" id="btn_cleardepartment" style="border-color:gray;color:black;font-size:20px;">ล้างข้อมูล</button>
+                                <button type="button" class="btn " id="btn_savedepartment" style="color: #fff;background-color: #643695;color:#fff;font-size:20px;">บันทึก</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-md-8">
+                <div class="row" style="margin-top: -50px;">
+                    <div class="col-md-12">
+                        <table class="table table-hover " id="table_detaildepartment">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th scope="col" id="td_numberPro" class="text-center" class="text-center">ลำดับ</th>
+                                    <th scope="col" style="width: 20%;" class="text-center" id="td_namedepartment">แผนก</th>
+                                    <th scope="col" style="width: 20%;" class="text-center" id="">สถานะ</th>
                                     <th scope="col" style="width: 20%;" class="text-center">#</th>
                                 </tr>
                             </thead>

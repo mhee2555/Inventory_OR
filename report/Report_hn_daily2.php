@@ -80,24 +80,25 @@ $select_date1_search = $select_date1_search[2] . '-' . $select_date1_search[1] .
 
 
 $query = "SELECT
-                set_hn.ID,
-                set_hn.isStatus,
-                set_hn.hncode,
-                DATE_FORMAT(set_hn.serviceDate, '%d/%m/%Y') AS serviceDate,
-                DATE_FORMAT(TIME(set_hn.serviceDate), '%H:%i') AS serviceTime,
-                set_hn.departmentroomid,
-                set_hn.remark,
-                set_hn.DocNo_deproom,
-                departmentroom.departmentroomname,
-                set_hn.isCancel,
-                ( SELECT GROUP_CONCAT( `doctor`.Doctor_Name SEPARATOR ' , ' ) AS Doctor_Name FROM `doctor` WHERE FIND_IN_SET( `doctor`.ID, set_hn.doctor ) ) AS Doctor_Name,
-                ( SELECT GROUP_CONCAT( `procedure`.Procedure_TH SEPARATOR ' , ' ) AS Procedures FROM `procedure` WHERE FIND_IN_SET( `procedure`.ID, set_hn.`procedure` ) ) AS Procedure_TH
-            FROM
-                set_hn
-                INNER JOIN departmentroom ON set_hn.departmentroomid = departmentroom.id 
-                AND DATE( set_hn.createAt ) = '$select_date1_search'  
-                AND NOT set_hn.isStatus = 9
-            ORDER BY set_hn.serviceDate ASC  ";
+            deproom.ID,
+            deproom.isStatus,
+            deproom.hn_record_id AS hncode,
+            DATE_FORMAT( deproom.serviceDate, '%d/%m/%Y' ) AS serviceDate,
+            DATE_FORMAT( TIME( deproom.serviceDate ), '%H:%i' ) AS serviceTime,
+            deproom.departmentroomid,
+            deproom.remark,
+            deproom.DocNo  AS DocNo_deproom,
+            departmentroom.departmentroomname,
+            deproom.isCancel,
+            ( SELECT GROUP_CONCAT( doctor.Doctor_Name SEPARATOR ' , ' ) FROM doctor WHERE FIND_IN_SET( doctor.ID, deproom.doctor ) ) AS Doctor_Name,
+            ( SELECT GROUP_CONCAT( `procedure`.Procedure_TH SEPARATOR ' , ' ) FROM `procedure` WHERE FIND_IN_SET( `procedure`.ID, deproom.`procedure` ) ) AS Procedure_TH 
+        FROM
+            deproom
+            INNER JOIN departmentroom ON deproom.departmentroomid = departmentroom.id 
+            AND DATE( deproom.serviceDate ) = '$select_date1_search' 
+            AND NOT deproom.isStatus = 9 
+        ORDER BY
+            deproom.serviceDate ASC;  ";
 
 $meQuery1 = $conn->prepare($query);
 $meQuery1->execute();
@@ -116,6 +117,7 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
     $Procedure_TH = $Result_Detail['Procedure_TH'];
     $hncode = $Result_Detail['hncode'];
 
+    $Procedure_TH = mb_strimwidth($Procedure_TH, 0, 60, '…', 'UTF-8');
 
 
 
@@ -129,7 +131,7 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
     $labelW = 45;
 
     // Row: วันที่
-    $pdf->Cell($labelW, 10, 'HN Number/Box No : ................................................................................................', 0, 0);
+    $pdf->Cell($labelW, 10, 'HN Code/Box No : ................................................................................................', 0, 0);
     $pdf->Cell(150, 17, " ", 0, 1);
 
     // Row: เวลา
@@ -148,10 +150,10 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
     $pdf->Cell($labelW, 10, 'Physician : .................................................................................................................', 0, 0);
     $pdf->Cell(150, 17, " ", 0, 0);
 
-    $pdf->SetFont('db_helvethaica_x', 'B', 17);
+    $pdf->SetFont('db_helvethaica_x', 'B', 20);
 
     $pdf->SetY(45);
-    $pdf->SetX(70);
+    $pdf->SetX(63);
     $pdf->Cell(50, 0, $hncode, 0, 1);
     $pdf->SetY(63);
     $pdf->SetX(45);

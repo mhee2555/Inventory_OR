@@ -43,10 +43,10 @@
             </div>
         </div>
 
-        <div class="col-md-3 text-right" style="margin-top: 38px;">
-            <button class="btn btn-success f18" id="btn_Show_Report1">รายงาน1</button>
-            <button class="btn btn-success f18" id="btn_Show_Report2">รายงาน2</button>
-        </div>
+        <!-- <div class="col-md-3 text-right" style="margin-top: 38px;">
+            <button class="btn btn-success f18" id="btn_Show_Report1">สรุปเคสประจำวัน</button>
+            <button class="btn btn-success f18" id="btn_Show_Report2">ใบติดหน้ากล่องผู้รับบริการของคนไข้</button>
+        </div> -->
 
 
     </div>

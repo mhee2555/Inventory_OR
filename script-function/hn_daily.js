@@ -82,19 +82,7 @@ $(function () {
     // show_detail_refrain();
   });
 
-  $("#btn_Show_Report1").click(function () {
-    option =
-      "?select_date1_search1=" +
-      $("#select_date1_search1").val();
-    window.open("report/Report_hn_daily1.php" + option, "_blank");
-  });
 
-  $("#btn_Show_Report2").click(function () {
-    option =
-      "?select_date1_search1=" +
-      $("#select_date1_search1").val();
-    window.open("report/Report_hn_daily2.php" + option, "_blank");
-  });
 
 
   set_his();
