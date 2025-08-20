@@ -41,7 +41,7 @@ try {
             $stock_balance = 0;
         }
 
-        if($stock_max != 0 && $stock_min !=0 && $stock_balance != 0){
+        if($stock_max != 0 || $stock_min !=0 || $stock_balance != 0){
             $updateStmt = $conn->prepare("UPDATE item SET stock_max = ?, stock_min = ?, stock_balance = ? WHERE itemcode = ?");
             $updateStmt->execute([$stock_max, $stock_min, $stock_balance, $itemcode]);
             $updated++;

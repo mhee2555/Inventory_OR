@@ -156,19 +156,28 @@ function onHIS($conn, $db)
                     hncode.DocNo = '$DocNo' ";
 
         $Q2 = "INSERT INTO his_detail ( DocNo , Qty , ItemCode ) 
-                    SELECT
-                        DocNo,
-                        SUM( hncode_detail.Qty ),
-                        itemstock.ItemCode 
-                    FROM
-                        hncode_detail
-                        INNER JOIN itemstock ON hncode_detail.ItemStockID = itemstock.RowID 
-                    WHERE
-                        hncode_detail.DocNo = '$DocNo' 
-                        AND hncode_detail.IsStatus != 99 
-                        AND hncode_detail.Qty > 0 
-                    GROUP BY
-                        itemstock.ItemCode  ";
+                        SELECT
+                            h.DocNo,
+                            SUM(h.Qty) AS TotalQty,
+                            CASE 
+                                WHEN h.ItemStockID = 0 THEN h.ItemCode 
+                                ELSE i.ItemCode 
+                            END AS ItemCode
+                        FROM
+                            hncode_detail h
+                            LEFT JOIN itemstock i 
+                                ON h.ItemStockID = i.RowID 
+                                AND h.ItemStockID > 0
+                        WHERE
+                            h.DocNo = '$DocNo' 
+                            AND h.IsStatus != 99 
+                            AND h.Qty > 0 
+                        GROUP BY
+                            CASE 
+                                WHEN h.ItemStockID = 0 THEN h.ItemCode 
+                                ELSE i.ItemCode 
+                            END,
+                            h.DocNo  ";
 
         $meQuery1 = $conn->prepare($Q1);
         $meQuery1->execute();

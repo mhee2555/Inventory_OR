@@ -136,23 +136,37 @@ $dataArray = [];
 // if ($db == 1) {
 
 $query = " SELECT
-                item.itemname,
-                item.itemcode2,
-                item.SalePrice,
-                hncode_detail.ID,
-                SUM( hncode_detail.Qty ) AS cnt,
-                itemtype.TyeName 
+                i.itemname,
+                i.itemcode2,
+                i.SalePrice,
+                MAX(hd.ID)              AS AnyDetailID,   -- แทน ANY_VALUE()
+                SUM(hd.Qty)             AS cnt,
+                it.TyeName
             FROM
-                hncode
-                LEFT JOIN hncode_detail ON hncode_detail.DocNo = hncode.DocNo
-                LEFT JOIN itemstock ON itemstock.RowID = hncode_detail.ItemStockID
-                LEFT JOIN item ON itemstock.ItemCode = item.itemcode
-                LEFT JOIN itemtype ON item.itemtypeID = itemtype.ID 
+                hncode h
+                LEFT JOIN hncode_detail hd
+                    ON hd.DocNo = h.DocNo
+                -- join itemstock เฉพาะกรณีมี ItemStockID (>0)
+                LEFT JOIN itemstock s
+                    ON hd.ItemStockID IS NOT NULL
+                AND hd.ItemStockID <> 0
+                AND s.RowID = hd.ItemStockID
+                -- เลือกทาง join ไป item:
+                -- - ถ้า ItemStockID มีค่า -> i.itemcode = s.ItemCode
+                -- - ถ้า ItemStockID เป็น NULL/0 -> i.itemcode = hd.ItemCode
+                LEFT JOIN item i
+                    ON (
+                        (hd.ItemStockID IS NOT NULL AND hd.ItemStockID <> 0 AND i.itemcode = s.ItemCode)
+                    OR (hd.ItemStockID IS NULL OR  hd.ItemStockID = 0  AND i.itemcode = hd.ItemCode)
+                    )
+                LEFT JOIN itemtype it
+                    ON i.itemtypeID = it.ID
             WHERE
-                hncode.DocNo = '$DocNo' 
-            GROUP BY  item.itemname
+                h.DocNo = '$DocNo'
+            GROUP BY
+                i.itemname, i.itemcode2, i.SalePrice, it.TyeName
             ORDER BY
-                item.itemname ASC ";
+                i.itemname ASC; ";
 
 
 

@@ -43,7 +43,7 @@ class MYPDF extends TCPDF
             $this->Ln(7);
 
 
-              $this->Cell(0, 10,  "รายงานสรุปการใช้อุปกรณ์กับผู้ป่วย", 0, 1, 'C');
+            $this->Cell(0, 10,  "รายงานสรุปการใช้อุปกรณ์กับผู้ป่วย", 0, 1, 'C');
             //   $this->Cell(0, 10,  $text_date, 0, 1, 'C');
 
 
@@ -53,12 +53,6 @@ class MYPDF extends TCPDF
 
             $image_file = "images/logo1.png";
             $this->Image($image_file, 7, 5, 15, 25, 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);
-
-
-
-
-
-
         }
     }
     // Page footer
@@ -151,12 +145,12 @@ while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
     $_DocNo_SS = $row['DocNo_SS'];
     $_Remark = $row['Remark'];
 
-    if($_HnCode == ""){
+    if ($_HnCode == "") {
         $_HnCode = $_number_box;
     }
 
 
-    
+
 
     if (str_contains($row['doctor'], ',')) {
         $checkloopDoctor = 'loop';
@@ -171,7 +165,7 @@ while ($row_select = $meQuery_select->fetch(PDO::FETCH_ASSOC)) {
 }
 
 $pdf->Cell(50, 5,  "HN : " . $_HnCode, 0, 0, 'L');
-$pdf->Cell(50, 5,  "ชื่อ : - " , 0, 1, 'R');
+$pdf->Cell(50, 5,  "ชื่อ : - ", 0, 1, 'R');
 
 $pdf->Cell(83, 5,  "วันที่เข้ารับบริการ : " . $_CreateDate, 0, 0, 'L');
 $pdf->Cell(50, 5,  "เวลาเข้ารับบริการ : " . $_CreateTime, 0, 1, 'R');
@@ -207,7 +201,7 @@ if ($checkloopDoctor == 'loop') {
         }
 
 
-        $pdf->Cell(50, 5, ($key + 1). ". ". $_Doctor_Name, 0, 1, 'L');
+        $pdf->Cell(50, 5, ($key + 1) . ". " . $_Doctor_Name, 0, 1, 'L');
     }
 } else {
     $pdf->Cell(50, 5,  "1. " . $_Doctor_Name, 0, 1, 'L');
@@ -244,61 +238,68 @@ $sum_all33 = 0;
 $sum_all44 = 0;
 
 $query = " SELECT
-                hncode.DocNo_SS,
-                item.itemname,
-                item.itemcode,
-                item.itemcode2,
-                item.SalePrice,
-                COUNT(deproomdetailsub.ID) AS cnt,
-                (
+            hncode.DocNo_SS,
+            item.itemname,
+            item.itemcode,
+            item.itemcode2,
+            item.SalePrice,
+            COUNT(deproomdetailsub.ID) AS cnt,
+            (
+                SELECT COUNT(log_return.id)
+                FROM log_return
+                LEFT JOIN itemstock AS is_return ON log_return.itemstockID = is_return.RowID
+                WHERE log_return.DocNo = '$_DocNo_SS'
+                AND is_return.ItemCode = item.itemcode
+            ) AS cnt_return
+        FROM
+            hncode
+            INNER JOIN deproom ON hncode.DocNo_SS = deproom.DocNo
+            INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
+            INNER JOIN deproomdetailsub ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID
+            -- ถ้า ItemStockID ไม่ NULL: join itemstock ด้วย RowID
+            -- ถ้า ItemStockID เป็น NULL: ไม่ join itemstock
+            LEFT JOIN itemstock
+                ON deproomdetailsub.ItemStockID IS NOT NULL
+            AND itemstock.RowID = deproomdetailsub.ItemStockID
+            -- join item แบบเลือกเงื่อนไข:
+            -- - ถ้า ItemStockID ไม่ NULL -> item.itemcode = itemstock.ItemCode
+            -- - ถ้า ItemStockID เป็น NULL -> item.itemcode = deproomdetailsub.itemcode_weighing
+            LEFT JOIN item
+                ON (
+                    (deproomdetailsub.ItemStockID IS NOT NULL AND item.itemcode = itemstock.ItemCode)
+                OR (deproomdetailsub.ItemStockID IS NULL     AND item.itemcode = deproomdetailsub.itemcode_weighing)
+                )
+        WHERE
+            hncode.DocNo = '$DocNo'
+        GROUP BY
+            item.itemname,
+            item.itemcode,
+            item.itemcode2,
+            item.SalePrice,
+            hncode.DocNo_SS
+        ORDER BY
+            (
+                COUNT(deproomdetailsub.ID) - COALESCE((
                     SELECT COUNT(log_return.id)
                     FROM log_return
                     LEFT JOIN itemstock AS is_return ON log_return.itemstockID = is_return.RowID
                     WHERE log_return.DocNo = '$_DocNo_SS'
-                        AND is_return.ItemCode = item.itemcode
-                ) AS cnt_return
-            FROM
-                hncode
-                INNER JOIN deproom ON hncode.DocNo_SS = deproom.DocNo
-                INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
-                INNER JOIN deproomdetailsub ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID 
-                LEFT JOIN itemstock ON itemstock.RowID = deproomdetailsub.ItemStockID
-                LEFT JOIN item ON itemstock.ItemCode = item.itemcode
-            WHERE
-                hncode.DocNo = '$DocNo'
-            GROUP BY
-                    item.itemname,
-                    item.itemcode,
-                    item.itemcode2,
-                    item.SalePrice,
-                    hncode.DocNo_SS 
-            ORDER BY
-            (
-                COUNT( deproomdetailsub.ID ) - COALESCE ((
-                    SELECT
-                        COUNT( log_return.id ) 
-                    FROM
-                        log_return
-                        LEFT JOIN itemstock AS is_return ON log_return.itemstockID = is_return.RowID 
-                    WHERE
-                        log_return.DocNo = '$_DocNo_SS' 
-                        AND is_return.ItemCode = item.itemcode 
-                        ),
-                    0 
-                )) DESC,
-            item.itemname ASC;  ";
+                    AND is_return.ItemCode = item.itemcode
+                ), 0)
+            ) DESC,
+            item.itemname ASC; ";
 
 $meQuery1 = $conn->prepare($query);
 $meQuery1->execute();
 while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
-    
+
     $pdf->SetFont('db_helvethaica_x', 'B', 18);
 
-        $itemcode = $Result_Detail['itemcode'];
-        $DocNo_SS = $Result_Detail['DocNo_SS'];
-        $cnt_return = $Result_Detail['cnt_return'];
+    $itemcode = $Result_Detail['itemcode'];
+    $DocNo_SS = $Result_Detail['DocNo_SS'];
+    $cnt_return = $Result_Detail['cnt_return'];
 
-    if($Result_Detail['cnt'] != 0){
+    if ($Result_Detail['cnt'] != 0) {
 
 
 
@@ -308,8 +309,8 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
         $html .=   '<td width="40 %" align="left" > ' . $Result_Detail['itemname'] . '</td>';
         $html .=   '<td width="10 %" align="center" >' . $Result_Detail['cnt'] . '</td>';
         $html .=   '<td width="10 %" align="center" >' . $cnt_return . '</td>';
-        $html .=   '<td width="10 %" align="center" style="background-color:#E6E6FA;">' . number_format( ($Result_Detail['cnt'] - $cnt_return)) . '</td>';
-        $html .=   '<td width="15 %" align="right" >' . number_format( ($Result_Detail['SalePrice'] * ($Result_Detail['cnt'] - $cnt_return)) ,2) . '</td>';
+        $html .=   '<td width="10 %" align="center" style="background-color:#E6E6FA;">' . number_format(($Result_Detail['cnt'] - $cnt_return)) . '</td>';
+        $html .=   '<td width="15 %" align="right" >' . number_format(($Result_Detail['SalePrice'] * ($Result_Detail['cnt'] - $cnt_return)), 2) . '</td>';
         $html .=  '</tr>';
         $count++;
 
@@ -317,32 +318,26 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
         $sum_all2 += $cnt_return;
         $sum_all3 += ($Result_Detail['cnt'] - $cnt_return);
         $sum_all4 += $Result_Detail['SalePrice'] * ($Result_Detail['cnt'] - $cnt_return);
-
-
-
-
     }
-
-
 }
 
-        $sum_all11 = ($sum_all1 / $sum_all1) *100 ;
-        $sum_all22 = ($sum_all2 / $sum_all1) *100 ;
-        $sum_all33 = ($sum_all3 / $sum_all1) *100 ;
+$sum_all11 = ($sum_all1 / $sum_all1) * 100;
+$sum_all22 = ($sum_all2 / $sum_all1) * 100;
+$sum_all33 = ($sum_all3 / $sum_all1) * 100;
 
 $html .= '<tr nobr="true" style="font-size:15px;">';
 $html .=   '<td width="55 %" align="center" colspan="2">Grand Total</td>';
 $html .=   '<td width="10 %" align="center">' . number_format($sum_all1) . '</td>';
 $html .=   '<td width="10 %" align="center">' . number_format($sum_all2) . '</td>';
 $html .=   '<td width="10 %" align="center" style="background-color:#E6E6FA;">' . number_format($sum_all3) . '</td>';
-$html .=   '<td width="15 %" align="right">' . number_format($sum_all4,2) . '</td>';
+$html .=   '<td width="15 %" align="right">' . number_format($sum_all4, 2) . '</td>';
 $html .=  '</tr>';
 
 $html .= '<tr nobr="true" style="font-size:15px;">';
 $html .=   '<td width="55 %" align="center" colspan="2">Utilization use rate</td>';
-$html .=   '<td width="10 %" align="center">' . number_format($sum_all11,2) . '%</td>';
-$html .=   '<td width="10 %" align="center">' . number_format($sum_all22,2) . '%</td>';
-$html .=   '<td width="10 %" align="center" style="background-color:#E6E6FA;">' . number_format($sum_all33,2) . '%</td>';
+$html .=   '<td width="10 %" align="center">' . number_format($sum_all11, 2) . '%</td>';
+$html .=   '<td width="10 %" align="center">' . number_format($sum_all22, 2) . '%</td>';
+$html .=   '<td width="10 %" align="center" style="background-color:#E6E6FA;">' . number_format($sum_all33, 2) . '%</td>';
 $html .=   '<td width="15 %" align="right"></td>';
 $html .=  '</tr>';
 
