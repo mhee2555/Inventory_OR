@@ -223,7 +223,7 @@ $html = '<table cellspacing="0" cellpadding="2" border="1" >
 <th width="12 %" align="center">รหัสอุปกรณ์</th>
 <th width="30 %" align="center">Barcode</th>
 <th width="28 %"  align="center">ชื่อ</th>
-<th width="6 %" align="center">Qty</th>
+<th width="6 %" align="center">จำนวน</th>
 <th width="12 %" align="center">ราคาต่อหน่วย</th>
 <th width="12 %" align="center">ราคารวม</th>
 </tr> </thead>';

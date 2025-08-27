@@ -7,6 +7,7 @@ $permission = $_GET['permission'];
 $Userid = $_GET['Userid'];
 $DepID = $_GET['DepID'];
 $deproom = $_GET['deproom'];
+$remark = $_GET['remark'];
 
 
 

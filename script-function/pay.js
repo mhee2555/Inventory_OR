@@ -956,7 +956,7 @@ function show_detail_deproom_pay_fix(DocNo) {
             }
 
             if (value2.IsConfirm_pay == 1) {
-              var sty = `style=background-color:#00bf63 `;
+              var sty = `style=background-color:lightgreen `;
             } else {
               var sty = ``;
             }
@@ -995,6 +995,7 @@ function show_detail_deproom_pay_fix(DocNo) {
                                         data-box="${value2.number_box}"
                                         data-doctor="${value2.doctorHN}"
                                         data-procedure="${value2.procedureHN}" 
+                                        data-iscomfirmpay="${value2.IsConfirm_pay}" 
                                         data-his_isstatus="${value2.his_IsStatus}"  type="checkbox" class="mr-3 form-check-input position-static clear_checkbox"  style="width: 20px;height: 20px;accent-color: #9A53FF;">
 
                                   <!-- HN -->
@@ -1062,7 +1063,8 @@ function show_detail_deproom_pay_fix(DocNo) {
           el.data("box"),
           el.data("doctor"),
           el.data("procedure"),
-          el.data("his_isstatus")
+          el.data("his_isstatus"),
+          el.data("iscomfirmpay")
         );
       });
 
@@ -1129,7 +1131,7 @@ function show_detail_deproom_pay() {
             }
 
             if (value2.IsConfirm_pay == 1) {
-              var sty = `style=background-color:#00bf63 `;
+              var sty = `style=background-color:lightgreen `;
             } else {
               var sty = ``;
             }
@@ -1168,6 +1170,7 @@ function show_detail_deproom_pay() {
                                         data-box="${value2.number_box}"
                                         data-doctor="${value2.doctorHN}"
                                         data-procedure="${value2.procedureHN}" 
+                                        data-iscomfirmpay="${value2.IsConfirm_pay}" 
                                         data-his_isstatus="${value2.his_IsStatus}"  type="checkbox" class="mr-3 form-check-input position-static clear_checkbox"  style="width: 20px;height: 20px;accent-color: #9A53FF;">
 
                                   <!-- HN -->
@@ -1244,7 +1247,8 @@ function show_detail_deproom_pay() {
           el.data("box"),
           el.data("doctor"),
           el.data("procedure"),
-          el.data("his_isstatus")
+          el.data("his_isstatus"),
+          el.data("iscomfirmpay")
         );
       });
     },
@@ -1357,11 +1361,17 @@ function oncheck_show_byDocNo(
   number_box,
   doctor,
   procedure,
-  his_isstatus
+  his_isstatus,
+  iscomfirmpay
 ) {
   $("#input_pay").focus();
   $(".all111").css("background-color", "");
-  $("#deproom_" + DocNo).css("background-color", "#F9F5FF");
+  if(iscomfirmpay != 1){
+    $("#deproom_" + DocNo).css("background-color", "#F9F5FF");
+  }else{
+    $("#deproom_" + DocNo).removeClass("all111");
+    $("#deproom_" + DocNo).css("background-color", "lightgreen");
+  }
 
   if (his_isstatus == "2") {
     $("#input_pay").attr("disabled", true);

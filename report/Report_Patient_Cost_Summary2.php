@@ -205,8 +205,8 @@ $pdf->SetFont('db_helvethaica_x', 'B', 18);
 
 $html = '<table cellspacing="0" cellpadding="2" border="1" >
 <thead><tr style="font-size:18px;color:#fff;background-color:#663399;">
-<th width="10 %" align="center">รหัสอุปกรณ์</th>
-<th width="58 %"  align="center">อุปกรณ์</th>
+<th width="12 %" align="center">รหัสอุปกรณ์</th>
+<th width="56 %"  align="center">อุปกรณ์</th>
 <th width="10 %" align="center">จำนวน</th>
 <th width="12 %" align="center">ราคาต่อหน่วย</th>
 <th width="10 %" align="center">ราคารวม</th>
@@ -266,8 +266,8 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
     if($Result_Detail['cnt'] != 0){
         $itemcode = "";
         $html .= '<tr nobr="true" style="font-size:15px;">';
-        $html .=   '<td width="10 %" align="center"> ' . $Result_Detail['itemcode2'] . '</td>';
-        $html .=   '<td width="58 %" align="left">' . $Result_Detail['itemname'] . '</td>';
+        $html .=   '<td width="12 %" align="center"> ' . $Result_Detail['itemcode2'] . '</td>';
+        $html .=   '<td width="56 %" align="left">' . $Result_Detail['itemname'] . '</td>';
         $html .=   '<td width="10 %" align="center">' . $Result_Detail['cnt'] . '</td>';
         $html .=   '<td width="12 %" align="right">' . number_format($Result_Detail['SalePrice'],2) . '</td>';
         $html .=   '<td width="10 %" align="right">' . number_format( ($Result_Detail['SalePrice'] * $Result_Detail['cnt']) ,2) . '</td>';
