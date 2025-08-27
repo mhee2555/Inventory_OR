@@ -613,12 +613,11 @@ function selection_departmentRoom() {
       }
 
       tr += `<th class='text-center' style="text-wrap: nowrap;width: 25%;" rowspan="2" id="td_item">อุปกรณ์</th>`;
-      tr += `<th style="text-wrap: nowrap;width: 5%;" class='text-center' rowspan="2" id="">จำนวนทั้งหมด</th>`;
-      tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#FEF0C7;border-bottom-color: #F79009;" class='text-center' rowspan="2" id="">จ่ายไปห้องผ่าตัด</th>`;
-      // tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#D1FADF;border-bottom-color: #12B76A;" class='text-center' rowspan="2" id="">ส่ง CSSD</th>`;
-      // tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#FEE4E2;border-bottom-color: #D92D20;" class='text-center' rowspan="2" id="">ชำรุด</th>`;
-      tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#CDF4EC;border-bottom-color: #219E83;" class='text-center' rowspan="2" id="">คงเหลือ</th>`;
+      tr += `<th style="text-wrap: nowrap;width: 5%;" class='text-center' rowspan="2" id="">สต๊อกตั้งต้น</th>`;
+      tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#FEF0C7;border-bottom-color: #F79009;" class='text-center' rowspan="2" id="">จ่ายไปห้องผ่าตัดรวม</th>`;
+      tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#F5DCE0;border-bottom-color: #d5a5a7;" class='text-center' rowspan="2" id="">จ่ายวันนี้</th>`;
       tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#91a7ff;border-bottom-color: #5677fc;" class='text-center' rowspan="2" id="">Max</th>`;
+      tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#CDF4EC;border-bottom-color: #219E83;" class='text-center' rowspan="2" id="">สต๊อกคงเหลือ</th>`;
       tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#4fc3f7;border-bottom-color: #03a9f4;" class='text-center' rowspan="2" id="">Min</th>`;
       // var tr = ``;
       if (!$.isEmptyObject(ObjData)) {
@@ -713,17 +712,19 @@ function selection_item() {
           tr += `<tr>
                                   <td class='text-center' style="text-wrap: nowrap;">${kay + 1
             }</td>
-                                  <td style="text-wrap: nowrap;${color}" >${value.itemname
+                                  <td style="text-wrap: nowrap;${color}">${value.itemname
             }</td>
                                   <td class='text-center' style="text-wrap: nowrap;">${value.cnt
             }</td>
                                   <td class='text-center' style="text-wrap: nowrap;background-color:#FFFAEB;">${value.cnt_pay
             }</td>
-                                  <td class='text-center' style="text-wrap: nowrap;background-color: #ECFDF3;">${value.calculated_balance
+                                  <td class='text-center' style="text-wrap: nowrap;background-color:#eedadb;">${value.cnt_pay_today
             }</td>
                                   <td class='text-center' style="text-wrap: nowrap;background-color: #d0d9ff;"">${value.stock_max
             }</td>
-                                   <td class='text-center' style="text-wrap: nowrap;background-color: #b3e5fc;"">${value.stock_min
+                                  <td class='text-center' style="text-wrap: nowrap;background-color:#ECFDF3;">${value.calculated_balance
+            }</td>
+                                  <td class='text-center' style="text-wrap: nowrap;background-color: #b3e5fc;"">${value.stock_min
             }</td>`;
 
           var sumcount = 0;
@@ -795,7 +796,7 @@ function selection_item() {
         scrollX: true,
         scrollCollapse: true,
         scrollY: '800px',
-        fixedColumns: { leftColumns: 7, rightColumns: 0 },
+        fixedColumns: { leftColumns: 8, rightColumns: 0 },
         fixedHeader: true,
 
         paging: true,
@@ -811,8 +812,9 @@ function selection_item() {
           { targets: 2, width: '100px' },
           { targets: 3, width: '120px' },
           { targets: 4, width: '110px' },
-          { targets: 5, width: '80px' },  // Max
-          { targets: 6, width: '80px' }   // Min  ⇒ เท่ากับคอลัมน์ 5
+          { targets: 5, width: '110px' },
+          { targets: 6, width: '80px' },  // Max
+          { targets: 7, width: '80px' }   // Min  ⇒ เท่ากับคอลัมน์ 5
         ],
         initComplete: function () {
           const api = this.api();
@@ -1046,12 +1048,11 @@ function selection_departmentRoom_rfid() {
       }
 
       tr += `<th class='text-center' style="text-wrap: nowrap;width: 25%;" rowspan="2" id="td_item">อุปกรณ์</th>`;
-      tr += `<th style="text-wrap: nowrap;width: 5%;" class='text-center' rowspan="2" id="">จำนวนทั้งหมด</th>`;
-      tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#FEF0C7;border-bottom-color: #F79009;" class='text-center' rowspan="2" id="">จ่ายไปห้องผ่าตัด</th>`;
-      // tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#D1FADF;border-bottom-color: #12B76A;" class='text-center' rowspan="2" id="">ส่ง CSSD</th>`;
-      // tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#FEE4E2;border-bottom-color: #D92D20;" class='text-center' rowspan="2" id="">ชำรุด</th>`;
-      tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#CDF4EC;border-bottom-color: #219E83;" class='text-center' rowspan="2" id="">คงเหลือ</th>`;
+      tr += `<th style="text-wrap: nowrap;width: 5%;" class='text-center' rowspan="2" id="">สต๊อกตั้งต้น</th>`;
+      tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#FEF0C7;border-bottom-color: #F79009;" class='text-center' rowspan="2" id="">จ่ายไปห้องผ่าตัดรวม</th>`;
+      tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#F5DCE0;border-bottom-color: #d5a5a7;" class='text-center' rowspan="2" id="">จ่ายวันนี้</th>`;
       tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#91a7ff;border-bottom-color: #5677fc;" class='text-center' rowspan="2" id="">Max</th>`;
+      tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#CDF4EC;border-bottom-color: #219E83;" class='text-center' rowspan="2" id="">สต๊อกคงเหลือ</th>`;
       tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#4fc3f7;border-bottom-color: #03a9f4;" class='text-center' rowspan="2" id="">Min</th>`;
       // var tr = ``;
       if (!$.isEmptyObject(ObjData)) {
@@ -1147,11 +1148,13 @@ function selection_item_rfid() {
             }</td>
                                   <td class='text-center' style="text-wrap: nowrap;background-color:#FFFAEB;">${value.cnt_pay
             }</td>
-                                     <td class='text-center' style="text-wrap: nowrap;background-color:#ECFDF3;">${value.calculated_balance
+                                  <td class='text-center' style="text-wrap: nowrap;background-color:#eedadb;">${value.cnt_pay_today
             }</td>
                                   <td class='text-center' style="text-wrap: nowrap;background-color: #d0d9ff;"">${value.stock_max
             }</td>
-                                   <td class='text-center' style="text-wrap: nowrap;background-color: #b3e5fc;"">${value.stock_min
+                                  <td class='text-center' style="text-wrap: nowrap;background-color:#ECFDF3;">${value.calculated_balance
+            }</td>
+                                  <td class='text-center' style="text-wrap: nowrap;background-color: #b3e5fc;"">${value.stock_min
             }</td>`;
 
           var sumcount = 0;
@@ -1229,7 +1232,7 @@ function selection_item_rfid() {
         scrollX: true,
         scrollCollapse: true,
         scrollY: '800px',
-        fixedColumns: { leftColumns: 7, rightColumns: 0 },
+        fixedColumns: { leftColumns: 8, rightColumns: 0 },
         fixedHeader: true,
 
         paging: true,
@@ -1245,8 +1248,9 @@ function selection_item_rfid() {
           { targets: 2, width: '100px' },
           { targets: 3, width: '120px' },
           { targets: 4, width: '110px' },
-          { targets: 5, width: '80px' },  // Max
-          { targets: 6, width: '80px' }   // Min  ⇒ เท่ากับคอลัมน์ 5
+          { targets: 5, width: '110px' },
+          { targets: 6, width: '80px' },  // Max
+          { targets: 7, width: '80px' }   // Min  ⇒ เท่ากับคอลัมน์ 5
         ],
         initComplete: function () {
           const api = this.api();
@@ -1309,12 +1313,11 @@ function selection_departmentRoom_normal() {
       }
 
       tr += `<th class='text-center' style="text-wrap: nowrap;width: 25%;" rowspan="2" id="td_item">อุปกรณ์</th>`;
-      tr += `<th style="text-wrap: nowrap;width: 5%;" class='text-center' rowspan="2" id="">จำนวนทั้งหมด</th>`;
-      tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#FEF0C7;border-bottom-color: #F79009;" class='text-center' rowspan="2" id="">จ่ายไปห้องผ่าตัด</th>`;
-      // tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#D1FADF;border-bottom-color: #12B76A;" class='text-center' rowspan="2" id="">ส่ง CSSD</th>`;
-      // tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#FEE4E2;border-bottom-color: #D92D20;" class='text-center' rowspan="2" id="">ชำรุด</th>`;
-      tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#CDF4EC;border-bottom-color: #219E83;" class='text-center' rowspan="2" id="">คงเหลือ</th>`;
+      tr += `<th style="text-wrap: nowrap;width: 5%;" class='text-center' rowspan="2" id="">สต๊อกตั้งต้น</th>`;
+      tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#FEF0C7;border-bottom-color: #F79009;" class='text-center' rowspan="2" id="">จ่ายไปห้องผ่าตัดรวม</th>`;
+      tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#F5DCE0;border-bottom-color: #d5a5a7;" class='text-center' rowspan="2" id="">จ่ายวันนี้</th>`;
       tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#91a7ff;border-bottom-color: #5677fc;" class='text-center' rowspan="2" id="">Max</th>`;
+      tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#CDF4EC;border-bottom-color: #219E83;" class='text-center' rowspan="2" id="">สต๊อกคงเหลือ</th>`;
       tr += `<th style="text-wrap: nowrap;width: 5%;background-color:#4fc3f7;border-bottom-color: #03a9f4;" class='text-center' rowspan="2" id="">Min</th>`;
       // var tr = ``;
       if (!$.isEmptyObject(ObjData)) {
@@ -1401,17 +1404,19 @@ function selection_item_normal() {
           tr += `<tr>
                                   <td class='text-center' style="text-wrap: nowrap;">${kay + 1
             }</td>
-                                  <td style="text-wrap: nowrap;${color}" >${value.itemname
+                                  <td style="text-wrap: nowrap;${color}">${value.itemname
             }</td>
                                   <td class='text-center' style="text-wrap: nowrap;">${value.cnt
             }</td>
                                   <td class='text-center' style="text-wrap: nowrap;background-color:#FFFAEB;">${value.cnt_pay
             }</td>
-                                     <td class='text-center' style="text-wrap: nowrap;background-color:#ECFDF3;">${value.calculated_balance
+                                  <td class='text-center' style="text-wrap: nowrap;background-color:#eedadb;">${value.cnt_pay_today
             }</td>
                                   <td class='text-center' style="text-wrap: nowrap;background-color: #d0d9ff;"">${value.stock_max
             }</td>
-                                   <td class='text-center' style="text-wrap: nowrap;background-color: #b3e5fc;"">${value.stock_min
+                                  <td class='text-center' style="text-wrap: nowrap;background-color:#ECFDF3;">${value.calculated_balance
+            }</td>
+                                  <td class='text-center' style="text-wrap: nowrap;background-color: #b3e5fc;"">${value.stock_min
             }</td>`;
 
           var sumcount = 0;
@@ -1482,7 +1487,7 @@ function selection_item_normal() {
         scrollX: true,
         scrollCollapse: true,
         scrollY: '800px',
-        fixedColumns: { leftColumns: 7, rightColumns: 0 },
+        fixedColumns: { leftColumns: 8, rightColumns: 0 },
         fixedHeader: true,
 
         paging: true,
@@ -1498,8 +1503,9 @@ function selection_item_normal() {
           { targets: 2, width: '100px' },
           { targets: 3, width: '120px' },
           { targets: 4, width: '110px' },
-          { targets: 5, width: '80px' },  // Max
-          { targets: 6, width: '80px' }   // Min  ⇒ เท่ากับคอลัมน์ 5
+          { targets: 5, width: '110px' },
+          { targets: 6, width: '80px' },  // Max
+          { targets: 7, width: '80px' }   // Min  ⇒ เท่ากับคอลัมน์ 5
         ],
         initComplete: function () {
           const api = this.api();

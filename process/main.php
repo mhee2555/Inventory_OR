@@ -32,6 +32,8 @@ if (!empty($_POST['FUNC_NAME'])) {
         selection_hn($conn,$db);
     } else if ($_POST['FUNC_NAME'] == 'selection_request_item') {
         selection_request_item($conn,$db);
+    } else if ($_POST['FUNC_NAME'] == 'selection_add_item') {
+        selection_add_item($conn,$db);
     }
 }
 
@@ -70,6 +72,25 @@ function onUpdateDisplay($conn,$db)
 }
 
 
+function selection_add_item($conn,$db)
+{
+    $return = [];
+    $query = " SELECT
+                    COUNT( DISTINCT deproom.DocNo ) AS c 
+                FROM
+                    deproom
+                WHERE
+                    deproom.IsCancel = 0 
+                    AND deproom.IsAdditem = 1  ";
+    $meQuery = $conn->prepare($query);
+    $meQuery->execute();
+    while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+        $return[] = $row;
+    }
+    echo json_encode($return);
+    unset($conn);
+    die;
+}
 
 function selection_request_item($conn,$db)
 {

@@ -321,9 +321,9 @@ $pdf->SetFont('db_helvethaica_x', 'B', 18);
 
 $html = '<table cellspacing="0" cellpadding="1" border="1" >
 <thead><tr style="font-size:18px;color:#fff;background-color:#663399;">
-<th width="12 %" align="center">Code</th>
-<th width="80 %"  align="center">Name</th>
-<th width="10 %" align="center">Qty</th>
+<th width="12 %" align="center">รหัสอุปกรณ์</th>
+<th width="80 %"  align="center">อุปกรณ์</th>
+<th width="10 %" align="center">จำนวน</th>
 </tr> </thead>';
 
 

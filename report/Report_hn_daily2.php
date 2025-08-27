@@ -1,4 +1,6 @@
 <?php
+
+session_start();
 require('../config/db.php');
 // include 'phpqrcode/qrlib.php';
 require('tcpdf/tcpdf.php');
@@ -178,7 +180,10 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
 
 
     // output the HTML content
-
+    $permission = $_SESSION['permission'];
+    $Userid = $_SESSION['Userid'];
+    $DepID = $_SESSION['DepID'];
+    $deproom = $_SESSION['deproom'];
 
     $DocNo = $DocNo_deproom;
     $x = 160; // คงที่ตามที่คุณอยากได้
@@ -194,7 +199,7 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
         'module_height' => 1 // height of a single module in points
     );
     // $url = 'http://10.11.9.54/Inventory_OR/pages/confirm_pay.php?doc=' . urlencode($DocNo); // หรือ link อะไรก็ได้
-    $url = 'http://192.168.2.101:8080/Inventory_OR/pages/confirm_pay.php?doc=' . urlencode($DocNo) . '&remark=issue'; // หรือ link อะไรก็ได้
+    $url = 'http://192.168.2.101:8080/Inventory_OR/pages/confirm_pay.php?doc=' . urlencode($DocNo) . '&remark=issue'.'&permission='.$permission.'&Userid='.$Userid.'&DepID='.$DepID.'&deproom='.$deproom; // // หรือ link อะไรก็ได้
 
 
     $pdf->write2DBarcode($url, 'QRCODE,L', $x, $y, 60, 30, $style, 'N');

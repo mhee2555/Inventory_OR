@@ -49,13 +49,13 @@ if (!empty($_POST['FUNC_NAME'])) {
         show_detail_request_byDocNo_change($conn, $db);
     } else if ($_POST['FUNC_NAME'] == 'updateDetail_qty') {
         updateDetail_qty($conn, $db);
-    }else if ($_POST['FUNC_NAME'] == 'save_deproom_routine') {
+    } else if ($_POST['FUNC_NAME'] == 'save_deproom_routine') {
         save_deproom_routine($conn, $db);
-    }else if ($_POST['FUNC_NAME'] == 'feeddata_detailDepartment') {
+    } else if ($_POST['FUNC_NAME'] == 'feeddata_detailDepartment') {
         feeddata_detailDepartment($conn, $db);
-    }else if ($_POST['FUNC_NAME'] == 'deleteDepartment') {
+    } else if ($_POST['FUNC_NAME'] == 'deleteDepartment') {
         deleteDepartment($conn, $db);
-    }else if ($_POST['FUNC_NAME'] == 'saveDepartment') {
+    } else if ($_POST['FUNC_NAME'] == 'saveDepartment') {
         saveDepartment($conn, $db);
     }
 }
@@ -525,7 +525,8 @@ function deleteUser($conn)
 
 function saveUser($conn)
 {
-    function post($key, $default = '') {
+    function post($key, $default = '')
+    {
         return isset($_POST[$key]) ? $_POST[$key] : $default;
     }
 
@@ -553,7 +554,7 @@ function saveUser($conn)
         // กรณีเพิ่มผู้ใช้ใหม่ (INSERT)
         // ------------------------------------------------------------
         if ($input_IDUser === "") {
-   
+
             // 1) ตรวจซ้ำ UserName
             $stmt = $conn->prepare("SELECT ID FROM users WHERE UserName = :uname LIMIT 1");
             $stmt->execute([':uname' => $input_userName]);
@@ -603,7 +604,7 @@ function saveUser($conn)
                 ':isadmin' => $IsAdmin_new
             ]);
 
- 
+
 
             // 5) INSERT / SETUP config_menu ตามสิทธิ์
             if ($IsAdmin_new == 1) {
@@ -671,7 +672,7 @@ function saveUser($conn)
             die;
         }
 
-                $sqlUpdateUser = "UPDATE users SET
+        $sqlUpdateUser = "UPDATE users SET
                         IsFingerPrint1 = :rfid,
                         IsFingerPrint2 = :weigh,
                         IsAdmin        = :isadmin,
@@ -682,24 +683,24 @@ function saveUser($conn)
                         permission     = :perm
                     WHERE ID = :id";
 
-                $params = [
-                    ':rfid'     => $select_user_rfid,
-                    ':weigh'    => $select_user_weighing,
-                    ':isadmin'  => $IsAdmin_new,
-                    ':emp'      => $input_empcodeUser,
-                    ':uname'    => $input_userName,
-                    ':pwd'      => $input_passWord, // ถ้าต้องการ hash: password_hash($input_passWord, PASSWORD_DEFAULT)
-                    ':iscancel22' => (int)$IsCancel,
-                    ':perm'     => $select_permission,
-                    ':id'       => $input_IDUser
-                ];
+        $params = [
+            ':rfid'     => $select_user_rfid,
+            ':weigh'    => $select_user_weighing,
+            ':isadmin'  => $IsAdmin_new,
+            ':emp'      => $input_empcodeUser,
+            ':uname'    => $input_userName,
+            ':pwd'      => $input_passWord, // ถ้าต้องการ hash: password_hash($input_passWord, PASSWORD_DEFAULT)
+            ':iscancel22' => (int)$IsCancel,
+            ':perm'     => $select_permission,
+            ':id'       => $input_IDUser
+        ];
 
-                // echo ออกมาดูก่อน
-                echo "<pre>";
-                print_r($params);
-                echo "</pre>";
-                $stmt = $conn->prepare($sqlUpdateUser);
-                $stmt->execute($params); 
+        // echo ออกมาดูก่อน
+        echo "<pre>";
+        print_r($params);
+        echo "</pre>";
+        $stmt = $conn->prepare($sqlUpdateUser);
+        $stmt->execute($params);
 
 
         // 4) UPDATE employee
@@ -752,7 +753,6 @@ function saveUser($conn)
         echo "insert success";
         unset($conn);
         die;
-
     } catch (Exception $e) {
         if ($conn && $conn->inTransaction()) {
             $conn->rollBack();
@@ -1108,44 +1108,104 @@ function saveDepartment($conn)
     }
 }
 
-function saveProcedure($conn)
+
+function saveProcedure(PDO $conn)
 {
-    $input_Procedure = $_POST['input_Procedure'];
-    $input_IDProcedure = $_POST['input_IDProcedure'];
-    $IsActive = $_POST['IsActive'];
+    // รับค่าพร้อม normalize
+    $input_Procedure    = isset($_POST['input_Procedure']) ? trim($_POST['input_Procedure']) : '';
+    $input_IDProcedure  = isset($_POST['input_IDProcedure']) && $_POST['input_IDProcedure'] !== '' ? (int)$_POST['input_IDProcedure'] : null;
+    $IsActive           = isset($_POST['IsActive']) ? (int)$_POST['IsActive'] : 1;
+    $status             = isset($_POST['status']) ? (int)$_POST['status'] : 1;
 
+    // รวมช่องว่างหลายตัวให้เป็นตัวเดียว (กัน "ผ่าตัด  ตา" = "ผ่าตัด ตา")
+    $input_Procedure = preg_replace('/\s+/u', ' ', $input_Procedure);
 
-
-    $count_id = 0;
-    // if ($input_IDProcedure == "") {
-    $check_d = "    SELECT ID
-                        FROM   `procedure` 
-                        WHERE Procedure_TH = '$input_Procedure' ";
-    $meQuery_d = $conn->prepare($check_d);
-    $meQuery_d->execute();
-    while ($row_d = $meQuery_d->fetch(PDO::FETCH_ASSOC)) {
-        $count_id++;
+    if ($input_Procedure === '') {
+        echo json_encode(['ok' => false, 'msg' => 'ชื่อหัตถการว่าง']);
+        return;
     }
-    // }
 
+    try {
+        if ($input_IDProcedure === null) {
+            // INSERT: เช็คว่ามีชื่อซ้ำอยู่แล้วหรือยัง
+            $sqlCheck = "SELECT 1 FROM `procedure` WHERE Procedure_EN = ? LIMIT 1";
+            $stmt = $conn->prepare($sqlCheck);
+            $stmt->execute([$input_Procedure]);
+            if ($stmt->fetchColumn()) {
+                echo json_encode(['ok' => false, 'msg' => 'มีรายการนี้อยู่แล้ว']);
+                return;
+            }
 
-    if ($count_id == 0) {
-        if ($input_IDProcedure == "") {
-            $stmt = $conn->prepare("INSERT INTO `procedure` (Procedure_TH, Procedure_EN, IsActive) VALUES (?, ?, ?)");
-            $stmt->execute([$input_Procedure, $input_Procedure, $IsActive]);
+            $sql = "INSERT INTO `procedure` (Procedure_TH, Procedure_EN, IsActive, `status`)
+                    VALUES (?, ?, ?, ?)";
+            $stmt = $conn->prepare($sql);
+            $stmt->execute([$input_Procedure, $input_Procedure, $IsActive, $status]);
+
+            echo json_encode(['ok' => true, 'action' => 'insert', 'id' => $conn->lastInsertId()]);
         } else {
-            $stmt = $conn->prepare("UPDATE `procedure` SET Procedure_TH = ?, Procedure_EN = ?, IsActive = ? WHERE ID = ?");
-            $stmt->execute([$input_Procedure, $input_Procedure, $IsActive, $input_IDProcedure]);
+            // UPDATE: เช็คซ้ำ แต่ "ไม่นับตัวเอง"
+            $sqlCheck = "SELECT 1 FROM `procedure` WHERE Procedure_EN = ? AND ID <> ? LIMIT 1";
+            $stmt = $conn->prepare($sqlCheck);
+            $stmt->execute([$input_Procedure, $input_IDProcedure]);
+            if ($stmt->fetchColumn()) {
+                echo json_encode(['ok' => false, 'msg' => 'มีชื่อซ้ำกับรายการอื่น']);
+                return;
+            }
+
+            $sql = "UPDATE `procedure`
+                    SET Procedure_TH = ?, Procedure_EN = ?, IsActive = ?, `status` = ?
+                    WHERE ID = ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->execute([$input_Procedure, $input_Procedure, $IsActive, $status, $input_IDProcedure]);
+
+            echo json_encode(['ok' => true, 'action' => 'update', 'id' => $input_IDProcedure]);
         }
-        echo "insert success";
-        unset($conn);
-        die;
-    } else {
-        echo "xxxx";
-        unset($conn);
-        die;
+    } catch (PDOException $e) {
+        // ถ้าเผลอชน UNIQUE ก็จะมาตรงนี้
+        echo json_encode(['ok' => false, 'msg' => 'DB error', 'error' => $e->getMessage()]);
     }
 }
+
+
+// function saveProcedure($conn)
+// {
+//     $input_Procedure = $_POST['input_Procedure'];
+//     $input_IDProcedure = $_POST['input_IDProcedure'];
+//     $IsActive = $_POST['IsActive'];
+//     $status = $_POST['status'];
+
+
+
+//     $count_id = 0;
+//     // if ($input_IDProcedure == "") {
+//     $check_d = "    SELECT ID
+//                         FROM   `procedure` 
+//                         WHERE Procedure_TH = '$input_Procedure' ";
+//     $meQuery_d = $conn->prepare($check_d);
+//     $meQuery_d->execute();
+//     while ($row_d = $meQuery_d->fetch(PDO::FETCH_ASSOC)) {
+//         $count_id++;
+//     }
+//     // }
+
+
+//     if ($count_id == 0) {
+//         if ($input_IDProcedure == "") {
+//             $stmt = $conn->prepare("INSERT INTO `procedure` (Procedure_TH, Procedure_EN, IsActive, `status`) VALUES (?, ?, ?, ?)");
+//             $stmt->execute([$input_Procedure, $input_Procedure, $IsActive, $status]);
+//         } else {
+//             $stmt = $conn->prepare("UPDATE `procedure` SET Procedure_TH = ?, Procedure_EN = ?, IsActive = ? , `status` = ? WHERE ID = ?");
+//             $stmt->execute([$input_Procedure, $input_Procedure, $IsActive, $status, $input_IDProcedure]);
+//         }
+//         echo "insert success";
+//         unset($conn);
+//         die;
+//     } else {
+//         echo "xxxx";
+//         unset($conn);
+//         die;
+//     }
+// }
 
 
 function feeddata_detailProcedure($conn, $db)
@@ -1156,7 +1216,10 @@ function feeddata_detailProcedure($conn, $db)
     $query = " SELECT
                      `procedure`.ID,
                      `procedure`.Procedure_EN AS Procedure_TH,
-                     `procedure`.IsActive
+                     `procedure`.IsActive,
+                     `procedure`.`status`
+
+                     
                 FROM
                      `procedure`  ";
 

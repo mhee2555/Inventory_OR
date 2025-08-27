@@ -44,9 +44,8 @@ class MYPDF extends TCPDF
 
         // if ($this->page == 1) {
 
-
-        $image_file = "images/logo1.png";
-        $this->Image($image_file, 10, 10, 20, 30, 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);
+            $image_file = "images/logo1.png";
+            $this->Image($image_file, 10, 10, 15, 25, 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);
 
 
 
@@ -122,8 +121,9 @@ $html = '<table cellspacing="0" cellpadding="2" border="1" >
 <thead><tr style="font-size:18px;color:#fff;background-color:#663399;">
 <th width="10 %" align="center">ลำดับ</th>
 <th width="20 %" align="center">รหัสอุปกรณ์</th>
-<th width="60 %"  align="center">อุปกรณ์</th>
-<th width="10 %" align="center">จำนวน</th>
+<th width="40 %"  align="center">อุปกรณ์</th>
+<th width="15 %" align="center">จำนวนสติ๊กเกอร์</th>
+<th width="15 %" align="center">นำเข้าสินค้าคงคลัง</th>
 </tr> </thead>';
 
 
@@ -133,14 +133,19 @@ $html = '<table cellspacing="0" cellpadding="2" border="1" >
 
 
 $count = 1;
-                
+
 $query = "SELECT
                 sub.itemname,
                 sub.itemcode2,
                 sub.stock_max,
                 sub.stock_min,
                 sub.stock_balance,
-                ( sub.cnt - sub.cnt_pay ) AS calculated_balance,
+                -- ( sub.cnt - sub.cnt_pay ) AS calculated_balance,
+                 CASE 
+                    WHEN IFNULL(sub.cnt, 0) > IFNULL(sub.stock_balance, 0)
+                        THEN (IFNULL(sub.cnt, 0) - IFNULL(sub.cnt_pay, 0))
+                    ELSE (IFNULL(sub.stock_balance, 0) - IFNULL(sub.cnt_pay, 0))
+                    END AS calculated_balance,
                 sub.cnt,
                 sub.cnt_pay,
                 sub.cnt_cssd,
@@ -193,17 +198,21 @@ $meQuery1 = $conn->prepare($query);
 $meQuery1->execute();
 while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
 
+    if ($Result_Detail['cnt'] < $Result_Detail['stock_balance']) {
+        $Result_Detail['cnt']  = $Result_Detail['stock_balance'];
+    }
+
     $pdf->SetFont('db_helvethaica_x', 'B', 18);
 
 
-        $html .= '<tr nobr="true" style="font-size:15px;">';
-        $html .=   '<td width="10 %" align="center" >' . $count . '</td>';
-        $html .=   '<td width="20 %" align="center" >' . $Result_Detail['itemcode2'] . '</td>';
-        $html .=   '<td width="60 %" align="left" >' . $Result_Detail['itemname'] . '</td>';
-        $html .=   '<td width="10 %" align="center" >' . $Result_Detail['calculated_balance'] . '</td>';
-        $html .=  '</tr>';
-        $count++;
-
+    $html .= '<tr nobr="true" style="font-size:15px;">';
+    $html .=   '<td width="10 %" align="center" >' . $count . '</td>';
+    $html .=   '<td width="20 %" align="center" >' . $Result_Detail['itemcode2'] . '</td>';
+    $html .=   '<td width="40 %" align="left" >' . $Result_Detail['itemname'] . '</td>';
+    $html .=   '<td width="15 %" align="center" >' . $Result_Detail['cnt'] . '</td>';
+    $html .=   '<td width="15 %" align="center" >' . $Result_Detail['calculated_balance'] . '</td>';
+    $html .=  '</tr>';
+    $count++;
 }
 
 
@@ -241,8 +250,9 @@ $html = '<table cellspacing="0" cellpadding="2" border="1" >
 <thead><tr style="font-size:18px;color:#fff;background-color:#663399;">
 <th width="10 %" align="center">ลำดับ</th>
 <th width="20 %" align="center">รหัสอุปกรณ์</th>
-<th width="60 %"  align="center">อุปกรณ์</th>
-<th width="10 %" align="center">จำนวน</th>
+<th width="40 %"  align="center">อุปกรณ์</th>
+<th width="15 %" align="center">จำนวนสติ๊กเกอร์</th>
+<th width="15 %" align="center">นำเข้าสินค้าคงคลัง</th>
 </tr> </thead>';
 
 
@@ -252,14 +262,19 @@ $html = '<table cellspacing="0" cellpadding="2" border="1" >
 
 
 $count = 1;
-                
+
 $query = "SELECT
                 sub.itemname,
                 sub.itemcode2,
                 sub.stock_max,
                 sub.stock_min,
                 sub.stock_balance,
-                ( sub.cnt - sub.cnt_pay ) AS calculated_balance,
+                -- ( sub.cnt - sub.cnt_pay ) AS calculated_balance,
+                CASE 
+                WHEN IFNULL(sub.cnt, 0) > IFNULL(sub.stock_balance, 0)
+                    THEN (IFNULL(sub.cnt, 0) - IFNULL(sub.cnt_pay, 0))
+                ELSE (IFNULL(sub.stock_balance, 0) - IFNULL(sub.cnt_pay, 0))
+                END AS calculated_balance,
                 sub.cnt,
                 sub.cnt_pay,
                 sub.cnt_cssd,
@@ -313,16 +328,18 @@ $meQuery1->execute();
 while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
 
     $pdf->SetFont('db_helvethaica_x', 'B', 18);
+    if ($Result_Detail['cnt'] < $Result_Detail['stock_balance']) {
+        $Result_Detail['cnt']  = $Result_Detail['stock_balance'];
+    }
 
-
-        $html .= '<tr nobr="true" style="font-size:15px;">';
-        $html .=   '<td width="10 %" align="center" >' . $count . '</td>';
-        $html .=   '<td width="20 %" align="center" >' . $Result_Detail['itemcode2'] . '</td>';
-        $html .=   '<td width="60 %" align="left" >' . $Result_Detail['itemname'] . '</td>';
-        $html .=   '<td width="10 %" align="center" >' . $Result_Detail['calculated_balance'] . '</td>';
-        $html .=  '</tr>';
-        $count++;
-
+    $html .= '<tr nobr="true" style="font-size:15px;">';
+    $html .=   '<td width="10 %" align="center" >' . $count . '</td>';
+    $html .=   '<td width="20 %" align="center" >' . $Result_Detail['itemcode2'] . '</td>';
+    $html .=   '<td width="40 %" align="left" >' . $Result_Detail['itemname'] . '</td>';
+    $html .=   '<td width="15 %" align="center" >' . $Result_Detail['cnt'] . '</td>';
+    $html .=   '<td width="15 %" align="center" >' . $Result_Detail['calculated_balance'] . '</td>';
+    $html .=  '</tr>';
+    $count++;
 }
 
 $html .= '</table>';
@@ -361,8 +378,9 @@ $html = '<table cellspacing="0" cellpadding="2" border="1" >
 <thead><tr style="font-size:18px;color:#fff;background-color:#663399;">
 <th width="10 %" align="center">ลำดับ</th>
 <th width="20 %" align="center">รหัสอุปกรณ์</th>
-<th width="60 %"  align="center">อุปกรณ์</th>
-<th width="10 %" align="center">จำนวน</th>
+<th width="40 %"  align="center">อุปกรณ์</th>
+<th width="15 %" align="center">จำนวนสติ๊กเกอร์</th>
+<th width="15 %" align="center">นำเข้าสินค้าคงคลัง</th>
 </tr> </thead>';
 
 
@@ -372,14 +390,19 @@ $html = '<table cellspacing="0" cellpadding="2" border="1" >
 
 
 $count = 1;
-                
+
 $query = "SELECT
                 sub.itemname,
                 sub.itemcode2,
                 sub.stock_max,
                 sub.stock_min,
                 sub.stock_balance,
-                ( sub.cnt - sub.cnt_pay ) AS calculated_balance,
+                -- ( sub.cnt - sub.cnt_pay ) AS calculated_balance,
+                CASE 
+                WHEN IFNULL(sub.cnt, 0) > IFNULL(sub.stock_balance, 0)
+                    THEN (IFNULL(sub.cnt, 0) - IFNULL(sub.cnt_pay, 0))
+                ELSE (IFNULL(sub.stock_balance, 0) - IFNULL(sub.cnt_pay, 0))
+                END AS calculated_balance,
                 sub.cnt,
                 sub.cnt_pay,
                 sub.cnt_cssd,
@@ -433,16 +456,18 @@ $meQuery1->execute();
 while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
 
     $pdf->SetFont('db_helvethaica_x', 'B', 18);
+    if ($Result_Detail['cnt'] < $Result_Detail['stock_balance']) {
+        $Result_Detail['cnt']  = $Result_Detail['stock_balance'];
+    }
 
-
-        $html .= '<tr nobr="true" style="font-size:15px;">';
-        $html .=   '<td width="10 %" align="center" >' . $count . '</td>';
-        $html .=   '<td width="20 %" align="center" >' . $Result_Detail['itemcode2'] . '</td>';
-        $html .=   '<td width="60 %" align="left" >' . $Result_Detail['itemname'] . '</td>';
-        $html .=   '<td width="10 %" align="center" >' . $Result_Detail['calculated_balance'] . '</td>';
-        $html .=  '</tr>';
-        $count++;
-
+    $html .= '<tr nobr="true" style="font-size:15px;">';
+    $html .=   '<td width="10 %" align="center" >' . $count . '</td>';
+    $html .=   '<td width="20 %" align="center" >' . $Result_Detail['itemcode2'] . '</td>';
+    $html .=   '<td width="40 %" align="left" >' . $Result_Detail['itemname'] . '</td>';
+    $html .=   '<td width="15 %" align="center" >' . $Result_Detail['cnt'] . '</td>';
+    $html .=   '<td width="15 %" align="center" >' . $Result_Detail['calculated_balance'] . '</td>';
+    $html .=  '</tr>';
+    $count++;
 }
 
 $html .= '</table>';

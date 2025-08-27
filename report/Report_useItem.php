@@ -205,9 +205,9 @@ $pdf->SetFont('db_helvethaica_x', 'B', 18);
 
 $html = '<table cellspacing="0" cellpadding="2" border="1" >
 <thead><tr style="font-size:18px;color:#fff;background-color:#663399;">
-<th width="10 %" align="center">Code</th>
-<th width="80 %"  align="center">Name</th>
-<th width="10 %" align="center">Qty</th>
+<th width="12 %" align="center">รหัสอุปกรณ์</th>
+<th width="78 %"  align="center">อุปกรณ์</th>
+<th width="10 %" align="center">จำนวน</th>
 </tr> </thead>';
 
 
@@ -264,8 +264,8 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
     if($Result_Detail['cnt'] != 0){
         $itemcode = "";
         $html .= '<tr nobr="true" style="font-size:15px;">';
-        $html .=   '<td width="10 %" align="center"> ' . $Result_Detail['itemcode2'] . '</td>';
-        $html .=   '<td width="80 %" align="left">' . $Result_Detail['itemname'] . '</td>';
+        $html .=   '<td width="12 %" align="center"> ' . $Result_Detail['itemcode2'] . '</td>';
+        $html .=   '<td width="78 %" align="left">' . $Result_Detail['itemname'] . '</td>';
         $html .=   '<td width="10 %" align="center">' . $Result_Detail['cnt'] . '</td>';
         $html .=  '</tr>';
         $count++;
@@ -277,7 +277,7 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
 }
 
 $html .= '<tr nobr="true" style="font-size:15px;">';
-$html .=   '<td width="90 %" align="center" rowspan="5">Grand Total</td>';
+$html .=   '<td width="90 %" align="center" rowspan="5">ยอดรวมสุทธิ</td>';
 $html .=   '<td width="10 %" align="center">' . $sum_all . '</td>';
 $html .=  '</tr>';
 

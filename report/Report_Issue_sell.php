@@ -1,4 +1,5 @@
 <?php
+session_start();
 require('../config/db.php');
 // include 'phpqrcode/qrlib.php';
 require('tcpdf/tcpdf.php');
@@ -84,7 +85,10 @@ class MYPDF extends TCPDF
 
 
 
-
+            $permission = $_SESSION['permission'];
+            $Userid = $_SESSION['Userid'];
+            $DepID = $_SESSION['DepID'];
+            $deproom = $_SESSION['deproom'];
             $DocNo = $_GET['DocNo'];
             // $pageHeight = $this->getPageHeight();
             $x = 160; // คงที่ตามที่คุณอยากได้
@@ -100,7 +104,7 @@ class MYPDF extends TCPDF
                 'module_height' => 1 // height of a single module in points
             );
             // $url = 'http://10.11.9.54/Inventory_OR/pages/confirm_pay.php?doc=' . urlencode($DocNo); // หรือ link อะไรก็ได้
-            $url = 'http://192.168.2.101:8080/Inventory_OR/pages/confirm_pay.php?doc=' . urlencode($DocNo) .'&remark=sell'; // หรือ link อะไรก็ได้
+            $url = 'http://192.168.2.101:8080/Inventory_OR/pages/confirm_pay.php?doc=' . urlencode($DocNo) .'&remark=sell'.'&permission='.$permission.'&Userid='.$Userid.'&DepID='.$DepID.'&deproom='.$deproom; // หรือ link อะไรก็ได้// หรือ link อะไรก็ได้
 
 
             $this->write2DBarcode($url, 'QRCODE,L', $x, $y, 80, 30, $style, 'N');

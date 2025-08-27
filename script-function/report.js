@@ -18,27 +18,27 @@ $(function () {
 
   $("#select_date1_10").val(output);
   $("#select_date1_10").datepicker({
-    onSelect: function (date) {},
+    onSelect: function (date) { },
   });
 
   $("#select_date2_10").val(output);
   $("#select_date2_10").datepicker({
-    onSelect: function (date) {},
+    onSelect: function (date) { },
   });
 
   $("#select_date1_9").val(output);
   $("#select_date1_9").datepicker({
-    onSelect: function (date) {},
+    onSelect: function (date) { },
   });
 
   $("#select_date1").val(output);
   $("#select_date1").datepicker({
-    onSelect: function (date) {},
+    onSelect: function (date) { },
   });
 
   $("#select_date2").val(output);
   $("#select_date2").datepicker({
-    onSelect: function (date) {},
+    onSelect: function (date) { },
   });
 
   $("#row_day_9").hide();
@@ -195,7 +195,7 @@ $(function () {
           if ($(this).val() == 9) {
             $("#btn_excel").attr("hidden", true);
             $("#btn_png").attr("hidden", true);
-          }else{
+          } else {
             $("#btn_excel").attr("hidden", false);
             $("#btn_png").attr("hidden", true);
           }
@@ -462,6 +462,49 @@ $(function () {
 
         window.open("report/Report_Issue2.php" + option, "_blank");
       }
+      if ($("#select_report").val() == 11) {
+        if ($("#radio_date1").is(":checked")) {
+          var checkday = 1;
+        } else {
+          var checkday = 2;
+        }
+        if ($("#radio_month1").is(":checked")) {
+          var checkmonth = 1;
+        } else {
+          var checkmonth = 2;
+        }
+        if ($("#radio_year1").is(":checked")) {
+          var checkyear = 1;
+        } else {
+          var checkyear = 2;
+        }
+        var option =
+          "?type_date=" +
+          $("#select_type_date").val() +
+          "&date1=" +
+          $("#select_date1").val() +
+          "&date2=" +
+          $("#select_date2").val() +
+          "&month1=" +
+          $("#select_month1").val() +
+          "&month2=" +
+          $("#select_month2").val() +
+          "&year1=" +
+          $("#select_year1").val() +
+          "&year2=" +
+          $("#select_year2").val() +
+          "&checkday=" +
+          checkday +
+          "&checkmonth=" +
+          checkmonth +
+          "&checkyear=" +
+          checkyear;
+
+        window.open(
+          "report/Report_sale.php" + option + "&Userid=" + Userid,
+          "_blank"
+        );
+      }
     } else {
       if ($("#select_report").val() == 7) {
         window.open("report/Report_stock.php", "_blank");
@@ -483,7 +526,7 @@ $(function () {
 
           window.open(
             "report/Report_Utilization_medical_devices_of_use_rate.php" +
-              option,
+            option,
             "_blank"
           );
         } else {
@@ -535,9 +578,9 @@ $(function () {
 
         window.open(
           "report/phpexcel/Report_Replenishment.php" +
-            option +
-            "&Userid=" +
-            Userid,
+          option +
+          "&Userid=" +
+          Userid,
           "_blank"
         );
       }
@@ -581,9 +624,9 @@ $(function () {
 
         window.open(
           "report/phpexcel/Report_Patient_Requisition.php" +
-            option +
-            "&Userid=" +
-            Userid,
+          option +
+          "&Userid=" +
+          Userid,
           "_blank"
         );
       }
@@ -660,9 +703,9 @@ $(function () {
 
         window.open(
           "report/phpexcel/Report_Cabinet_Issue.php" +
-            option +
-            "&Userid=" +
-            Userid,
+          option +
+          "&Userid=" +
+          Userid,
           "_blank"
         );
       }
@@ -706,9 +749,9 @@ $(function () {
 
         window.open(
           "report/phpexcel/Report_Patient_Cost_Summary2.php" +
-            option +
-            "&Userid=" +
-            Userid,
+          option +
+          "&Userid=" +
+          Userid,
           "_blank"
         );
       }
@@ -755,6 +798,52 @@ $(function () {
           "_blank"
         );
       }
+      if ($("#select_report").val() == 11) {
+        if ($("#radio_date1").is(":checked")) {
+          var checkday = 1;
+        } else {
+          var checkday = 2;
+        }
+        if ($("#radio_month1").is(":checked")) {
+          var checkmonth = 1;
+        } else {
+          var checkmonth = 2;
+        }
+        if ($("#radio_year1").is(":checked")) {
+          var checkyear = 1;
+        } else {
+          var checkyear = 2;
+        }
+        var option =
+          "?type_date=" +
+          $("#select_type_date").val() +
+          "&date1=" +
+          $("#select_date1").val() +
+          "&date2=" +
+          $("#select_date2").val() +
+          "&month1=" +
+          $("#select_month1").val() +
+          "&month2=" +
+          $("#select_month2").val() +
+          "&year1=" +
+          $("#select_year1").val() +
+          "&year2=" +
+          $("#select_year2").val() +
+          "&checkday=" +
+          checkday +
+          "&checkmonth=" +
+          checkmonth +
+          "&checkyear=" +
+          checkyear;
+
+        window.open(
+          "report/phpexcel/Report_sale.php" +
+          option +
+          "&Userid=" +
+          Userid,
+          "_blank"
+        );
+      }
     } else {
       if ($("#select_report").val() == 7) {
         window.open(
@@ -795,7 +884,7 @@ function session() {
       Permission_name = ObjData.Permission_name;
       Userid = ObjData.Userid;
 
-      
+
     },
   });
 }

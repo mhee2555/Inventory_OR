@@ -5,6 +5,7 @@
             <button class="tab-button active" id="manage">จัดการข้อมูลระบบ</button>
             <button class="tab-button" id="mapping">Data Mapping</button>
             <button class="tab-button" id="routine">จัดการ Routine</button>
+            <button class="tab-button" id="item">จับคู่อุปกรณ์</button>
         </div>
 
         <!-- 
@@ -121,6 +122,29 @@
                                 <input type="text" class="form-control" id="input_IDProcedure" autocomplete="off">
                             </div>
                             <div class="col-md-12 mt-3">
+                                <select class="form-control f18" id="select_majorminor">
+                                    <option value="1">major</option>
+                                    <option value="2">minor</option>
+                                </select>
+                                <!-- <div class="row">
+                                    <div class="col-md-4">
+                                        <label for="" style="color:black;" id="radio_majorminor"></label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="form-check-inline">
+                                            <label class="form-check-label" style="color:black;">
+                                                <input type="radio" class="form-check-input" name="radio_majorminor" id="radio_major" checked>major
+                                            </label>
+                                        </div>
+                                        <div class="form-check-inline">
+                                            <label class="form-check-label" style="color:black;">
+                                                <input type="radio" class="form-check-input" name="radio_majorminor" id="radio_minor">minor
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div> -->
+                            </div>
+                            <div class="col-md-12 mt-3">
                                 <div class="row">
                                     <div class="col-md-4">
                                         <label for="" style="color:black;" id="radio_statusProcedure">สถานะ</label>
@@ -139,6 +163,8 @@
                                     </div>
                                 </div>
                             </div>
+
+
                             <div class="col-md-12 mt-3 text-right">
                                 <button type="button" class="btn" id="btn_clearProcedure" style="border-color:gray;color:black;font-size:20px;">ล้างข้อมูล</button>
                                 <button type="button" class="btn " id="btn_saveProcedure" style="color: #fff;background-color: #643695;color:#fff;font-size:20px;">บันทึก</button>
@@ -488,7 +514,6 @@
         </div>
     </div>
 </div>
-
 
 <div id="row_mapping">
 
@@ -843,6 +868,72 @@
     </div>
 </div>
 
+<div id="row_item">
+    <div class="row">
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header f18" style="color:black;">พ่วงอุปกรณ์</div>
+                <div class="card-body">
+
+                    <div class="row position-relative">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label for="" style="color:black;">อุปกรณ์</label>
+                                    <select class="form-control f18" id="select_map_item_main"></select>
+                                </div>
+
+
+                                <div class="col-md-12 mt-3">
+                                    <label for="" style="color:black;">อุปกรณ์ที่จับคู่</label>
+                                    <select class="form-control f18" id="select_map_item_sub" disabled></select>
+                                </div>
+
+                                <div class="col-md-12 mt-3">
+                                    <div class="row">
+                                        <div class="col-md-12" style="display: contents;" id="row_item_map">
+
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                </div>
+                <div class="card-footer text-right">
+                    <button class="btn " id="btn_Clear_item_map" style="border-color:gray;color: black;font-size:20px;"> <i class="fa-solid fa-repeat"></i> รีเซ็ตข้อมูล</button>
+                    <button class="btn" id="btn_Save_item_map" style="color: #fff;background: #643695;font-size:20px;"> <i class="fa-solid fa-arrow-down"></i> บันทึก</button>
+                </div>
+            </div>
+
+
+        </div>
+
+        <div class="col-md-8">
+            <table class="table table-hover " id="table_detail_item_map">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col" id="td_number" style="width: 5%;" class="text-center" class="text-center">ลำดับ</th>
+                        <th scope="col" style="width: 20%;" class="text-center">อุปกรณ์</th>
+                        <th scope="col" style="width: 20%;" class="text-center">อุปกรณ์ที่จับคู่</th>
+                        <th scope="col" style="width: 10%;" class="text-center">#</th>
+                        <th scope="col" style="width: 10%;" class="text-center">#</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
 
 
 <div class="modal fade" id="showDetail_deproom" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -885,6 +976,31 @@
                         <tr>
                             <th scope="col" class="text-center" id="">ลำดับ</th>
                             <th scope="col" class="text-center" id="">หัตถการ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="showDetail_item_map" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">อุปกรณ์</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-hover " id="table_detail_item_map_modal">
+                    <thead style="background-color: #cdd6ff;">
+                        <tr>
+                            <th scope="col" class="text-center" id="">ลำดับ</th>
+                            <th scope="col" class="text-center" id="">อุปกรณ์</th>
                         </tr>
                     </thead>
                     <tbody>

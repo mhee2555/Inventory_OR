@@ -465,9 +465,6 @@ $(function () {
 
   });
 
-
-
-
   $("#input_hn_history_block").keypress(function (e) {
     if (e.which == 13) {
       show_detail_history_block();
@@ -499,7 +496,28 @@ $(function () {
     feeddataClaim();
   });
 
-  show_detail_deproom_pay();
+  $.ajax({
+    url: "process/pay.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "checkIsaddItem",
+    },
+    success: function (result) {
+      var ObjData = JSON.parse(result);
+      console.log(ObjData);
+      if (!$.isEmptyObject(ObjData)) {
+        $.each(ObjData, function (kay, value) {
+          if (value.cnt == 0) {
+            show_detail_deproom_pay();
+          } else {
+            show_detail_deproom_pay_fix(value.DocNo);
+          }
+        });
+      }
+    },
+  });
+
+
   select_deproom();
   select_doctor();
   select_procedure();
@@ -885,6 +903,178 @@ function Deletprocedure(selectedValue) {
   show_detail_history();
 }
 
+function show_detail_deproom_pay_fix(DocNo) {
+  $.ajax({
+    url: "process/pay.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "show_detail_deproom_pay_fix",
+      DocNo: DocNo,
+    },
+    success: function (result) {
+      var _tr = "";
+      // $("#table_deproom_pay").DataTable().destroy();
+      $("#table_deproom_pay tbody").html("");
+      var ObjData = JSON.parse(result);
+      if (!$.isEmptyObject(ObjData)) {
+        $.each(ObjData["departmentroomname"], function (kay, value) {
+          _tr += `<tr id='trbg_${value.id}'>
+                      <td class="f24 text-left"><i class="fa-solid fa-chevron-up" style='font-size:20px;cursor:pointer;rotate: 180deg;' id='open_${value.id
+            }' value='1' onclick='open_deproom_sub(${value.id
+            })'></i> ${kay + 1}</td>
+                      <td class="f24 text-left" style='font-weight:bold;'>${value.departmentroomname
+            }</td>
+                      <td class="" hidden></td>
+                   </tr>`;
+          $.each(ObjData[value.id], function (kay, value2) {
+            if (value2.cnt_detail == "ครบ") {
+              var txt = "ครบ";
+              var sty = "color:#00bf63 ";
+            } else {
+              var txt = "ค้าง";
+              var sty = "color:#ed1c24 ";
+            }
+
+            var titleP = '';
+            if (value2.Procedure_TH == "button") {
+              value2.Procedure_TH = `<a class="text-primary" style="cursor:pointer;" onclick='showDetail_Procedure("${value2.procedure}")'>หัตถการ</a>`;
+            } else {
+              titleP = `title='${value2.Procedure_TH}'`;
+            }
+
+            var titleD = '';
+            if (value2.Doctor_Name == "button") {
+              value2.Doctor_Name = `<a class="text-primary" style="cursor:pointer;" onclick='showDetail_Doctor("${value2.doctor}")'>แพทย์</a>`;
+            } else {
+              titleD = `title='${value2.Doctor_Name}'`;
+            }
+
+            if (value2.hn_record_id == "") {
+              var tttt = value2.number_box;
+            } else {
+              var tttt = value2.hn_record_id;
+            }
+
+            if (value2.IsConfirm_pay == 1) {
+              var sty = `style=background-color:#00bf63 `;
+            } else {
+              var sty = ``;
+            }
+
+            if (value2.IsManual > 0) {
+              var txt = "manual";
+              var btn_ = `<span   class="badge" style="width: 120px;background-color: #673ab7; color: white; padding: 0.5em 0.75em; font-size: 14px;">${txt}</span>`;
+            } else {
+              if (value2.cnt_detail == "ครบ") {
+                var txt = "จ่ายแล้วทั้งหมด";
+                var btn_ = `<span  onclick='showDetail_Permission("${value2.DocNo}")' class="badge btn-success" style="cursor:pointer; width: 120px; color: white; padding: 0.5em 0.75em; font-size: 14px;" id='textstatus_${value2.DocNo}'>${txt}</span>`;
+              } else if (value2.cnt_detail == "บางส่วน") {
+                var txt = "จ่ายแล้วบางส่วน";
+                var btn_ = `<span  onclick='showDetail_Permission("${value2.DocNo}")' class="badge btn-primary" style="cursor:pointer;  width: 120px; color: white; padding: 0.5em 0.75em; font-size: 14px;" id='textstatus_${value2.DocNo}'>${txt}</span>`;
+              } else {
+                var txt = "รอดำเนินการ";
+                var btn_ = `<span  onclick='showDetail_Permission("${value2.DocNo}")' class="badge btn-danger" style="cursor:pointer;  width: 120px; color: white; padding: 0.5em 0.75em; font-size: 14px;" id='textstatus_${value2.DocNo}'>${txt}</span>`;
+              }
+            }
+
+            _tr += `<tr class='tr_${value.id} all111' ${sty} id='deproom_${value2.DocNo}'>
+                          <td class='text-center' >
+
+              
+                          </td>
+                          <td colspan="99" style=" padding: 0.75rem 1rem; ">
+                              <div class="d-flex align-items-center justify-content-between">
+                                <!-- ฝั่งซ้าย -->
+                                <div class="d-flex align-items-center flex-wrap">
+                                  <input id="checkbox_${value2.DocNo}"
+                                        data-id="${value.id}"
+                                        data-docno="${value2.DocNo}"
+                                        data-hn="${value2.hn_record_id}"
+                                        data-date="${value2.serviceDate}"
+                                        data-time="${value2.serviceTime}"
+                                        data-box="${value2.number_box}"
+                                        data-doctor="${value2.doctorHN}"
+                                        data-procedure="${value2.procedureHN}" 
+                                        data-his_isstatus="${value2.his_IsStatus}"  type="checkbox" class="mr-3 form-check-input position-static clear_checkbox"  style="width: 20px;height: 20px;accent-color: #9A53FF;">
+
+                                  <!-- HN -->
+                                  <div class="text-truncate mr-2 text-dark" style="max-width: 150px; font-weight: 500;" title="${tttt}">
+                                    ${tttt} 
+                                  </div>
+
+                                  <label class="pl-2 pr-2">|</label>
+                                      
+                                  <!-- Procedure -->
+                                  <div class="text-truncate mr-2 text-dark" style="max-width: 200px;" ${titleP}>
+                                    ${value2.Procedure_TH} 
+                                  </div>
+
+                                    <label class="pl-2 pr-2">|</label>
+
+                                  <!-- Doctor -->
+                                  <div class="text-truncate text-dark" style="max-width: 200px;" ${titleD}>
+                                    ${value2.Doctor_Name} 
+                                  </div>
+                                </div>
+
+                                <!-- ฝั่งขวา: ป้าย manual -->
+                                <div>
+                                  ${btn_}
+                                </div>
+                              </div>
+                            </td>
+                          <td hidden class='text-center'> <label id='text_balance_${value2.DocNo}' class='f18' style='font-weight:bold;${sty};text-decoration-line: underline;'>${txt}</label> </td>
+
+                        </tr>`;
+          });
+        });
+      }
+
+
+      $("#table_deproom_pay tbody").html(_tr);
+
+      $(".all111").show();
+
+      // $(".clear_checkbox").on("click", function () {
+      //   const el = $(this);
+      //   oncheck_show_byDocNo(
+      //     el.data("id"),
+      //     el.data("docno"),
+      //     el.data("hn"),
+      //     el.data("date"),
+      //     el.data("time"),
+      //     el.data("box"),
+      //     el.data("doctor"),
+      //     el.data("procedure"),
+      //     el.data("his_isstatus")
+      //   );
+      // });
+
+      $(document).on("click", ".clear_checkbox", function () {
+        const el = $(this);
+
+        oncheck_show_byDocNo(
+          el.data("id"),
+          el.data("docno"),
+          el.data("hn"),
+          el.data("date"),
+          el.data("time"),
+          el.data("box"),
+          el.data("doctor"),
+          el.data("procedure"),
+          el.data("his_isstatus")
+        );
+      });
+
+
+      
+
+      setTimeout(() => {
+        $("#checkbox_" + DocNo).prop("checked", true).trigger("click");
+      }, 300);
+    },
+  });
+}
 function show_detail_deproom_pay() {
   $.ajax({
     url: "process/pay.php",
@@ -1952,6 +2142,9 @@ function oncheck_Returnpay(input_returnpay) {
     success: function (result) {
       if (result == 2) {
         showDialogFailed("รหัสนี้อยู่คลังสต๊อกห้องผ่าตัด");
+      }
+      if (result == 3) {
+        show_detail_item_ByDocNo();
       }
       if (result == 0) {
         showDialogFailed("QR Code ไม่ถูกต้องไม่พบรหัสนี้ในระบบ");

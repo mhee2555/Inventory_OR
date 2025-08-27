@@ -229,70 +229,82 @@ function selection_item_normal($conn, $db)
         $wherepermission = " AND item.warehouseID = $permission ";
     }
 
-    $Q1 = "      SELECT
-                    i.itemname,
-                    i.itemcode,
-                    i.stock_max,
-                    i.stock_min,
-                    i.stock_balance,
-                    (IFNULL(s.cnt, 0) - IFNULL(tp.cnt_pay, 0)) AS calculated_balance,
-                    IFNULL(s.cnt, 0) AS cnt,
-                    IFNULL(tp.cnt_pay, 0) AS cnt_pay,
-                    IFNULL(tc.cnt_cssd, 0) AS cnt_cssd,
-                    IFNULL(sb.balance, 0) AS balance,
-                    IFNULL(dm.damage, 0) AS damage
+    $Q1 = " SELECT
+                i.itemname,
+                i.itemcode,
+                i.stock_max,
+                i.stock_min,
+                i.stock_balance,
+                CASE 
+                    WHEN IFNULL(s.cnt, 0) > IFNULL(i.stock_balance, 0)
+                        THEN (IFNULL(s.cnt, 0) - IFNULL(tp.cnt_pay, 0))
+                    ELSE (IFNULL(i.stock_balance, 0) - IFNULL(tp.cnt_pay, 0))
+                END AS calculated_balance,
+                IFNULL(s.cnt, 0)                 AS cnt,
+                IFNULL(tp.cnt_pay, 0)            AS cnt_pay,
+                IFNULL(tpt.cnt_pay_today, 0)     AS cnt_pay_today,  -- ⬅️ จ่ายวันนี้
+                IFNULL(tc.cnt_cssd, 0)           AS cnt_cssd,
+                IFNULL(sb.balance, 0)            AS balance,
+                IFNULL(dm.damage, 0)             AS damage
+            FROM item i
 
-                FROM item i
+            -- นับทั้งหมดใน itemstock
+            LEFT JOIN (
+                SELECT ItemCode, COUNT(*) AS cnt
+                FROM itemstock
+                GROUP BY ItemCode
+            ) s ON s.ItemCode = i.itemcode
 
-                -- นับทั้งหมดใน itemstock
-                LEFT JOIN (
-                    SELECT ItemCode, COUNT(*) AS cnt
-                    FROM itemstock
-                    GROUP BY ItemCode
-                ) s ON s.ItemCode = i.itemcode
+            -- นับจำนวนที่ถูกจ่ายทั้งหมด (IsStatus = 1)
+            LEFT JOIN (
+                SELECT ItemCode, COUNT(*) AS cnt_pay
+                FROM itemstock_transaction_detail
+                WHERE IsStatus = 1
+                GROUP BY ItemCode
+            ) tp ON tp.ItemCode = i.itemcode
 
-                -- นับจำนวนที่ถูกจ่าย
-                LEFT JOIN (
-                    SELECT ItemCode, COUNT(*) AS cnt_pay
-                    FROM itemstock_transaction_detail
-                    WHERE IsStatus = 1
-                    GROUP BY ItemCode
-                ) tp ON tp.ItemCode = i.itemcode
+            LEFT JOIN (
+                SELECT d.ItemCode, COUNT(*) AS cnt_pay_today
+                FROM itemstock_transaction_detail d
+                WHERE d.IsStatus = 1
+                AND d.CreateDate = '$select_date1'
+                GROUP BY d.ItemCode
+            ) tpt ON tpt.ItemCode = i.itemcode
 
-                -- นับที่ cssd
-                LEFT JOIN (
-                    SELECT ItemCode, COUNT(*) AS cnt_cssd
-                    FROM itemstock_transaction_detail
-                    WHERE IsStatus = 7
-                    GROUP BY ItemCode
-                ) tc ON tc.ItemCode = i.itemcode
+            -- นับที่ cssd (IsStatus = 7)
+            LEFT JOIN (
+                SELECT ItemCode, COUNT(*) AS cnt_cssd
+                FROM itemstock_transaction_detail
+                WHERE IsStatus = 7
+                GROUP BY ItemCode
+            ) tc ON tc.ItemCode = i.itemcode
 
-                -- นับ balance ตามเงื่อนไข
-                LEFT JOIN (
-                    SELECT ItemCode, COUNT(*) AS balance
-                    FROM itemstock
-                    WHERE (IsDamage = 0 OR IsDamage IS NULL)
-                    AND Isdeproom NOT IN (1,2,3,4,5,6,7,8,9)
-                    GROUP BY ItemCode
-                ) sb ON sb.ItemCode = i.itemcode
+            -- นับ balance ตามเงื่อนไข
+            LEFT JOIN (
+                SELECT ItemCode, COUNT(*) AS balance
+                FROM itemstock
+                WHERE (IsDamage = 0 OR IsDamage IS NULL)
+                AND Isdeproom NOT IN (1,2,3,4,5,6,7,8,9)
+                GROUP BY ItemCode
+            ) sb ON sb.ItemCode = i.itemcode
 
-                -- นับ damage
-                LEFT JOIN (
-                    SELECT ItemCode, COUNT(*) AS damage
-                    FROM itemstock
-                    WHERE IsDamage IN (1, 2)
-                    GROUP BY ItemCode
-                ) dm ON dm.ItemCode = i.itemcode
+            -- นับ damage
+            LEFT JOIN (
+                SELECT ItemCode, COUNT(*) AS damage
+                FROM itemstock
+                WHERE IsDamage IN (1, 2)
+                GROUP BY ItemCode
+            ) dm ON dm.ItemCode = i.itemcode
 
-                WHERE
-                    (i.itemname LIKE '%$input_search%' OR i.itemcode LIKE '%$input_search%')
-                    AND i.SpecialID = '1'
-                    AND i.IsCancel = '0'
+            WHERE
+                (i.itemname LIKE '%$input_search%' OR i.itemcode LIKE '%$input_search%')
+                AND i.SpecialID = '1'
+                AND i.IsCancel = '0'
 
-                ORDER BY
-                    CASE WHEN (IFNULL(s.cnt, 0) - IFNULL(tp.cnt_pay, 0)) < i.stock_min THEN 0 ELSE 1 END,
-                    s.cnt DESC,
-                    i.itemname ";
+            ORDER BY
+                CASE WHEN calculated_balance < i.stock_min THEN 0 ELSE 1 END,
+                s.cnt DESC,
+                i.itemname;";
 
 
 
@@ -319,6 +331,9 @@ function selection_item_normal($conn, $db)
     $meQuery1 = $conn->prepare($Q1);
     $meQuery1->execute();
     while ($row1 = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
+        if ($row1['cnt'] < $row1['stock_balance']) {
+            $row1['cnt']  = $row1['stock_balance'];
+        }
         $return['item'][] = $row1;
         $_itemcode[] = $row1['itemcode'];
     }
@@ -643,13 +658,17 @@ function selection_item_rfid($conn, $db)
                 i.stock_max,
                 i.stock_min,
                 i.stock_balance,
-                (IFNULL(s.cnt, 0) - IFNULL(tp.cnt_pay, 0)) AS calculated_balance,
-                IFNULL(s.cnt, 0) AS cnt,
-                IFNULL(tp.cnt_pay, 0) AS cnt_pay,
-                IFNULL(tc.cnt_cssd, 0) AS cnt_cssd,
-                IFNULL(sb.balance, 0) AS balance,
-                IFNULL(dm.damage, 0) AS damage
-
+                CASE 
+                    WHEN IFNULL(s.cnt, 0) > IFNULL(i.stock_balance, 0)
+                        THEN (IFNULL(s.cnt, 0) - IFNULL(tp.cnt_pay, 0))
+                    ELSE (IFNULL(i.stock_balance, 0) - IFNULL(tp.cnt_pay, 0))
+                END AS calculated_balance,
+                IFNULL(s.cnt, 0)          AS cnt,
+                IFNULL(tp.cnt_pay, 0)     AS cnt_pay,
+                IFNULL(tpt.cnt_pay_today, 0) AS cnt_pay_today,   -- ⬅️ ยอดจ่ายวันนี้
+                IFNULL(tc.cnt_cssd, 0)    AS cnt_cssd,
+                IFNULL(sb.balance, 0)     AS balance,
+                IFNULL(dm.damage, 0)      AS damage
             FROM item i
 
             -- JOIN นับ stock ทั้งหมด
@@ -659,13 +678,22 @@ function selection_item_rfid($conn, $db)
                 GROUP BY ItemCode
             ) s ON s.ItemCode = i.itemcode
 
-            -- JOIN นับจ่าย (IsStatus = 1)
+            -- JOIN นับจ่าย (IsStatus = 1) ทั้งหมด
             LEFT JOIN (
                 SELECT ItemCode, COUNT(*) AS cnt_pay
                 FROM itemstock_transaction_detail
                 WHERE IsStatus = 1
                 GROUP BY ItemCode
             ) tp ON tp.ItemCode = i.itemcode
+
+            -- JOIN นับจ่ายวันนี้ (IsStatus = 1 เฉพาะวันนี้)
+            LEFT JOIN (
+                SELECT d.ItemCode, COUNT(*) AS cnt_pay_today
+                FROM itemstock_transaction_detail d
+                WHERE d.IsStatus = 1
+                AND d.CreateDate = '$select_date1'
+                GROUP BY d.ItemCode
+            ) tpt ON tpt.ItemCode = i.itemcode
 
             -- JOIN cssd (IsStatus = 7)
             LEFT JOIN (
@@ -692,7 +720,6 @@ function selection_item_rfid($conn, $db)
                 GROUP BY ItemCode
             ) dm ON dm.ItemCode = i.itemcode
 
-            -- เงื่อนไข
             WHERE
                 (i.itemname LIKE '%$input_search%' OR i.itemcode LIKE '%$input_search%')
                 AND i.SpecialID = '0'
@@ -700,10 +727,7 @@ function selection_item_rfid($conn, $db)
                 $wherepermission
 
             ORDER BY
-                CASE
-                    WHEN (IFNULL(s.cnt, 0) - IFNULL(tp.cnt_pay, 0)) < i.stock_min THEN 0
-                    ELSE 1
-                END,
+                CASE WHEN (IFNULL(s.cnt, 0) - IFNULL(tp.cnt_pay, 0)) < i.stock_min THEN 0 ELSE 1 END,
                 s.cnt DESC,
                 i.itemname  ";
 
@@ -732,6 +756,10 @@ function selection_item_rfid($conn, $db)
     $meQuery1 = $conn->prepare($Q1);
     $meQuery1->execute();
     while ($row1 = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
+        if ($row1['cnt'] < $row1['stock_balance']) {
+            $row1['cnt']  = $row1['stock_balance'];
+        }
+
         $return['item'][] = $row1;
         $_itemcode[] = $row1['itemcode'];
     }
@@ -1095,13 +1123,17 @@ function selection_item($conn, $db)
                 i.stock_max,
                 i.stock_min,
                 i.stock_balance,
-                (IFNULL(s.cnt, 0) - IFNULL(tp.cnt_pay, 0)) AS calculated_balance,
-                IFNULL(s.cnt, 0) AS cnt,
-                IFNULL(tp.cnt_pay, 0) AS cnt_pay,
-                IFNULL(tc.cnt_cssd, 0) AS cnt_cssd,
-                IFNULL(sb.balance, 0) AS balance,
-                IFNULL(dm.damage, 0) AS damage
-
+                CASE 
+                    WHEN IFNULL(s.cnt, 0) > IFNULL(i.stock_balance, 0)
+                        THEN (IFNULL(s.cnt, 0) - IFNULL(tp.cnt_pay, 0))
+                    ELSE (IFNULL(i.stock_balance, 0) - IFNULL(tp.cnt_pay, 0))
+                END AS calculated_balance,
+                IFNULL(s.cnt, 0)              AS cnt,
+                IFNULL(tp.cnt_pay, 0)         AS cnt_pay,
+                IFNULL(tpt.cnt_pay_today, 0)  AS cnt_pay_today,   -- ⬅️ เพิ่มจ่ายวันนี้
+                IFNULL(tc.cnt_cssd, 0)        AS cnt_cssd,
+                IFNULL(sb.balance, 0)         AS balance,
+                IFNULL(dm.damage, 0)          AS damage
             FROM item i
 
             -- JOIN นับ stock ทั้งหมด
@@ -1111,7 +1143,7 @@ function selection_item($conn, $db)
                 GROUP BY ItemCode
             ) s ON s.ItemCode = i.itemcode
 
-            -- JOIN นับจ่าย
+            -- JOIN นับจ่ายทั้งหมด (IsStatus = 1)
             LEFT JOIN (
                 SELECT ItemCode, COUNT(*) AS cnt_pay
                 FROM itemstock_transaction_detail
@@ -1119,7 +1151,16 @@ function selection_item($conn, $db)
                 GROUP BY ItemCode
             ) tp ON tp.ItemCode = i.itemcode
 
-            -- JOIN cssd
+            -- JOIN นับจ่ายวันนี้ (IsStatus = 1 เฉพาะวันนี้)
+            LEFT JOIN (
+                SELECT d.ItemCode, COUNT(*) AS cnt_pay_today
+                FROM itemstock_transaction_detail d
+                WHERE d.IsStatus = 1
+                AND d.CreateDate = '$select_date1'
+                GROUP BY d.ItemCode
+            ) tpt ON tpt.ItemCode = i.itemcode
+
+            -- JOIN cssd (IsStatus = 7)
             LEFT JOIN (
                 SELECT ItemCode, COUNT(*) AS cnt_cssd
                 FROM itemstock_transaction_detail
@@ -1144,7 +1185,6 @@ function selection_item($conn, $db)
                 GROUP BY ItemCode
             ) dm ON dm.ItemCode = i.itemcode
 
-            -- เงื่อนไข
             WHERE
                 (i.itemname LIKE '%$input_search%' OR i.itemcode LIKE '%$input_search%')
                 AND i.SpecialID = '2'
@@ -1152,12 +1192,9 @@ function selection_item($conn, $db)
                 $wherepermission
 
             ORDER BY
-                CASE
-                    WHEN (IFNULL(s.cnt, 0) - IFNULL(tp.cnt_pay, 0)) < i.stock_min THEN 0
-                    ELSE 1
-                END,
+                CASE WHEN calculated_balance < i.stock_min THEN 0 ELSE 1 END,
                 s.cnt DESC,
-                i.itemname  ";
+                i.itemname; ";
 
     // $Q1 = " SELECT
     //             item.itemname,
@@ -1178,6 +1215,11 @@ function selection_item($conn, $db)
     $meQuery1 = $conn->prepare($Q1);
     $meQuery1->execute();
     while ($row1 = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
+
+        if ($row1['cnt'] < $row1['stock_balance']) {
+            $row1['cnt']  = $row1['stock_balance'];
+        }
+
 
         if ($row1['cnt_pay'] == null) {
             $row1['cnt_pay'] = 0;

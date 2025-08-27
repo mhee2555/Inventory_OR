@@ -79,7 +79,7 @@ $pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8',
 // set document information
 $pdf->SetCreator(PDF_CREATOR);
 $pdf->SetAuthor('Nicola Asuni');
-$pdf->SetTitle('Report_Patient_Cost_Summary_(IOR)');
+$pdf->SetTitle('Report_item_sale');
 $pdf->SetSubject('TCPDF Tutorial');
 $pdf->SetKeywords('TCPDF, PDF, example, test, guide');
 // set default header data
@@ -162,12 +162,12 @@ if ($type_date == 1) {
     if ($checkday == 1) {
         $date1 = $date1[2] . '-' . $date1[1] . '-' . $date1[0];
 
-        $where_date = "WHERE DATE(hncode.DocDate) = '$date1'  ";
+        $where_date = " AND DATE(deproomdetailsub.PayDate) = '$date1'  ";
     } else {
         $date1 = $date1[2] . '-' . $date1[1] . '-' . $date1[0];
         $date2 = $date2[2] . '-' . $date2[1] . '-' . $date2[0];
 
-        $where_date = "WHERE DATE(hncode.DocDate) BETWEEN '$date1' 	AND '$date2' ";
+        $where_date = " AND DATE(deproomdetailsub.PayDate) BETWEEN '$date1' 	AND '$date2' ";
     }
 }
 
@@ -175,10 +175,10 @@ if ($type_date == 2) {
     $year1 = $year1-543;
 
     if ($checkmonth == 1) {
-        $where_date = "WHERE MONTH(hncode.DocDate) = '$month1' AND YEAR(hncode.DocDate) = '$year1'   ";
+        $where_date = " AND MONTH(deproomdetailsub.PayDate) = '$month1' AND YEAR(deproomdetailsub.PayDate) = '$year1'   ";
 
     } else {
-        $where_date = "WHERE MONTH(hncode.DocDate) BETWEEN '$month1' 	AND '$month2' AND YEAR(hncode.DocDate) = '$year1'  ";
+        $where_date = " AND MONTH(deproomdetailsub.PayDate) BETWEEN '$month1' 	AND '$month2' AND YEAR(deproomdetailsub.PayDate) = '$year1'  ";
     }
 }
 
@@ -186,14 +186,14 @@ if ($type_date == 3) {
     $year1 = $year1-543;
     $year2 = $year2-543;
     if ($checkyear == 1) {
-        $where_date = "WHERE YEAR(hncode.DocDate) = '$year1'  ";
+        $where_date = " AND YEAR(deproomdetailsub.PayDate) = '$year1'  ";
 
     } else {
-        $where_date = "WHERE YEAR(hncode.DocDate) BETWEEN '$year1' 	AND '$year2' ";
+        $where_date = " AND YEAR(deproomdetailsub.PayDate) BETWEEN '$year1' AND '$year2' ";
     }
 }
 
-$pdf->Cell(0, 10,  " ใบสรุปค่าใช้จ่าย OR ", 0, 1, 'C');
+$pdf->Cell(0, 10,  "รายงานอุปกรณ์ผู้แทน", 0, 1, 'C');
 $pdf->Cell(0, 10,  $text_date, 0, 1, 'C');
 
 
@@ -205,11 +205,11 @@ $pdf->SetFont('db_helvethaica_x', 'B', 18);
 
 $html = '<table cellspacing="0" cellpadding="2" border="1" >
 <thead><tr style="font-size:18px;color:#fff;background-color:#663399;">
-<th width="10 %" align="center">รหัสอุปกรณ์</th>
-<th width="58 %"  align="center">อุปกรณ์</th>
-<th width="10 %" align="center">จำนวน</th>
-<th width="12 %" align="center">ราคาต่อหน่วย</th>
-<th width="10 %" align="center">ราคารวม</th>
+<th width="15 %" align="center">รหัสอุปกรณ์</th>
+<th width="18 %" align="center">รหัสใช้งาน</th>
+<th width="40 %"  align="center">อุปกรณ์</th>
+<th width="17 %" align="center">เลขประจำตัวผู้ป่วย</th>
+<th width="10 %" align="center">ราคา</th>
 </tr> </thead>';
 
 
@@ -217,23 +217,29 @@ $html = '<table cellspacing="0" cellpadding="2" border="1" >
 $count = 1;
 $sum_all = 0;
 $query = " SELECT
+                itemstock.UsageCode,
                 item.itemname,
-                item.itemcode,
                 item.itemcode2,
-                item.SalePrice,
-                hncode_detail.ID,
-                SUM( hncode_detail.Qty ) AS cnt,
-                itemtype.TyeName 
+                deproom.hn_record_id,
+                deproom.number_box,
+                item.SalePrice 
             FROM
-                hncode
-                INNER JOIN hncode_detail ON hncode_detail.DocNo = hncode.DocNo
-                INNER JOIN itemstock ON itemstock.RowID = hncode_detail.ItemStockID
-                INNER JOIN item ON itemstock.ItemCode = item.itemcode
-                INNER JOIN itemtype ON item.itemtypeID = itemtype.ID 
-            $where_date
-            GROUP BY  item.itemname
+                deproom
+                INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
+                INNER JOIN item ON deproomdetail.ItemCode = item.itemcode
+                INNER JOIN itemtype ON item.itemtypeID = itemtype.ID
+                INNER JOIN deproomdetailsub ON deproomdetailsub.Deproomdetail_RowID = deproomdetail.ID 
+                INNER JOIN itemstock ON itemstock.RowID = deproomdetailsub.ItemStockID 
+            WHERE
+                deproom.IsCancel = 0 
+                $where_date
+                AND deproomdetail.IsCancel = 0 
+                AND item.itemtypeID IN (	30,31 ) 
+            GROUP BY
+                item.itemcode 
             ORDER BY
                 item.itemname ASC ";
+           
 
 $meQuery1 = $conn->prepare($query);
 $meQuery1->execute();
@@ -241,41 +247,21 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
     
     $pdf->SetFont('db_helvethaica_x', 'B', 18);
 
-    $style = array(
-        'position' => '',
-        'align' => 'S',
-        'stretch' => false,
-        'fitwidth' => false,
-        'cellfitalign' => '',
-        'border' => false,
-        'hpadding' => 0,
-        'vpadding' => 0,
-        'fgcolor' => array(0,0,0),
-        'bgcolor' => false,
-        'text' => true,
-        'font' => 'helvetica',
-        'fontsize' => 4,
-        'stretchtext' => 4
-    );
+        if($Result_Detail['hn_record_id'] == ""){
+            $Result_Detail['hn_record_id'] = $Result_Detail['number_box'] ;
+        }
 
-    // $params = $pdf->serializeTCPDFtagParameters(array(
-    //     $Result_Detail['itemcode'], 'C39', '', '', 53, 9, 0.4, $style, 'N'  // เปลี่ยนจาก 8 เป็น 12
-    // ));
-
-
-    if($Result_Detail['cnt'] != 0){
         $itemcode = "";
         $html .= '<tr nobr="true" style="font-size:15px;">';
-        $html .=   '<td width="10 %" align="center"> ' . $Result_Detail['itemcode2'] . '</td>';
-        $html .=   '<td width="58 %" align="left">' . $Result_Detail['itemname'] . '</td>';
-        $html .=   '<td width="10 %" align="center">' . $Result_Detail['cnt'] . '</td>';
-        $html .=   '<td width="12 %" align="right">' . number_format($Result_Detail['SalePrice'],2) . '</td>';
-        $html .=   '<td width="10 %" align="right">' . number_format( ($Result_Detail['SalePrice'] * $Result_Detail['cnt']) ,2) . '</td>';
+        $html .=   '<td width="15 %" align="center"> ' . $Result_Detail['itemcode2'] . '</td>';
+        $html .=   '<td width="18 %" align="center"> ' . $Result_Detail['UsageCode'] . '</td>';
+        $html .=   '<td width="40 %" align="left">' . $Result_Detail['itemname'] . '</td>';
+        $html .=   '<td width="17 %" align="center">' . $Result_Detail['hn_record_id'] . '</td>';
+        $html .=   '<td width="10 %" align="right">' . number_format($Result_Detail['SalePrice'],2) . '</td>';
         $html .=  '</tr>';
         $count++;
 
-        $sum_all += $Result_Detail['SalePrice'] * $Result_Detail['cnt'];
-    }
+        $sum_all += $Result_Detail['SalePrice'] ;
 
 
 }
@@ -304,7 +290,7 @@ $pdf->writeHTML($html, true, false, false, false, '');
 
 //Close and output PDF document
 $ddate = date('d_m_Y');
-$pdf->Output('Report_Patient_Cost_Summary_(IOR)_' . $ddate . '.pdf', 'I');
+$pdf->Output('Report_item_sale_' . $ddate . '.pdf', 'I');
 
 
 //============================================================+

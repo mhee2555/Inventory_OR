@@ -17,6 +17,7 @@ $(function () {
   selection_oc();
   selection_hn();
   selection_request_item();
+  selection_add_item();
 
   setTimeout(() => {
     selection_ExSoon();
@@ -29,6 +30,7 @@ $(function () {
       $("#row_borrow").attr("hidden", false);
       $("#row_damage").attr("hidden", true);
       $("#row_request_item").attr("hidden", false);
+      $("#row_add_item").attr("hidden", false);
       // $("#row_addon").attr('hidden',false);
     } else {
       $("#row_ex").attr("hidden", false);
@@ -38,6 +40,7 @@ $(function () {
       $("#row_borrow").attr("hidden", false);
       $("#row_damage").attr("hidden", true);
       $("#row_request_item").attr("hidden", false);
+      $("#row_add_item").attr("hidden", false);
       // $("#row_addon").attr('hidden',false);
     }
   }, 300);
@@ -76,6 +79,26 @@ function selection_ExSoon() {
       if (!$.isEmptyObject(ObjData)) {
         $.each(ObjData, function (key, value) {
           $("#text_ExSoon").text(value.c);
+        });
+      }
+    },
+  });
+}
+
+function selection_add_item() {
+  $.ajax({
+    url: "process/main.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "selection_add_item",
+    },
+    success: function (result) {
+      var ObjData = JSON.parse(result);
+      console.log(ObjData);
+      if (!$.isEmptyObject(ObjData)) {
+        var c = 0;
+        $.each(ObjData, function (key, value) {
+          $("#text_add_item").text(value.c);
         });
       }
     },
@@ -377,6 +400,7 @@ $("#btn_borrow").on("click", function (e) {
     loadScript("script-function/borrow.js");
   });
 });
+
 $("#btn_receive_stock").on("click", function (e) {
   e.preventDefault();
   var link = this.href;
@@ -399,6 +423,7 @@ $("#btn_receive_stock").on("click", function (e) {
     loadScript("script-function/recieve_stock.js");
   });
 });
+
 $("#btn_ex").on("click", function (e) {
   e.preventDefault();
   var link = this.href;
@@ -421,6 +446,7 @@ $("#btn_ex").on("click", function (e) {
     loadScript("assets/lang/ex.js");
   });
 });
+
 $("#btn_exsoon").on("click", function (e) {
   e.preventDefault();
   var link = this.href;
@@ -444,6 +470,7 @@ $("#btn_exsoon").on("click", function (e) {
     loadScript("assets/lang/ex.js");
   });
 });
+
 $("#btn_use_deproom").on("click", function (e) {
   e.preventDefault();
   var link = this.href;
@@ -465,6 +492,30 @@ $("#btn_use_deproom").on("click", function (e) {
 
     loadScript("script-function/use_deproom.js");
     loadScript("assets/lang/use_deproom.js");
+  });
+});
+
+$("#btn_add_item").on("click", function (e) {
+  e.preventDefault();
+  var link = this.href;
+  $.get(link, function (res) {
+    $(".nav-item").removeClass("active");
+    $(".nav-item").css("background-color", "");
+
+    $("#ic_mainpage").attr("src", "assets/img_project/3_icon/ic_mainpage.png");
+    $("#li_main").addClass("active");
+    if (display == 2) {
+      $("#li_main").css("background-color", "rgb(60, 32, 90)");
+    } else {
+      $("#li_main").css("background-color", "#643695");
+    }
+
+    $("#conMain").html(res);
+    history.pushState({}, "Results for `Cats`", "index.php?s=use_deproom");
+    document.title = "use_deproom";
+
+    loadScript("script-function/add_item.js");
+    loadScript("assets/lang/add_item.js");
   });
 });
 
@@ -496,6 +547,7 @@ function configMenu() {
     },
   });
 }
+
 function session() {
   $.ajax({
     url: "process/session.php",

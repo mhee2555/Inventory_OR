@@ -288,6 +288,25 @@
       </div>
     </div>
   </div>
+
+  <div class="col-sm-12 col-md-12 col-lg-6 mt-3" id="row_add_item">
+    <div class="card text-center">
+      <div class="card-body">
+        <div class="row g-0">
+          <div class="col-md-8 text-left">
+            <h2 class="card-title text-dark font-weight-bold f24" id="">แจ้งเตือนขอเบิกอุปกรณ์</h2>
+            <div class="card-text"> <label style="font-size: 70px;color:#101828;line-height: 55px;" id="text_add_item">0</label>
+              <label class="f24" style="color:black;" class="label_add_item"> เอกสาร </label>
+            </div>
+          </div>
+          <div class="col-md-12 text-left">
+            <a href="pages/add_item.php" class="btn btn-primary" id="btn_add_item" style="font-size: 25px;background-color:#643695;"> <label class="mb-0">ไปยังหน้า แจ้งเตือนขอเบิกอุปกรณ์<i class="fa-solid fa-arrow-right-long" style="font-size: 15px;margin-left: 15px;"></i> </label> </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!--  -->
 
 

@@ -20,6 +20,7 @@
                             <option value="8">สรุปผู้ป่วยเข้ารับบริการ</option>
                             <option value="9">Operating Room Inventory Tracking</option>
                             <option value="10">Utilization medical devices of use rate</option>
+                            <option value="11">รายงานอุปกรณ์ผู้แทน</option>
                         </select>
                     </div>
                     <div class="col-md-12 mt-3" id="row_typedate">

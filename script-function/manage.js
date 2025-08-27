@@ -2,6 +2,9 @@ var procedure_id_Array = [];
 var doctor_Array = [];
 var deproom_Array = [];
 
+var item_Array = [];
+
+
 var procedure_routine = [];
 var doctor_routine = [];
 
@@ -14,6 +17,8 @@ $(function () {
 function click_main() {
   $("#row_mapping").hide();
   $("#row_routine").hide();
+  $("#row_item").hide();
+
 
   // $("#manage").css("color", "#bbbbb");
   // $("#manage").css("background", "#E0D2EF");
@@ -24,6 +29,8 @@ function click_main() {
     $("#row_manage").show();
     $("#row_mapping").hide();
     $("#row_routine").hide();
+    $("#row_item").hide();
+
   });
 
   $("#mapping").click(function () {
@@ -32,6 +39,7 @@ function click_main() {
     $("#row_manage").hide();
     $("#row_mapping").show();
     $("#row_routine").hide();
+    $("#row_item").hide();
 
     select_deproom();
     select_procedure();
@@ -61,6 +69,7 @@ function click_main() {
     $("#row_routine").show();
     $("#row_mapping").hide();
     $("#row_manage").hide();
+    $("#row_item").hide();
 
     show_detail_item();
     select_type();
@@ -81,6 +90,23 @@ function click_main() {
     $("#table_item_detail_request").DataTable().destroy();
     $("#table_item_detail_request tbody").html("");
   });
+
+  $("#item").click(function () {
+    $(".tab-button").removeClass("active");
+    $(this).addClass("active");
+    $("#row_manage").hide();
+    $("#row_item").show();
+    $("#row_mapping").hide();
+    $("#row_routine").hide();
+
+    $("#row_item_map").html("");
+    item_Array = [];
+
+    select_item();
+    show_detail_item_map();
+  });
+
+
 
   $("#select_doctor_routine").on("select2:select", function (e) {
     if ($("#select_doctor_routine").val() == "") {
@@ -105,6 +131,318 @@ function click_main() {
     }
   });
 }
+
+
+
+// item
+
+$("#select_map_item_sub").on("select2:select", function (e) {
+  var selectedValue = e.params.data.id; // ดึงค่า value
+  var selectedText = e.params.data.text; // ดึงค่า text
+  if (selectedValue != "" && selectedValue != $("#select_map_item_main").val()) {
+    var index = item_Array.indexOf(selectedValue);
+    if (index == -1) {
+      item_Array.push(selectedValue);
+      var _row = "";
+      _row += `       <div  class='div_${selectedValue} pl-3 clear_item_map' onclick='DeleteItemmap("${selectedValue}")'>
+                            <label for="" class="custom-label">${selectedText}</label>
+                        </div> `;
+
+      $("#row_item_map").append(_row);
+
+      $("#select_map_item_sub").val("").trigger("change");
+    }
+  } else {
+    $("#select_map_item_sub").val("").trigger("change");
+  }
+});
+
+
+function DeleteItemmap(selectedValue) {
+  var index = item_Array.indexOf(String(selectedValue));
+  console.log(index);
+
+  if (index !== -1) {
+    item_Array.splice(index, 1);
+  }
+
+  console.log(item_Array);
+  $(".div_" + selectedValue).attr("hidden", true);
+}
+
+
+
+$("#select_map_item_main").change(function () {
+  if ($("#select_map_item_main").val() != "") {
+    $("#select_map_item_sub").attr("disabled", false);
+  } else {
+    $("#select_map_item_sub").attr("disabled", true);
+  }
+  select_item_map();
+});
+
+$("#btn_Save_item_map").click(function () {
+  if ($("#select_map_item_main").val() == "") {
+    showDialogFailed("กรุณาเลือกอุปกรณ์");
+    return;
+  }
+  if (item_Array.length === 0) {
+    showDialogFailed("กรุณาเลือกอุปกรณ์พ่วง");
+    return;
+  }
+
+  Swal.fire({
+    title: "ยืนยัน",
+    text: "ยืนยัน! การส่งข้อมูล ?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "ยืนยัน",
+    cancelButtonText: "ยกเลิก",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      onconfirm_save_item();
+    }
+  });
+});
+
+function onconfirm_save_item() {
+  $.ajax({
+    url: "process/mapping.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "onconfirm_save_item",
+      select_map_item_main: $("#select_map_item_main").val(),
+      item_Array: item_Array,
+    },
+    success: function (result) {
+      var ObjData = JSON.parse(result);
+      console.log(ObjData);
+
+      showDialogSuccess("บันทึกสำเร็จ");
+
+      setTimeout(() => {
+        $("#select_map_item_main").val("");
+        $("#select2-select_map_item_main-container").text("กรุณาเลือกอุปกรณ์");
+        $("#select_map_item_sub").attr("disabled", true);
+        $("#row_item_map").html("");
+        item_Array = [];
+
+        show_detail_item_map();
+      }, 300);
+    },
+  });
+}
+
+
+function show_detail_item_map() {
+  $.ajax({
+    url: "process/mapping.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "show_detail_item_map",
+    },
+    success: function (result) {
+      $("#table_detail_item_map").DataTable().destroy();
+      var ObjData = JSON.parse(result);
+      console.log(ObjData);
+      var _tr = ``;
+      if (!$.isEmptyObject(ObjData)) {
+        $.each(ObjData, function (kay, value) {
+          if (value.itemname_sub == "button") {
+            value.itemname_sub = `<a class="text-primary" style="cursor:pointer;" onclick='showDetail_item_map("${value.itemCode_sub}")'>อุปกรณ์</a>`;
+          }
+
+          _tr +=
+            `<tr >
+            <td class="text-center">${kay + 1}</td>
+            <td class="text-left">${value.itemname_main}</td>
+            <td class="text-center" >${value.itemname_sub}</td>
+            <td class="text-center" > <button class="btn btn-outline-dark f18"  onclick='edit_item_map("${value.itemCode_main}")'> <i class="fa-regular fa-pen-to-square"></i> แก้ไข</button> </td>
+            <td class="text-center"> <button  class="btn btn-outline-danger f18" onclick='delete_item_map("${value.itemCode_main}")'><i class="fa-solid fa-trash-can"></i></button> </td>
+            </tr>`;
+        });
+      } else {
+      }
+      $("#table_detail_item_map tbody").html(_tr);
+      $("#table_detail_item_map ").DataTable({
+        language: {
+          emptyTable: settext("dataTables_empty"),
+          paginate: {
+            next: settext("table_itemStock_next"),
+            previous: settext("table_itemStock_previous"),
+          },
+          info:
+            settext("dataTables_Showing") +
+            " _START_ " +
+            settext("dataTables_to") +
+            " _END_ " +
+            settext("dataTables_of") +
+            " _TOTAL_ " +
+            settext("dataTables_entries") +
+            " ",
+        },
+        columnDefs: [
+          {
+            width: "10%",
+            targets: 0,
+          },
+          {
+            width: "34%",
+            targets: 1,
+          },
+          {
+            width: "34%",
+            targets: 2,
+          },
+          {
+            width: "12%",
+            targets: 3,
+          },
+          {
+            width: "10%",
+            targets: 4,
+          },
+        ],
+        info: false,
+        scrollX: false,
+        scrollCollapse: false,
+        visible: false,
+        searching: false,
+        lengthChange: false,
+        autoWidth: false,
+        fixedHeader: false,
+        ordering: false,
+      });
+      $("th").removeClass("sorting_asc");
+      if (_tr == "") {
+        $(".dataTables_info").text(
+          settext("dataTables_Showing") +
+          " 0 " +
+          settext("dataTables_to") +
+          " 0 " +
+          settext("dataTables_of") +
+          " 0 " +
+          settext("dataTables_entries") +
+          ""
+        );
+      }
+    },
+  });
+}
+
+function showDetail_item_map(itemCode_sub) {
+  $("#showDetail_item_map").modal("toggle");
+
+  $.ajax({
+    url: "process/mapping.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "showDetail_item_map",
+      itemCode_sub: itemCode_sub,
+    },
+    success: function (result) {
+      // $("#table_item_claim").DataTable().destroy();
+      $("#table_detail_item_map_modal tbody").html("");
+      var ObjData = JSON.parse(result);
+      if (!$.isEmptyObject(ObjData)) {
+        var _tr = ``;
+        var allpage = 0;
+        $.each(ObjData, function (kay, value) {
+          _tr += `<tr>
+                <td class="text-center">${kay + 1}</td>
+                <td class="text-left">${value.itemname}</td>
+              </tr>`;
+        });
+
+        $("#table_detail_item_map_modal tbody").html(_tr);
+      }
+    },
+  });
+}
+
+function delete_item_map(itemCode_main) {
+
+  Swal.fire({
+    title: "ยืนยัน",
+    text: "ยืนยัน! การลบข้อมูล ?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "ยืนยัน",
+    cancelButtonText: "ยกเลิก",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      $.ajax({
+        url: "process/mapping.php",
+        type: "POST",
+        data: {
+          FUNC_NAME: "delete_item_map",
+          itemCode_main: itemCode_main,
+        },
+        success: function (result) {
+          var ObjData = JSON.parse(result);
+          console.log(ObjData);
+
+          showDialogSuccess("ลบสำเร็จ");
+          show_detail_item_map();
+        },
+      });
+    }
+  });
+
+
+
+}
+
+function edit_item_map(itemCode_main) {
+  $("#select_map_item_main").val(itemCode_main).trigger("change");
+}
+
+function select_item_map() {
+  $.ajax({
+    url: "process/mapping.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "select_item_map",
+      select_map_item_main: $("#select_map_item_main").val(),
+    },
+    success: function (result) {
+      var ObjData = JSON.parse(result);
+
+      $("#row_item_map").html("");
+      item_Array = [];
+
+      if (!$.isEmptyObject(ObjData)) {
+        var _row = "";
+        $.each(ObjData, function (kay, value) {
+          item_Array.push(value.itemcode.toString());
+
+          _row += `       <div  class='div_${value.itemcode} pl-3 clear_deproom' onclick='DeleteItemmap("${value.itemcode}")'>
+                                  <label for="" class="custom-label">${value.itemname}</label>
+                              </div> `;
+        });
+
+        $("#row_item_map").append(_row);
+      } else {
+      }
+    },
+  });
+}
+
+$("#btn_Clear_item_map").click(function () {
+  $("#select_map_item_main").val("");
+  $("#select2-select_map_item_main-container").text("กรุณาเลือกอุปกรณ์");
+
+  // $("#select_doctor_deproom").val("").triggerHandler("change");
+  $("#select_map_item_sub").attr("disabled", true);
+  $("#row_item_map").html("");
+  item_Array = [];
+});
+
+// item
 
 // $("#select_doctor_routine").on("select2:select", function (e) {
 //   var selectedValue = e.params.data.id; // ดึงค่า value
@@ -458,7 +796,7 @@ $("#btn_savedepartment").click(function () {
     showDialogFailed("กรุณากรอกแผนก อังกฤษ");
     return;
   }
-  
+
   saveDepartment();
 });
 
@@ -510,18 +848,24 @@ function saveProcedure() {
     var IsActive = 0;
   }
 
+
+
+
   $.ajax({
     url: "process/manage.php",
     type: "POST",
+    dataType: "json", // ให้ PHP echo เป็น JSON
     data: {
       FUNC_NAME: "saveProcedure",
       input_Procedure: $("#input_Procedure").val(),
       input_IDProcedure: $("#input_IDProcedure").val(),
       IsActive: IsActive,
+      status: $("#select_majorminor").val(),
     },
     success: function (result) {
-      if (result == "xxxx") {
-        showDialogFailed("ชื่อหัตถการซ้ำ");
+      console.log(result.msg);
+      if (!result.ok) {
+        showDialogFailed(result.msg);
       } else {
         showDialogSuccess(result);
         feeddata_detailProcedure();
@@ -530,6 +874,8 @@ function saveProcedure() {
 
       $("#input_Procedure").val("");
       $("#input_IDProcedure").val("");
+      $("#select_majorminor").val(1);
+
     },
   });
 }
@@ -547,7 +893,7 @@ function editDepartment(ID, name, name2, IsCancel) {
   }
 }
 
-function editProcedure(ID, Procedure_TH, IsActive) {
+function editProcedure(ID, Procedure_TH, IsActive, majorminor) {
   $("#input_Procedure").val(Procedure_TH);
   $("#input_IDProcedure").val(ID);
 
@@ -556,6 +902,11 @@ function editProcedure(ID, Procedure_TH, IsActive) {
   } else {
     $("#radio_statusProcedure2").prop("checked", true);
   }
+
+
+  $("#select_majorminor").val(majorminor);
+
+
 }
 
 function deleteProcedure(ID) {
@@ -625,6 +976,7 @@ $("#btn_cleardepartment").click(function () {
 $("#btn_clearProcedure").click(function () {
   $("#input_Procedure").val("");
   $("#input_IDProcedure").val("");
+  $("#select_majorminor").val(1);
 });
 
 function feeddata_detailProcedure() {
@@ -657,7 +1009,7 @@ function feeddata_detailProcedure() {
             `<td class="text-center"><button class='btn' ${bg}>  ${value.IsActive} </button></td>` +
             `<td class="text-center">
             
-                       <button class="btn btn-outline-dark f18 edit-btn mr-4" data-id="${value.ID}" data-name="${value.Procedure_TH}" data-active="${value.IsActive}" > <i class="fa-regular fa-pen-to-square"></i> แก้ไข</button>
+                       <button class="btn btn-outline-dark f18 edit-btn mr-4" data-id="${value.ID}" data-name="${value.Procedure_TH}" data-active="${value.IsActive}" data-majorminor="${value.status}" > <i class="fa-regular fa-pen-to-square"></i> แก้ไข</button>
                        <button  class="btn btn-outline-danger f18 ml-4" onclick='deleteProcedure(${value.ID})'><i class="fa-solid fa-trash-can"></i></button> 
             
             
@@ -672,7 +1024,8 @@ function feeddata_detailProcedure() {
             const id = btn.dataset.id;
             const name = btn.dataset.name;
             const isActive = btn.dataset.active;
-            editProcedure(id, name, isActive);
+            const status = btn.dataset.status;
+            editProcedure(id, name, isActive, status);
           });
         });
       }
@@ -742,7 +1095,8 @@ function feeddata_detailProcedure() {
         const id = $(this).data("id");
         const name = $(this).data("name");
         const isActive = $(this).data("active");
-        editProcedure(id, name, isActive);
+        const majorminor = $(this).data("majorminor");
+        editProcedure(id, name, isActive, majorminor);
       });
     },
   });
@@ -1416,6 +1770,34 @@ function feeddata_detailDeproom() {
 }
 // ================================================
 
+function select_item() {
+  $.ajax({
+    url: "process/process_main/select_main.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "select_item",
+    },
+    success: function (result) {
+      var ObjData = JSON.parse(result);
+      console.log(ObjData);
+      var option = `<option value="" >กรุณาเลือกอุปกรณ์</option>`;
+      if (!$.isEmptyObject(ObjData)) {
+        $.each(ObjData, function (kay, value) {
+          option += `<option value="${value.itemcode}" >${value.itemname}</option>`;
+        });
+      } else {
+        option = `<option value="0">ไม่มีข้อมูล</option>`;
+      }
+      $("#select_map_item_main").html(option);
+      $("#select_map_item_sub").html(option);
+
+      $("#select_map_item_main").select2();
+      $("#select_map_item_sub").select2();
+
+    },
+  });
+}
+
 function select_floor() {
   $.ajax({
     url: "process/process_main/select_main.php",
@@ -1975,7 +2357,7 @@ function show_detail_doctor() {
             targets: 1,
           },
           {
-            width: "10%",
+            width: "12%",
             targets: 2,
           },
           {
@@ -2118,7 +2500,7 @@ function show_detail_deproom() {
             targets: 1,
           },
           {
-            width: "10%",
+            width: "12%",
             targets: 2,
           },
           {

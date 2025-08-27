@@ -220,12 +220,12 @@ $pdf->SetFont('db_helvethaica_x', 'B', 18);
 
 $html = '<table cellspacing="0" cellpadding="2" border="1" >
 <thead><tr style="font-size:18px;color:#fff;background-color:#663399;">
-<th width="12 %" align="center">Code</th>
+<th width="12 %" align="center">รหัสอุปกรณ์</th>
 <th width="30 %" align="center">Barcode</th>
 <th width="28 %"  align="center">ชื่อ</th>
 <th width="6 %" align="center">Qty</th>
-<th width="12 %" align="center">Unit price</th>
-<th width="12 %" align="center">Total Price</th>
+<th width="12 %" align="center">ราคาต่อหน่วย</th>
+<th width="12 %" align="center">ราคารวม</th>
 </tr> </thead>';
 
 
@@ -339,7 +339,7 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
 }
 
 $html .= '<tr nobr="true" style="font-size:15px;">';
-$html .=   '<td width="88 %" align="center" rowspan="5">Grand Total</td>';
+$html .=   '<td width="88 %" align="center" rowspan="5">ยอดรวมสุทธิ</td>';
 $html .=   '<td width="12 %" align="center">' . number_format($sum_all,2) . '</td>';
 $html .=  '</tr>';
 
