@@ -1,7 +1,7 @@
 <?php
 
 
-function createDocNo($conn, $S_UserId, $DepID, $select_departmentRoom, $remark, $IsBorrow, $IsStatus, $IsAuto, $departmentroomid, $select_procedure_request, $select_doctor_request, $input_hn_request ,$input_box_pay_manual ,  $db,$IsManual)
+function createDocNo($conn, $S_UserId, $DepID, $select_departmentRoom, $remark, $IsBorrow, $IsStatus, $IsAuto, $departmentroomid, $select_procedure_request, $select_doctor_request, $input_hn_request ,$input_box_pay_manual ,  $db,$IsManual , $checkbox_manual_ems)
 {
 
     if ($db == 1) {
@@ -71,11 +71,11 @@ function createDocNo($conn, $S_UserId, $DepID, $select_departmentRoom, $remark, 
         $sql = "INSERT INTO deproom (
             DocNo, DocDate, CreateDate, ModifyDate, DeptID, UserCode, IsStatus, Qty, IsCancel,
             departmentroomid, IsWeb, IsBorrow, Remark, IsAuto, Ref_departmentroomid, `procedure`,
-            doctor, hn_record_id, number_box ,IsManual
+            doctor, hn_record_id, number_box ,IsManual , IsEms
         ) VALUES (
             :DocNo, NOW(), NOW(), NOW(), :DeptID, :UserCode, :IsStatus, 0, 0,
             :departmentroomid, 1, :IsBorrow, :Remark, :IsAuto, :Ref_departmentroomid, '0',
-            :doctor, :hn_record_id , :number_box , :IsManual
+            :doctor, :hn_record_id , :number_box , :IsManual , :IsEms
         )";
         $stmt = $conn->prepare($sql);
         $stmt->execute([
@@ -91,7 +91,8 @@ function createDocNo($conn, $S_UserId, $DepID, $select_departmentRoom, $remark, 
             ':doctor' => $select_doctor_request,
             ':hn_record_id' => $input_hn_request,
             ':number_box' => $input_box_pay_manual,
-            ':IsManual' => $IsManual
+            ':IsManual' => $IsManual,
+            ':IsEms' => $checkbox_manual_ems
         ]);
 
 

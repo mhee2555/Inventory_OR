@@ -216,24 +216,61 @@ $html = '<table cellspacing="0" cellpadding="2" border="1" >
 
 $count = 1;
 $sum_all = 0;
-$query = " SELECT
-                item.itemname,
-                item.itemcode,
-                item.itemcode2,
-                item.SalePrice,
-                hncode_detail.ID,
-                SUM( hncode_detail.Qty ) AS cnt,
-                itemtype.TyeName 
+$query = "SELECT
+            i.itemname,
+            i.itemcode2,
+            i.SalePrice,
+            MAX( x.ID ) AS DetailID,
+            SUM( x.Qty ) AS cnt,
+            t.TyeName 
+        FROM
+            hncode 
+            LEFT JOIN (
+            SELECT
+                d.DocNo,
+                d.ID,
+                d.Qty,
+                d.ItemStockID,
+                d.ItemCode,
+            CASE
+                    
+                    WHEN d.ItemStockID = 0 THEN
+                    d.ItemCode ELSE s.ItemCode 
+                END AS effective_itemcode 
             FROM
-                hncode
-                INNER JOIN hncode_detail ON hncode_detail.DocNo = hncode.DocNo
-                INNER JOIN itemstock ON itemstock.RowID = hncode_detail.ItemStockID
-                INNER JOIN item ON itemstock.ItemCode = item.itemcode
-                INNER JOIN itemtype ON item.itemtypeID = itemtype.ID 
-            $where_date
-            GROUP BY  item.itemname
-            ORDER BY
-                item.itemname ASC ";
+                hncode_detail d
+                LEFT JOIN itemstock s ON d.ItemStockID = s.RowID 
+                AND d.ItemStockID > 0 
+            ) x ON x.DocNo = hncode.DocNo
+            LEFT JOIN item i ON i.itemcode = x.effective_itemcode
+            LEFT JOIN itemtype t ON i.itemtypeID = t.ID 
+        $where_date
+        AND i.itemname != ''
+        GROUP BY
+            i.itemname,
+            i.itemcode2,
+            i.SalePrice,
+            t.TyeName 
+        ORDER BY
+            i.itemname ASC; ";
+// $query = " SELECT
+//                 item.itemname,
+//                 item.itemcode,
+//                 item.itemcode2,
+//                 item.SalePrice,
+//                 hncode_detail.ID,
+//                 SUM( hncode_detail.Qty ) AS cnt,
+//                 itemtype.TyeName 
+//             FROM
+//                 hncode
+//                 INNER JOIN hncode_detail ON hncode_detail.DocNo = hncode.DocNo
+//                 INNER JOIN itemstock ON itemstock.RowID = hncode_detail.ItemStockID
+//                 INNER JOIN item ON itemstock.ItemCode = item.itemcode
+//                 INNER JOIN itemtype ON item.itemtypeID = itemtype.ID 
+//             $where_date
+//             GROUP BY  item.itemname
+//             ORDER BY
+//                 item.itemname ASC ";
 
 $meQuery1 = $conn->prepare($query);
 $meQuery1->execute();

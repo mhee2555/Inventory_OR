@@ -231,7 +231,7 @@ $query = " SELECT
             $where_date
             GROUP BY  item.itemname
             ORDER BY
-                item.itemname ASC ";
+                SUM( hncode_detail.Qty ) DESC ";
 
 $meQuery1 = $conn->prepare($query);
 $meQuery1->execute();

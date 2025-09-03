@@ -885,6 +885,8 @@
                                 </div>
 
 
+
+
                                 <div class="col-md-12 mt-3">
                                     <label for="" style="color:black;">อุปกรณ์ที่จับคู่</label>
                                     <select class="form-control f18" id="select_map_item_sub" disabled></select>
@@ -896,6 +898,15 @@
 
                                         </div>
                                     </div>
+                                </div>
+
+
+                                <div class="col-md-12 mt-3">
+                                    <label for="" style="color:black;">เงื่อนไขการจับคู่</label>
+                                    <select class="form-control f18" id="select_set_mapping_item" disabled>
+                                        <option value="0">1</option>
+                                        <option value="3">2</option>
+                                    </select>
                                 </div>
 
 

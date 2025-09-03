@@ -193,7 +193,21 @@
 </div>
 
 <div id="pay_manual">
-    <div class="row">
+
+
+    <div class="row mt-3">
+        <div class=" col-md-12 col-lg-9  ">
+
+            <div class="tab-button-group">
+                <button class="tab-button3 active" id="radio_pay_manual_sub">จ่ายอุปกรณ์ Manual</button>
+                <button class="tab-button3" id="radio_ems_manual">เคสฉุกเฉิน</button>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="row mt-3" id="row_manual">
         <div class="col-md-12">
             <div class="row">
                 <div class="col-md-12">
@@ -201,13 +215,19 @@
                         <div class="card-body">
 
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-5">
                                     <label style="color:black;font-weight: 600;">เลขที่กล่อง</label>
                                     <input type='text' class='form-control f18' id="input_box_pay_manual">
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-5">
                                     <label style="color:black;font-weight: 600;">เลขประจำตัวผู้ป่วย</label>
                                     <input type='text' class='form-control f18' id="input_Hn_pay_manual">
+                                </div>
+                                <div class="col-md-2 text-right">
+                                    <div class="form-check " style="margin-top: 38px;">
+                                        <input type="checkbox" class="form-check-input" id="checkbox_manual_ems" style="width: 25px;height: 25px;">
+                                        <label class="form-check-label f18 ml-4 mt-1" for="checkbox_manual_ems" style="color:black;font-weight:bold;">สแกนจ่ายเคสฉุกเฉิน</label>
+                                    </div>
                                 </div>
                                 <div class="col-md-4 mt-3">
                                     <div class="form-group ">
@@ -360,6 +380,26 @@
 
             </div>
         </div>
+    </div>
+
+    <div class="row mt-3" id="row_ems">
+        <div class="col-md-12">
+            <table class="table table-hover " id="table_ems">
+                <thead style="background-color: #cdd6ff;">
+                    <tr>
+                        <th scope="col" class="text-center" id="">ลำดับ</th>
+                        <th scope="col" class="text-center" id="">แพทย์</th>
+                        <th scope="col" class="text-center" id="">หัตถการ</th>
+                        <th scope="col" class="text-center" id="">ห้องผ่าตัด</th>
+                        <th scope="col" class="text-center" id="">อุปกรณ์</th>
+                        <th scope="col" class="text-center" id="">#</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+
     </div>
 </div>
 
@@ -1360,6 +1400,97 @@
     </div>
 </div>
 
+<div class="modal fade" id="myModal_edit_ems" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+
+                    <div class="col-md-12">
+                        <label style="color:black;font-weight: 600;">เลขที่กล่อง</label>
+                        <input type='text' class='form-control f18' id="input_box_pay_ems">
+                    </div>
+                    <div class="col-md-4 mt-3">
+                        <label style="color:black;font-weight: 600;">เลขประจำตัวผู้ป่วย</label>
+                        <input type='text' class='form-control f18' id="input_Hn_pay_ems">
+                    </div>
+                    <div class="col-md-4 mt-3">
+
+                        <div class="form-group ">
+                            <label style="color:black;font-weight: 600;">วันที่รับบริการ</label>
+                            <input type="text" class="form-control datepicker-here f18" id="input_date_service_ems" data-language='en' data-date-format='dd-mm-yyyy'>
+                        </div>
+
+
+                    </div>
+                    <div class="col-md-4 mt-3">
+
+                        <div class="form-group ">
+                            <label style="color:black;font-weight: 600;">เวลารับบริการ</label>
+                            <input type="time" class="form-control datepicker-here f18" id="input_time_service_ems" data-language='en' data-date-format='dd-mm-yyyy'>
+                        </div>
+
+
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group x">
+                                    <label style="color:black;font-weight: 600;">แพทย์</label>
+                                    <select class="form-control f18" autocomplete="off" id="select_doctor_ems"></select>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+
+                                <div class="col-md-12" style="display: ruby;" id="row_doctor_ems">
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-4">
+                        <div class="form-group ">
+                            <label style="color:black;font-weight: 600;">ห้องผ่าตัด</label>
+                            <select class="form-control f18" autocomplete="off" id="select_deproom_ems"></select>
+                        </div>
+                    </div>
+
+
+
+                    <div class="col-md-4">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group ">
+                                    <label style="color:black;font-weight: 600;">หัตถการ</label>
+                                    <select class="form-control f18" autocomplete="off" id="select_procedure_ems"></select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12" style="display: ruby;" id="row_procedure_ems">
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn-success btn f18" id="btn_save_ems">บันทึก</button>
+                <button class="btn-danger btn f18" data-dismiss="modal">ยกเลิก</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <div class="modal fade" id="myModal_Detail_Block" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -1468,5 +1599,30 @@
                 <button type="button" class="btn-success btn f18" id="btn_Show_Report2_modal">ยืนยัน</button>
             </div>
         </form>
+    </div>
+</div>
+
+<div class="modal fade" id="showDetail_item_map" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">อุปกรณ์</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-hover " id="table_detail_item_modal">
+                    <thead style="background-color: #cdd6ff;">
+                        <tr>
+                            <th scope="col" class="text-center" id="">อุปกรณ์</th>
+                            <th scope="col" class="text-center" id="">จำนวน</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>

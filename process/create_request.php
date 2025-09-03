@@ -344,10 +344,11 @@ function onconfirm_send_request($conn, $db)
 
 
         $p = "SELECT
-                `procedure`.`status` 
+                    MIN( `procedure`.`status` ) AS status 
             FROM
-                `procedure`
-            WHERE  `procedure`.ID IN ($select_procedure_request) ";
+                `procedure` 
+            WHERE
+                `procedure`.ID IN ($select_procedure_request) ";
         $meQueryp = $conn->prepare($p);
         $meQueryp->execute();
         while ($rowp = $meQueryp->fetch(PDO::FETCH_ASSOC)) {
@@ -525,7 +526,7 @@ function onconfirm_request($conn, $db)
     $count = 0;
     if ($txt_docno_request == "") {
         $remark = "สร้างจาก ขอเบิกอุปกรณ์ ";
-        $txt_docno_request = createDocNo($conn, $Userid, $DepID, $deproom, $remark, 0, 1, 0, 0, '', '', '', '', $db, 0);
+        $txt_docno_request = createDocNo($conn, $Userid, $DepID, $deproom, $remark, 0, 1, 0, 0, '', '', '', '', $db, 0,0);
     }
 
     foreach ($array_itemcode as $key => $value) {

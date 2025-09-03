@@ -563,6 +563,8 @@ function show_detail_hn($conn, $db)
                     hncode
                 INNER JOIN
                     departmentroom ON departmentroom.id = hncode.departmentroomid
+                INNER JOIN
+                    deproom ON deproom.DocNo = hncode.DocNo_SS
                 LEFT JOIN
                     his ON his.DocNo = hncode.DocNo
                 LEFT JOIN
@@ -577,8 +579,8 @@ function show_detail_hn($conn, $db)
                     hncode.IsStatus = 1
                     AND hncode.IsCancel = 0
                     AND hncode.IsBlock = 0
+                    AND deproom.IsEms = 0
                     $where
-                    
                 GROUP BY hncode.DocNo
                 ORDER BY
                     DATE_FORMAT(hncode.DocDate, '%d-%m-%Y') ASC ";

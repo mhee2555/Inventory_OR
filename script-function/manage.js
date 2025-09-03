@@ -155,6 +155,16 @@ $("#select_map_item_sub").on("select2:select", function (e) {
   } else {
     $("#select_map_item_sub").val("").trigger("change");
   }
+
+
+
+  if (item_Array.length > 0) {
+    $("#select_set_mapping_item").attr('disabled', false);
+  } else {
+    $("#select_set_mapping_item").attr('disabled', true);
+  }
+
+
 });
 
 
@@ -168,6 +178,14 @@ function DeleteItemmap(selectedValue) {
 
   console.log(item_Array);
   $(".div_" + selectedValue).attr("hidden", true);
+
+
+  if (item_Array.length > 0) {
+    $("#select_set_mapping_item").attr('disabled', false);
+  } else {
+    $("#select_set_mapping_item").attr('disabled', true);
+  }
+
 }
 
 
@@ -214,6 +232,7 @@ function onconfirm_save_item() {
     data: {
       FUNC_NAME: "onconfirm_save_item",
       select_map_item_main: $("#select_map_item_main").val(),
+      select_set_mapping_item: $("#select_set_mapping_item").val(),
       item_Array: item_Array,
     },
     success: function (result) {
@@ -259,7 +278,7 @@ function show_detail_item_map() {
             <td class="text-center">${kay + 1}</td>
             <td class="text-left">${value.itemname_main}</td>
             <td class="text-center" >${value.itemname_sub}</td>
-            <td class="text-center" > <button class="btn btn-outline-dark f18"  onclick='edit_item_map("${value.itemCode_main}")'> <i class="fa-regular fa-pen-to-square"></i> แก้ไข</button> </td>
+            <td class="text-center" > <button class="btn btn-outline-dark f18"  onclick='edit_item_map("${value.itemCode_main}",${value.IsSet})'> <i class="fa-regular fa-pen-to-square"></i> แก้ไข</button> </td>
             <td class="text-center"> <button  class="btn btn-outline-danger f18" onclick='delete_item_map("${value.itemCode_main}")'><i class="fa-solid fa-trash-can"></i></button> </td>
             </tr>`;
         });
@@ -397,8 +416,11 @@ function delete_item_map(itemCode_main) {
 
 }
 
-function edit_item_map(itemCode_main) {
+function edit_item_map(itemCode_main, IsSet) {
   $("#select_map_item_main").val(itemCode_main).trigger("change");
+  $("#select_set_mapping_item").val(IsSet);
+
+
 }
 
 function select_item_map() {
@@ -428,12 +450,19 @@ function select_item_map() {
         $("#row_item_map").append(_row);
       } else {
       }
+
+      if (item_Array.length > 0) {
+        $("#select_set_mapping_item").attr('disabled', false);
+      }
     },
   });
 }
 
 $("#btn_Clear_item_map").click(function () {
+
+  $("#select_set_mapping_item").attr('disabled', true);
   $("#select_map_item_main").val("");
+  $("#select_set_mapping_item").val(0);
   $("#select2-select_map_item_main-container").text("กรุณาเลือกอุปกรณ์");
 
   // $("#select_doctor_deproom").val("").triggerHandler("change");

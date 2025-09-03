@@ -5,44 +5,40 @@ require '../connect/connect.php';
 
 if (!empty($_POST['FUNC_NAME'])) {
     if ($_POST['FUNC_NAME'] == 'feeddata') {
-        feeddata($conn,$db);
+        feeddata($conn, $db);
     } else if ($_POST['FUNC_NAME'] == 'checkNSterile') {
-        checkNSterile($conn,$db);
-    }  else if ($_POST['FUNC_NAME'] == 'onSendNsterile') {
-        onSendNsterile($conn,$db);
-    } 
+        checkNSterile($conn, $db);
+    } else if ($_POST['FUNC_NAME'] == 'onSendNsterile') {
+        onSendNsterile($conn, $db);
+    }
 }
 
-function checkNSterile($conn,$db)
+function checkNSterile($conn, $db)
 {
+    $ArrayItemStockID = $_POST['ArrayItemStockID'];
+    $select_cut_itemex = $_POST['select_cut_itemex'];
+    $ItemStockID = "";
+    $return = [];
 
-    $checkNsterile = $_POST['checkNsterile'];
+    foreach ($ArrayItemStockID as $key => $value) {
 
-    $where1 = "";
-
-    $where1 = "	 AND ( itemstock.IsCross = 0 OR itemstock.IsCross = 1 OR itemstock.IsCross IS NULL )";
-
-    $query = "SELECT COUNT(itemstock.RowID) AS qty
-                FROM
-                    itemstock
-                INNER JOIN item ON itemstock.ItemCode = item.itemcode 	
-                WHERE
-                    itemstock.Isdeproom = 6
-                    AND item.itemtypeID  = 44
-                    $where1 ";
-    // AND itemstock.RowID IN (  $subItemStockID  ) 
-
-    $meQuery = $conn->prepare($query);
-    $meQuery->execute();
-    while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
-        $return[] = $row;
+        if($select_cut_itemex == 1){
+            $update = "UPDATE itemstock SET itemstock.IsCancel = 1 WHERE itemstock.RowID = '$value' ";
+        }else{
+            $update = "UPDATE itemstock SET itemstock.IsCancel = 1 , itemstock.IsPrint = 1 WHERE itemstock.RowID = '$value' ";
+        }
+        $meQueryupdate = $conn->prepare($update);
+        $meQueryupdate->execute();
     }
+
+
+
     echo json_encode($return);
     unset($conn);
     die;
 }
 
-function feeddata($conn,$db)
+function feeddata($conn, $db)
 {
     $DepID = $_SESSION['DepID'];
     $GN_WarningExpiringSoonDay = $_POST['GN_WarningExpiringSoonDay'];
@@ -53,20 +49,20 @@ function feeddata($conn,$db)
     $wheredep = "";
     if ($RefDepID  == '36DEN') {
         $wheredep = "AND itemstock.departmentroomid = '$deproom'  AND  itemstock.IsDeproom = 1  ";
-    }else{
+    } else {
         $wheredep = "AND  itemstock.IsDeproom = 0 ";
     }
     $permission = $_SESSION['permission'];
 
     $wherepermission = "";
-    if($permission != '5'){
+    if ($permission != '5') {
         $wherepermission = " AND item.warehouseID = $permission ";
     }
 
 
     $return = [];
 
-    if($db == 1){
+    if ($db == 1) {
         $query = " SELECT
                     itemstock.ItemCode,
                     itemstock.UsageCode,
@@ -97,7 +93,7 @@ function feeddata($conn,$db)
                     itemstock.UsageCode
                 ORDER BY
                     item.itemname, DATE_FORMAT(itemstock.ExpireDate, '%d/%m/%Y') ASC ";
-    }else{
+    } else {
         $query = "SELECT
                     itemstock.ItemCode,
                     itemstock.UsageCode,
@@ -142,12 +138,12 @@ function feeddata($conn,$db)
     $meQuery->execute();
     while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
 
-        if($check_ex == '1'){
+        if ($check_ex == '1') {
+            $return[] = $row;
+        } else {
+            if ($row['IsStatus'] == 'ใกล้หมดอายุ') {
                 $return[] = $row;
-        }else{
-            if($row['IsStatus'] == 'ใกล้หมดอายุ'){
-                $return[] = $row;
-            }else if($row['IsStatus'] == 'หมดอายุ'){
+            } else if ($row['IsStatus'] == 'หมดอายุ') {
                 $return[] = $row;
             }
         }
@@ -163,7 +159,7 @@ function feeddata($conn,$db)
     die;
 }
 
-function onSendNsterile($conn,$db)
+function onSendNsterile($conn, $db)
 {
     $ArrayItemStockID = $_POST['ArrayItemStockID'];
     $ItemStockID = "";
@@ -175,7 +171,7 @@ function onSendNsterile($conn,$db)
     $wheredep = "";
     if ($RefDepID  == '36DEN') {
         $wheredep = "  itemstock.IsDeproom = 1  ";
-    }else{
+    } else {
         $wheredep = "  itemstock.IsDeproom = 0 ";
     }
 
@@ -183,7 +179,7 @@ function onSendNsterile($conn,$db)
     $subItemStockID = substr($ItemStockID, 0, strlen($ItemStockID) - 1);
     $return = [];
 
-    if($db == 1){
+    if ($db == 1) {
         $query = " SELECT
                         itemstock.RowID,
                         itemstock.UsageCode,
@@ -201,7 +197,7 @@ function onSendNsterile($conn,$db)
                     ORDER BY
                         item.itemname,
                         DATE_FORMAT(itemstock.ExpireDate, '%d/%m/%Y') ASC ";
-    }else{
+    } else {
         $query = " SELECT
                     itemstock.RowID,
                     itemstock.UsageCode,

@@ -259,14 +259,14 @@ function selection_item_normal($conn, $db)
             LEFT JOIN (
                 SELECT ItemCode, COUNT(*) AS cnt_pay
                 FROM itemstock_transaction_detail
-                WHERE IsStatus = 1
+                WHERE IsStatus IN (1, 9)
                 GROUP BY ItemCode
             ) tp ON tp.ItemCode = i.itemcode
 
             LEFT JOIN (
                 SELECT d.ItemCode, COUNT(*) AS cnt_pay_today
                 FROM itemstock_transaction_detail d
-                WHERE d.IsStatus = 1
+                WHERE d.IsStatus IN (1, 9)
                 AND d.CreateDate = '$select_date1'
                 GROUP BY d.ItemCode
             ) tpt ON tpt.ItemCode = i.itemcode
@@ -682,7 +682,7 @@ function selection_item_rfid($conn, $db)
             LEFT JOIN (
                 SELECT ItemCode, COUNT(*) AS cnt_pay
                 FROM itemstock_transaction_detail
-                WHERE IsStatus = 1
+                WHERE IsStatus  IN (1, 9)
                 GROUP BY ItemCode
             ) tp ON tp.ItemCode = i.itemcode
 
@@ -690,7 +690,7 @@ function selection_item_rfid($conn, $db)
             LEFT JOIN (
                 SELECT d.ItemCode, COUNT(*) AS cnt_pay_today
                 FROM itemstock_transaction_detail d
-                WHERE d.IsStatus = 1
+                WHERE d.IsStatus IN (1, 9)
                 AND d.CreateDate = '$select_date1'
                 GROUP BY d.ItemCode
             ) tpt ON tpt.ItemCode = i.itemcode
@@ -1147,7 +1147,7 @@ function selection_item($conn, $db)
             LEFT JOIN (
                 SELECT ItemCode, COUNT(*) AS cnt_pay
                 FROM itemstock_transaction_detail
-                WHERE IsStatus = 1
+                WHERE IsStatus IN (1, 9)
                 GROUP BY ItemCode
             ) tp ON tp.ItemCode = i.itemcode
 
@@ -1155,7 +1155,7 @@ function selection_item($conn, $db)
             LEFT JOIN (
                 SELECT d.ItemCode, COUNT(*) AS cnt_pay_today
                 FROM itemstock_transaction_detail d
-                WHERE d.IsStatus = 1
+                WHERE d.IsStatus IN (1, 9)
                 AND d.CreateDate = '$select_date1'
                 GROUP BY d.ItemCode
             ) tpt ON tpt.ItemCode = i.itemcode

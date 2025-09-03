@@ -85,6 +85,7 @@ $query = "SELECT
             deproom.ID,
             deproom.isStatus,
             deproom.hn_record_id AS hncode,
+            deproom.number_box,
             DATE_FORMAT( deproom.serviceDate, '%d/%m/%Y' ) AS serviceDate,
             DATE_FORMAT( TIME( deproom.serviceDate ), '%H:%i' ) AS serviceTime,
             deproom.departmentroomid,
@@ -96,10 +97,11 @@ $query = "SELECT
             ( SELECT GROUP_CONCAT( `procedure`.Procedure_TH SEPARATOR ' , ' ) FROM `procedure` WHERE FIND_IN_SET( `procedure`.ID, deproom.`procedure` ) ) AS Procedure_TH 
         FROM
             deproom
-            INNER JOIN departmentroom ON deproom.departmentroomid = departmentroom.id 
+            INNER JOIN departmentroom ON deproom.Ref_departmentroomid = departmentroom.id 
             AND DATE( deproom.serviceDate ) = '$select_date1_search' 
             AND deproom.DocNo NOT IN (SELECT set_hn.DocNo_deproom FROM set_hn WHERE DATE( set_hn.serviceDate ) = '$select_date1_search' AND set_hn.isCancel = 1  AND DocNo_deproom IS NOT NULL  )
             AND NOT deproom.isStatus = 9 
+            AND  deproom.isCancel = 0
         ORDER BY
             deproom.serviceDate ASC;  ";
 
@@ -121,6 +123,10 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
     $hncode = $Result_Detail['hncode'];
     $DocNo_deproom = $Result_Detail['DocNo_deproom'];
 
+    if($hncode == ""){
+        $hncode = $Result_Detail['number_box'];
+    }
+
     $Procedure_TH = mb_strimwidth($Procedure_TH, 0, 60, '…', 'UTF-8');
 
 
@@ -134,12 +140,13 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
     // ขนาด label
     $labelW = 45;
 
-    // Row: วันที่
-    $pdf->Cell($labelW, 10, 'HN Code/Box No : ................................................................................................', 0, 0);
-    $pdf->Cell(150, 17, " ", 0, 1);
 
     // Row: เวลา
     $pdf->Cell($labelW, 10, 'Visit Date : .................................................................................................................', 0, 0);
+    $pdf->Cell(150, 17, " ", 0, 1);
+
+    // Row: วันที่
+    $pdf->Cell($labelW, 10, 'HN Code/Box No : ................................................................................................', 0, 0);
     $pdf->Cell(150, 17, " ", 0, 1);
 
     // Row: Operation
@@ -154,14 +161,42 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
     $pdf->Cell($labelW, 10, 'Physician : .................................................................................................................', 0, 0);
     $pdf->Cell(150, 17, " ", 0, 0);
 
-    $pdf->SetFont('db_helvethaica_x', 'B', 20);
+    $pdf->SetFont('db_helvethaica_x', 'B', 22);
 
-    $pdf->SetY(45);
-    $pdf->SetX(63);
-    $pdf->Cell(50, 0, $hncode, 0, 1);
-    $pdf->SetY(63);
+
+    list($day, $month, $year) = explode('/', $serviceDate);
+    $dateFormatted = "$year-$month-$day";
+
+    // หาวันในสัปดาห์ (1=จันทร์, 7=อาทิตย์)
+    $dayOfWeek = date('N', strtotime($dateFormatted));
+
+
+    // กำหนดสีพื้นหลังแต่ละวัน (RGB)
+$colors = [
+    1 => [253, 253, 150],     // จันทร์
+    2 => [255, 105, 180],   // อังคาร
+    3 => [0, 128, 0],       // พุธ
+    4 => [255, 204, 0],     // พฤหัสบดี
+    5 => [0, 102, 204],     // ศุกร์
+    6 => [128, 0, 128],     // เสาร์
+    7 => [204, 0, 0],       // อาทิตย์
+];
+
+    // ตั้งค่าสีพื้นหลังตามวัน
+    $pdf->SetFillColor($colors[$dayOfWeek][0], $colors[$dayOfWeek][1], $colors[$dayOfWeek][2]);
+
+    // ตั้งค่าสีตัวอักษร (ดำ)
+    $pdf->SetTextColor(0, 0, 0);
+
+
+    $pdf->SetY(42);
     $pdf->SetX(45);
-    $pdf->Cell(0, 0, $serviceDate, 0, 1);
+    $pdf->Cell(30, 0, $serviceDate, 0, 1, '', true);
+    // $pdf->Cell(50, 0, $serviceDate, 0, 1);
+    $pdf->SetY(63);
+    $pdf->SetX(63);
+    $pdf->SetFont('db_helvethaica_x', 'B', 20);
+    $pdf->Cell(0, 0, $hncode, 0, 1);
     $pdf->SetY(80);
     $pdf->SetX(45);
     $pdf->Cell(0, 0, $serviceTime, 0, 1);
@@ -199,7 +234,7 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
         'module_height' => 1 // height of a single module in points
     );
     // $url = 'http://10.11.9.54/Inventory_OR/pages/confirm_pay.php?doc=' . urlencode($DocNo); // หรือ link อะไรก็ได้
-    $url = 'http://192.168.2.101:8080/Inventory_OR/pages/confirm_pay.php?doc=' . urlencode($DocNo) . '&remark=issue'.'&permission='.$permission.'&Userid='.$Userid.'&DepID='.$DepID.'&deproom='.$deproom; // // หรือ link อะไรก็ได้
+    $url = 'http://192.168.2.101:8080/Inventory_OR/pages/confirm_pay.php?doc=' . urlencode($DocNo) . '&remark=issue' . '&permission=' . $permission . '&Userid=' . $Userid . '&DepID=' . $DepID . '&deproom=' . $deproom; // // หรือ link อะไรก็ได้
 
 
     $pdf->write2DBarcode($url, 'QRCODE,L', $x, $y, 60, 30, $style, 'N');

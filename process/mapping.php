@@ -281,8 +281,10 @@ function onconfirm_save_item($conn, $db)
 {
     $return = array();
     $select_map_item_main = $_POST['select_map_item_main'];
+    $select_set_mapping_item = $_POST['select_set_mapping_item'];
     $item_Array = $_POST['item_Array'];
 
+    
     $item_Array = implode(",", $item_Array);
 
     $count_item = 0;
@@ -307,6 +309,10 @@ function onconfirm_save_item($conn, $db)
 
     }
 
+    $updateItem = "UPDATE item SET item.IsSet = $select_set_mapping_item  WHERE item.itemcode = '$select_map_item_main' ";
+    $meQueryupdateItem = $conn->prepare($updateItem);
+    $meQueryupdateItem->execute();
+
 
     $meQuery1 = $conn->prepare($queryInsert);
     $meQuery1->execute();
@@ -328,7 +334,8 @@ function show_detail_item_map($conn, $db)
                         mapping_item.itemCode_main,
                         mapping_item.itemCode_sub,
                         item1.itemname AS itemname_main,
-                        item2.itemname AS itemname_sub 
+                        item2.itemname AS itemname_sub ,
+                        item1.IsSet
                     FROM
                         mapping_item
                         INNER JOIN item AS item1 ON item1.itemcode = mapping_item.itemCode_main

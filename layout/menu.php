@@ -8,7 +8,7 @@
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
                 <div class="sidebar-brand-text mx-3 color_menu">
-                    <img src="assets/img/logo.png" alt="" style="width: 100%;" id="img_logo">
+                    <img src="assets/img/logo.png" alt="" style="width: 75%;" id="img_logo">
                 </div>
             </a>
             <!-- Divider -->

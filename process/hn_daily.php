@@ -238,8 +238,6 @@ function update_create_request($conn, $db)
     $Q1 = "SELECT
                 set_hn.ID,
                 set_hn.hncode,
-                -- DATE_FORMAT( set_hn.serviceDate, '%d-%m-%Y' ) AS serviceDate,
-                -- DATE_FORMAT( set_hn.serviceDate, '%H:%i' ) AS serviceTime,
                 DATE( set_hn.serviceDate) AS serviceDate,
                 TIME( set_hn.serviceDate) AS serviceTime,
                 set_hn.doctor,
@@ -269,7 +267,7 @@ function update_create_request($conn, $db)
     }
 
 
-    $txt_docno_request = createDocNo($conn, $Userid, $DepID, $select_deproom_request, $remark, 0, 0, 0, 0, '', '', $input_hn_request, '', $db, 0);
+    $txt_docno_request = createDocNo($conn, $Userid, $DepID, $select_deproom_request, $remark, 0, 0, 0, 0, '', '', $input_hn_request, '', $db, 0,0);
 
     $sql1 = " UPDATE deproom SET IsStatus = 0 , serviceDate = '$serviceDate $serviceTime'  , hn_record_id = '$input_hn_request' , doctor = '$select_doctor_request' , `procedure` = '$select_procedure_request' , Ref_departmentroomid = '$select_deproom_request' WHERE DocNo = '$txt_docno_request' AND IsCancel = 0 ";
     $meQueryUpdate = $conn->prepare($sql1);
@@ -277,11 +275,15 @@ function update_create_request($conn, $db)
     $DocNo_hn = createhncodeDocNo($conn, $Userid, $DepID, $input_hn_request, $select_deproom_request, 1, $select_procedure_request, $select_doctor_request, 'สร้างจากเมนูขอเบิกอุปกรณ์', $txt_docno_request, $db, $serviceDate, '');
 
 
-                    $p = "SELECT
-                `procedure`.`status` 
-            FROM
-                `procedure`
-            WHERE  `procedure`.ID IN ($select_procedure_request) ";
+
+
+
+                    $p = "  SELECT
+                                    MIN( `procedure`.`status` ) AS status 
+                            FROM
+                                `procedure` 
+                            WHERE
+                                `procedure`.ID IN ($select_procedure_request)  ";
         $meQueryp = $conn->prepare($p);
         $meQueryp->execute();
         while ($rowp = $meQueryp->fetch(PDO::FETCH_ASSOC)) {
@@ -574,7 +576,7 @@ function show_detail_daily($conn, $db)
                 $whereD
                 AND NOT set_hn.isStatus = 9
                 $where_t
-            ORDER BY set_hn.serviceDate ASC";
+            ORDER BY set_hn.serviceDate DESC ";
 
     $meQ1 = $conn->prepare($Q1);
     $meQ1->execute();

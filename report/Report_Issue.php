@@ -81,7 +81,8 @@ class MYPDF extends TCPDF
 
 
             $image_file = "images/logo1.png";
-            $this->Image($image_file, 10, 5, 10, 15, 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);
+            // $this->Image($image_file, 10, 5, 10, 15, 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);
+            $this->Image($image_file, 7, 3, 15, 24, 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);
 
 
 
@@ -173,6 +174,7 @@ $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 // add a page
 $pdf->AddPage('P', 'A4');
 $pdf->SetFont('db_helvethaica_x', 'B', 15);
+$pdf->Ln(5);
 
 $DocNo = $_GET['DocNo'];
 

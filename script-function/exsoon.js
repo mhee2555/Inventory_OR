@@ -4,20 +4,18 @@ $(function () {
   session();
   configMenu();
 
+  $("#radio_tab2").addClass("active");
+
+  // $("#radio_tab3").css('color', '#bbbbb');
+  // $("#radio_tab3").css('background', '#EAE1F4');
+  // $("#radio_tab2").css('color', 'black');
+  // $("#radio_tab2").css('background', '');
+  // $("#radio_tab1").css('color', 'black');
+  // $("#radio_tab1").css('background', '');
   $("#col_sendsterile").attr("hidden", true);
-
-  $("#radio_tab2").addClass('active');
-
-  // $("#radio_tab2").css("color", "#bbbbb");
-  // $("#radio_tab2").css("background", "#EAE1F4");
-  // $("#radio_tab1").css("color", "black");
-  // $("#radio_tab1").css("background", "");
-  // $("#radio_tab3").css("color", "black");
-  // $("#radio_tab3").css("background", "");
   $("#table_data").attr("hidden", false);
   $("#table_data2").attr("hidden", true);
   $("#check_ex").val("2");
-  feeddata();
 
   setTimeout(() => {
     feeddata();
@@ -43,7 +41,7 @@ $("#radio_tab2").click(function () {
 });
 
 $("#radio_tab3").click(function () {
-  $("#col_sendsterile").attr("hidden", true);
+  $("#col_sendsterile").attr("hidden", false);
   $(".tab-button").removeClass("active");
   $(this).addClass("active");
 
@@ -72,7 +70,7 @@ $("#input_return_ex").keypress(function (e) {
 $("#btn_sendNSterile").click(function () {
   Swal.fire({
     title: settext("lang_text_confirm"),
-    text: settext("lang_text_confirmSendData"),
+    text: "ยืนยันการบันทึก",
     icon: "warning",
     showCancelButton: true,
     confirmButtonColor: "#3085d6",
@@ -110,6 +108,11 @@ function onSendNsterile() {
     return;
   }
 
+  if ($("#select_cut_itemex").val() == "") {
+    showDialogFailed('กรุณาเลือกประเภทการสแกน');
+    return;
+  }
+
   var nsterile = 1;
 
   $.ajax({
@@ -118,48 +121,49 @@ function onSendNsterile() {
     data: {
       FUNC_NAME: "checkNSterile",
       ArrayItemStockID: ArrayItemStockID,
-      checkNsterile: nsterile,
+      'select_cut_itemex': $("#select_cut_itemex").val(),
     },
     success: function (result) {
       var ObjData = JSON.parse(result);
 
-      $.each(ObjData, function (kay, value) {
-        if (value.qty != "0") {
-          showDialogFailed("มีอุปกรณ์รอส่ง Create Request");
-        } else {
-          $.ajax({
-            url: "process/ex.php",
-            type: "POST",
-            data: {
-              FUNC_NAME: "onSendNsterile",
-              ArrayItemStockID: ArrayItemStockID,
-            },
-            success: function (result) {
-              var ObjData = JSON.parse(result);
-              if (!$.isEmptyObject(ObjData)) {
-                $.each(ObjData, function (kay, value) {
-                  // var departmentroomid = value.departmentroomid;
-                  // var RowID = value.RowID;
-                  // var ItemCode = value.ItemCode;
-                  // onInSertitemstock_Transaction(RowID, ItemCode, departmentroomid, 3, 19);
-                  // onItemstock_Balance(ItemCode, 19, 1, 0);
-                  // // onItemstock_Balance_sub(ItemCode, 19, 1, departmentroomid, 0);
-                });
-              }
+      feeddata();
+      // $.each(ObjData, function (kay, value) {
+      //   if (value.qty != "0") {
+      //     showDialogFailed("มีอุปกรณ์รอส่ง Create Request");
+      //   } else {
+      //     $.ajax({
+      //       url: "process/ex.php",
+      //       type: "POST",
+      //       data: {
+      //         FUNC_NAME: "onSendNsterile",
+      //         ArrayItemStockID: ArrayItemStockID,
+      //       },
+      //       success: function (result) {
+      //         var ObjData = JSON.parse(result);
+      //         if (!$.isEmptyObject(ObjData)) {
+      //           $.each(ObjData, function (kay, value) {
+      //             // var departmentroomid = value.departmentroomid;
+      //             // var RowID = value.RowID;
+      //             // var ItemCode = value.ItemCode;
+      //             // onInSertitemstock_Transaction(RowID, ItemCode, departmentroomid, 3, 19);
+      //             // onItemstock_Balance(ItemCode, 19, 1, 0);
+      //             // // onItemstock_Balance_sub(ItemCode, 19, 1, departmentroomid, 0);
+      //           });
+      //         }
 
-              if (RefDepID == "36DEN") {
-                setTimeout(() => {
-                  feeddata();
-                }, 500);
-              } else {
-                setTimeout(() => {
-                  $("#btn_send").click();
-                }, 200);
-              }
-            },
-          });
-        }
-      });
+      //         if (RefDepID == "36DEN") {
+      //           setTimeout(() => {
+      //             feeddata();
+      //           }, 500);
+      //         } else {
+      //           setTimeout(() => {
+      //             $("#btn_send").click();
+      //           }, 200);
+      //         }
+      //       },
+      //     });
+      //   }
+      // });
     },
   });
 }
@@ -203,7 +207,7 @@ function feeddata() {
 
         $.each(ObjData, function (kay, value) {
           var color = "";
-          if (value.IsStatus == 'ใกล้หมดอายุ') {
+          if (value.IsStatus == "ใกล้หมดอายุ") {
             color = "btn btn-warning ' ";
           } else {
             color = "btn btn-danger ' ";
@@ -219,6 +223,7 @@ function feeddata() {
             }
             _tr +=
               `<tr> ` +
+              `<td class="text-center"><input disabled value="${value.UsageCode}"  type="checkbox"    data-itemstockid="${value.RowID}"    class="form-check-input checkAllSub_${kay}  checkAllSub checkAllSubxx_${value.UsageCode}" id="checkAllSub_${value.UsageCode}"   style="width: 25px;height: 20px;"></td>` +
               `<td class="text-center"><label >${number_ex}</label></td>` +
               `<td class="text-center"><label >${value.UsageCode}</label></td>` +
               `<td class="text-left"><label >${value.itemname}</label></td>` +
@@ -234,6 +239,7 @@ function feeddata() {
               value.IsStatus = settext("exsoon");
               _tr +=
                 `<tr> ` +
+                `<td class="text-center"><input disabled value="${value.UsageCode}"  type="checkbox"    data-itemstockid="${value.RowID}"    class="form-check-input checkAllSub_${kay}  checkAllSub checkAllSubxx_${value.UsageCode}" id="checkAllSub_${value.UsageCode}"   style="width: 25px;height: 20px;"></td>` +
                 `<td class="text-center"><label >${number_ex}</label></td>` +
                 `<td class="text-center"><label >${value.UsageCode}</label></td>` +
                 `<td class="text-left"><label >${value.itemname}</label></td>` +
@@ -251,7 +257,7 @@ function feeddata() {
               var disabled = "disabled";
               _tr +=
                 `<tr id='tr_${value.UsageCode}'> ` +
-                // `<td class="text-center"><input ${disabled} value="${value.UsageCode}"  type="checkbox"    data-itemstockid="${value.RowID}"    class="form-check-input checkAllSub_${kay}  checkAllSub checkAllSubxx_${value.UsageCode}" id="checkAllSub_${value.UsageCode}"   style="width: 25px;height: 20px;"></td>` +
+                `<td class="text-center"><input disabled value="${value.UsageCode}"  type="checkbox"    data-itemstockid="${value.RowID}"    class="form-check-input checkAllSub_${kay}  checkAllSub checkAllSubxx_${value.UsageCode}" id="checkAllSub_${value.UsageCode}"   style="width: 25px;height: 20px;"></td>` +
                 `<td class="text-center"><label >${number_ex}</label></td>` +
                 `<td class="text-center"><label >${value.UsageCode}</label></td>` +
                 `<td class="text-left"><label >${value.itemname}</label></td>` +
@@ -282,25 +288,36 @@ function feeddata() {
               settext("dataTables_entries") +
               " ",
           },
-          columnDefs: [{
-            width: '5%',
-            targets: 0
-          }, {
-            width: '15%',
-            targets: 1
-          }, {
-            width: '20%',
-            targets: 2
-          }, {
-            width: '15%',
-            targets: 3
-          }, {
-            width: '10%',
-            targets: 4
-          }, {
-            width: '10%',
-            targets: 5
-          }],
+          columnDefs: [
+            {
+              width: "5%",
+              targets: 0,
+            },
+            {
+              width: "5%",
+              targets: 1,
+            },
+            {
+              width: "15%",
+              targets: 2,
+            },
+            {
+              width: "20%",
+              targets: 3,
+            },
+            {
+              width: "15%",
+              targets: 4,
+            },
+            {
+              width: "10%",
+              targets: 5,
+            },
+            {
+              width: "10%",
+              targets: 6,
+            },
+          ],
           info: false,
           scrollX: false,
           scrollCollapse: false,
@@ -384,8 +401,6 @@ function session() {
       deproom = ObjData.deproom;
       RefDepID = ObjData.RefDepID;
       Permission_name = ObjData.Permission_name;
-
-      
     },
   });
 }
