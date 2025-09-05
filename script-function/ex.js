@@ -58,7 +58,16 @@ $("#radio_tab3").click(function () {
 
 $('#input_scanexpire').keypress(function (e) {
   if (e.which == 13) {
+
+    if ($("#select_cut_itemex").val() == "") {
+      showDialogFailed("กรุณาเลือกเงื่อนไขการสแกน");
+      $("#input_scanexpire").val("");
+      return;
+    }
+
     $('#input_scanexpire').val(convertString($(this).val()));
+
+
     xxx($("#input_scanexpire").val().trim());
     $("#input_scanexpire").val("");
 
@@ -402,7 +411,7 @@ function xxx(IDGroup) {
   if (table_data.$('.checkAllSubxx_' + IDGroup).val() == $("#input_scanexpire").val().trim()) {
     table_data.$('.checkAllSubxx_' + IDGroup).prop('checked', true);
 
-    $("#tr_" + IDGroup).css('background-color', "#FEE4E2");
+    table_data.$("#tr_" + IDGroup).css('background-color', "#FEE4E2");
     cnt++;
   }
 

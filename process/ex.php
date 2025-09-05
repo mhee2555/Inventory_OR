@@ -22,9 +22,9 @@ function checkNSterile($conn, $db)
 
     foreach ($ArrayItemStockID as $key => $value) {
 
-        if($select_cut_itemex == 1){
+        if ($select_cut_itemex == 1) {
             $update = "UPDATE itemstock SET itemstock.IsCancel = 1 WHERE itemstock.RowID = '$value' ";
-        }else{
+        } else {
             $update = "UPDATE itemstock SET itemstock.IsCancel = 1 , itemstock.IsPrint = 1 WHERE itemstock.RowID = '$value' ";
         }
         $meQueryupdate = $conn->prepare($update);
@@ -63,7 +63,9 @@ function feeddata($conn, $db)
     $return = [];
 
     if ($db == 1) {
-        $query = " SELECT
+
+        if ($check_ex == 1) {
+            $query = " SELECT
                     itemstock.ItemCode,
                     itemstock.UsageCode,
                     itemstock.RowID,
@@ -93,6 +95,87 @@ function feeddata($conn, $db)
                     itemstock.UsageCode
                 ORDER BY
                     item.itemname, DATE_FORMAT(itemstock.ExpireDate, '%d/%m/%Y') ASC ";
+        } else if ($check_ex == 2) {
+            $query = " SELECT
+                            itemstock.ItemCode,
+                            itemstock.UsageCode,
+                            itemstock.RowID,
+                            DATE_FORMAT( itemstock.ExpireDate, '%d/%m/%Y' ) AS ExpireDate,
+                            COUNT( itemstock.Qty ) AS Qty,
+                        CASE
+                                
+                                WHEN DATE( itemstock.ExpireDate ) BETWEEN CURDATE() 
+                                AND DATE_ADD( CURDATE(), INTERVAL $GN_WarningExpiringSoonDay DAY ) 
+                                AND DATE( itemstock.ExpireDate ) != CURDATE() THEN
+                                    'ใกล้หมดอายุ' ELSE 'หมดอายุ' 
+                                END AS IsStatus,
+                            CASE
+                                    
+                                    WHEN DATE( itemstock.ExpireDate ) BETWEEN CURDATE() 
+                                    AND DATE_ADD( CURDATE(), INTERVAL $GN_WarningExpiringSoonDay  DAY ) 
+                                    AND DATE( itemstock.ExpireDate ) != CURDATE() THEN
+                                        DATEDIFF(
+                                            itemstock.ExpireDate,
+                                        CURDATE()) ELSE DATEDIFF( CURDATE(), itemstock.ExpireDate ) 
+                                    END AS Exp_day,
+                                    item.itemname 
+                                FROM
+                                    itemstock
+                                    LEFT JOIN item ON item.itemcode = itemstock.ItemCode 
+                                WHERE
+                                    itemstock.IsCancel = 0 
+                                    AND (
+                                        DATE( itemstock.ExpireDate ) <= CURDATE() 
+                                        OR DATE( itemstock.ExpireDate ) BETWEEN CURDATE() 
+                                        AND DATE_ADD( CURDATE(), INTERVAL  $GN_WarningExpiringSoonDay DAY ) 
+                                    ) 
+                                GROUP BY
+                                    itemstock.UsageCode 
+                                HAVING
+                                    IsStatus = 'ใกล้หมดอายุ' 
+                                ORDER BY
+                            DATE( itemstock.ExpireDate ) ASC;  ";
+        } else if ($check_ex == 3) {
+            $query = " SELECT
+                            itemstock.ItemCode,
+                            itemstock.UsageCode,
+                            itemstock.RowID,
+                            DATE_FORMAT( itemstock.ExpireDate, '%d/%m/%Y' ) AS ExpireDate,
+                            COUNT( itemstock.Qty ) AS Qty,
+                        CASE
+                                
+                                WHEN DATE( itemstock.ExpireDate ) BETWEEN CURDATE() 
+                                AND DATE_ADD( CURDATE(), INTERVAL $GN_WarningExpiringSoonDay DAY ) 
+                                AND DATE( itemstock.ExpireDate ) != CURDATE() THEN
+                                    'ใกล้หมดอายุ' ELSE 'หมดอายุ' 
+                                END AS IsStatus,
+                            CASE
+                                    
+                                    WHEN DATE( itemstock.ExpireDate ) BETWEEN CURDATE() 
+                                    AND DATE_ADD( CURDATE(), INTERVAL $GN_WarningExpiringSoonDay  DAY ) 
+                                    AND DATE( itemstock.ExpireDate ) != CURDATE() THEN
+                                        DATEDIFF(
+                                            itemstock.ExpireDate,
+                                        CURDATE()) ELSE DATEDIFF( CURDATE(), itemstock.ExpireDate ) 
+                                    END AS Exp_day,
+                                    item.itemname 
+                                FROM
+                                    itemstock
+                                    LEFT JOIN item ON item.itemcode = itemstock.ItemCode 
+                                WHERE
+                                    itemstock.IsCancel = 0 
+                                    AND (
+                                        DATE( itemstock.ExpireDate ) <= CURDATE() 
+                                        OR DATE( itemstock.ExpireDate ) BETWEEN CURDATE() 
+                                        AND DATE_ADD( CURDATE(), INTERVAL  $GN_WarningExpiringSoonDay DAY ) 
+                                    ) 
+                                GROUP BY
+                                    itemstock.UsageCode 
+                                HAVING
+                                    IsStatus = 'หมดอายุ' 
+                                ORDER BY
+                            DATE( itemstock.ExpireDate ) DESC;  ";
+        }
     } else {
         $query = "SELECT
                     itemstock.ItemCode,

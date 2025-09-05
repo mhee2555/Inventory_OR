@@ -21,10 +21,10 @@
 
             <div class="col-md-5 text-center">
 
-                <select name="" id="select_cut_itemex" class="form-control">
+                <select name="" id="select_cut_itemex" class="form-control f18">
                     <option value="">กรุณาเลือกประเภทการสแกน</option>
                     <option value="1">สแกนตัดออกจากระบบ</option>
-                    <option value="2">สแกนตัดออกจากระบบ2</option>
+                    <option value="2">สแกนส่ง Re-Sterile</option>
                 </select>
 
             </div>

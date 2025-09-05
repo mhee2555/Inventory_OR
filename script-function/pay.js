@@ -283,8 +283,7 @@ $(function () {
     $("#input_date_service_manual").attr("disabled", false);
     $("#input_time_service_manual").attr("disabled", false);
 
-
-
+    $('#input_date_service_manual').data('datepicker').selectDate(new Date());
     $("#input_time_service_manual").val(currentTime);
     $("#input_date_service_manual").val(output);
     $("#select_doctor_manual").val("").trigger("change");
@@ -523,6 +522,27 @@ $(function () {
     $("#select_department_sell_right").select2();
 
 
+  });
+
+
+  $("#input_searchHN_pay").keypress(function (e) {
+    if (e.which == 13) {
+      if ($("#input_searchHN_pay").val() == "") {
+        show_detail_deproom_pay();
+
+        $("#btn_edit_hn").attr("disabled", true);
+        $("#btn_block_hn").attr("disabled", true);
+
+        $("#input_Hn_pay").val('');
+        $("#input_date_service").val('');
+        $("#input_time_service").val('');
+        $("#input_box_pay").val('');
+
+        $("#table_deproom_DocNo_pay tbody").html("");
+      } else {
+        show_detail_deproom_pay_fix('');
+      }
+    }
   });
 
   $("#input_hn_history_block").keypress(function (e) {
@@ -965,12 +985,16 @@ function Deletprocedure(selectedValue) {
 }
 
 function show_detail_deproom_pay_fix(DocNo) {
+  var input_searchHN_pay = $("#input_searchHN_pay").val();
+  var select_date_pay = $("#select_date_pay").val();
   $.ajax({
     url: "process/pay.php",
     type: "POST",
     data: {
       FUNC_NAME: "show_detail_deproom_pay_fix",
       DocNo: DocNo,
+      input_searchHN_pay: input_searchHN_pay,
+      select_date_pay: select_date_pay,
     },
     success: function (result) {
       var _tr = "";
@@ -1088,8 +1112,16 @@ function show_detail_deproom_pay_fix(DocNo) {
                           <td hidden class='text-center'> <label id='text_balance_${value2.DocNo}' class='f18' style='font-weight:bold;${sty};text-decoration-line: underline;'>${txt}</label> </td>
 
                         </tr>`;
+
+
+            DocNo = value2.DocNo;
+            $("#input_searchHN_pay").val("");
           });
         });
+      } else {
+        showDialogFailed('ไม่พบข้อมูล');
+        $("#input_searchHN_pay").val("");
+        show_detail_deproom_pay();
       }
 
 
@@ -1936,10 +1968,28 @@ function show_detail_history_ems() {
 
 $("#btn_save_ems").click(function () {
 
-  if ($("#input_Hn_pay_ems").val() == "") {
-    showDialogFailed('กรุณากรอก เลขประจำตัวผู้ป่วย');
-    return;
+  if ($("#input_box_pay_ems").val() == "") {
+
+    if ($("#input_Hn_pay_ems").val() != "") {
+    } else {
+      showDialogFailed('กรุณากรอก เลขที่กล่อง หรือ เลขประจำตัวผู้ป่วย');
+      return;
+    }
+
   }
+
+  // if ($("#input_Hn_pay_ems").val() == "") {
+
+  //   if ($("#input_box_pay_ems").val() != "") {
+  //   } else {
+  //     showDialogFailed('กรุณากรอก เลขประจำตัวผู้ป่วย');
+  //     return;
+  //   }
+
+  // }
+
+
+
   if ($("#input_date_service_ems").val() == "") {
     showDialogFailed('กรุณาเลือกวันที่รับบริการ');
     return;

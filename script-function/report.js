@@ -1,8 +1,9 @@
 var Userid = "";
+var GN_WarningExpiringSoonDay = "";
 
 $(function () {
   session();
-
+  configMenu();
   var d = new Date();
   var month = d.getMonth() + 1;
   var day = d.getDate();
@@ -175,10 +176,12 @@ $(function () {
 
     $("#select_type_date").val("").change();
 
-    if ($(this).val() == 7) {
+    if ($(this).val() == 7 || $(this).val() == 12) {
       $("#row_typedate").hide();
       $("#row_day_9").hide();
       $("#row_day_10").hide();
+      $("#btn_png").attr("hidden", true);
+      $("#btn_excel").attr("hidden", false);
     } else {
       if ($(this).val() == 9 || $(this).val() == 8) {
         $("#row_typedate").hide();
@@ -506,8 +509,15 @@ $(function () {
         );
       }
     } else {
-      if ($("#select_report").val() == 7) {
-        window.open("report/Report_stock.php", "_blank");
+      if ($("#select_report").val() == 7 || $("#select_report").val() == 12) {
+
+        if ($("#select_report").val() == 7) {
+          window.open("report/Report_stock.php", "_blank");
+        } else if ($("#select_report").val() == 12) {
+          window.open("report/Report_ex_soon.php" + "?GN_WarningExpiringSoonDay=" + GN_WarningExpiringSoonDay,"_blank"
+          );
+        }
+
       } else {
         if ($("#select_report").val() == 9) {
           var option = "?date1=" + $("#select_date1_9").val();
@@ -845,11 +855,19 @@ $(function () {
         );
       }
     } else {
-      if ($("#select_report").val() == 7) {
-        window.open(
-          "report/phpexcel/Report_stock.php" + "?Userid=" + Userid,
-          "_blank"
-        );
+      if ($("#select_report").val() == 7 || $("#select_report").val() == 12) {
+
+        if ($("#select_report").val() == 7) {
+          window.open(
+            "report/phpexcel/Report_stock.php" + "?Userid=" + Userid,
+            "_blank"
+          );
+        } else if ($("#select_report").val() == 12) {
+          window.open(
+            "report/phpexcel/Report_ex_soon.php" + "?GN_WarningExpiringSoonDay=" + GN_WarningExpiringSoonDay+ "&Userid=" + Userid, "_blank"
+          );
+        }
+
       } else {
         Swal.fire("ล้มเหลว", "กรุณาเลือกประเภท", "error");
       }
@@ -885,6 +903,25 @@ function session() {
       Userid = ObjData.Userid;
 
 
+    },
+  });
+}
+
+function configMenu() {
+  $.ajax({
+    url: "process/configuration_dental.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "configuration_dental",
+    },
+    success: function (result) {
+      var ObjData = JSON.parse(result);
+      console.log(ObjData);
+      if (!$.isEmptyObject(ObjData)) {
+        $.each(ObjData, function (kay, value) {
+          GN_WarningExpiringSoonDay = value.GN_WarningExpiringSoonDay;
+        });
+      }
     },
   });
 }

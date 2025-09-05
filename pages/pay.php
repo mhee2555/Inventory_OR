@@ -33,7 +33,7 @@
 
 
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="form-group ">
                         <label style="color:black;font-weight: 600;">วันที่</label>
 
@@ -49,11 +49,22 @@
                     </div>
                 </div>
 
-                <div class="col-md-6">
+                <div class="col-md-4">
 
                     <div class="form-group ">
                         <label style="color:black;font-weight: 600;">ห้องผ่าตัด</label>
                         <select class="form-control f18" autocomplete="off" id="select_deproom_pay"></select>
+                    </div>
+
+
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <div class="form-group ">
+                        <label style="color:black;font-weight: 600;">ค้นหา เลขประจำตัวผู้ป่วย</label>
+                        <input class="form-control f18" autocomplete="off" id="input_searchHN_pay">
                     </div>
 
 

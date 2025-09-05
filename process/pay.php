@@ -1412,7 +1412,7 @@ function show_detail_history_ems($conn, $db)
     $return = array();
     $DepID = $_SESSION['DepID'];
 
-        $query = "SELECT
+    $query = "SELECT
                         deproom.DocNo,
                         DATE_FORMAT( deproom.serviceDate, '%d-%m-%Y' ) AS serviceDate,
                         DATE_FORMAT( deproom.serviceDate, '%H:%i' ) AS serviceTime,
@@ -2529,7 +2529,7 @@ function oncheck_pay_manual($conn, $db)
             if ($_check_exp == 'no_exp') {
                 if ($input_docNo_deproom_manual == "") {
                     $remark = "สร้างจาก ขอเบิกอุปกรณ์ ";
-                    $input_docNo_deproom_manual = createDocNo($conn, $Userid, $DepID, $deproom, $input_remark_manual, 0, 0, 0, 0, '', '', $input_Hn_pay_manual, $input_box_pay_manual, $db, 1 , $checkbox_manual_ems);
+                    $input_docNo_deproom_manual = createDocNo($conn, $Userid, $DepID, $deproom, $input_remark_manual, 0, 0, 0, 0, '', '', $input_Hn_pay_manual, $input_box_pay_manual, $db, 1, $checkbox_manual_ems);
                     $input_docNo_HN_manual = createhncodeDocNo($conn, $Userid, $DepID, $input_Hn_pay_manual, $select_deproom_manual, 1, $select_procedure_manual, $select_doctor_manual, 'สร้างจากเมนูขอเบิกอุปกรณ์', $input_docNo_deproom_manual, $db, $input_date_service_manual, $input_box_pay_manual);
 
                     $sql1 = " UPDATE deproom SET IsStatus = 1 , serviceDate = '$input_date_service_manual $input_time_service_manual'  , hn_record_id = '$input_Hn_pay_manual' , doctor = '$select_doctor_manual' , `procedure` = '$select_procedure_manual' , Ref_departmentroomid = '$select_deproom_manual' WHERE DocNo = '$input_docNo_deproom_manual' AND IsCancel = 0 ";
@@ -3081,7 +3081,7 @@ function oncheck_pay_manual($conn, $db)
 
 
                         if ($_item_status == 3) {
-                            oncheck_delete_pay_mapping($conn, $db, $_ItemCode, $input_docNo_deproom_manual, $input_date_service_manual, $_item_status, $_DocNo, $_itemtypeID, $input_docNo_HN_manual, 1);
+                            oncheck_delete_pay_mapping($conn, $db, $_ItemCode, $input_docNo_deproom_manual, $input_date_service_manual, $_item_status, $_DocNo, 2 , $input_docNo_HN_manual, 1);
                             // $count_itemstock = 2;
                         }
 
@@ -3191,15 +3191,14 @@ function oncheck_pay_manual($conn, $db)
                             $meQueryUpdate = $conn->prepare($queryUpdate);
                             $meQueryUpdate->execute();
                             // ==============================
-                            $queryInsert2 = "INSERT INTO hncode_detail (DocNo,UsageCode,ItemStockID,Qty,IsStatus,IsCancel,LastSterileDetailID)  VALUES             
+                            $queryInsert2 = "INSERT INTO hncode_detail (DocNo,UsageCode,ItemStockID,Qty,IsStatus,IsCancel)  VALUES             
                                                             (
                                                             '$input_docNo_HN_manual', 
                                                             '$input_pay_manual',
                                                             '$_RowID',
                                                             1, 
                                                             1, 
-                                                            0, 
-                                                            (SELECT LastSterileDetailID FROM itemstock  WHERE itemstock.RowID = $_RowID)
+                                                            0
                                                             ) ";
 
 
@@ -3901,7 +3900,7 @@ function oncheck_pay_rfid_manual($conn, $db)
 
     if ($input_docNo_deproom_manual == "") {
         $remark = "สร้างจาก ขอเบิกอุปกรณ์ ";
-        $input_docNo_deproom_manual = createDocNo($conn, $Userid, $DepID, $deproom, $input_remark_manual, 0, 0, 0, 0, '', '', $input_Hn_pay_manual, $input_box_pay_manual, $db, 1 , 0);
+        $input_docNo_deproom_manual = createDocNo($conn, $Userid, $DepID, $deproom, $input_remark_manual, 0, 0, 0, 0, '', '', $input_Hn_pay_manual, $input_box_pay_manual, $db, 1, 0);
         $input_docNo_HN_manual = createhncodeDocNo($conn, $Userid, $DepID, $input_Hn_pay_manual, $select_deproom_manual, 1, $select_procedure_manual, $select_doctor_manual, 'สร้างจากเมนูขอเบิกอุปกรณ์', $input_docNo_deproom_manual, $db, $input_date_service_manual, $input_box_pay_manual);
 
         $sql1 = " UPDATE deproom SET IsStatus = 1 , serviceDate = '$input_date_service_manual $input_time_service_manual'  , hn_record_id = '$input_Hn_pay_manual' , doctor = '$select_doctor_manual' , `procedure` = '$select_procedure_manual' , Ref_departmentroomid = '$select_deproom_manual' WHERE DocNo = '$input_docNo_deproom_manual' AND IsCancel = 0 ";
@@ -7068,15 +7067,14 @@ function oncheck_pay($conn, $db)
                             $meQueryUpdate->execute();
                             // ==============================
 
-                            $queryInsert2 = "INSERT INTO hncode_detail (DocNo,UsageCode,ItemStockID,Qty,IsStatus,IsCancel,LastSterileDetailID)  VALUES             
+                            $queryInsert2 = "INSERT INTO hncode_detail (DocNo,UsageCode,ItemStockID,Qty,IsStatus,IsCancel)  VALUES             
                                 (
                                 (SELECT hncode.DocNo FROM hncode  WHERE hncode.DocNo_SS = '$DocNo_pay'  LIMIT 1  ), 
                                 '$input_pay',
                                 '$_RowID',
                                 1, 
                                 1, 
-                                0, 
-                                (SELECT LastSterileDetailID FROM itemstock  WHERE itemstock.RowID = $_RowID)
+                                0
                                 ) ";
 
 
@@ -7400,7 +7398,7 @@ function oncheck_pay($conn, $db)
                             while ($row_select = $meQuery_select->fetch(PDO::FETCH_ASSOC)) {
                                 $_DocNoHN = $row_select['DocNo'];
                             }
-                            oncheck_delete_pay_mapping($conn, $db, $_ItemCode, $DocNo_pay, $input_date_service, $_item_status, $DocNo_borrow, $_itemtypeID, $_DocNoHN, 0);
+                            oncheck_delete_pay_mapping($conn, $db, $_ItemCode, $DocNo_pay, $input_date_service, $_item_status, $DocNo_borrow, 2 , $_DocNoHN, 0);
                             // $count_itemstock = 2;
                         }
 
@@ -7547,7 +7545,7 @@ function oncheck_pay($conn, $db)
                                 1, 
                                 1, 
                                 0, 
-                                (SELECT LastSterileDetailID FROM itemstock  WHERE itemstock.RowID = $_RowID)
+                                ''
                                 ) ";
 
 
@@ -8087,9 +8085,11 @@ function oncheck_pay_mapping($conn, $db, $_ItemCode, $DocNo_pay, $input_date_ser
                                     LEFT JOIN hncode ON hncode.DocNo_SS = deproom.DocNo
                                     LEFT JOIN hncode_detail ON hncode_detail.DocNo = hncode.DocNo
                                     INNER JOIN item ON deproomdetail.ItemCode = item.itemcode 
+                                    INNER JOIN item AS item2 ON hncode_detail.ItemCode = item2.itemcode 
                                 WHERE
                                     deproom.DocNo = '$DocNo_pay' 
                                     AND item.IsSet = 1
+                                    AND item2.IsSet = 1
                                 ORDER BY
                                     deproomdetailsub.ID DESC 
                                     LIMIT 1  ";
@@ -8852,12 +8852,15 @@ function oncheck_delete_pay_mapping($conn, $db, $_ItemCodex, $DocNo_pay, $input_
                 }
             }
 
-            $query_old = "DELETE FROM itemstock_transaction_detail  WHERE  ItemCode = '$_itemcode' 
+
+            if (isset($__Ref_departmentroomid) && !empty($_ModifyDate)) {
+                $query_old = "DELETE FROM itemstock_transaction_detail  WHERE  ItemCode = '$_itemcode' 
                         AND departmentroomid = '$__Ref_departmentroomid' 
                         AND  IsStatus = '1'
                         AND DATE(CreateDate) = '$_ModifyDate' ";
-            $meQuery_old = $conn->prepare($query_old);
-            $meQuery_old->execute();
+                $meQuery_old = $conn->prepare($query_old);
+                $meQuery_old->execute();
+            }
         }
     }
 }
@@ -9252,6 +9255,21 @@ function show_detail_deproom_pay_fix($conn, $db)
 {
     $return = array();
     $DocNo = $_POST['DocNo'];
+    $input_searchHN_pay = $_POST['input_searchHN_pay'];
+    $select_date_pay = $_POST['select_date_pay'];
+
+    $select_date_pay = explode("-", $select_date_pay);
+    $select_date_pay = $select_date_pay[2] . '-' . $select_date_pay[1] . '-' . $select_date_pay[0];
+
+
+    $where = "";
+    $where2 = "";
+    if ($input_searchHN_pay == "") {
+        $where = " deproom.DocNo = '$DocNo' ";
+        $where2 = " deproom.DocNo = '$DocNo' ";
+    } else {
+        $where = "   DATE(deproom.serviceDate) = '$select_date_pay' AND  ( deproom.hn_record_id = '$input_searchHN_pay' OR deproom.number_box = '$input_searchHN_pay' )  ";
+    }
 
 
     $query = " SELECT
@@ -9262,7 +9280,7 @@ function show_detail_deproom_pay_fix($conn, $db)
                     INNER JOIN
                         departmentroom ON deproom.Ref_departmentroomid = departmentroom.id
                     WHERE
-                        deproom.DocNo = '$DocNo'
+                        $where
                         AND deproom.IsCancel = 0
                         AND deproom.IsBlock = 0
                     GROUP BY
@@ -9311,7 +9329,7 @@ function show_detail_deproom_pay_fix($conn, $db)
                         LEFT JOIN 
                             his ON his.DocNo_Deproom = deproom.DocNo 
                         WHERE
-                            deproom.DocNo = '$DocNo'
+                            $where
                             AND deproom.IsCancel = 0
                             AND deproom.IsBlock = 0
                         GROUP BY
