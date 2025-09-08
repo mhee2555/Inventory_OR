@@ -90,7 +90,34 @@ if (!empty($_POST['FUNC_NAME'])) {
         show_detail_history_ems($conn, $db);
     } else if ($_POST['FUNC_NAME'] == 'save_edit_ems') {
         save_edit_ems($conn, $db);
+    } else if ($_POST['FUNC_NAME'] == 'checkHNDocNo') {
+        checkHNDocNo($conn, $db);
     }
+}
+
+function checkHNDocNo($conn, $db)
+{
+    $return = array();
+    $input_searchHN_pay = $_POST['input_searchHN_pay'];
+    $select_date_pay = $_POST['select_date_pay'];
+    $select_date_pay = explode("-", $select_date_pay);
+    $select_date_pay = $select_date_pay[2] . '-' . $select_date_pay[1] . '-' . $select_date_pay[0];
+
+    $query = " SELECT COUNT(deproom.DocNo) AS cnt , 
+                      deproom.DocNo  
+                FROM deproom 
+                WHERE  DATE(deproom.serviceDate) = '$select_date_pay' AND  ( deproom.hn_record_id = '$input_searchHN_pay' OR deproom.number_box = '$input_searchHN_pay' )  ";
+
+    $meQuery = $conn->prepare($query);
+    $meQuery->execute();
+    while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+        $return[] = $row;
+    }
+
+
+    echo json_encode($return);
+    unset($conn);
+    die;
 }
 
 function checkIsaddItem($conn, $db)
@@ -1568,6 +1595,7 @@ function show_detail_history($conn, $db)
                     WHERE
                         DATE( deproom.CreateDate ) BETWEEN '$select_date_history_s' AND '$select_date_history_l'
                         AND deproom.IsCancel = 0 
+                        AND deproom.IsEms = 0 
                          $whereD
                          $whereP
                          $whereR

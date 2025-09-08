@@ -155,6 +155,7 @@ $query = "SELECT
             deproom.ID,
             deproom.isStatus,
             deproom.hn_record_id AS hncode,
+            deproom.number_box,
             DATE( deproom.serviceDate ) AS serviceDate,
             DATE_FORMAT( TIME( deproom.serviceDate ), '%H:%i' ) AS serviceTime,
             deproom.departmentroomid,
@@ -165,10 +166,11 @@ $query = "SELECT
             ( SELECT GROUP_CONCAT( `procedure`.Procedure_TH SEPARATOR ' , ' ) FROM `procedure` WHERE FIND_IN_SET( `procedure`.ID, deproom.`procedure` ) ) AS Procedure_TH 
         FROM
             deproom
-            INNER JOIN departmentroom ON deproom.departmentroomid = departmentroom.id 
+            INNER JOIN departmentroom ON deproom.Ref_departmentroomid = departmentroom.id 
             AND DATE( deproom.serviceDate ) = '$select_date1_search' 
             AND deproom.DocNo NOT IN (SELECT set_hn.DocNo_deproom FROM set_hn WHERE DATE( set_hn.serviceDate ) = '$select_date1_search' AND set_hn.isCancel = 1  AND DocNo_deproom IS NOT NULL  )
             AND NOT deproom.isStatus = 9 
+            AND  deproom.isCancel = 0
         ORDER BY
             deproom.serviceDate ASC; ";
 
@@ -183,7 +185,9 @@ $Doctor_Name = $Result_Detail['Doctor_Name'];
 $Procedure_TH = $Result_Detail['Procedure_TH'];
 $hncode = $Result_Detail['hncode'];
 
-
+    if($hncode == ""){
+        $hncode = $Result_Detail['number_box'];
+    }
 
 
 

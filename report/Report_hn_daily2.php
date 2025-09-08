@@ -184,14 +184,12 @@ $colors = [
 
     // ตั้งค่าสีพื้นหลังตามวัน
     $pdf->SetFillColor($colors[$dayOfWeek][0], $colors[$dayOfWeek][1], $colors[$dayOfWeek][2]);
-
     // ตั้งค่าสีตัวอักษร (ดำ)
     $pdf->SetTextColor(0, 0, 0);
-
-
-    $pdf->SetY(42);
-    $pdf->SetX(45);
-    $pdf->Cell(30, 0, $serviceDate, 0, 1, '', true);
+    $pdf->SetFont('db_helvethaica_x', 'B', 40);
+    $pdf->SetY(35);
+    $pdf->SetX(40);
+    $pdf->Cell(50, 0, $serviceDate, 0, 1, '', true);
     // $pdf->Cell(50, 0, $serviceDate, 0, 1);
     $pdf->SetY(63);
     $pdf->SetX(63);

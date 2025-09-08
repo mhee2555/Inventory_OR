@@ -122,6 +122,9 @@ $(function () {
         "-" +
         year;
 
+      $('#select_date1').data('datepicker').selectDate(new Date());
+      $('#select_date2').data('datepicker').selectDate(new Date());
+
       $("#select_date1").val(output);
       $("#select_date2").val(output);
 
@@ -188,6 +191,7 @@ $(function () {
         $("#row_day_10").hide();
         $("#row_day_9").show();
 
+        $('#select_date1_9').data('datepicker').selectDate(new Date());
         $("#select_date1_9").val(output);
 
         if ($(this).val() == 8) {
@@ -195,7 +199,7 @@ $(function () {
           $("#btn_png").attr("hidden", false);
         } else {
 
-          if ($(this).val() == 9) {
+          if ($(this).val() == 9 ) {
             $("#btn_excel").attr("hidden", true);
             $("#btn_png").attr("hidden", true);
           } else {
@@ -210,10 +214,13 @@ $(function () {
 
 
         if ($(this).val() == 10) {
+          $("#btn_excel").attr("hidden", true);
+          $("#btn_png").attr("hidden", true);
           $("#row_typedate").hide();
           $("#row_day_10").show();
           $("#row_day_9").hide();
-
+          $('#select_date1_10').data('datepicker').selectDate(new Date());
+          $('#select_date2_10').data('datepicker').selectDate(new Date());
           $("#select_date1_10").val(output);
           $("#select_date2_10").val(output);
         } else {

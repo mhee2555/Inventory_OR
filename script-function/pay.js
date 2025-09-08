@@ -527,21 +527,49 @@ $(function () {
 
   $("#input_searchHN_pay").keypress(function (e) {
     if (e.which == 13) {
-      if ($("#input_searchHN_pay").val() == "") {
-        show_detail_deproom_pay();
+      var input_searchHN_pay = $("#input_searchHN_pay").val();
+      var select_date_pay = $("#select_date_pay").val();
 
-        $("#btn_edit_hn").attr("disabled", true);
-        $("#btn_block_hn").attr("disabled", true);
+      $.ajax({
+        url: "process/pay.php",
+        type: "POST",
+        data: {
+          FUNC_NAME: "checkHNDocNo",
+          input_searchHN_pay: input_searchHN_pay,
+          select_date_pay: select_date_pay,
+        },
+        success: function (result) {
+          var ObjData = JSON.parse(result);
+          console.log(ObjData);
+          if (!$.isEmptyObject(ObjData)) {
+            $.each(ObjData, function (kay, value) {
+              setTimeout(() => {
+                $("#checkbox_" + value.DocNo).prop("checked", true).trigger("click");
+              }, 300);
+              $("#input_searchHN_pay").val("");
+            });
+          }else{
+            showDialogFailed('ไม่พบข้อมูล');
+            $("#input_searchHN_pay").val("");
+          }
+        },
+      });
 
-        $("#input_Hn_pay").val('');
-        $("#input_date_service").val('');
-        $("#input_time_service").val('');
-        $("#input_box_pay").val('');
 
-        $("#table_deproom_DocNo_pay tbody").html("");
-      } else {
-        show_detail_deproom_pay_fix('');
-      }
+      // if ($("#input_searchHN_pay").val() == "") {
+      //   show_detail_deproom_pay();
+
+      //   $("#btn_edit_hn").attr("disabled", true);
+      //   $("#btn_block_hn").attr("disabled", true);
+
+      //   $("#input_Hn_pay").val('');
+      //   $("#input_date_service").val('');
+      //   $("#input_time_service").val('');
+      //   $("#input_box_pay").val('');
+      //   $("#table_deproom_DocNo_pay tbody").html("");
+      // } else {
+      //   show_detail_deproom_pay_fix('');
+      // }
     }
   });
 
@@ -4114,7 +4142,7 @@ function select_department() {
       var option = `<option value="" selected>กรุณาเลือกหน่วยงาน</option>`;
       if (!$.isEmptyObject(ObjData)) {
         $.each(ObjData, function (kay, value) {
-          option += `<option value="${value.ID}" >${value.DepName}</option>`;
+          option += `<option value="${value.ID}" >${value.DepName} ( ${value.DepName2} )</option>`;
         });
       } else {
         option = `<option value="0">ไม่มีข้อมูล</option>`;
@@ -4300,10 +4328,11 @@ function feeddata_history_Return() {
     },
     success: function (result) {
       // $("#table_item_claim").DataTable().destroy();
+      $("#table_history_return tbody").html("");
       $("#table_history_return").DataTable().destroy();
       var ObjData = JSON.parse(result);
+      var _tr = ``;
       if (!$.isEmptyObject(ObjData)) {
-        var _tr = ``;
         var allpage = 0;
         $.each(ObjData, function (kay, value) {
           _tr +=
@@ -4315,6 +4344,7 @@ function feeddata_history_Return() {
             `<td class="text-center">${value.hn_record_id}</td>` +
             ` </tr>`;
         });
+      }
 
         $("#table_history_return tbody").html(_tr);
         $("#table_history_return").DataTable({
@@ -4337,26 +4367,27 @@ function feeddata_history_Return() {
           },
           columnDefs: [
             {
-              width: "2%",
+              width: "5%",
               targets: 0,
             },
             {
-              width: "15%",
+              width: "20%",
               targets: 1,
             },
             {
-              width: "35%",
+              width: "30%",
               targets: 2,
             },
             {
-              width: "10%",
+              width: "20%",
               targets: 3,
             },
             {
-              width: "10%",
+              width: "20%",
               targets: 4,
             }
           ],
+          autoWidth: false,
           info: false,
           scrollX: false,
           scrollCollapse: false,
@@ -4379,7 +4410,6 @@ function feeddata_history_Return() {
             ""
           );
         }
-      }
     },
   });
 }

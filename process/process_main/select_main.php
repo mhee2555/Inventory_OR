@@ -48,7 +48,8 @@ function select_department($conn)
 
     $query = " SELECT
                     department.ID, 
-                    department.DepName2 AS DepName
+                    department.DepName2 AS DepName, 
+                    department.DepName AS DepName2
                 FROM
                     department 
                 WHERE department.IsAutomaticPayout = 0 ";

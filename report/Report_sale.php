@@ -235,8 +235,6 @@ $query = " SELECT
                 $where_date
                 AND deproomdetail.IsCancel = 0 
                 AND item.itemtypeID IN (	30,31 ) 
-            GROUP BY
-                item.itemcode 
             ORDER BY
                 item.itemname ASC ";
            

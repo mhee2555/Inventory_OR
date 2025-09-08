@@ -462,19 +462,21 @@
 
                     </div>
 
+                    <div class="col-md-12">
+                        <table class="table table-hover " id="table_item_return">
+                            <thead style="background-color: #cdd6ff;">
+                                <tr>
+                                    <th scope="col" class="text-center" id="">ลำดับ</th>
+                                    <th scope="col" class="text-center" id="">รหัสอุปกรณ์</th>
+                                    <th scope="col" class="text-center" id="" style="width: 60%;">อุปกรณ์</th>
+                                    <th scope="col" class="text-center" id="">จำนวน</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
 
-                    <table class="table table-hover " id="table_item_return">
-                        <thead style="background-color: #cdd6ff;">
-                            <tr>
-                                <th scope="col" class="text-center" id="">ลำดับ</th>
-                                <th scope="col" class="text-center" id="">รหัสอุปกรณ์</th>
-                                <th scope="col" class="text-center" id="" style="width: 60%;">อุปกรณ์</th>
-                                <th scope="col" class="text-center" id="">จำนวน</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
 
                     <div class="col-md-12 text-right mt-2">
                         <button class="btn f18" style="background-color:#643695;color:#fff;" id="btn_send_return_data">ส่งข้อมูล</button>
@@ -508,20 +510,25 @@
                         </div>
                     </div>
 
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table class="table table-hover " id="table_history_return">
+                                <thead style="background-color: #cdd6ff;">
+                                    <tr>
+                                        <th scope="col" class="text-center" id="" style="width: 5%;">ลำดับ</th>
+                                        <th scope="col" class="text-center" id="" style="width:  20%;">รหัสอุปกรณ์</th>
+                                        <th scope="col" class="text-center" id="" style="width: 30%;">อุปกรณ์</th>
+                                        <th scope="col" class="text-center" id="" style="width: 20%;">ผู้คืน</th>
+                                        <th scope="col" class="text-center" id="" style="width: 20%;">เลขประจำตัวผู้ป่วย</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
 
-                    <table class="table table-hover " id="table_history_return">
-                        <thead style="background-color: #cdd6ff;">
-                            <tr>
-                                <th scope="col" class="text-center" id="">ลำดับ</th>
-                                <th scope="col" class="text-center" id="">รหัสอุปกรณ์</th>
-                                <th scope="col" class="text-center" id="">อุปกรณ์</th>
-                                <th scope="col" class="text-center" id="">ผู้คืน</th>
-                                <th scope="col" class="text-center" id="">เลขประจำตัวผู้ป่วย</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
+
 
                 </div>
             </div>
