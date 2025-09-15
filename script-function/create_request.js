@@ -584,6 +584,8 @@ $("#btn_confirm_send_request").click(function () {
     return;
   }
 
+
+
   Swal.fire({
     title: "ยืนยัน",
     text: "ยืนยัน! การส่งข้อมูล ?",
@@ -938,6 +940,11 @@ function onconfirm_send_request() {
     id_Array.push($(this).data("id"));
   });
 
+  var checkbox_tf = 0;
+  if ($("#checkbox_tf").is(":checked")) {
+    checkbox_tf = 1;
+  }
+
   $.ajax({
     url: "process/create_request.php",
     type: "POST",
@@ -952,6 +959,7 @@ function onconfirm_send_request() {
       input_remark_request: $("#input_remark_request").val(),
       select_date_request: $("#select_date_request").val(),
       select_time_request: $("#select_time_request").val(),
+      checkbox_tf: checkbox_tf,
       text_edit: $("#text_edit").val(),
       qty_Array: qty_Array,
       id_Array: id_Array,
@@ -968,6 +976,7 @@ function onconfirm_send_request() {
       var currentTime = hours + ":" + minutes;
 
       setTimeout(() => {
+        $("#checkbox_tf").prop('checked', false);
         $("#table_item_detail_request").DataTable().destroy();
         $("#table_item_detail_request tbody").empty();
         $("#txt_docno_request").val("");
@@ -1080,7 +1089,7 @@ function show_detail_history() {
           }
 
           if (value.cnt_id == null) {
-            var edit_id = `<button class=' btn-block btn btn-outline-dark f18' onclick='edit_item_byDocNo("${value.DocNo}","${value.hn_record_id}","${value.serviceDate}","${value.doctor_ID}","${value.procedure_ID}","${value.deproom_ID}","${value.Remark}","${value.doctor}","${value.procedure}","${value.departmentroomname}","edit","${value.serviceTime}")'><i class="fa-regular fa-pen-to-square"></i> แก้ไข</button>`;
+            var edit_id = `<button class=' btn-block btn btn-outline-dark f18' onclick='edit_item_byDocNo("${value.DocNo}","${value.hn_record_id}","${value.serviceDate}","${value.doctor_ID}","${value.procedure_ID}","${value.deproom_ID}","${value.Remark}","${value.doctor}","${value.procedure}","${value.departmentroomname}","edit","${value.serviceTime}","${value.IsTF}")'><i class="fa-regular fa-pen-to-square"></i> แก้ไข</button>`;
             var showreport = `<button class='btn f18' style='background-color:#643695;color:#fff;' onclick='show_Report("${value.DocNo}")'>รายงานขอเบิก</button>`;
           } else {
             var edit_id = ``;
@@ -1317,8 +1326,17 @@ function edit_item_byDocNo(
   Procedure_TH,
   departmentroomname,
   text_edit,
-  serviceTime
+  serviceTime,
+  IsTF
 ) {
+
+  if (IsTF == 1) {
+    $("#checkbox_tf").prop('checked', true);
+  } else {
+    $("#checkbox_tf").prop('checked', false);
+  }
+
+
   $(".clear_doctor").attr("hidden", true);
   doctor_Array = [];
 

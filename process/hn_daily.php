@@ -247,7 +247,8 @@ function update_create_request($conn, $db)
                 set_hn.isStatus,
                 set_hn.userID,
                 set_hn.isCancel,
-                set_hn.createAt 
+                set_hn.createAt ,
+                set_hn.IsTF 
             FROM
                 set_hn 
             WHERE set_hn.ID = '$ID' ";
@@ -264,10 +265,11 @@ function update_create_request($conn, $db)
         $remark = $row['remark'];
         $serviceDate = $row['serviceDate'];
         $serviceTime = $row['serviceTime'];
+        $IsTF = $row['IsTF'];
     }
 
 
-    $txt_docno_request = createDocNo($conn, $Userid, $DepID, $select_deproom_request, $remark, 0, 0, 0, 0, '', '', $input_hn_request, '', $db, 0,0);
+    $txt_docno_request = createDocNo($conn, $Userid, $DepID, $select_deproom_request, $remark, 0, 0, 0, 0, '', '', $input_hn_request, '', $db, 0,0,$IsTF);
 
     $sql1 = " UPDATE deproom SET IsStatus = 0 , serviceDate = '$serviceDate $serviceTime'  , hn_record_id = '$input_hn_request' , doctor = '$select_doctor_request' , `procedure` = '$select_procedure_request' , Ref_departmentroomid = '$select_deproom_request' WHERE DocNo = '$txt_docno_request' AND IsCancel = 0 ";
     $meQueryUpdate = $conn->prepare($sql1);

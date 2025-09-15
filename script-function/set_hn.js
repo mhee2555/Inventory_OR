@@ -120,9 +120,7 @@ function show_detail_history() {
                       <td class="f18 text-left" style='line-height: 35px;'>${value.departmentroomname}</td>
                       <td class="f18 text-left" style="line-height: 35px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 300px;" ${title}>${value.Procedure_TH}</td>
                       <td class="f18 text-center" style='width:10%;'><button ${hidden} class='btn btn-primary' style='width:70%;' onclick='showdetail("${value.ID
-            }","${value.hncode}","${value.serviceDate}","${value.serviceTime}","${value.doctor
-            }","${value.procedure}","${value.departmentroomid}","${value.remark
-            }")'>แก้ไข</button></td>
+            }","${value.hncode}","${value.serviceDate}","${value.serviceTime}","${value.doctor}","${value.procedure}","${value.departmentroomid}","${value.remark}","${value.IsTF}")'>แก้ไข</button></td>
                    </tr>`;
         });
       }
@@ -210,7 +208,8 @@ function showdetail(
   doctor,
   procedure,
   departmentroomid,
-  remark
+  remark,
+  IsTF
 ) {
   // $(".clear_doctor").attr("hidden", true);
   // doctor_Array = [];
@@ -222,6 +221,12 @@ function showdetail(
   // $("#select2-select_procedure_request-container").text("กรุณาเลือกหัตถการ");
   // $(".clear_procedure").attr("hidden", true);
   // procedure_id_Array = [];
+
+  if(IsTF == 1){
+    $("#checkbox_tf").prop('checked', true);
+  }else{
+    $("#checkbox_tf").prop('checked', false);
+  }
   $("#radio_set_hn").click();
 
   $("#input_Hn_pay_manual").val(hncode);
@@ -350,7 +355,7 @@ $("#btn_clear_manual").click(function () {
     month +
     "-" +
     year;
-
+  $("#checkbox_tf").prop('checked', false);
   $("#input_Hn_ID").val("");
   $("#input_Hn_pay_manual").val("");
   $("#input_date_service_manual").val(output);
@@ -401,6 +406,14 @@ $("#btn_save_hn_manual").click(function () {
     return;
   }
 
+
+  var checkbox_tf = 0;
+  if ($("#checkbox_tf").is(":checked")) {
+    checkbox_tf = 1;
+  }
+
+
+
   Swal.fire({
     title: "ยืนยัน",
     text: "ยืนยัน! การบันทึก HN ?",
@@ -417,6 +430,7 @@ $("#btn_save_hn_manual").click(function () {
         type: "POST",
         data: {
           FUNC_NAME: "save_hn",
+          checkbox_tf: checkbox_tf,
           input_Hn_ID: $("#input_Hn_ID").val(),
           input_Hn_pay_manual: $("#input_Hn_pay_manual").val().trim(),
           input_date_service_manual: $("#input_date_service_manual").val(),
@@ -444,7 +458,7 @@ $("#btn_save_hn_manual").click(function () {
             month +
             "-" +
             year;
-
+          $("#checkbox_tf").prop('checked', false);
           $("#input_Hn_ID").val("");
           $("#input_Hn_pay_manual").val("");
           // $("#input_date_service_manual").val(output);

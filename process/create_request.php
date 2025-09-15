@@ -259,6 +259,7 @@ function onconfirm_send_request($conn, $db)
     $id_Array = $_POST['id_Array'];
     $Userid = $_SESSION['Userid'];
     $input_set_hn_ID_request = $_POST['input_set_hn_ID_request'];
+    $checkbox_tf = $_POST['checkbox_tf'];
 
 
 
@@ -326,9 +327,9 @@ function onconfirm_send_request($conn, $db)
         $sql_ = " UPDATE hncode SET DocDate  = '$select_date_request $select_time_request' WHERE DocNo_SS = '$txt_docno_request' ";
 
 
-        $sql1 = " UPDATE deproom SET IsStatus = 1 , serviceDate = '$select_date_request $select_time_request' , Remark = '$input_remark_request' , hn_record_id = '$input_hn_request' , doctor = '$select_doctor_request' , `procedure` = '$select_procedure_request' , Ref_departmentroomid = '$select_deproom_request' WHERE DocNo = '$txt_docno_request' AND IsCancel = 0 ";
+        $sql1 = " UPDATE deproom SET IsTF = $checkbox_tf , IsStatus = 1 , serviceDate = '$select_date_request $select_time_request' , Remark = '$input_remark_request' , hn_record_id = '$input_hn_request' , doctor = '$select_doctor_request' , `procedure` = '$select_procedure_request' , Ref_departmentroomid = '$select_deproom_request' WHERE DocNo = '$txt_docno_request' AND IsCancel = 0 ";
     } else {
-        $sql1 = " UPDATE deproom SET IsStatus = 1 , serviceDate = '$select_date_request $select_time_request' , Remark = '$input_remark_request' , hn_record_id = '$input_hn_request' , doctor = '$select_doctor_request' , [procedure] = '$select_procedure_request' , Ref_departmentroomid = '$select_deproom_request' WHERE DocNo = '$txt_docno_request' AND IsCancel = 0 ";
+        $sql1 = " UPDATE deproom SET IsTF = $checkbox_tf , IsStatus = 1 , serviceDate = '$select_date_request $select_time_request' , Remark = '$input_remark_request' , hn_record_id = '$input_hn_request' , doctor = '$select_doctor_request' , [procedure] = '$select_procedure_request' , Ref_departmentroomid = '$select_deproom_request' WHERE DocNo = '$txt_docno_request' AND IsCancel = 0 ";
     }
 
     $sql2 = " UPDATE deproomdetail SET IsStatus = 3 WHERE DocNo = '$txt_docno_request' AND IsCancel = 0 ";
@@ -526,7 +527,7 @@ function onconfirm_request($conn, $db)
     $count = 0;
     if ($txt_docno_request == "") {
         $remark = "สร้างจาก ขอเบิกอุปกรณ์ ";
-        $txt_docno_request = createDocNo($conn, $Userid, $DepID, $deproom, $remark, 0, 1, 0, 0, '', '', '', '', $db, 0,0);
+        $txt_docno_request = createDocNo($conn, $Userid, $DepID, $deproom, $remark, 0, 1, 0, 0, '', '', '', '', $db, 0,0,0);
     }
 
     foreach ($array_itemcode as $key => $value) {
@@ -758,6 +759,7 @@ function show_detail_history($conn, $db)
                         deproom.Remark,
                         deproom.doctor,
                         deproom.`procedure` ,
+                        deproom.IsTF ,
                         deproomdetailsub.ID  AS cnt_id,
                         SUM( CASE WHEN deproomdetail.IsStart = 1 AND deproomdetailsub.ID IS NOT NULL THEN 1 ELSE 0 END ) AS cnt_start_with_sub
                     FROM

@@ -84,6 +84,7 @@ $select_date1_search = $select_date1_search[2] . '-' . $select_date1_search[1] .
 $query = "SELECT
             deproom.ID,
             deproom.isStatus,
+            deproom.IsTF,
             deproom.hn_record_id AS hncode,
             deproom.number_box,
             DATE_FORMAT( deproom.serviceDate, '%d/%m/%Y' ) AS serviceDate,
@@ -120,6 +121,7 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
     $serviceDate = $Result_Detail['serviceDate'];
     $Doctor_Name = $Result_Detail['Doctor_Name'];
     $Procedure_TH = $Result_Detail['Procedure_TH'];
+    $IsTF = $Result_Detail['IsTF'];
     $hncode = $Result_Detail['hncode'];
     $DocNo_deproom = $Result_Detail['DocNo_deproom'];
 
@@ -209,6 +211,13 @@ $colors = [
     // ล้อมกรอบ (optional)
 
     $pdf->Rect(10, 9, 190, 130); // (x, y, w, h) - ปรับตาม layout จริง
+
+    if($IsTF == 1){
+        $pdf->SetY(20);
+        $pdf->SetX(130);
+        $pdf->SetFont('db_helvethaica_x', 'B', 35);
+        $pdf->Cell(20, 0, 'TF', 1, 1, 'C');
+    }
 
 
 

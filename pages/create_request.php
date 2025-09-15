@@ -1,7 +1,3 @@
-
-
-
-
 <div class="row mt-3">
     <div class=" col-md-12 col-lg-9  ">
 
@@ -194,10 +190,17 @@
                                     <button class="btn btn-block" style="background-color: #643695;color:#fff;margin-top: 2.2rem;" id="btn_routine">Routine</button>
                                 </div>
 
+                                <div class="col-md-6">
+                                    <div class="form-check ">
+                                        <input type="checkbox" class="form-check-input" id="checkbox_tf" style="width: 25px;height: 25px;">
+                                        <label class="form-check-label f18 ml-4 mt-1" for="checkbox_tf" style="color:black;font-weight:bold;">TF</label>
+                                    </div>
+                                </div>
+
                             </div>
 
 
-                            <table class="table table-hover " id="table_item_detail_request">
+                            <table class="table table-hover mt-3" id="table_item_detail_request">
                                 <thead>
                                     <tr>
                                         <th scope="col" class="text-center" id="">ลำดับ</th>

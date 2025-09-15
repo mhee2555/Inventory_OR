@@ -2,6 +2,8 @@
 // header('HTTP/1.1 200 OK');
 session_start();
 date_default_timezone_set("Asia/Bangkok");
+
+
 $page = isset($_GET['s']) ? $_GET['s'] : 'main';
 $pay = isset($_GET['pay']) ? $_GET['pay'] : '';
 $ex = isset($_GET['ex']) ? $_GET['ex'] : '';
@@ -36,6 +38,9 @@ if (!isset($_SESSION['UserName'])) {
 }
 
 
+
+
+
 ?>
 
 <!DOCTYPE html>
@@ -62,22 +67,22 @@ if (!isset($_SESSION['UserName'])) {
 <body id="page-top"></body>
 
 <div id="wrapper" style="display: flex; height: 100vh; overflow: hidden;">
-  
-  <!-- Sidebar -->
-  <?php require("layout/menu.php"); ?>
 
-  <!-- Main Content -->
-  <div id="content-wrapper" class="d-flex flex-column" style="flex: 1; overflow: hidden;">
-    
-    <div id="content" style="background-color: white; flex: 1; overflow-y: auto;">
-      <?php require("layout/header.php"); ?>
+    <!-- Sidebar -->
+    <?php require("layout/menu.php"); ?>
 
-      <div class="container-fluid" id="conMain" style="background-color: white;">
-        <!-- เนื้อหา -->
-      </div>
+    <!-- Main Content -->
+    <div id="content-wrapper" class="d-flex flex-column" style="flex: 1; overflow: hidden;">
+
+        <div id="content" style="background-color: white; flex: 1; overflow-y: auto;">
+            <?php require("layout/header.php"); ?>
+
+            <div class="container-fluid" id="conMain" style="background-color: white;">
+                <!-- เนื้อหา -->
+            </div>
+        </div>
+
     </div>
-
-  </div>
 </div>
 
 
@@ -222,7 +227,30 @@ if (!isset($_SESSION['UserName'])) {
 <script>
     <?php include_once('assets/lang/' . $page . '.js'); ?>
 
+    let idleTime = 0;
+    const timeoutMinutes = 60; // 15 นาที
+
+    // รีเซ็ตเวลาเมื่อมีการขยับเมาส์หรือกดปุ่ม
+    $(document).on("mousemove keypress click scroll", function() {
+        idleTime = 0;
+        console.log("รีเซ็ตเวลา idle");
+    });
+
+    // นับเวลา idle ทุก 1 นาที
+    setInterval(function() {
+        idleTime++;
+        console.log("Idle time: " + idleTime + " นาที");
+
+        if (idleTime >= timeoutMinutes) {
+            // ออกระบบ
+            window.location.href = "login.php";
+        }
+    }, 60000);
+
     $(function() {
+
+
+
 
 
 

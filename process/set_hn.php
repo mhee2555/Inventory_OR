@@ -36,6 +36,7 @@ function show_detail_history($conn, $db)
                 set_hn.`procedure`,
                 set_hn.remark,
                 doctor.Doctor_Name,
+                set_hn.IsTF,
                 IFNULL( `procedure`.Procedure_TH, '' ) AS Procedure_TH,
                 departmentroom.departmentroomname
             FROM
@@ -76,8 +77,8 @@ function show_detail_history($conn, $db)
 function save_hn($conn, $db)
 {
     $return = array();
-
     $input_Hn_ID = $_POST['input_Hn_ID'];
+    $checkbox_tf = $_POST['checkbox_tf'];
     $input_Hn_pay_manual = $_POST['input_Hn_pay_manual'];
     $input_date_service_manual = $_POST['input_date_service_manual'];
     $input_time_service_manual = $_POST['input_time_service_manual'];
@@ -85,6 +86,7 @@ function save_hn($conn, $db)
     $select_deproom_manual = $_POST['select_deproom_manual'];
     $procedure_id_Array = $_POST['procedure_id_Array'];
     $doctor_Array = $_POST['doctor_Array'];
+    $checkbox_tf = $_POST['checkbox_tf'];
 
 
 
@@ -99,8 +101,8 @@ function save_hn($conn, $db)
 
 
     if($input_Hn_ID == ""){
-        $insert_log = "INSERT INTO set_hn (hncode, serviceDate, doctor, departmentroomid, `procedure`, remark, isStatus, userID, createAt) 
-                            VALUES (:hncode, '$input_date_service_manual $input_time_service_manual' , :doctor, :departmentroomid, :proceduce, :remark,0, :Userid, NOW())";
+        $insert_log = "INSERT INTO set_hn (hncode, serviceDate, doctor, departmentroomid, `procedure`, remark, isStatus, userID, createAt,IsTF) 
+                            VALUES (:hncode, '$input_date_service_manual $input_time_service_manual' , :doctor, :departmentroomid, :proceduce, :remark,0, :Userid, NOW(),:checkbox_tf)";
 
         $meQuery_log = $conn->prepare($insert_log);
 
@@ -110,6 +112,7 @@ function save_hn($conn, $db)
         $meQuery_log->bindParam(':proceduce', $procedure_id_Array);
         $meQuery_log->bindParam(':remark', $input_remark_manual);
         $meQuery_log->bindParam(':Userid', $Userid);
+        $meQuery_log->bindParam(':checkbox_tf', $checkbox_tf);
 
 
         $meQuery_log->execute();
@@ -121,7 +124,8 @@ function save_hn($conn, $db)
                                           `procedure` = :proceduce, 
                                           remark = :remark, 
                                           userID = :Userid, 
-                                          createAt = NOW() 
+                                          createAt = NOW() , 
+                                          IsTF = ,:checkbox_tf 
                         WHERE ID = '$input_Hn_ID' ";
 
         $meQuery_log = $conn->prepare($insert_log);
@@ -132,6 +136,7 @@ function save_hn($conn, $db)
         $meQuery_log->bindParam(':proceduce', $procedure_id_Array);
         $meQuery_log->bindParam(':remark', $input_remark_manual);
         $meQuery_log->bindParam(':Userid', $Userid);
+        $meQuery_log->bindParam(':checkbox_tf', $checkbox_tf);
 
 
         $meQuery_log->execute();

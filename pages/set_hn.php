@@ -1,5 +1,3 @@
-
-
 <div class="row mt-3">
     <div class=" col-md-12 col-lg-9  ">
 
@@ -52,13 +50,18 @@
                                         </div> -->
                                     </div>
                                 </div>
-                                <div class="col-md-4 ">
+                                <div class="col-md-3 ">
                                     <div class="form-group ">
                                         <label style="color:black;font-weight: 600;">เวลารับบริการ</label>
                                         <input type="time" class="form-control datepicker-here f18" id="input_time_service_manual" data-language='en' data-date-format='dd-mm-yyyy'>
                                     </div>
                                 </div>
-
+                                <div class="col-md-1 text-right">
+                                    <div class="form-check " style="margin-top: 38px;">
+                                        <input type="checkbox" class="form-check-input" id="checkbox_tf" style="width: 25px;height: 25px;">
+                                        <label class="form-check-label f18 ml-4 mt-1" for="checkbox_tf" style="color:black;font-weight:bold;">TF</label>
+                                    </div>
+                                </div>
 
                                 <div class="col-md-4">
                                     <div class="row">
@@ -178,13 +181,13 @@
                     <table class="table table-hover " id="table_history">
                         <thead style="background-color: #cdd6ff;">
                             <tr>
-                                <th scope="col" class="text-center"  style="width: 5%;">ลำดับ</th>
-                                <th scope="col" class="text-center"  style="width: 15%;">เลขที่ประจำตัวผู้ป่วย</th>
-                                <th scope="col" class="text-center"  style="width: 15%;">วัน/เวลารับบริการ</th>
-                                <th scope="col" class="text-center"  style="width: 15%;">แพทย์</th>
-                                <th scope="col" class="text-center"  style="width: 15%;">ห้องผ่าตัด</th>
-                                <th scope="col" class="text-center"  style="width: 15%;">หัตถการ</th>
-                                <th scope="col" class="text-center"  style="width: 10%;">#</th>
+                                <th scope="col" class="text-center" style="width: 5%;">ลำดับ</th>
+                                <th scope="col" class="text-center" style="width: 15%;">เลขที่ประจำตัวผู้ป่วย</th>
+                                <th scope="col" class="text-center" style="width: 15%;">วัน/เวลารับบริการ</th>
+                                <th scope="col" class="text-center" style="width: 15%;">แพทย์</th>
+                                <th scope="col" class="text-center" style="width: 15%;">ห้องผ่าตัด</th>
+                                <th scope="col" class="text-center" style="width: 15%;">หัตถการ</th>
+                                <th scope="col" class="text-center" style="width: 10%;">#</th>
 
                             </tr>
                         </thead>

@@ -274,6 +274,7 @@ $(function () {
     }, 500);
 
     $("#checkbox_manual_ems").prop('checked', false);
+    $("#checkbox_tf").prop('checked', false);
 
     $("#input_Hn_pay_manual").val("");
     $("#input_box_pay_manual").val("");
@@ -548,7 +549,7 @@ $(function () {
               }, 300);
               $("#input_searchHN_pay").val("");
             });
-          }else{
+          } else {
             showDialogFailed('ไม่พบข้อมูล');
             $("#input_searchHN_pay").val("");
           }
@@ -2375,6 +2376,12 @@ function oncheck_pay_manual(input_pay_manual) {
     checkbox_manual_ems = 1;
   }
 
+  var checkbox_tf = 0;
+  if ($("#checkbox_tf").is(":checked")) {
+    checkbox_tf = 1;
+  }
+
+
   if (checkbox_manual_ems == 0) {
     if ($("#input_Hn_pay_manual").val().trim() == "" && $("#input_box_pay_manual").val().trim() == "") {
       showDialogFailed("กรุณากรอก เลขที่กล่อง หรือ HN Code");
@@ -2444,6 +2451,7 @@ function oncheck_pay_manual(input_pay_manual) {
       checkbox_manual_ems: checkbox_manual_ems,
       select_deproom_manual: $("#select_deproom_manual").val(),
       input_remark_manual: $("#input_remark_manual").val(),
+      checkbox_tf: checkbox_tf,
       // select_procedure_manual: $("#select_procedure_manual").val(),
       select_doctor_manual: doctor_Array,
       select_procedure_manual: procedure_id_Array,
@@ -4346,70 +4354,70 @@ function feeddata_history_Return() {
         });
       }
 
-        $("#table_history_return tbody").html(_tr);
-        $("#table_history_return").DataTable({
-          language: {
-            emptyTable: settext("dataTables_empty"),
-            paginate: {
-              next: settext("table_itemStock_next"),
-              previous: settext("table_itemStock_previous"),
-            },
-            search: settext("btn_Search"),
-            info:
-              settext("dataTables_Showing") +
-              " _START_ " +
-              settext("dataTables_to") +
-              " _END_ " +
-              settext("dataTables_of") +
-              " _TOTAL_ " +
-              settext("dataTables_entries") +
-              " ",
+      $("#table_history_return tbody").html(_tr);
+      $("#table_history_return").DataTable({
+        language: {
+          emptyTable: settext("dataTables_empty"),
+          paginate: {
+            next: settext("table_itemStock_next"),
+            previous: settext("table_itemStock_previous"),
           },
-          columnDefs: [
-            {
-              width: "5%",
-              targets: 0,
-            },
-            {
-              width: "20%",
-              targets: 1,
-            },
-            {
-              width: "30%",
-              targets: 2,
-            },
-            {
-              width: "20%",
-              targets: 3,
-            },
-            {
-              width: "20%",
-              targets: 4,
-            }
-          ],
-          autoWidth: false,
-          info: false,
-          scrollX: false,
-          scrollCollapse: false,
-          visible: false,
-          searching: false,
-          lengthChange: false,
-          fixedHeader: false,
-          ordering: false,
-        });
-        $("th").removeClass("sorting_asc");
-        if (_tr == "") {
-          $(".dataTables_info").text(
+          search: settext("btn_Search"),
+          info:
             settext("dataTables_Showing") +
-            " 0 " +
+            " _START_ " +
             settext("dataTables_to") +
-            " 0 " +
+            " _END_ " +
             settext("dataTables_of") +
-            " 0 " +
+            " _TOTAL_ " +
             settext("dataTables_entries") +
-            ""
-          );
-        }
+            " ",
+        },
+        columnDefs: [
+          {
+            width: "5%",
+            targets: 0,
+          },
+          {
+            width: "20%",
+            targets: 1,
+          },
+          {
+            width: "30%",
+            targets: 2,
+          },
+          {
+            width: "20%",
+            targets: 3,
+          },
+          {
+            width: "20%",
+            targets: 4,
+          }
+        ],
+        autoWidth: false,
+        info: false,
+        scrollX: false,
+        scrollCollapse: false,
+        visible: false,
+        searching: false,
+        lengthChange: false,
+        fixedHeader: false,
+        ordering: false,
+      });
+      $("th").removeClass("sorting_asc");
+      if (_tr == "") {
+        $(".dataTables_info").text(
+          settext("dataTables_Showing") +
+          " 0 " +
+          settext("dataTables_to") +
+          " 0 " +
+          settext("dataTables_of") +
+          " 0 " +
+          settext("dataTables_entries") +
+          ""
+        );
+      }
     },
   });
 }

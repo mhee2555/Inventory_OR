@@ -226,14 +226,21 @@
                         <div class="card-body">
 
                             <div class="row">
-                                <div class="col-md-5">
+                                <div class="col-md-4">
                                     <label style="color:black;font-weight: 600;">เลขที่กล่อง</label>
                                     <input type='text' class='form-control f18' id="input_box_pay_manual">
                                 </div>
-                                <div class="col-md-5">
+                                <div class="col-md-4">
                                     <label style="color:black;font-weight: 600;">เลขประจำตัวผู้ป่วย</label>
                                     <input type='text' class='form-control f18' id="input_Hn_pay_manual">
                                 </div>
+                                <div class="col-md-2 text-right">
+                                    <div class="form-check " style="margin-top: 38px;">
+                                        <input type="checkbox" class="form-check-input" id="checkbox_tf" style="width: 25px;height: 25px;">
+                                        <label class="form-check-label f18 ml-4 mt-1" for="checkbox_tf" style="color:black;font-weight:bold;">TF</label>
+                                    </div>
+                                </div>
+
                                 <div class="col-md-2 text-right">
                                     <div class="form-check " style="margin-top: 38px;">
                                         <input type="checkbox" class="form-check-input" id="checkbox_manual_ems" style="width: 25px;height: 25px;">
