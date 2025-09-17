@@ -26,7 +26,126 @@ if (!empty($_POST['FUNC_NAME'])) {
         onSavemanage_stockRFID($conn, $db);
     } else if ($_POST['FUNC_NAME'] == 'show_restock') {
         show_restock($conn, $db);
+    } else if ($_POST['FUNC_NAME'] == 'save_item_daily') {
+        save_item_daily($conn, $db);
+    } else if ($_POST['FUNC_NAME'] == 'select_set_item_daily') {
+        select_set_item_daily($conn, $db);
+    } else if ($_POST['FUNC_NAME'] == 'delete_item_daily') {
+        delete_item_daily($conn, $db);
+    } else if ($_POST['FUNC_NAME'] == 'selection_follow_item_detail') {
+        selection_follow_item_detail($conn, $db);
     }
+}
+
+function selection_follow_item_detail($conn, $db)
+{
+    $return = array();
+    $select_follow_month = $_POST['select_follow_month'];
+    $select_follow_year = $_POST['select_follow_year'];
+
+
+    
+    $is = "SELECT
+                daily_stock_item.snapshot_date,
+                daily_stock_item.itemcode,
+                daily_stock_item.itemname
+            FROM
+                daily_stock_item
+            WHERE daily_stock_item.itemcode IN (SELECT set_item_daily.itemCode FROM set_item_daily)
+            AND MONTH(daily_stock_item.snapshot_date) = '$select_follow_month' 
+            AND YEAR(daily_stock_item.snapshot_date) = '$select_follow_year' 
+            GROUP BY daily_stock_item.itemcode ";
+    $meQuery = $conn->prepare($is);
+    $meQuery->execute();
+    while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+        $return['item'][] = $row;
+
+        $itemCode = $row['itemcode'] ;
+
+        $sub = "WITH RECURSIVE calendar AS (-- วันแรกของเดือนที่ต้องการ
+                    SELECT
+                        DATE( '$select_follow_year-$select_follow_month-01' ) AS DAY UNION ALL-- ไล่วันไปเรื่อย ๆ จนถึงวันสุดท้ายของเดือน
+                    SELECT DAY
+                        + INTERVAL 1 DAY 
+                    FROM
+                        calendar 
+                    WHERE
+                        DAY + INTERVAL 1 DAY <= LAST_DAY( '$select_follow_year-$select_follow_month-01' ) 
+                    ) SELECT
+                    c.DAY AS snapshot_date,
+                    d.itemcode,
+                    d.itemname,
+                    COALESCE ( d.calculated_balance, 0 ) AS calculated_balance 
+                FROM
+                    calendar c
+                    LEFT JOIN daily_stock_item d ON DATE( d.snapshot_date ) = c.DAY 
+                    AND d.itemcode = '$itemCode' 
+                ORDER BY
+                    c.DAY,
+                    d.itemcode; ";
+        $meQuery2 = $conn->prepare($sub);
+        $meQuery2->execute();
+        while ($row2 = $meQuery2->fetch(PDO::FETCH_ASSOC)) {
+            $return[$itemCode][] = $row2;
+        }
+
+
+
+    }
+
+    echo json_encode($return);
+    unset($conn);
+    die;
+}
+
+function delete_item_daily($conn, $db)
+{
+    $return = array();
+    $itemCode = $_POST['itemCode'];
+
+    $is = "DELETE FROM set_item_daily  WHERE itemCode = '$itemCode' ";
+
+    $meQuery = $conn->prepare($is);
+    $meQuery->execute();
+
+    echo json_encode($return);
+    unset($conn);
+    die;
+}
+
+function select_set_item_daily($conn, $db)
+{
+    $return = array();
+
+    $is = "SELECT
+                set_item_daily.itemCode,
+                item.itemname 
+            FROM
+                set_item_daily
+                INNER JOIN item ON set_item_daily.itemCode = item.itemcode  ";
+    $meQuery = $conn->prepare($is);
+    $meQuery->execute();
+    while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+        $return[] = $row;
+    }
+
+    echo json_encode($return);
+    unset($conn);
+    die;
+}
+
+function save_item_daily($conn, $db)
+{
+    $return = array();
+    $itemCode = $_POST['itemCode'];
+
+    $is = "INSERT INTO set_item_daily (itemCode) VALUES ('$itemCode') ";
+    $meQuery = $conn->prepare($is);
+    $meQuery->execute();
+
+    echo json_encode($return);
+    unset($conn);
+    die;
 }
 
 function show_restock($conn, $db)
@@ -242,20 +361,18 @@ function selection_item_normal($conn, $db)
                 END AS calculated_balance,
                 IFNULL(s.cnt, 0)                 AS cnt,
                 IFNULL(tp.cnt_pay, 0)            AS cnt_pay,
-                IFNULL(tpt.cnt_pay_today, 0)     AS cnt_pay_today,  -- ⬅️ จ่ายวันนี้
+                IFNULL(tpt.cnt_pay_today, 0)     AS cnt_pay_today, 
                 IFNULL(tc.cnt_cssd, 0)           AS cnt_cssd,
                 IFNULL(sb.balance, 0)            AS balance,
                 IFNULL(dm.damage, 0)             AS damage
             FROM item i
 
-            -- นับทั้งหมดใน itemstock
             LEFT JOIN (
                 SELECT ItemCode, COUNT(*) AS cnt
                 FROM itemstock
                 GROUP BY ItemCode
             ) s ON s.ItemCode = i.itemcode
 
-            -- นับจำนวนที่ถูกจ่ายทั้งหมด (IsStatus = 1)
             LEFT JOIN (
                 SELECT ItemCode, COUNT(*) AS cnt_pay
                 FROM itemstock_transaction_detail
@@ -267,11 +384,10 @@ function selection_item_normal($conn, $db)
                 SELECT d.ItemCode, COUNT(*) AS cnt_pay_today
                 FROM itemstock_transaction_detail d
                 WHERE d.IsStatus IN (1, 9)
-                AND d.CreateDate = '$select_date1'
+                AND DATE(d.CreateDate) = '$select_date1'
                 GROUP BY d.ItemCode
             ) tpt ON tpt.ItemCode = i.itemcode
 
-            -- นับที่ cssd (IsStatus = 7)
             LEFT JOIN (
                 SELECT ItemCode, COUNT(*) AS cnt_cssd
                 FROM itemstock_transaction_detail
@@ -279,7 +395,6 @@ function selection_item_normal($conn, $db)
                 GROUP BY ItemCode
             ) tc ON tc.ItemCode = i.itemcode
 
-            -- นับ balance ตามเงื่อนไข
             LEFT JOIN (
                 SELECT ItemCode, COUNT(*) AS balance
                 FROM itemstock
@@ -288,7 +403,6 @@ function selection_item_normal($conn, $db)
                 GROUP BY ItemCode
             ) sb ON sb.ItemCode = i.itemcode
 
-            -- นับ damage
             LEFT JOIN (
                 SELECT ItemCode, COUNT(*) AS damage
                 FROM itemstock
@@ -307,7 +421,7 @@ function selection_item_normal($conn, $db)
                 i.itemname;";
 
 
-
+       
 
     // $Q1 = " SELECT
     //             item.itemname,
@@ -691,7 +805,7 @@ function selection_item_rfid($conn, $db)
                 SELECT d.ItemCode, COUNT(*) AS cnt_pay_today
                 FROM itemstock_transaction_detail d
                 WHERE d.IsStatus IN (1, 9)
-                AND d.CreateDate = '$select_date1'
+                AND DATE(d.CreateDate) = '$select_date1'
                 GROUP BY d.ItemCode
             ) tpt ON tpt.ItemCode = i.itemcode
 
@@ -1156,7 +1270,7 @@ function selection_item($conn, $db)
                 SELECT d.ItemCode, COUNT(*) AS cnt_pay_today
                 FROM itemstock_transaction_detail d
                 WHERE d.IsStatus IN (1, 9)
-                AND d.CreateDate = '$select_date1'
+                AND DATE(d.CreateDate) = '$select_date1'
                 GROUP BY d.ItemCode
             ) tpt ON tpt.ItemCode = i.itemcode
 

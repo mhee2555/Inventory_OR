@@ -156,6 +156,7 @@ $query = "SELECT
             deproom.isStatus,
             deproom.hn_record_id AS hncode,
             deproom.number_box,
+            deproom.IsTF,
             DATE( deproom.serviceDate ) AS serviceDate,
             DATE_FORMAT( TIME( deproom.serviceDate ), '%H:%i' ) AS serviceTime,
             deproom.departmentroomid,
@@ -184,16 +185,22 @@ $serviceTime = $Result_Detail['serviceTime'];
 $Doctor_Name = $Result_Detail['Doctor_Name'];
 $Procedure_TH = $Result_Detail['Procedure_TH'];
 $hncode = $Result_Detail['hncode'];
+$IsTF = $Result_Detail['IsTF'];
 
     if($hncode == ""){
         $hncode = $Result_Detail['number_box'];
     }
 
+    if($IsTF == 1){
+        $IsTF = 'TF';
+    }else{
+        $IsTF = "";
+    }
 
 
 $html .= '<tr nobr="true" style="font-size:18px;">';
 $html .=   '<td width="10 %" align="center" > ' . $count . '</td>';
-$html .=   '<td width="20 %" align="center" > ' . $serviceTime . '</td>';
+$html .=   '<td width="20 %" align="center" > ' . $serviceTime . ' ' . $IsTF . ' </td>';
 $html .=   '<td width="30 %" align="left" >' . $Procedure_TH . '</td>';
 $html .=   '<td width="20 %" align="left" >' . $hncode . '</td>';
 $html .=   '<td width="20 %" align="left">' . $Doctor_Name . '</td>';

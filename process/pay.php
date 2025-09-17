@@ -613,6 +613,7 @@ function feeddata_waitReturn($conn, $db)
     $DepID = $_SESSION['DepID'];
     $Userid = $_SESSION['Userid'];
     $IsAdmin = $_SESSION['IsAdmin'];
+    $isShowUsage = $_POST['isShowUsage'];
 
     $return = [];
     // if ($IsAdmin == 1) {
@@ -621,7 +622,21 @@ function feeddata_waitReturn($conn, $db)
     //     $where = "  ";
     // }
 
-    $query = " SELECT
+    if ($isShowUsage == 1) {
+        $query = " SELECT
+                        item.itemname,
+                        itemstock.UsageCode AS itemcode ,
+                        1 AS cnt
+                    FROM
+                        itemstock
+                    INNER JOIN
+                        item ON itemstock.ItemCode = item.itemcode
+                    WHERE
+                        itemstock.IsCross = 9
+                       AND itemstock.return_userID  = '$Userid'
+                    ORDER BY itemstock.ReturnDate DESC ";
+    } else {
+        $query = " SELECT
                         item.itemname,
                         item.itemcode,
                         COUNT(itemstock.UsageCode) AS cnt
@@ -635,6 +650,9 @@ function feeddata_waitReturn($conn, $db)
                     GROUP BY
 	                    item.itemname  
                     ORDER BY itemstock.ReturnDate DESC ";
+    }
+
+
 
 
 
@@ -2159,7 +2177,7 @@ function oncheck_pay_manual($conn, $db)
 
         if ($input_docNo_deproom_manual == "") {
             $remark = "สร้างจาก ขอเบิกอุปกรณ์ ";
-            $input_docNo_deproom_manual = createDocNo($conn, $Userid, $DepID, $deproom, $input_remark_manual, 0, 0, 0, 0, '', '', $input_Hn_pay_manual, $input_box_pay_manual, $db, 1, $checkbox_manual_ems,$checkbox_tf);
+            $input_docNo_deproom_manual = createDocNo($conn, $Userid, $DepID, $deproom, $input_remark_manual, 0, 0, 0, 0, '', '', $input_Hn_pay_manual, $input_box_pay_manual, $db, 1, $checkbox_manual_ems, $checkbox_tf);
             $input_docNo_HN_manual = createhncodeDocNo($conn, $Userid, $DepID, $input_Hn_pay_manual, $select_deproom_manual, 1, $select_procedure_manual, $select_doctor_manual, 'สร้างจากเมนูขอเบิกอุปกรณ์', $input_docNo_deproom_manual, $db, $input_date_service_manual, $input_box_pay_manual);
 
             $sql1 = " UPDATE deproom SET IsStatus = 1 , serviceDate = '$input_date_service_manual $input_time_service_manual'  , hn_record_id = '$input_Hn_pay_manual' , doctor = '$select_doctor_manual' , `procedure` = '$select_procedure_manual' , Ref_departmentroomid = '$select_deproom_manual' WHERE DocNo = '$input_docNo_deproom_manual' AND IsCancel = 0 ";
@@ -2558,8 +2576,8 @@ function oncheck_pay_manual($conn, $db)
             if ($_check_exp == 'no_exp') {
                 if ($input_docNo_deproom_manual == "") {
                     $remark = "สร้างจาก ขอเบิกอุปกรณ์ ";
-                    $input_docNo_deproom_manual = createDocNo($conn, $Userid, $DepID, $deproom, $input_remark_manual, 0, 0, 0, 0, '', '', $input_Hn_pay_manual, $input_box_pay_manual, $db, 1, $checkbox_manual_ems);
-                    $input_docNo_HN_manual = createhncodeDocNo($conn, $Userid, $DepID, $input_Hn_pay_manual, $select_deproom_manual, 1, $select_procedure_manual, $select_doctor_manual, 'สร้างจากเมนูขอเบิกอุปกรณ์', $input_docNo_deproom_manual, $db, $input_date_service_manual, $input_box_pay_manual,$checkbox_tf);
+                    $input_docNo_deproom_manual = createDocNo($conn, $Userid, $DepID, $deproom, $input_remark_manual, 0, 0, 0, 0, '', '', $input_Hn_pay_manual, $input_box_pay_manual, $db, 1, $checkbox_manual_ems, $checkbox_tf);
+                    $input_docNo_HN_manual = createhncodeDocNo($conn, $Userid, $DepID, $input_Hn_pay_manual, $select_deproom_manual, 1, $select_procedure_manual, $select_doctor_manual, 'สร้างจากเมนูขอเบิกอุปกรณ์', $input_docNo_deproom_manual, $db, $input_date_service_manual, $input_box_pay_manual, $checkbox_tf);
 
                     $sql1 = " UPDATE deproom SET IsStatus = 1 , serviceDate = '$input_date_service_manual $input_time_service_manual'  , hn_record_id = '$input_Hn_pay_manual' , doctor = '$select_doctor_manual' , `procedure` = '$select_procedure_manual' , Ref_departmentroomid = '$select_deproom_manual' WHERE DocNo = '$input_docNo_deproom_manual' AND IsCancel = 0 ";
                     $meQueryUpdate = $conn->prepare($sql1);
@@ -3110,7 +3128,7 @@ function oncheck_pay_manual($conn, $db)
 
 
                         if ($_item_status == 3) {
-                            oncheck_delete_pay_mapping($conn, $db, $_ItemCode, $input_docNo_deproom_manual, $input_date_service_manual, $_item_status, $_DocNo, 2 , $input_docNo_HN_manual, 1);
+                            oncheck_delete_pay_mapping($conn, $db, $_ItemCode, $input_docNo_deproom_manual, $input_date_service_manual, $_item_status, $_DocNo, 2, $input_docNo_HN_manual, 1);
                             // $count_itemstock = 2;
                         }
 
@@ -3929,7 +3947,7 @@ function oncheck_pay_rfid_manual($conn, $db)
 
     if ($input_docNo_deproom_manual == "") {
         $remark = "สร้างจาก ขอเบิกอุปกรณ์ ";
-        $input_docNo_deproom_manual = createDocNo($conn, $Userid, $DepID, $deproom, $input_remark_manual, 0, 0, 0, 0, '', '', $input_Hn_pay_manual, $input_box_pay_manual, $db, 1, 0,0);
+        $input_docNo_deproom_manual = createDocNo($conn, $Userid, $DepID, $deproom, $input_remark_manual, 0, 0, 0, 0, '', '', $input_Hn_pay_manual, $input_box_pay_manual, $db, 1, 0, 0);
         $input_docNo_HN_manual = createhncodeDocNo($conn, $Userid, $DepID, $input_Hn_pay_manual, $select_deproom_manual, 1, $select_procedure_manual, $select_doctor_manual, 'สร้างจากเมนูขอเบิกอุปกรณ์', $input_docNo_deproom_manual, $db, $input_date_service_manual, $input_box_pay_manual);
 
         $sql1 = " UPDATE deproom SET IsStatus = 1 , serviceDate = '$input_date_service_manual $input_time_service_manual'  , hn_record_id = '$input_Hn_pay_manual' , doctor = '$select_doctor_manual' , `procedure` = '$select_procedure_manual' , Ref_departmentroomid = '$select_deproom_manual' WHERE DocNo = '$input_docNo_deproom_manual' AND IsCancel = 0 ";
@@ -7427,7 +7445,7 @@ function oncheck_pay($conn, $db)
                             while ($row_select = $meQuery_select->fetch(PDO::FETCH_ASSOC)) {
                                 $_DocNoHN = $row_select['DocNo'];
                             }
-                            oncheck_delete_pay_mapping($conn, $db, $_ItemCode, $DocNo_pay, $input_date_service, $_item_status, $DocNo_borrow, 2 , $_DocNoHN, 0);
+                            oncheck_delete_pay_mapping($conn, $db, $_ItemCode, $DocNo_pay, $input_date_service, $_item_status, $DocNo_borrow, 2, $_DocNoHN, 0);
                             // $count_itemstock = 2;
                         }
 
@@ -9536,6 +9554,7 @@ function show_detail_deproom_pay($conn, $db)
                             deproom.doctor AS doctorHN,
                             deproom.`procedure` AS procedureHN,
                             deproom.number_box,
+                            deproom.IsTF,
                             deproom.IsConfirm_pay,
                             SUM(CASE WHEN deproom.IsManual = 1 THEN 1 ELSE 0 END) AS IsManual ,
                             SUM(CASE WHEN deproomdetail.IsRequest = 1 THEN 1 ELSE 0 END) AS IsRequest  ,

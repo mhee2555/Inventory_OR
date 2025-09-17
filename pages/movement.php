@@ -13,6 +13,7 @@
                 <button class="tab-button" id="radio_sterile">ความเคลื่อนไหวตู้ Weighing</button>
                 <button class="tab-button" id="radio_normal">ความเคลื่อนไหว อุปกรณ์ปกติ</button>
                 <button class="tab-button" id="radio_restock">ปรับยอดสต๊อก</button>
+                <button class="tab-button" id="radio_follow">ติดตามอุปกรณ์</button>
             </div>
 
             <!-- <div class="btn-group btn-group-toggle" role="group" aria-label="Basic example">
@@ -467,6 +468,91 @@
     </div>
 </div>
 
+<div id="follow">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="form-group ">
+                        <label for="" class=" col-form-label" style="color:black;">วันที่</label>
+                        <select name="" id="select_follow_month" class="form-control f18">
+                            <option value="01">มกราคม</option>
+                            <option value="02">กุมภาพันธ์</option>
+                            <option value="03">มีนาคม</option>
+                            <option value="04">เมษายน</option>
+                            <option value="05">พฤษภาคม</option>
+                            <option value="06">มิถุนายน</option>
+                            <option value="07">กรกฎาคม</option>
+                            <option value="08">สิงหาคม</option>
+                            <option value="09">กันยายน</option>
+                            <option value="10">ตุลาคม</option>
+                            <option value="11">พฤศจิกายน</option>
+                            <option value="12">ธันวาคม</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group ">
+                        <label for="" class=" col-form-label" style="color:black;">ปี</label>
+                        <select name="" id="select_follow_year" class="form-control f18">
+                            <option value="2025">2025</option>
+                            <option value="2026">2026</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group ">
+                        <label for="" class="col-form-label " style="color:black;">ประเภท</label>
+                        <select name="" id="select_follow_type" class="form-control f18">
+                            <option value="1">สต๊อกนอก</option>
+                            <option value="2">สต๊อกใน</option>
+                        </select>
+                    </div>
+                </div>
+
+
+
+                <div class="col-md-5 text-right" style="margin-top: 40px;">
+                    <button class="btn btn-warning f18" style="margin-right: 10px;width: 130px;" id="btn_add_follow_item">เพิ่มรายการ</button>
+                    <button class="btn btn-danger f18" style="margin-right: 10px;width: 130px;" id="btn_pdf_follow_item">PDF</button>
+                    <button class="btn btn-success f18" style="width: 130px;" id="btn_excel_follow_item">EXCEL</button>
+                </div>
+
+
+
+                <div class="col-md-12 mt-3">
+
+                    <div class="card">
+
+                        <div class="card-body">
+
+                            <div class="row">
+                                <div class="col-lg-12 mt-3  table-responsive">
+
+                                    <table class="table  table-bordered" id="table_follow_item">
+                                        <thead>
+                                            <tr id="tr_followHard_item">
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <div class="modal fade" id="modal_upload_stock" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -540,6 +626,41 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">ยกเลิก</button>
                 <button type="button" class="btn btn-primary" id="save_manage_stockRFID">บันทึก</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModal_follow_item" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+
+
+                    <div class="col-md-12 mt-3">
+                        <label for="" style="color:black;">อุปกรณ์</label>
+                        <select class="form-control f18" id="select_map_item_sub" ></select>
+                    </div>
+
+                    <div class="col-md-12 mt-3">
+                        <div class="row">
+                            <div class="col-md-12"  id="row_item_map">
+
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+                </div>
+
             </div>
         </div>
     </div>

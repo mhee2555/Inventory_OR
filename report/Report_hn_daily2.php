@@ -213,10 +213,10 @@ $colors = [
     $pdf->Rect(10, 9, 190, 130); // (x, y, w, h) - ปรับตาม layout จริง
 
     if($IsTF == 1){
-        $pdf->SetY(20);
-        $pdf->SetX(130);
+        $pdf->SetY(75);
+        $pdf->SetX(60);
         $pdf->SetFont('db_helvethaica_x', 'B', 35);
-        $pdf->Cell(20, 0, 'TF', 1, 1, 'C');
+        $pdf->Cell(20, 0, 'TF', 0, 0, 'C');
     }
 
 

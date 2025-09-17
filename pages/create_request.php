@@ -179,10 +179,17 @@
 
 
 
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="form-group ">
                                         <label style="color:black;font-weight: 600;">หมายเหตุ</label>
                                         <input type="text" class="form-control f18" id="input_remark_request" placeholder="">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-2" style="margin-top: 30px;">
+                                    <div class="form-check ">
+                                        <input type="checkbox" class="form-check-input" id="checkbox_tf" style="width: 25px;height: 25px;">
+                                        <label class="form-check-label f18 ml-4 mt-1" for="checkbox_tf" style="color:black;font-weight:bold;">TF</label>
                                     </div>
                                 </div>
 
@@ -190,12 +197,7 @@
                                     <button class="btn btn-block" style="background-color: #643695;color:#fff;margin-top: 2.2rem;" id="btn_routine">Routine</button>
                                 </div>
 
-                                <div class="col-md-6">
-                                    <div class="form-check ">
-                                        <input type="checkbox" class="form-check-input" id="checkbox_tf" style="width: 25px;height: 25px;">
-                                        <label class="form-check-label f18 ml-4 mt-1" for="checkbox_tf" style="color:black;font-weight:bold;">TF</label>
-                                    </div>
-                                </div>
+
 
                             </div>
 

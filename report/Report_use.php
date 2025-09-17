@@ -242,6 +242,7 @@ $query = " SELECT
             item.itemname,
             item.itemcode,
             item.itemcode2,
+            deproomdetailsub.ItemStockID,
             item.SalePrice,
             item.item_status,
             COUNT(deproomdetailsub.ID) AS cnt,
@@ -279,7 +280,7 @@ $query = " SELECT
             item.SalePrice,
             hncode.DocNo_SS
         ORDER BY
-            item.item_status DESC ,
+            deproomdetailsub.ItemStockID ASC,
             (
                 COUNT(deproomdetailsub.ID) - COALESCE((
                     SELECT COUNT(log_return.id)
@@ -301,13 +302,14 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
     $DocNo_SS = $Result_Detail['DocNo_SS'];
     $cnt_return = $Result_Detail['cnt_return'];
     $item_status = $Result_Detail['item_status'];
+    $ItemStockID = $Result_Detail['ItemStockID'];
 
     
     if ($Result_Detail['cnt'] != 0) {
 
         $style="";
         $style2="background-color:#E6E6FA;";
-        if($item_status > 0 ){
+        if($ItemStockID == null){
             $style = " background-color:#e1bee7; ";
             $style2 = " background-color:#e1bee7; ";
         }

@@ -1274,6 +1274,15 @@ function show_detail_deproom_pay() {
               }
             }
 
+            var text_TF = "";
+            if (value2.IsTF == 1) {
+              text_TF = `<label class="pl-2 pr-2">|</label>
+                          <div class="text-truncate text-dark" style="max-width: 200px;">
+                            TF 
+                          </div>  `;
+            }
+
+            console.log();
             _tr += `<tr class='tr_${value.id} all111' ${sty} id='deproom_${value2.DocNo}'>
                           <td class='text-center' >
 
@@ -1313,6 +1322,10 @@ function show_detail_deproom_pay() {
                                   <div class="text-truncate text-dark" style="max-width: 200px;" ${titleD}>
                                     ${value2.Doctor_Name} 
                                   </div>
+
+                                  ${text_TF}
+      
+
                                 </div>
 
                                 <!-- ฝั่งขวา: ป้าย manual -->
@@ -4325,6 +4338,7 @@ $("#input_scan_return").keypress(function (e) {
 $("#input_search_history_return").keyup(function (e) {
   feeddata_history_Return();
 });
+
 function feeddata_history_Return() {
   $.ajax({
     url: "process/pay.php",
@@ -4423,11 +4437,20 @@ function feeddata_history_Return() {
 }
 
 function feeddata_waitReturn() {
+
+  if ($("#checkbox_showReturn").is(":checked")) {
+    var isShowUsage = 1;
+  } else {
+    var isShowUsage = 0;
+  }
+
+
   $.ajax({
     url: "process/pay.php",
     type: "POST",
     data: {
       FUNC_NAME: "feeddata_waitReturn",
+      isShowUsage: isShowUsage,
     },
     success: function (result) {
       // $("#table_item_claim").DataTable().destroy();
@@ -4453,6 +4476,11 @@ function feeddata_waitReturn() {
     },
   });
 }
+
+
+$("#checkbox_showReturn").click(function () {
+  feeddata_waitReturn();
+});
 
 // claim
 $("#input_scanclaim").keypress(function (e) {
@@ -4493,6 +4521,7 @@ $("#input_scanclaim").keypress(function (e) {
     });
   }
 });
+
 $("#input_return_claim").keypress(function (e) {
   if (e.which == 13) {
     $("#input_return_claim").val(convertString($(this).val().trim()));
@@ -4531,6 +4560,7 @@ $("#input_return_claim").keypress(function (e) {
     });
   }
 });
+
 $("#btn_send_nsterile_claim").click(function () {
   Swal.fire({
     title: "ยืนยัน",
@@ -4592,6 +4622,7 @@ function onSendNsterile() {
     },
   });
 }
+
 $("#btn_send").on("click", function (e) {
   e.preventDefault();
   var link = this.href;
@@ -5189,6 +5220,7 @@ function session() {
     },
   });
 }
+
 function showDialogFailed(text) {
   Swal.fire({
     title: settext("alert_fail"),
@@ -5196,6 +5228,7 @@ function showDialogFailed(text) {
     icon: "error",
   });
 }
+
 function showDialogSuccess(text) {
   Swal.fire({
     title: settext("alert_success"),
@@ -5204,6 +5237,7 @@ function showDialogSuccess(text) {
     timer: 1000,
   });
 }
+
 function convertString(S_Input) {
   var S_QR = "";
   console.log(S_Input.charCodeAt(0));
@@ -5219,6 +5253,7 @@ function convertString(S_Input) {
 
   return S_QR;
 }
+
 function convertEN(char) {
   switch (char) {
     case "ข":
@@ -5351,6 +5386,7 @@ function convertEN(char) {
       return " ";
   }
 }
+
 function set_date() {
   var d = new Date();
   var month = d.getMonth() + 1;
@@ -5367,6 +5403,7 @@ function set_date() {
 
   return output;
 }
+
 function loadScript(url) {
   const script = document.createElement("script");
   script.src = url;
@@ -5376,6 +5413,7 @@ function loadScript(url) {
   };
   document.head.appendChild(script);
 }
+
 function settext(key) {
   if (localStorage.lang == "en") {
     return en[key];

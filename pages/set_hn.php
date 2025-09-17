@@ -56,7 +56,7 @@
                                         <input type="time" class="form-control datepicker-here f18" id="input_time_service_manual" data-language='en' data-date-format='dd-mm-yyyy'>
                                     </div>
                                 </div>
-                                <div class="col-md-1 text-right">
+                                <div class="col-md-1 text-left">
                                     <div class="form-check " style="margin-top: 38px;">
                                         <input type="checkbox" class="form-check-input" id="checkbox_tf" style="width: 25px;height: 25px;">
                                         <label class="form-check-label f18 ml-4 mt-1" for="checkbox_tf" style="color:black;font-weight:bold;">TF</label>

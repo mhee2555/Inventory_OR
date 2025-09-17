@@ -230,11 +230,11 @@
                                     <label style="color:black;font-weight: 600;">เลขที่กล่อง</label>
                                     <input type='text' class='form-control f18' id="input_box_pay_manual">
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-5">
                                     <label style="color:black;font-weight: 600;">เลขประจำตัวผู้ป่วย</label>
                                     <input type='text' class='form-control f18' id="input_Hn_pay_manual">
                                 </div>
-                                <div class="col-md-2 text-right">
+                                <div class="col-md-1 text-right">
                                     <div class="form-check " style="margin-top: 38px;">
                                         <input type="checkbox" class="form-check-input" id="checkbox_tf" style="width: 25px;height: 25px;">
                                         <label class="form-check-label f18 ml-4 mt-1" for="checkbox_tf" style="color:black;font-weight:bold;">TF</label>
@@ -431,10 +431,20 @@
                 <button class="tab-button2" id="radio_history_return">ประวัติสแกนคืนอุปกรณ์</button>
             </div>
 
+
+
+
             <!-- <div class="btn-group btn-group-toggle" role="group" aria-label="Basic example">
                 <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;border-color: lightgray;" id="radio_return">สแกนคืนอุปกรณ์</button>
                 <button type="button" class="btn btn-light f24" style="border: 1px solid;font-weight: 600;width:260px;border-color: lightgray;" id="radio_history_return">ประวัติสแกนคืนอุปกรณ์</button>
             </div> -->
+        </div>
+
+        <div class="col-lg-3 text-right">
+            <div class="form-check " style="margin-top: 38px;">
+                <input type="checkbox" class="form-check-input" id="checkbox_showReturn" style="width: 25px;height: 25px;">
+                <label class="form-check-label f18 ml-4 mt-1" for="checkbox_showReturn" style="color:black;font-weight:bold;">แสดงแบบแยกรหัสอุปกรณ์</label>
+            </div>
         </div>
     </div>
 

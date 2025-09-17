@@ -129,6 +129,8 @@ function feeddata($conn, $db)
                                         OR DATE( itemstock.ExpireDate ) BETWEEN CURDATE() 
                                         AND DATE_ADD( CURDATE(), INTERVAL  $GN_WarningExpiringSoonDay DAY ) 
                                     ) 
+                                    $wherepermission
+                                    $wheredep
                                 GROUP BY
                                     itemstock.UsageCode 
                                 HAVING
@@ -169,6 +171,8 @@ function feeddata($conn, $db)
                                         OR DATE( itemstock.ExpireDate ) BETWEEN CURDATE() 
                                         AND DATE_ADD( CURDATE(), INTERVAL  $GN_WarningExpiringSoonDay DAY ) 
                                     ) 
+                                    $wherepermission
+                                    $wheredep
                                 GROUP BY
                                     itemstock.UsageCode 
                                 HAVING
@@ -214,7 +218,6 @@ function feeddata($conn, $db)
                 item.itemname,  FORMAT ( itemstock.ExpireDate, 'dd/MM/yyyy' ) ASC";
     }
 
-    // echo $query;
 
 
     $meQuery = $conn->prepare($query);

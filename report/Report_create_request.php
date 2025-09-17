@@ -370,7 +370,7 @@ $query = "SELECT
                 item.itemcode,
                 deproomdetail.ID ,
                 itemtype.TyeName
-                ORDER BY item.itemname ASC ";
+                ORDER BY TyeName  , item.itemname ASC ";
 
 $meQuery1 = $conn->prepare($query);
 $meQuery1->execute();
