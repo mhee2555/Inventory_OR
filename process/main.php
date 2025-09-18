@@ -34,6 +34,8 @@ if (!empty($_POST['FUNC_NAME'])) {
         selection_request_item($conn,$db);
     } else if ($_POST['FUNC_NAME'] == 'selection_add_item') {
         selection_add_item($conn,$db);
+    } else if ($_POST['FUNC_NAME'] == 'onUpdatesound') {
+        onUpdatesound($conn,$db);
     }
 }
 
@@ -336,6 +338,27 @@ function selection_receive_stock($conn,$db)
 
     
     $return[] = $cnt;
+
+    echo json_encode($return);
+    unset($conn);
+    die;
+}
+
+
+
+function onUpdatesound($conn,$db)
+{
+    $return = [];
+    $Userid = $_POST['Userid'];
+    $select_sound = $_POST['select_sound'];
+
+    $query = "UPDATE users SET IsSound = $select_sound WHERE ID = '$Userid' ";
+
+    $_SESSION['IsSound'] = $select_sound;
+
+
+    $meQuery = $conn->prepare($query);
+    $meQuery->execute();
 
     echo json_encode($return);
     unset($conn);

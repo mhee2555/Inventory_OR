@@ -1,6 +1,8 @@
 var departmentroomname = "";
 var UserName = "";
 var Userid = "";
+var IsSound = "";
+
 
 var procedure_id_Array = [];
 var doctor_Array = [];
@@ -15,6 +17,7 @@ var procedure_edit_ems_Array = [];
 var doctor_edit_ems_Array = [];
 
 $(function () {
+
   session();
 
   var now = new Date();
@@ -2492,23 +2495,35 @@ function oncheck_pay_manual(input_pay_manual) {
       if (ObjData.count_itemstock == 3) {
         showDialogFailed("สแกนอุปกรณ์ซ้ำ");
         $("#input_pay_manual").val("");
+        if (IsSound == 1) {
+          playNot_Found_Item();
+        }
         return;
       }
 
       if (ObjData.count_itemstock == 0) {
         showDialogFailed("QR Code ไม่ถูกต้องไม่พบรหัสนี้ในระบบ");
         $("#input_pay_manual").val("");
+        if (IsSound == 1) {
+          playNot_Found_Item();
+        }
         return;
       }
 
       if (ObjData.count_itemstock == 9) {
         showDialogFailed("รหัสใช้งานหมดอายุไม่สามารถสแกนใช้งานได้");
         $("#input_pay_manual").val("");
+        if (IsSound == 1) {
+          playNot_Found_Item();
+        }
         return;
       }
 
       if (ObjData.input_docNo_deproom_manual == "") {
         showDialogFailed("QR Code ไม่ถูกต้องไม่พบรหัสนี้ในระบบ");
+        if (IsSound == 1) {
+          playNot_Found_Item();
+        }
       } else {
         $("#input_docNo_deproom_manual").val(
           ObjData.input_docNo_deproom_manual
@@ -2621,14 +2636,23 @@ function oncheck_pay(input_pay) {
       success: function (result) {
         if (result == 0) {
           showDialogFailed("QR Code ไม่ถูกต้องไม่พบรหัสนี้ในระบบ");
+          if (IsSound == 1) {
+            playNot_Found_Item();
+          }
         } else if (result == 1) {
           showDialogFailed("จ่ายครบแล้ว");
         } else if (result == 2) {
           show_detail_item_ByDocNo();
         } else if (result == 3) {
           showDialogFailed("สแกนอุปกรณ์ซ้ำ");
+          if (IsSound == 1) {
+            playNot_Found_Item();
+          }
         } else if (result == 9) {
           showDialogFailed("รหัสใช้งานหมดอายุไม่สามารถสแกนใช้งานได้");
+          if (IsSound == 1) {
+            playNot_Found_Item();
+          }
         } else {
           var ObjData = JSON.parse(result);
           if (!$.isEmptyObject(ObjData)) {
@@ -2810,9 +2834,15 @@ function oncheck_Returnpay_manual(input_returnpay_manual) {
     success: function (result) {
       if (result == 2) {
         showDialogFailed("รหัสนี้อยู่คลังสต๊อกห้องผ่าตัด");
+        if (IsSound == 1) {
+          playNot_Found_Item();
+        }
       }
       if (result == 0) {
         showDialogFailed("QR Code ไม่ถูกต้องไม่พบรหัสนี้ในระบบ");
+        if (IsSound == 1) {
+          playNot_Found_Item();
+        }
       } else {
         show_detail_item_ByDocNo_manual();
       }
@@ -2841,12 +2871,18 @@ function oncheck_Returnpay(input_returnpay) {
     success: function (result) {
       if (result == 2) {
         showDialogFailed("รหัสนี้อยู่คลังสต๊อกห้องผ่าตัด");
+        if (IsSound == 1) {
+          playNot_Found_Item();
+        }
       }
       if (result == 3) {
         show_detail_item_ByDocNo();
       }
       if (result == 0) {
         showDialogFailed("QR Code ไม่ถูกต้องไม่พบรหัสนี้ในระบบ");
+        if (IsSound == 1) {
+          playNot_Found_Item();
+        }
       } else {
         var ObjData = JSON.parse(result);
         if (!$.isEmptyObject(ObjData)) {
@@ -4343,6 +4379,9 @@ $("#input_scan_return").keypress(function (e) {
           });
         } else {
           showDialogFailed("QR Code ไม่ถูกต้องไม่พบรหัสนี้ในระบบ");
+          if (IsSound == 1) {
+            playNot_Found_Item();
+          }
         }
 
         $("#input_scan_return").val("");
@@ -4777,6 +4816,9 @@ function oncheck_Returnsell(input_returnpay_sell) {
       }
       if (result == 0) {
         showDialogFailed("QR Code ไม่ถูกต้องไม่พบรหัสนี้ในระบบ");
+        if (IsSound == 1) {
+          playNot_Found_Item();
+        }
       } else {
         var ObjData = JSON.parse(result);
         show_detail_item_sell();
@@ -4827,14 +4869,23 @@ function oncheck_sell(input_pay_sell) {
       success: function (result) {
         if (result == 0) {
           showDialogFailed("QR Code ไม่ถูกต้องไม่พบรหัสนี้ในระบบ");
+          if (IsSound == 1) {
+            playNot_Found_Item();
+          }
         } else if (result == 1) {
           showDialogFailed("จ่ายครบแล้ว");
         } else if (result == 2) {
           show_detail_item_ByDocNo();
         } else if (result == 3) {
           showDialogFailed("สแกนอุปกรณ์ซ้ำ");
+          if (IsSound == 1) {
+            playNot_Found_Item();
+          }
         } else if (result == 9) {
           showDialogFailed("รหัสใช้งานหมดอายุไม่สามารถสแกนใช้งานได้");
+          if (IsSound == 1) {
+            playNot_Found_Item();
+          }
         } else {
 
           if ($("#input_pay_sell").data("docno") != "") {
@@ -5231,6 +5282,7 @@ function session() {
       RefDepID = ObjData.RefDepID;
       Permission_name = ObjData.Permission_name;
       Userid = ObjData.Userid;
+      IsSound = ObjData.IsSound;
 
 
     },
@@ -5436,4 +5488,8 @@ function settext(key) {
   } else {
     return th[key];
   }
+}
+
+function playNot_Found_Item() {
+  new Audio("assets/sound/no_item_found.mp3").play();
 }

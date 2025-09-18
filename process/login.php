@@ -89,6 +89,7 @@ function LoginUser($conn, $db)
                 permission.Permission,
                 users.B_ID,
                 users.Lang,
+                users.IsSound,
                 users.display,
                 users.font,
                 employee.DepID,
@@ -116,6 +117,7 @@ function LoginUser($conn, $db)
         $_SESSION['DepID'] = $row['DepID'];
         $_SESSION['Lang'] = $row['Lang'];
         $_SESSION['display'] = $row['display'];
+        $_SESSION['IsSound'] = $row['IsSound'];
         $_SESSION['font'] = $row['font'];
         $_SESSION['RefDepID'] = $row['RefDepID'];
         $_SESSION['UserName'] = $row['UserName'];

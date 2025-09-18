@@ -30,7 +30,7 @@ $EmpCode = $_SESSION['EmpCode'];
 $time_out = $_SESSION['time_out'];
 $GN_WarningExpiringSoonDay = $_SESSION['GN_WarningExpiringSoonDay'];
 $Permission_name = $_SESSION['Permission_name'];
-
+$IsSound = $_SESSION['IsSound'];
 
 if (!isset($_SESSION['UserName'])) {
     header("location:login.php");
@@ -111,7 +111,7 @@ if (!isset($_SESSION['UserName'])) {
             <div class="modal-body text-center">
 
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="card pl-3 pr-3">
                             <div style="border-bottom: none;text-align: center;display: block;">
                                 <i style="font-size: 80px;color: #007bff;margin-bottom: 10px;" class="fa-solid fa-clock"></i>
@@ -123,21 +123,10 @@ if (!isset($_SESSION['UserName'])) {
                                     <span class="input-group-text" id="basic-addon2">นาที</span>
                                 </div>
                             </div>
-
-                            <!-- <div class="row">
-                                <div class="col-md-6 text-right">
-                                    <button type="button" class="btn btn-primary w-50 " id="save_time_out_Button" style="color:#fff;background-color:#004aad;font-size:20px;">บันทึก</button>
-                                </div>
-                                <div class="col-md-6 text-left">
-                                    <button type="button" class="btn btn-logout w-50 " data-dismiss="modal" style="background-color:#ed1c24;color:#fff;font-size:20px;">ปิด</button>
-                                </div>
-                            </div> -->
                         </div>
 
                     </div>
-
-
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="card pl-3 pr-3">
                             <div style="border-bottom: none;text-align: center;display: block;">
                                 <i style="font-size: 80px;color: #007bff;margin-bottom: 10px;" class="fa-solid fa-clock"></i>
@@ -149,21 +138,24 @@ if (!isset($_SESSION['UserName'])) {
                                     <span class="input-group-text" id="basic-addon2">วัน</span>
                                 </div>
                             </div>
-
-                            <!-- <div class="row">
-                                <div class="col-md-6 text-right">
-                                    <button type="button" class="btn btn-primary w-50 " id="save_ex_soon_Button" style="color:#fff;background-color:#004aad;font-size:20px;">บันทึก</button>
-                                </div>
-                                <div class="col-md-6 text-left">
-                                    <button type="button" class="btn btn-logout w-50 " data-dismiss="modal" style="background-color:#ed1c24;color:#fff;font-size:20px;">ปิด</button>
-                                </div>
-                            </div> -->
-
-
-
                         </div>
 
                     </div>
+
+                    <div class="col-md-4">
+                        <div class="card pl-3 pr-3">
+                            <div style="border-bottom: none;text-align: center;display: block;">
+                                <i style="font-size: 80px;color: #007bff;margin-bottom: 10px;"  class="fa-solid fa-volume-high"></i>
+                                <h5 class="modal-title" id="loginModalLabel" style="color:black;">เสียง</h5>
+                            </div>
+                                <select name="" id="select_sound" class="form-control mb-3">
+                                    <option value="1">เปิด</option>
+                                    <option value="0">ปิด</option>
+                                </select>
+                        </div>
+
+                    </div>
+
                 </div>
 
 
@@ -420,7 +412,7 @@ if (!isset($_SESSION['UserName'])) {
         }
 
 
-
+        var IsSound = '<?php echo $IsSound; ?>';
         var GN_WarningExpiringSoonDay = '<?php echo $GN_WarningExpiringSoonDay; ?>';
         var time_out = '<?php echo $time_out; ?>';
         var RefDepID = '<?php echo $RefDepID; ?>';
@@ -433,6 +425,7 @@ if (!isset($_SESSION['UserName'])) {
         }
         $("#input_time_out").val(time_out);
         $("#input_exsoon").val(GN_WarningExpiringSoonDay);
+        $("#select_sound").val(IsSound);
 
         $('#save_time_out_Button').on("click", function(e) {
 
@@ -478,6 +471,21 @@ if (!isset($_SESSION['UserName'])) {
                     location.reload();
                 }
             });
+
+            $.ajax({
+                url: "process/main.php",
+                type: 'POST',
+                data: {
+                    'FUNC_NAME': 'onUpdatesound',
+                    'Userid': Userid,
+                    'select_sound': $("#select_sound").val(),
+                },
+                success: function(result) {
+                    location.reload();
+                }
+            });
+
+            
             // $("#time_out_Modal").modal('toggle');
         })
 
