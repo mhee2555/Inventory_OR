@@ -117,7 +117,9 @@ $query = " SELECT
                 ( SELECT GROUP_CONCAT( `procedure`.Procedure_TH SEPARATOR ' , ' ) AS Procedures FROM `procedure` WHERE FIND_IN_SET( `procedure`.ID, hncode.`procedure` ) ) AS Procedures,
                 itemtype.TyeName,
                 itemstock.UsageCode,
-                item.itemname 
+                item.itemname,
+                item2.itemname AS itemname2,
+	            item2.itemcode AS itemcode2,
             FROM
                 hncode
                 LEFT JOIN departmentroom ON departmentroom.id = hncode.departmentroomid
@@ -180,6 +182,14 @@ while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
         $row['HnCode'] = $row['number_box'];
     }
 
+    if ($row['UsageCode'] == null) {
+        $usageCode = $row['itemcode2'];
+        $itemname = $row['itemname2'];
+    } else {
+        $usageCode = $row['UsageCode'];
+        $itemname = $row['itemname'];
+    }
+
     $dataArray[] = [
         'DocDate'              => $row['DocDate'],
         'HnCode'               => $row['HnCode'],
@@ -187,8 +197,8 @@ while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
         'Doctor_Name'          => $row['Doctor_Name'],
         'Procedures'           => $row['Procedures'],
         'TyeName'              => $row['TyeName'],
-        'UsageCode'            => $row['UsageCode'],
-        'itemname'             => $row['itemname']
+        'UsageCode'            => $usageCode,
+        'itemname'             => $itemname
     ];
 }
 

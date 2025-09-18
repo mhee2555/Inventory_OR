@@ -224,7 +224,7 @@ function oncheck_sell($conn, $db)
     $input_date_service_sell = explode("-", $input_date_service_sell);
     $input_date_service_sell = $input_date_service_sell[2] . '-' . $input_date_service_sell[1] . '-' . $input_date_service_sell[0];
 
-    
+
     $count_new_item_itemcode = 0;
 
 
@@ -234,11 +234,6 @@ function oncheck_sell($conn, $db)
         $wherepermission = " AND item.warehouseID = $permission ";
     }
 
-    // echo  $DocNo_pay_sell;
-    // exit;
-    if ($DocNo_pay_sell == "") {
-        $DocNo_pay_sell = createDocNoSell($conn, $Userid, 1, $select_department_sell_right, $input_date_service_sell, $input_time_service_sell, $db);
-    }
 
 
     $query_1 = "        SELECT
@@ -267,6 +262,16 @@ function oncheck_sell($conn, $db)
 
         $_check_exp = $row_1['check_exp'];
         if ($_check_exp == 'no_exp') {
+
+
+            // echo  $DocNo_pay_sell;
+            // exit;
+            if ($DocNo_pay_sell == "") {
+                $DocNo_pay_sell = createDocNoSell($conn, $Userid, 1, $select_department_sell_right, $input_date_service_sell, $input_time_service_sell, $db);
+            }
+
+
+
             $_ItemCode = $row_1['ItemCode'];
             $_Isdeproom =  $row_1['Isdeproom'];
             $_departmentroomid =  $row_1['departmentroomid'];

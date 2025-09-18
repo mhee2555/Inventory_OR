@@ -1,4 +1,5 @@
 <?php
+session_start();
 require('../config/db.php');
 include 'phpqrcode/qrlib.php';
 require('tcpdf/tcpdf.php');
@@ -53,12 +54,6 @@ class MYPDF extends TCPDF
 
             $image_file = "images/logo1.png";
             $this->Image($image_file, 10, 10, 15, 25, 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);
-
-
-
-
-
-
         }
     }
     // Page footer
@@ -132,6 +127,21 @@ $html = '<table cellspacing="0" cellpadding="2" border="1" >
 </tr> </thead>';
 
 
+$deproom = $_SESSION['deproom'];
+$RefDepID = $_SESSION['RefDepID'];
+$wheredep = "";
+if ($RefDepID  == '36DEN') {
+    $wheredep = "AND itemstock.departmentroomid = '$deproom'  AND  itemstock.IsDeproom = 1  ";
+} else {
+    $wheredep = "AND  itemstock.IsDeproom = 0 ";
+}
+$permission = $_SESSION['permission'];
+
+$wherepermission = "";
+if ($permission != '5') {
+    $wherepermission = " AND item.warehouseID = $permission ";
+}
+
 
 $count = 1;
 $sum_all = 0;
@@ -139,7 +149,7 @@ $query = " SELECT
                 itemstock.ItemCode,
                 itemstock.UsageCode,
                 itemstock.RowID,
-                DATE_FORMAT( itemstock.ExpireDate, '%d/%m/%Y' ) AS ExpireDate,
+                DATE_FORMAT( itemstock.ExpireDate, '%d-%m-%Y' ) AS ExpireDate,
                 COUNT( itemstock.Qty ) AS Qty,
             CASE
                     
@@ -163,6 +173,8 @@ $query = " SELECT
                         LEFT JOIN item ON item.itemcode = itemstock.ItemCode 
                     WHERE
                         itemstock.IsCancel = 0 
+                        $wherepermission
+                        $wheredep
                         AND (
                             DATE( itemstock.ExpireDate ) <= CURDATE() 
                             OR DATE( itemstock.ExpireDate ) BETWEEN CURDATE() 
@@ -176,25 +188,25 @@ $query = " SELECT
                     item.itemname,
                 DATE( itemstock.ExpireDate ) ASC;  ";
 
+
+
 $meQuery1 = $conn->prepare($query);
 $meQuery1->execute();
 while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
-    
+
     $pdf->SetFont('db_helvethaica_x', 'B', 18);
 
 
 
 
-        $itemcode = "";
-        $html .= '<tr nobr="true" style="font-size:15px;">';
-        $html .=   '<td width="10 %" align="center"> ' . $count . '</td>';
-        $html .=   '<td width="20 %" align="center">' .    $Result_Detail['UsageCode'] . '</td>';
-        $html .=   '<td width="55 %" align="left">' . $Result_Detail['itemname'] . '</td>';
-        $html .=   '<td width="15 %" align="center">' . $Result_Detail['ExpireDate'] . '</td>';
-        $html .=  '</tr>';
-        $count++;
-
-
+    $itemcode = "";
+    $html .= '<tr nobr="true" style="font-size:15px;">';
+    $html .=   '<td width="10 %" align="center"> ' . $count . '</td>';
+    $html .=   '<td width="20 %" align="center">' .    $Result_Detail['UsageCode'] . '</td>';
+    $html .=   '<td width="55 %" align="left">' . $Result_Detail['itemname'] . '</td>';
+    $html .=   '<td width="15 %" align="center">' . $Result_Detail['ExpireDate'] . '</td>';
+    $html .=  '</tr>';
+    $count++;
 }
 
 // $html .= '<tr nobr="true" style="font-size:15px;">';

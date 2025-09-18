@@ -160,7 +160,7 @@ $query = "SELECT
                     item.stock_min,
                     item.stock_balance,
                     COUNT( itemstock.RowID ) AS cnt,
-                    ( SELECT COUNT( ID ) FROM itemstock_transaction_detail WHERE ItemCode = item.itemcode AND IsStatus = 1 ) AS cnt_pay,
+                    ( SELECT COUNT( ID ) FROM itemstock_transaction_detail WHERE ItemCode = item.itemcode AND (IsStatus = 1 OR IsStatus = 9 ) ) AS cnt_pay,
                     ( SELECT COUNT( ID ) FROM itemstock_transaction_detail WHERE ItemCode = item.itemcode AND IsStatus = 7 ) AS cnt_cssd,
                     (
                     SELECT

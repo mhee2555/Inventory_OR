@@ -432,50 +432,148 @@ function deleteDeproom($conn)
 
 function saveDeproom($conn)
 {
-    $input_DeproomFloor = $_POST['input_DeproomFloor'];
-    $input_DeproomNameTH = $_POST['input_DeproomNameTH'];
-    $input_DeproomNameEN = $_POST['input_DeproomNameEN'];
-    $input_DeproomName_sub = $_POST['input_DeproomName_sub'];
-    $input_IDDeproom = $_POST['input_IDDeproom'];
-    $IsActive = $_POST['IsActive'];
+    // helper
+    $post = function ($k, $d = '') { return isset($_POST[$k]) ? $_POST[$k] : $d; };
 
-    $IsAdmin = 0;
+    // inputs
+    $input_DeproomFloor   = (int)$post('input_DeproomFloor', 0);
+    $input_DeproomNameTH  = trim($post('input_DeproomNameTH', ''));
+    $input_DeproomNameEN  = trim($post('input_DeproomNameEN', ''));
+    $input_DeproomNameSub = trim($post('input_DeproomName_sub', ''));
+    $input_IDDeproom      = trim($post('input_IDDeproom', ''));
+    $IsActive             = isset($_POST['IsActive']) ? (int)$_POST['IsActive'] : 0;
 
-    $count_id = 0;
+    try {
+        $conn->beginTransaction();
 
-    // if ($input_IDDeproom == "") {
-    $check_d = "    SELECT id 
-                            FROM   departmentroom 
-                            WHERE (departmentroomname_sub = '$input_DeproomName_sub' OR departmentroomname = '$input_DeproomNameTH' OR departmentroomname_EN = '$input_DeproomNameEN' ) ";
-    $meQuery_d = $conn->prepare($check_d);
-    $meQuery_d->execute();
-    while ($row_d = $meQuery_d->fetch(PDO::FETCH_ASSOC)) {
-        $count_id++;
-    }
-    // }
-
-
-
-    if ($count_id == 0) {
-        if ($input_IDDeproom == "") {
-            $query = "INSERT INTO departmentroom ( departmentroomname ,  floor_id ,  IsActive  ,  departmentroomname_EN ,  IsMainroom , departmentroomname_sub  ) 
-            VALUES             ('$input_DeproomNameTH'  , '$input_DeproomFloor'  , $IsActive , '$input_DeproomNameEN'  , 0 , '$input_DeproomName_sub') ";
-        } else {
-            $query = "UPDATE departmentroom SET   departmentroomname = '$input_DeproomNameTH' , floor_id = $input_DeproomFloor , IsActive = $IsActive , departmentroomname_EN = '$input_DeproomNameEN' , departmentroomname_sub = '$input_DeproomName_sub'
-                    WHERE id = '$input_IDDeproom'  ";
+        // --------- ตรวจซ้ำ (ไม่ชนตัวเองตอนแก้ไข) -----------
+        $sqlDup = "SELECT id
+                   FROM departmentroom
+                   WHERE (departmentroomname_sub = :sub
+                          OR departmentroomname = :th
+                          OR departmentroomname_EN = :en)";
+        if ($input_IDDeproom !== '') {
+            $sqlDup .= " AND id <> :id";
         }
-        $meQuery = $conn->prepare($query);
-        $meQuery->execute();
+        $sqlDup .= " LIMIT 1";
 
-        echo "insert success";
-        unset($conn);
-        die;
-    } else {
-        echo "xxxx";
+        $stmt = $conn->prepare($sqlDup);
+        $stmt->bindValue(':sub', $input_DeproomNameSub, PDO::PARAM_STR);
+        $stmt->bindValue(':th',  $input_DeproomNameTH,  PDO::PARAM_STR);
+        $stmt->bindValue(':en',  $input_DeproomNameEN,  PDO::PARAM_STR);
+        if ($input_IDDeproom !== '') {
+            $stmt->bindValue(':id', $input_IDDeproom, PDO::PARAM_INT);
+        }
+        $stmt->execute();
+        if ($stmt->fetch(PDO::FETCH_ASSOC)) {
+            // พบชื่อซ้ำ
+            echo "xxxx";
+            $conn->rollBack();
+            unset($conn);
+            die;
+        }
+
+        // -------------- INSERT / UPDATE -----------------
+        if ($input_IDDeproom === '') {
+            // INSERT
+            $sql = "INSERT INTO departmentroom
+                        (departmentroomname, floor_id, IsActive, departmentroomname_EN, IsMainroom, departmentroomname_sub)
+                    VALUES
+                        (:th, :floor, :act, :en, 0, :sub)";
+            $stmt = $conn->prepare($sql);
+            $stmt->bindValue(':th',    $input_DeproomNameTH,  PDO::PARAM_STR);
+            $stmt->bindValue(':floor', $input_DeproomFloor,   PDO::PARAM_INT);
+            $stmt->bindValue(':act',   $IsActive,             PDO::PARAM_INT);
+            $stmt->bindValue(':en',    $input_DeproomNameEN,  PDO::PARAM_STR);
+            $stmt->bindValue(':sub',   $input_DeproomNameSub, PDO::PARAM_STR);
+            $stmt->execute();
+
+            $conn->commit();
+            echo "insert success";
+            unset($conn);
+            die;
+
+        } else {
+            // UPDATE
+            $sql = "UPDATE departmentroom SET
+                        departmentroomname    = :th,
+                        floor_id              = :floor,
+                        IsActive              = :act,
+                        departmentroomname_EN = :en,
+                        departmentroomname_sub= :sub
+                    WHERE id = :id";
+            $stmt = $conn->prepare($sql);
+            $stmt->bindValue(':th',    $input_DeproomNameTH,  PDO::PARAM_STR);
+            $stmt->bindValue(':floor', $input_DeproomFloor,   PDO::PARAM_INT);
+            $stmt->bindValue(':act',   $IsActive,             PDO::PARAM_INT);
+            $stmt->bindValue(':en',    $input_DeproomNameEN,  PDO::PARAM_STR);
+            $stmt->bindValue(':sub',   $input_DeproomNameSub, PDO::PARAM_STR);
+            $stmt->bindValue(':id',    $input_IDDeproom,      PDO::PARAM_INT);
+            $stmt->execute();
+
+            $conn->commit();
+            echo "update success";
+            unset($conn);
+            die;
+        }
+
+    } catch (Exception $e) {
+        if ($conn && $conn->inTransaction()) {
+            $conn->rollBack();
+        }
+        echo "error";
         unset($conn);
         die;
     }
 }
+
+
+// function saveDeproom($conn)
+// {
+//     $input_DeproomFloor = $_POST['input_DeproomFloor'];
+//     $input_DeproomNameTH = $_POST['input_DeproomNameTH'];
+//     $input_DeproomNameEN = $_POST['input_DeproomNameEN'];
+//     $input_DeproomName_sub = $_POST['input_DeproomName_sub'];
+//     $input_IDDeproom = $_POST['input_IDDeproom'];
+//     $IsActive = $_POST['IsActive'];
+
+//     $IsAdmin = 0;
+
+//     $count_id = 0;
+
+//     // if ($input_IDDeproom == "") {
+//     $check_d = "    SELECT id 
+//                             FROM   departmentroom 
+//                             WHERE (departmentroomname_sub = '$input_DeproomName_sub' OR departmentroomname = '$input_DeproomNameTH' OR departmentroomname_EN = '$input_DeproomNameEN' ) ";
+//     $meQuery_d = $conn->prepare($check_d);
+//     $meQuery_d->execute();
+//     while ($row_d = $meQuery_d->fetch(PDO::FETCH_ASSOC)) {
+//         $count_id++;
+//     }
+//     // }
+
+
+
+//     if ($count_id == 0) {
+//         if ($input_IDDeproom == "") {
+//             $query = "INSERT INTO departmentroom ( departmentroomname ,  floor_id ,  IsActive  ,  departmentroomname_EN ,  IsMainroom , departmentroomname_sub  ) 
+//             VALUES             ('$input_DeproomNameTH'  , '$input_DeproomFloor'  , $IsActive , '$input_DeproomNameEN'  , 0 , '$input_DeproomName_sub') ";
+//         } else {
+//             $query = "UPDATE departmentroom SET   departmentroomname = '$input_DeproomNameTH' , floor_id = $input_DeproomFloor , IsActive = $IsActive , departmentroomname_EN = '$input_DeproomNameEN' , departmentroomname_sub = '$input_DeproomName_sub'
+//                     WHERE id = '$input_IDDeproom'  ";
+//         }
+//         $meQuery = $conn->prepare($query);
+//         $meQuery->execute();
+
+//         echo "insert success";
+//         unset($conn);
+//         die;
+//     } else {
+//         echo "xxxx";
+//         unset($conn);
+//         die;
+//     }
+// }
 
 
 function feeddata_detailDeproom($conn, $db)
@@ -1092,7 +1190,7 @@ function saveDepartment($conn)
 
     if ($count_id == 0) {
         if ($input_IDdepartment == "") {
-            $stmt = $conn->prepare("INSERT INTO department  (DepName  , DepName2 , IsCancel) VALUES (?, ?)");
+            $stmt = $conn->prepare("INSERT INTO department  (DepName  , DepName2 , IsCancel) VALUES (?, ?, ?)");
             $stmt->execute([$input_departmenteng, $input_departmentthai, $IsCancel]);
         } else {
             $stmt = $conn->prepare("UPDATE `department` SET DepName = ? , DepName2 = ? , IsCancel = ? WHERE ID = ?");

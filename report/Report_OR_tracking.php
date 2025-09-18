@@ -58,7 +58,7 @@ while ($Result_CC = $meQueryCC->fetch(PDO::FETCH_ASSOC)) {
     $query = "SELECT 
         hncode.HnCode,
         hncode.number_box,
-        DATE_FORMAT(deproom.serviceDate, '%d/%m/%Y') AS date1,
+        DATE_FORMAT(deproom.serviceDate, '%d-%m-%Y') AS date1,
         DATE_FORMAT(deproom.serviceDate, '%H:%i') AS time1,
         hncode.`procedure`,
         departmentroom.departmentroomname_EN,

@@ -69,7 +69,7 @@ function feeddata($conn, $db)
                     itemstock.ItemCode,
                     itemstock.UsageCode,
                     itemstock.RowID,
-                    DATE_FORMAT(itemstock.ExpireDate, '%d/%m/%Y') AS ExpireDate,
+                    DATE_FORMAT(itemstock.ExpireDate, '%d-%m-%Y') AS ExpireDate,
                     COUNT(itemstock.Qty) AS Qty,
                     CASE
                         WHEN DATE(itemstock.ExpireDate) BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL $GN_WarningExpiringSoonDay DAY)
@@ -94,13 +94,13 @@ function feeddata($conn, $db)
                 GROUP BY
                     itemstock.UsageCode
                 ORDER BY
-                    item.itemname, DATE_FORMAT(itemstock.ExpireDate, '%d/%m/%Y') ASC ";
+                    item.itemname, DATE_FORMAT(itemstock.ExpireDate, '%d-%m-%Y') ASC ";
         } else if ($check_ex == 2) {
             $query = " SELECT
                             itemstock.ItemCode,
                             itemstock.UsageCode,
                             itemstock.RowID,
-                            DATE_FORMAT( itemstock.ExpireDate, '%d/%m/%Y' ) AS ExpireDate,
+                            DATE_FORMAT( itemstock.ExpireDate, '%d-%m-%Y' ) AS ExpireDate,
                             COUNT( itemstock.Qty ) AS Qty,
                         CASE
                                 
@@ -142,7 +142,7 @@ function feeddata($conn, $db)
                             itemstock.ItemCode,
                             itemstock.UsageCode,
                             itemstock.RowID,
-                            DATE_FORMAT( itemstock.ExpireDate, '%d/%m/%Y' ) AS ExpireDate,
+                            DATE_FORMAT( itemstock.ExpireDate, '%d-%m-%Y' ) AS ExpireDate,
                             COUNT( itemstock.Qty ) AS Qty,
                         CASE
                                 
@@ -282,7 +282,7 @@ function onSendNsterile($conn, $db)
                         AND itemstock.RowID IN ($subItemStockID)
                     ORDER BY
                         item.itemname,
-                        DATE_FORMAT(itemstock.ExpireDate, '%d/%m/%Y') ASC ";
+                        DATE_FORMAT(itemstock.ExpireDate, '%d-%m-%Y') ASC ";
     } else {
         $query = " SELECT
                     itemstock.RowID,
@@ -299,7 +299,7 @@ function onSendNsterile($conn, $db)
                     AND itemstock.RowID IN (  $subItemStockID  )  
                 ORDER BY
                     item.itemname,
-                    FORMAT ( itemstock.ExpireDate, 'dd/MM/yyyy' ) ASC ";
+                    FORMAT ( itemstock.ExpireDate, 'dd-MM-yyyy' ) ASC ";
     }
 
     $meQuery = $conn->prepare($query);

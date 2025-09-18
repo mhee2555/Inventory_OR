@@ -372,7 +372,13 @@ $("#select_map_item_sub").on("select2:select", function (e) {
           FUNC_NAME: "save_item_daily",
           itemCode: selectedValue,
         },
-        success: function (result) { },
+        success: function (result) {
+          selection_follow_item();
+
+          setTimeout(() => {
+            selection_follow_item_detail();
+          }, 1000);
+        },
       });
 
 
@@ -434,7 +440,16 @@ function DeleteItemmap(selectedValue) {
         FUNC_NAME: "delete_item_daily",
         itemCode: selectedValue,
       },
-      success: function (result) { },
+      success: function (result) {
+
+        selection_follow_item();
+
+        setTimeout(() => {
+          selection_follow_item_detail();
+        }, 1000);
+
+
+      },
     });
   }
 
@@ -594,12 +609,12 @@ function convertEN(char) {
 
 
 $("#btn_pdf_follow_item").click(function () {
-  option ="?select_follow_month=" +$("#select_follow_month").val() +"&select_follow_year=" + $("#select_follow_year").val();
-  window.open("report/Report_follow_item.php" + option + "&Userid=" + Userid,"_blank" );
+  option = "?select_follow_month=" + $("#select_follow_month").val() + "&select_follow_year=" + $("#select_follow_year").val();
+  window.open("report/Report_follow_item.php" + option + "&Userid=" + Userid, "_blank");
 });
 $("#btn_excel_follow_item").click(function () {
-  option ="?select_follow_month=" +$("#select_follow_month").val() +"&select_follow_year=" + $("#select_follow_year").val();
-  window.open("report/phpexcel/Report_follow_item.php" + option + "&Userid=" + Userid,"_blank" );
+  option = "?select_follow_month=" + $("#select_follow_month").val() + "&select_follow_year=" + $("#select_follow_year").val();
+  window.open("report/phpexcel/Report_follow_item.php" + option + "&Userid=" + Userid, "_blank");
 });
 
 $("#input_scan_restock").keypress(function (e) {

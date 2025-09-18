@@ -312,6 +312,11 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
         if($ItemStockID == null){
             $style = " background-color:#e1bee7; ";
             $style2 = " background-color:#e1bee7; ";
+        }else{
+            $sum_all1 += $Result_Detail['cnt'];
+            $sum_all2 += $cnt_return;
+            $sum_all3 += ($Result_Detail['cnt'] - $cnt_return);
+            $sum_all4 += $Result_Detail['SalePrice'] * ($Result_Detail['cnt'] - $cnt_return);
         }
 
         $html .= '<tr nobr="true" style="font-size:15px;' . $style  . '">';
@@ -324,10 +329,7 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
         $html .=  '</tr>';
         $count++;
 
-        $sum_all1 += $Result_Detail['cnt'];
-        $sum_all2 += $cnt_return;
-        $sum_all3 += ($Result_Detail['cnt'] - $cnt_return);
-        $sum_all4 += $Result_Detail['SalePrice'] * ($Result_Detail['cnt'] - $cnt_return);
+
     }
 }
 

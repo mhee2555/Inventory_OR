@@ -148,6 +148,22 @@ $(function () {
 
     $("#table_deproom_DocNo_pay_manual tbody").html("");
 
+    $("#btn_edit_hn").attr("disabled", true);
+    $("#btn_block_hn").attr("disabled", true);
+
+    $("#input_Hn_pay").val('');
+    $("#input_date_service").val('');
+    $("#input_time_service").val('');
+    $("#input_box_pay").val('');
+
+    $("#input_Hn_pay").data("docno", '');
+    $("#input_Hn_pay").data("hncode", '');
+
+    $("#input_Hn_pay").data("departmeneoomid", '');
+
+
+    $("#table_deproom_DocNo_pay tbody").html("");
+
     show_detail_deproom_pay();
   });
 

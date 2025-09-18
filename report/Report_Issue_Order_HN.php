@@ -221,7 +221,7 @@ class MYPDF extends TCPDF
             $query = "SELECT
                         CONCAT(employee1.FirstName, ' ', employee1.LastName) AS name_1,
                         CONCAT(employee2.FirstName, ' ', employee2.LastName) AS name_2,
-                        DATE_FORMAT(deproom.serviceDate, '%d/%m/%Y') AS serviceDate
+                        DATE_FORMAT(deproom.serviceDate, '%d-%m-%Y') AS serviceDate
                     FROM
                         deproom
                     INNER JOIN

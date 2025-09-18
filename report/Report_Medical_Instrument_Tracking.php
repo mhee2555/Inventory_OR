@@ -296,7 +296,7 @@ if ($db == 1) {
                         hncode
                     LEFT JOIN departmentroom ON departmentroom.id = hncode.departmentroomid
                     LEFT JOIN hncode_detail ON hncode.DocNo = hncode_detail.DocNo
-                    LEFT JOIN itemstock ON hncode_detail.ItemStockID = itemstock.RowID
+                    INNER JOIN itemstock ON hncode_detail.ItemStockID = itemstock.RowID
                     LEFT JOIN item ON itemstock.ItemCode = item.itemcode
                     LEFT JOIN itemtype ON itemtype.ID = item.itemtypeID
                     LEFT JOIN item AS item2 ON item2.ItemCode = hncode_detail.ItemCode
