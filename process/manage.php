@@ -1077,45 +1077,98 @@ function deleteDoctor($conn)
 
 function saveDoctor($conn)
 {
-    $input_doctorth = $_POST['input_doctorth'];
-    $input_IDdoctor = $_POST['input_IDdoctor'];
-    $IsActive = $_POST['IsActive'];
+    // รับค่า + normalize
+    $input_doctorth   = isset($_POST['input_doctorth']) ? trim($_POST['input_doctorth']) : '';
+    $input_IDdoctor   = isset($_POST['input_IDdoctor']) && $_POST['input_IDdoctor'] !== '' ? (int)$_POST['input_IDdoctor'] : null;
+    $IsActive         = isset($_POST['IsActive']) ? (int)$_POST['IsActive'] : 1;
 
+    // รวมช่องว่างหลายตัวเป็นตัวเดียว
+    $input_doctorth = preg_replace('/\s+/u', ' ', $input_doctorth);
 
-    $count_id = 0;
-    // if ($input_IDdoctor == "") {
-    $check_d = "    SELECT ID
-                        FROM   doctor 
-                        WHERE Doctor_Name = '$input_doctorth' ";
-    $meQuery_d = $conn->prepare($check_d);
-    $meQuery_d->execute();
-    while ($row_d = $meQuery_d->fetch(PDO::FETCH_ASSOC)) {
-        $count_id++;
+    if ($input_doctorth === '') {
+        echo json_encode(['ok' => false, 'msg' => 'ชื่อแพทย์ว่าง']);
+        return;
     }
-    // }
 
-    if ($count_id == 0) {
-        if ($input_IDdoctor == "") {
-            $query = "INSERT INTO `doctor` ( Doctor_Name , IsActive) 
-            VALUES             ('$input_doctorth' , $IsActive ) ";
+    try {
+        if ($input_IDdoctor === null) {
+            // INSERT: เช็คว่ามีชื่อซ้ำอยู่แล้วหรือยัง
+            $sqlCheck = "SELECT 1 FROM doctor WHERE Doctor_Name = ? LIMIT 1";
+            $stmt = $conn->prepare($sqlCheck);
+            $stmt->execute([$input_doctorth]);
+            if ($stmt->fetchColumn()) {
+                echo json_encode(['ok' => false, 'msg' => 'มีรายชื่อนี้อยู่แล้ว']);
+                return;
+            }
+
+            $sql = "INSERT INTO doctor (Doctor_Name, IsActive) VALUES (?, ?)";
+            $stmt = $conn->prepare($sql);
+            $stmt->execute([$input_doctorth, $IsActive]);
+
+            echo json_encode(['ok' => true, 'action' => 'insert', 'id' => $conn->lastInsertId()]);
         } else {
-            $query = "UPDATE `doctor` SET Doctor_Name = '$input_doctorth' , IsActive = $IsActive WHERE ID = '$input_IDdoctor'  ";
+            // UPDATE: เช็คซ้ำ แต่ "ไม่นับตัวเอง"
+            $sqlCheck = "SELECT 1 FROM doctor WHERE Doctor_Name = ? AND ID <> ? LIMIT 1";
+            $stmt = $conn->prepare($sqlCheck);
+            $stmt->execute([$input_doctorth, $input_IDdoctor]);
+            if ($stmt->fetchColumn()) {
+                echo json_encode(['ok' => false, 'msg' => 'มีชื่อซ้ำกับรายการอื่น']);
+                return;
+            }
+
+            $sql = "UPDATE doctor SET Doctor_Name = ?, IsActive = ? WHERE ID = ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->execute([$input_doctorth, $IsActive, $input_IDdoctor]);
+
+            echo json_encode(['ok' => true, 'action' => 'update', 'id' => $input_IDdoctor]);
         }
-
-
-
-        $meQuery = $conn->prepare($query);
-        $meQuery->execute();
-
-        echo "insert success";
-        unset($conn);
-        die;
-    } else {
-        echo "xxxx";
-        unset($conn);
-        die;
+    } catch (PDOException $e) {
+        echo json_encode(['ok' => false, 'msg' => 'DB error', 'error' => $e->getMessage()]);
     }
 }
+
+
+// function saveDoctor($conn)
+// {
+//     $input_doctorth = $_POST['input_doctorth'];
+//     $input_IDdoctor = $_POST['input_IDdoctor'];
+//     $IsActive = $_POST['IsActive'];
+
+
+//     $count_id = 0;
+//     // if ($input_IDdoctor == "") {
+//     $check_d = "    SELECT ID
+//                         FROM   doctor 
+//                         WHERE Doctor_Name = '$input_doctorth' ";
+//     $meQuery_d = $conn->prepare($check_d);
+//     $meQuery_d->execute();
+//     while ($row_d = $meQuery_d->fetch(PDO::FETCH_ASSOC)) {
+//         $count_id++;
+//     }
+//     // }
+
+//     if ($count_id == 0) {
+//         if ($input_IDdoctor == "") {
+//             $query = "INSERT INTO `doctor` ( Doctor_Name , IsActive) 
+//             VALUES             ('$input_doctorth' , $IsActive ) ";
+//         } else {
+//             $query = "UPDATE `doctor` SET Doctor_Name = '$input_doctorth' , IsActive = $IsActive WHERE ID = '$input_IDdoctor'  ";
+//         }
+
+
+
+//         $meQuery = $conn->prepare($query);
+//         $meQuery->execute();
+
+//         echo "insert success";
+//         unset($conn);
+//         die;
+//     } else {
+//         echo "xxxx";
+//         unset($conn);
+//         die;
+//     }
+// }
 
 function feeddata_detailDoctor($conn, $db)
 {

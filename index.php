@@ -1636,7 +1636,7 @@ if (!isset($_SESSION['UserName'])) {
                     $(".color_menu").addClass('color_menu3');
                     $("#menu13").removeClass('color_menu3');
                     $("#menu13").addClass('color_menu1');
-
+                    $("#ic_create_equipment_request").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
                     $("#ic_turnon_offdisplay_3").attr("src", "assets/img_project/2_icon/ic_report.png");
                     $("#ic_request_item").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
                     $("#ic_movement").attr("src", "assets/img_project/2_icon/ic_movement.png");

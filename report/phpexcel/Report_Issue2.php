@@ -134,13 +134,11 @@ $query = "SELECT
             itemtype.TyeName
             FROM
             deproom
-            INNER JOIN
-            deproomdetail ON deproom.DocNo = deproomdetail.DocNo
-            INNER JOIN
-            item ON deproomdetail.ItemCode = item.itemcode
-            INNER JOIN
-            itemtype ON item.itemtypeID = itemtype.ID
-            INNER JOIN deproomdetailsub ON deproomdetailsub.Deproomdetail_RowID = deproomdetail.ID 
+            INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
+            INNER JOIN deproomdetailsub ON deproomdetailsub.Deproomdetail_RowID = deproomdetail.ID
+            INNER JOIN itemstock ON itemstock.RowID = deproomdetailsub.ItemStockID
+            INNER JOIN item ON itemstock.ItemCode = item.itemcode
+            INNER JOIN itemtype ON item.itemtypeID = itemtype.ID 
             WHERE
              deproom.IsCancel = 0
             $where_date

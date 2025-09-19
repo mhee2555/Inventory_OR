@@ -222,80 +222,92 @@ $html = '<table cellspacing="0" cellpadding="2" border="1" >
 
 $count = 1;
 $sum_all = 0;
-$query = "( SELECT
+$query = "SELECT
+            itemname,
+            itemcode2,
+            SalePrice,
+            DetailID,
+            cnt,
+            TyeName 
+        FROM
+            (-- ฝั่ง hncode_detail
+            SELECT
                 i.itemname,
                 i.itemcode2,
                 i.SalePrice,
                 MAX( x.ID ) AS DetailID,
                 SUM( x.Qty ) AS cnt,
-                t.TyeName 
-                FROM
-                    hncode
-                    LEFT JOIN (
-                    SELECT
-                        d.DocNo,
-                        d.ID,
-                        d.Qty,
-                        d.ItemStockID,
-                        d.ItemCode,
-                    CASE
-                            
-                            WHEN d.ItemStockID = 0 THEN
-                            d.ItemCode ELSE s.ItemCode 
-                        END AS effective_itemcode 
-                    FROM
-                        hncode_detail d
-                        LEFT JOIN itemstock s ON d.ItemStockID = s.RowID 
-                        AND d.ItemStockID > 0 
-                    ) x ON x.DocNo = hncode.DocNo
-                    LEFT JOIN item i ON i.itemcode = x.effective_itemcode
-                    LEFT JOIN itemtype t ON i.itemtypeID = t.ID 
-                    $where_date 
-                    AND COALESCE ( i.itemname, '' ) <> '' 
-                GROUP BY
-                    i.itemname,
-                    i.itemcode2,
-                    i.SalePrice,
-                    t.TyeName 
-                ) UNION ALL
-                (
+                t.TyeName,
+                MIN( x.ItemStockID ) AS sort_key 
+            FROM
+                hncode
+                LEFT JOIN (
                 SELECT
-                    i.itemname,
-                    i.itemcode2,
-                    i.SalePrice,
-                    MAX( x.ID ) AS DetailID,
-                    SUM( 1 ) AS cnt,
-                    t.TyeName 
+                    d.DocNo,
+                    d.ID,
+                    d.Qty,
+                    d.ItemStockID,
+                    d.ItemCode,
+                CASE
+                        
+                        WHEN d.ItemStockID = 0 THEN
+                        d.ItemCode ELSE s.ItemCode 
+                    END AS effective_itemcode 
                 FROM
-                    sell_department
-                    LEFT JOIN (
-                    SELECT
-                        d.DocNo,
-                        d.ID,
-                        d.ItemStockID,
-                        d.ItemCode,
-                    CASE
-                            
-                            WHEN d.ItemStockID = 0 THEN
-                            d.ItemCode ELSE s.ItemCode 
-                        END AS effective_itemcode 
-                    FROM
-                        sell_department_detail d
-                        LEFT JOIN itemstock s ON d.ItemStockID = s.RowID 
-                        AND d.ItemStockID > 0 
-                    ) x ON x.DocNo = sell_department.DocNo
-                    LEFT JOIN item i ON i.itemcode = x.effective_itemcode
-                    LEFT JOIN itemtype t ON i.itemtypeID = t.ID 
+                    hncode_detail d
+                    LEFT JOIN itemstock s ON d.ItemStockID = s.RowID 
+                    AND d.ItemStockID > 0 
+                ) x ON x.DocNo = hncode.DocNo
+                LEFT JOIN item i ON i.itemcode = x.effective_itemcode
+                LEFT JOIN itemtype t ON i.itemtypeID = t.ID 
+            
+                $where_date
+                AND COALESCE ( i.itemname, '' ) <> '' 
+            GROUP BY
+                i.itemname,
+                i.itemcode2,
+                i.SalePrice,
+                t.TyeName UNION ALL-- ฝั่ง sell_department_detail
+            SELECT
+                i.itemname,
+                i.itemcode2,
+                i.SalePrice,
+                MAX( x.ID ) AS DetailID,
+                SUM( 1 ) AS cnt,
+                t.TyeName,
+                MIN( x.ItemStockID ) AS sort_key 
+            FROM
+                sell_department
+                LEFT JOIN (
+                SELECT
+                    d.DocNo,
+                    d.ID,
+                    d.ItemStockID,
+                    d.ItemCode,
+                CASE
+                        
+                        WHEN d.ItemStockID = 0 THEN
+                        d.ItemCode ELSE s.ItemCode 
+                    END AS effective_itemcode 
+                FROM
+                    sell_department_detail d
+                    LEFT JOIN itemstock s ON d.ItemStockID = s.RowID 
+                    AND d.ItemStockID > 0 
+                ) x ON x.DocNo = sell_department.DocNo
+                LEFT JOIN item i ON i.itemcode = x.effective_itemcode
+                LEFT JOIN itemtype t ON i.itemtypeID = t.ID 
             $where_date2
-                    AND COALESCE ( i.itemname, '' ) <> '' 
-                GROUP BY
-                    i.itemname,
-                    i.itemcode2,
-                    i.SalePrice,
-                    t.TyeName 
-                ) 
-            ORDER BY
-                itemname ASC; ";
+                AND COALESCE ( i.itemname, '' ) <> '' 
+            GROUP BY
+                i.itemname,
+                i.itemcode2,
+                i.SalePrice,
+                t.TyeName 
+            ) u 
+        ORDER BY
+            u.sort_key DESC,
+            u.itemname;";
+
 
 
 

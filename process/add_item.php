@@ -27,9 +27,13 @@ function onChangePay($conn, $db)
 
 
     $query = " UPDATE deproom SET IsAdditem = 2 WHERE  deproom.DocNo = '$DocNo' ";
+    $query2 = " UPDATE deproomdetail SET Isaddnew = 2 WHERE  deproomdetail.DocNo = '$DocNo' ";
 
     $meQuery = $conn->prepare($query);
     $meQuery->execute();
+
+    $meQuery2 = $conn->prepare($query2);
+    $meQuery2->execute();
 
     echo json_encode($return);
     unset($conn);
