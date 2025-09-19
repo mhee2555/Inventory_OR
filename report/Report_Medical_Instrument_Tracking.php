@@ -288,8 +288,6 @@ if ($db == 1) {
                         hncode_detail.LastSterileDetailID,
                         departmentroom.departmentroomname,
                         hncode_detail.Qty,
-                        item2.itemname AS itemname2,
-	                    item2.itemcode AS itemcode2,
                         itemstock.serielNo,
                         itemstock.lotNo
                     FROM
@@ -299,7 +297,6 @@ if ($db == 1) {
                     INNER JOIN itemstock ON hncode_detail.ItemStockID = itemstock.RowID
                     LEFT JOIN item ON itemstock.ItemCode = item.itemcode
                     LEFT JOIN itemtype ON itemtype.ID = item.itemtypeID
-                    LEFT JOIN item AS item2 ON item2.ItemCode = hncode_detail.ItemCode
                     WHERE
                         hncode.IsStatus = 1
                         AND hncode.IsCancel = 0

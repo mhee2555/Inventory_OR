@@ -2547,7 +2547,7 @@ function oncheck_pay_manual($conn, $db)
                             itemstock.UsageCode,
                             itemstock.departmentroomid ,
                             item.item_status,
-                            item.itemtypeID,
+                            item.itemtypeID2 AS itemtypeID ,
                             item.IsSet,
                             CASE
                                     WHEN DATE(itemstock.ExpireDate) <= DATE(NOW()) THEN 'exp'
@@ -3751,7 +3751,7 @@ function oncheck_Returnpay_manual($conn, $db)
                         itemstock.departmentroomid ,
                         itemstock.RowID ,
                         item.item_status,
-                        item.itemtypeID
+                        item.itemtypeID2 AS itemtypeID 
                     FROM
                         itemstock
                     INNER JOIN item ON itemstock.ItemCode = item.itemcode
@@ -5163,7 +5163,7 @@ function oncheck_Returnpay($conn, $db)
                     itemstock.departmentroomid ,
                     itemstock.RowID,
                     item.item_status,
-                    item.itemtypeID
+                    item.itemtypeID2 AS itemtypeID 
                 FROM
                     itemstock
                 INNER JOIN item ON itemstock.ItemCode = item.itemcode 
@@ -6791,7 +6791,7 @@ function oncheck_pay($conn, $db)
                                     itemstock.UsageCode,
                                     itemstock.departmentroomid ,
                                     item.item_status,
-                                    item.itemtypeID,
+                                    item.itemtypeID2 AS itemtypeID ,
                                     item.IsSet,
                                     CASE
                                             WHEN DATE(itemstock.ExpireDate) <= DATE(NOW()) THEN 'exp'
@@ -8302,7 +8302,6 @@ function oncheck_pay_mapping($conn, $db, $_ItemCode, $DocNo_pay, $input_date_ser
                 }
             }
 
-
             $cnt_type33 = 0;
             if ($_itemtypeID == 32) {
                 $checkTypeID = "SELECT
@@ -8314,7 +8313,7 @@ function oncheck_pay_mapping($conn, $db, $_ItemCode, $DocNo_pay, $input_date_ser
                             INNER JOIN item ON deproomdetail.ItemCode = item.itemcode 
                         WHERE
                             deproom.DocNo = '$DocNo_pay' 
-                            AND item.itemtypeID = '33' 
+                            AND item.itemtypeID2 = '33' 
                             LIMIT 1 ";
                 $meQuery_checkTypeID = $conn->prepare($checkTypeID);
                 $meQuery_checkTypeID->execute();
@@ -8545,7 +8544,7 @@ function oncheck_delete_pay_mapping($conn, $db, $_ItemCodex, $DocNo_pay, $input_
                             INNER JOIN item ON deproomdetail.ItemCode = item.itemcode 
                         WHERE
                             deproom.DocNo = '$DocNo_borrow' 
-                            AND item.itemtypeID = '32' 
+                            AND item.itemtypeID2 = '32' 
                             LIMIT 1 ";
             $meQuery_checkTypeID = $conn->prepare($checkTypeID);
             $meQuery_checkTypeID->execute();
@@ -8565,7 +8564,7 @@ function oncheck_delete_pay_mapping($conn, $db, $_ItemCodex, $DocNo_pay, $input_
                             INNER JOIN item ON deproomdetail.ItemCode = item.itemcode 
                         WHERE
                             deproom.DocNo = '$DocNo_borrow' 
-                            AND item.itemtypeID = '33' 
+                            AND item.itemtypeID2 = '33' 
                             LIMIT 1 ";
             $meQuery_checkTypeID = $conn->prepare($checkTypeID);
             $meQuery_checkTypeID->execute();
@@ -8586,7 +8585,7 @@ function oncheck_delete_pay_mapping($conn, $db, $_ItemCodex, $DocNo_pay, $input_
                             INNER JOIN item ON deproomdetail.ItemCode = item.itemcode 
                         WHERE
                             deproom.DocNo = '$DocNo_pay' 
-                            AND item.itemtypeID = '32' 
+                            AND item.itemtypeID2 = '32' 
                             LIMIT 1 ";
                     $meQuery_checkTypeID = $conn->prepare($checkTypeID);
                     $meQuery_checkTypeID->execute();

@@ -166,7 +166,7 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
     $pdf->SetFont('db_helvethaica_x', 'B', 22);
 
 
-    list($day, $month, $year) = explode('/', $serviceDate);
+    list($day, $month, $year) = explode('-', $serviceDate);
     $dateFormatted = "$year-$month-$day";
 
     // หาวันในสัปดาห์ (1=จันทร์, 7=อาทิตย์)
@@ -188,7 +188,7 @@ $colors = [
     $pdf->SetFillColor($colors[$dayOfWeek][0], $colors[$dayOfWeek][1], $colors[$dayOfWeek][2]);
     // ตั้งค่าสีตัวอักษร (ดำ)
     $pdf->SetTextColor(0, 0, 0);
-    $pdf->SetFont('db_helvethaica_x', 'B', 40);
+    $pdf->SetFont('db_helvethaica_x', 'B', 38);
     $pdf->SetY(35);
     $pdf->SetX(40);
     $pdf->Cell(50, 0, $serviceDate, 0, 1, '', true);

@@ -114,7 +114,7 @@ $checkloopDoctor  = "";
 $_procedure = "";
 $query = "SELECT
                 CONCAT( employee1.FirstName, ' ', employee1.LastName ) AS name_1,
-								DATE_FORMAT(deproom.serviceDate, '%d/%m/%Y') AS CreateDate,
+								DATE_FORMAT(deproom.serviceDate, '%d-%m-%Y') AS CreateDate,
                 TIME(deproom.serviceDate) AS CreateTime,
                 hncode.HnCode,
                 hncode.number_box,
