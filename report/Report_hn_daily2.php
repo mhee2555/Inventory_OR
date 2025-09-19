@@ -87,7 +87,7 @@ $query = "SELECT
             deproom.IsTF,
             deproom.hn_record_id AS hncode,
             deproom.number_box,
-            DATE_FORMAT( deproom.serviceDate, '%d/%m/%Y' ) AS serviceDate,
+            DATE_FORMAT( deproom.serviceDate, '%d-%m-%Y' ) AS serviceDate,
             DATE_FORMAT( TIME( deproom.serviceDate ), '%H:%i' ) AS serviceTime,
             deproom.departmentroomid,
             deproom.remark,

@@ -38,6 +38,7 @@ if ($type_date == 1) {
         $date1 = $date1[2] . '-' . $date1[1] . '-' . $date1[0];
 
         $where_date = "WHERE DATE(hncode.DocDate) = '$date1'  ";
+        $where_date2 = "WHERE DATE(sell_department.serviceDate) = '$date1'  ";
     } else {
         $date1 = explode("-", $date1);
         $date2 = explode("-", $date2);
@@ -46,28 +47,31 @@ if ($type_date == 1) {
         $date2 = $date2[2] . '-' . $date2[1] . '-' . $date2[0];
 
         $where_date = "WHERE DATE(hncode.DocDate) BETWEEN '$date1' 	AND '$date2' ";
+        $where_date2 = "WHERE DATE(sell_department.serviceDate)  BETWEEN '$date1' 	AND '$date2' ";
     }
 }
 
 if ($type_date == 2) {
-    $year1 = $year1-543;
+    $year1 = $year1 - 543;
 
     if ($checkmonth == 1) {
         $where_date = "WHERE MONTH(hncode.DocDate) = '$month1' AND YEAR(hncode.DocDate) = '$year1'   ";
-
+        $where_date2 = "WHERE MONTH(sell_department.serviceDate) = '$month1' AND YEAR(sell_department.serviceDate) = '$year1'   ";
     } else {
         $where_date = "WHERE MONTH(hncode.DocDate) BETWEEN '$month1' 	AND '$month2' AND YEAR(hncode.DocDate) = '$year1'  ";
+        $where_date2 = "WHERE MONTH(sell_department.serviceDate) BETWEEN '$month1' 	AND '$month2' AND YEAR(sell_department.serviceDate) = '$year1'  ";
     }
 }
 
 if ($type_date == 3) {
-    $year1 = $year1-543;
-    $year2 = $year2-543;
+    $year1 = $year1 - 543;
+    $year2 = $year2 - 543;
     if ($checkyear == 1) {
         $where_date = "WHERE YEAR(hncode.DocDate) = '$year1'  ";
-
+        $where_date2 = "WHERE YEAR(sell_department.serviceDate) = '$year1'  ";
     } else {
         $where_date = "WHERE YEAR(hncode.DocDate) BETWEEN '$year1' 	AND '$year2' ";
+        $where_date2 = "WHERE YEAR(sell_department.serviceDate) BETWEEN '$year1' 	AND '$year2' ";
     }
 }
 
@@ -110,7 +114,7 @@ while ($row_user = $meQuery_user->fetch(PDO::FETCH_ASSOC)) {
     $_FirstName = $row_user['FirstName'];
 }
 
-$sheet->setCellValue('E3', 'พิมพ์โดย ' . $_FirstName );
+$sheet->setCellValue('E3', 'พิมพ์โดย ' . $_FirstName);
 $sheet->setCellValue('E4', 'วันที่พิมพ์ ' . date('d/m/Y') . ' ' . date('H:i:s'));
 $sheet->getStyle('E3')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
 $sheet->getStyle('E4')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
@@ -126,30 +130,108 @@ $sheet->setCellValue('E8', 'Total Price');
 
 $dataArray = [];
 
-$query = " SELECT
-                item.itemname,
-                item.itemcode,
-                item.itemcode2,
-                item.SalePrice,
-                hncode_detail.ID,
-                SUM( hncode_detail.Qty ) AS cnt,
-                itemtype.TyeName 
-            FROM
-                hncode
-                INNER JOIN hncode_detail ON hncode_detail.DocNo = hncode.DocNo
-                INNER JOIN itemstock ON itemstock.RowID = hncode_detail.ItemStockID
-                INNER JOIN item ON itemstock.ItemCode = item.itemcode
-                INNER JOIN itemtype ON item.itemtypeID = itemtype.ID 
-            $where_date
-            GROUP BY  item.itemname
+// $query = " SELECT
+//                 item.itemname,
+//                 item.itemcode,
+//                 item.itemcode2,
+//                 item.SalePrice,
+//                 hncode_detail.ID,
+//                 SUM( hncode_detail.Qty ) AS cnt,
+//                 itemtype.TyeName 
+//             FROM
+//                 hncode
+//                 INNER JOIN hncode_detail ON hncode_detail.DocNo = hncode.DocNo
+//                 INNER JOIN itemstock ON itemstock.RowID = hncode_detail.ItemStockID
+//                 INNER JOIN item ON itemstock.ItemCode = item.itemcode
+//                 INNER JOIN itemtype ON item.itemtypeID = itemtype.ID 
+//             $where_date
+//             GROUP BY  item.itemname
+//             ORDER BY
+//                 item.itemname ASC ";
+
+$query = "( SELECT
+                i.itemname,
+                i.itemcode2,
+                i.SalePrice,
+                MAX( x.ID ) AS DetailID,
+                SUM( x.Qty ) AS cnt,
+                t.TyeName 
+                FROM
+                    hncode
+                    LEFT JOIN (
+                    SELECT
+                        d.DocNo,
+                        d.ID,
+                        d.Qty,
+                        d.ItemStockID,
+                        d.ItemCode,
+                    CASE
+                            
+                            WHEN d.ItemStockID = 0 THEN
+                            d.ItemCode ELSE s.ItemCode 
+                        END AS effective_itemcode 
+                    FROM
+                        hncode_detail d
+                        LEFT JOIN itemstock s ON d.ItemStockID = s.RowID 
+                        AND d.ItemStockID > 0 
+                    ) x ON x.DocNo = hncode.DocNo
+                    LEFT JOIN item i ON i.itemcode = x.effective_itemcode
+                    LEFT JOIN itemtype t ON i.itemtypeID = t.ID 
+                    $where_date 
+                    AND COALESCE ( i.itemname, '' ) <> '' 
+                GROUP BY
+                    i.itemname,
+                    i.itemcode2,
+                    i.SalePrice,
+                    t.TyeName 
+                ) UNION ALL
+                (
+                SELECT
+                    i.itemname,
+                    i.itemcode2,
+                    i.SalePrice,
+                    MAX( x.ID ) AS DetailID,
+                    SUM( 1 ) AS cnt,
+                    t.TyeName 
+                FROM
+                    sell_department
+                    LEFT JOIN (
+                    SELECT
+                        d.DocNo,
+                        d.ID,
+                        d.ItemStockID,
+                        d.ItemCode,
+                    CASE
+                            
+                            WHEN d.ItemStockID = 0 THEN
+                            d.ItemCode ELSE s.ItemCode 
+                        END AS effective_itemcode 
+                    FROM
+                        sell_department_detail d
+                        LEFT JOIN itemstock s ON d.ItemStockID = s.RowID 
+                        AND d.ItemStockID > 0 
+                    ) x ON x.DocNo = sell_department.DocNo
+                    LEFT JOIN item i ON i.itemcode = x.effective_itemcode
+                    LEFT JOIN itemtype t ON i.itemtypeID = t.ID 
+            $where_date2
+                    AND COALESCE ( i.itemname, '' ) <> '' 
+                GROUP BY
+                    i.itemname,
+                    i.itemcode2,
+                    i.SalePrice,
+                    t.TyeName 
+                ) 
             ORDER BY
-                item.itemname ASC ";
+                itemname ASC; ";
+
+
+
 $meQuery = $conn->prepare($query);
 $meQuery->execute();
 
 while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
 
-   $cal_cnt = number_format( ($row['SalePrice'] * $row['cnt']) ,2);
+    $cal_cnt = number_format(($row['SalePrice'] * $row['cnt']), 2);
     $dataArray[] = [
         'itemcode2'   => $row['itemcode2'],
         'itemname'    => $row['itemname'],

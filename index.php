@@ -909,7 +909,8 @@ if (!isset($_SESSION['UserName'])) {
                     $("#menu15").removeClass('color_menu3');
                     $("#menu15").addClass('color_menu1');
 
-
+                    $("#ic_set_hn").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
+                    $("#ic_create_equipment_request").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
                     $("#ic_movement").attr("src", "assets/img_project/2_icon/ic_movement.png");
                     $("#ic_search_hndata").attr("src", "assets/img_project/2_icon/ic_search_hndata.png");
                     $("#ic_dispense_equipment").attr("src", "assets/img_project/2_icon/ic_dispense_equipment.png");
@@ -1336,7 +1337,7 @@ if (!isset($_SESSION['UserName'])) {
                     $("#menu9").removeClass('color_menu3');
                     $("#menu9").addClass('color_menu1');
 
-
+                    $("#ic_create_equipment_request").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
                     $("#ic_dispense_equipment").attr("src", "assets/img_project/2_icon/ic_dispense_equipment.png");
                     $("#ic_setup_equipment_rooms").attr("src", "assets/img_project/2_icon/ic_receiveinventory.png");
                     $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
@@ -1490,7 +1491,7 @@ if (!isset($_SESSION['UserName'])) {
                     $("#menu11").addClass('color_menu1');
 
 
-
+                    $("#ic_create_equipment_request").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
                     $("#ic_search_hndata").attr("src", "assets/img_project/2_icon/ic_search_hndata.png");
                     $("#ic_dispense_equipment").attr("src", "assets/img_project/2_icon/ic_dispense_equipment.png");
                     $("#ic_setup_equipment_rooms").attr("src", "assets/img_project/2_icon/ic_receiveinventory.png");
@@ -1723,6 +1724,8 @@ if (!isset($_SESSION['UserName'])) {
                     $("#menu14").removeClass('color_menu3');
                     $("#menu14").addClass('color_menu1');
 
+
+                    $("#ic_create_equipment_request").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
                     $("#ic_request_item").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
                     $("#ic_movement").attr("src", "assets/img_project/2_icon/ic_movement.png");
                     $("#ic_search_hndata").attr("src", "assets/img_project/2_icon/ic_search_hndata.png");
@@ -1812,6 +1815,8 @@ if (!isset($_SESSION['UserName'])) {
                     $("#menu17").removeClass('color_menu3');
                     $("#menu17").addClass('color_menu1');
 
+
+                    $("#ic_create_equipment_request").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");
                     $("#ic_turnon_offdisplay_2").attr("src", "assets/img_project/2_icon/ic_turnon_offdisplay.png");
                     $("#ic_turnon_offdisplay_3").attr("src", "assets/img_project/2_icon/ic_report.png");
                     $("#ic_request_item").attr("src", "assets/img_project/2_icon/ic_create_equipment_request.png");

@@ -341,7 +341,7 @@ $("#btn_add_follow_item").click(function () {
     $("#select_map_item_sub").select2({
       dropdownParent: $("#myModal_follow_item"), // 👈 ต้องชี้ dropdownParent เป็น modal
     });
-  }, 1000);
+  }, 500);
 
   select_set_item_daily();
 });

@@ -125,7 +125,7 @@ function save_hn($conn, $db)
                                           remark = :remark, 
                                           userID = :Userid, 
                                           createAt = NOW() , 
-                                          IsTF = ,:checkbox_tf 
+                                          IsTF = :checkbox_tf 
                         WHERE ID = '$input_Hn_ID' ";
 
         $meQuery_log = $conn->prepare($insert_log);

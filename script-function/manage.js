@@ -1610,7 +1610,7 @@ function saveDeproom() {
     },
     success: function (result) {
       if (result == "xxxx") {
-        showDialogFailed("ชื่อ ซ้ำ");
+        showDialogFailed("ชื่อซ้ำ");
       } else {
         showDialogSuccess(result);
         feeddata_detailDeproom();

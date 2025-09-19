@@ -46,7 +46,7 @@ class MYPDF extends TCPDF
             $query = " SELECT 
                             hncode.HnCode,
                             hncode.number_box,
-                            DATE_FORMAT(deproom.serviceDate, '%d/%m/%Y') AS date1,
+                            DATE_FORMAT(deproom.serviceDate, '%d-%m-%Y') AS date1,
                             DATE_FORMAT(deproom.serviceDate, '%H:%i') AS time1,
                             -- `procedure`.Procedure_EN AS Procedure_TH,
                             -- doctor.Doctor_Name_EN AS Doctor_Name,

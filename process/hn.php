@@ -421,7 +421,7 @@ function feeddata_hncode_detail($conn, $db)
                         AND hncode_detail.IsStatus != 99
                         AND hncode.DocNo = '$DocNo'
                     ORDER BY
-                        hncode.ID ASC;  ";
+                       hncode_detail.ItemStockID ASC;  ";
     } else {
         $query = "SELECT
                     hncode.ID,

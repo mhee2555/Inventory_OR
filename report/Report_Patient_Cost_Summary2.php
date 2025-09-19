@@ -195,7 +195,7 @@ if ($type_date == 3) {
 
     } else {
         $where_date = "WHERE YEAR(hncode.DocDate) BETWEEN '$year1' 	AND '$year2' ";
-        $where_date2 = "WHERE YEAR(sell_department.serviceDate) BETWEEN '$year1' 	AND '$year2' ";;
+        $where_date2 = "WHERE YEAR(sell_department.serviceDate) BETWEEN '$year1' 	AND '$year2' ";
     }
 }
 

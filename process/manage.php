@@ -433,7 +433,9 @@ function deleteDeproom($conn)
 function saveDeproom($conn)
 {
     // helper
-    $post = function ($k, $d = '') { return isset($_POST[$k]) ? $_POST[$k] : $d; };
+    $post = function ($k, $d = '') {
+        return isset($_POST[$k]) ? $_POST[$k] : $d;
+    };
 
     // inputs
     $input_DeproomFloor   = (int)$post('input_DeproomFloor', 0);
@@ -492,7 +494,6 @@ function saveDeproom($conn)
             echo "insert success";
             unset($conn);
             die;
-
         } else {
             // UPDATE
             $sql = "UPDATE departmentroom SET
@@ -516,7 +517,6 @@ function saveDeproom($conn)
             unset($conn);
             die;
         }
-
     } catch (Exception $e) {
         if ($conn && $conn->inTransaction()) {
             $conn->rollBack();
@@ -1165,42 +1165,126 @@ function deleteProcedure($conn)
     die;
 }
 
+// function saveDepartment($conn)
+// {
+//     $input_departmentthai = $_POST['input_departmentthai'];
+//     $input_departmenteng = $_POST['input_departmenteng'];
+
+//     $input_IDdepartment = $_POST['input_IDdepartment'];
+//     $IsCancel = $_POST['IsCancel'];
+
+
+
+//     $count_id = 0;
+//     // if ($input_IDProcedure == "") {
+//     $check_d = "    SELECT ID
+//                         FROM   department 
+//                         WHERE DepName = '$input_departmenteng' OR DepName2 = '$input_departmentthai'  ";
+//     $meQuery_d = $conn->prepare($check_d);
+//     $meQuery_d->execute();
+//     while ($row_d = $meQuery_d->fetch(PDO::FETCH_ASSOC)) {
+//         $count_id++;
+//     }
+//     // }
+
+
+//     if ($count_id == 0) {
+//         if ($input_IDdepartment == "") {
+//             $stmt = $conn->prepare("INSERT INTO department  (DepName  , DepName2 , IsCancel) VALUES (?, ?, ?)");
+//             $stmt->execute([$input_departmenteng, $input_departmentthai, $IsCancel]);
+//         } else {
+//             $stmt = $conn->prepare("UPDATE `department` SET DepName = ? , DepName2 = ? , IsCancel = ? WHERE ID = ?");
+//             $stmt->execute([$input_departmenteng, $input_departmentthai,  $IsCancel, $input_IDdepartment]);
+//         }
+//         echo "insert success";
+//         unset($conn);
+//         die;
+//     } else {
+//         echo "xxxx";
+//         unset($conn);
+//         die;
+//     }
+// }
 function saveDepartment($conn)
 {
-    $input_departmentthai = $_POST['input_departmentthai'];
-    $input_departmenteng = $_POST['input_departmenteng'];
+    // helper
+    $post = function ($k, $d = '') {
+        return isset($_POST[$k]) ? $_POST[$k] : $d;
+    };
 
-    $input_IDdepartment = $_POST['input_IDdepartment'];
-    $IsCancel = $_POST['IsCancel'];
+    // inputs
+    $input_departmentthai = trim($post('input_departmentthai', '')); // DepName2 (TH)
+    $input_departmenteng  = trim($post('input_departmenteng',  '')); // DepName  (EN)
+    $input_IDdepartment   = trim($post('input_IDdepartment',   ''));
+    $IsCancel             = isset($_POST['IsCancel']) ? (int)$_POST['IsCancel'] : 0;
 
+    try {
+        $conn->beginTransaction();
 
-
-    $count_id = 0;
-    // if ($input_IDProcedure == "") {
-    $check_d = "    SELECT ID
-                        FROM   department 
-                        WHERE DepName = '$input_departmenteng' OR DepName2 = '$input_departmentthai'  ";
-    $meQuery_d = $conn->prepare($check_d);
-    $meQuery_d->execute();
-    while ($row_d = $meQuery_d->fetch(PDO::FETCH_ASSOC)) {
-        $count_id++;
-    }
-    // }
-
-
-    if ($count_id == 0) {
-        if ($input_IDdepartment == "") {
-            $stmt = $conn->prepare("INSERT INTO department  (DepName  , DepName2 , IsCancel) VALUES (?, ?, ?)");
-            $stmt->execute([$input_departmenteng, $input_departmentthai, $IsCancel]);
-        } else {
-            $stmt = $conn->prepare("UPDATE `department` SET DepName = ? , DepName2 = ? , IsCancel = ? WHERE ID = ?");
-            $stmt->execute([$input_departmenteng, $input_departmentthai,  $IsCancel, $input_IDdepartment]);
+        // --------- ตรวจซ้ำ (ไม่ชนตัวเองตอนแก้ไข) ----------
+        $sqlDup = "SELECT ID
+                   FROM department
+                   WHERE (DepName = :en OR DepName2 = :th)";
+        if ($input_IDdepartment !== '') {
+            $sqlDup .= " AND ID <> :id";
         }
-        echo "insert success";
-        unset($conn);
-        die;
-    } else {
-        echo "xxxx";
+        $sqlDup .= " LIMIT 1";
+
+        $stmt = $conn->prepare($sqlDup);
+        $stmt->bindValue(':en', $input_departmenteng,  PDO::PARAM_STR);
+        $stmt->bindValue(':th', $input_departmentthai, PDO::PARAM_STR);
+        if ($input_IDdepartment !== '') {
+            $stmt->bindValue(':id', $input_IDdepartment, PDO::PARAM_INT);
+        }
+        $stmt->execute();
+
+        if ($stmt->fetch(PDO::FETCH_ASSOC)) {
+            // พบชื่อซ้ำ
+            echo "xxxx";
+            $conn->rollBack();
+            unset($conn);
+            die;
+        }
+
+        // -------------- INSERT / UPDATE -----------------
+        if ($input_IDdepartment === '') {
+            // INSERT
+            $sql = "INSERT INTO department (DepName, DepName2, IsCancel)
+                    VALUES (:en, :th, :cancel)";
+            $stmt = $conn->prepare($sql);
+            $stmt->bindValue(':en',     $input_departmenteng,  PDO::PARAM_STR);
+            $stmt->bindValue(':th',     $input_departmentthai, PDO::PARAM_STR);
+            $stmt->bindValue(':cancel', $IsCancel,             PDO::PARAM_INT);
+            $stmt->execute();
+
+            $conn->commit();
+            echo "insert success";
+            unset($conn);
+            die;
+        } else {
+            // UPDATE
+            $sql = "UPDATE department SET
+                        DepName   = :en,
+                        DepName2  = :th,
+                        IsCancel  = :cancel
+                    WHERE ID = :id";
+            $stmt = $conn->prepare($sql);
+            $stmt->bindValue(':en',     $input_departmenteng,  PDO::PARAM_STR);
+            $stmt->bindValue(':th',     $input_departmentthai, PDO::PARAM_STR);
+            $stmt->bindValue(':cancel', $IsCancel,             PDO::PARAM_INT);
+            $stmt->bindValue(':id',     $input_IDdepartment,   PDO::PARAM_INT);
+            $stmt->execute();
+
+            $conn->commit();
+            echo "update success";
+            unset($conn);
+            die;
+        }
+    } catch (Exception $e) {
+        if ($conn && $conn->inTransaction()) {
+            $conn->rollBack();
+        }
+        echo "error";
         unset($conn);
         die;
     }

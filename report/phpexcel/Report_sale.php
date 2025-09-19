@@ -37,7 +37,7 @@ if ($type_date == 1) {
 
         $date1 = $date1[2] . '-' . $date1[1] . '-' . $date1[0];
 
-        $where_date = "WHERE DATE(itemstock_transaction_detail.CreateDate) = '$date1'  ";
+        $where_date = " AND DATE(deproomdetailsub.PayDate) = '$date1'  ";
     } else {
         $date1 = explode("-", $date1);
         $date2 = explode("-", $date2);
@@ -45,29 +45,27 @@ if ($type_date == 1) {
         $date1 = $date1[2] . '-' . $date1[1] . '-' . $date1[0];
         $date2 = $date2[2] . '-' . $date2[1] . '-' . $date2[0];
 
-        $where_date = "WHERE DATE(itemstock_transaction_detail.CreateDate) BETWEEN '$date1' 	AND '$date2' ";
+        $where_date = " AND DATE(deproomdetailsub.PayDate) BETWEEN '$date1' 	AND '$date2' ";
     }
 }
 
 if ($type_date == 2) {
-    $year1 = $year1-543;
+    $year1 = $year1 - 543;
 
     if ($checkmonth == 1) {
-        $where_date = "WHERE MONTH(itemstock_transaction_detail.CreateDate) = '$month1' AND YEAR(itemstock_transaction_detail.CreateDate) = '$year1'   ";
-
+        $where_date = " AND MONTH(deproomdetailsub.PayDate) = '$month1' AND YEAR(deproomdetailsub.PayDate) = '$year1'   ";
     } else {
-        $where_date = "WHERE MONTH(itemstock_transaction_detail.CreateDate) BETWEEN '$month1' 	AND '$month2' AND YEAR(itemstock_transaction_detail.CreateDate) = '$year1'  ";
+        $where_date = " AND MONTH(deproomdetailsub.PayDate) BETWEEN '$month1' 	AND '$month2' AND YEAR(deproomdetailsub.PayDate) = '$year1'  ";
     }
 }
 
 if ($type_date == 3) {
-    $year1 = $year1-543;
-    $year2 = $year2-543;
+    $year1 = $year1 - 543;
+    $year2 = $year2 - 543;
     if ($checkyear == 1) {
-        $where_date = "WHERE YEAR(itemstock_transaction_detail.CreateDate) = '$year1'  ";
-
+        $where_date = " AND YEAR(deproomdetailsub.PayDate) = '$year1'  ";
     } else {
-        $where_date = "WHERE YEAR(itemstock_transaction_detail.CreateDate) BETWEEN '$year1' 	AND '$year2' ";
+        $where_date = " AND YEAR(deproomdetailsub.PayDate) BETWEEN '$year1' AND '$year2' ";
     }
 }
 
@@ -110,7 +108,7 @@ while ($row_user = $meQuery_user->fetch(PDO::FETCH_ASSOC)) {
     $_FirstName = $row_user['FirstName'];
 }
 
-$sheet->setCellValue('E3', 'พิมพ์โดย ' . $_FirstName );
+$sheet->setCellValue('E3', 'พิมพ์โดย ' . $_FirstName);
 $sheet->setCellValue('E4', 'วันที่พิมพ์ ' . date('d/m/Y') . ' ' . date('H:i:s'));
 $sheet->getStyle('E3')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
 $sheet->getStyle('E4')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
@@ -130,24 +128,55 @@ $query = " SELECT
                 itemstock.UsageCode,
                 item.itemname,
                 item.itemcode2,
-                itemstock_transaction_detail.hncode,
+                deproom.hn_record_id,
+                deproom.number_box,
                 item.SalePrice 
             FROM
-                itemstock_transaction_detail
-                INNER JOIN itemstock ON itemstock_transaction_detail.ItemStockID = itemstock.RowID
-                INNER JOIN item ON itemstock.ItemCode = item.itemcode 
-            $where_date AND item.itemtypeID IN (	30,31 )  ";
+                deproom
+                INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
+                INNER JOIN item ON deproomdetail.ItemCode = item.itemcode
+                INNER JOIN itemtype ON item.itemtypeID = itemtype.ID
+                INNER JOIN deproomdetailsub ON deproomdetailsub.Deproomdetail_RowID = deproomdetail.ID 
+                INNER JOIN itemstock ON itemstock.RowID = deproomdetailsub.ItemStockID 
+            WHERE
+                deproom.IsCancel = 0 
+                $where_date
+                AND deproomdetail.IsCancel = 0 
+                AND item.itemtypeID IN (	30,31 ) 
+            ORDER BY
+                item.itemname ASC ";
+
+
+// $query = " SELECT
+//                 itemstock.UsageCode,
+//                 item.itemname,
+//                 item.itemcode2,
+//                 itemstock_transaction_detail.hncode,
+//                 item.SalePrice 
+//             FROM
+//                 itemstock_transaction_detail
+//                 INNER JOIN itemstock ON itemstock_transaction_detail.ItemStockID = itemstock.RowID
+//                 INNER JOIN item ON itemstock.ItemCode = item.itemcode 
+//             $where_date AND item.itemtypeID IN (	30,31 )  ";
+
 $meQuery = $conn->prepare($query);
 $meQuery->execute();
 
 while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
 
-   $cal_cnt = number_format( ($row['SalePrice'] * $row['cnt']) ,2);
+
+    if ($row['hn_record_id'] == "") {
+        $row['hn_record_id'] = $row['number_box'];
+    }
+
+
+
+    $cal_cnt = number_format(($row['SalePrice'] * $row['cnt']), 2);
     $dataArray[] = [
         'itemcode2'   => $row['itemcode2'],
         'UsageCode'    => $row['UsageCode'],
         'itemname'   => $row['itemname'],
-        'hncode'  => $row['hncode'],
+        'hncode'  => $row['hn_record_id'],
         'SalePrice'      => $row['SalePrice']
     ];
 }

@@ -166,6 +166,10 @@ function show_detail_itemstock($conn, $db)
         if ($row['hn_record_id'] == '') {
             $row['hn_record_id'] = $row['number_box'];
         }
+
+        if($row['IsDeproom'] == 0){
+            $row['hn_record_id'] = "";
+        }
         $return[] = $row;
     }
     echo json_encode($return);
