@@ -65,13 +65,13 @@ function onconfirm_request($conn, $db)
 
             if ($_IsCancel == 0) {
                 $queryUpdate = "UPDATE deproomdetail 
-                SET Qty = (Qty +  $array_qty[$key])
+                SET Qty = (Qty +  $array_qty[$key]) , Isaddnew = 1
                 WHERE
                     DocNo = '$txt_docno_request' 
                     AND ItemCode = '$value'  ";
             } else {
                 $queryUpdate = "UPDATE deproomdetail 
-                SET Qty = $array_qty[$key] , IsCancel = 0
+                SET Qty = $array_qty[$key] , IsCancel = 0 , Isaddnew = 1
                 WHERE
                     DocNo = '$txt_docno_request' 
                     AND ItemCode = '$value'  ";

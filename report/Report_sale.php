@@ -234,6 +234,7 @@ $query = " SELECT
                 deproom.IsCancel = 0 
                 $where_date
                 AND deproomdetail.IsCancel = 0 
+                AND itemstock.IsDeproom = 1
                 AND item.itemtypeID IN (	30,31 ) 
             ORDER BY
                 item.itemname ASC ";
