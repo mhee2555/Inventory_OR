@@ -51,7 +51,7 @@ function showDetail_item2($conn, $db)
 
     $query = "SELECT
                     item.itemname,
-                    deproomdetail.Qty 
+                    deproomdetail.IsQtyStart AS Qty 
                 FROM
                     deproom
                     INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
@@ -80,7 +80,7 @@ function showDetail_item($conn, $db)
 
     $query = "SELECT
                     item.itemname,
-                    deproomdetail.Qty 
+                    deproomdetail.IsQtyStart AS Qty  
                 FROM
                     deproom
                     INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo

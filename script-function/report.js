@@ -892,7 +892,7 @@ $(function () {
 
   $("#btn_reset").click(function (e) {
     $("#select_type_date").val("").change();
-    $("#select_report").val(1);
+    $("#select_report").val(1).change();
   });
 });
 

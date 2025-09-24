@@ -531,19 +531,22 @@ if (!isset($_SESSION['UserName'])) {
 
             $.get(link, function(res) {
 
-                // $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
-                if (display == '3') {
-                    $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
-                } else {
                     $("#ic_mainpage").attr("src", "assets/img_project/3_icon/ic_mainpage.png");
-                }
+
+                // $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
+                // if (display == 3) {
+                //     $("#ic_mainpage").attr("src", "assets/img_project/3_icon/ic_mainpage.png");
+                // } else {
+                //     $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
+                // }
                 if (display == 2) {
                     $("#li_main").css("background-color", "rgb(60, 32, 90)");
                 } else {
                     $("#li_main").css("background-color", "#643695");
                 }
+                    $("#menu1").addClass('color_menu1');
 
-                $("#menu1").css('color', '#667085');
+                // $("#menu1").css('color', '#667085');
 
                 $("#conMain").html(res);
                 history.pushState({}, "Results for `Cats`", 'index.php?s=ex');

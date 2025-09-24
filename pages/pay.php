@@ -121,7 +121,7 @@
                                         <label style="color:black;font-weight: 600;">วันที่รับบริการ</label>
 
                                         <div class="position-relative">
-                                            <input type="text" class="form-control rounded pr-5 f18" placeholder="" id="input_date_service" data-language='en' data-date-format='dd-mm-yyyy'>
+                                            <input disabled type="text" class="form-control rounded pr-5 f18" placeholder="" id="input_date_service" data-language='en' data-date-format='dd-mm-yyyy'>
                                             <span class="input-icon">
                                                 <i class="fa-solid fa-calendar" style="color:black;"></i>
                                             </span>
@@ -137,7 +137,7 @@
 
                                     <div class="form-group ">
                                         <label style="color:black;font-weight: 600;">เวลารับบริการ</label>
-                                        <input type="time" class="form-control datepicker-here f18" id="input_time_service" data-language='en' data-date-format='dd-mm-yyyy'>
+                                        <input disabled type="time" class="form-control datepicker-here f18" id="input_time_service" data-language='en' data-date-format='dd-mm-yyyy'>
                                     </div>
 
 
@@ -226,25 +226,32 @@
                         <div class="card-body">
 
                             <div class="row">
-                                <div class="col-md-4">
-                                    <label style="color:black;font-weight: 600;">เลขที่กล่อง</label>
-                                    <input type='text' class='form-control f18' id="input_box_pay_manual">
-                                </div>
-                                <div class="col-md-5">
-                                    <label style="color:black;font-weight: 600;">เลขประจำตัวผู้ป่วย</label>
-                                    <input type='text' class='form-control f18' id="input_Hn_pay_manual">
-                                </div>
-                                <div class="col-md-1 text-right">
-                                    <div class="form-check " style="margin-top: 38px;">
-                                        <input type="checkbox" class="form-check-input" id="checkbox_tf" style="width: 25px;height: 25px;">
-                                        <label class="form-check-label f18 ml-4 mt-1" for="checkbox_tf" style="color:black;font-weight:bold;">TF</label>
+                                <div class="col-md-9" style="margin-top: -35px !important;">'
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label style="color:black;font-weight: 600;">เลขที่กล่อง</label>
+                                            <input type='text' class='form-control f18' id="input_box_pay_manual">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label style="color:black;font-weight: 600;">เลขประจำตัวผู้ป่วย</label>
+                                            <input type='text' class='form-control f18' id="input_Hn_pay_manual">
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div class="col-md-2 text-right">
-                                    <div class="form-check " style="margin-top: 38px;">
+                                
+
+                                <div class="col-md-1 text-right" style="max-width: 7.333333%;">
+                                    <div class="form-check " style="margin-top: 35px;">
+                                        <input type="checkbox" class="form-check-input" id="checkbox_tf" style="width: 25px;height: 25px;">
+                                        <label class="form-check-label f22 ml-4 mt-1" for="checkbox_tf" style="color:black;font-weight:bold;">TF</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-2 text-right" style="max-width: 15%;">
+                                    <div class="form-check " style="margin-top: 35px;">
                                         <input type="checkbox" class="form-check-input" id="checkbox_manual_ems" style="width: 25px;height: 25px;">
-                                        <label class="form-check-label f18 ml-4 mt-1" for="checkbox_manual_ems" style="color:black;font-weight:bold;">สแกนจ่ายเคสฉุกเฉิน</label>
+                                        <label class="form-check-label f22 ml-4 mt-1" for="checkbox_manual_ems" style="color:black;font-weight:bold;">สแกนจ่ายเคสฉุกเฉิน</label>
                                     </div>
                                 </div>
                                 <div class="col-md-4 mt-3">

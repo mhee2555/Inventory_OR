@@ -116,10 +116,11 @@ $query = " SELECT
                 ( SELECT GROUP_CONCAT( doctor.Doctor_Name SEPARATOR ' , ' ) AS Doctor_Name FROM doctor WHERE FIND_IN_SET( doctor.ID, hncode.doctor ) ) AS Doctor_Name,
                 ( SELECT GROUP_CONCAT( `procedure`.Procedure_TH SEPARATOR ' , ' ) AS Procedures FROM `procedure` WHERE FIND_IN_SET( `procedure`.ID, hncode.`procedure` ) ) AS Procedures,
                 itemtype.TyeName,
+                itemtype2.TyeName AS TyeName2,
                 itemstock.UsageCode,
                 item.itemname,
                 item2.itemname AS itemname2,
-	            item2.itemcode AS itemcode2,
+	            item2.itemcode AS itemcode2
             FROM
                 hncode
                 LEFT JOIN departmentroom ON departmentroom.id = hncode.departmentroomid
@@ -128,6 +129,7 @@ $query = " SELECT
                 LEFT JOIN item ON itemstock.ItemCode = item.itemcode
                 LEFT JOIN itemtype ON itemtype.ID = item.itemtypeID
                 LEFT JOIN item AS item2 ON item2.ItemCode = hncode_detail.ItemCode 
+                LEFT JOIN itemtype AS itemtype2 ON itemtype2.ID = item2.itemtypeID
             WHERE
                 DATE( hncode.DocDate ) BETWEEN '$select_date_history_s' AND '$select_date_history_l'
                 AND hncode.IsStatus = 1 
@@ -135,6 +137,8 @@ $query = " SELECT
                 AND hncode_detail.IsStatus != 99 
             ORDER BY
                 hncode.ID ASC   ";
+
+
 
 // } else {
 //     $query = " SELECT
@@ -185,9 +189,11 @@ while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
     if ($row['UsageCode'] == null) {
         $usageCode = $row['itemcode2'];
         $itemname = $row['itemname2'];
+        $TyeName = $row['TyeName2'];
     } else {
         $usageCode = $row['UsageCode'];
         $itemname = $row['itemname'];
+        $TyeName = $row['TyeName'];
     }
 
     $dataArray[] = [
@@ -196,7 +202,7 @@ while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
         'departmentroomname'   => $row['departmentroomname'],
         'Doctor_Name'          => $row['Doctor_Name'],
         'Procedures'           => $row['Procedures'],
-        'TyeName'              => $row['TyeName'],
+        'TyeName'              => $TyeName,
         'UsageCode'            => $usageCode,
         'itemname'             => $itemname
     ];

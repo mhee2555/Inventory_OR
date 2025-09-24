@@ -258,11 +258,13 @@ function feeddata() {
     success: function (result) {
 
       var ObjData = JSON.parse(result);
+      $('#table_data').DataTable().destroy();
+      $("#table_data tbody").html("");
+
       if (!$.isEmptyObject(ObjData)) {
         var _tr = ``;
         var allpage = 0;
-        $('#table_data').DataTable().destroy();
-        $("#table_data tbody").html("");
+
         var number_ex = 1;
 
         $.each(ObjData, function (kay, value) {

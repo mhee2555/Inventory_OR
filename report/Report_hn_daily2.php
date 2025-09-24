@@ -103,6 +103,7 @@ $query = "SELECT
             AND deproom.DocNo NOT IN (SELECT set_hn.DocNo_deproom FROM set_hn WHERE DATE( set_hn.serviceDate ) = '$select_date1_search' AND set_hn.isCancel = 1  AND DocNo_deproom IS NOT NULL  )
             AND NOT deproom.isStatus = 9 
             AND  deproom.isCancel = 0
+            AND  deproom.IsEms = 0
         ORDER BY
             deproom.serviceDate ASC;  ";
 

@@ -83,7 +83,7 @@ function oncheck_Returnsell($conn, $db)
             $queryT = "DELETE FROM itemstock_transaction_detail  WHERE ItemStockID = '$_RowID' 
                     AND ItemCode = '$_ItemCode' 
                     AND departmentroomid = '$select_department_sell_right' 
-                    AND  IsStatus = '1'
+                    AND  IsStatus = '9'
                     AND DATE(CreateDate) = '$input_date_service_sell' LIMIT 1 ";
 
 
@@ -435,7 +435,7 @@ function oncheck_sell($conn, $db)
                 $query_old = "DELETE FROM itemstock_transaction_detail  WHERE ItemStockID = '$_RowID' 
                         AND ItemCode = '$_ItemCode' 
                         AND departmentroomid = '$__Ref_departmentroomid' 
-                        AND  IsStatus = '1'
+                        AND  IsStatus = '9'
                         AND DATE(CreateDate) = '$_ModifyDate' ";
                 $meQuery_old = $conn->prepare($query_old);
                 $meQuery_old->execute();

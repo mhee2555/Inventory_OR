@@ -237,6 +237,61 @@ $sum_all22 = 0;
 $sum_all33 = 0;
 $sum_all44 = 0;
 
+
+// $query = "SELECT
+// 	hncode.DocNo_SS,
+// 	i.itemname,
+// 	i.itemcode,
+// 	i.itemcode2,
+// 	hnd.ItemStockID,
+// 	i.SalePrice,
+// 	i.item_status,
+// 	COUNT( hnd.ID ) AS cnt,
+// 	(
+// 	SELECT
+// 		COUNT( lr.id ) 
+// 	FROM
+// 		log_return lr
+// 		LEFT JOIN itemstock is_return ON lr.itemstockID = is_return.RowID 
+// 	WHERE
+// 		lr.DocNo = '$_DocNo_SS' 
+// 		AND is_return.ItemCode = COALESCE ( s.ItemCode, hnd.ItemCode ) 
+// 	) AS cnt_return 
+// FROM
+// 	hncode
+// 	INNER JOIN deproom d ON hncode.DocNo_SS = d.DocNo
+// 	INNER JOIN hncode_detail hnd ON hncode.DocNo = hnd.DocNo -- ถ้ามี ItemStockID (ไม่ NULL/ไม่ว่าง) ค่อยจับคู่กับ itemstock
+// 	LEFT JOIN itemstock s ON ( hnd.ItemStockID IS NOT NULL AND hnd.ItemStockID <> '' AND s.RowID = hnd.ItemStockID ) -- item จะใช้ itemcode จาก itemstock ถ้ามี มิฉะนั้นใช้ hnd.ItemCode
+// 	LEFT JOIN item i ON i.itemcode = COALESCE ( s.ItemCode, hnd.ItemCode ) 
+// WHERE
+// 	hncode.DocNo = '$DocNo' 
+// GROUP BY
+// 	i.itemname,
+// 	i.itemcode,
+// 	i.itemcode2,
+// 	i.SalePrice,
+// 	hncode.DocNo_SS 
+// ORDER BY
+// 	hnd.ItemStockID ASC,
+// 	(
+// 		COUNT( hnd.ID ) - COALESCE ((
+// 			SELECT
+// 				COUNT( lr2.id ) 
+// 			FROM
+// 				log_return lr2
+// 				LEFT JOIN itemstock is_return2 ON lr2.itemstockID = is_return2.RowID 
+// 			WHERE
+// 				lr2.DocNo = '$_DocNo_SS' 
+// 				AND is_return2.ItemCode = COALESCE ( s.ItemCode, hnd.ItemCode ) 
+// 				),
+// 			0 
+// 		) 
+// 	) DESC,
+// 	i.itemname ASC; ";
+
+    // echo $query ;
+    // exit;
+
 $query = " SELECT
             hncode.DocNo_SS,
             item.itemname,
@@ -246,12 +301,25 @@ $query = " SELECT
             item.SalePrice,
             item.item_status,
             COUNT(deproomdetailsub.ID) AS cnt,
+            -- (
+            --     SELECT COUNT(log_return.id)
+            --     FROM log_return
+            --     LEFT JOIN itemstock AS is_return ON log_return.itemstockID = is_return.RowID
+            --     WHERE log_return.DocNo = '$_DocNo_SS'
+            --     AND is_return.ItemCode = item.itemcode
+            -- ) AS cnt_return
             (
-                SELECT COUNT(log_return.id)
-                FROM log_return
-                LEFT JOIN itemstock AS is_return ON log_return.itemstockID = is_return.RowID
-                WHERE log_return.DocNo = '$_DocNo_SS'
-                AND is_return.ItemCode = item.itemcode
+                SELECT COUNT(lr.id)
+                FROM log_return lr
+                LEFT JOIN itemstock is_return 
+                    ON lr.itemstockID = is_return.RowID
+                WHERE lr.DocNo = '$_DocNo_SS'
+                AND (
+                        -- กรณีมี itemstockID
+                        (lr.itemstockID > 0 AND is_return.ItemCode = item.itemcode)
+                    OR -- กรณี itemstockID = 0
+                        (lr.itemstockID = 0 AND lr.itemCode = item.itemcode)
+                )
             ) AS cnt_return
         FROM
             hncode
@@ -292,6 +360,9 @@ $query = " SELECT
             ) DESC,
             item.itemname ASC; ";
 
+            // echo $query;
+            // exit;
+
 $meQuery1 = $conn->prepare($query);
 $meQuery1->execute();
 while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
@@ -309,7 +380,7 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
 
         $style="";
         $style2="background-color:#E6E6FA;";
-        if($ItemStockID == null){
+        if($ItemStockID == 0){
             $style = " background-color:#e1bee7; ";
             $style2 = " background-color:#e1bee7; ";
         }else{
@@ -333,9 +404,13 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
     }
 }
 
-$sum_all11 = ($sum_all1 / $sum_all1) * 100;
-$sum_all22 = ($sum_all2 / $sum_all1) * 100;
-$sum_all33 = ($sum_all3 / $sum_all1) * 100;
+if ($sum_all1 > 0) {
+    $sum_all11 = ($sum_all1 / $sum_all1) * 100; // ค่าจะได้ 100 เสมอ
+} else {
+    $sum_all11 = 0; // หรือ NULL ตามที่คุณต้องการ
+}
+$sum_all22 = ($sum_all1 > 0) ? ($sum_all2 / $sum_all1) * 100 : 0;
+$sum_all33 = ($sum_all1 > 0) ? ($sum_all3 / $sum_all1) * 100 : 0;
 
 $html .= '<tr nobr="true" style="font-size:15px;">';
 $html .=   '<td width="55 %" align="center" colspan="2">Grand Total</td>';

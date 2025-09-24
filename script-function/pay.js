@@ -190,7 +190,12 @@ $(function () {
       "-" +
       year;
 
+    $("#input_date_service_manual").attr('disabled', false);
+    $("#input_time_service_manual").attr('disabled', false);
 
+    $("#checkbox_manual_ems").prop('checked', false);
+    $("#checkbox_tf").prop('checked', false);
+    $("#checkbox_tf").prop('disabled', false);
 
     $("#input_Hn_pay_manual").val("");
     $("#input_box_pay_manual").val("");
@@ -547,8 +552,13 @@ $(function () {
 
   $("#input_searchHN_pay").keypress(function (e) {
     if (e.which == 13) {
-      var input_searchHN_pay = $("#input_searchHN_pay").val();
+      var input_searchHN_pay = $("#input_searchHN_pay").val().trim();
       var select_date_pay = $("#select_date_pay").val();
+
+      if (input_searchHN_pay == "") {
+        showDialogFailed('กรุณากรอกเลขประจำตัวผู้ป่วย');
+        $("#input_searchHN_pay").val("");
+      }
 
       $.ajax({
         url: "process/pay.php",
@@ -563,10 +573,17 @@ $(function () {
           console.log(ObjData);
           if (!$.isEmptyObject(ObjData)) {
             $.each(ObjData, function (kay, value) {
-              setTimeout(() => {
-                $("#checkbox_" + value.DocNo).prop("checked", true).trigger("click");
-              }, 300);
-              $("#input_searchHN_pay").val("");
+
+              if (value.DocNo == null) {
+                showDialogFailed('ไม่พบเลขประจำตัวผู้ป่วยที่ค้นหา');
+                $("#input_searchHN_pay").val("");
+              } else {
+                setTimeout(() => {
+                  $("#checkbox_" + value.DocNo).prop("checked", true).trigger("click");
+                }, 300);
+                $("#input_searchHN_pay").val("");
+              }
+
             });
           } else {
             showDialogFailed('ไม่พบข้อมูล');
@@ -2387,12 +2404,15 @@ $("#checkbox_manual_ems").change(function () {
   if ($("#checkbox_manual_ems").is(":checked")) {
     $("#input_box_pay_manual").val("");
     $("#input_box_pay_manual").attr('disabled', true);
+    $("#checkbox_tf").attr('disabled', true);
+    $("#checkbox_tf").prop('checked', false);
     $("#input_Hn_pay_manual").val("");
     $("#input_Hn_pay_manual").attr('disabled', true);
     $("#input_date_service_manual").attr('disabled', true);
     $("#input_time_service_manual").attr('disabled', true);
   } else {
     $("#input_box_pay_manual").val("");
+    $("#checkbox_tf").attr('disabled', false);
     $("#input_box_pay_manual").attr('disabled', false);
     $("#input_Hn_pay_manual").val("");
     $("#input_Hn_pay_manual").attr('disabled', false);
@@ -4359,7 +4379,7 @@ $("#input_scan_return").keypress(function (e) {
               return;
             }
             if (value.IsCross == 9) {
-              showDialogFailed("สแกนรหัสซ้ำ");
+              showDialogFailed("สแกนรหัสซ้ำ");ฟห
               $("#input_scan_return").val("");
               return;
             }

@@ -1042,7 +1042,7 @@ function feeddata_detailUser($conn, $db)
                         '' ELSE u.permission 
                     END AS permission,
                     u.IsAdmin,
-                    ( SELECT GROUP_CONCAT( cabinet_id ORDER BY cabinet_id SEPARATOR ',' ) FROM user_cabinet WHERE user_id = u.ID ) AS cabinet_ids 
+                    ( SELECT GROUP_CONCAT( cabinet_id ORDER BY cabinet_id SEPARATOR ',' ) FROM user_cabinet WHERE user_id = u.ID AND cabinet_finger_id IS NOT NULL  ) AS cabinet_ids 
                 FROM
                     users u
                     INNER JOIN employee e ON u.EmpCode = e.EmpCode ";
