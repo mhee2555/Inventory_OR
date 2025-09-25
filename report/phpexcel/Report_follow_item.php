@@ -3,6 +3,7 @@ require 'vendor/autoload.php';
 
 require('../../config/db.php');
 require('../../connect/connect.php');
+require('../Class.php');
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -75,6 +76,9 @@ use PhpOffice\PhpSpreadsheet\Cell\DataType;
 $year  = $select_follow_year;
 $month = $select_follow_month;
 $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+
+$datetime = new DatetimeTH();
+$sheet->setCellValue('A7', 'เดือน ' . $datetime->getTHmonthFromnum($select_follow_month) . " ปี " . $select_follow_year);
 
 // หัวคงที่
 $sheet->setCellValue('A8', 'ลำดับ');

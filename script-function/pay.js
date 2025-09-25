@@ -2376,7 +2376,7 @@ function showDetail_item(DocNo) {
     url: "process/add_item.php",
     type: "POST",
     data: {
-      FUNC_NAME: "showDetail_item2",
+      FUNC_NAME: "showDetail_item3",
       DocNo: DocNo,
     },
     success: function (result) {

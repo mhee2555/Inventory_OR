@@ -830,11 +830,11 @@ function feeddata_detailDoctor() {
 
 $("#btn_savedepartment").click(function () {
   if ($("#input_departmentthai").val().trim() == "") {
-    showDialogFailed("กรุณากรอกแผนก ไทย");
+    showDialogFailed("กรุณากรอก ชื่อแผนกภาษาไทย");
     return;
   }
   if ($("#input_departmenteng").val().trim() == "") {
-    showDialogFailed("กรุณากรอกแผนก อังกฤษ");
+    showDialogFailed("กรุณากรอก ชื่อแผนกภาษาอังกฤษ");
     return;
   }
 
@@ -1587,11 +1587,11 @@ function feeddata_detailUser() {
 // =============DEPROOM===================================
 $("#btn_saveDeproom").click(function () {
   if ($("#input_DeproomNameTH").val().trim() == "") {
-    showDialogFailed("กรุณากรอก ชื่อห้อง ไทย");
+    showDialogFailed("กรุณากรอก ชื่อห้องภาษาไทย");
     return;
   }
   if ($("#input_DeproomNameEN").val().trim() == "") {
-    showDialogFailed("กรุณากรอก ชื่อห้อง อังกฤษ");
+    showDialogFailed("กรุณากรอก ชื่อห้องภาษาอังกฤษ");
     return;
   }
   if ($("#input_DeproomName_sub").val().trim() == "") {

@@ -646,7 +646,7 @@
                     <button class="btn btn-outline-danger " style="font-size: 18px;width:100%;" id="btn_Show_Report2">ใบติดหน้ากล่อง</button>
                 </div>
                 <div class="col">
-                    <button class="btn btn-outline-success" id="btn_show_report" style="font-size: 18px;width:100%;"><i class="fa-solid fa-file-excel"></i> EXCEL</button>
+                    <button class="btn btn-outline-success" id="btn_show_report" style="font-size: 15px;width:100%;"><i class="fa-solid fa-file-excel"></i> สถิติการจ่ายอุปกรณ์</button>
                 </div>
 
 

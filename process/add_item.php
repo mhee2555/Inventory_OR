@@ -15,6 +15,8 @@ if (!empty($_POST['FUNC_NAME'])) {
         onChangePay($conn, $db);
     } else if ($_POST['FUNC_NAME'] == 'showDetail_item2') {
         showDetail_item2($conn, $db);
+    } else if ($_POST['FUNC_NAME'] == 'showDetail_item3') {
+        showDetail_item3($conn, $db);
     }
 }
 
@@ -34,6 +36,35 @@ function onChangePay($conn, $db)
 
     $meQuery2 = $conn->prepare($query2);
     $meQuery2->execute();
+
+    echo json_encode($return);
+    unset($conn);
+    die;
+}
+
+function showDetail_item3($conn, $db)
+{
+    $return = array();
+    $DocNo = $_POST['DocNo'];
+    $deproom = $_SESSION['deproom'];
+
+
+
+    $query = "SELECT
+                    item.itemname,
+                    deproomdetail.Qty 
+                FROM
+                    deproom
+                    INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
+                    INNER JOIN item ON deproomdetail.ItemCode = item.itemcode 
+                WHERE  deproom.DocNo = '$DocNo' ";
+
+    $meQuery = $conn->prepare($query);
+    $meQuery->execute();
+    while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+        $return[] = $row;
+    }
+
 
     echo json_encode($return);
     unset($conn);

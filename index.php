@@ -145,13 +145,13 @@ if (!isset($_SESSION['UserName'])) {
                     <div class="col-md-4">
                         <div class="card pl-3 pr-3">
                             <div style="border-bottom: none;text-align: center;display: block;">
-                                <i style="font-size: 80px;color: #007bff;margin-bottom: 10px;"  class="fa-solid fa-volume-high"></i>
+                                <i style="font-size: 80px;color: #007bff;margin-bottom: 10px;" class="fa-solid fa-volume-high"></i>
                                 <h5 class="modal-title" id="loginModalLabel" style="color:black;">เสียง</h5>
                             </div>
-                                <select name="" id="select_sound" class="form-control mb-3">
-                                    <option value="1">เปิด</option>
-                                    <option value="0">ปิด</option>
-                                </select>
+                            <select name="" id="select_sound" class="form-control mb-3">
+                                <option value="1">เปิด</option>
+                                <option value="0">ปิด</option>
+                            </select>
                         </div>
 
                     </div>
@@ -485,7 +485,7 @@ if (!isset($_SESSION['UserName'])) {
                 }
             });
 
-            
+
             // $("#time_out_Modal").modal('toggle');
         })
 
@@ -531,7 +531,7 @@ if (!isset($_SESSION['UserName'])) {
 
             $.get(link, function(res) {
 
-                    $("#ic_mainpage").attr("src", "assets/img_project/3_icon/ic_mainpage.png");
+                $("#ic_mainpage").attr("src", "assets/img_project/3_icon/ic_mainpage.png");
 
                 // $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
                 // if (display == 3) {
@@ -544,7 +544,7 @@ if (!isset($_SESSION['UserName'])) {
                 } else {
                     $("#li_main").css("background-color", "#643695");
                 }
-                    $("#menu1").addClass('color_menu1');
+                $("#menu1").addClass('color_menu1');
 
                 // $("#menu1").css('color', '#667085');
 
@@ -565,18 +565,21 @@ if (!isset($_SESSION['UserName'])) {
 
                 // $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
 
-                if (display == '3') {
-                    $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
-                } else {
-                    $("#ic_mainpage").attr("src", "assets/img_project/3_icon/ic_mainpage.png");
-                }
+                // if (display == '3') {
+                //     $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
+                // } else {
+                //     $("#ic_mainpage").attr("src", "assets/img_project/3_icon/ic_mainpage.png");
+                // }
+
+                $("#ic_mainpage").attr("src", "assets/img_project/3_icon/ic_mainpage.png");
+
                 if (display == 2) {
                     $("#li_main").css("background-color", "rgb(60, 32, 90)");
                 } else {
                     $("#li_main").css("background-color", "#643695");
                 }
 
-                $("#menu1").css('color', '#667085');
+                $("#menu1").addClass('color_menu1');
 
                 $("#conMain").html(res);
                 history.pushState({}, "Results for `Cats`", 'index.php?s=oc');
@@ -595,18 +598,20 @@ if (!isset($_SESSION['UserName'])) {
 
                 // $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
 
-                if (display == '3') {
-                    $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
-                } else {
-                    $("#ic_mainpage").attr("src", "assets/img_project/3_icon/ic_mainpage.png");
-                }
+                // if (display == '3') {
+                //     $("#ic_mainpage").attr("src", "assets/img_project/2_icon/ic_mainpage.png");
+                // } else {
+                //     $("#ic_mainpage").attr("src", "assets/img_project/3_icon/ic_mainpage.png");
+                // }
+                $("#ic_mainpage").attr("src", "assets/img_project/3_icon/ic_mainpage.png");
+
                 if (display == 2) {
                     $("#li_main").css("background-color", "rgb(60, 32, 90)");
                 } else {
                     $("#li_main").css("background-color", "#643695");
                 }
 
-                $("#menu1").css('color', '#667085');
+                $("#menu1").addClass('color_menu1');
 
                 $("#conMain").html(res);
                 history.pushState({}, "Results for `Cats`", 'index.php?s=hn_daily');

@@ -29,7 +29,8 @@ class MYPDF extends TCPDF
         // date th
         $printdate = date('d') . " " . $datetime->getTHmonth(date('F'))  . " " . date('Y');
 
-
+            $select_follow_month = $_GET['select_follow_month'];
+            $select_follow_year = $_GET['select_follow_year'];
 
         // Set font
         $this->SetFont('db_helvethaica_x', '', 14);
@@ -37,7 +38,8 @@ class MYPDF extends TCPDF
         // Title
         $this->Cell(0, 10,  'วันที่พิมพ์รายงาน' . ' ' . $printdate, 0, 1, 'R');
 
-
+        $this->SetFont('db_helvethaica_x', '', 18);
+        $this->Cell(0, 50, "เดือน ". $datetime->getTHmonthFromnum($select_follow_month) . " ปี " . $select_follow_year , 0, 1, 'C');
 
 
 
@@ -164,7 +166,8 @@ $query = "SELECT
             WHERE daily_stock_item.itemcode IN (SELECT set_item_daily.itemCode FROM set_item_daily)
             AND MONTH(daily_stock_item.snapshot_date) = '$select_follow_month' 
             AND YEAR(daily_stock_item.snapshot_date) = '$select_follow_year' 
-            GROUP BY daily_stock_item.itemcode  ";
+            GROUP BY daily_stock_item.itemcode
+            ORDER BY daily_stock_item.itemname, daily_stock_item.itemcode  ";
 
 $meQuery1 = $conn->prepare($query);
 $meQuery1->execute();

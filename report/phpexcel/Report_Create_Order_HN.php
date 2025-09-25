@@ -108,6 +108,7 @@ if ($db == 1) {
                 WHERE
                 deproom.CreateDate >= '$select_date_history_s 00:00:00' AND deproom.CreateDate <= '$select_date_history_l 23:59:59'
                 AND deproom.IsCancel = 0
+                AND deproom.IsEms = 0
                 AND deproomdetail.IsCancel = 0
                 AND deproomdetail.IsStart = 1
                 GROUP BY
@@ -129,6 +130,7 @@ if ($db == 1) {
                 WHERE
                 CONVERT(DATE,deproom.CreateDate)  BETWEEN  '$select_date_history_s'  AND '$select_date_history_l' 
                 AND deproom.IsCancel = 0 
+                AND deproom.IsEms = 0
                 AND deproomdetail.IsCancel = 0 
                 AND deproomdetail.IsStart = 1
                 AND itemtype.TyeName = 'SUDs'

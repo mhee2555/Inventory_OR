@@ -441,7 +441,7 @@ function oncheck_sell($conn, $db)
                 $query_old = "DELETE FROM itemstock_transaction_detail  WHERE ItemStockID = '$_RowID' 
                         AND ItemCode = '$_ItemCode' 
                         AND departmentroomid = '$__Ref_departmentroomid' 
-                        AND  IsStatus = '9'
+                        AND  IsStatus = '1'
                         AND DATE(CreateDate) = '$_ModifyDate' ";
                 $meQuery_old = $conn->prepare($query_old);
                 $meQuery_old->execute();

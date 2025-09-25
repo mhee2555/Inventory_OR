@@ -474,7 +474,7 @@ $query = " SELECT
                 INNER JOIN deproomdetailsub ON deproomdetailsub.Deproomdetail_RowID = deproomdetail.ID
                 INNER JOIN item ON deproomdetail.ItemCode = item.itemcode 
             WHERE
-                DATE( deproom.CreateDate ) BETWEEN '$select_date_history_s'  AND '$select_date_history_l' 
+                DATE( deproom.serviceDate ) BETWEEN '$select_date_history_s'  AND '$select_date_history_l' 
                 AND deproom.IsCancel = 0 
                 AND deproomdetail.IsCancel = 0 
                 AND item.SpecialID = '1' 
