@@ -322,7 +322,7 @@ function show_detail_item_request($conn,$db)
                     item.IsNormal = 1 
                     AND item.IsCancel = 0 
                     AND item.item_status != 1
-                    AND item.IsSet != 1
+                    AND ( item.IsSet != 1 AND  item.IsSet != 2 )
                     AND ( item.itemcode LIKE '%$input_Search%' OR item.itemname LIKE '%$input_Search%' ) 
                     $wherepermission
                     $wheretype 

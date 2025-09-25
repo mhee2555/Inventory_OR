@@ -89,6 +89,12 @@ function oncheck_Returnsell($conn, $db)
 
             $meQueryT = $conn->prepare($queryT);
             $meQueryT->execute();
+
+
+        }
+
+        if($DocNo_old == ""){
+            $count_itemstock = 0 ;
         }
 
 

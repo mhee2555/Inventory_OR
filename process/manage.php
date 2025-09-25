@@ -1097,7 +1097,7 @@ function saveDoctor($conn)
             $stmt = $conn->prepare($sqlCheck);
             $stmt->execute([$input_doctorth]);
             if ($stmt->fetchColumn()) {
-                echo json_encode(['ok' => false, 'msg' => 'มีรายชื่อนี้อยู่แล้ว']);
+                echo json_encode(['ok' => false, 'msg' => 'มีรายการนี้อยู่แล้ว']);
                 return;
             }
 

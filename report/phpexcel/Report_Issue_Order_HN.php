@@ -132,6 +132,8 @@ if ($db == 1) {
                     AND deproom.IsCancel = 0 
                     AND deproomdetail.IsCancel = 0 
                     AND item.SpecialID = '0' 
+                    AND item.item_status != 1
+                    AND ( item.IsSet != 1 AND  item.IsSet != 2 )
                     $whereD
                     $whereP
                     $whereR

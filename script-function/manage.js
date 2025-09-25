@@ -277,7 +277,7 @@ function show_detail_item_map() {
             `<tr >
             <td class="text-center">${kay + 1}</td>
             <td class="text-left">${value.itemname_main}</td>
-            <td class="text-center" >${value.itemname_sub}</td>
+            <td class="text-left" >${value.itemname_sub}</td>
             <td class="text-center" > <button class="btn btn-outline-dark f18"  onclick='edit_item_map("${value.itemCode_main}",${value.IsSet})'> <i class="fa-regular fa-pen-to-square"></i> แก้ไข</button> </td>
             <td class="text-center"> <button  class="btn btn-outline-danger f18" onclick='delete_item_map("${value.itemCode_main}")'><i class="fa-solid fa-trash-can"></i></button> </td>
             </tr>`;
@@ -648,6 +648,7 @@ function saveDoctor() {
   $.ajax({
     url: "process/manage.php",
     type: "POST",
+    dataType: "json", // ให้ PHP echo เป็น JSON
     data: {
       FUNC_NAME: "saveDoctor",
       input_doctorth: $("#input_doctorth").val(),
@@ -655,16 +656,27 @@ function saveDoctor() {
       IsActive: IsActive,
     },
     success: function (result) {
-      if (result == "xxxx") {
-        showDialogFailed("ชื่อแพทย์ซ้ำ");
+
+      if (!result.ok) {
+        showDialogFailed(result.msg);
       } else {
         showDialogSuccess(result);
         feeddata_detailDoctor();
         showDialogSuccess("บันทึกสำเร็จ");
       }
 
-      $("#input_doctorth").val("");
-      $("#input_IDdoctor").val("");
+
+      // var ObjData = JSON.parse(result);
+      // if (result == "xxxx") {
+      //   showDialogFailed("ชื่อแพทย์ซ้ำ");
+      // } else {
+      //   showDialogSuccess(result);
+      //   feeddata_detailDoctor();
+      //   // showDialogSuccess("บันทึกสำเร็จ");
+      // }
+
+      // $("#input_doctorth").val("");
+      // $("#input_IDdoctor").val("");
     },
   });
 }
@@ -856,7 +868,7 @@ function saveDepartment() {
     },
     success: function (result) {
       if (result == "xxxx") {
-        showDialogFailed("ชื่อแผนกซ้ำ");
+        showDialogFailed("มีรายการนี้อยู่แล้ว");
       } else {
         showDialogSuccess(result);
         feeddata_detailDepartment();
@@ -1610,7 +1622,7 @@ function saveDeproom() {
     },
     success: function (result) {
       if (result == "xxxx") {
-        showDialogFailed("ชื่อซ้ำ");
+        showDialogFailed("มีรายการนี้อยู่แล้ว");
       } else {
         showDialogSuccess(result);
         feeddata_detailDeproom();

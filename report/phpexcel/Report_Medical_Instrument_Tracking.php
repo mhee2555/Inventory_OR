@@ -138,6 +138,8 @@ $query = " SELECT
             ORDER BY
                 hncode.ID ASC   ";
 
+// echo $query;
+// exit;
 
 
 // } else {
