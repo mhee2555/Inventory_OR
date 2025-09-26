@@ -583,7 +583,7 @@ function show_detail_hn($conn, $db)
                     $where
                 GROUP BY hncode.DocNo
                 ORDER BY
-                    DATE_FORMAT(hncode.DocDate, '%d-%m-%Y') ASC ";
+                    hncode.DocDate ASC ";
     } else {
         $query = " SELECT
                         hncode.ID,

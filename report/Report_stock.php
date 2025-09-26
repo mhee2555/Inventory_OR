@@ -178,6 +178,9 @@ $query = "SELECT
                     LEFT JOIN itemstock ON itemstock.ItemCode = item.itemcode 
                 WHERE
 										item.SpecialID = '0' 
+                                        AND item.IsCancel = '0'
+                                        AND item.item_status != 1
+                                        AND item.stock_max IS NOT NULL
                 GROUP BY
                     item.itemname,
                     item.itemcode,
@@ -307,6 +310,11 @@ $query = "SELECT
                     LEFT JOIN itemstock ON itemstock.ItemCode = item.itemcode 
                 WHERE
 										item.SpecialID = '2' 
+                                        AND item.IsCancel = '0'
+                                        AND item.item_status != 1
+                                        AND item.stock_max IS NOT NULL
+                                        
+                                        
                 GROUP BY
                     item.itemname,
                     item.itemcode,
@@ -435,6 +443,9 @@ $query = "SELECT
                     LEFT JOIN itemstock ON itemstock.ItemCode = item.itemcode 
                 WHERE
 										item.SpecialID = '1' 
+                                        AND item.IsCancel = '0'
+                                        AND item.item_status != 1
+                                        AND item.stock_max IS NOT NULL
                 GROUP BY
                     item.itemname,
                     item.itemcode,

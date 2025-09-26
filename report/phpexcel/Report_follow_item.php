@@ -62,10 +62,10 @@ while ($row_user = $meQuery_user->fetch(PDO::FETCH_ASSOC)) {
     $_FirstName = $row_user['FirstName'];
 }
 
-$sheet->setCellValue('E3', 'พิมพ์โดย ' . $_FirstName);
-$sheet->setCellValue('E4', 'วันที่พิมพ์ ' . date('d/m/Y') . ' ' . date('H:i:s'));
-$sheet->getStyle('E3')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
-$sheet->getStyle('E4')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+$sheet->setCellValue('B6', 'พิมพ์โดย ' . $_FirstName);
+$sheet->setCellValue('B7', 'วันที่พิมพ์ ' . date('d/m/Y') . ' ' . date('H:i:s'));
+$sheet->getStyle('B6')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+$sheet->getStyle('B7')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
 
 
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
@@ -79,6 +79,7 @@ $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year);
 
 $datetime = new DatetimeTH();
 $sheet->setCellValue('A7', 'เดือน ' . $datetime->getTHmonthFromnum($select_follow_month) . " ปี " . $select_follow_year);
+$sheet->getStyle('A7')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
 // หัวคงที่
 $sheet->setCellValue('A8', 'ลำดับ');
@@ -169,15 +170,88 @@ if (!$items) {
 // 3) ดึงค่าคงเหลือทั้งเดือนของทุก item ครั้งเดียว
 //     คืนมาเป็น: [itemcode][Y-m-d] = calculated_balance
 // ======================
+// $sqlData = "
+//     SELECT DATE(d.snapshot_date) AS ddate, d.itemcode, COALESCE(d.calculated_balance, 0) AS val
+//     FROM daily_stock_item d
+//     WHERE d.itemcode IN (SELECT s.itemCode FROM set_item_daily s)
+//       AND d.snapshot_date >= :startDate
+//       AND d.snapshot_date <  DATE_ADD(:endDate, INTERVAL 1 DAY) ";
+
 $sqlData = "
-    SELECT DATE(d.snapshot_date) AS ddate, d.itemcode, COALESCE(d.calculated_balance, 0) AS val
-    FROM daily_stock_item d
-    WHERE d.itemcode IN (SELECT s.itemCode FROM set_item_daily s)
-      AND d.snapshot_date >= :startDate
-      AND d.snapshot_date <  DATE_ADD(:endDate, INTERVAL 1 DAY)
-";
+            WITH RECURSIVE
+            calendar AS (
+                SELECT DATE(:startDate_cal) AS day
+                UNION ALL
+                SELECT day + INTERVAL 1 DAY
+                FROM calendar
+                WHERE day + INTERVAL 1 DAY <= :endDate_cal
+            ),
+            items AS (
+                SELECT DISTINCT s.itemCode AS itemcode
+                FROM set_item_daily s
+            ),
+            ds AS (
+                SELECT
+                    DATE(dsi.snapshot_date) AS ddate,
+                    dsi.itemcode,
+                    MAX(dsi.itemname) AS itemname,
+                    SUM(dsi.calculated_balance) AS val
+                FROM daily_stock_item dsi
+                WHERE dsi.snapshot_date >= :startDate_ds
+                AND dsi.snapshot_date <  DATE_ADD(:endDate_ds, INTERVAL 1 DAY)
+                AND DATE(dsi.snapshot_date) <> CURDATE()
+                AND dsi.itemcode IN (SELECT itemcode FROM items)
+                GROUP BY DATE(dsi.snapshot_date), dsi.itemcode
+            ),
+            today_calc AS (
+                SELECT
+                    i.itemcode,
+                    i.itemname,
+                    CASE
+                        WHEN IFNULL(s.cnt, 0) > IFNULL(i.stock_balance, 0)
+                            THEN (IFNULL(s.cnt, 0) - IFNULL(tp.cnt_pay, 0))
+                        ELSE (IFNULL(i.stock_balance, 0) - IFNULL(tp.cnt_pay, 0))
+                    END AS val
+                FROM item i
+                INNER JOIN items it ON it.itemcode = i.itemcode
+                LEFT JOIN (
+                    SELECT ItemCode, COUNT(*) AS cnt
+                    FROM itemstock
+                    GROUP BY ItemCode
+                ) s ON s.ItemCode = i.itemcode
+                LEFT JOIN (
+                    SELECT ItemCode, COUNT(*) AS cnt_pay
+                    FROM itemstock_transaction_detail
+                    WHERE IsStatus IN (1, 9)
+                    GROUP BY ItemCode
+                ) tp ON tp.ItemCode = i.itemcode
+            ),
+            d AS (
+                SELECT ddate, itemcode, itemname, val FROM ds
+                UNION ALL
+                SELECT CURDATE() AS ddate, itemcode, itemname, val
+                FROM today_calc
+            )
+            SELECT
+                c.day          AS ddate,
+                it.itemcode    AS itemcode,
+                COALESCE(dd.itemname, i2.itemname) AS itemname,
+                COALESCE(dd.val, 0) AS val
+            FROM calendar c
+            CROSS JOIN items it
+            LEFT JOIN d dd
+                ON dd.itemcode = it.itemcode AND dd.ddate = c.day
+            LEFT JOIN item i2
+                ON i2.itemcode = it.itemcode
+            ORDER BY c.day, it.itemcode
+            ";
 $stmData = $conn->prepare($sqlData);
-$stmData->execute([':startDate' => $startDate, ':endDate' => $endDate]);
+$stmData->execute([
+    ':startDate_cal' => $startDate, // YYYY-MM-01
+    ':endDate_cal'   => $endDate,   // YYYY-MM-t
+    ':startDate_ds'  => $startDate,
+    ':endDate_ds'    => $endDate,
+]);
 
 $byItemByDay = []; // เช่น $byItemByDay['I00152']['2025-09-03'] = 12
 while ($r = $stmData->fetch(PDO::FETCH_ASSOC)) {
@@ -358,7 +432,7 @@ $sheet->freezePane('C9'); // เลื่อนแล้วให้คอลั
 // // $sheet->getStyle('A1')->getFont()->setSize(20); // หัวข้อใหญ่
 // // $sheet->getColumnDimension('A')->setWidth(40); // คอลัมน์ A กว้างขึ้น
 $sheet->getColumnDimension('A')->setWidth(30); // คอลัมน์ B ปรับอัตโนมัติ
-$sheet->getColumnDimension('B')->setWidth(30); // คอลัมน์ B ปรับอัตโนมัติ
+$sheet->getColumnDimension('B')->setWidth(45); // คอลัมน์ B ปรับอัตโนมัติ
 // $sheet->getColumnDimension('C')->setWidth(30); // คอลัมน์ B ปรับอัตโนมัติ
 // $sheet->getColumnDimension('D')->setWidth(30); // คอลัมน์ B ปรับอัตโนมัติ
 // $sheet->getColumnDimension('E')->setWidth(30); // คอลัมน์ B ปรับอัตโนมัติ

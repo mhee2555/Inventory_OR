@@ -1,6 +1,7 @@
 var departmentroomname = "";
 var UserName = "";
 var Userid = "";
+var display = "";
 
 $(function () {
   $("#row_department").hide();
@@ -1009,11 +1010,16 @@ $("#btn_send_pay").click(function () {
             $(".nav-item").removeClass("active");
             $(".nav-item").css("background-color", "");
 
-            $("#ic_search_hndata").attr(
-              "src",
-              "assets/img_project/2_icon/ic_search_hndata.png"
-            );
-            $("#menu9").css("color", "#667085");
+
+            $("#ic_search_hndata").attr("src", "assets/img_project/3_icon/ic_search_hndata.png");
+  
+            if(display == 3){
+              $("#menu9").removeClass("color_menu");
+              $("#menu9").removeClass("color_menu1");
+              $("#menu9").addClass("color_menu3");
+              $("#ic_search_hndata").attr("src", "assets/img_project/2_icon/ic_search_hndata.png");
+            }
+            // $("#menu9").css("color", "#667085");
 
             $("#conMain").html(res);
             history.pushState({}, "Results for `Cats`", "index.php?s=hn_daily");
@@ -1357,7 +1363,7 @@ function session() {
       RefDepID = ObjData.RefDepID;
       Permission_name = ObjData.Permission_name;
       Userid = ObjData.Userid;
-
+      display = ObjData.display;
       
     },
   });

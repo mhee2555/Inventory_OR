@@ -181,28 +181,84 @@ while ($row = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
         $html .=   '<td width="5 %" align="center"> ' . (string)$count . '</td>';
         $html .=   '<td width="20 %" align="left"> ' . (string)$_itemname . '</td>';
 
+                $sub = "  WITH RECURSIVE calendar AS (
+                SELECT DATE('$select_follow_year-$select_follow_month-01') AS day
+                UNION ALL
+                SELECT day + INTERVAL 1 DAY
+                FROM calendar
+                WHERE day + INTERVAL 1 DAY <= LAST_DAY( '$select_follow_year-$select_follow_month-01' ) 
+            ),
+            d AS (
+                SELECT
+                    DATE(ds.snapshot_date) AS snapshot_date,
+                    ds.itemcode,
+                    ds.itemname,
+                    ds.calculated_balance
+                FROM daily_stock_item ds
+                WHERE ds.itemcode = '$_itemcode'
+                AND DATE(ds.snapshot_date) <> CURDATE()
 
-                $sub = "WITH RECURSIVE calendar AS (-- วันแรกของเดือนที่ต้องการ
-                    SELECT
-                        DATE( '$select_follow_year-$select_follow_month-01' ) AS DAY UNION ALL-- ไล่วันไปเรื่อย ๆ จนถึงวันสุดท้ายของเดือน
-                    SELECT DAY
-                        + INTERVAL 1 DAY 
-                    FROM
-                        calendar 
-                    WHERE
-                        DAY + INTERVAL 1 DAY <= LAST_DAY( '$select_follow_year-$select_follow_month-01' ) 
-                    ) SELECT
-                    c.DAY AS snapshot_date,
-                    d.itemcode,
-                    d.itemname,
-                    COALESCE ( d.calculated_balance, 0 ) AS calculated_balance 
-                FROM
-                    calendar c
-                    LEFT JOIN daily_stock_item d ON DATE( d.snapshot_date ) = c.DAY 
-                    AND d.itemcode = '$_itemcode' 
-                ORDER BY
-                    c.DAY,
-                    d.itemcode; ";
+                UNION ALL
+
+                SELECT
+                    CURDATE() AS snapshot_date,
+                    i.itemcode,
+                    i.itemname,
+                    CASE 
+                        WHEN IFNULL(s.cnt, 0) > IFNULL(i.stock_balance, 0)
+                            THEN (IFNULL(s.cnt, 0) - IFNULL(tp.cnt_pay, 0))
+                        ELSE (IFNULL(i.stock_balance, 0) - IFNULL(tp.cnt_pay, 0))
+                    END AS calculated_balance
+                FROM item i
+
+                LEFT JOIN (
+                    SELECT ItemCode, COUNT(*) AS cnt
+                    FROM itemstock
+                    GROUP BY ItemCode
+                ) s ON s.ItemCode = i.itemcode
+
+                LEFT JOIN (
+                    SELECT ItemCode, COUNT(*) AS cnt_pay
+                    FROM itemstock_transaction_detail
+                    WHERE IsStatus IN (1, 9)
+                    GROUP BY ItemCode
+                ) tp ON tp.ItemCode = i.itemcode
+
+
+                WHERE i.itemcode = '$_itemcode'
+            )
+
+            SELECT
+                c.day AS snapshot_date,
+                d.itemcode,
+                d.itemname,
+                COALESCE(d.calculated_balance, 0) AS calculated_balance
+            FROM calendar c
+            LEFT JOIN d
+                ON d.snapshot_date = c.day
+            ORDER BY c.day, d.itemcode;";
+
+                // $sub = "WITH RECURSIVE calendar AS (-- วันแรกของเดือนที่ต้องการ
+                //     SELECT
+                //         DATE( '$select_follow_year-$select_follow_month-01' ) AS DAY UNION ALL-- ไล่วันไปเรื่อย ๆ จนถึงวันสุดท้ายของเดือน
+                //     SELECT DAY
+                //         + INTERVAL 1 DAY 
+                //     FROM
+                //         calendar 
+                //     WHERE
+                //         DAY + INTERVAL 1 DAY <= LAST_DAY( '$select_follow_year-$select_follow_month-01' ) 
+                //     ) SELECT
+                //     c.DAY AS snapshot_date,
+                //     d.itemcode,
+                //     d.itemname,
+                //     COALESCE ( d.calculated_balance, 0 ) AS calculated_balance 
+                // FROM
+                //     calendar c
+                //     LEFT JOIN daily_stock_item d ON DATE( d.snapshot_date ) = c.DAY 
+                //     AND d.itemcode = '$_itemcode' 
+                // ORDER BY
+                //     c.DAY,
+                //     d.itemcode; ";
         $meQuery2 = $conn->prepare($sub);
         $meQuery2->execute();
         while ($row2 = $meQuery2->fetch(PDO::FETCH_ASSOC)) {
