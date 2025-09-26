@@ -169,7 +169,8 @@ function createPDF($conn, $date1)
                 $where_date  
                 -- AND deproom.DocNo NOT IN (SELECT set_hn.DocNo_deproom FROM set_hn WHERE DATE( set_hn.serviceDate ) = '$date1_formatted' AND set_hn.isStatus = 9  )
                 AND deproom.IsCancel = 0
-                AND deproom.IsBlock = 0            
+                AND deproom.IsBlock = 0       
+                AND deproom.IsEms = 0
                 GROUP BY deproom.DocNo";
 
     $meQuery1 = $conn->prepare($query);

@@ -1,4 +1,5 @@
 <?php
+session_start();
 require 'vendor/autoload.php';
 
 require('../../config/db.php');
@@ -74,6 +75,22 @@ $sheet->setCellValue('D8', 'วันหมดอายุ');
 
 $dataArray = [];
 
+$deproom = $_SESSION['deproom'];
+$RefDepID = $_SESSION['RefDepID'];
+$wheredep = "";
+if ($RefDepID  == '36DEN') {
+    $wheredep = "AND itemstock.departmentroomid = '$deproom'  AND  itemstock.IsDeproom = 1  ";
+} else {
+    $wheredep = "AND  itemstock.IsDeproom = 0 ";
+}
+$permission = $_SESSION['permission'];
+
+$wherepermission = "";
+if ($permission != '5') {
+    $wherepermission = " AND item.warehouseID = $permission ";
+}
+
+
 $query = " SELECT
                 itemstock.ItemCode,
                 itemstock.UsageCode,
@@ -102,6 +119,8 @@ $query = " SELECT
                         LEFT JOIN item ON item.itemcode = itemstock.ItemCode 
                     WHERE
                         itemstock.IsCancel = 0 
+                        $wherepermission
+                        $wheredep
                         AND (
                             DATE( itemstock.ExpireDate ) <= CURDATE() 
                             OR DATE( itemstock.ExpireDate ) BETWEEN CURDATE() 

@@ -547,7 +547,7 @@ function select_doctor($conn)
                     doctor.Doctor_Name 
                 FROM
                     doctor
-                WHERE doctor.IsCancel = 0
+                WHERE doctor.IsActive = 1
                 ORDER BY Doctor_Name ASC  ";
 
 

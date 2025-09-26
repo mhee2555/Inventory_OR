@@ -130,10 +130,14 @@ $query = " SELECT
                 LEFT JOIN itemtype ON itemtype.ID = item.itemtypeID
                 LEFT JOIN item AS item2 ON item2.ItemCode = hncode_detail.ItemCode 
                 LEFT JOIN itemtype AS itemtype2 ON itemtype2.ID = item2.itemtypeID
+                LEFT JOIN deproom  ON deproom.DocNo = hncode.DocNo_SS
             WHERE
                 DATE( hncode.DocDate ) BETWEEN '$select_date_history_s' AND '$select_date_history_l'
                 AND hncode.IsStatus = 1 
                 AND hncode.IsCancel = 0 
+                AND item.item_status != 1
+                AND deproom.IsEms = 0
+                AND ( item.IsSet != 1 AND  item.IsSet != 2 )
                 AND hncode_detail.IsStatus != 99 
             ORDER BY
                 hncode.ID ASC   ";
