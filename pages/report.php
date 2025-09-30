@@ -161,18 +161,22 @@
 
                         <div class="row">
                             <div class="col-md-6">
-                                <select class="form-control f18" id="select_year1">
+                                <input type="text" class="form-control f18" id="select_year1" data-language='en' data-date-format='yyyy'>
+
+                                <!-- <select class="form-control f18" id="select_year1">
                                     <option value="2566">2566</option>
                                     <option value="2567">2567</option>
                                     <option value="2568">2568</option>
-                                </select>
+                                </select> -->
                             </div>
                             <div class="col-md-6">
-                                <select class="form-control f18" id="select_year2">
+                                <input type="text" class="form-control f18" id="select_year2" data-language='en' data-date-format='yyyy'>
+
+                                <!-- <select class="form-control f18" id="select_year2">
                                     <option value="2566">2566</option>
                                     <option value="2567">2567</option>
                                     <option value="2568">2568</option>
-                                </select>
+                                </select> -->
                             </div>
                         </div>
 

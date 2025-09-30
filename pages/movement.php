@@ -474,7 +474,7 @@
             <div class="row">
                 <div class="col-md-2">
                     <div class="form-group ">
-                        <label for="" class=" col-form-label" style="color:black;">วันที่</label>
+                        <label for="" class=" col-form-label" style="color:black;">เดือน</label>
                         <select name="" id="select_follow_month" class="form-control f18">
                             <option value="01">มกราคม</option>
                             <option value="02">กุมภาพันธ์</option>
@@ -494,10 +494,11 @@
                 <div class="col-md-2">
                     <div class="form-group ">
                         <label for="" class=" col-form-label" style="color:black;">ปี</label>
-                        <select name="" id="select_follow_year" class="form-control f18">
+                        <input type="text" class="form-control f18" id="select_follow_year" data-language='en' data-date-format='yyyy'>
+                        <!-- <select name="" id="select_follow_year" class="form-control f18">
                             <option value="2025">2025</option>
                             <option value="2026">2026</option>
-                        </select>
+                        </select> -->
                     </div>
                 </div>
                 <div class="col-md-3">

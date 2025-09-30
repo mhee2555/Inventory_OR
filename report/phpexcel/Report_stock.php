@@ -109,7 +109,10 @@ $query = " SELECT
                     item
                     LEFT JOIN itemstock ON itemstock.ItemCode = item.itemcode 
                 WHERE
-										item.SpecialID = '0' 
+										item.SpecialID = '0'
+                                        AND item.IsCancel = '0' 
+                                        AND item.item_status != 1
+                                        AND item.stock_max IS NOT NULL
                 GROUP BY
                     item.itemname,
                     item.itemcode,
@@ -125,8 +128,8 @@ $query = " SELECT
                 END,
                 sub.cnt DESC ,
                 sub.itemname;  ";
-            // echo $query;
-            // exit;
+// echo $query;
+// exit;
 $meQuery = $conn->prepare($query);
 $meQuery->execute();
 
@@ -315,7 +318,10 @@ $query = " SELECT
                     item
                     LEFT JOIN itemstock ON itemstock.ItemCode = item.itemcode 
                 WHERE
-										item.SpecialID = '2' 
+										item.SpecialID = '2'
+                                        AND item.IsCancel = '0' 
+                                        AND item.item_status != 1
+                                        AND item.stock_max IS NOT NULL
                 GROUP BY
                     item.itemname,
                     item.itemcode,
@@ -331,8 +337,8 @@ $query = " SELECT
                 END,
                 sub.cnt DESC ,
                 sub.itemname;  ";
-            // echo $query;
-            // exit;
+// echo $query;
+// exit;
 $meQuery = $conn->prepare($query);
 $meQuery->execute();
 
@@ -468,7 +474,7 @@ $sheet->mergeCells('D4:E5'); // วันที่พิมพ์
 
 // --- ใส่ข้อมูล ---
 
-$sheet->setCellValue('D1', 'พิมพ์โดย '  . $_FirstName );
+$sheet->setCellValue('D1', 'พิมพ์โดย '  . $_FirstName);
 $sheet->setCellValue('D4', 'วันที่พิมพ์ ' . date('d/m/Y') . ' ' . date('H:i:s'));
 $sheet->getStyle('D1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
 $sheet->getStyle('D4')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
@@ -522,6 +528,9 @@ $query = " SELECT
                     LEFT JOIN itemstock ON itemstock.ItemCode = item.itemcode 
                 WHERE
 										item.SpecialID = '1' 
+                                        AND item.IsCancel = '0' 
+                                        AND item.item_status != 1
+                                        AND item.stock_max IS NOT NULL
                 GROUP BY
                     item.itemname,
                     item.itemcode,
@@ -537,8 +546,8 @@ $query = " SELECT
                 END,
                 sub.cnt DESC ,
                 sub.itemname;  ";
-            // echo $query;
-            // exit;
+// echo $query;
+// exit;
 $meQuery = $conn->prepare($query);
 $meQuery->execute();
 

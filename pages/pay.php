@@ -226,7 +226,7 @@
                         <div class="card-body">
 
                             <div class="row">
-                                <div class="col-md-9" style="margin-top: -35px !important;">'
+                                <div class="col-md-9" style="margin-top: -35px !important;">
                                     <div class="row">
                                         <div class="col-md-6">
                                             <label style="color:black;font-weight: 600;">เลขที่กล่อง</label>

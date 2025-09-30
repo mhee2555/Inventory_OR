@@ -237,92 +237,92 @@ $sum_all22 = 0;
 $sum_all33 = 0;
 $sum_all44 = 0;
 
-$query = "SELECT
-                hn.DocNo_SS,
-                i.itemname,
-                i.itemcode,
-                i.itemcode2,
-                MIN( hnd.ItemStockID ) AS ItemStockID,
-                i.SalePrice,
-                i.item_status,-- นับจาก deproomdetailsub ก่อน ถ้า 0 ค่อย fallback เป็น hncode_detail
-            CASE
+// $query = "SELECT
+//                 hn.DocNo_SS,
+//                 i.itemname,
+//                 i.itemcode,
+//                 i.itemcode2,
+//                 MIN( hnd.ItemStockID ) AS ItemStockID,
+//                 i.SalePrice,
+//                 i.item_status,-- นับจาก deproomdetailsub ก่อน ถ้า 0 ค่อย fallback เป็น hncode_detail
+//             CASE
                     
-                    WHEN COALESCE ( ds_sum.cnt_ds, 0 ) = 0 THEN
-                    COALESCE ( hd_sum.cnt_hnd, 0 ) ELSE COALESCE ( ds_sum.cnt_ds, 0 ) 
-                END AS cnt,
-                COALESCE ( r.cnt_return, 0 ) AS cnt_return,-- net = cnt(fallback) - คืน
-                (
-                CASE
+//                     WHEN COALESCE ( ds_sum.cnt_ds, 0 ) = 0 THEN
+//                     COALESCE ( hd_sum.cnt_hnd, 0 ) ELSE COALESCE ( ds_sum.cnt_ds, 0 ) 
+//                 END AS cnt,
+//                 COALESCE ( r.cnt_return, 0 ) AS cnt_return,-- net = cnt(fallback) - คืน
+//                 (
+//                 CASE
                         
-                        WHEN COALESCE ( ds_sum.cnt_ds, 0 ) = 0 THEN
-                        COALESCE ( hd_sum.cnt_hnd, 0 ) ELSE COALESCE ( ds_sum.cnt_ds, 0 ) 
-                    END - COALESCE ( r.cnt_return, 0 ) 
-                ) AS net_count 
-            FROM
-                hncode hn
-                JOIN deproom d ON hn.DocNo_SS = d.DocNo
-                JOIN hncode_detail hnd ON hn.DocNo = hnd.DocNo
-                LEFT JOIN itemstock s ON hnd.ItemStockID > 0 
-                AND s.RowID = hnd.ItemStockID
-                LEFT JOIN item i ON i.itemcode = COALESCE ( s.ItemCode, hnd.ItemCode ) -- 1) สรุปยอดที่นับจาก deproomdetailsub (อิง DocNo ของ deproom = DocNo_SS ของ hncode)
-                LEFT JOIN (
-                SELECT
-                    dr.DocNo AS DocNo_SS,
-                    COALESCE ( is_ds.ItemCode, ds.itemcode_weighing ) AS eff_itemcode,
-                    COUNT(*) AS cnt_ds 
-                FROM
-                    deproom dr
-                    JOIN deproomdetail dd ON dr.DocNo = dd.DocNo
-                    JOIN deproomdetailsub ds ON dd.ID = ds.Deproomdetail_RowID
-                    LEFT JOIN itemstock is_ds ON ds.ItemStockID > 0 
-                    AND is_ds.RowID = ds.ItemStockID 
-                GROUP BY
-                    dr.DocNo,
-                    COALESCE ( is_ds.ItemCode, ds.itemcode_weighing ) 
-                ) ds_sum ON ds_sum.DocNo_SS = hn.DocNo_SS 
-                AND ds_sum.eff_itemcode = COALESCE ( s.ItemCode, hnd.ItemCode ) -- 2) สรุปยอดนับจาก hncode_detail (ไว้ fallback เมื่อตัวบนได้ 0)
-                LEFT JOIN (
-                SELECT
-                    hn2.DocNo_SS,
-                    COALESCE ( is_hnd.ItemCode, hnd2.ItemCode ) AS eff_itemcode,
-                    COUNT(*) AS cnt_hnd 
-                FROM
-                    hncode hn2
-                    JOIN hncode_detail hnd2 ON hn2.DocNo = hnd2.DocNo
-                    LEFT JOIN itemstock is_hnd ON hnd2.ItemStockID > 0 
-                    AND is_hnd.RowID = hnd2.ItemStockID 
-                GROUP BY
-                    hn2.DocNo_SS,
-                    COALESCE ( is_hnd.ItemCode, hnd2.ItemCode ) 
-                ) hd_sum ON hd_sum.DocNo_SS = hn.DocNo_SS 
-                AND hd_sum.eff_itemcode = COALESCE ( s.ItemCode, hnd.ItemCode ) -- 3) สรุปยอดคืน log_return ตาม DocNo ของ deproom และ effective itemcode
-                LEFT JOIN (
-                SELECT
-                    lr.DocNo,
-                    COALESCE ( isr.ItemCode, lr.ItemCode ) AS eff_itemcode,
-                    COUNT(*) AS cnt_return 
-                FROM
-                    log_return lr
-                    LEFT JOIN itemstock isr ON lr.itemstockID > 0 
-                    AND isr.RowID = lr.itemstockID 
-                GROUP BY
-                    lr.DocNo,
-                    COALESCE ( isr.ItemCode, lr.ItemCode ) 
-                ) r ON r.DocNo = d.DocNo 
-                AND r.eff_itemcode = COALESCE ( s.ItemCode, hnd.ItemCode ) 
-            WHERE
-                hn.DocNo = '$DocNo' 
-            GROUP BY
-                hn.DocNo_SS,
-                i.itemname,
-                i.itemcode,
-                i.itemcode2,
-                i.SalePrice,
-                i.item_status 
-            ORDER BY
-                MIN( hnd.ItemStockID ) ASC,
-                net_count DESC,
-                i.itemname ASC; ";
+//                         WHEN COALESCE ( ds_sum.cnt_ds, 0 ) = 0 THEN
+//                         COALESCE ( hd_sum.cnt_hnd, 0 ) ELSE COALESCE ( ds_sum.cnt_ds, 0 ) 
+//                     END - COALESCE ( r.cnt_return, 0 ) 
+//                 ) AS net_count 
+//             FROM
+//                 hncode hn
+//                 JOIN deproom d ON hn.DocNo_SS = d.DocNo
+//                 JOIN hncode_detail hnd ON hn.DocNo = hnd.DocNo
+//                 LEFT JOIN itemstock s ON hnd.ItemStockID > 0 
+//                 AND s.RowID = hnd.ItemStockID
+//                 LEFT JOIN item i ON i.itemcode = COALESCE ( s.ItemCode, hnd.ItemCode ) -- 1) สรุปยอดที่นับจาก deproomdetailsub (อิง DocNo ของ deproom = DocNo_SS ของ hncode)
+//                 LEFT JOIN (
+//                 SELECT
+//                     dr.DocNo AS DocNo_SS,
+//                     COALESCE ( is_ds.ItemCode, ds.itemcode_weighing ) AS eff_itemcode,
+//                     COUNT(*) AS cnt_ds 
+//                 FROM
+//                     deproom dr
+//                     JOIN deproomdetail dd ON dr.DocNo = dd.DocNo
+//                     JOIN deproomdetailsub ds ON dd.ID = ds.Deproomdetail_RowID
+//                     LEFT JOIN itemstock is_ds ON ds.ItemStockID > 0 
+//                     AND is_ds.RowID = ds.ItemStockID 
+//                 GROUP BY
+//                     dr.DocNo,
+//                     COALESCE ( is_ds.ItemCode, ds.itemcode_weighing ) 
+//                 ) ds_sum ON ds_sum.DocNo_SS = hn.DocNo_SS 
+//                 AND ds_sum.eff_itemcode = COALESCE ( s.ItemCode, hnd.ItemCode ) -- 2) สรุปยอดนับจาก hncode_detail (ไว้ fallback เมื่อตัวบนได้ 0)
+//                 LEFT JOIN (
+//                 SELECT
+//                     hn2.DocNo_SS,
+//                     COALESCE ( is_hnd.ItemCode, hnd2.ItemCode ) AS eff_itemcode,
+//                     COUNT(*) AS cnt_hnd 
+//                 FROM
+//                     hncode hn2
+//                     JOIN hncode_detail hnd2 ON hn2.DocNo = hnd2.DocNo
+//                     LEFT JOIN itemstock is_hnd ON hnd2.ItemStockID > 0 
+//                     AND is_hnd.RowID = hnd2.ItemStockID 
+//                 GROUP BY
+//                     hn2.DocNo_SS,
+//                     COALESCE ( is_hnd.ItemCode, hnd2.ItemCode ) 
+//                 ) hd_sum ON hd_sum.DocNo_SS = hn.DocNo_SS 
+//                 AND hd_sum.eff_itemcode = COALESCE ( s.ItemCode, hnd.ItemCode ) -- 3) สรุปยอดคืน log_return ตาม DocNo ของ deproom และ effective itemcode
+//                 LEFT JOIN (
+//                 SELECT
+//                     lr.DocNo,
+//                     COALESCE ( isr.ItemCode, lr.ItemCode ) AS eff_itemcode,
+//                     COUNT(*) AS cnt_return 
+//                 FROM
+//                     log_return lr
+//                     LEFT JOIN itemstock isr ON lr.itemstockID > 0 
+//                     AND isr.RowID = lr.itemstockID 
+//                 GROUP BY
+//                     lr.DocNo,
+//                     COALESCE ( isr.ItemCode, lr.ItemCode ) 
+//                 ) r ON r.DocNo = d.DocNo 
+//                 AND r.eff_itemcode = COALESCE ( s.ItemCode, hnd.ItemCode ) 
+//             WHERE
+//                 hn.DocNo = '$DocNo' 
+//             GROUP BY
+//                 hn.DocNo_SS,
+//                 i.itemname,
+//                 i.itemcode,
+//                 i.itemcode2,
+//                 i.SalePrice,
+//                 i.item_status 
+//             ORDER BY
+//                 MIN( hnd.ItemStockID ) ASC,
+//                 net_count DESC,
+//                 i.itemname ASC; ";
 
 
 // $query = "SELECT
@@ -379,73 +379,73 @@ $query = "SELECT
 //     echo $query ;
 //     exit;
 
-// $query = " SELECT
-//             hncode.DocNo_SS,
-//             item.itemname,
-//             item.itemcode,
-//             item.itemcode2,
-//             deproomdetailsub.ItemStockID,
-//             item.SalePrice,
-//             item.item_status,
-//             COUNT(deproomdetailsub.ID) AS cnt,
-//             -- (
-//             --     SELECT COUNT(log_return.id)
-//             --     FROM log_return
-//             --     LEFT JOIN itemstock AS is_return ON log_return.itemstockID = is_return.RowID
-//             --     WHERE log_return.DocNo = '$_DocNo_SS'
-//             --     AND is_return.ItemCode = item.itemcode
-//             -- ) AS cnt_return
-//             (
-//                 SELECT COUNT(lr.id)
-//                 FROM log_return lr
-//                 LEFT JOIN itemstock is_return 
-//                     ON lr.itemstockID = is_return.RowID
-//                 WHERE lr.DocNo = '$_DocNo_SS'
-//                 AND (
-//                         -- กรณีมี itemstockID
-//                         (lr.itemstockID > 0 AND is_return.ItemCode = item.itemcode)
-//                     OR -- กรณี itemstockID = 0
-//                         (lr.itemstockID = 0 AND lr.itemCode = item.itemcode)
-//                 )
-//             ) AS cnt_return
-//         FROM
-//             hncode
-//             INNER JOIN deproom ON hncode.DocNo_SS = deproom.DocNo
-//             INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
-//             INNER JOIN deproomdetailsub ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID
-//             -- ถ้า ItemStockID ไม่ NULL: join itemstock ด้วย RowID
-//             -- ถ้า ItemStockID เป็น NULL: ไม่ join itemstock
-//             LEFT JOIN itemstock
-//                 ON deproomdetailsub.ItemStockID IS NOT NULL
-//             AND itemstock.RowID = deproomdetailsub.ItemStockID
-//             -- join item แบบเลือกเงื่อนไข:
-//             -- - ถ้า ItemStockID ไม่ NULL -> item.itemcode = itemstock.ItemCode
-//             -- - ถ้า ItemStockID เป็น NULL -> item.itemcode = deproomdetailsub.itemcode_weighing
-//             LEFT JOIN item
-//                 ON (
-//                     (deproomdetailsub.ItemStockID IS NOT NULL AND item.itemcode = itemstock.ItemCode)
-//                 OR (deproomdetailsub.ItemStockID IS NULL     AND item.itemcode = deproomdetailsub.itemcode_weighing)
-//                 )
-//         WHERE
-//             hncode.DocNo = '$DocNo'
-//         GROUP BY
-//             item.itemname,
-//             item.itemcode,
-//             item.itemcode2,
-//             item.SalePrice,
-//             hncode.DocNo_SS
-//         ORDER BY
-//             deproomdetailsub.ItemStockID ASC,
-//             (
-//                 COUNT(deproomdetailsub.ID) - COALESCE((
-//                     SELECT COUNT(log_return.id)
-//                     FROM log_return
-//                     LEFT JOIN itemstock AS is_return ON log_return.itemstockID = is_return.RowID
-//                     WHERE log_return.DocNo = '$_DocNo_SS'
-//                     AND is_return.ItemCode = item.itemcode
-//                 ), 0)
-//             ) DESC,
-//             item.itemname ASC; ";
+$query = " SELECT
+            hncode.DocNo_SS,
+            item.itemname,
+            item.itemcode,
+            item.itemcode2,
+            deproomdetailsub.ItemStockID,
+            item.SalePrice,
+            item.item_status,
+            COUNT(deproomdetailsub.ID) AS cnt,
+            -- (
+            --     SELECT COUNT(log_return.id)
+            --     FROM log_return
+            --     LEFT JOIN itemstock AS is_return ON log_return.itemstockID = is_return.RowID
+            --     WHERE log_return.DocNo = '$_DocNo_SS'
+            --     AND is_return.ItemCode = item.itemcode
+            -- ) AS cnt_return
+            (
+                SELECT COUNT(lr.id)
+                FROM log_return lr
+                LEFT JOIN itemstock is_return 
+                    ON lr.itemstockID = is_return.RowID
+                WHERE lr.DocNo = '$_DocNo_SS'
+                AND (
+                        -- กรณีมี itemstockID
+                        (lr.itemstockID > 0 AND is_return.ItemCode = item.itemcode)
+                    OR -- กรณี itemstockID = 0
+                        (lr.itemstockID = 0 AND lr.itemCode = item.itemcode)
+                )
+            ) AS cnt_return
+        FROM
+            hncode
+            INNER JOIN deproom ON hncode.DocNo_SS = deproom.DocNo
+            INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
+            INNER JOIN deproomdetailsub ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID
+            -- ถ้า ItemStockID ไม่ NULL: join itemstock ด้วย RowID
+            -- ถ้า ItemStockID เป็น NULL: ไม่ join itemstock
+            LEFT JOIN itemstock
+                ON deproomdetailsub.ItemStockID IS NOT NULL
+            AND itemstock.RowID = deproomdetailsub.ItemStockID
+            -- join item แบบเลือกเงื่อนไข:
+            -- - ถ้า ItemStockID ไม่ NULL -> item.itemcode = itemstock.ItemCode
+            -- - ถ้า ItemStockID เป็น NULL -> item.itemcode = deproomdetailsub.itemcode_weighing
+            LEFT JOIN item
+                ON (
+                    (deproomdetailsub.ItemStockID IS NOT NULL AND item.itemcode = itemstock.ItemCode)
+                OR (deproomdetailsub.ItemStockID IS NULL     AND item.itemcode = deproomdetailsub.itemcode_weighing)
+                )
+        WHERE
+            hncode.DocNo = '$DocNo'
+        GROUP BY
+            item.itemname,
+            item.itemcode,
+            item.itemcode2,
+            item.SalePrice,
+            hncode.DocNo_SS
+        ORDER BY
+            deproomdetailsub.ItemStockID ASC,
+            (
+                COUNT(deproomdetailsub.ID) - COALESCE((
+                    SELECT COUNT(log_return.id)
+                    FROM log_return
+                    LEFT JOIN itemstock AS is_return ON log_return.itemstockID = is_return.RowID
+                    WHERE log_return.DocNo = '$_DocNo_SS'
+                    AND is_return.ItemCode = item.itemcode
+                ), 0)
+            ) DESC,
+            item.itemname ASC; ";
 
             // echo $query;
             // exit;

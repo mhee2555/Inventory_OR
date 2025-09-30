@@ -25,6 +25,7 @@
           </span>
         </div>
         <input type="text" class="form-control font-weight-bold" 
+              disabled
                id="search-input" 
                placeholder="ค้นหาข้อมูล"
                value="<?php echo $Permission_name ?>"
@@ -39,6 +40,7 @@
           </span>
         </div>
         <input type="text" class="form-control font-weight-bold" 
+              disabled
                id="search-input" 
                placeholder="ค้นหาข้อมูล"
                value="<?php echo $UserName ?>"

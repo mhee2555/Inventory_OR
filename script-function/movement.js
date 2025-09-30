@@ -10,6 +10,24 @@ $(function () {
 
   session();
   select_item();
+
+  
+
+  $("#select_follow_year").val(2025);
+  $("#select_follow_year").datepicker({
+    view: 'years',      // เปิดมาที่หน้าปี
+    minView: 'years',   // ล็อกให้อยู่ที่หน้าปี (ไม่ลงไปเดือน/วัน)
+    dateFormat: 'yyyy', // ให้ value แสดงเป็นปี เช่น 2025
+    language: 'th',    // ถ้ามี language pack ไทย (ไม่บังคับ)
+    onSelect: function (formattedDate, date, inst) {
+      // if (date) {
+      //   let thYear = date.getFullYear() + 543;
+      //   $('#select_year1').val(thYear);
+      // }
+    }
+  });
+
+
   $("#select_date1").val(set_date());
   $("#select_date1").datepicker({
     onSelect: function (date) {

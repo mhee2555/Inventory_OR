@@ -1676,7 +1676,7 @@ function show_detail_history($conn, $db)
                     GROUP BY
                         sell_department.DocNo 
                     ORDER BY
-                        serviceDate DESC; ";
+                        CreateDate DESC; ";
 
 
 

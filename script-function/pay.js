@@ -4379,7 +4379,7 @@ $("#input_scan_return").keypress(function (e) {
               return;
             }
             if (value.IsCross == 9) {
-              showDialogFailed("สแกนรหัสซ้ำ");ฟห
+              showDialogFailed("สแกนรหัสซ้ำ");
               $("#input_scan_return").val("");
               return;
             }

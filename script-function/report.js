@@ -17,6 +17,36 @@ $(function () {
     "-" +
     year;
 
+
+  $("#select_year1").val(year);
+  $("#select_year1").datepicker({
+    view: 'years',      // เปิดมาที่หน้าปี
+    minView: 'years',   // ล็อกให้อยู่ที่หน้าปี (ไม่ลงไปเดือน/วัน)
+    dateFormat: 'yyyy', // ให้ value แสดงเป็นปี เช่น 2025
+    language: 'th',    // ถ้ามี language pack ไทย (ไม่บังคับ)
+    onSelect: function (formattedDate, date, inst) {
+      if (date) {
+        let thYear = date.getFullYear() + 543;
+        $('#select_year1').val(thYear);
+      }
+    }
+  });
+
+  $("#select_year2").val(year);
+  $("#select_year2").datepicker({
+    view: 'years',      // เปิดมาที่หน้าปี
+    minView: 'years',   // ล็อกให้อยู่ที่หน้าปี (ไม่ลงไปเดือน/วัน)
+    dateFormat: 'yyyy', // ให้ value แสดงเป็นปี เช่น 2025
+    language: 'th',    // ถ้ามี language pack ไทย (ไม่บังคับ)
+    onSelect: function (formattedDate, date, inst) {
+      if (date) {
+        let thYear = date.getFullYear() + 543;
+        $('#select_year2').val(thYear);
+      }
+    }
+  });
+
+
   $("#select_date1_10").val(output);
   $("#select_date1_10").datepicker({
     onSelect: function (date) { },
@@ -199,7 +229,7 @@ $(function () {
           $("#btn_png").attr("hidden", false);
         } else {
 
-          if ($(this).val() == 9 ) {
+          if ($(this).val() == 9) {
             $("#btn_excel").attr("hidden", true);
             $("#btn_png").attr("hidden", true);
           } else {
@@ -521,7 +551,7 @@ $(function () {
         if ($("#select_report").val() == 7) {
           window.open("report/Report_stock.php", "_blank");
         } else if ($("#select_report").val() == 12) {
-          window.open("report/Report_ex_soon.php" + "?GN_WarningExpiringSoonDay=" + GN_WarningExpiringSoonDay,"_blank"
+          window.open("report/Report_ex_soon.php" + "?GN_WarningExpiringSoonDay=" + GN_WarningExpiringSoonDay, "_blank"
           );
         }
 
@@ -871,7 +901,7 @@ $(function () {
           );
         } else if ($("#select_report").val() == 12) {
           window.open(
-            "report/phpexcel/Report_ex_soon.php" + "?GN_WarningExpiringSoonDay=" + GN_WarningExpiringSoonDay+ "&Userid=" + Userid, "_blank"
+            "report/phpexcel/Report_ex_soon.php" + "?GN_WarningExpiringSoonDay=" + GN_WarningExpiringSoonDay + "&Userid=" + Userid, "_blank"
           );
         }
 
