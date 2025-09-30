@@ -88,6 +88,7 @@ function feeddata($conn, $db)
                     item ON item.itemcode = itemstock.ItemCode
                 WHERE
                     itemstock.IsCancel = 0
+                    AND itemstock.IsSell = 0
                     $wheredep
                     AND ( DATE(itemstock.ExpireDate) <= CURDATE() OR DATE(itemstock.ExpireDate) BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL $GN_WarningExpiringSoonDay DAY) )
                     $wherepermission
@@ -124,6 +125,7 @@ function feeddata($conn, $db)
                                     LEFT JOIN item ON item.itemcode = itemstock.ItemCode 
                                 WHERE
                                     itemstock.IsCancel = 0 
+                                    AND itemstock.IsSell = 0
                                     AND (
                                         DATE( itemstock.ExpireDate ) <= CURDATE() 
                                         OR DATE( itemstock.ExpireDate ) BETWEEN CURDATE() 
@@ -166,6 +168,7 @@ function feeddata($conn, $db)
                                     LEFT JOIN item ON item.itemcode = itemstock.ItemCode 
                                 WHERE
                                     itemstock.IsCancel = 0 
+                                    AND itemstock.IsSell = 0
                                     AND (
                                         DATE( itemstock.ExpireDate ) <= CURDATE() 
                                         OR DATE( itemstock.ExpireDate ) BETWEEN CURDATE() 

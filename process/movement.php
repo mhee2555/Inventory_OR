@@ -477,7 +477,7 @@ function selection_item_normal($conn, $db)
                 AND i.SpecialID = '1'
                 AND i.IsCancel = '0'
                 AND i.item_status != 1
-                AND i.stock_max IS NOT NULL
+                -- AND i.stock_max IS NOT NULL
             ORDER BY
                 CASE WHEN calculated_balance < i.stock_min THEN 0 ELSE 1 END,
                 s.cnt DESC,
@@ -903,7 +903,7 @@ function selection_item_rfid($conn, $db)
                 AND i.IsCancel = '0'
                 $wherepermission
                 AND i.item_status != 1
-                AND i.stock_max IS NOT NULL
+                -- AND i.stock_max IS NOT NULL
             ORDER BY
                 CASE WHEN (IFNULL(s.cnt, 0) - IFNULL(tp.cnt_pay, 0)) < i.stock_min THEN 0 ELSE 1 END,
                 s.cnt DESC,
@@ -1368,7 +1368,7 @@ function selection_item($conn, $db)
                 AND i.SpecialID = '2'
                 AND i.IsCancel = '0'
                 AND i.item_status != 1
-                AND i.stock_max IS NOT NULL
+                -- AND i.stock_max IS NOT NULL
                 $wherepermission
 
             ORDER BY

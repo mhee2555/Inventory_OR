@@ -176,12 +176,15 @@ if ($type_date == 1) {
     if ($checkday == 1) {
         $date1 = $date1[2] . '-' . $date1[1] . '-' . $date1[0];
 
-        $where_date = "AND DATE(deproomdetailsub.PayDate) = '$date1'  ";
+        $where_date = "AND DATE(drs.PayDate) = '$date1'  ";
+        $where_date2 = "AND DATE(sdd.PayDate) = '$date1'  ";
     } else {
         $date1 = $date1[2] . '-' . $date1[1] . '-' . $date1[0];
         $date2 = $date2[2] . '-' . $date2[1] . '-' . $date2[0];
 
-        $where_date = "AND DATE(deproomdetailsub.PayDate) BETWEEN '$date1' 	AND '$date2' ";
+        $where_date = "AND DATE(drs.PayDate) BETWEEN '$date1' 	AND '$date2' ";
+        $where_date2 = "AND DATE(sdd.PayDate) BETWEEN '$date1' 	AND '$date2' ";
+
     }
 }
 
@@ -189,10 +192,12 @@ if ($type_date == 2) {
     $year1 = $year1-543;
 
     if ($checkmonth == 1) {
-        $where_date = "AND MONTH(deproomdetailsub.PayDate) = '$month1' AND YEAR(deproom.serviceDate) = '$year1'  ";
+        $where_date = "AND MONTH(drs.PayDate) = '$month1' AND YEAR(drs.PayDate) = '$year1'  ";
+        $where_date2 = "AND MONTH(sdd.PayDate) = '$month1' AND YEAR(sdd.PayDate) = '$year1'  ";
 
     } else {
-        $where_date = "AND MONTH(deproomdetailsub.PayDate) BETWEEN '$month1' 	AND '$month2' AND YEAR(deproom.serviceDate) = '$year1' ";
+        $where_date = "AND MONTH(drs.PayDate) BETWEEN '$month1' 	AND '$month2' AND YEAR(drs.PayDate) = '$year1' ";
+        $where_date2 = "AND MONTH(sdd.PayDate) BETWEEN '$month1' 	AND '$month2' AND YEAR(sdd.PayDate) = '$year1' ";
     }
 }
 
@@ -203,10 +208,12 @@ if ($type_date == 3) {
 
 
     if ($checkyear == 1) {
-        $where_date = "AND YEAR(deproomdetailsub.PayDate) = '$year1'  ";
+        $where_date = "AND YEAR(drs.PayDate) = '$year1'  ";
+        $where_date2 = "AND YEAR(sdd.PayDate) = '$year1'  ";
 
     } else {
-        $where_date = "AND YEAR(deproomdetailsub.PayDate) BETWEEN '$year1' 	AND '$year2' ";
+        $where_date = "AND YEAR(drs.PayDate) BETWEEN '$year1' 	AND '$year2' ";
+        $where_date2 = "AND YEAR(sdd.PayDate) BETWEEN '$year1' 	AND '$year2' ";
     }
 }
 
@@ -361,29 +368,92 @@ $html = '<table cellspacing="0" cellpadding="1" border="1" >
 // }
 
 $count = 1;
-$query = "SELECT
-            item.itemname,
-            item.itemcode2,
-            item.itemcode,
-            deproomdetail.ID,
-            SUM(deproomdetail.Qty) AS cnt,
-            COUNT( deproomdetailsub.ID)  AS cnt_pay,
-            itemtype.TyeName
-            FROM
-            deproom
-            INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
-            INNER JOIN deproomdetailsub ON deproomdetailsub.Deproomdetail_RowID = deproomdetail.ID
-            INNER JOIN itemstock ON itemstock.RowID = deproomdetailsub.ItemStockID
-            INNER JOIN item ON itemstock.ItemCode = item.itemcode
-            INNER JOIN itemtype ON item.itemtypeID = itemtype.ID 
-            WHERE
-             deproom.IsCancel = 0
-            $where_date
-            AND deproomdetail.IsCancel = 0
+// $query = "SELECT
+//             item.itemname,
+//             item.itemcode2,
+//             item.itemcode,
+//             deproomdetail.ID,
+//             SUM(deproomdetail.Qty) AS cnt,
+//             COUNT( deproomdetailsub.ID)  AS cnt_pay,
+//             itemtype.TyeName
+//             FROM
+//             deproom
+//             INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
+//             INNER JOIN deproomdetailsub ON deproomdetailsub.Deproomdetail_RowID = deproomdetail.ID
+//             INNER JOIN itemstock ON itemstock.RowID = deproomdetailsub.ItemStockID
+//             INNER JOIN item ON itemstock.ItemCode = item.itemcode
+//             INNER JOIN itemtype ON item.itemtypeID = itemtype.ID 
+//             WHERE
+//              deproom.IsCancel = 0
+//             $where_date
+//             AND deproomdetail.IsCancel = 0
+//             GROUP BY
+//             item.itemcode
+//             ORDER BY
+//             item.itemname ASC  ";
+
+$query  ="SELECT 
+                x.itemname,
+                x.itemcode2,
+                x.itemcode,
+                SUM(x.cnt)      AS cnt,
+                SUM(x.cnt_pay)  AS cnt_pay,
+                x.TyeName
+            FROM (
+                /* ---- แหล่ง deproom ---- */
+                SELECT
+                    i.itemname,
+                    i.itemcode2,
+                    i.itemcode,
+                    SUM(drd.Qty)          AS cnt,
+                    COUNT(drs.ID)         AS cnt_pay,
+                    it.TyeName
+                FROM deproom dr
+                INNER JOIN deproomdetail drd 
+                    ON dr.DocNo = drd.DocNo
+                INNER JOIN deproomdetailsub drs 
+                    ON drs.Deproomdetail_RowID = drd.ID
+                INNER JOIN itemstock s 
+                    ON s.RowID = drs.ItemStockID
+                INNER JOIN item i 
+                    ON s.ItemCode = i.itemcode
+                INNER JOIN itemtype it 
+                    ON i.itemtypeID = it.ID
+                WHERE
+                    dr.IsCancel = 0
+                    AND drd.IsCancel = 0
+                    $where_date
+                GROUP BY
+                    i.itemcode, i.itemname, i.itemcode2, it.TyeName
+
+                UNION ALL
+
+                /* ---- แหล่ง sell_department ---- */
+                SELECT
+                    i.itemname,
+                    i.itemcode2,
+                    i.itemcode,
+                    COUNT(sdd.ItemStockID) AS cnt ,
+                    COUNT(sdd.ItemStockID) AS cnt_pay,
+                    it.TyeName
+                FROM sell_department sd
+                INNER JOIN sell_department_detail sdd 
+                    ON sdd.DocNo = sd.DocNo
+                LEFT JOIN item i 
+                    ON i.itemcode = sdd.itemCode
+                LEFT JOIN itemtype it 
+                    ON i.itemtypeID = it.ID
+                WHERE
+                    sdd.ItemStockID IS NOT NULL
+                    $where_date2
+                GROUP BY
+                    i.itemcode, i.itemname, i.itemcode2, it.TyeName
+            ) x
             GROUP BY
-            item.itemcode
+                x.itemcode, x.itemname, x.itemcode2, x.TyeName
             ORDER BY
-            item.itemname ASC  ";
+                x.itemname ASC ";
+            
 
 $meQuery1 = $conn->prepare($query);
 $meQuery1->execute();
@@ -394,14 +464,14 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
 
 
 
-    if($Result_Detail['cnt_pay'] > 0){
+    // if($Result_Detail['cnt_pay'] > 0){
         $html .= '<tr nobr="true" style="font-size:15px;">';
         $html .=   '<td width="12 %" align="center" > ' . $Result_Detail['itemcode2'] . '</td>';
         $html .=   '<td width="80 %" align="left" > ' . $Result_Detail['itemname'] . '</td>';
         $html .=   '<td width="10 %" align="center">' . $Result_Detail['cnt_pay'] . '</td>';
         $html .=  '</tr>';
         $count++;
-    }
+    // }
 
 
 }

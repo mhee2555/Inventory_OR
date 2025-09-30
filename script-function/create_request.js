@@ -510,9 +510,24 @@ $("#btn_clear_request").click(function () {
   var hours = String(now.getHours()).padStart(2, "0");
   var minutes = String(now.getMinutes()).padStart(2, "0");
   var currentTime = hours + ":" + minutes;
+
+  var d = new Date();
+  var month = d.getMonth() + 1;
+  var day = d.getDate();
+  var year = d.getFullYear();
+  var output =
+    (("" + day).length < 2 ? "0" : "") +
+    day +
+    "-" +
+    (("" + month).length < 2 ? "0" : "") +
+    month +
+    "-" +
+    year;
+
+
   $("#select_time_request").val(currentTime);
 
-  $("#select_date_request").val("");
+  $("#select_date_request").val(output);
 
   $("#txt_docno_request").val("");
 
@@ -975,13 +990,28 @@ function onconfirm_send_request() {
       var minutes = String(now.getMinutes()).padStart(2, "0");
       var currentTime = hours + ":" + minutes;
 
+      var d = new Date();
+      var month = d.getMonth() + 1;
+      var day = d.getDate();
+      var year = d.getFullYear();
+      var output =
+        (("" + day).length < 2 ? "0" : "") +
+        day +
+        "-" +
+        (("" + month).length < 2 ? "0" : "") +
+        month +
+        "-" +
+        year;
+
       setTimeout(() => {
         $("#checkbox_tf").prop('checked', false);
         $("#table_item_detail_request").DataTable().destroy();
         $("#table_item_detail_request tbody").empty();
         $("#txt_docno_request").val("");
         $("#input_hn_request").val("");
-        $("#select_date_request").val("");
+        $("#select_date_request").val(output);
+
+
 
         $("#btn_routine").attr("disabled", false);
 

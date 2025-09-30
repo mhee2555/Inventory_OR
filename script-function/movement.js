@@ -11,7 +11,7 @@ $(function () {
   session();
   select_item();
 
-  
+
 
   $("#select_follow_year").val(2025);
   $("#select_follow_year").datepicker({
@@ -20,6 +20,13 @@ $(function () {
     dateFormat: 'yyyy', // ให้ value แสดงเป็นปี เช่น 2025
     language: 'th',    // ถ้ามี language pack ไทย (ไม่บังคับ)
     onSelect: function (formattedDate, date, inst) {
+
+      selection_follow_item();
+
+      setTimeout(() => {
+        selection_follow_item_detail();
+      }, 1000);
+
       // if (date) {
       //   let thYear = date.getFullYear() + 543;
       //   $('#select_year1').val(thYear);
@@ -196,13 +203,13 @@ $("#select_follow_month").change(function () {
   }, 1000);
 });
 
-$("#select_follow_year").change(function () {
-  selection_follow_item();
+// $("#select_follow_year").change(function () {
+//   selection_follow_item();
 
-  setTimeout(() => {
-    selection_follow_item_detail();
-  }, 1000);
-});
+//   setTimeout(() => {
+//     selection_follow_item_detail();
+//   }, 1000);
+// });
 
 function selection_follow_item() {
 

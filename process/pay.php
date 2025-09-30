@@ -2059,6 +2059,43 @@ function save_edit_hn($conn, $db)
     $meQueryq->execute();
 
 
+    if ($input_Hn_pay_editHN == '') {
+        $input_Hn_pay_editHN_x = $input_box_pay_editHN;
+    }else{
+        $input_Hn_pay_editHN_x = $input_Hn_pay_editHN;
+    }
+
+        $qcheck = "SELECT
+                    deproom.number_box,
+                    deproom.hn_record_id
+                FROM
+                    deproom
+                WHERE
+                    deproom.DocNo = '$DocNo_editHN' ";
+
+    // echo $qcheck;
+    // exit;
+    $meQueryq = $conn->prepare($qcheck);
+    $meQueryq->execute();
+    while ($rowq = $meQueryq->fetch(PDO::FETCH_ASSOC)) {
+        $_number_box_xx  = $rowq['number_box'];
+        $_hn_record_id_xx  = $rowq['hn_record_id'];
+    }
+    if ($_hn_record_id_xx == '') {
+        $_hn_record_id_xx = $_number_box_xx;
+    }
+
+    $update0 = "UPDATE deproomdetailsub SET
+                        hn_record_id_borrow = :input_Hn_pay_editHN_x
+                WHERE hn_record_id_borrow = :_hn_record_id_xx ";
+
+    $stmt0 = $conn->prepare($update0);
+    $stmt0->execute([
+        ':input_Hn_pay_editHN_x' => $input_Hn_pay_editHN_x,
+        ':_hn_record_id_xx' => $_hn_record_id_xx
+    ]);
+
+
     $update1 = "UPDATE deproom SET
                         number_box = :number_box,
                         hn_record_id = :hn_record_id,
