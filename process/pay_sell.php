@@ -90,11 +90,18 @@ function oncheck_Returnsell($conn, $db)
             $meQueryT = $conn->prepare($queryT);
             $meQueryT->execute();
 
-
+            $queryUpdate = "UPDATE itemstock 
+                            SET Isdeproom = 0 ,
+                            departmentroomid = '35',
+                            IsSell = 0
+                            WHERE
+                            RowID = '$_RowID' ";
+            $meQueryUpdate = $conn->prepare($queryUpdate);
+            $meQueryUpdate->execute();
         }
 
-        if($DocNo_old == ""){
-            $count_itemstock = 0 ;
+        if ($DocNo_old == "") {
+            $count_itemstock = 0;
         }
 
 

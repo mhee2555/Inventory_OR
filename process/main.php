@@ -216,6 +216,7 @@ function selection_ExSoon($conn,$db)
                     WHERE
                         itemstock.IsCancel = 0 
                         AND itemstock.Isdeproom = 0 
+                        AND IsSell = 0
                         AND DATE( itemstock.ExpireDate ) BETWEEN CURDATE() 
                         AND DATE_ADD( CURDATE(), INTERVAL $GN_WarningExpiringSoonDay DAY ) 
                         AND DATE( itemstock.ExpireDate ) != CURDATE() $wheredep $wherepermission ";
@@ -272,6 +273,7 @@ function selection_Ex($conn,$db)
                     INNER JOIN item ON item.itemcode = itemstock.ItemCode
                     WHERE
                         itemstock.IsCancel = 0 
+                        AND IsSell = 0
                         AND DATE_FORMAT( itemstock.ExpireDate, '%Y-%m-%d' ) <= DATE_FORMAT( NOW(), '%Y-%m-%d' ) $wheredep $wherepermission ";
     }else{
         $query = "SELECT COUNT(DISTINCT itemstock.UsageCode ) AS c 

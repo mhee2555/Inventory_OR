@@ -82,9 +82,6 @@ $(function () {
     // show_detail_refrain();
   });
 
-
-
-
   set_his();
 });
 
@@ -98,8 +95,15 @@ function set_his() {
     success: function (result) {
       var ObjData = JSON.parse(result);
       if (!$.isEmptyObject(ObjData)) {
-        $("#radio_his").css("color", "#bbbbb");
-        $("#radio_his").css("background", "#EAE1F4");
+        
+        $(".tab-button").removeClass("active");
+        $("#radio_his").addClass("active");
+
+        // $("#radio_his").css("color", "#bbbbb");
+        // $("#radio_his").css("background", "#EAE1F4");
+
+        // $("#radio_his").css("color", "#bbbbb");
+        // $("#radio_his").css("background", "#EAE1F4");
 
         $("#radio_daily").css("color", "black");
         $("#radio_daily").css("background", "");
@@ -320,7 +324,7 @@ function updateDetail_qty(ID, itemcode) {
       itemcode: itemcode,
       qty: $("#qty_item_" + ID).val(),
     },
-    success: function (result) { },
+    success: function (result) {},
   });
 }
 
@@ -652,8 +656,6 @@ function session() {
       deproom = ObjData.deproom;
       RefDepID = ObjData.RefDepID;
       Permission_name = ObjData.Permission_name;
-
-
     },
   });
 }
