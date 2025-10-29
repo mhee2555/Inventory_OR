@@ -44,7 +44,7 @@ function selection_follow_item_detail($conn, $db)
     $select_follow_year = $_POST['select_follow_year'];
 
 
-    
+
     $is = "SELECT
                 daily_stock_item.snapshot_date,
                 daily_stock_item.itemcode,
@@ -56,13 +56,13 @@ function selection_follow_item_detail($conn, $db)
             AND YEAR(daily_stock_item.snapshot_date) = '$select_follow_year' 
             GROUP BY daily_stock_item.itemcode ";
 
-         
+
     $meQuery = $conn->prepare($is);
     $meQuery->execute();
     while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
         $return['item'][] = $row;
 
-        $itemCode = $row['itemcode'] ;
+        $itemCode = $row['itemcode'];
 
         $sub = "  WITH RECURSIVE calendar AS (
                 SELECT DATE('$select_follow_year-$select_follow_month-01') AS day
@@ -143,16 +143,13 @@ function selection_follow_item_detail($conn, $db)
         //             c.DAY,
         //             d.itemcode; ";
 
- 
-             
+
+
         $meQuery2 = $conn->prepare($sub);
         $meQuery2->execute();
         while ($row2 = $meQuery2->fetch(PDO::FETCH_ASSOC)) {
             $return[$itemCode][] = $row2;
         }
-
-
-
     }
 
     echo json_encode($return);
@@ -432,6 +429,7 @@ function selection_item_normal($conn, $db)
             LEFT JOIN (
                 SELECT ItemCode, COUNT(*) AS cnt
                 FROM itemstock
+                WHERE itemstock.IsCancel = 0
                 GROUP BY ItemCode
             ) s ON s.ItemCode = i.itemcode
 
@@ -462,6 +460,7 @@ function selection_item_normal($conn, $db)
                 FROM itemstock
                 WHERE (IsDamage = 0 OR IsDamage IS NULL)
                 AND Isdeproom NOT IN (1,2,3,4,5,6,7,8,9)
+                AND itemstock.IsCancel = 0
                 GROUP BY ItemCode
             ) sb ON sb.ItemCode = i.itemcode
 
@@ -469,6 +468,7 @@ function selection_item_normal($conn, $db)
                 SELECT ItemCode, COUNT(*) AS damage
                 FROM itemstock
                 WHERE IsDamage IN (1, 2)
+                AND itemstock.IsCancel = 0
                 GROUP BY ItemCode
             ) dm ON dm.ItemCode = i.itemcode
 
@@ -477,13 +477,14 @@ function selection_item_normal($conn, $db)
                 AND i.SpecialID = '1'
                 AND i.IsCancel = '0'
                 AND i.item_status != 1
+                AND i.item_status2 IS NULL
                 -- AND i.stock_max IS NOT NULL
             ORDER BY
                 CASE WHEN calculated_balance < i.stock_min THEN 0 ELSE 1 END,
                 s.cnt DESC,
                 i.itemname;";
 
-                
+
 
 
     // $Q1 = " SELECT
@@ -852,6 +853,7 @@ function selection_item_rfid($conn, $db)
             LEFT JOIN (
                 SELECT ItemCode, COUNT(*) AS cnt
                 FROM itemstock
+                WHERE itemstock.IsCancel = 0
                 GROUP BY ItemCode
             ) s ON s.ItemCode = i.itemcode
 
@@ -886,6 +888,7 @@ function selection_item_rfid($conn, $db)
                 FROM itemstock
                 WHERE (IsDamage = 0 OR IsDamage IS NULL)
                 AND Isdeproom NOT IN (1,2,3,4,5,6,7,8,9)
+                AND itemstock.IsCancel = 0
                 GROUP BY ItemCode
             ) sb ON sb.ItemCode = i.itemcode
 
@@ -894,6 +897,7 @@ function selection_item_rfid($conn, $db)
                 SELECT ItemCode, COUNT(*) AS damage
                 FROM itemstock
                 WHERE IsDamage IN (1, 2)
+                AND itemstock.IsCancel = 0
                 GROUP BY ItemCode
             ) dm ON dm.ItemCode = i.itemcode
 
@@ -903,6 +907,7 @@ function selection_item_rfid($conn, $db)
                 AND i.IsCancel = '0'
                 $wherepermission
                 AND i.item_status != 1
+                AND i.item_status2 IS NULL
                 -- AND i.stock_max IS NOT NULL
             ORDER BY
                 CASE WHEN (IFNULL(s.cnt, 0) - IFNULL(tp.cnt_pay, 0)) < i.stock_min THEN 0 ELSE 1 END,
@@ -1318,6 +1323,7 @@ function selection_item($conn, $db)
             LEFT JOIN (
                 SELECT ItemCode, COUNT(*) AS cnt
                 FROM itemstock
+                WHERE itemstock.IsCancel = 0
                 GROUP BY ItemCode
             ) s ON s.ItemCode = i.itemcode
 
@@ -1352,6 +1358,7 @@ function selection_item($conn, $db)
                 FROM itemstock
                 WHERE (IsDamage = 0 OR IsDamage IS NULL)
                 AND Isdeproom NOT IN (1,2,3,4,5,6,7,8,9)
+                AND itemstock.IsCancel = 0
                 GROUP BY ItemCode
             ) sb ON sb.ItemCode = i.itemcode
 
@@ -1360,6 +1367,7 @@ function selection_item($conn, $db)
                 SELECT ItemCode, COUNT(*) AS damage
                 FROM itemstock
                 WHERE IsDamage IN (1, 2)
+                AND itemstock.IsCancel = 0
                 GROUP BY ItemCode
             ) dm ON dm.ItemCode = i.itemcode
 
@@ -1368,6 +1376,7 @@ function selection_item($conn, $db)
                 AND i.SpecialID = '2'
                 AND i.IsCancel = '0'
                 AND i.item_status != 1
+                AND i.item_status2 IS NULL
                 -- AND i.stock_max IS NOT NULL
                 $wherepermission
 
@@ -1376,7 +1385,7 @@ function selection_item($conn, $db)
                 s.cnt DESC,
                 i.itemname; ";
 
-                
+
 
     // $Q1 = " SELECT
     //             item.itemname,

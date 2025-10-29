@@ -213,35 +213,48 @@ if ($type_date == 3) {
 }
 
 $count = 1;
-$query = " SELECT
-                item.itemname,
-                item.itemcode2,
-                ( 
 
-                SELECT COUNT( itemstock.RowID ) 
-                FROM itemstock 
-                WHERE itemstock.ItemCode = item.itemcode 
-                AND  itemstock.IsStatus = 4 
-                AND ( itemstock.IsDeproom IS NULL  OR  itemstock.IsDeproom = 0 )
-                AND ( itemstock.departmentroomid IS NULL  OR  itemstock.departmentroomid = 35 )
-                )		AS all_  ,
-                ( 
-
-                SELECT COUNT( itemstock.RowID ) 
-                FROM itemstock 
-                WHERE itemstock.ItemCode = item.itemcode 
-                AND  itemstock.IsStatus = 4 
-                AND  itemstock.IsDeproom IS NULL 
-                AND  itemstock.departmentroomid IS NULL
-                
-                )		AS qty 
+$query = "SELECT
+            item.itemname,
+            item.itemcode2,
+            COUNT(itemstock.ItemCode) AS qty,
+            (SELECT COUNT(itemstock.RowID) FROM itemstock WHERE itemstock.ItemCode = item.itemcode AND itemstock.StockID = '2') AS all_ 
             FROM
-                itemstock
-                INNER JOIN item ON itemstock.ItemCode = item.itemcode 
+            itemstock
+            INNER JOIN item ON itemstock.ItemCode = item.itemcode 
             $where_date
+            AND itemstock.StockID = '2' 
             GROUP BY
-                item.itemname
-            ORDER BY  qty DESC ";
+            item.itemcode ";
+// $query = " SELECT
+//                 item.itemname,
+//                 item.itemcode2,
+//                 ( 
+
+//                 SELECT COUNT( itemstock.RowID ) 
+//                 FROM itemstock 
+//                 WHERE itemstock.ItemCode = item.itemcode 
+//                 AND  itemstock.IsStatus = 4 
+//                 AND ( itemstock.IsDeproom IS NULL  OR  itemstock.IsDeproom = 0 )
+//                 AND ( itemstock.departmentroomid IS NULL  OR  itemstock.departmentroomid = 35 )
+//                 )		AS all_  ,
+//                 ( 
+
+//                 SELECT COUNT( itemstock.RowID ) 
+//                 FROM itemstock 
+//                 WHERE itemstock.ItemCode = item.itemcode 
+//                 AND  itemstock.IsStatus = 4 
+//                 AND  itemstock.IsDeproom IS NULL 
+//                 AND  itemstock.departmentroomid IS NULL
+                
+//                 )		AS qty 
+//             FROM
+//                 itemstock
+//                 INNER JOIN item ON itemstock.ItemCode = item.itemcode 
+//             $where_date
+//             GROUP BY
+//                 item.itemname
+//             ORDER BY  qty DESC ";
 
 
 
@@ -342,18 +355,34 @@ if ($type_date == 1) {
     if ($checkday == 1) {
         $date1 = $date1[2] . '-' . $date1[1] . '-' . $date1[0];
 
-        $where_date = "WHERE DATE(itemstock.LastCabinetModify) = '$date1'  ";
+        $where_date = "AND DATE(itemslotincabinet_detail.ModifyDate) = '$date1'  ";
     } else {
         $date1 = $date1[2] . '-' . $date1[1] . '-' . $date1[0];
         $date2 = $date2[2] . '-' . $date2[1] . '-' . $date2[0];
 
-        $where_date = "WHERE DATE(itemstock.LastCabinetModify) BETWEEN '$date1' 	AND '$date2' ";
+        $where_date = "AND DATE(itemslotincabinet_detail.ModifyDate) BETWEEN '$date1' 	AND '$date2' ";
     }
 }
 if ($type_date == 2) {
 
     if ($checkmonth == 1) {
+        $where_date = "AND MONTH(itemslotincabinet_detail.ModifyDate) = '$month1'  ";
+
     } else {
+        $where_date = "AND MONTH(itemslotincabinet_detail.ModifyDate) BETWEEN '$month1' 	AND '$month2' ";
+    }
+}
+
+if ($type_date == 3) {
+
+    $year1 = $year1-543;
+    $year2 = $year2-543;
+
+    if ($checkyear == 1) {
+        $where_date = "AND YEAR(itemslotincabinet_detail.ModifyDate) = '$year1'  ";
+
+    } else {
+        $where_date = "AND YEAR(itemslotincabinet_detail.ModifyDate) BETWEEN '$year1' 	AND '$year2' ";
     }
 }
 
@@ -362,14 +391,16 @@ $query = " SELECT
                 item.itemname,
                 item.itemcode2,
                 COUNT( itemstock.ItemCode ) AS all_,
-                ( SELECT COUNT( itemstock.RowID ) FROM itemstock WHERE itemstock.ItemCode = item.itemcode AND  ( itemstock.StockID IS NOT NULL ) )		AS qty 
+                itemslotincabinet_detail.Qty AS qty 
             FROM
-                itemstock
-                INNER JOIN item ON itemstock.ItemCode = item.itemcode 
-            $where_date
+                itemslotincabinet_detail
+                INNER JOIN item ON itemslotincabinet_detail.itemcode = item.itemcode
+                INNER JOIN itemstock ON itemstock.ItemCode = item.itemcode 
+            WHERE
+                itemslotincabinet_detail.Sign = '+' 
+                $where_date
             GROUP BY
-                item.itemname
-            ORDER BY  qty DESC ";
+                item.itemcode ";
 
 $meQuery1 = $conn->prepare($query);
 $meQuery1->execute();
@@ -381,9 +412,9 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
     $html .=   '<td width="6 %" align="center"> ' . (string)$count . '</td>';
     $html .=   '<td width="20 %" align="center"> ' . $Result_Detail['itemcode2'] . '</td>';
     $html .=   '<td width="36 %" align="left">' . $Result_Detail['itemname'] . '</td>';
-    $html .=   '<td width="10 %" align="center">' . $Result_Detail['all_'] . '</td>';
+    $html .=   '<td width="10 %" align="center">' . $Result_Detail['all_'] -  $Result_Detail['qty']   . '</td>';
     $html .=   '<td width="15 %" align="center">' . $Result_Detail['qty'] . '</td>';
-    $html .=   '<td width="15 %" align="center">' . $Result_Detail['all_'] -  $Result_Detail['qty']   . '</td>';
+    $html .=   '<td width="15 %" align="center">' . $Result_Detail['all_'] . '</td>';
     $html .=  '</tr>';
     $count++;
 }

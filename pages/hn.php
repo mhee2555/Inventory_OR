@@ -220,13 +220,13 @@
                 </div>
             </div>
 
-            <div class="col-md-4 pl-0">
+            <!-- <div class="col-md-4 pl-0">
                 <button class="btn btn-success f18" id="edit_his_department" disabled>แก้ไขอุปกรณ์</button>
-            </div>
+            </div> -->
 
-            <div class="col-md-6 text-right">
+            <!-- <div class="col-md-6 text-right">
                 <button class="btn btn-success" id="btn_send_pay_department" disabled>ยืนยันการส่งค่าใข้จ่าย (HIS)</button>
-            </div>
+            </div> -->
 
             <div class="col-md-12 col-lg-12 mt-2">
                 <div class="row">

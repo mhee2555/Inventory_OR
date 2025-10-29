@@ -119,6 +119,7 @@ $query = " SELECT
                         LEFT JOIN item ON item.itemcode = itemstock.ItemCode 
                     WHERE
                         itemstock.IsCancel = 0 
+                        AND itemstock.IsSell = 0
                         $wherepermission
                         $wheredep
                         AND (

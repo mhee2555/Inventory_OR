@@ -122,35 +122,49 @@ $sheet->setCellValue('F8', 'คงเหลือล่าสุด');
 
 $dataArray = [];
 
-$query = "  SELECT
-                item.itemname,
-                item.itemcode2,
-                ( 
-
-                SELECT COUNT( itemstock.RowID ) 
-                FROM itemstock 
-                WHERE itemstock.ItemCode = item.itemcode 
-                AND  itemstock.IsStatus = 4 
-                AND ( itemstock.IsDeproom IS NULL  OR  itemstock.IsDeproom = 0 )
-                AND ( itemstock.departmentroomid IS NULL  OR  itemstock.departmentroomid = 35 )
-                )		AS all_  ,
-                ( 
-
-                SELECT COUNT( itemstock.RowID ) 
-                FROM itemstock 
-                WHERE itemstock.ItemCode = item.itemcode 
-                AND  itemstock.IsStatus = 4 
-                AND  itemstock.IsDeproom IS NULL 
-                AND  itemstock.departmentroomid IS NULL
-                
-                )		AS qty 
+$query = "SELECT
+            item.itemname,
+            item.itemcode2,
+            COUNT(itemstock.ItemCode) AS qty,
+            (SELECT COUNT(itemstock.RowID) FROM itemstock WHERE itemstock.ItemCode = item.itemcode AND itemstock.StockID = '2') AS all_ 
             FROM
-                itemstock
-                INNER JOIN item ON itemstock.ItemCode = item.itemcode 
+            itemstock
+            INNER JOIN item ON itemstock.ItemCode = item.itemcode 
+            WHERE
+            itemstock.StockID = '2' 
             $where_date
             GROUP BY
-                item.itemname
-            ORDER BY  qty DESC   ";
+            item.itemcode ";
+
+// $query = "  SELECT
+//                 item.itemname,
+//                 item.itemcode2,
+//                 ( 
+
+//                 SELECT COUNT( itemstock.RowID ) 
+//                 FROM itemstock 
+//                 WHERE itemstock.ItemCode = item.itemcode 
+//                 AND  itemstock.IsStatus = 4 
+//                 AND ( itemstock.IsDeproom IS NULL  OR  itemstock.IsDeproom = 0 )
+//                 AND ( itemstock.departmentroomid IS NULL  OR  itemstock.departmentroomid = 35 )
+//                 )		AS all_  ,
+//                 ( 
+
+//                 SELECT COUNT( itemstock.RowID ) 
+//                 FROM itemstock 
+//                 WHERE itemstock.ItemCode = item.itemcode 
+//                 AND  itemstock.IsStatus = 4 
+//                 AND  itemstock.IsDeproom IS NULL 
+//                 AND  itemstock.departmentroomid IS NULL
+                
+//                 )		AS qty 
+//             FROM
+//                 itemstock
+//                 INNER JOIN item ON itemstock.ItemCode = item.itemcode 
+//             $where_date
+//             GROUP BY
+//                 item.itemname
+//             ORDER BY  qty DESC   ";
             // echo $query;
             // exit;
 $meQuery = $conn->prepare($query);
@@ -294,14 +308,14 @@ if ($type_date == 1) {
         $date1 = explode("-", $date1);
         $date1 = $date1[2] . '-' . $date1[1] . '-' . $date1[0];
 
-        $where_date = "AND DATE(itemstock.LastCabinetModify) = '$date1'  ";
+        $where_date = "AND DATE(itemslotincabinet_detail.ModifyDate) = '$date1'  ";
     } else {
          $date1 = explode("-", $date1);
         $date2 = explode("-", $date2);
         $date1 = $date1[2] . '-' . $date1[1] . '-' . $date1[0];
         $date2 = $date2[2] . '-' . $date2[1] . '-' . $date2[0];
 
-        $where_date = "AND DATE(itemstock.LastCabinetModify) BETWEEN '$date1' 	AND '$date2' ";
+        $where_date = "AND DATE(itemslotincabinet_detail.ModifyDate) BETWEEN '$date1' 	AND '$date2' ";
     }
 }
 if ($type_date == 2) {
@@ -309,9 +323,9 @@ if ($type_date == 2) {
     $year1 = $year1 - 543;
 
     if ($checkmonth == 1) {
-        $where_date = "AND MONTH(itemstock.LastCabinetModify) = '$month1' AND YEAR(itemstock.LastCabinetModify) = '$year1'  ";
+        $where_date = "AND MONTH(itemslotincabinet_detail.ModifyDate) = '$month1' AND YEAR(itemslotincabinet_detail.ModifyDate) = '$year1'  ";
     } else {
-        $where_date = "AND MONTH(itemstock.LastCabinetModify) BETWEEN '$month1' 	AND '$month2' AND YEAR(itemstock.LastCabinetModify) = '$year1' ";
+        $where_date = "AND MONTH(itemslotincabinet_detail.ModifyDate) BETWEEN '$month1' 	AND '$month2' AND YEAR(itemslotincabinet_detail.ModifyDate) = '$year1' ";
     }
 }
 
@@ -321,9 +335,9 @@ if ($type_date == 3) {
     $year2 = $year2 - 543;
 
     if ($checkyear == 1) {
-        $where_date = "AND YEAR(itemstock.LastCabinetModify) = '$year1'  ";
+        $where_date = "AND YEAR(itemslotincabinet_detail.ModifyDate) = '$year1'  ";
     } else {
-        $where_date = "AND YEAR(itemstock.LastCabinetModify) BETWEEN '$year1' 	AND '$year2' ";
+        $where_date = "AND YEAR(itemslotincabinet_detail.ModifyDate) BETWEEN '$year1' 	AND '$year2' ";
     }
 }
 // --- ใส่โลโก้ ---
@@ -370,14 +384,29 @@ $query = " SELECT
                 item.itemname,
                 item.itemcode2,
                 COUNT( itemstock.ItemCode ) AS all_,
-                ( SELECT COUNT( itemstock.RowID ) FROM itemstock WHERE itemstock.ItemCode = item.itemcode AND  ( itemstock.StockID IS NOT NULL ) )		AS qty 
+                itemslotincabinet_detail.Qty AS qty 
             FROM
-                itemstock
-                INNER JOIN item ON itemstock.ItemCode = item.itemcode 
-            $where_date
+                itemslotincabinet_detail
+                INNER JOIN item ON itemslotincabinet_detail.itemcode = item.itemcode
+                INNER JOIN itemstock ON itemstock.ItemCode = item.itemcode 
+            WHERE
+                itemslotincabinet_detail.Sign = '+' 
+                $where_date
             GROUP BY
-                item.itemname
-            ORDER BY  qty DESC   ";
+                item.itemcode ";
+
+// $query = " SELECT
+//                 item.itemname,
+//                 item.itemcode2,
+//                 COUNT( itemstock.ItemCode ) AS all_,
+//                 ( SELECT COUNT( itemstock.RowID ) FROM itemstock WHERE itemstock.ItemCode = item.itemcode AND  ( itemstock.StockID IS NOT NULL ) )		AS qty 
+//             FROM
+//                 itemstock
+//                 INNER JOIN item ON itemstock.ItemCode = item.itemcode 
+//             $where_date
+//             GROUP BY
+//                 item.itemname
+//             ORDER BY  qty DESC   ";
             // echo $query;
             // exit;
 $meQuery = $conn->prepare($query);
@@ -403,9 +432,9 @@ foreach ($dataArray as $item) {
     $sheet->setCellValue('A' . $rowIndex, (string)$count);
     $sheet->setCellValue('B' . $rowIndex, (string)$item['itemcode2']);
     $sheet->setCellValue('C' . $rowIndex, (string)$item['itemname']);
-    $sheet->setCellValue('D' . $rowIndex, (string)$item['all_']);
+    $sheet->setCellValue('D' . $rowIndex, (string)$sum);
     $sheet->setCellValue('E' . $rowIndex, (string)$item['qty']);
-    $sheet->setCellValue('F' . $rowIndex, (string)$sum);
+    $sheet->setCellValue('F' . $rowIndex, (string)$item['all_']);
 
     $sheet->getRowDimension($rowIndex)->setRowHeight(30);
     $rowIndex++;

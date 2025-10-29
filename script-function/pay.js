@@ -4376,11 +4376,17 @@ $("#input_scan_return").keypress(function (e) {
             if (value.Isdeproom == 0) {
               showDialogFailed("รหัสนี้อยู่คลังสต๊อกห้องผ่าตัด");
               $("#input_scan_return").val("");
+              if (IsSound == 1) {
+                playNot_Found_Item();
+              }
               return;
             }
             if (value.IsCross == 9) {
               showDialogFailed("สแกนรหัสซ้ำ");
               $("#input_scan_return").val("");
+              if (IsSound == 1) {
+                playNot_Found_Item();
+              }
               return;
             }
             var UsageCode = value.UsageCode;
