@@ -218,12 +218,12 @@ $query = "SELECT
             item.itemname,
             item.itemcode2,
             COUNT(itemstock.ItemCode) AS qty,
-            (SELECT COUNT(itemstock.RowID) FROM itemstock WHERE itemstock.ItemCode = item.itemcode AND itemstock.StockID = '2') AS all_ 
+            (SELECT COUNT(itemstock.RowID) FROM itemstock WHERE itemstock.ItemCode = item.itemcode AND itemstock.StockID != 0 ) AS all_ 
             FROM
             itemstock
             INNER JOIN item ON itemstock.ItemCode = item.itemcode 
             $where_date
-            AND itemstock.StockID = '2' 
+            AND itemstock.StockID != 0
             GROUP BY
             item.itemcode ";
 // $query = " SELECT

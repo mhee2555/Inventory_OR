@@ -4,7 +4,7 @@
     <div class=" col-md-12 col-lg-9">
 
         <div class="tab-button-group">
-            <button class="tab-button active" id="radio_hn">สืบค้นข้อมูล คนไข้</button>
+            <button class="tab-button active" id="radio_hn">สืบค้นข้อมูล ผู้ป่วย</button>
             <button class="tab-button" id="radio_department">สืบค้นข้อมูล หน่วยงาน</button>
         </div>
     </div>
@@ -224,9 +224,9 @@
                 <button class="btn btn-success f18" id="edit_his_department" disabled>แก้ไขอุปกรณ์</button>
             </div> -->
 
-            <!-- <div class="col-md-6 text-right">
-                <button class="btn btn-success" id="btn_send_pay_department" disabled>ยืนยันการส่งค่าใข้จ่าย (HIS)</button>
-            </div> -->
+            <!-- <div class="col-md-6 text-right"> -->
+                <button class="btn btn-success" id="btn_send_pay_department" disabled hidden>ยืนยันการส่งค่าใข้จ่าย (HIS)</button>
+            <!-- </div> -->
 
             <div class="col-md-12 col-lg-12 mt-2">
                 <div class="row">

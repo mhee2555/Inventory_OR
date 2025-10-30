@@ -201,6 +201,8 @@ function setActive_feeddata_sell_detail(DocNo, his_IsStatus) {
   $("#tr_" + DocNo).css("background-color", "#FEE4E2");
 
   $("#btn_send_pay_department").data("DocNo", DocNo);
+  
+  console.log($("#btn_send_pay_department").data("DocNo"));
 
   // $("#btn_Tracking").attr("disabled", false);
 

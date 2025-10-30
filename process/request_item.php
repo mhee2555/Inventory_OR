@@ -341,7 +341,7 @@ function show_detail_item_request($conn,$db)
                 END ASC,
                 remain_balance ASC ";
 
-
+    
 
 
     // echo $query;

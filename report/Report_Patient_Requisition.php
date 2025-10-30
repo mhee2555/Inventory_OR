@@ -244,7 +244,7 @@ $query = "SELECT
                 left JOIN stock_room_type ON stock_room.stkr_type_id = stock_room_type.stkr_type_id
 
                 WHERE
-                itemstock.StockID ='4'
+                itemstock.StockID ='0'
                 $where_date 
                 GROUP BY item.itemname , itemstock.LastCabinetModify  ";
                 

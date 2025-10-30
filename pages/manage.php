@@ -325,7 +325,7 @@
                             <div class="col-md-12 mt-3">
                                 <select class="form-control f18" id="select_permission"></select>
                             </div>
-                            <div class="col-md-6 mt-3">
+                            <!-- <div class="col-md-6 mt-3">
                                 <select class="form-control f18" id="select_user_rfid" disabled>
                                     <option value="">RFID</option>
                                     <option value="1">ลงทะเบียน</option>
@@ -338,7 +338,7 @@
                                     <option value="1">ลงทะเบียน</option>
                                     <option value="0">ไม่ได้ลงทะเบียน</option>
                                 </select>
-                            </div>
+                            </div> -->
                             <div class="col-md-12 mt-3" hidden>
                                 <input type="text" class="form-control" id="input_IDUser" autocomplete="off">
                             </div>
@@ -987,6 +987,56 @@
                         <tr>
                             <th scope="col" class="text-center" id="">ลำดับ</th>
                             <th scope="col" class="text-center" id="">หัตถการ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="show_modal_cabinet_ids_RFID" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-hover " id="table_detail_cabinet_ids_RFID">
+                    <thead style="background-color: #cdd6ff;">
+                        <tr>
+                            <th scope="col" class="text-center" id="">RFID 1</th>
+                            <th scope="col" class="text-center" id="">RFID 2</th>
+                            <th scope="col" class="text-center" id="">RFID 3</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="show_modal_cabinet_ids_Weighing" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-hover " id="table_detail_cabinet_ids_Weighing">
+                    <thead style="background-color: #cdd6ff;">
+                        <tr>
+                            <th scope="col" class="text-center" id="">Weighing 1</th>
+                            <th scope="col" class="text-center" id="">Weighing 2</th>
+                            <th scope="col" class="text-center" id="">Weighing 3</th>
                         </tr>
                     </thead>
                     <tbody>

@@ -1329,8 +1329,8 @@ function saveUser() {
       input_userName: $("#input_userName").val(),
       input_passWord: $("#input_passWord").val(),
       select_permission: $("#select_permission").val(),
-      select_user_rfid: $("#select_user_rfid").val(),
-      select_user_weighing: $("#select_user_weighing").val(),
+      // select_user_rfid: $("#select_user_rfid").val(),
+      // select_user_weighing: $("#select_user_weighing").val(),
       IsAdmin: IsAdmin,
       input_IDUser: $("#input_IDUser").val(),
       IsCancel: IsCancel,
@@ -1353,14 +1353,14 @@ function saveUser() {
       $("#input_lastUser").val("");
       $("#input_userName").val("");
       $("#input_passWord").val("");
-      $("#select_user_rfid").val("");
-      $("#select_user_weighing").val("");
+      // $("#select_user_rfid").val("");
+      // $("#select_user_weighing").val("");
       $("#input_IDUser").val("");
     },
   });
 }
 function editUser(
-  cabinet_ids,
+  // cabinet_ids,
   ID,
   EmpCode,
   FirstName,
@@ -1371,20 +1371,20 @@ function editUser(
   permission,
   IsAdmin
 ) {
-  if (cabinet_ids == "2") {
-    $("#select_user_rfid").val(1);
-  } else {
-    $("#select_user_rfid").val(0);
-  }
-  if (cabinet_ids == "8") {
-    $("#select_user_weighing").val(1);
-  } else {
-    $("#select_user_weighing").val(0);
-  }
-  if (cabinet_ids == "button") {
-    $("#select_user_rfid").val(1);
-    $("#select_user_weighing").val(1);
-  }
+  // if (cabinet_ids == "2") {
+  //   $("#select_user_rfid").val(1);
+  // } else {
+  //   $("#select_user_rfid").val(0);
+  // }
+  // if (cabinet_ids == "8") {
+  //   $("#select_user_weighing").val(1);
+  // } else {
+  //   $("#select_user_weighing").val(0);
+  // }
+  // if (cabinet_ids == "button") {
+  //   $("#select_user_rfid").val(1);
+  //   $("#select_user_weighing").val(1);
+  // }
   $("#input_empcodeUser").val(EmpCode);
   $("#input_nameUser").val(FirstName);
   $("#input_lastUser").val(LastName);
@@ -1441,8 +1441,8 @@ $("#btn_clearUser").click(function () {
   $("#input_passWord").val("");
   $("#select_permission").val("");
   $("#input_IDUser").val("");
-  $("#select_user_rfid").val("");
-  $("#select_user_weighing").val("");
+  // $("#select_user_rfid").val("");
+  // $("#select_user_weighing").val("");
 });
 function feeddata_detailUser() {
   $.ajax({
@@ -1489,13 +1489,12 @@ function feeddata_detailUser() {
                       <td class="text-left">${value.EmpCode}</td>
                       <td class="text-left">${value.FirstName}</td>
                       <td class="text-left">${value.LastName}</td>
-                      <td class="text-center">${img1}</td>
-                      <td class="text-center">${img2}</td>
+                      <td class="text-center"><button class='btn btn-primary' onclick='show_modal_cabinet_ids_RFID("${value.cabinet_ids}")'>รายละเอียด</button></td>
+                      <td class="text-center"><button class='btn btn-primary' onclick='show_modal_cabinet_ids_Weighing("${value.cabinet_ids}")'>รายละเอียด</button></td>
                       <td class="text-left"><button class='btn' ${bg}>  ${value.IsCancel
             } </button></td>
                       <td class="text-center">
-                      <button class="btn btn-outline-dark f18 mr-4" onclick='editUser("${value.cabinet_ids
-            }","${value.ID}","${value.EmpCode}","${value.FirstName
+                      <button class="btn btn-outline-dark f18 mr-4" onclick='editUser("${value.ID}","${value.EmpCode}","${value.FirstName
             }","${value.LastName}","${value.UserName}","${value.xxx}","${value.IsCancel
             }","${value.permission}","${value.IsAdmin
             }")'  > <i class="fa-regular fa-pen-to-square"></i> แก้ไข</button> <button  class="btn btn-outline-danger f18 ml-4" onclick='deleteUser(${value.ID
@@ -1545,7 +1544,7 @@ function feeddata_detailUser() {
             targets: 4,
           },
           {
-            width: "10%",
+            width: "15%",
             targets: 5,
           },
           {
@@ -1581,6 +1580,87 @@ function feeddata_detailUser() {
       }
     },
   });
+}
+
+function show_modal_cabinet_ids_RFID(cabinet_ids) {
+  $("#show_modal_cabinet_ids_RFID").modal('toggle');
+
+  value = cabinet_ids.replace(/[^0-9,]/g, "");
+
+  $(this).val(value);
+
+  let arr = value.split(",");
+
+      var img1 = ` <img src="assets/img/fingerprint_0.png" style='width:30%;' > `;
+      var img2 = ` <img src="assets/img/fingerprint_0.png" style='width:30%;' > `;
+      var img3 = ` <img src="assets/img/fingerprint_0.png" style='width:30%;' > `;
+
+  arr.forEach((num) => {
+
+    if (num == "2") {
+       img1 = ` <img src="assets/img/fingerprint_1.png" style='width:30%;' > `;
+    }
+
+    if (num == "1") {
+       img2 = ` <img src="assets/img/fingerprint_1.png" style='width:30%;' > `;
+    }
+
+    if (num == "3") {
+       img3 = ` <img src="assets/img/fingerprint_1.png" style='width:30%;' > `;
+    }
+
+
+    var _tr = `<tr> 
+                <td class="text-center">${img1}</td>
+                <td class="text-center">${img2}</td>
+                <td class="text-center">${img3}</td>  
+             </tr>`;
+
+
+      $("#table_detail_cabinet_ids_RFID tbody").html(_tr);
+
+  });
+
+}
+function show_modal_cabinet_ids_Weighing(cabinet_ids) {
+  $("#show_modal_cabinet_ids_Weighing").modal('toggle');
+
+  value = cabinet_ids.replace(/[^0-9,]/g, "");
+
+  $(this).val(value);
+
+  let arr = value.split(",");
+
+      var img1 = ` <img src="assets/img/fingerprint_0.png" style='width:30%;' > `;
+      var img2 = ` <img src="assets/img/fingerprint_0.png" style='width:30%;' > `;
+      var img3 = ` <img src="assets/img/fingerprint_0.png" style='width:30%;' > `;
+
+  arr.forEach((num) => {
+
+    if (num == "8") {
+       img1 = ` <img src="assets/img/fingerprint_1.png" style='width:30%;' > `;
+    }
+
+    if (num == "4") {
+       img2 = ` <img src="assets/img/fingerprint_1.png" style='width:30%;' > `;
+    }
+
+    if (num == "5") {
+       img3 = ` <img src="assets/img/fingerprint_1.png" style='width:30%;' > `;
+    }
+
+
+    var _tr = `<tr> 
+                <td class="text-center">${img1}</td>
+                <td class="text-center">${img2}</td>
+                <td class="text-center">${img3}</td>  
+             </tr>`;
+
+
+      $("#table_detail_cabinet_ids_Weighing tbody").html(_tr);
+
+  });
+
 }
 // ================================================
 

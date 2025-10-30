@@ -628,8 +628,8 @@ function saveUser($conn)
         return isset($_POST[$key]) ? $_POST[$key] : $default;
     }
 
-    $select_user_rfid     = post('select_user_rfid', '');
-    $select_user_weighing = post('select_user_weighing', '');
+    // $select_user_rfid     = post('select_user_rfid', '');
+    // $select_user_weighing = post('select_user_weighing', '');
     $input_empcodeUser    = post('input_empcodeUser', '');
     $input_nameUser       = post('input_nameUser', '');
     $input_lastUser       = post('input_lastUser', '');
@@ -641,8 +641,8 @@ function saveUser($conn)
     $IsAdmin_new          = isset($_POST['IsAdmin']) ? (int)$_POST['IsAdmin'] : 0;
 
     // ค่าดีฟอลต์กรณีว่าง
-    if ($select_user_rfid === "")     $select_user_rfid = 0;
-    if ($select_user_weighing === "") $select_user_weighing = 0;
+    // if ($select_user_rfid === "")     $select_user_rfid = 0;
+    // if ($select_user_weighing === "") $select_user_weighing = 0;
 
     try {
         // ใช้ทรานแซคชันเพื่อความสอดคล้องของข้อมูล
@@ -675,9 +675,9 @@ function saveUser($conn)
 
             // 3) INSERT users
             $sqlInsertUser = "INSERT INTO users 
-                (EmpCode, UserName, Password, IsCancel, DeptID, display, permission, IsAdmin, IsFingerPrint1, IsFingerPrint2)
+                (EmpCode, UserName, Password, IsCancel, DeptID, display, permission, IsAdmin)
                 VALUES
-                (:emp, :uname, :pwd, :iscancel, 1, 3, :perm, :isadmin, :rfid, :weigh)";
+                (:emp, :uname, :pwd, :iscancel, 1, 3, :perm, :isadmin)";
             $stmt = $conn->prepare($sqlInsertUser);
             $stmt->execute([
                 ':emp'      => $input_empcodeUser,
@@ -685,9 +685,7 @@ function saveUser($conn)
                 ':pwd'      => $input_passWord, // ถ้าต้องการ hash: password_hash($input_passWord, PASSWORD_DEFAULT)
                 ':iscancel' => $IsCancel,
                 ':perm'     => $select_permission,
-                ':isadmin'  => $IsAdmin_new,
-                ':rfid'     => $select_user_rfid,
-                ':weigh'    => $select_user_weighing
+                ':isadmin'  => $IsAdmin_new
             ]);
             $newUserId = (int)$conn->lastInsertId();
 
@@ -771,8 +769,6 @@ function saveUser($conn)
         }
 
         $sqlUpdateUser = "UPDATE users SET
-                        IsFingerPrint1 = :rfid,
-                        IsFingerPrint2 = :weigh,
                         IsAdmin        = :isadmin,
                         EmpCode        = :emp,
                         UserName       = :uname,
@@ -782,8 +778,8 @@ function saveUser($conn)
                     WHERE ID = :id";
 
         $params = [
-            ':rfid'     => $select_user_rfid,
-            ':weigh'    => $select_user_weighing,
+            // ':rfid'     => $select_user_rfid,
+            // ':weigh'    => $select_user_weighing,
             ':isadmin'  => $IsAdmin_new,
             ':emp'      => $input_empcodeUser,
             ':uname'    => $input_userName,
@@ -1052,9 +1048,9 @@ function feeddata_detailUser($conn, $db)
     $meQuery->execute();
     while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
 
-        if (!is_null($row['cabinet_ids']) && str_contains($row['cabinet_ids'], ',')) {
-            $row['cabinet_ids'] = 'button';
-        }
+        // if (!is_null($row['cabinet_ids']) && str_contains($row['cabinet_ids'], ',')) {
+        //     $row['cabinet_ids'] = 'button';
+        // }
         $return[] = $row;
     }
     echo json_encode($return);
