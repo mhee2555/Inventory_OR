@@ -2061,11 +2061,11 @@ function save_edit_hn($conn, $db)
 
     if ($input_Hn_pay_editHN == '') {
         $input_Hn_pay_editHN_x = $input_box_pay_editHN;
-    }else{
+    } else {
         $input_Hn_pay_editHN_x = $input_Hn_pay_editHN;
     }
 
-        $qcheck = "SELECT
+    $qcheck = "SELECT
                     deproom.number_box,
                     deproom.hn_record_id
                 FROM
@@ -2898,6 +2898,7 @@ function oncheck_pay_manual($conn, $db)
                         // ==============================
                         $queryUpdate = "UPDATE itemstock 
                                                 SET Isdeproom = 1 ,
+                                                Stockin = 1,
                                                 departmentroomid = '$_departmentroomid'
                                                 WHERE
                                                 RowID = '$_RowID' ";
@@ -3039,6 +3040,7 @@ function oncheck_pay_manual($conn, $db)
 
                             $queryUpdate = "UPDATE itemstock 
                                         SET Isdeproom = 1 ,
+                                            Stockin = 1,
                                         departmentroomid = '$_departmentroomid'
                                         WHERE
                                         RowID = '$_RowID' ";
@@ -3292,6 +3294,7 @@ function oncheck_pay_manual($conn, $db)
                             // ==============================
                             $queryUpdate = "UPDATE itemstock 
                                                     SET Isdeproom = 1 ,
+                                                    Stockin = 1,
                                                     departmentroomid = '$_departmentroomid'
                                                     WHERE
                                                     RowID = '$_RowID' ";
@@ -3431,6 +3434,7 @@ function oncheck_pay_manual($conn, $db)
 
                                 $queryUpdate = "UPDATE itemstock 
                                             SET Isdeproom = 1 ,
+                                                Stockin = 1,
                                             departmentroomid = '$_departmentroomid'
                                             WHERE
                                             RowID = '$_RowID' ";
@@ -6982,6 +6986,7 @@ function oncheck_pay($conn, $db)
                         // ==============================
                         $queryUpdate = "UPDATE itemstock 
                             SET Isdeproom = 1 ,
+                                Stockin = 1,
                             departmentroomid = '$_departmentroomid'
                             WHERE
                             RowID = '$_RowID' ";
@@ -7167,6 +7172,7 @@ function oncheck_pay($conn, $db)
 
                             $queryUpdate = "UPDATE itemstock 
                                 SET Isdeproom = 1 ,
+                                Stockin = 1,
                                 departmentroomid = '$_departmentroomid'
                                 WHERE
                                 RowID = '$_RowID' ";
@@ -7638,6 +7644,7 @@ function oncheck_pay($conn, $db)
                             // ==============================
                             $queryUpdate = "UPDATE itemstock 
                                 SET Isdeproom = 1 ,
+                                Stockin = 1,
                                 departmentroomid = '$_departmentroomid'
                                 WHERE
                                 RowID = '$_RowID' ";
@@ -7865,6 +7872,7 @@ function oncheck_pay($conn, $db)
 
                                 $queryUpdate = "UPDATE itemstock 
                                     SET Isdeproom = 1 ,
+                                    Stockin = 1,
                                     departmentroomid = '$_departmentroomid'
                                     WHERE
                                     RowID = '$_RowID' ";

@@ -430,6 +430,7 @@ function selection_item_normal($conn, $db)
                 SELECT ItemCode, COUNT(*) AS cnt
                 FROM itemstock
                 WHERE itemstock.IsCancel = 0
+                AND itemstock.Stockin = 1
                 GROUP BY ItemCode
             ) s ON s.ItemCode = i.itemcode
 
@@ -461,6 +462,7 @@ function selection_item_normal($conn, $db)
                 WHERE (IsDamage = 0 OR IsDamage IS NULL)
                 AND Isdeproom NOT IN (1,2,3,4,5,6,7,8,9)
                 AND itemstock.IsCancel = 0
+                AND itemstock.Stockin = 1
                 GROUP BY ItemCode
             ) sb ON sb.ItemCode = i.itemcode
 
@@ -469,6 +471,7 @@ function selection_item_normal($conn, $db)
                 FROM itemstock
                 WHERE IsDamage IN (1, 2)
                 AND itemstock.IsCancel = 0
+                AND itemstock.Stockin = 1
                 GROUP BY ItemCode
             ) dm ON dm.ItemCode = i.itemcode
 
@@ -854,6 +857,7 @@ function selection_item_rfid($conn, $db)
                 SELECT ItemCode, COUNT(*) AS cnt
                 FROM itemstock
                 WHERE itemstock.IsCancel = 0
+                AND itemstock.Stockin = 1
                 GROUP BY ItemCode
             ) s ON s.ItemCode = i.itemcode
 
@@ -889,6 +893,7 @@ function selection_item_rfid($conn, $db)
                 WHERE (IsDamage = 0 OR IsDamage IS NULL)
                 AND Isdeproom NOT IN (1,2,3,4,5,6,7,8,9)
                 AND itemstock.IsCancel = 0
+                AND itemstock.Stockin = 1
                 GROUP BY ItemCode
             ) sb ON sb.ItemCode = i.itemcode
 
@@ -898,6 +903,7 @@ function selection_item_rfid($conn, $db)
                 FROM itemstock
                 WHERE IsDamage IN (1, 2)
                 AND itemstock.IsCancel = 0
+                AND itemstock.Stockin = 1
                 GROUP BY ItemCode
             ) dm ON dm.ItemCode = i.itemcode
 
@@ -1324,6 +1330,7 @@ function selection_item($conn, $db)
                 SELECT ItemCode, COUNT(*) AS cnt
                 FROM itemstock
                 WHERE itemstock.IsCancel = 0
+                AND itemstock.Stockin = 1
                 GROUP BY ItemCode
             ) s ON s.ItemCode = i.itemcode
 
@@ -1359,6 +1366,7 @@ function selection_item($conn, $db)
                 WHERE (IsDamage = 0 OR IsDamage IS NULL)
                 AND Isdeproom NOT IN (1,2,3,4,5,6,7,8,9)
                 AND itemstock.IsCancel = 0
+                AND itemstock.Stockin = 1
                 GROUP BY ItemCode
             ) sb ON sb.ItemCode = i.itemcode
 
@@ -1368,6 +1376,7 @@ function selection_item($conn, $db)
                 FROM itemstock
                 WHERE IsDamage IN (1, 2)
                 AND itemstock.IsCancel = 0
+                AND itemstock.Stockin = 1
                 GROUP BY ItemCode
             ) dm ON dm.ItemCode = i.itemcode
 

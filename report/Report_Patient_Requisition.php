@@ -227,12 +227,12 @@ $query = "SELECT
                 item.itemname,
                 item.itemcode2,
                 stock_room_type.type_name,
-                itemstock.HNCode,
+                itemstock_transaction_detail.hncode AS HNCode,
                 
                 CONCAT(employee.FirstName, +' ',employee.LastName) AS Issue_Name ,
                 itemstock.LastCabinetModify,
                 CASE
-                    WHEN itemstock.HnCode IS NOT NULL THEN
+                    WHEN itemstock_transaction_detail.hncode IS NOT NULL THEN
                     'ถูกยิงใช้กับผู้ป่วย' ELSE 'ไม่ถูกยิงใช้กับผู้ป่วย'  END AS STATUS 
                 FROM
                 itemstock
@@ -242,9 +242,10 @@ $query = "SELECT
                 left JOIN stock ON itemstock.StockID = stock.StockID
                 left JOIN stock_room ON stock.DrpSTID = stock_room.DepSTID
                 left JOIN stock_room_type ON stock_room.stkr_type_id = stock_room_type.stkr_type_id
-
+                left JOIN itemstock_transaction_detail ON itemstock_transaction_detail.ItemStockID = itemstock.RowID
                 WHERE
                 itemstock.StockID ='0'
+                AND itemstock.CabinetUserID != 177
                 $where_date 
                 GROUP BY item.itemname , itemstock.LastCabinetModify  ";
                 
@@ -460,6 +461,7 @@ $query = " SELECT
             WHERE
                 itemslotincabinet_detail.Sign = '-' 
                 $where_date
+                AND itemslotincabinet_detail.UserID != 177
             GROUP BY
                 item.itemcode ";
 

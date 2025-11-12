@@ -11,7 +11,7 @@ date_default_timezone_set("Asia/Bangkok");
 
 if($db == 1){
 
-	$host = '10.11.9.21'; // e.g., localhost, 127.0.0.1
+	$host = '10.11.9.6'; // e.g., localhost, 127.0.0.1
 	$dbname = 'inventory_or';
 	$username = 'root';
 	$password = 'A$192dijd';

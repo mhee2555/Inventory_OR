@@ -64,7 +64,7 @@ $(function () {
   if (localStorage.request_item == 1) {
     $("#radio_receive").click();
     localStorage.removeItem("request_item");
-  }else{
+  } else {
     $("#select_typeItem_request").select2();
   }
 });
@@ -664,7 +664,7 @@ function oncheck_show_byDocNo(docnort, docnorq, status) {
 function show_detail_item_ByDocNo(docnort, docnorq) {
   $.ajax({
     url: "process/request_item.php",
-    type: "POST",
+    type: "POST", 
     data: {
       FUNC_NAME: "show_detail_item_ByDocNo",
       docnort: docnort,
@@ -685,9 +685,20 @@ function show_detail_item_ByDocNo(docnort, docnorq) {
                       <td class="f24 text-center">${value.cnt}</td>
                    </tr>`;
           $.each(ObjData[value.itemcode], function (kay2, value2) {
+
+            var dis = "";
+            if (value2.Stockin == 1) {
+              dis = 'disabled checked';
+            }
             _tr += `<tr class='tr_${value.itemcode} all222'>
                        <td class="f24 text-center"></td>
-                       <td class="f24 text-center"></td>
+                       <td class="f24 text-center">
+
+                               <input ${dis}
+                                style="width: 20px;height: 20px;"
+                                class="form-check-input position-static clear_checkbox2"
+                                type="checkbox"  data-qrcode="${value2.QrCode}" >
+                       </td>
                        <td class="f24 text-center">${value2.QrCode}</td>
                        <td class="f24 text-center"></td>
                     </tr>`;
@@ -723,6 +734,19 @@ $("#btn_confirm_RQ").click(function () {
 });
 
 function onconfirm_RQ() {
+  var checkbox = Array();
+  var qrcode = Array();
+  var count_all = 0;
+  $(".clear_checkbox2").each(function () {
+    if ($(this).is(":checked")) {
+      checkbox.push(1);
+      qrcode.push($(this).data('qrcode'));
+    }
+    count_all++;
+  });
+
+
+
   $.ajax({
     url: "process/request_item.php",
     type: "POST",
@@ -730,6 +754,9 @@ function onconfirm_RQ() {
       FUNC_NAME: "onconfirm_RQ",
       docnort: $("#btn_confirm_RQ").data("docnort"),
       docnorq: $("#btn_confirm_RQ").data("docnorq"),
+      checkbox: checkbox,
+      qrcode: qrcode,
+      count_all: count_all,
     },
     success: function (result) {
       $("#table_detail_rq tbody").html("");

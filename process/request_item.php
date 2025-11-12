@@ -113,11 +113,27 @@ function onconfirm_RQ($conn,$db){
     $return = array();
     $docnort = $_POST['docnort'];
     $docnorq = $_POST['docnorq'];
+    $checkbox = $_POST['checkbox'];
+    $qrcode = $_POST['qrcode'];
+    $count_all = $_POST['count_all'];
     $Userid = $_SESSION['Userid'];
 
-    $Q1 = " UPDATE insertrfid SET insertrfid.StatusDocNo = 2 , insertrfid.userID = $Userid WHERE insertrfid.RqDocNo = '$docnorq'   AND insertrfid.RtDocNo = '$docnort'   ";
-    $meQ1 = $conn->prepare($Q1);
-    $meQ1->execute();
+    $count_check = 0;
+    foreach ($qrcode as $key => $value) {
+
+        $Qitemstock = "UPDATE itemstock SET Stockin = 1 WHERE UsageCode = '$value' ";
+        $meQitem = $conn->prepare($Qitemstock);
+        $meQitem->execute();
+       $count_check++;
+    }
+
+    if($count_check == $count_all){
+        $Q1 = " UPDATE insertrfid SET insertrfid.StatusDocNo = 2 , insertrfid.userID = $Userid WHERE insertrfid.RqDocNo = '$docnorq'   AND insertrfid.RtDocNo = '$docnort'   ";
+        $meQ1 = $conn->prepare($Q1);
+        $meQ1->execute();
+    }
+
+
 
     echo json_encode($return);
     unset($conn);
@@ -152,14 +168,18 @@ function show_detail_item_ByDocNo($conn,$db){
 
 
         $Q2 = " SELECT
-                    insertrfid_detail.QrCode 
+                    insertrfid_detail.QrCode,
+	                itemstock.Stockin 
                 FROM
                     insertrfid
                     INNER JOIN insertrfid_detail ON insertrfid.DocNo = insertrfid_detail.DocNo 
+                    INNER JOIN itemstock ON insertrfid_detail.QrCode = itemstock.UsageCode 
                 WHERE
                     insertrfid.RqDocNo = '$docnorq' 
                     AND insertrfid.RtDocNo = '$docnort' 
                     AND insertrfid_detail.ItemCode = '$_itemcode' ";
+
+         
 
         $meQ2 = $conn->prepare($Q2);
         $meQ2->execute();

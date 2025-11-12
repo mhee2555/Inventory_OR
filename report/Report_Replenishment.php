@@ -129,9 +129,9 @@ if ($type_date == 1) {
 if ($type_date == 2) {
 
     if ($checkmonth == 1) {
-        $text_date = "เดือนที่เติมอุปกรณ์ : " . $datetime->getTHmonthFromnum($month1)." ปี " .$year1;
+        $text_date = "เดือนที่เติมอุปกรณ์ : " . $datetime->getTHmonthFromnum($month1) . " ปี " . $year1;
     } else {
-        $text_date = "เดือนที่เติมอุปกรณ์ : " . $datetime->getTHmonthFromnum($month1) . " ถึง " . $datetime->getTHmonthFromnum($month2)." ปี " .$year1;
+        $text_date = "เดือนที่เติมอุปกรณ์ : " . $datetime->getTHmonthFromnum($month1) . " ถึง " . $datetime->getTHmonthFromnum($month2) . " ปี " . $year1;
     }
 }
 
@@ -191,22 +191,20 @@ if ($type_date == 1) {
     }
 }
 if ($type_date == 2) {
-    $year1 = $year1-543;
+    $year1 = $year1 - 543;
 
     if ($checkmonth == 1) {
         $where_date = "WHERE MONTH(itemstock.LastCabinetModify) = '$month1' AND YEAR(itemstock.LastCabinetModify) = '$year1'   ";
-
     } else {
         $where_date = "WHERE MONTH(itemstock.LastCabinetModify) BETWEEN '$month1' 	AND '$month2' AND YEAR(itemstock.LastCabinetModify) = '$year1'  ";
     }
 }
 
 if ($type_date == 3) {
-    $year1 = $year1-543;
-    $year2 = $year2-543;
+    $year1 = $year1 - 543;
+    $year2 = $year2 - 543;
     if ($checkyear == 1) {
         $where_date = "WHERE YEAR(itemstock.LastCabinetModify) = '$year1'  ";
-
     } else {
         $where_date = "WHERE YEAR(itemstock.LastCabinetModify) BETWEEN '$year1' 	AND '$year2' ";
     }
@@ -224,6 +222,7 @@ $query = "SELECT
             INNER JOIN item ON itemstock.ItemCode = item.itemcode 
             $where_date
             AND itemstock.StockID != 0
+            AND itemstock.CabinetUserID != 177
             GROUP BY
             item.itemcode ";
 // $query = " SELECT
@@ -246,7 +245,7 @@ $query = "SELECT
 //                 AND  itemstock.IsStatus = 4 
 //                 AND  itemstock.IsDeproom IS NULL 
 //                 AND  itemstock.departmentroomid IS NULL
-                
+
 //                 )		AS qty 
 //             FROM
 //                 itemstock
@@ -367,7 +366,6 @@ if ($type_date == 2) {
 
     if ($checkmonth == 1) {
         $where_date = "AND MONTH(itemslotincabinet_detail.ModifyDate) = '$month1'  ";
-
     } else {
         $where_date = "AND MONTH(itemslotincabinet_detail.ModifyDate) BETWEEN '$month1' 	AND '$month2' ";
     }
@@ -375,12 +373,11 @@ if ($type_date == 2) {
 
 if ($type_date == 3) {
 
-    $year1 = $year1-543;
-    $year2 = $year2-543;
+    $year1 = $year1 - 543;
+    $year2 = $year2 - 543;
 
     if ($checkyear == 1) {
         $where_date = "AND YEAR(itemslotincabinet_detail.ModifyDate) = '$year1'  ";
-
     } else {
         $where_date = "AND YEAR(itemslotincabinet_detail.ModifyDate) BETWEEN '$year1' 	AND '$year2' ";
     }
@@ -390,15 +387,17 @@ $count = 1;
 $query = " SELECT
                 item.itemname,
                 item.itemcode2,
-                COUNT( itemstock.ItemCode ) AS all_,
+                itemslotincabinet.Qty AS all_,
                 itemslotincabinet_detail.Qty AS qty 
             FROM
                 itemslotincabinet_detail
-                INNER JOIN item ON itemslotincabinet_detail.itemcode = item.itemcode
+                INNER JOIN itemslotincabinet ON itemslotincabinet.itemcode = itemslotincabinet_detail.itemcode
+                INNER JOIN item ON itemslotincabinet.itemcode = item.itemcode
                 INNER JOIN itemstock ON itemstock.ItemCode = item.itemcode 
             WHERE
                 itemslotincabinet_detail.Sign = '+' 
                 $where_date
+                AND itemslotincabinet_detail.UserID != 177
             GROUP BY
                 item.itemcode ";
 
