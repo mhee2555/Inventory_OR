@@ -1318,6 +1318,7 @@ $(".btn_manage_stock").click(function () {
   $("#modal_manage_stockRFID").modal("toggle");
   $("#max_manage_stockRFID").val("");
   $("#min_manage_stockRFID").val("");
+  $("#balance_manage_stockRFID").val("");
   $("#item_manage_stockRFID").val("");
   setTimeout(() => {
     $("#item_manage_stockRFID").select2({
@@ -1333,10 +1334,9 @@ $("#save_manage_stockRFID").click(function () {
   }
 
   if (
-    $("#max_manage_stockRFID").val() == "" ||
-    $("#min_manage_stockRFID").val() == ""
+    $("#max_manage_stockRFID").val() == "" &&  $("#min_manage_stockRFID").val() == "" &&  $("#balance_manage_stockRFID").val() == ""
   ) {
-    Swal.fire("ล้มเหลว", "กรุณากรอก Max & Min", "error");
+    Swal.fire("ล้มเหลว", "กรุณากรอก Max & Min & Balance", "error");
     return;
   }
   Swal.fire({
@@ -1358,6 +1358,7 @@ $("#save_manage_stockRFID").click(function () {
           item_manage_stockRFID: $("#item_manage_stockRFID").val(),
           max_manage_stockRFID: $("#max_manage_stockRFID").val(),
           min_manage_stockRFID: $("#min_manage_stockRFID").val(),
+          balance_manage_stockRFID: $("#balance_manage_stockRFID").val(),
         },
         success: function (result) {
           // selection_item_rfid();

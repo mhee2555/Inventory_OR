@@ -494,6 +494,7 @@
                                     <th scope="col" class="text-center" id="">รหัสอุปกรณ์</th>
                                     <th scope="col" class="text-center" id="" style="width: 60%;">อุปกรณ์</th>
                                     <th scope="col" class="text-center" id="">จำนวน</th>
+                                    <th scope="col" class="text-center" id="">#</th>
                                 </tr>
                             </thead>
                             <tbody>

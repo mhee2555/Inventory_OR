@@ -92,6 +92,8 @@ if (!empty($_POST['FUNC_NAME'])) {
         save_edit_ems($conn, $db);
     } else if ($_POST['FUNC_NAME'] == 'checkHNDocNo') {
         checkHNDocNo($conn, $db);
+    } else if ($_POST['FUNC_NAME'] == 'deleteReturn') {
+        deleteReturn($conn, $db);
     }
 }
 
@@ -603,6 +605,22 @@ function feeddata_history_Return($conn, $db)
         }
         $return[] = $row;
     }
+    echo json_encode($return);
+    unset($conn);
+    die;
+}
+
+
+
+function deleteReturn($conn, $db)
+{
+    $return = [];
+    $itemcode = $_POST['itemcode'];
+
+    $update = "UPDATE itemstock SET itemstock.IsCross = 0 WHERE itemstock.ItemCode = '$itemcode' AND itemstock.IsCross = 9 ";
+    $meQuery = $conn->prepare($update);
+    $meQuery->execute();
+    
     echo json_encode($return);
     unset($conn);
     die;

@@ -623,6 +623,10 @@
                     <label for="" style="color:black;">Stock Min</label>
                     <input type="number" class="form-control f18" id="min_manage_stockRFID">
                 </div>
+                <div class="form-group">
+                    <label for="" style="color:black;">Stock Balance</label>
+                    <input type="number" class="form-control f18" id="balance_manage_stockRFID">
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">ยกเลิก</button>
@@ -646,12 +650,12 @@
 
                     <div class="col-md-12 mt-3">
                         <label for="" style="color:black;">อุปกรณ์</label>
-                        <select class="form-control f18" id="select_map_item_sub" ></select>
+                        <select class="form-control f18" id="select_map_item_sub"></select>
                     </div>
 
                     <div class="col-md-12 mt-3">
                         <div class="row">
-                            <div class="col-md-12"  id="row_item_map">
+                            <div class="col-md-12" id="row_item_map">
 
                             </div>
                         </div>

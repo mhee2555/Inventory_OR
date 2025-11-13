@@ -4548,6 +4548,7 @@ function feeddata_waitReturn() {
               `<td class="text-center">${value.itemcode}</td>` +
               `<td class="text-left">${value.itemname}</td>` +
               `<td class="text-center">${value.cnt}</td>` +
+              `<td class="text-center"><button class='btn btn-danger' onclick='deleteReturn("${value.itemcode}")'>ลบ</button></td>` +
               ` </tr>`;
           }
         });
@@ -4556,6 +4557,38 @@ function feeddata_waitReturn() {
       }
     },
   });
+}
+
+function deleteReturn(itemcode) {
+
+  Swal.fire({
+    title: "ยืนยัน",
+    text: "ยืนยัน! ลบรายการ ?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "ยืนยัน",
+    cancelButtonText: "ยกเลิก",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      showLoading();
+
+      $.ajax({
+        url: "process/pay.php",
+        type: "POST",
+        data: {
+          FUNC_NAME: "deleteReturn",
+          itemcode: itemcode,
+        },
+        success: function (result) {
+          $("body").loadingModal("destroy");
+          feeddata_waitReturn();
+        },
+      });
+    }
+  });
+
 }
 
 

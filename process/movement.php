@@ -364,17 +364,25 @@ function onSavemanage_stockRFID($conn, $db)
     $item_manage_stockRFID = $_POST['item_manage_stockRFID'];
     $max_manage_stockRFID = $_POST['max_manage_stockRFID'];
     $min_manage_stockRFID = $_POST['min_manage_stockRFID'];
+    $balance_manage_stockRFID = $_POST['balance_manage_stockRFID'];
 
 
 
-
-
-
-    $update = "UPDATE item SET stock_max = '$max_manage_stockRFID' , stock_min = '$min_manage_stockRFID' WHERE item.itemcode = '$item_manage_stockRFID' ";
-    $meQuery = $conn->prepare($update);
-    $meQuery->execute();
-
-
+    if ($max_manage_stockRFID != "") {
+        $update = "UPDATE item SET  stock_max = '$max_manage_stockRFID' WHERE item.itemcode = '$item_manage_stockRFID' ";
+        $meQuery = $conn->prepare($update);
+        $meQuery->execute();
+    }
+    if ($min_manage_stockRFID != "") {
+        $update = "UPDATE item SET  stock_min = '$min_manage_stockRFID'   WHERE item.itemcode = '$item_manage_stockRFID' ";
+        $meQuery = $conn->prepare($update);
+        $meQuery->execute();
+    }
+    if ($balance_manage_stockRFID != "") {
+        $update = "UPDATE item SET  stock_balance = '$balance_manage_stockRFID'  WHERE item.itemcode = '$item_manage_stockRFID' ";
+        $meQuery = $conn->prepare($update);
+        $meQuery->execute();
+    }
 
 
     echo json_encode($return);
