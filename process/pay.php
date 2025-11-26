@@ -2636,7 +2636,8 @@ function oncheck_pay_manual($conn, $db)
                         INNER JOIN item ON itemstock.ItemCode = item.itemcode
                         WHERE
                                 itemstock.UsageCode = '$input_pay_manual'
-                                AND itemstock.IsCancel = 0 ";
+                                AND itemstock.IsCancel = 0
+                                AND itemstock.Adjust_stock = 0 ";
         // AND itemstock.departmentroomid = '35' 
         // AND itemstock.Isdeproom = '0' 
         // AND itemstock.HNCode = '$input_Hn_pay_manual' ";
@@ -6885,6 +6886,7 @@ function oncheck_pay($conn, $db)
                                 WHERE
                                         itemstock.UsageCode = '$input_pay' 
                                         AND itemstock.IsCancel = 0
+                                        AND itemstock.Adjust_stock = 0
                                         $wherepermission ";
 
 

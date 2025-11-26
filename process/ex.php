@@ -88,6 +88,7 @@ function feeddata($conn, $db)
                     item ON item.itemcode = itemstock.ItemCode
                 WHERE
                     itemstock.IsCancel = 0
+                    AND item.IsCancel = 0 
                     AND itemstock.IsSell = 0
                     $wheredep
                     AND ( DATE(itemstock.ExpireDate) <= CURDATE() OR DATE(itemstock.ExpireDate) BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL $GN_WarningExpiringSoonDay DAY) )
@@ -125,6 +126,7 @@ function feeddata($conn, $db)
                                     LEFT JOIN item ON item.itemcode = itemstock.ItemCode 
                                 WHERE
                                     itemstock.IsCancel = 0 
+                                    AND item.IsCancel = 0 
                                     AND itemstock.IsSell = 0
                                     AND (
                                         DATE( itemstock.ExpireDate ) <= CURDATE() 
@@ -168,6 +170,7 @@ function feeddata($conn, $db)
                                     LEFT JOIN item ON item.itemcode = itemstock.ItemCode 
                                 WHERE
                                     itemstock.IsCancel = 0 
+                                    AND item.IsCancel = 0 
                                     AND itemstock.IsSell = 0
                                     AND (
                                         DATE( itemstock.ExpireDate ) <= CURDATE() 
@@ -207,6 +210,7 @@ function feeddata($conn, $db)
                     LEFT JOIN item ON item.itemcode = itemstock.ItemCode 
                 WHERE
                   itemstock.IsCancel = 0 
+                  AND item.IsCancel = 0 
                 $wheredep
                 AND (  CONVERT ( DATE, itemstock.ExpireDate )  <= FORMAT ( GETDATE( ), 'yyyy/MM/dd' )
                 OR  CONVERT ( DATE, itemstock.ExpireDate ) BETWEEN CONVERT ( DATE, GETDATE( ) )  AND DATEADD( DAY,  $GN_WarningExpiringSoonDay, CONVERT ( DATE, GETDATE( ) ) ) )

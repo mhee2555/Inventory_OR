@@ -608,6 +608,13 @@ function show_detail_receive() {
               var txt = "Waiting";
               var bg_g = "";
             }
+
+         if (value2.type_cre == 1) {
+              var txt2 = "main";
+            } else {
+              var txt2 = "sub";
+            }
+            
             _tr += `<tr class='tr_${value.RqDocNo} all111' ${bg_g}>
                        <td class="f24 text-center">
 
@@ -623,7 +630,7 @@ function show_detail_receive() {
                        
                        
                        </td>
-                       <td class="f24 text-center">${value2.RtDocNo}</td>
+                       <td class="f24 text-center">${value2.RtDocNo}(${txt2})</td>
                        <td class="f24 text-left">${txt}</td>
                        <td class="f24 text-center">${value2.cnt}</td>
                     </tr>`;
@@ -658,13 +665,14 @@ function oncheck_show_byDocNo(docnort, docnorq, status) {
   $("#btn_confirm_RQ").data("docnort", docnort);
   $("#btn_confirm_RQ").data("docnorq", docnorq);
 
+  $("#checkAll").prop('checked',false);
   show_detail_item_ByDocNo(docnort, docnorq);
 }
 
 function show_detail_item_ByDocNo(docnort, docnorq) {
   $.ajax({
     url: "process/request_item.php",
-    type: "POST", 
+    type: "POST",
     data: {
       FUNC_NAME: "show_detail_item_ByDocNo",
       docnort: docnort,
@@ -711,6 +719,13 @@ function show_detail_item_ByDocNo(docnort, docnorq) {
     },
   });
 }
+
+$(document).on("change", "#checkAll", function () {
+  const checked = $(this).is(":checked");
+
+  // เช็คเฉพาะตัวที่ไม่ disabled
+  $(".clear_checkbox2:not(:disabled)").prop("checked", checked);
+});
 
 $("#btn_confirm_RQ").click(function () {
   if ($("#table_detail_rq tbody tr").length == 0) {

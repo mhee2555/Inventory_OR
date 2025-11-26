@@ -173,9 +173,13 @@ $(function () {
       $("#row_year").show();
 
       $("#radio_month1").prop("checked", true).trigger("click");
-      $("#select_month1").val("1");
-      $("#select_month2").val("1");
-      $("#select_year1").val("2566");
+
+      var d = new Date();
+      var month = d.getMonth() + 1;
+
+      $("#select_month1").val(month);
+      $("#select_month2").val(month);
+      $("#select_year1").val("2568");
     }
     if ($(this).val() == "3") {
       $("#row_typeday").hide();
@@ -188,8 +192,8 @@ $(function () {
 
       $("#radio_year1").prop("checked", true).trigger("click");
 
-      $("#select_year1").val("2566");
-      $("#select_year2").val("2566");
+      $("#select_year1").val("2568");
+      $("#select_year2").val("2568");
     }
   });
 
@@ -209,7 +213,7 @@ $(function () {
 
     $("#select_type_date").val("").change();
 
-    if ($(this).val() == 7 || $(this).val() == 12) {
+    if ($(this).val() == 7 || $(this).val() == 12 || $(this).val() == 13) {
       $("#row_typedate").hide();
       $("#row_day_9").hide();
       $("#row_day_10").hide();
@@ -546,13 +550,15 @@ $(function () {
         );
       }
     } else {
-      if ($("#select_report").val() == 7 || $("#select_report").val() == 12) {
+      if ($("#select_report").val() == 7 || $("#select_report").val() == 12 || $("#select_report").val() == 13) {
 
         if ($("#select_report").val() == 7) {
           window.open("report/Report_stock.php", "_blank");
         } else if ($("#select_report").val() == 12) {
           window.open("report/Report_ex_soon.php" + "?GN_WarningExpiringSoonDay=" + GN_WarningExpiringSoonDay, "_blank"
           );
+        } else if ($("#select_report").val() == 13) {
+          window.open("report/Report_stock_Cabinet.php", "_blank");
         }
 
       } else {
@@ -892,7 +898,7 @@ $(function () {
         );
       }
     } else {
-      if ($("#select_report").val() == 7 || $("#select_report").val() == 12) {
+      if ($("#select_report").val() == 7 || $("#select_report").val() == 12 || $("#select_report").val() == 13) {
 
         if ($("#select_report").val() == 7) {
           window.open(
@@ -902,6 +908,11 @@ $(function () {
         } else if ($("#select_report").val() == 12) {
           window.open(
             "report/phpexcel/Report_ex_soon.php" + "?GN_WarningExpiringSoonDay=" + GN_WarningExpiringSoonDay + "&Userid=" + Userid, "_blank"
+          );
+        } else if ($("#select_report").val() == 13) {
+          window.open(
+            "report/phpexcel/Report_stock_Cabinet.php" + "?Userid=" + Userid,
+            "_blank"
           );
         }
 

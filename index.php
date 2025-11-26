@@ -628,7 +628,11 @@ if (!isset($_SESSION['UserName'])) {
 
         $('#a_main').on("click", function(e) {
             e.preventDefault();
-            var link = this.href;
+            // var link = this.href;
+
+            var link = 'pages/main.php';
+
+            // alert(link);
             $.get(link, function(res) {
 
                 if (display == '3') {
@@ -1052,7 +1056,9 @@ if (!isset($_SESSION['UserName'])) {
         })
         $('#a_pay').on("click", function(e) {
             e.preventDefault();
-            var link = this.href;
+            // var link = this.href;
+            var link = 'pages/pay.php';
+
             $.get(link, function(res) {
 
                 $(".nav-item").removeClass("active");
@@ -1330,7 +1336,10 @@ if (!isset($_SESSION['UserName'])) {
         })
         $('#a_hn').on("click", function(e) {
             e.preventDefault();
-            var link = this.href;
+            // var link = this.href;
+
+            var link = 'pages/hn.php';
+
             $.get(link, function(res) {
 
                 $(".nav-item").removeClass("active");
@@ -1422,7 +1431,10 @@ if (!isset($_SESSION['UserName'])) {
         })
         $('#a_setting').on("click", function(e) {
             e.preventDefault();
-            var link = this.href;
+            // var link = this.href;
+
+            var link = 'pages/setting.php';
+
             $.get(link, function(res) {
 
                 $(".nav-item").removeClass("active");
@@ -1482,7 +1494,9 @@ if (!isset($_SESSION['UserName'])) {
         })
         $('#a_movement').on("click", function(e) {
             e.preventDefault();
-            var link = this.href;
+            // var link = this.href;
+            var link = 'pages/movement.php';
+
             $.get(link, function(res) {
 
                 $(".nav-item").removeClass("active");
@@ -1630,7 +1644,9 @@ if (!isset($_SESSION['UserName'])) {
         })
         $('#a_manage').on("click", function(e) {
             e.preventDefault();
-            var link = this.href;
+            // var link = this.href;
+            var link = 'pages/manage.php';
+
             $.get(link, function(res) {
 
                 $(".nav-item").removeClass("active");
@@ -1716,7 +1732,9 @@ if (!isset($_SESSION['UserName'])) {
         })
         $('#a_report').on("click", function(e) {
             e.preventDefault();
-            var link = this.href;
+            // var link = this.href;
+            var link = 'pages/report.php';
+
             $.get(link, function(res) {
 
                 $(".nav-item").removeClass("active");
@@ -1808,7 +1826,9 @@ if (!isset($_SESSION['UserName'])) {
         })
         $('#a_permission').on("click", function(e) {
             e.preventDefault();
-            var link = this.href;
+            // var link = this.href;
+            var link = 'pages/permission.php';
+
             $.get(link, function(res) {
 
                 $(".nav-item").removeClass("active");

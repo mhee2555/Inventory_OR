@@ -222,7 +222,8 @@ $query = "SELECT
             INNER JOIN item ON itemstock.ItemCode = item.itemcode 
             $where_date
             AND itemstock.StockID != 0
-            AND itemstock.CabinetUserID != 177
+            AND itemstock.CabinetUserID != 177 
+            AND itemstock.CabinetUserID != 278 
             GROUP BY
             item.itemcode ";
 // $query = " SELECT
@@ -339,8 +340,7 @@ $html = '<table cellspacing="0" cellpadding="2" border="1" >
 <thead><tr style="font-size:18px;color:#fff;background-color:#663399;">
 <th width="6 %" align="center">ลำดับ</th>
 <th width="20 %" align="center">รหัสอุปกรณ์</th>
-<th width="36 %"  align="center">อุปกรณ์</th>
-<th width="10 %" align="center">ทั้งหมด</th>
+<th width="46 %"  align="center">อุปกรณ์</th>
 <th width="15 %" align="center">เติมอุปกรณ์เข้าตู้</th>
 <th width="15 %" align="center">คงเหลือล่าสุด</th>
 </tr> </thead>';
@@ -354,20 +354,20 @@ if ($type_date == 1) {
     if ($checkday == 1) {
         $date1 = $date1[2] . '-' . $date1[1] . '-' . $date1[0];
 
-        $where_date = "AND DATE(itemslotincabinet_detail.ModifyDate) = '$date1'  ";
+        $where_date = " DATE(itemslotincabinet_detail.ModifyDate) = '$date1'  ";
     } else {
         $date1 = $date1[2] . '-' . $date1[1] . '-' . $date1[0];
         $date2 = $date2[2] . '-' . $date2[1] . '-' . $date2[0];
 
-        $where_date = "AND DATE(itemslotincabinet_detail.ModifyDate) BETWEEN '$date1' 	AND '$date2' ";
+        $where_date = " DATE(itemslotincabinet_detail.ModifyDate) BETWEEN '$date1' 	AND '$date2' ";
     }
 }
 if ($type_date == 2) {
 
     if ($checkmonth == 1) {
-        $where_date = "AND MONTH(itemslotincabinet_detail.ModifyDate) = '$month1'  ";
+        $where_date = " MONTH(itemslotincabinet_detail.ModifyDate) = '$month1'  ";
     } else {
-        $where_date = "AND MONTH(itemslotincabinet_detail.ModifyDate) BETWEEN '$month1' 	AND '$month2' ";
+        $where_date = " MONTH(itemslotincabinet_detail.ModifyDate) BETWEEN '$month1' 	AND '$month2' ";
     }
 }
 
@@ -377,29 +377,32 @@ if ($type_date == 3) {
     $year2 = $year2 - 543;
 
     if ($checkyear == 1) {
-        $where_date = "AND YEAR(itemslotincabinet_detail.ModifyDate) = '$year1'  ";
+        $where_date = " YEAR(itemslotincabinet_detail.ModifyDate) = '$year1'  ";
     } else {
-        $where_date = "AND YEAR(itemslotincabinet_detail.ModifyDate) BETWEEN '$year1' 	AND '$year2' ";
+        $where_date = " YEAR(itemslotincabinet_detail.ModifyDate) BETWEEN '$year1' 	AND '$year2' ";
     }
 }
 
 $count = 1;
 $query = " SELECT
-                item.itemname,
-                item.itemcode2,
-                itemslotincabinet.Qty AS all_,
-                itemslotincabinet_detail.Qty AS qty 
+            item.itemname,
+            item.itemcode2,
+            itemslotincabinet.Qty AS all_,
+            -- รวม Qty เฉพาะ Sign = '+'
+            SUM(CASE WHEN itemslotincabinet_detail.Sign = '+' THEN itemslotincabinet_detail.Qty ELSE 0 END) AS qty_plus,
+            -- รวม Qty เฉพาะ Sign = '-'
+            SUM(CASE WHEN itemslotincabinet_detail.Sign = '-' THEN itemslotincabinet_detail.Qty ELSE 0 END) AS qty_minus
             FROM
-                itemslotincabinet_detail
-                INNER JOIN itemslotincabinet ON itemslotincabinet.itemcode = itemslotincabinet_detail.itemcode
-                INNER JOIN item ON itemslotincabinet.itemcode = item.itemcode
-                INNER JOIN itemstock ON itemstock.ItemCode = item.itemcode 
+            itemslotincabinet_detail
+            INNER JOIN itemslotincabinet ON itemslotincabinet.itemcode = itemslotincabinet_detail.itemcode
+            INNER JOIN item ON itemslotincabinet.itemcode = item.itemcode
             WHERE
-                itemslotincabinet_detail.Sign = '+' 
-                $where_date
-                AND itemslotincabinet_detail.UserID != 177
+            $where_date
             GROUP BY
-                item.itemcode ";
+            item.itemcode,
+            item.itemname
+            HAVING
+            qty_plus > 0; -- ⭐ แสดงเฉพาะ item ที่มี Sign = '+'";
 
 $meQuery1 = $conn->prepare($query);
 $meQuery1->execute();
@@ -410,9 +413,9 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
     $html .= '<tr nobr="true" style="font-size:15px;">';
     $html .=   '<td width="6 %" align="center"> ' . (string)$count . '</td>';
     $html .=   '<td width="20 %" align="center"> ' . $Result_Detail['itemcode2'] . '</td>';
-    $html .=   '<td width="36 %" align="left">' . $Result_Detail['itemname'] . '</td>';
-    $html .=   '<td width="10 %" align="center">' . $Result_Detail['all_'] -  $Result_Detail['qty']   . '</td>';
-    $html .=   '<td width="15 %" align="center">' . $Result_Detail['qty'] . '</td>';
+    $html .=   '<td width="46 %" align="left">' . $Result_Detail['itemname'] . '</td>';
+    // $html .=   '<td width="10 %" align="center">' . $Result_Detail['all_'] -  ($Result_Detail['qty_plus'] -  $Result_Detail['qty_minus'])   . '</td>';
+    $html .=   '<td width="15 %" align="center">' . $Result_Detail['qty_plus']   . '</td>';
     $html .=   '<td width="15 %" align="center">' . $Result_Detail['all_'] . '</td>';
     $html .=  '</tr>';
     $count++;

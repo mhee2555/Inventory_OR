@@ -227,10 +227,12 @@ function show_detail_receive($conn,$db){
         $Q2 = " SELECT
                     insertrfid.RtDocNo ,
                     insertrfid.StatusDocNo,
-                    COUNT(DISTINCT insertrfid_detail.ItemCode) AS cnt
+                    COUNT(DISTINCT insertrfid_detail.ItemCode) AS cnt,
+                    request.type_cre
                 FROM
                     insertrfid 
                 INNER JOIN insertrfid_detail ON insertrfid.DocNo = insertrfid_detail.DocNo
+                LEFT JOIN request ON request.DocNo = insertrfid.RqDocNo
                 WHERE
                     insertrfid.RqDocNo = '$_RqDocNo'
                 GROUP BY insertrfid.DocNo ";

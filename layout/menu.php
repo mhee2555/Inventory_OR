@@ -23,7 +23,7 @@
 
             <div class="sb-sidenav-menu" id="mydiv">
                 <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_main">
-                    <a class="collapse-item" href="pages/main.php" style="color: black;font-size: 16px;" id="a_main">
+                    <a class="collapse-item" href="index.php?s=main" style="color: black;font-size: 16px;" id="a_main">
                         <img id="ic_mainpage" style="width: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;">
                         <label style="font-size: 20px;color: white;" class="color_menu" id="menu1">หน้าหลัก</label>
 
@@ -55,7 +55,7 @@
                 </li>
 
                 <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_set_hn" hidden>
-                    <a class="collapse-item" href="pages/set_hn.php" style="color: black;font-size: 16px;" id="a_set_hn">
+                    <a class="collapse-item" href="index.php?s=set_hn" style="color: black;font-size: 16px;" id="a_set_hn">
                         <img id="ic_set_hn" style="width: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;">
                         <label style="font-size: 20px;color: #667085;" class="color_menu" id="menu16">กรอกข้อมูลผู้ป่วย</label>
                     </a>
@@ -70,7 +70,7 @@
 
 
                 <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_pay" hidden>
-                    <a class="collapse-item" href="pages/pay.php" style="color: black;font-size: 16px;" id="a_pay">
+                    <a class="collapse-item" href="index.php?s=pay" style="color: black;font-size: 16px;" id="a_pay">
                         <img id="ic_dispense_equipment" style="width: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;">
                         <label style="font-size: 20px;color: #667085;" class="color_menu" id="menu4">จ่ายอุปกรณ์</label>
                     </a>
@@ -78,21 +78,21 @@
 
 
                 <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_hn" hidden>
-                    <a class="collapse-item" href="pages/hn.php" style="color: black;font-size: 16px;" id="a_hn">
+                    <a class="collapse-item" href="index.php?s=hn" style="color: black;font-size: 16px;" id="a_hn">
                         <img id="ic_search_hndata" style="width: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;">
                         <label style="font-size: 20px;color: #667085;" class="color_menu" id="menu9">สืบค้นข้อมูล HN</label>
                     </a>
                 </li>
 
                 <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_movement" hidden>
-                    <a class="collapse-item" href="pages/movement.php" style="color: black;font-size: 16px;" id="a_movement">
+                    <a class="collapse-item" href="index.php?s=movement" style="color: black;font-size: 16px;" id="a_movement">
                         <img id="ic_movement" style="width: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;">
                         <label style="font-size: 20px;color: #667085;" class="color_menu" id="menu11">ความเคลื่่อนไหว</label>
                     </a>
                 </li>
 
                 <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_request_item" hidden>
-                    <a class="collapse-item" href="pages/request_item.php" style="color: black;font-size: 16px;" id="a_request_item">
+                    <a class="collapse-item" href="index.php?s=request_item" style="color: black;font-size: 16px;" id="a_request_item">
                         <img id="ic_request_item" style="width: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;">
                         <label style="font-size: 20px;color: #667085;" class="color_menu" id="menu15">ขอเบิกอุปกรณ์จากคลังหลัก</label>
                     </a>
@@ -100,7 +100,7 @@
 
 
                 <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_report" hidden>
-                    <a class="collapse-item" href="pages/report.php" style="color: black;font-size: 16px;" id="a_report">
+                    <a class="collapse-item" href="index.php?s=report" style="color: black;font-size: 16px;" id="a_report">
                         <img id="ic_turnon_offdisplay_3" style="width: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;">
                         <label style="font-size: 20px;color: #667085;" class="color_menu" id="menu14">รายงาน</label>
                     </a>
@@ -145,7 +145,7 @@
 
 
                 <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_setting" hidden>
-                    <a class="collapse-item" href="pages/setting.php" style="color: black;font-size: 16px;" id="a_setting">
+                    <a class="collapse-item" href="index.php?s=setting" style="color: black;font-size: 16px;" id="a_setting">
                         <img id="ic_turnon_offdisplay" style="width: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;">
                         <label style="font-size: 20px;color: #667085;" class="color_menu" id="menu10">เปิด/ปิดการแสดงผล</label>
                     </a>
@@ -153,7 +153,7 @@
 
 
                 <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_manage" hidden>
-                    <a class="collapse-item" href="pages/manage.php" style="color: black;font-size: 16px;" id="a_manage">
+                    <a class="collapse-item" href="index.php?s=manage" style="color: black;font-size: 16px;" id="a_manage">
                         <img id="ic_turnon_offdisplay_2" style="width: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;">
                         <label style="font-size: 20px;color: #667085;" class="color_menu" id="menu13">จัดการข้อมูลระบบ</label>
                     </a>
@@ -162,7 +162,7 @@
 
 
                 <li class="nav-item  py-2 collapse-inner rounded m-3 text-center" id="li_permission">
-                    <a class="collapse-item" href="pages/permission.php" style="color: black;font-size: 16px;" id="a_permission">
+                    <a class="collapse-item" href="index.php?s=permission" style="color: black;font-size: 16px;" id="a_permission">
                         <img id="ic_permission" style="width: 65px;margin-left: 35px;display: block;margin-left: auto;margin-right: auto;">
                         <label style="font-size: 20px;color: #667085;" class="color_menu" id="menu17">กำหนดสิทธิการเข้าถึง</label>
                     </a>

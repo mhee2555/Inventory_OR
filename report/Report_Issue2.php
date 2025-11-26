@@ -433,7 +433,7 @@ $query  ="SELECT
                     i.itemname,
                     i.itemcode2,
                     i.itemcode,
-                    COUNT(sdd.ItemStockID) AS cnt ,
+                    COUNT(sdd.ItemStockID) AS cnt,
                     COUNT(sdd.ItemStockID) AS cnt_pay,
                     it.TyeName
                 FROM sell_department sd
@@ -452,7 +452,8 @@ $query  ="SELECT
             GROUP BY
                 x.itemcode, x.itemname, x.itemcode2, x.TyeName
             ORDER BY
-                x.itemname ASC ";
+                SUM(x.cnt_pay) DESC,   -- เรียงยอดจ่ายมากสุดก่อน
+                x.itemname ASC;        -- เผื่ออยากเรียงชื่อเพิ่ม ";
             
 
 $meQuery1 = $conn->prepare($query);

@@ -155,7 +155,7 @@
                     <table class="table table-hover " id="table_detail_rq">
                         <thead style="background-color: #cdd6ff;">
                             <tr>
-                                <th scope="col" class="text-center" id="" style="width:5%;"></th>
+                                <th scope="col" class="text-center" id="" style="width:10%;"><input id="checkAll" style="width: 20px;height: 20px;" class="form-check-input position-static" type="checkbox" ></th>
                                 <th scope="col" class="text-center" id="">รหัสอุปกรณ์</th>
                                 <th scope="col" class="text-center" id="">อุปกรณ์</th>
                                 <th scope="col" class="text-center" id="">จำนวน</th>

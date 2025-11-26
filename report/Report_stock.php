@@ -272,64 +272,156 @@ $query = "SELECT
                 sub.stock_max,
                 sub.stock_min,
                 sub.stock_balance,
-                -- ( sub.cnt - sub.cnt_pay ) AS calculated_balance,
-                CASE 
-                WHEN IFNULL(sub.cnt, 0) > IFNULL(sub.stock_balance, 0)
-                    THEN (IFNULL(sub.cnt, 0) - IFNULL(sub.cnt_pay, 0))
-                ELSE (IFNULL(sub.stock_balance, 0) - IFNULL(sub.cnt_pay, 0))
-                END AS calculated_balance,
+
+                -- ใช้ยอดนับจาก itemstock เฉพาะ departmentroomid = 35 เป็น calculated_balance
+                IFNULL(sub.cnt_dept35, 0) AS calculated_balance,
+
                 sub.cnt,
                 sub.cnt_pay,
                 sub.cnt_cssd,
                 sub.balance,
-                sub.damage 
+                sub.damage
             FROM
-                (
+            (
                 SELECT
                     item.itemname,
                     item.itemcode2,
                     item.stock_max,
                     item.stock_min,
                     item.stock_balance,
-                    COUNT( itemstock.RowID ) AS cnt,
-                    ( SELECT COUNT( ID ) FROM itemstock_transaction_detail WHERE ItemCode = item.itemcode AND IsStatus = 1 ) AS cnt_pay,
-                    ( SELECT COUNT( ID ) FROM itemstock_transaction_detail WHERE ItemCode = item.itemcode AND IsStatus = 7 ) AS cnt_cssd,
+
+                    -- นับ itemstock ทั้งหมด (ตาม join เดิม)
+                    COUNT(itemstock.RowID) AS cnt,
+
+                    -- ยอดเบิก (IsStatus = 1)
+                    ( SELECT COUNT(ID)
+                    FROM itemstock_transaction_detail
+                    WHERE ItemCode = item.itemcode
+                        AND IsStatus = 1
+                    ) AS cnt_pay,
+
+                    -- ยอด CSSD (IsStatus = 7)
+                    ( SELECT COUNT(ID)
+                    FROM itemstock_transaction_detail
+                    WHERE ItemCode = item.itemcode
+                        AND IsStatus = 7
+                    ) AS cnt_cssd,
+
+                    -- ยอด balance (ไม่เสียหาย, ไม่อยู่ dep room ที่ตัดออก)
                     (
-                    SELECT
-                        COUNT( RowID ) 
-                    FROM
-                        itemstock 
-                    WHERE
-                        ItemCode = item.itemcode 
-                        AND ( IsDamage = 0 OR IsDamage IS NULL ) 
-                        AND Isdeproom NOT IN ( 1, 2, 3, 4, 5, 6, 7, 8, 9 ) 
+                        SELECT COUNT(RowID)
+                        FROM itemstock
+                        WHERE ItemCode = item.itemcode
+                        AND (IsDamage = 0 OR IsDamage IS NULL)
+                        AND Isdeproom NOT IN (1,2,3,4,5,6,7,8,9)
                     ) AS balance,
-                    ( SELECT COUNT( RowID ) FROM itemstock WHERE ItemCode = item.itemcode AND ( IsDamage = 1 OR IsDamage = 2 ) ) AS damage 
-                FROM
-                    item
-                    LEFT JOIN itemstock ON itemstock.ItemCode = item.itemcode 
+
+                    -- ยอดที่เป็น damage
+                    (
+                        SELECT COUNT(RowID)
+                        FROM itemstock
+                        WHERE ItemCode = item.itemcode
+                        AND (IsDamage = 1 OR IsDamage = 2)
+                    ) AS damage,
+
+                    -- ⭐ ยอดนับเฉพาะ departmentroomid = 35 ตามเงื่อนไขที่คุณให้มา
+                    (
+                        SELECT COUNT(*) AS cnt
+                        FROM itemstock
+                        WHERE itemstock.ItemCode = item.itemcode
+                        AND itemstock.IsCancel = 0
+                        AND itemstock.Stockin = 1
+                        AND itemstock.Adjust_stock = 0
+                        AND itemstock.IsDeproom = 0
+                        AND itemstock.departmentroomid = 35
+                    ) AS cnt_dept35
+
+                FROM item
+                LEFT JOIN itemstock ON itemstock.ItemCode = item.itemcode
                 WHERE
-										item.SpecialID = '2' 
-                                        AND item.IsCancel = '0'
-                                        AND item.item_status != 1
-                                        AND item.stock_max IS NOT NULL
-                                        
-                                        
+                    item.SpecialID = '2'
+                    AND item.IsCancel = '0'
+                    AND item.item_status != 1
+                    AND item.stock_max IS NOT NULL
                 GROUP BY
                     item.itemname,
                     item.itemcode,
+                    item.itemcode2,
                     item.stock_max,
                     item.stock_min,
-                    item.stock_balance 
-                ) AS sub 
+                    item.stock_balance
+            ) AS sub
             ORDER BY
-            CASE
-                    
-                    WHEN ( sub.cnt - sub.cnt_pay ) < sub.stock_min THEN
-                    0 ELSE 1 
+                CASE
+                    WHEN (sub.cnt - sub.cnt_pay) < sub.stock_min THEN 0 ELSE 1
                 END,
-                sub.cnt DESC ,
+                sub.cnt DESC,
                 sub.itemname; ";
+
+// $query = "SELECT
+//                 sub.itemname,
+//                 sub.itemcode2,
+//                 sub.stock_max,
+//                 sub.stock_min,
+//                 sub.stock_balance,
+//                 -- ( sub.cnt - sub.cnt_pay ) AS calculated_balance,
+//                 CASE 
+//                 WHEN IFNULL(sub.cnt, 0) > IFNULL(sub.stock_balance, 0)
+//                     THEN (IFNULL(sub.cnt, 0) - IFNULL(sub.cnt_pay, 0))
+//                 ELSE (IFNULL(sub.stock_balance, 0) - IFNULL(sub.cnt_pay, 0))
+//                 END AS calculated_balance,
+//                 sub.cnt,
+//                 sub.cnt_pay,
+//                 sub.cnt_cssd,
+//                 sub.balance,
+//                 sub.damage 
+//             FROM
+//                 (
+//                 SELECT
+//                     item.itemname,
+//                     item.itemcode2,
+//                     item.stock_max,
+//                     item.stock_min,
+//                     item.stock_balance,
+//                     COUNT( itemstock.RowID ) AS cnt,
+//                     ( SELECT COUNT( ID ) FROM itemstock_transaction_detail WHERE ItemCode = item.itemcode AND IsStatus = 1 ) AS cnt_pay,
+//                     ( SELECT COUNT( ID ) FROM itemstock_transaction_detail WHERE ItemCode = item.itemcode AND IsStatus = 7 ) AS cnt_cssd,
+//                     (
+//                     SELECT
+//                         COUNT( RowID ) 
+//                     FROM
+//                         itemstock 
+//                     WHERE
+//                         ItemCode = item.itemcode 
+//                         AND ( IsDamage = 0 OR IsDamage IS NULL ) 
+//                         AND Isdeproom NOT IN ( 1, 2, 3, 4, 5, 6, 7, 8, 9 ) 
+//                     ) AS balance,
+//                     ( SELECT COUNT( RowID ) FROM itemstock WHERE ItemCode = item.itemcode AND ( IsDamage = 1 OR IsDamage = 2 ) ) AS damage 
+//                 FROM
+//                     item
+//                     LEFT JOIN itemstock ON itemstock.ItemCode = item.itemcode 
+//                 WHERE
+// 										item.SpecialID = '2' 
+//                                         AND item.IsCancel = '0'
+//                                         AND item.item_status != 1
+//                                         AND item.stock_max IS NOT NULL
+                                        
+                                        
+//                 GROUP BY
+//                     item.itemname,
+//                     item.itemcode,
+//                     item.stock_max,
+//                     item.stock_min,
+//                     item.stock_balance 
+//                 ) AS sub 
+//             ORDER BY
+//             CASE
+                    
+//                     WHEN ( sub.cnt - sub.cnt_pay ) < sub.stock_min THEN
+//                     0 ELSE 1 
+//                 END,
+//                 sub.cnt DESC ,
+//                 sub.itemname; ";
 
 $meQuery1 = $conn->prepare($query);
 $meQuery1->execute();

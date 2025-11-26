@@ -246,6 +246,9 @@ $query = "SELECT
                 WHERE
                 itemstock.StockID ='0'
                 AND itemstock.CabinetUserID != 177
+                AND itemstock.CabinetUserID != 278
+                AND itemstock.CabinetUserID != 251
+                AND itemstock.CabinetUserID != 277
                 $where_date 
                 GROUP BY item.itemname , itemstock.LastCabinetModify  ";
                 
@@ -281,8 +284,8 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
 
     $pdf->SetFont('db_helvethaica_x', 'B', 18);
 
-    if($Result_Detail['users_ID'] != '251'  && $Result_Detail['users_ID'] != '177')
-    {
+    // if($Result_Detail['users_ID'] != '251'  && $Result_Detail['users_ID'] != '177')
+    // {
         $html .= '<tr nobr="true" style="font-size:15px;">';
         $html .=   '<td width="6 %" align="center" style="line-height:40px;vertical-align: middle;" > ' . (string)$count . '</td>';
         $html .=   '<td width="16 %" align="center" style="line-height:40px;vertical-align: middle;"> ' . $Result_Detail['itemcode2'] . '</td>';
@@ -290,11 +293,11 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
         $html .=   '<td width="10 %" align="center" >' . $Result_Detail['UsageCode'] . '</td>';
         $html .=   '<td width="10 %" align="center" >' . $Result_Detail['Issue_Name'] . '</td>';
         $html .=   '<td width="10 %" align="center" >' . $Result_Detail['LastCabinetModify'] . '</td>';
-        $html .=   '<td width="10 %" align="center" >' . $Result_Detail['HnCode'] . '</td>';
+        $html .=   '<td width="10 %" align="center" >' . $Result_Detail['HNCode'] . '</td>';
         $html .=   '<td width="10 %" align="center" >' . $Result_Detail['STATUS'] . '</td>';
         $html .=  '</tr>';
         $count++;
-    }
+    // }
 
 }
 
@@ -462,6 +465,9 @@ $query = " SELECT
                 itemslotincabinet_detail.Sign = '-' 
                 $where_date
                 AND itemslotincabinet_detail.UserID != 177
+                AND itemslotincabinet_detail.UserID != 278
+                AND itemstock.CabinetUserID != 251
+                AND itemstock.CabinetUserID != 277
             GROUP BY
                 item.itemcode ";
 

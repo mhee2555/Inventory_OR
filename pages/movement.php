@@ -426,17 +426,29 @@
                 <div class="card-body">
 
                     <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group ">
+                        <div class=" col-md-12 col-lg-9  ">
 
-                                <div class="position-relative">
-                                    <input type="text" class="form-control rounded pr-5 f18" placeholder="" id="input_scan_restock">
-                                    <span class="input-icon">
-                                        <i class="fas fa-qrcode" style="color:black;"></i>
-                                    </span>
-                                </div>
+                            <div class="tab-button-group">
+                                <button class="tab-button2 active" id="radio_w">ปรับยอดสต๊อก</button>
+                                <button class="tab-button2" id="radio_m">Adjust Stock</button>
+                            </div>
+                        </div>
+                    </div>
 
-                                <!-- <div class="input-group mb-2">
+                    <div id="row_restock">
+
+                        <div class="row">
+                            <div class="col-md-12 mt-3">
+                                <div class="form-group ">
+
+                                    <div class="position-relative">
+                                        <input type="text" class="form-control rounded pr-5 f18" placeholder="" id="input_scan_restock">
+                                        <span class="input-icon">
+                                            <i class="fas fa-qrcode" style="color:black;"></i>
+                                        </span>
+                                    </div>
+
+                                    <!-- <div class="input-group mb-2">
                                     <input type="text" class="form-control f18" id="input_scan_restock" autocomplete="off" placeholder="">
                                     <div class="input-group-append">
                                         <div class="input-group-text"><i class="fa-solid fa-qrcode"></i></div>
@@ -444,29 +456,73 @@
 
                                 </div> -->
 
+                                </div>
                             </div>
+
                         </div>
+
+
+                        <table class="table table-hover " id="table_item_restock">
+                            <thead style="background-color: #cdd6ff;">
+                                <tr>
+                                    <th scope="col" class="text-center" id="">รหัสอุปกรณ์</th>
+                                    <th scope="col" class="text-center" id="">อุปกรณ์</th>
+                                    <th scope="col" class="text-center" id="">รหัสใช้งาน</th>
+                                    <th scope="col" class="text-center" id="">สถานะ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+
 
                     </div>
 
+                    <div id="row_clearstock">
+                        <div class="row mt-3">
+                            <div class="col-md-10">
 
-                    <table class="table table-hover " id="table_item_restock">
-                        <thead style="background-color: #cdd6ff;">
-                            <tr>
-                                <th scope="col" class="text-center" id="">รหัสอุปกรณ์</th>
-                                <th scope="col" class="text-center" id="">อุปกรณ์</th>
-                                <th scope="col" class="text-center" id="">รหัสใช้งาน</th>
-                                <th scope="col" class="text-center" id="">สถานะ</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
+                                <div class="form-group ">
+                                    <label style="color:black;font-weight: 600;">ชื่ออุปกรณ์</label>
+                                    <input type="text" class="form-control f18" placeholder="พิมพ์ชื่อค้นหา หรือรหัสอุปกรณ์" id="input_search_request">
+                                </div>
+                            </div>
+
+                            <div class="col-md-2" style="margin-top: 35px;">
+                                <button class="btn btn-block f18" style="background-color: #643695;color:#fff;" id="btn_search_request"><i class="fa-solid fa-magnifying-glass"></i> ค้นหา</button>
+                            </div>
+
+                            <div class="col-md-12 mt-3">
+
+                                <div class="card">
+
+                                    <div class="card-body">
+                                        <table class="table table-hover " id="table_item_request">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col" class="text-center" id="">ลำดับ</th>
+                                                    <th scope="col" class="text-center" id="">อุปกรณ์</th>
+                                                    <th scope="col" class="text-center" id="">ประเภท</th>
+                                                    <th scope="col" class="text-center" id="">#</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 
 <div id="follow">
     <div class="row">
@@ -501,7 +557,7 @@
                         </select> -->
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <div class="form-group ">
                         <label for="" class="col-form-label " style="color:black;">ประเภท</label>
                         <select name="" id="select_follow_type" class="form-control f18">
@@ -511,9 +567,14 @@
                     </div>
                 </div>
 
+                <div class="col-md-2">
+                    <div class="form-group ">
+                        <label for="" class="col-form-label " style="color:black;">ค้นหาชื่ออุปกรณ์</label>
+                        <input type="text" class="form-control  f18" id="input_search_follow" autocomplete="off">
+                    </div>
+                </div>
 
-
-                <div class="col-md-5 text-right" style="margin-top: 40px;">
+                <div class="col-md-4 text-right" style="margin-top: 40px;">
                     <button class="btn btn-warning f18" style="margin-right: 10px;width: 130px;" id="btn_add_follow_item">เพิ่มรายการ</button>
                     <button class="btn btn-danger f18" style="margin-right: 10px;width: 130px;" id="btn_pdf_follow_item">PDF</button>
                     <button class="btn btn-success f18" style="width: 130px;" id="btn_excel_follow_item">EXCEL</button>

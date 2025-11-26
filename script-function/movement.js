@@ -3,6 +3,28 @@ var UserName = "";
 var Userid = "";
 var item_Array = [];
 $(function () {
+  $("#radio_w").click(function () {
+    $(".tab-button2").removeClass("active");
+    $(this).addClass("active");
+
+    $("#row_restock").show();
+    $("#row_clearstock").hide();
+
+    // show_detail_deproom_pay();
+  });
+
+  $("#radio_m").click(function () {
+    $(".tab-button2").removeClass("active");
+    $(this).addClass("active");
+
+    $("#row_clearstock").show();
+    $("#row_restock").hide();
+    show_detail_item_request();
+    // show_detail_history();
+
+    // show_detail_deproom_pay();
+  });
+
   $("#excelFile").on("change", function () {
     var fileName = this.files[0]?.name || "";
     $("#filename").val(fileName);
@@ -11,16 +33,13 @@ $(function () {
   session();
   select_item();
 
-
-
   $("#select_follow_year").val(2025);
   $("#select_follow_year").datepicker({
-    view: 'years',      // เปิดมาที่หน้าปี
-    minView: 'years',   // ล็อกให้อยู่ที่หน้าปี (ไม่ลงไปเดือน/วัน)
-    dateFormat: 'yyyy', // ให้ value แสดงเป็นปี เช่น 2025
-    language: 'th',    // ถ้ามี language pack ไทย (ไม่บังคับ)
+    view: "years", // เปิดมาที่หน้าปี
+    minView: "years", // ล็อกให้อยู่ที่หน้าปี (ไม่ลงไปเดือน/วัน)
+    dateFormat: "yyyy", // ให้ value แสดงเป็นปี เช่น 2025
+    language: "th", // ถ้ามี language pack ไทย (ไม่บังคับ)
     onSelect: function (formattedDate, date, inst) {
-
       selection_follow_item();
 
       setTimeout(() => {
@@ -31,9 +50,8 @@ $(function () {
       //   let thYear = date.getFullYear() + 543;
       //   $('#select_year1').val(thYear);
       // }
-    }
+    },
   });
-
 
   $("#select_date1").val(set_date());
   $("#select_date1").datepicker({
@@ -71,6 +89,10 @@ $(function () {
 
   $("#input_search_normal").keyup(function () {
     selection_item_normal();
+  });
+
+  $("#input_search_follow").keyup(function () {
+    selection_follow_item_detail();
   });
 
   $("#suds").hide();
@@ -143,6 +165,7 @@ $(function () {
     $(".tab-button").removeClass("active");
     $(this).addClass("active");
 
+    $("#radio_w").click();
     $("#restock").show();
     $("#sterile1").hide();
     $("#sterile").hide();
@@ -168,19 +191,15 @@ $(function () {
     $("#sterile").hide();
     $("#normal").hide();
 
-
-
     var d = new Date();
     var month = d.getMonth() + 1;
     var output = (("" + month).length < 2 ? "0" : "") + month;
 
     $("#select_follow_month").val(output);
 
-
     setTimeout(() => {
       selection_follow_item();
     }, 500);
-
 
     setTimeout(() => {
       selection_follow_item_detail();
@@ -194,6 +213,133 @@ $(function () {
   });
 });
 
+$("#btn_search_request").click(function () {
+  show_detail_item_request();
+});
+
+function show_detail_item_request() {
+  $.ajax({
+    url: "process/create_request.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "show_detail_item_request",
+      input_search_request: $("#input_search_request").val(),
+      select_typeItem: "",
+    },
+    success: function (result) {
+      var _tr = "";
+      $("#table_item_request tbody").html("");
+      $("#table_item_request").DataTable().destroy();
+      var ObjData = JSON.parse(result);
+      if (!$.isEmptyObject(ObjData)) {
+        $.each(ObjData, function (kay, value) {
+          _tr += `<tr>
+                      <td class='text-center' >${kay + 1}</td>
+                      <td>${value.Item_name}</td>
+                      <td class='text-left'> <label style='color: lightgray;max-width: 240px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;' title='${value.TyeName
+            }'>${value.TyeName}</label> </td>
+                      <td class='text-center'><button class='btn btn-primary' onclick='clearStock("${value.itemcode
+            }")'>Adjust</button></td>
+                   </tr>`;
+        });
+      }
+
+      $("#table_item_request tbody").html(_tr);
+      $("#table_item_request").DataTable({
+        language: {
+          emptyTable: settext("dataTables_empty"),
+          paginate: {
+            next: settext("table_itemStock_next"),
+            previous: settext("table_itemStock_previous"),
+          },
+          search: settext("btn_Search"),
+          info:
+            settext("dataTables_Showing") +
+            " _START_ " +
+            settext("dataTables_to") +
+            " _END_ " +
+            settext("dataTables_of") +
+            " _TOTAL_ " +
+            settext("dataTables_entries") +
+            " ",
+        },
+        columnDefs: [
+          {
+            width: "10%",
+            targets: 0,
+          },
+          {
+            width: "30%",
+            targets: 1,
+          },
+          {
+            width: "30%",
+            targets: 2,
+          },
+          {
+            width: "10%",
+            targets: 3,
+          },
+        ],
+        autoWidth: false,
+        info: false,
+        scrollX: false,
+        scrollCollapse: false,
+        visible: false,
+        searching: false,
+        lengthChange: false,
+        fixedHeader: false,
+        ordering: false,
+      });
+      $("th").removeClass("sorting_asc");
+      if (_tr == "") {
+        $(".dataTables_info").text(
+          settext("dataTables_Showing") +
+          " 0 " +
+          settext("dataTables_to") +
+          " 0 " +
+          settext("dataTables_of") +
+          " 0 " +
+          settext("dataTables_entries") +
+          ""
+        );
+      }
+
+      $(".numonly").on("input", function () {
+        this.value = this.value.replace(/[^0-9]/g, ""); //<-- replace all other than given set of values
+      });
+    },
+  });
+}
+
+function clearStock(itemcode) {
+  Swal.fire({
+    title: "ยืนยัน",
+    text: "ยืนยัน! การ Adjust Stock ?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "ยืนยัน",
+    cancelButtonText: "ยกเลิก",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      showLoading();
+
+      $.ajax({
+        url: "process/movement.php",
+        type: "POST",
+        data: {
+          FUNC_NAME: "clearStock",
+          itemcode: itemcode,
+        },
+        success: function (result) {
+          $("body").loadingModal("destroy");
+        },
+      });
+    }
+  });
+}
 
 $("#select_follow_month").change(function () {
   selection_follow_item();
@@ -213,29 +359,40 @@ $("#select_follow_month").change(function () {
 
 function selection_follow_item() {
 
+
+  if ($.fn.DataTable.isDataTable("#table_follow_item")) {
+    $("#table_follow_item").DataTable().clear().destroy();
+  }
+
+
+  // $("#table_follow_item").DataTable().destroy();
+  $("#table_follow_item tbody").html("");
+
+
   var num = 0;
   var select_follow_month = $("#select_follow_month").val();
-  if (select_follow_month == '04' || select_follow_month == '06' || select_follow_month == '09' || select_follow_month == '11') {
+  if (
+    select_follow_month == "04" ||
+    select_follow_month == "06" ||
+    select_follow_month == "09" ||
+    select_follow_month == "11"
+  ) {
     num = 30;
-  } else if (select_follow_month == '02') {
+  } else if (select_follow_month == "02") {
     num = 28;
   } else {
     num = 31;
   }
 
-
-
   var tr = `<th class='text-center' style="text-wrap: nowrap;width: 3%;">ลำดับ</th>`;
   tr += `<th class='text-center' style="text-wrap: nowrap;width: 25%;">อุปกรณ์</th>`;
 
   for (let index = 0; index < num; index++) {
-    tr += `<th class='text-center' style="text-wrap: nowrap;">${index + 1}</th>`;
+    tr += `<th class='text-center' style="text-wrap: nowrap;">${index + 1
+      }</th>`;
   }
 
   $("#tr_followHard_item").html(tr);
-
-
-
 }
 
 function selection_follow_item_detail() {
@@ -246,115 +403,116 @@ function selection_follow_item_detail() {
       FUNC_NAME: "selection_follow_item_detail",
       select_follow_month: $("#select_follow_month").val(),
       select_follow_year: $("#select_follow_year").val(),
+      input_search_follow: $("#input_search_follow").val(),
     },
     success: function (result) {
       var ObjData = JSON.parse(result);
-      $("#table_follow_item tbody").html("");
-      $("#table_follow_item").DataTable().destroy();
+
+
       console.log(ObjData);
       var tr = ``;
       // var tr = ``;
       if (!$.isEmptyObject(ObjData)) {
         $.each(ObjData["item"], function (kay, value) {
           tr += `<tr>
-                    <td class='text-center' style="text-wrap: nowrap;">${kay + 1}</td>
+                    <td class='text-center' style="text-wrap: nowrap;">${kay + 1
+            }</td>
                     <td style="text-wrap: nowrap;">${value.itemname}</td>`;
 
           $.each(ObjData[value.itemcode], function (kay2, value2) {
             tr += `<td style="text-wrap: nowrap;">${value2.calculated_balance}</td>`;
           });
           tr += `</tr>`;
-
         });
       } else {
       }
 
       $("#table_follow_item tbody").html(tr);
       // ถ้าถูก init มาก่อนแล้ว ให้ destroy ก่อน
-      // if ($.fn.DataTable.isDataTable("#table_follow_item")) {
-      //   $("#table_follow_item").DataTable().destroy();
-      // }
+      if ($.fn.DataTable.isDataTable("#table_follow_item")) {
+        $("#table_follow_item").DataTable().destroy();
+      }
 
-      // const tbl = $("#table_follow_item").DataTable({
-      //   language: {
-      //     emptyTable: settext("dataTables_empty"),
-      //     paginate: {
-      //       next: settext("table_itemStock_next"),
-      //       previous: settext("table_itemStock_previous"),
-      //     },
-      //     info:
-      //       settext("dataTables_Showing") +
-      //       " _START_ " +
-      //       settext("dataTables_to") +
-      //       " _END_ " +
-      //       settext("dataTables_of") +
-      //       " _TOTAL_ " +
-      //       settext("dataTables_entries") +
-      //       " ",
-      //   },
+      const tbl = $("#table_follow_item").DataTable({
+        language: {
+          emptyTable: settext("dataTables_empty"),
+          paginate: {
+            next: settext("table_itemStock_next"),
+            previous: settext("table_itemStock_previous"),
+          },
+          info:
+            settext("dataTables_Showing") +
+            " _START_ " +
+            settext("dataTables_to") +
+            " _END_ " +
+            settext("dataTables_of") +
+            " _TOTAL_ " +
+            settext("dataTables_entries") +
+            " ",
+        },
 
-      //   autoWidth: false, // ให้เราคุม width เอง
-      //   scrollX: true,
-      //   scrollCollapse: true,
-      //   scrollY: "800px",
-      //   fixedColumns: { leftColumns: 2, rightColumns: 0 },
-      //   fixedHeader: true,
+        autoWidth: false, // ให้เราคุม width เอง
+        scrollX: true,
+        scrollCollapse: true,
+        scrollY: "800px",
+        fixedColumns: { leftColumns: 2, rightColumns: 0 },
+        fixedHeader: true,
 
-      //   paging: true,
-      //   pageLength: 15,
-      //   searching: false,
-      //   lengthChange: false,
-      //   ordering: false,
-      //   info: true,
+        paging: true,
+        pageLength: 15,
+        searching: false,
+        lengthChange: false,
+        ordering: false,
+        info: true,
 
-      //   columnDefs: [
-      //     { targets: 0, width: "50px" },
-      //     { targets: 1, width: "250px" },
+        columnDefs: [
+          { targets: 0, width: "50px" },
+          { targets: 1, width: "250px" },
 
-      //   ],
-      //   initComplete: function () {
-      //     const api = this.api();
-      //     api.columns.adjust();
-      //     if (api.fixedColumns && api.fixedColumns().relayout)
-      //       api.fixedColumns().relayout();
-      //   },
-      //   drawCallback: function () {
-      //     const api = this.api();
-      //     api.columns.adjust();
-      //     if (api.fixedColumns && api.fixedColumns().relayout)
-      //       api.fixedColumns().relayout();
-      //   },
-      // });
+        ],
+        initComplete: function () {
+          const api = this.api();
+          api.columns.adjust();
+          if (api.fixedColumns && api.fixedColumns().relayout)
+            api.fixedColumns().relayout();
+        },
+        drawCallback: function () {
+          const api = this.api();
+          api.columns.adjust();
+          if (api.fixedColumns && api.fixedColumns().relayout)
+            api.fixedColumns().relayout();
+        },
+      });
 
-      // // ถ้าตารางเพิ่งถูกโชว์ (เช่น อยู่ในแท็บ) ให้ sync อีกรอบ
-      // setTimeout(() => {
-      //   tbl.columns.adjust().draw(false);
-      //   if (tbl.fixedColumns && tbl.fixedColumns().relayout) {
-      //     tbl.fixedColumns().relayout();
-      //   }
-      // }, 0);
+      // ถ้าตารางเพิ่งถูกโชว์ (เช่น อยู่ในแท็บ) ให้ sync อีกรอบ
+      setTimeout(() => {
+        tbl.columns.adjust().draw(false);
+        if (tbl.fixedColumns && tbl.fixedColumns().relayout) {
+          tbl.fixedColumns().relayout();
+        }
+      }, 0);
 
-      // // ช่วยเวลา resize
-      // $(window).on("resize", () => {
-      //   tbl.columns.adjust();
-      //   if (tbl.fixedColumns && tbl.fixedColumns().relayout) {
-      //     tbl.fixedColumns().relayout();
-      //   }
-      // });
+      // ช่วยเวลา resize
+      $(window).on("resize", () => {
+        tbl.columns.adjust();
+        if (tbl.fixedColumns && tbl.fixedColumns().relayout) {
+          tbl.fixedColumns().relayout();
+        }
+      });
 
-      // $("th").removeClass("sorting_asc");
-      // if (tr == "") {
-      //   $(".dataTables_info").text(
-      //     settext("dataTables_Showing") +
-      //     " 0 " +
-      //     settext("dataTables_to") +
-      //     " 0 " +
-      //     settext("dataTables_of") +
-      //     " 0 " +
-      //     settext("dataTables_entries") +
-      //     ""
-      //   );
-      // }
+      $("th").removeClass("sorting_asc");
+      if (tr == "") {
+        $(".dataTables_info").text(
+          settext("dataTables_Showing") +
+          " 0 " +
+          settext("dataTables_to") +
+          " 0 " +
+          settext("dataTables_of") +
+          " 0 " +
+          settext("dataTables_entries") +
+          ""
+        );
+      }
     },
   });
 }
@@ -389,7 +547,6 @@ $("#select_map_item_sub").on("select2:select", function (e) {
       $("#row_item_map").append(_row);
       $("#select_map_item_sub").val("").trigger("change");
 
-
       $.ajax({
         url: "process/movement.php",
         type: "POST",
@@ -405,8 +562,6 @@ $("#select_map_item_sub").on("select2:select", function (e) {
           }, 1000);
         },
       });
-
-
     } else {
       $("#select_map_item_sub").val("").trigger("change");
     }
@@ -466,21 +621,17 @@ function DeleteItemmap(selectedValue) {
         itemCode: selectedValue,
       },
       success: function (result) {
-
         selection_follow_item();
 
         setTimeout(() => {
           selection_follow_item_detail();
         }, 1000);
-
-
       },
     });
   }
 
   console.log(item_Array);
   $(".div_" + selectedValue).attr("hidden", true);
-
 }
 
 function convertString(S_Input) {
@@ -632,14 +783,27 @@ function convertEN(char) {
   }
 }
 
-
 $("#btn_pdf_follow_item").click(function () {
-  option = "?select_follow_month=" + $("#select_follow_month").val() + "&select_follow_year=" + $("#select_follow_year").val();
-  window.open("report/Report_follow_item.php" + option + "&Userid=" + Userid, "_blank");
+  option =
+    "?select_follow_month=" +
+    $("#select_follow_month").val() +
+    "&select_follow_year=" +
+    $("#select_follow_year").val();
+  window.open(
+    "report/Report_follow_item.php" + option + "&Userid=" + Userid,
+    "_blank"
+  );
 });
 $("#btn_excel_follow_item").click(function () {
-  option = "?select_follow_month=" + $("#select_follow_month").val() + "&select_follow_year=" + $("#select_follow_year").val();
-  window.open("report/phpexcel/Report_follow_item.php" + option + "&Userid=" + Userid, "_blank");
+  option =
+    "?select_follow_month=" +
+    $("#select_follow_month").val() +
+    "&select_follow_year=" +
+    $("#select_follow_year").val();
+  window.open(
+    "report/phpexcel/Report_follow_item.php" + option + "&Userid=" + Userid,
+    "_blank"
+  );
 });
 
 $("#input_scan_restock").keypress(function (e) {
@@ -1060,8 +1224,9 @@ function selection_item() {
           if (value.calculated_balance < value.stock_min) {
             color = "color:red;";
           }
-          if (value.cnt < value.stock_balance) {
-            value.cnt = value.stock_balance;
+          var cntx = value.cnt;
+          if (value.cntx < value.stock_balance) {
+            value.cntx = value.stock_balance;
           }
 
           tr += `<tr>
@@ -1069,7 +1234,7 @@ function selection_item() {
             }</td>
                                   <td style="text-wrap: nowrap;${color}">${value.itemname
             }</td>
-                                  <td class='text-center' style="text-wrap: nowrap;">${value.cnt
+                                  <td class='text-center' style="text-wrap: nowrap;">${value.cntx
             }</td>
                                   <td class='text-center' style="text-wrap: nowrap;background-color:#FFFAEB;">${value.cnt_pay
             }</td>
@@ -1077,8 +1242,7 @@ function selection_item() {
             }</td>
                                   <td class='text-center' style="text-wrap: nowrap;background-color: #d0d9ff;"">${value.stock_max
             }</td>
-                                  <td class='text-center' style="text-wrap: nowrap;background-color:#ECFDF3;">${value.calculated_balance
-            }</td>
+                                  <td class='text-center' style="text-wrap: nowrap;background-color:#ECFDF3;">${cntx}</td>
                                   <td class='text-center' style="text-wrap: nowrap;background-color: #b3e5fc;"">${value.stock_min
             }</td>`;
 
@@ -1334,7 +1498,9 @@ $("#save_manage_stockRFID").click(function () {
   }
 
   if (
-    $("#max_manage_stockRFID").val() == "" &&  $("#min_manage_stockRFID").val() == "" &&  $("#balance_manage_stockRFID").val() == ""
+    $("#max_manage_stockRFID").val() == "" &&
+    $("#min_manage_stockRFID").val() == "" &&
+    $("#balance_manage_stockRFID").val() == ""
   ) {
     Swal.fire("ล้มเหลว", "กรุณากรอก Max & Min & Balance", "error");
     return;
@@ -1498,16 +1664,16 @@ function selection_item_rfid() {
           if (value.calculated_balance < value.stock_min) {
             color = "color:red;";
           }
-
-          if (value.cnt < value.stock_balance) {
-            value.cnt = value.stock_balance;
+          var cntx = value.cnt;
+          if (value.cntx < value.stock_balance) {
+            value.cntx = value.stock_balance;
           }
           tr += `<tr>
                                   <td class='text-center' style="text-wrap: nowrap;">${kay + 1
             }</td>
                                   <td style="text-wrap: nowrap;${color}">${value.itemname
             }</td>
-                                  <td class='text-center' style="text-wrap: nowrap;">${value.cnt
+                                  <td class='text-center' style="text-wrap: nowrap;">${value.cntx
             }</td>
                                   <td class='text-center' style="text-wrap: nowrap;background-color:#FFFAEB;">${value.cnt_pay
             }</td>
@@ -1515,8 +1681,7 @@ function selection_item_rfid() {
             }</td>
                                   <td class='text-center' style="text-wrap: nowrap;background-color: #d0d9ff;"">${value.stock_max
             }</td>
-                                  <td class='text-center' style="text-wrap: nowrap;background-color:#ECFDF3;">${value.calculated_balance
-            }</td>
+                                  <td class='text-center' style="text-wrap: nowrap;background-color:#ECFDF3;">${cntx}</td>
                                   <td class='text-center' style="text-wrap: nowrap;background-color: #b3e5fc;"">${value.stock_min
             }</td>`;
 
@@ -1758,9 +1923,9 @@ function selection_item_normal() {
           if (value.calculated_balance < value.stock_min) {
             color = "color:red;";
           }
-
-          if (value.cnt < value.stock_balance) {
-            value.cnt = value.stock_balance;
+          var cntx = value.cnt;
+          if (value.cntx < value.stock_balance) {
+            value.cntx = value.stock_balance;
           }
 
           tr += `<tr>
@@ -1768,7 +1933,7 @@ function selection_item_normal() {
             }</td>
                                   <td style="text-wrap: nowrap;${color}">${value.itemname
             }</td>
-                                  <td class='text-center' style="text-wrap: nowrap;">${value.cnt
+                                  <td class='text-center' style="text-wrap: nowrap;">${value.cntx
             }</td>
                                   <td class='text-center' style="text-wrap: nowrap;background-color:#FFFAEB;">${value.cnt_pay
             }</td>
@@ -1776,8 +1941,7 @@ function selection_item_normal() {
             }</td>
                                   <td class='text-center' style="text-wrap: nowrap;background-color: #d0d9ff;"">${value.stock_max
             }</td>
-                                  <td class='text-center' style="text-wrap: nowrap;background-color:#ECFDF3;">${value.calculated_balance
-            }</td>
+                                  <td class='text-center' style="text-wrap: nowrap;background-color:#ECFDF3;">${cntx}</td>
                                   <td class='text-center' style="text-wrap: nowrap;background-color: #b3e5fc;"">${value.stock_min
             }</td>`;
 
