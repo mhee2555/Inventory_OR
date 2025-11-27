@@ -1318,6 +1318,15 @@ function show_detail_deproom_pay() {
                           </div>  `;
             }
 
+
+            if (value2.cnt_return == 0) {
+              var txt22 = 'ยังไม่ได้คืน';
+            }else{
+              var txt22 = 'คืนแล้ว';
+            }
+            var btn_2 = `<span class="badge btn-primary" style="cursor:pointer;  width: 120px; color: white; padding: 0.5em 0.75em; font-size: 14px;" >${txt22}</span>`;
+
+
             console.log();
             _tr += `<tr class='tr_${value.id} all111' ${sty} id='deproom_${value2.DocNo}'>
                           <td class='text-center' >
@@ -1348,14 +1357,14 @@ function show_detail_deproom_pay() {
                                   <label class="pl-2 pr-2">|</label>
                                       
                                   <!-- Procedure -->
-                                  <div class="text-truncate mr-2 text-dark" style="max-width: 200px;" ${titleP}>
+                                  <div class="text-truncate mr-2 text-dark" style="max-width: 100px;" ${titleP}>
                                     ${value2.Procedure_TH} 
                                   </div>
 
                                     <label class="pl-2 pr-2">|</label>
 
                                   <!-- Doctor -->
-                                  <div class="text-truncate text-dark" style="max-width: 200px;" ${titleD}>
+                                  <div class="text-truncate text-dark" style="max-width: 150px;" ${titleD}>
                                     ${value2.Doctor_Name} 
                                   </div>
 
@@ -1366,6 +1375,7 @@ function show_detail_deproom_pay() {
 
                                 <!-- ฝั่งขวา: ป้าย manual -->
                                 <div>
+                                  ${btn_2}
                                   ${btn_}
                                 </div>
                               </div>

@@ -23,6 +23,7 @@
                             <option value="11">รายงานอุปกรณ์ผู้แทน</option>
                             <option value="12">รายงานอุปกรณ์ใกล้หมดอายุ</option>
                             <option value="13">รายงานสต๊อกคงเหลือในตู้ Smart Cabinet</option>
+                            <option value="14">รายงานสรุปการใช้อุปกรณ์กับคนไข้</option>
                         </select>
                     </div>
                     <div class="col-md-12 mt-3" id="row_typedate">

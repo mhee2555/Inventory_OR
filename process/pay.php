@@ -9949,7 +9949,15 @@ function show_detail_deproom_pay($conn, $db)
                             deproom.IsConfirm_pay,
                             SUM(CASE WHEN deproom.IsManual = 1 THEN 1 ELSE 0 END) AS IsManual ,
                             SUM(CASE WHEN deproomdetail.IsRequest = 1 THEN 1 ELSE 0 END) AS IsRequest  ,
-	                        COALESCE(his.IsStatus, 0) AS his_IsStatus
+	                        COALESCE(his.IsStatus, 0) AS his_IsStatus,
+                              (
+                                SELECT
+                                    COUNT( lr.id ) 
+                                FROM
+                                    log_return lr
+                                WHERE
+                                    lr.DocNo = deproom.DocNo 
+                                ) AS cnt_return
                         FROM
                             deproom
                         LEFT JOIN

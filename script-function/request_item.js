@@ -1,5 +1,6 @@
 var RqDocNo_x = "";
 var RtDocNo_x = "";
+var tb_rq2 = null;
 
 $(function () {
 
@@ -61,13 +62,72 @@ $(function () {
 
 
 
-  if (localStorage.request_item == 1) {
-    $("#radio_receive").click();
-    localStorage.removeItem("request_item");
-  } else {
-    $("#select_typeItem_request").select2();
-  }
+  // toggle เปิด/ปิด sub
+  $("#table_rq2 tbody").on("click", ".btn-toggle-rq", function () {
+    const tr  = $(this).closest("tr");
+    const row = tb_rq2.row(tr);
+    const rq  = tr.data("rqdocno");
+
+    if (row.child.isShown()) {
+      // หุบ
+      row.child.hide();
+      $(this).removeClass("fa-chevron-up").addClass("fa-chevron-down");
+    } else {
+      // ขยาย
+      const childHtml = buildChildTable(rqDetails[rq], rq);
+      row.child(childHtml).show();
+      $(this).removeClass("fa-chevron-down").addClass("fa-chevron-up");
+    }
+  });
+
+  // checkbox ในแถวลูก
+  $("#table_rq2 tbody").on("click", ".clear_checkbox", function (e) {
+    e.stopPropagation(); // กันคลิกแล้วไป trigger toggle แถว
+    const el = $(this);
+    oncheck_show_byDocNo(
+      el.data("docnort"),
+      el.data("docnorq"),
+      el.data("status")
+    );
+  });
+
+
+
+
+
+
+if (localStorage.request_item == 1) {
+  $("#radio_receive").click();
+  localStorage.removeItem("request_item");
+} else {
+  $("#select_typeItem_request").select2();
+}
 });
+
+
+function initDT_rq2() {
+  tb_rq2 = $("#table_rq2").DataTable({
+    paging: true,
+    pageLength: 10,
+    ordering: false,
+    lengthChange: false,   // << ปิด Show x entries
+    searching: false,
+    info: false,
+    autoWidth: false,
+    retrieve: true, // ถ้ามีแล้วให้ reuse
+    language: {
+      paginate: {
+        previous: "ก่อนหน้า",
+        next: "ถัดไป"
+      },
+      info: "แสดง _START_ ถึง _END_ จาก _TOTAL_ รายการ",
+      infoEmpty: "ไม่มีข้อมูล",
+      zeroRecords: "ไม่พบข้อมูล"
+    }
+  });
+}
+
+
 
 $("#select_typeItem_request").change(function () {
   show_detail_item_request();
@@ -432,6 +492,7 @@ function set_menu() {
     $("#row_receive").show();
     $("#row_history").hide();
 
+    initDT_rq2();
     show_detail_receive();
 
   });
@@ -574,6 +635,85 @@ function showdetail(RqDocNo, RtDocNo, check_show) {
   });
 }
 
+// function show_detail_receive() {
+//   $.ajax({
+//     url: "process/request_item.php",
+//     type: "POST",
+//     data: {
+//       FUNC_NAME: "show_detail_receive",
+//       select_date1_rq: $("#select_date1_rq").val(),
+//       select_date2_rq: $("#select_date2_rq").val(),
+//     },
+//     success: function (result) {
+//       var _tr = "";
+//       // $("#table_deproom_pay").DataTable().destroy();
+//       $("#table_rq2 tbody").html("");
+//       var ObjData = JSON.parse(result);
+//       if (!$.isEmptyObject(ObjData)) {
+//         $.each(ObjData["rq"], function (kay, value) {
+//           _tr += `<tr id='trbg_${value.RqDocNo}'>
+//                       <td class="f24 text-left">
+                      
+//                       <i class="fa-solid fa-chevron-up" style='font-size:20px;cursor:pointer;' id='open_${value.RqDocNo}' value='0' onclick='open_receive_sub("${value.RqDocNo}")'></i>
+                      
+//                       </td>
+//                       <td class="f24 text-left">${value.RqDocNo}</td>
+//                       <td class="f24 text-left"></td>
+//                       <td class="f24 text-left"></td>
+//                    </tr>`;
+//           $.each(ObjData[value.RqDocNo], function (kay2, value2) {
+//             if (value2.StatusDocNo == "2") {
+//               var txt = "Complete";
+//               var bg_g = "style='background-color: lightgreen;'";
+//             } else {
+//               var txt = "Waiting";
+//               var bg_g = "";
+//             }
+
+//             if (value2.type_cre == 1) {
+//               var txt2 = "main";
+//             } else {
+//               var txt2 = "sub";
+//             }
+
+//             _tr += `<tr class='tr_${value.RqDocNo} all111' ${bg_g}>
+//                        <td class="f24 text-center">
+
+//                                <input 
+//                                 style="width: 20px;height: 20px;"
+//                                 class="form-check-input position-static clear_checkbox"
+//                                 type="checkbox"
+//                                 id="checkbox_${value2.RtDocNo}"
+//                                 data-docnort="${value2.RtDocNo}"
+//                                 data-docnorq="${value.RqDocNo}"
+//                                 data-status="${value2.StatusDocNo}"  >
+                       
+                       
+                       
+//                        </td>
+//                        <td class="f24 text-center">${value2.RtDocNo}(${txt2})</td>
+//                        <td class="f24 text-left">${txt}</td>
+//                        <td class="f24 text-center">${value2.cnt}</td>
+//                     </tr>`;
+//           });
+//         });
+//       }
+
+//       $("#table_rq2 tbody").html(_tr);
+//       $(".all111").hide();
+
+//       $(".clear_checkbox").on("click", function () {
+//         const el = $(this);
+//         oncheck_show_byDocNo(
+//           el.data("docnort"),
+//           el.data("docnorq"),
+//           el.data("status")
+//         );
+//       });
+//     },
+//   });
+// }
+
 function show_detail_receive() {
   $.ajax({
     url: "process/request_item.php",
@@ -585,72 +725,81 @@ function show_detail_receive() {
     },
     success: function (result) {
       var _tr = "";
-      // $("#table_deproom_pay").DataTable().destroy();
-      $("#table_rq2 tbody").html("");
+      rqDetails = {}; // เคลียร์ของเก่า
+
       var ObjData = JSON.parse(result);
+
+      // destroy datatable เก่า
+      if ($.fn.DataTable.isDataTable("#table_rq2")) {
+        $("#table_rq2").DataTable().clear().destroy();
+      }
+      $("#table_rq2 tbody").empty();
+
       if (!$.isEmptyObject(ObjData)) {
-        $.each(ObjData["rq"], function (kay, value) {
-          _tr += `<tr id='trbg_${value.RqDocNo}'>
-                      <td class="f24 text-left">
-                      
-                      <i class="fa-solid fa-chevron-up" style='font-size:20px;cursor:pointer;' id='open_${value.RqDocNo}' value='0' onclick='open_receive_sub("${value.RqDocNo}")'></i>
-                      
-                      </td>
-                      <td class="f24 text-left">${value.RqDocNo}</td>
-                      <td class="f24 text-left"></td>
-                      <td class="f24 text-left"></td>
-                   </tr>`;
-          $.each(ObjData[value.RqDocNo], function (kay2, value2) {
-            if (value2.StatusDocNo == "2") {
-              var txt = "Complete";
-              var bg_g = "style='background-color: lightgreen;'";
-            } else {
-              var txt = "Waiting";
-              var bg_g = "";
-            }
+        $.each(ObjData["rq"], function (k, value) {
+          // เก็บ sub ของแต่ละ RQ ไว้ใน rqDetails
+          rqDetails[value.RqDocNo] = ObjData[value.RqDocNo] || [];
 
-         if (value2.type_cre == 1) {
-              var txt2 = "main";
-            } else {
-              var txt2 = "sub";
-            }
-            
-            _tr += `<tr class='tr_${value.RqDocNo} all111' ${bg_g}>
-                       <td class="f24 text-center">
-
-                               <input 
-                                style="width: 20px;height: 20px;"
-                                class="form-check-input position-static clear_checkbox"
-                                type="checkbox"
-                                id="checkbox_${value2.RtDocNo}"
-                                data-docnort="${value2.RtDocNo}"
-                                data-docnorq="${value.RqDocNo}"
-                                data-status="${value2.StatusDocNo}"  >
-                       
-                       
-                       
-                       </td>
-                       <td class="f24 text-center">${value2.RtDocNo}(${txt2})</td>
-                       <td class="f24 text-left">${txt}</td>
-                       <td class="f24 text-center">${value2.cnt}</td>
-                    </tr>`;
-          });
+          // สร้างแถวหัวอย่างเดียว
+          _tr += `
+            <tr id="trbg_${value.RqDocNo}" data-rqdocno="${value.RqDocNo}">
+              <td class="f24 text-left">
+                <i class="fa-solid fa-chevron-down btn-toggle-rq"
+                   style="font-size:20px;cursor:pointer;"
+                   id="open_${value.RqDocNo}"></i>
+              </td>
+              <td class="f24 text-left">${value.RqDocNo}</td>
+              <td class="f24 text-left"></td>
+              <td class="f24 text-left"></td>
+            </tr>`;
         });
       }
 
       $("#table_rq2 tbody").html(_tr);
-      $(".all111").hide();
 
-      $(".clear_checkbox").on("click", function () {
-        const el = $(this);
-        oncheck_show_byDocNo(
-          el.data("docnort"),
-          el.data("docnorq"),
-          el.data("status")
-        );
-      });
+      // สร้าง DataTable ใหม่ (เลขหน้าใช้เฉพาะหัว RQ)
+      initDT_rq2();
     },
   });
+}
+
+function buildChildTable(list, rqDocNo) {
+  if (!list || list.length === 0) {
+    return '<div style="padding:5px 20px;">ไม่มีรายการย่อย</div>';
+  }
+
+  var html = '<table class="table table-sm mb-0" style="background:#f8f9fa;">';
+  $.each(list, function (i, value2) {
+    let txt, bg_g;
+    if (value2.StatusDocNo == "2") {
+      txt  = "Complete";
+      bg_g = "background-color: lightgreen;";
+    } else {
+      txt  = "Waiting";
+      bg_g = "";
+    }
+
+    let txt2 = (value2.type_cre == 1) ? "main" : "sub";
+
+    html += `
+      <tr style="${bg_g}">
+        <td class="f24 text-center" style="width:40px;">
+          <input 
+            style="width: 20px;height: 20px;"
+            class="form-check-input position-static clear_checkbox"
+            type="checkbox"
+            id="checkbox_${value2.RtDocNo}"
+            data-docnort="${value2.RtDocNo}"
+            data-docnorq="${rqDocNo}"
+            data-status="${value2.StatusDocNo}">
+        </td>
+        <td class="f24 text-center" style="width:300px;">${value2.RtDocNo} (${txt2})</td>
+        <td class="f24 text-left">${txt}</td>
+        <td class="f24 text-center" style="width:80px;">${value2.cnt}</td>
+      </tr>`;
+  });
+  html += "</table>";
+  return html;
 }
 
 function oncheck_show_byDocNo(docnort, docnorq, status) {
@@ -665,7 +814,7 @@ function oncheck_show_byDocNo(docnort, docnorq, status) {
   $("#btn_confirm_RQ").data("docnort", docnort);
   $("#btn_confirm_RQ").data("docnorq", docnorq);
 
-  $("#checkAll").prop('checked',false);
+  $("#checkAll").prop('checked', false);
   show_detail_item_ByDocNo(docnort, docnorq);
 }
 

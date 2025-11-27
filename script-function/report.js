@@ -247,7 +247,7 @@ $(function () {
         $("#btn_png").attr("hidden", true);
 
 
-        if ($(this).val() == 10) {
+        if ($(this).val() == 10 || $(this).val() == 14) {
           $("#btn_excel").attr("hidden", true);
           $("#btn_png").attr("hidden", true);
           $("#row_typedate").hide();
@@ -579,6 +579,20 @@ $(function () {
 
           window.open(
             "report/Report_Utilization_medical_devices_of_use_rate.php" +
+            option,
+            "_blank"
+          );
+        } else if ($("#select_report").val() == 14) {
+          var option =
+            "?date1=" +
+            $("#select_date1_10").val() +
+            "&date2=" +
+            $("#select_date2_10").val()+
+            "&Userid=" +
+            Userid;
+
+          window.open(
+            "report/Report_Use_hn.php" +
             option,
             "_blank"
           );
