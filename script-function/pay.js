@@ -1321,10 +1321,12 @@ function show_detail_deproom_pay() {
 
             if (value2.cnt_return == 0) {
               var txt22 = 'ยังไม่ได้คืน';
+              var txt_btn = 'btn-danger';
             }else{
               var txt22 = 'คืนแล้ว';
+              var txt_btn = 'btn-success';
             }
-            var btn_2 = `<span class="badge btn-primary" style="cursor:pointer;  width: 120px; color: white; padding: 0.5em 0.75em; font-size: 14px;" >${txt22}</span>`;
+            var btn_2 = `<span class="badge ${txt_btn}" style="cursor:pointer;  width: 120px; color: white; padding: 0.5em 0.75em; font-size: 14px;" >${txt22}</span>`;
 
 
             console.log();
