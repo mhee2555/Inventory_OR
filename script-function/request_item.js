@@ -64,9 +64,9 @@ $(function () {
 
   // toggle เปิด/ปิด sub
   $("#table_rq2 tbody").on("click", ".btn-toggle-rq", function () {
-    const tr  = $(this).closest("tr");
+    const tr = $(this).closest("tr");
     const row = tb_rq2.row(tr);
-    const rq  = tr.data("rqdocno");
+    const rq = tr.data("rqdocno");
 
     if (row.child.isShown()) {
       // หุบ
@@ -96,12 +96,12 @@ $(function () {
 
 
 
-if (localStorage.request_item == 1) {
-  $("#radio_receive").click();
-  localStorage.removeItem("request_item");
-} else {
-  $("#select_typeItem_request").select2();
-}
+  if (localStorage.request_item == 1) {
+    $("#radio_receive").click();
+    localStorage.removeItem("request_item");
+  } else {
+    $("#select_typeItem_request").select2();
+  }
 });
 
 
@@ -181,6 +181,26 @@ $("#btn_confirm_send_request").click(function () {
     }
   });
 });
+
+
+$("#btn_receive_all").click(function () {
+  Swal.fire({
+    title: "ยืนยัน",
+    text: "ยืนยัน! การรับเข้าทั้งหมด ?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "ยืนยัน",
+    cancelButtonText: "ยกเลิก",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      onconfirm_receive_all();
+    }
+  });
+});
+
+
 
 function onconfirm_send_request() {
   $.ajax({
@@ -653,9 +673,9 @@ function showdetail(RqDocNo, RtDocNo, check_show) {
 //         $.each(ObjData["rq"], function (kay, value) {
 //           _tr += `<tr id='trbg_${value.RqDocNo}'>
 //                       <td class="f24 text-left">
-                      
+
 //                       <i class="fa-solid fa-chevron-up" style='font-size:20px;cursor:pointer;' id='open_${value.RqDocNo}' value='0' onclick='open_receive_sub("${value.RqDocNo}")'></i>
-                      
+
 //                       </td>
 //                       <td class="f24 text-left">${value.RqDocNo}</td>
 //                       <td class="f24 text-left"></td>
@@ -687,9 +707,9 @@ function showdetail(RqDocNo, RtDocNo, check_show) {
 //                                 data-docnort="${value2.RtDocNo}"
 //                                 data-docnorq="${value.RqDocNo}"
 //                                 data-status="${value2.StatusDocNo}"  >
-                       
-                       
-                       
+
+
+
 //                        </td>
 //                        <td class="f24 text-center">${value2.RtDocNo}(${txt2})</td>
 //                        <td class="f24 text-left">${txt}</td>
@@ -772,10 +792,10 @@ function buildChildTable(list, rqDocNo) {
   $.each(list, function (i, value2) {
     let txt, bg_g;
     if (value2.StatusDocNo == "2") {
-      txt  = "Complete";
+      txt = "Complete";
       bg_g = "background-color: lightgreen;";
     } else {
-      txt  = "Waiting";
+      txt = "Waiting";
       bg_g = "";
     }
 
@@ -896,6 +916,27 @@ $("#btn_confirm_RQ").click(function () {
     }
   });
 });
+
+
+
+
+function onconfirm_receive_all() {
+
+  $.ajax({
+    url: "process/request_item.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "onconfirm_receive_all",
+      select_date1_rq: $("#select_date1_rq").val(),
+      select_date2_rq: $("#select_date2_rq").val(),
+    },
+    success: function (result) {
+      $("#table_detail_rq tbody").html("");
+      show_detail_receive();
+      showDialogSuccess("บันทึกสำเร็จ");
+    },
+  });
+}
 
 function onconfirm_RQ() {
   var checkbox = Array();

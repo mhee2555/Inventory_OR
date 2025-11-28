@@ -6,34 +6,37 @@ require '../process/Createreturn.php';
 
 if (!empty($_POST['FUNC_NAME'])) {
     if ($_POST['FUNC_NAME'] == 'show_detail_item_request') {
-        show_detail_item_request($conn,$db);
-    }else if ($_POST['FUNC_NAME'] == 'onconfirm_request') {
-        onconfirm_request($conn,$db);
-    }else if ($_POST['FUNC_NAME'] == 'show_detail_request_byDocNo') {
-        show_detail_request_byDocNo($conn,$db);
-    }else if ($_POST['FUNC_NAME'] == 'onconfirm_send_request') {
-        onconfirm_send_request($conn,$db);
-    }else if ($_POST['FUNC_NAME'] == 'show_detail_receive') {
-        show_detail_receive($conn,$db);
-    }else if ($_POST['FUNC_NAME'] == 'show_detail_item_ByDocNo') {
-        show_detail_item_ByDocNo($conn,$db);
-    }else if ($_POST['FUNC_NAME'] == 'onconfirm_RQ') {
-        onconfirm_RQ($conn,$db);
-    }else if ($_POST['FUNC_NAME'] == 'show_detail_history') {
-        show_detail_history($conn,$db);
-    }else if ($_POST['FUNC_NAME'] == 'showdetail') {
-        showdetail($conn,$db);
+        show_detail_item_request($conn, $db);
+    } else if ($_POST['FUNC_NAME'] == 'onconfirm_request') {
+        onconfirm_request($conn, $db);
+    } else if ($_POST['FUNC_NAME'] == 'show_detail_request_byDocNo') {
+        show_detail_request_byDocNo($conn, $db);
+    } else if ($_POST['FUNC_NAME'] == 'onconfirm_send_request') {
+        onconfirm_send_request($conn, $db);
+    } else if ($_POST['FUNC_NAME'] == 'show_detail_receive') {
+        show_detail_receive($conn, $db);
+    } else if ($_POST['FUNC_NAME'] == 'show_detail_item_ByDocNo') {
+        show_detail_item_ByDocNo($conn, $db);
+    } else if ($_POST['FUNC_NAME'] == 'onconfirm_RQ') {
+        onconfirm_RQ($conn, $db);
+    } else if ($_POST['FUNC_NAME'] == 'show_detail_history') {
+        show_detail_history($conn, $db);
+    } else if ($_POST['FUNC_NAME'] == 'showdetail') {
+        showdetail($conn, $db);
+    } else if ($_POST['FUNC_NAME'] == 'onconfirm_receive_all') {
+        onconfirm_receive_all($conn, $db);
     }
 }
 
-function showdetail($conn,$db){
+function showdetail($conn, $db)
+{
     $return = array();
     $docnort = $_POST['RtDocNo'];
     $docnorq = $_POST['RqDocNo'];
     $check_show = $_POST['check_show'];
 
-    if($check_show == 0){
-    $Q1 = " SELECT
+    if ($check_show == 0) {
+        $Q1 = " SELECT
                 item.itemcode2 AS itemcode,
                 item.itemname,
                 insertrfid_detail.QrCode
@@ -44,8 +47,8 @@ function showdetail($conn,$db){
             WHERE
                     insertrfid.RqDocNo = '$docnorq' 
                 AND insertrfid.RtDocNo = '$docnort' ";
-    }else{
-            $Q1 = " SELECT
+    } else {
+        $Q1 = " SELECT
                 item.itemcode2 AS itemcode,
                 item.itemname,
                 COUNT(insertrfid_detail.QrCode) AS QrCode
@@ -69,10 +72,10 @@ function showdetail($conn,$db){
     echo json_encode($return);
     unset($conn);
     die;
-
 }
 
-function show_detail_history($conn,$db){
+function show_detail_history($conn, $db)
+{
     $return = array();
     $select_date1_search = $_POST['select_date1_search'];
     $select_date2_search = $_POST['select_date2_search'];
@@ -106,10 +109,52 @@ function show_detail_history($conn,$db){
     echo json_encode($return);
     unset($conn);
     die;
-
 }
 
-function onconfirm_RQ($conn,$db){
+
+function onconfirm_receive_all($conn, $db)
+{
+    $return = array();
+    $select_date1_rq = $_POST['select_date1_rq'];
+    $select_date2_rq = $_POST['select_date2_rq'];
+    $Userid = $_SESSION['Userid'];
+
+    $select_date1_rq = explode("-", $select_date1_rq);
+    $select_date1_rq = $select_date1_rq[2] . '-' . $select_date1_rq[1] . '-' . $select_date1_rq[0];
+
+    $select_date2_rq = explode("-", $select_date2_rq);
+    $select_date2_rq = $select_date2_rq[2] . '-' . $select_date2_rq[1] . '-' . $select_date2_rq[0];
+
+
+    $Q2 = " SELECT
+                    insertrfid_detail.QrCode,
+	                itemstock.Stockin 
+                FROM
+                    insertrfid
+                    INNER JOIN insertrfid_detail ON insertrfid.DocNo = insertrfid_detail.DocNo 
+                    INNER JOIN itemstock ON insertrfid_detail.QrCode = itemstock.UsageCode 
+                WHERE
+                     DATE(insertrfid.Createdate) BETWEEN  '$select_date1_rq' AND '$select_date2_rq' ";
+
+        $meQ1 = $conn->prepare($Q2);
+        $meQ1->execute();
+        while ($rowQ1 = $meQ1->fetch(PDO::FETCH_ASSOC)) {
+            $_QrCode = $rowQ1['QrCode'];
+            $_Stockin = $rowQ1['Stockin'];
+
+            $Qitemstock = "UPDATE itemstock SET Stockin = 1 WHERE UsageCode = '$_QrCode' ";
+            $meQitem = $conn->prepare($Qitemstock);
+            $meQitem->execute();
+            
+        }
+
+        $Q1 = " UPDATE insertrfid SET insertrfid.StatusDocNo = 2 , insertrfid.userID = $Userid WHERE DATE(insertrfid.Createdate) BETWEEN  '$select_date1_rq' AND '$select_date2_rq'   ";
+        $meQ1 = $conn->prepare($Q1);
+        $meQ1->execute();
+}
+
+function onconfirm_RQ($conn, $db)
+{
     $return = array();
     $docnort = $_POST['docnort'];
     $docnorq = $_POST['docnorq'];
@@ -124,10 +169,10 @@ function onconfirm_RQ($conn,$db){
         $Qitemstock = "UPDATE itemstock SET Stockin = 1 WHERE UsageCode = '$value' ";
         $meQitem = $conn->prepare($Qitemstock);
         $meQitem->execute();
-       $count_check++;
+        $count_check++;
     }
 
-    if($count_check == $count_all){
+    if ($count_check == $count_all) {
         $Q1 = " UPDATE insertrfid SET insertrfid.StatusDocNo = 2 , insertrfid.userID = $Userid WHERE insertrfid.RqDocNo = '$docnorq'   AND insertrfid.RtDocNo = '$docnort'   ";
         $meQ1 = $conn->prepare($Q1);
         $meQ1->execute();
@@ -140,7 +185,8 @@ function onconfirm_RQ($conn,$db){
     die;
 }
 
-function show_detail_item_ByDocNo($conn,$db){
+function show_detail_item_ByDocNo($conn, $db)
+{
     $return = array();
     $docnort = $_POST['docnort'];
     $docnorq = $_POST['docnorq'];
@@ -179,23 +225,22 @@ function show_detail_item_ByDocNo($conn,$db){
                     AND insertrfid.RtDocNo = '$docnort' 
                     AND insertrfid_detail.ItemCode = '$_itemcode' ";
 
-         
+
 
         $meQ2 = $conn->prepare($Q2);
         $meQ2->execute();
         while ($rowQ2 = $meQ2->fetch(PDO::FETCH_ASSOC)) {
             $return[$_itemcode][] = $rowQ2;
         }
-                    
     }
 
     echo json_encode($return);
     unset($conn);
     die;
-
 }
 
-function show_detail_receive($conn,$db){
+function show_detail_receive($conn, $db)
+{
     $return = array();
     $select_date1_rq = $_POST['select_date1_rq'];
     $select_date2_rq = $_POST['select_date2_rq'];
@@ -242,16 +287,15 @@ function show_detail_receive($conn,$db){
         while ($rowQ2 = $meQ2->fetch(PDO::FETCH_ASSOC)) {
             $return[$_RqDocNo][] = $rowQ2;
         }
-                    
     }
+
 
     echo json_encode($return);
     unset($conn);
     die;
-
 }
 
-function onconfirm_send_request($conn,$db)
+function onconfirm_send_request($conn, $db)
 {
     $return = array();
     $txt_docno_request = $_POST['txt_docno_request'];
@@ -264,9 +308,8 @@ function onconfirm_send_request($conn,$db)
     echo json_encode($txt_docno_request);
     unset($conn);
     die;
-
-}  
-function show_detail_request_byDocNo($conn,$db)
+}
+function show_detail_request_byDocNo($conn, $db)
 {
     $return = array();
     $DepID = $_SESSION['DepID'];
@@ -306,7 +349,7 @@ function show_detail_request_byDocNo($conn,$db)
 }
 
 
-function show_detail_item_request($conn,$db)
+function show_detail_item_request($conn, $db)
 {
     $return = array();
     $input_Search = $_POST['input_search_request'];
@@ -314,16 +357,16 @@ function show_detail_item_request($conn,$db)
     $permission = $_SESSION['permission'];
 
     $wheretype = "";
-    if($select_typeItem != ""){
+    if ($select_typeItem != "") {
         $wheretype = " AND itemtype.ID = '$select_typeItem' ";
     }
 
     $wherepermission = "";
-    if($permission != '5'){
+    if ($permission != '5') {
         $wherepermission = " AND item.warehouseID = $permission ";
     }
 
-    $query="SELECT
+    $query = "SELECT
                 * 
             FROM
                 (
@@ -363,7 +406,7 @@ function show_detail_item_request($conn,$db)
                 END ASC,
                 remain_balance ASC ";
 
-    
+
 
 
     // echo $query;
@@ -372,7 +415,7 @@ function show_detail_item_request($conn,$db)
     $meQuery = $conn->prepare($query);
     $meQuery->execute();
     while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
-         $row['cnt'] = $row['remain_balance'];
+        $row['cnt'] = $row['remain_balance'];
         $return[] = $row;
     }
     echo json_encode($return);
@@ -380,7 +423,7 @@ function show_detail_item_request($conn,$db)
     die;
 }
 
-function onconfirm_request($conn,$db)
+function onconfirm_request($conn, $db)
 {
     $return = array();
     $txt_docno_request = $_POST['txt_docno_request'];
@@ -393,11 +436,11 @@ function onconfirm_request($conn,$db)
     $deproom = $_SESSION['deproom'];
 
 
-    
+
 
     $count = 0;
     if ($txt_docno_request == "") {
-        $txt_docno_request = createDocNo($conn, $Userid ,$db,0);
+        $txt_docno_request = createDocNo($conn, $Userid, $db, 0);
     }
 
     foreach ($array_itemcode as $key => $value) {
@@ -420,7 +463,7 @@ function onconfirm_request($conn,$db)
         if ($_cntcheck > 0) {
 
 
-                $queryUpdate = "UPDATE request_detail 
+            $queryUpdate = "UPDATE request_detail 
                 SET Qty = Qty +  $array_qty[$key]
                 WHERE
                     DocNo = '$txt_docno_request' 
@@ -430,11 +473,11 @@ function onconfirm_request($conn,$db)
             $meQueryUpdate->execute();
         } else {
 
-            if($db == 1){
+            if ($db == 1) {
                 $queryInsert = "INSERT INTO request_detail ( DocNo, itemCode, qty , createAt )
                 VALUES
                     ( '$txt_docno_request', '$value', '$array_qty[$key]' , NOW()  )";
-            }else{
+            } else {
                 $queryInsert = "INSERT INTO request_detail ( DocNo, itemCode, qty )
                 VALUES
                     ( '$txt_docno_request', '$value', '$array_qty[$key]' , GETDATE() )";
