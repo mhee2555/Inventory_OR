@@ -25,6 +25,42 @@
 <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/css/dropify.css" integrity="sha512-In/+MILhf6UMDJU4ZhDL0R0fEpsp4D3Le23m6+ujDWXwl3whwpucJG1PEmI3B07nyJx+875ccs+yX2CqQJUxUw==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
 
 <style>
+    #bag_list{
+       line-height: 45px;
+       color: black;
+    }
+    .bag-item {
+        display: flex;
+        align-items: center;
+        padding: 8px 12px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .bag-item:nth-child(1) {
+        /* background: #f7edff; */
+        /* แถวที่เลือก/แถวแรก ไล่สีอ่อน ๆ ตามรูป */
+    }
+
+    .bag-name {
+        flex: 0 0 35%;
+    }
+
+    .bag-code {
+        flex: 0 0 35%;
+    }
+
+    .bag-qty {
+        flex: 0 0 10%;
+        text-align: center;
+    }
+
+    .bag-action {
+        flex: 0 0 20%;
+        text-align: right;
+    }
+
+
+
     /* ให้ Sidebar สูงเต็ม body */
     #accordionSidebar {
         height: 100%;

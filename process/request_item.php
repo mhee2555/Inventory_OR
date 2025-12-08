@@ -253,7 +253,11 @@ function show_detail_receive($conn, $db)
 
     $Q1 = " SELECT
                 insertrfid.RqDocNo ,
-                insertrfid.StatusDocNo 
+                insertrfid.StatusDocNo,
+                SUM(CASE 
+                    WHEN insertrfid.StatusDocNo = 2 THEN 1 
+                    ELSE 0 
+                END) AS StatusDocNo
             FROM
                 insertrfid 
             WHERE

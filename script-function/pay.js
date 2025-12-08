@@ -299,6 +299,7 @@ $(function () {
 
     $("#checkbox_manual_ems").prop('checked', false);
     $("#checkbox_tf").prop('checked', false);
+    $("#checkbox_tf").prop('disabled', false);
 
     $("#input_Hn_pay_manual").val("");
     $("#input_box_pay_manual").val("");

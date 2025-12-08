@@ -757,8 +757,20 @@ function show_detail_receive() {
 
       if (!$.isEmptyObject(ObjData)) {
         $.each(ObjData["rq"], function (k, value) {
+
           // เก็บ sub ของแต่ละ RQ ไว้ใน rqDetails
           rqDetails[value.RqDocNo] = ObjData[value.RqDocNo] || [];
+
+
+
+          if (value.StatusDocNo == 0) {
+            var txt1 = "รอ";
+            var bg_g1 = "background-color: lightgreen;";
+          } else {
+            var txt1 = "เสร็จสิ้น";
+            var bg_g1 = "";
+          }
+
 
           // สร้างแถวหัวอย่างเดียว
           _tr += `
@@ -769,7 +781,7 @@ function show_detail_receive() {
                    id="open_${value.RqDocNo}"></i>
               </td>
               <td class="f24 text-left">${value.RqDocNo}</td>
-              <td class="f24 text-left"></td>
+              <td class="f24 text-center">${txt1}</td>
               <td class="f24 text-left"></td>
             </tr>`;
         });
@@ -792,10 +804,10 @@ function buildChildTable(list, rqDocNo) {
   $.each(list, function (i, value2) {
     let txt, bg_g;
     if (value2.StatusDocNo == "2") {
-      txt = "Complete";
+      txt = "เสร็จสิ้น";
       bg_g = "background-color: lightgreen;";
     } else {
-      txt = "Waiting";
+      txt = "รอ";
       bg_g = "";
     }
 
@@ -803,7 +815,7 @@ function buildChildTable(list, rqDocNo) {
 
     html += `
       <tr style="${bg_g}">
-        <td class="f24 text-center" style="width:40px;">
+        <td class="f24 text-center" style="width:5%;">
           <input 
             style="width: 20px;height: 20px;"
             class="form-check-input position-static clear_checkbox"
@@ -813,9 +825,9 @@ function buildChildTable(list, rqDocNo) {
             data-docnorq="${rqDocNo}"
             data-status="${value2.StatusDocNo}">
         </td>
-        <td class="f24 text-center" style="width:300px;">${value2.RtDocNo} (${txt2})</td>
-        <td class="f24 text-left">${txt}</td>
-        <td class="f24 text-center" style="width:80px;">${value2.cnt}</td>
+        <td class="f24 text-center" style="width:50%;">${value2.RtDocNo} (${txt2})</td>
+        <td class="f24 text-center" style="width:10%;">${txt}</td>
+        <td class="f24 text-center" style="width:10%;">${value2.cnt}</td>
       </tr>`;
   });
   html += "</table>";

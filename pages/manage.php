@@ -869,7 +869,19 @@
 </div>
 
 <div id="row_item">
-    <div class="row">
+
+    <div class="row mb-3 mt-4">
+        <div class="col-md-6" style="z-index: 10;">
+
+            <div class="tab-button-group">
+                <button class="tab-button3 active" id="radio_mapping_item">อุปกรณ์ที่ถูกจับคู่</button>
+                <button class="tab-button3" id="radio_mapping_bag">อุปกรณ์ที่บรรจุในถุง</button>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row" id="row_mapping_item">
 
         <div class="col-md-4">
             <div class="card">
@@ -942,6 +954,80 @@
             </table>
         </div>
 
+    </div>
+
+    <div class="row" id="row_bag">
+
+        <div class="col-md-4">
+
+            <div class="row">
+
+                <div class="col-md-12">
+                    <div class="form-group ">
+                        <label style="color:black;font-weight: 600;">ค้นหา</label>
+                        <input type="text" class="form-control f18" placeholder="ค้นหา" id="input_search_bag">
+                    </div>
+                </div>
+
+            </div>
+
+
+
+            <div class="card">
+                <div class="card-header f18" style="color:black;">พ่วงอุปกรณ์</div>
+                <div class="card-body">
+
+                            <div id="bag_list" class="f16"></div>
+                </div>
+            </div>
+
+
+        </div>
+
+        <div class="col-md-8">
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group ">
+                        <label style="color:black;font-weight: 600;">สแกนนำเข้า</label>
+                        <input type="text" class="form-control f18" id="input_scan_in_bag">
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group ">
+                        <label style="color:black;font-weight: 600;">สแกนนำออก</label>
+                        <input type="text" class="form-control f18" id="input_scan_out_bag">
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="card">
+                <div class="card-header f18" style="color:black;">รหัสอุปกรณ์ในถุงซิบ</div>
+                <div class="card-body">
+
+                    <table class="table table-hover " id="table_detail_bag">
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col" id="td_number" style="width: 40%;" class="text-center" class="text-center">รายการ</th>
+                                <th scope="col" style="" class="text-center">จำนวน</th>
+                                <th scope="col" style="" class="text-center">ต้องเติม</th>
+                                <th scope="col" style="" class="text-center">#</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+
+
+                </div>
+            </div>
+
+
+
+
+        </div>
     </div>
 </div>
 

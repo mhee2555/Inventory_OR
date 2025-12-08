@@ -188,8 +188,8 @@ function selection_follow_item_detail($conn, $db)
         //         ON d.snapshot_date = c.day
         //     ORDER BY c.day, d.itemcode;";
 
-            // echo $sub;
-            // exit;
+        // echo $sub;
+        // exit;
 
         // $sub = "WITH RECURSIVE calendar AS (-- วันแรกของเดือนที่ต้องการ
         //             SELECT
@@ -309,9 +309,23 @@ function show_restock($conn, $db)
 
         $count_itemstock = 0;
 
-        $query = "DELETE FROM itemstock_transaction_detail  WHERE ItemStockID = '$_RowID'  ";
-        $meQuery = $conn->prepare($query);
-        $meQuery->execute();
+        if ($_Isdeproom == 0) {
+            $query = "DELETE FROM itemstock_transaction_detail  WHERE ItemStockID = '$_RowID'  ";
+            $meQuery = $conn->prepare($query);
+            $meQuery->execute();
+
+
+            $queryUpdate = "UPDATE itemstock 
+            SET Isdeproom = 0 ,
+            departmentroomid = '35',
+            itemstock.Adjust_stock = 0,
+            itemstock.IsCross = NULL
+            WHERE
+            RowID = '$_RowID' ";
+            $meQueryUpdate = $conn->prepare($queryUpdate);
+            $meQueryUpdate->execute();
+        }
+
 
 
         // $query_2 = "SELECT
@@ -411,15 +425,7 @@ function show_restock($conn, $db)
 
 
 
-        $queryUpdate = "UPDATE itemstock 
-            SET Isdeproom = 0 ,
-            departmentroomid = '35',
-            itemstock.Adjust_stock = 0,
-            itemstock.IsCross = NULL
-            WHERE
-            RowID = '$_RowID' ";
-        $meQueryUpdate = $conn->prepare($queryUpdate);
-        $meQueryUpdate->execute();
+
     }
 
 

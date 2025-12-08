@@ -620,7 +620,7 @@ function deleteReturn($conn, $db)
     $update = "UPDATE itemstock SET itemstock.IsCross = 0 WHERE itemstock.ItemCode = '$itemcode' AND itemstock.IsCross = 9 ";
     $meQuery = $conn->prepare($update);
     $meQuery->execute();
-    
+
     echo json_encode($return);
     unset($conn);
     die;
@@ -2651,44 +2651,45 @@ function oncheck_pay_manual($conn, $db)
             $_itemtypeID = $row['itemtypeID'];
             $_IsSet = $row['IsSet'];
 
+            if ($_item_status == 4 || $_item_status == 5) {
 
-            if ($_check_exp == 'no_exp') {
-                if ($input_docNo_deproom_manual == "") {
-                    $remark = "สร้างจาก ขอเบิกอุปกรณ์ ";
-                    $input_docNo_deproom_manual = createDocNo($conn, $Userid, $DepID, $deproom, $input_remark_manual, 0, 0, 0, 0, '', '', $input_Hn_pay_manual, $input_box_pay_manual, $db, 1, $checkbox_manual_ems, $checkbox_tf);
-                    $input_docNo_HN_manual = createhncodeDocNo($conn, $Userid, $DepID, $input_Hn_pay_manual, $select_deproom_manual, 1, $select_procedure_manual, $select_doctor_manual, 'สร้างจากเมนูขอเบิกอุปกรณ์', $input_docNo_deproom_manual, $db, $input_date_service_manual, $input_box_pay_manual, $checkbox_tf);
+                if ($_check_exp == 'no_exp') {
+                    if ($input_docNo_deproom_manual == "") {
+                        $remark = "สร้างจาก ขอเบิกอุปกรณ์ ";
+                        $input_docNo_deproom_manual = createDocNo($conn, $Userid, $DepID, $deproom, $input_remark_manual, 0, 0, 0, 0, '', '', $input_Hn_pay_manual, $input_box_pay_manual, $db, 1, $checkbox_manual_ems, $checkbox_tf);
+                        $input_docNo_HN_manual = createhncodeDocNo($conn, $Userid, $DepID, $input_Hn_pay_manual, $select_deproom_manual, 1, $select_procedure_manual, $select_doctor_manual, 'สร้างจากเมนูขอเบิกอุปกรณ์', $input_docNo_deproom_manual, $db, $input_date_service_manual, $input_box_pay_manual, $checkbox_tf);
 
-                    $sql1 = " UPDATE deproom SET IsStatus = 1 , serviceDate = '$input_date_service_manual $input_time_service_manual'  , hn_record_id = '$input_Hn_pay_manual' , doctor = '$select_doctor_manual' , `procedure` = '$select_procedure_manual' , Ref_departmentroomid = '$select_deproom_manual' WHERE DocNo = '$input_docNo_deproom_manual' AND IsCancel = 0 ";
-                    $meQueryUpdate = $conn->prepare($sql1);
-                    $meQueryUpdate->execute();
+                        $sql1 = " UPDATE deproom SET IsStatus = 1 , serviceDate = '$input_date_service_manual $input_time_service_manual'  , hn_record_id = '$input_Hn_pay_manual' , doctor = '$select_doctor_manual' , `procedure` = '$select_procedure_manual' , Ref_departmentroomid = '$select_deproom_manual' WHERE DocNo = '$input_docNo_deproom_manual' AND IsCancel = 0 ";
+                        $meQueryUpdate = $conn->prepare($sql1);
+                        $meQueryUpdate->execute();
 
 
-                    $p = " SELECT
+                        $p = " SELECT
                                 MIN( `procedure`.`status` ) AS status 
                         FROM
                             `procedure` 
                         WHERE
                             `procedure`.ID IN ($select_procedure_manual)  ";
-                    $meQueryp = $conn->prepare($p);
-                    $meQueryp->execute();
-                    while ($rowp = $meQueryp->fetch(PDO::FETCH_ASSOC)) {
-                        $_status = $rowp['status'];
-                    }
+                        $meQueryp = $conn->prepare($p);
+                        $meQueryp->execute();
+                        while ($rowp = $meQueryp->fetch(PDO::FETCH_ASSOC)) {
+                            $_status = $rowp['status'];
+                        }
 
-                    $item = "SELECT item.ItemCode FROM item WHERE item.item_status2 = $_status  OR  item.item_status = 1 ";
-                    $meQueryp = $conn->prepare($item);
-                    $meQueryp->execute();
-                    while ($rowp = $meQueryp->fetch(PDO::FETCH_ASSOC)) {
-                        $_itemcode = $rowp['ItemCode'];
+                        $item = "SELECT item.ItemCode FROM item WHERE item.item_status2 = $_status  OR  item.item_status = 1 ";
+                        $meQueryp = $conn->prepare($item);
+                        $meQueryp->execute();
+                        while ($rowp = $meQueryp->fetch(PDO::FETCH_ASSOC)) {
+                            $_itemcode = $rowp['ItemCode'];
 
-                        $queryInsert99 = "INSERT INTO deproomdetail ( DocNo, ItemCode, Qty, IsStatus, PayDate, IsCancel, ModifyUser, ModifyTime ,IsRequest )
-                        VALUES
+                            $queryInsert99 = "INSERT INTO deproomdetail ( DocNo, ItemCode, Qty, IsStatus, PayDate, IsCancel, ModifyUser, ModifyTime ,IsRequest )
+                            VALUES
                             ( '$input_docNo_deproom_manual', '$_itemcode', 1, 3,NOW(), 0, '$Userid',NOW() , 1)";
 
-                        $meQueryInsert99 = $conn->prepare($queryInsert99);
-                        $meQueryInsert99->execute();
+                            $meQueryInsert99 = $conn->prepare($queryInsert99);
+                            $meQueryInsert99->execute();
 
-                        $query_299 = "SELECT
+                            $query_299 = "SELECT
                                 deproomdetail.ID,
                                 deproom.Ref_departmentroomid AS departmentroomid,
                                 deproom.`procedure`,
@@ -2715,17 +2716,17 @@ function oncheck_pay_manual($conn, $db)
                                 deproomdetail.ItemCode ,
                                 deproomdetail.Qty,
                                 deproomdetail.PayDate ";
-                        $meQuery_299 = $conn->prepare($query_299);
-                        $meQuery_299->execute();
-                        while ($row_299 = $meQuery_299->fetch(PDO::FETCH_ASSOC)) {
-                            $_ID = $row_299['ID'];
-                            $_departmentroomid = $row_299['departmentroomid'];
-                            $_procedure = $row_299['procedure'];
-                            $_hn_record_id = $row_299['hn_record_id'];
-                            $_doctor = $row_299['doctor'];
+                            $meQuery_299 = $conn->prepare($query_299);
+                            $meQuery_299->execute();
+                            while ($row_299 = $meQuery_299->fetch(PDO::FETCH_ASSOC)) {
+                                $_ID = $row_299['ID'];
+                                $_departmentroomid = $row_299['departmentroomid'];
+                                $_procedure = $row_299['procedure'];
+                                $_hn_record_id = $row_299['hn_record_id'];
+                                $_doctor = $row_299['doctor'];
 
 
-                            $queryInsert199 = "INSERT INTO deproomdetailsub (
+                                $queryInsert199 = "INSERT INTO deproomdetailsub (
                             Deproomdetail_RowID,
                             dental_warehouse_id,
                             IsStatus,
@@ -2751,16 +2752,16 @@ function oncheck_pay_manual($conn, $db)
                                 1
                             ) ";
 
-                            $queryInsert199 = $conn->prepare($queryInsert199);
-                            $queryInsert199->execute();
+                                $queryInsert199 = $conn->prepare($queryInsert199);
+                                $queryInsert199->execute();
 
-                            $query99 = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty,hncode )
+                                $query99 = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty,hncode )
                                         VALUES
                                         ( '0', '$_itemcode','$input_date_service_manual','$_departmentroomid', $Userid,1,1,'$_hn_record_id') ";
-                            $meQuery99 = $conn->prepare($query99);
-                            $meQuery99->execute();
+                                $meQuery99 = $conn->prepare($query99);
+                                $meQuery99->execute();
 
-                            $queryInsert299 = "INSERT INTO hncode_detail (DocNo,UsageCode,ItemStockID,Qty,IsStatus,IsCancel,ItemCode)  VALUES             
+                                $queryInsert299 = "INSERT INTO hncode_detail (DocNo,UsageCode,ItemStockID,Qty,IsStatus,IsCancel,ItemCode)  VALUES             
                                                 (
                                                     '$input_docNo_HN_manual', 
                                                     '0',
@@ -2771,63 +2772,107 @@ function oncheck_pay_manual($conn, $db)
                                                     '$_itemcode'
                                                 ) ";
 
-                            $query_updateHN99 = "UPDATE hncode SET IsStatus = 1  WHERE DocNo = '$input_docNo_HN_manual'   ";
-                            $query_updateHN99 = $conn->prepare($query_updateHN99);
-                            $query_updateHN99->execute();
+                                $query_updateHN99 = "UPDATE hncode SET IsStatus = 1  WHERE DocNo = '$input_docNo_HN_manual'   ";
+                                $query_updateHN99 = $conn->prepare($query_updateHN99);
+                                $query_updateHN99->execute();
 
 
-                            $sqlDocNo99 = "SELECT DocNo FROM his WHERE DocNo_deproom = ? LIMIT 1";
-                            $stmtDoc99 = $conn->prepare($sqlDocNo99);
-                            $stmtDoc99->execute([$input_docNo_deproom_manual]);
-                            $row99 = $stmtDoc99->fetch(PDO::FETCH_ASSOC);
+                                $sqlDocNo99 = "SELECT DocNo FROM his WHERE DocNo_deproom = ? LIMIT 1";
+                                $stmtDoc99 = $conn->prepare($sqlDocNo99);
+                                $stmtDoc99->execute([$input_docNo_deproom_manual]);
+                                $row99 = $stmtDoc99->fetch(PDO::FETCH_ASSOC);
 
-                            if ($row99) {
-                                $docNo_hn = $row['DocNo'];
+                                if ($row99) {
+                                    $docNo_hn = $row['DocNo'];
 
-                                // 2. เช็คว่า ItemCode มีอยู่ใน his_detail แล้วหรือยัง
-                                $sqlCheck99 = "SELECT Qty FROM his_detail WHERE DocNo = ? AND ItemCode = ?";
-                                $stmtCheck99 = $conn->prepare($sqlCheck99);
-                                $stmtCheck99->execute([$docNo_hn, $_itemcode]);
-                                $resultCheck99 = $stmtCheck99->fetch(PDO::FETCH_ASSOC);
+                                    // 2. เช็คว่า ItemCode มีอยู่ใน his_detail แล้วหรือยัง
+                                    $sqlCheck99 = "SELECT Qty FROM his_detail WHERE DocNo = ? AND ItemCode = ?";
+                                    $stmtCheck99 = $conn->prepare($sqlCheck99);
+                                    $stmtCheck99->execute([$docNo_hn, $_itemcode]);
+                                    $resultCheck99 = $stmtCheck99->fetch(PDO::FETCH_ASSOC);
 
-                                if ($resultCheck99) {
-                                    // เจอแล้ว -> UPDATE Qty +1
-                                    $sqlUpdate99 = "UPDATE his_detail SET Qty = Qty + 1 WHERE DocNo = ? AND ItemCode = ?";
-                                    $stmtUpdate99 = $conn->prepare($sqlUpdate99);
-                                    $stmtUpdate99->execute([$docNo_hn, $_itemcode]);
-                                } else {
-                                    // ไม่เจอ -> INSERT
-                                    $sqlInsert99 = "INSERT INTO his_detail (DocNo, ItemCode, Qty) VALUES (?, ?, 1)";
-                                    $stmtInsert99 = $conn->prepare($sqlInsert99);
-                                    $stmtInsert99->execute([$docNo_hn, $_itemcode]);
+                                    if ($resultCheck99) {
+                                        // เจอแล้ว -> UPDATE Qty +1
+                                        $sqlUpdate99 = "UPDATE his_detail SET Qty = Qty + 1 WHERE DocNo = ? AND ItemCode = ?";
+                                        $stmtUpdate99 = $conn->prepare($sqlUpdate99);
+                                        $stmtUpdate99->execute([$docNo_hn, $_itemcode]);
+                                    } else {
+                                        // ไม่เจอ -> INSERT
+                                        $sqlInsert99 = "INSERT INTO his_detail (DocNo, ItemCode, Qty) VALUES (?, ?, 1)";
+                                        $stmtInsert99 = $conn->prepare($sqlInsert99);
+                                        $stmtInsert99->execute([$docNo_hn, $_itemcode]);
+                                    }
                                 }
+
+
+
+
+                                $queryInsert299 = $conn->prepare($queryInsert299);
+                                $queryInsert299->execute();
                             }
-
-
-
-
-                            $queryInsert299 = $conn->prepare($queryInsert299);
-                            $queryInsert299->execute();
                         }
+                        //  ======================
+
                     }
-                    //  ======================
 
-                }
-
-                $_ItemCode = $row['ItemCode'];
-                $_Isdeproom =  $row['Isdeproom'];
-                $_departmentroomid =  $row['departmentroomid'];
-                $_RowID =  $row['RowID'];
-
-                $count_itemstock++;
-
-                $count_itemstock = 0;
-                $count_new_item = 0;
+                    $_ItemCode = $row['ItemCode'];
+                    $_Isdeproom =  $row['Isdeproom'];
+                    $_departmentroomid =  $row['departmentroomid'];
+                    $_RowID =  $row['RowID'];
 
 
-                if ($_Isdeproom == 0) {
 
-                    $query_2 = "SELECT
+
+
+                    $query_99 = " SELECT 
+                                s.ItemCode,
+                                s.Isdeproom,
+                                s.RowID,
+                                bd.UsageCode_bag,
+                                bd.UsageCode,-- ตัวนี้คือของแต่ละชิ้นในถุง
+                                s.departmentroomid,
+                                item.item_status,
+                                item.itemtypeID2 AS itemtypeID,
+                                item.IsSet,
+                            CASE
+                                    
+                                    WHEN DATE( s.ExpireDate ) <= DATE(
+                                        NOW()) THEN
+                                        'exp' ELSE 'no_exp' 
+                                    END AS check_exp 
+                                FROM
+                                    bag_detail bd
+                                    INNER JOIN itemstock s ON s.UsageCode = bd.UsageCode 
+                                    INNER JOIN item  ON s.ItemCode = item.itemcode 
+                                WHERE
+                                    bd.UsageCode_bag = '$input_pay_manual' 
+                                
+                                AND s.IsCancel = 0  ";
+                    $meQuery_99 = $conn->prepare($query_99);
+                    $meQuery_99->execute();
+                    while ($row_99 = $meQuery_99->fetch(PDO::FETCH_ASSOC)) {
+
+                        $_check_exp = $row_99['check_exp'];
+                        $_item_status = $row_99['item_status'];
+                        $_itemtypeID = $row_99['itemtypeID'];
+                        $_IsSet = $row_99['IsSet'];
+
+                        $_ItemCode = $row_99['ItemCode'];
+                        $_Isdeproom =  $row_99['Isdeproom'];
+                        $_departmentroomid =  $row_99['departmentroomid'];
+                        $_RowID =  $row_99['RowID'];
+
+
+
+                        $count_itemstock++;
+
+                        $count_itemstock = 0;
+                        $count_new_item = 0;
+
+
+                        if ($_Isdeproom == 0) {
+
+                            $query_2 = "SELECT
                                         deproomdetail.ID,
                                         deproom.Ref_departmentroomid AS departmentroomid,
                                         deproom.`procedure`,
@@ -2856,26 +2901,26 @@ function oncheck_pay_manual($conn, $db)
                                         deproomdetail.PayDate ";
 
 
-                    $meQuery_2 = $conn->prepare($query_2);
-                    $meQuery_2->execute();
-                    while ($row_2 = $meQuery_2->fetch(PDO::FETCH_ASSOC)) {
+                            $meQuery_2 = $conn->prepare($query_2);
+                            $meQuery_2->execute();
+                            while ($row_2 = $meQuery_2->fetch(PDO::FETCH_ASSOC)) {
 
-                        $return[] = $row_2;
+                                $return[] = $row_2;
 
-                        $_ID = $row_2['ID'];
-                        $_PayDate = $row_2['PayDate'];
-                        $_departmentroomid = $row_2['departmentroomid'];
-                        $_procedure = $row_2['procedure'];
-                        $_hn_record_id = $row_2['hn_record_id'];
-                        $_doctor = $row_2['doctor'];
-                        $_Qty_detail = $row_2['Qty'];
-                        $_Qty_detail_sub = $row_2['cnt_sub'];
-                        $_ModifyDate = $row_2['ModifyDate'];
+                                $_ID = $row_2['ID'];
+                                $_PayDate = $row_2['PayDate'];
+                                $_departmentroomid = $row_2['departmentroomid'];
+                                $_procedure = $row_2['procedure'];
+                                $_hn_record_id = $row_2['hn_record_id'];
+                                $_doctor = $row_2['doctor'];
+                                $_Qty_detail = $row_2['Qty'];
+                                $_Qty_detail_sub = $row_2['cnt_sub'];
+                                $_ModifyDate = $row_2['ModifyDate'];
 
 
-                        // ==============================
+                                // ==============================
 
-                        $queryInsert1 = "INSERT INTO deproomdetailsub (
+                                $queryInsert1 = "INSERT INTO deproomdetailsub (
                                                 Deproomdetail_RowID,
                                                 ItemStockID,
                                                 dental_warehouse_id,
@@ -2902,29 +2947,29 @@ function oncheck_pay_manual($conn, $db)
                                             ) ";
 
 
-                        $queryInsert1 = $conn->prepare($queryInsert1);
-                        $queryInsert1->execute();
+                                $queryInsert1 = $conn->prepare($queryInsert1);
+                                $queryInsert1->execute();
 
-                        // =======================================================================================================================================
-                        $query = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty ,hncode )
+                                // =======================================================================================================================================
+                                $query = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty ,hncode )
                                     VALUES
                                     ( $_RowID, '$_ItemCode','$input_date_service_manual','$_departmentroomid', $Userid,1,1 ,'$_hn_record_id') ";
-                        $meQuery = $conn->prepare($query);
-                        $meQuery->execute();
-                        // =======================================================================================================================================
+                                $meQuery = $conn->prepare($query);
+                                $meQuery->execute();
+                                // =======================================================================================================================================
 
 
-                        // ==============================
-                        $queryUpdate = "UPDATE itemstock 
+                                // ==============================
+                                $queryUpdate = "UPDATE itemstock 
                                                 SET Isdeproom = 1 ,
                                                 Stockin = 1,
                                                 departmentroomid = '$_departmentroomid'
                                                 WHERE
                                                 RowID = '$_RowID' ";
-                        $meQueryUpdate = $conn->prepare($queryUpdate);
-                        $meQueryUpdate->execute();
-                        // ==============================
-                        $queryInsert2 = "INSERT INTO hncode_detail (DocNo,UsageCode,ItemStockID,Qty,IsStatus,IsCancel,LastSterileDetailID)  VALUES             
+                                $meQueryUpdate = $conn->prepare($queryUpdate);
+                                $meQueryUpdate->execute();
+                                // ==============================
+                                $queryInsert2 = "INSERT INTO hncode_detail (DocNo,UsageCode,ItemStockID,Qty,IsStatus,IsCancel,LastSterileDetailID)  VALUES             
                                                         (
                                                         '$input_docNo_HN_manual', 
                                                         '$input_pay_manual',
@@ -2937,31 +2982,31 @@ function oncheck_pay_manual($conn, $db)
 
 
 
-                        $query_updateHN = "UPDATE hncode SET IsStatus = 1  WHERE DocNo = '$input_docNo_HN_manual'  ";
-                        $query_updateHN = $conn->prepare($query_updateHN);
-                        $query_updateHN->execute();
+                                $query_updateHN = "UPDATE hncode SET IsStatus = 1  WHERE DocNo = '$input_docNo_HN_manual'  ";
+                                $query_updateHN = $conn->prepare($query_updateHN);
+                                $query_updateHN->execute();
 
 
-                        // echo $queryInsert2;
-                        // exit;
-                        $queryInsert2 = $conn->prepare($queryInsert2);
-                        $queryInsert2->execute();
-                        $count_itemstock++;
+                                // echo $queryInsert2;
+                                // exit;
+                                $queryInsert2 = $conn->prepare($queryInsert2);
+                                $queryInsert2->execute();
+                                $count_itemstock++;
 
-                        $count_new_item++;
-
-
-
-                        if ($_item_status == 2 || $_item_status == 3) {
-                            oncheck_pay_mapping($conn, $db, $_ItemCode, $input_docNo_deproom_manual, $input_date_service_manual, $_item_status, 1, $_itemtypeID, $_IsSet);
-                            // $count_itemstock = 2;
-                        }
-                    }
+                                $count_new_item++;
 
 
-                    if ($count_new_item  == 0) {
 
-                        $queryInsert = "INSERT INTO deproomdetail ( DocNo, ItemCode, Qty, IsStatus, PayDate, IsCancel, ModifyUser, ModifyTime ,Ismanual)
+                                if ($_item_status == 2 || $_item_status == 3) {
+                                    oncheck_pay_mapping($conn, $db, $_ItemCode, $input_docNo_deproom_manual, $input_date_service_manual, $_item_status, 1, $_itemtypeID, $_IsSet);
+                                    // $count_itemstock = 2;
+                                }
+                            }
+
+
+                            if ($count_new_item  == 0) {
+
+                                $queryInsert = "INSERT INTO deproomdetail ( DocNo, ItemCode, Qty, IsStatus, PayDate, IsCancel, ModifyUser, ModifyTime ,Ismanual)
                                             VALUES
                                                 ( '$input_docNo_deproom_manual', '$_ItemCode', '1', 0,NOW(), 0, '$Userid',NOW() ,1)";
 
@@ -2969,11 +3014,11 @@ function oncheck_pay_manual($conn, $db)
 
 
 
-                        $meQueryInsert = $conn->prepare($queryInsert);
-                        $meQueryInsert->execute();
+                                $meQueryInsert = $conn->prepare($queryInsert);
+                                $meQueryInsert->execute();
 
 
-                        $query_2 = "SELECT
+                                $query_2 = "SELECT
                                             deproomdetail.ID,
                                             deproom.Ref_departmentroomid AS departmentroomid,
                                             deproom.`procedure`,
@@ -3002,22 +3047,22 @@ function oncheck_pay_manual($conn, $db)
                                             deproomdetail.PayDate ";
 
 
-                        $meQuery_2 = $conn->prepare($query_2);
-                        $meQuery_2->execute();
-                        while ($row_2 = $meQuery_2->fetch(PDO::FETCH_ASSOC)) {
+                                $meQuery_2 = $conn->prepare($query_2);
+                                $meQuery_2->execute();
+                                while ($row_2 = $meQuery_2->fetch(PDO::FETCH_ASSOC)) {
 
-                            $return[] = $row_2;
+                                    $return[] = $row_2;
 
-                            $_ID = $row_2['ID'];
-                            $_departmentroomid = $row_2['departmentroomid'];
-                            $_procedure = $row_2['procedure'];
-                            $_hn_record_id = $row_2['hn_record_id'];
-                            $_doctor = $row_2['doctor'];
-                            $_ModifyDate = $row_2['ModifyDate'];
+                                    $_ID = $row_2['ID'];
+                                    $_departmentroomid = $row_2['departmentroomid'];
+                                    $_procedure = $row_2['procedure'];
+                                    $_hn_record_id = $row_2['hn_record_id'];
+                                    $_doctor = $row_2['doctor'];
+                                    $_ModifyDate = $row_2['ModifyDate'];
 
-                            // ==============================
+                                    // ==============================
 
-                            $queryInsert1 = "INSERT INTO deproomdetailsub (
+                                    $queryInsert1 = "INSERT INTO deproomdetailsub (
                                                 Deproomdetail_RowID,
                                                 ItemStockID,
                                                 dental_warehouse_id,
@@ -3044,30 +3089,30 @@ function oncheck_pay_manual($conn, $db)
                                                 ) ";
 
 
-                            $queryInsert1 = $conn->prepare($queryInsert1);
-                            $queryInsert1->execute();
-                            // ==============================
+                                    $queryInsert1 = $conn->prepare($queryInsert1);
+                                    $queryInsert1->execute();
+                                    // ==============================
 
-                            // =======================================================================================================================================
-                            $query = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty , hncode )
+                                    // =======================================================================================================================================
+                                    $query = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty , hncode )
                                     VALUES
                                     ( $_RowID, '$_ItemCode','$input_date_service_manual','$_departmentroomid', $Userid,1,1 ,'$_hn_record_id') ";
-                            $meQuery = $conn->prepare($query);
-                            $meQuery->execute();
-                            // =======================================================================================================================================
+                                    $meQuery = $conn->prepare($query);
+                                    $meQuery->execute();
+                                    // =======================================================================================================================================
 
 
-                            $queryUpdate = "UPDATE itemstock 
+                                    $queryUpdate = "UPDATE itemstock 
                                         SET Isdeproom = 1 ,
                                             Stockin = 1,
                                         departmentroomid = '$_departmentroomid'
                                         WHERE
                                         RowID = '$_RowID' ";
-                            $meQueryUpdate = $conn->prepare($queryUpdate);
-                            $meQueryUpdate->execute();
-                            // ==============================
+                                    $meQueryUpdate = $conn->prepare($queryUpdate);
+                                    $meQueryUpdate->execute();
+                                    // ==============================
 
-                            $queryInsert2 = "INSERT INTO hncode_detail (DocNo,UsageCode,ItemStockID,Qty,IsStatus,IsCancel,LastSterileDetailID)  VALUES             
+                                    $queryInsert2 = "INSERT INTO hncode_detail (DocNo,UsageCode,ItemStockID,Qty,IsStatus,IsCancel,LastSterileDetailID)  VALUES             
                                         (
                                         '$input_docNo_HN_manual',
                                         '$input_pay_manual',
@@ -3081,56 +3126,56 @@ function oncheck_pay_manual($conn, $db)
 
 
 
-                            $query_updateHN = "UPDATE hncode SET IsStatus = 1  WHERE DocNo = '$input_docNo_HN_manual'  ";
-                            $query_updateHN = $conn->prepare($query_updateHN);
-                            $query_updateHN->execute();
+                                    $query_updateHN = "UPDATE hncode SET IsStatus = 1  WHERE DocNo = '$input_docNo_HN_manual'  ";
+                                    $query_updateHN = $conn->prepare($query_updateHN);
+                                    $query_updateHN->execute();
 
 
-                            // echo $queryInsert2;
-                            // exit;
-                            $queryInsert2 = $conn->prepare($queryInsert2);
-                            $queryInsert2->execute();
-                            $count_itemstock++;
+                                    // echo $queryInsert2;
+                                    // exit;
+                                    $queryInsert2 = $conn->prepare($queryInsert2);
+                                    $queryInsert2->execute();
+                                    $count_itemstock++;
 
-                            $count_new_item++;
+                                    $count_new_item++;
 
 
 
-                            $count_itemstock = 2;
+                                    $count_itemstock = 2;
 
-                            if ($_item_status == 2 || $_item_status == 3) {
-                                oncheck_pay_mapping($conn, $db, $_ItemCode, $input_docNo_deproom_manual, $input_date_service_manual, $_item_status, 1, $_itemtypeID, $_IsSet);
-                                // $count_itemstock = 2;
+                                    if ($_item_status == 2 || $_item_status == 3) {
+                                        oncheck_pay_mapping($conn, $db, $_ItemCode, $input_docNo_deproom_manual, $input_date_service_manual, $_item_status, 1, $_itemtypeID, $_IsSet);
+                                        // $count_itemstock = 2;
+                                    }
+                                }
                             }
-                        }
-                    }
 
 
-                    $updatePay = "UPDATE deproom SET UserPay = $Userid WHERE deproom.DocNo = '$input_docNo_deproom_manual' ";
-                    $meQueryPay = $conn->prepare($updatePay);
-                    $meQueryPay->execute();
+                            $updatePay = "UPDATE deproom SET UserPay = $Userid WHERE deproom.DocNo = '$input_docNo_deproom_manual' ";
+                            $meQueryPay = $conn->prepare($updatePay);
+                            $meQueryPay->execute();
 
 
-                    $insert_log = "INSERT INTO log_activity_users (itemCode , itemstockID , qty, isStatus, DocNo, userID, createAt) 
+                            $insert_log = "INSERT INTO log_activity_users (itemCode , itemstockID , qty, isStatus, DocNo, userID, createAt) 
                                     VALUES (:itemCode, :itemstockID, 1, :isStatus, :DocNo, :Userid, NOW())";
 
-                    $meQuery_log = $conn->prepare($insert_log);
+                            $meQuery_log = $conn->prepare($insert_log);
 
-                    $meQuery_log->bindParam(':itemCode', $_ItemCode);
-                    $meQuery_log->bindParam(':itemstockID', $_RowID);
-                    $meQuery_log->bindValue(':isStatus', 6, PDO::PARAM_INT);
-                    $meQuery_log->bindParam(':DocNo', $input_docNo_deproom_manual);
-                    $meQuery_log->bindParam(':Userid', $Userid);
-
-
-                    $meQuery_log->execute();
-                }
+                            $meQuery_log->bindParam(':itemCode', $_ItemCode);
+                            $meQuery_log->bindParam(':itemstockID', $_RowID);
+                            $meQuery_log->bindValue(':isStatus', 6, PDO::PARAM_INT);
+                            $meQuery_log->bindParam(':DocNo', $input_docNo_deproom_manual);
+                            $meQuery_log->bindParam(':Userid', $Userid);
 
 
-                if ($_Isdeproom == 1) {
+                            $meQuery_log->execute();
+                        }
 
 
-                    $query_old = "SELECT
+                        if ($_Isdeproom == 1) {
+
+
+                            $query_old = "SELECT
                                         deproomdetailsub.ID,
                                         deproomdetail.ID AS detailID,
                                         hncode_detail.ID AS hndetail_ID,
@@ -3160,70 +3205,70 @@ function oncheck_pay_manual($conn, $db)
 
 
 
-                    $meQuery_old = $conn->prepare($query_old);
-                    $meQuery_old->execute();
-                    while ($row_old = $meQuery_old->fetch(PDO::FETCH_ASSOC)) {
-                        $_DocNo = $row_old['DocNo'];
-                        $detailID = $row_old['detailID'];
-                        $hndetail_ID = $row_old['hndetail_ID'];
-                        $deproom_qty = $row_old['deproom_qty'];
-                        $hncode_qty = $row_old['hncode_qty'];
-                        $deproomdetailsub_id = $row_old['ID'];
-                        $_hn_record_id_borrow = $row_old['hn_record_id'];
-                        $_Ref_departmentroomid = $row_old['Ref_departmentroomid'];
-                        $_ModifyDate = $row_old['ModifyDate'];
-                        $_number_box = $row_old['number_box'];
+                            $meQuery_old = $conn->prepare($query_old);
+                            $meQuery_old->execute();
+                            while ($row_old = $meQuery_old->fetch(PDO::FETCH_ASSOC)) {
+                                $_DocNo = $row_old['DocNo'];
+                                $detailID = $row_old['detailID'];
+                                $hndetail_ID = $row_old['hndetail_ID'];
+                                $deproom_qty = $row_old['deproom_qty'];
+                                $hncode_qty = $row_old['hncode_qty'];
+                                $deproomdetailsub_id = $row_old['ID'];
+                                $_hn_record_id_borrow = $row_old['hn_record_id'];
+                                $_Ref_departmentroomid = $row_old['Ref_departmentroomid'];
+                                $_ModifyDate = $row_old['ModifyDate'];
+                                $_number_box = $row_old['number_box'];
 
-                        if ($_hn_record_id_borrow == "") {
-                            $_hn_record_id_borrow = $_number_box;
-                        }
-                        $_PayDate = $row_old['PayDate'];
-                        // $_datecheck = $row_old['datecheck'];
+                                if ($_hn_record_id_borrow == "") {
+                                    $_hn_record_id_borrow = $_number_box;
+                                }
+                                $_PayDate = $row_old['PayDate'];
+                                // $_datecheck = $row_old['datecheck'];
 
-                    }
+                            }
 
-                    if ($input_docNo_deproom_manual != $_DocNo) {
-                        // if ($input_Hn_pay_manual != $_hn_record_id_borrow  || $input_box_pay_manual != $_number_box || $_PayDate != $_datecheck) {
+                            if ($input_docNo_deproom_manual != $_DocNo) {
+                                // if ($input_Hn_pay_manual != $_hn_record_id_borrow  || $input_box_pay_manual != $_number_box || $_PayDate != $_datecheck) {
 
-                        // =======================================================================================================================================
+                                // =======================================================================================================================================
 
-                        $query = "DELETE FROM itemstock_transaction_detail  WHERE ItemStockID = '$_RowID' 
+                                $query = "DELETE FROM itemstock_transaction_detail  WHERE ItemStockID = '$_RowID' 
                             AND ItemCode = '$_ItemCode' 
                             AND departmentroomid = '$_Ref_departmentroomid' 
                             AND  IsStatus = '1'
                             AND DATE(CreateDate) = '$_ModifyDate' ";
 
-                        $meQuery = $conn->prepare($query);
-                        $meQuery->execute();
-                        // =======================================================================================================================================
+                                $meQuery = $conn->prepare($query);
+                                $meQuery->execute();
+                                // =======================================================================================================================================
 
 
 
-                        $update_old_sub = "DELETE FROM deproomdetailsub WHERE deproomdetailsub.ID =  '$deproomdetailsub_id'    ";
-                        $meQuery_old_sub = $conn->prepare($update_old_sub);
-                        $meQuery_old_sub->execute();
+                                $update_old_sub = "DELETE FROM deproomdetailsub WHERE deproomdetailsub.ID =  '$deproomdetailsub_id'    ";
+                                $meQuery_old_sub = $conn->prepare($update_old_sub);
+                                $meQuery_old_sub->execute();
 
-                        $queryD2 = "DELETE FROM hncode_detail WHERE ID =  '$hndetail_ID' ";
-                        $meQueryD2 = $conn->prepare($queryD2);
-                        $meQueryD2->execute();
-
-
-                        if ($_item_status == 3) {
-                            oncheck_delete_pay_mapping($conn, $db, $_ItemCode, $input_docNo_deproom_manual, $input_date_service_manual, $_item_status, $_DocNo, 2, $input_docNo_HN_manual, 1);
-                            // $count_itemstock = 2;
-                        }
-
-                        // if ($hncode_qty == 1) {
-
-                        // } else {
-                        //     $queryInsert0 = "UPDATE hncode_detail SET Qty = Qty-1 WHERE  ID =  '$hndetail_ID' ";
-                        //     $meQuery0 = $conn->prepare($queryInsert0);
-                        //     $meQuery0->execute();
-                        // }
+                                $queryD2 = "DELETE FROM hncode_detail WHERE ID =  '$hndetail_ID' ";
+                                $meQueryD2 = $conn->prepare($queryD2);
+                                $meQueryD2->execute();
 
 
+                                if ($_item_status == 3) {
+                                    oncheck_delete_pay_mapping($conn, $db, $_ItemCode, $input_docNo_deproom_manual, $input_date_service_manual, $_item_status, $_DocNo, 2, $input_docNo_HN_manual, 1);
+                                    // $count_itemstock = 2;
+                                }
 
-                        $query_2 = "SELECT
+                                // if ($hncode_qty == 1) {
+
+                                // } else {
+                                //     $queryInsert0 = "UPDATE hncode_detail SET Qty = Qty-1 WHERE  ID =  '$hndetail_ID' ";
+                                //     $meQuery0 = $conn->prepare($queryInsert0);
+                                //     $meQuery0->execute();
+                                // }
+
+
+
+                                $query_2 = "SELECT
                                             deproomdetail.ID,
                                             deproom.Ref_departmentroomid AS departmentroomid,
                                             deproom.`procedure`,
@@ -3252,24 +3297,24 @@ function oncheck_pay_manual($conn, $db)
                                             deproomdetail.PayDate ";
 
 
-                        $meQuery_2 = $conn->prepare($query_2);
-                        $meQuery_2->execute();
-                        while ($row_2 = $meQuery_2->fetch(PDO::FETCH_ASSOC)) {
+                                $meQuery_2 = $conn->prepare($query_2);
+                                $meQuery_2->execute();
+                                while ($row_2 = $meQuery_2->fetch(PDO::FETCH_ASSOC)) {
 
-                            $return[] = $row_2;
+                                    $return[] = $row_2;
 
-                            $_ID = $row_2['ID'];
-                            $_PayDate = $row_2['PayDate'];
-                            $_departmentroomid = $row_2['departmentroomid'];
-                            $_procedure = $row_2['procedure'];
-                            $_hn_record_id = $row_2['hn_record_id'];
-                            $_doctor = $row_2['doctor'];
-                            $_Qty_detail = $row_2['Qty'];
-                            $_Qty_detail_sub = $row_2['cnt_sub'];
-                            $_ModifyDate = $row_2['ModifyDate'];
-                            // ==============================
+                                    $_ID = $row_2['ID'];
+                                    $_PayDate = $row_2['PayDate'];
+                                    $_departmentroomid = $row_2['departmentroomid'];
+                                    $_procedure = $row_2['procedure'];
+                                    $_hn_record_id = $row_2['hn_record_id'];
+                                    $_doctor = $row_2['doctor'];
+                                    $_Qty_detail = $row_2['Qty'];
+                                    $_Qty_detail_sub = $row_2['cnt_sub'];
+                                    $_ModifyDate = $row_2['ModifyDate'];
+                                    // ==============================
 
-                            $queryInsert1 = "INSERT INTO deproomdetailsub (
+                                    $queryInsert1 = "INSERT INTO deproomdetailsub (
                                                     Deproomdetail_RowID,
                                                     ItemStockID,
                                                     dental_warehouse_id,
@@ -3298,29 +3343,29 @@ function oncheck_pay_manual($conn, $db)
                                                 ) ";
 
 
-                            $queryInsert1 = $conn->prepare($queryInsert1);
-                            $queryInsert1->execute();
+                                    $queryInsert1 = $conn->prepare($queryInsert1);
+                                    $queryInsert1->execute();
 
-                            // =======================================================================================================================================
-                            $query = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty ,hncode )
+                                    // =======================================================================================================================================
+                                    $query = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty ,hncode )
                                         VALUES
                                         ( $_RowID, '$_ItemCode','$input_date_service_manual','$_departmentroomid', $Userid,1,1 ,'$_hn_record_id') ";
-                            $meQuery = $conn->prepare($query);
-                            $meQuery->execute();
-                            // =======================================================================================================================================
+                                    $meQuery = $conn->prepare($query);
+                                    $meQuery->execute();
+                                    // =======================================================================================================================================
 
 
-                            // ==============================
-                            $queryUpdate = "UPDATE itemstock 
+                                    // ==============================
+                                    $queryUpdate = "UPDATE itemstock 
                                                     SET Isdeproom = 1 ,
                                                     Stockin = 1,
                                                     departmentroomid = '$_departmentroomid'
                                                     WHERE
                                                     RowID = '$_RowID' ";
-                            $meQueryUpdate = $conn->prepare($queryUpdate);
-                            $meQueryUpdate->execute();
-                            // ==============================
-                            $queryInsert2 = "INSERT INTO hncode_detail (DocNo,UsageCode,ItemStockID,Qty,IsStatus,IsCancel)  VALUES             
+                                    $meQueryUpdate = $conn->prepare($queryUpdate);
+                                    $meQueryUpdate->execute();
+                                    // ==============================
+                                    $queryInsert2 = "INSERT INTO hncode_detail (DocNo,UsageCode,ItemStockID,Qty,IsStatus,IsCancel)  VALUES             
                                                             (
                                                             '$input_docNo_HN_manual', 
                                                             '$input_pay_manual',
@@ -3331,29 +3376,29 @@ function oncheck_pay_manual($conn, $db)
                                                             ) ";
 
 
-                            $query_updateHN = "UPDATE hncode SET IsStatus = 1  WHERE DocNo = '$input_docNo_HN_manual'  ";
-                            $query_updateHN = $conn->prepare($query_updateHN);
-                            $query_updateHN->execute();
+                                    $query_updateHN = "UPDATE hncode SET IsStatus = 1  WHERE DocNo = '$input_docNo_HN_manual'  ";
+                                    $query_updateHN = $conn->prepare($query_updateHN);
+                                    $query_updateHN->execute();
 
 
-                            // echo $queryInsert2;
-                            // exit;
-                            $queryInsert2 = $conn->prepare($queryInsert2);
-                            $queryInsert2->execute();
-                            $count_itemstock++;
+                                    // echo $queryInsert2;
+                                    // exit;
+                                    $queryInsert2 = $conn->prepare($queryInsert2);
+                                    $queryInsert2->execute();
+                                    $count_itemstock++;
 
-                            $count_new_item++;
+                                    $count_new_item++;
 
-                            if ($_item_status == 2 || $_item_status == 3) {
-                                oncheck_pay_mapping($conn, $db, $_ItemCode, $input_docNo_deproom_manual, $input_date_service_manual, $_item_status, 1, $_itemtypeID, $_IsSet);
-                                // $count_itemstock = 2;
-                            }
-                        }
+                                    if ($_item_status == 2 || $_item_status == 3) {
+                                        oncheck_pay_mapping($conn, $db, $_ItemCode, $input_docNo_deproom_manual, $input_date_service_manual, $_item_status, 1, $_itemtypeID, $_IsSet);
+                                        // $count_itemstock = 2;
+                                    }
+                                }
 
 
-                        if ($count_new_item  == 0) {
+                                if ($count_new_item  == 0) {
 
-                            $queryInsert = "INSERT INTO deproomdetail ( DocNo, ItemCode, Qty, IsStatus, PayDate, IsCancel, ModifyUser, ModifyTime ,Ismanual)
+                                    $queryInsert = "INSERT INTO deproomdetail ( DocNo, ItemCode, Qty, IsStatus, PayDate, IsCancel, ModifyUser, ModifyTime ,Ismanual)
                                                 VALUES
                                                     ( '$input_docNo_deproom_manual', '$_ItemCode', '1', 0,NOW(), 0, '$Userid',NOW() ,1)";
 
@@ -3361,11 +3406,11 @@ function oncheck_pay_manual($conn, $db)
 
 
 
-                            $meQueryInsert = $conn->prepare($queryInsert);
-                            $meQueryInsert->execute();
+                                    $meQueryInsert = $conn->prepare($queryInsert);
+                                    $meQueryInsert->execute();
 
 
-                            $query_2 = "SELECT
+                                    $query_2 = "SELECT
                                                 deproomdetail.ID,
                                                 deproom.Ref_departmentroomid AS departmentroomid,
                                                 deproom.`procedure`,
@@ -3394,22 +3439,22 @@ function oncheck_pay_manual($conn, $db)
                                                 deproomdetail.PayDate ";
 
 
-                            $meQuery_2 = $conn->prepare($query_2);
-                            $meQuery_2->execute();
-                            while ($row_2 = $meQuery_2->fetch(PDO::FETCH_ASSOC)) {
+                                    $meQuery_2 = $conn->prepare($query_2);
+                                    $meQuery_2->execute();
+                                    while ($row_2 = $meQuery_2->fetch(PDO::FETCH_ASSOC)) {
 
-                                $return[] = $row_2;
+                                        $return[] = $row_2;
 
-                                $_ID = $row_2['ID'];
-                                $_departmentroomid = $row_2['departmentroomid'];
-                                $_procedure = $row_2['procedure'];
-                                $_hn_record_id = $row_2['hn_record_id'];
-                                $_doctor = $row_2['doctor'];
-                                $_ModifyDate = $row_2['ModifyDate'];
+                                        $_ID = $row_2['ID'];
+                                        $_departmentroomid = $row_2['departmentroomid'];
+                                        $_procedure = $row_2['procedure'];
+                                        $_hn_record_id = $row_2['hn_record_id'];
+                                        $_doctor = $row_2['doctor'];
+                                        $_ModifyDate = $row_2['ModifyDate'];
 
-                                // ==============================
+                                        // ==============================
 
-                                $queryInsert1 = "INSERT INTO deproomdetailsub (
+                                        $queryInsert1 = "INSERT INTO deproomdetailsub (
                                                     Deproomdetail_RowID,
                                                     ItemStockID,
                                                     dental_warehouse_id,
@@ -3438,30 +3483,30 @@ function oncheck_pay_manual($conn, $db)
                                                     ) ";
 
 
-                                $queryInsert1 = $conn->prepare($queryInsert1);
-                                $queryInsert1->execute();
-                                // ==============================
+                                        $queryInsert1 = $conn->prepare($queryInsert1);
+                                        $queryInsert1->execute();
+                                        // ==============================
 
-                                // =======================================================================================================================================
-                                $query = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty , hncode )
+                                        // =======================================================================================================================================
+                                        $query = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty , hncode )
                                         VALUES
                                         ( $_RowID, '$_ItemCode','$input_date_service_manual','$_departmentroomid', $Userid,1,1 ,'$_hn_record_id') ";
-                                $meQuery = $conn->prepare($query);
-                                $meQuery->execute();
-                                // =======================================================================================================================================
+                                        $meQuery = $conn->prepare($query);
+                                        $meQuery->execute();
+                                        // =======================================================================================================================================
 
 
-                                $queryUpdate = "UPDATE itemstock 
+                                        $queryUpdate = "UPDATE itemstock 
                                             SET Isdeproom = 1 ,
                                                 Stockin = 1,
                                             departmentroomid = '$_departmentroomid'
                                             WHERE
                                             RowID = '$_RowID' ";
-                                $meQueryUpdate = $conn->prepare($queryUpdate);
-                                $meQueryUpdate->execute();
-                                // ==============================
+                                        $meQueryUpdate = $conn->prepare($queryUpdate);
+                                        $meQueryUpdate->execute();
+                                        // ==============================
 
-                                $queryInsert2 = "INSERT INTO hncode_detail (DocNo,UsageCode,ItemStockID,Qty,IsStatus,IsCancel,LastSterileDetailID)  VALUES             
+                                        $queryInsert2 = "INSERT INTO hncode_detail (DocNo,UsageCode,ItemStockID,Qty,IsStatus,IsCancel,LastSterileDetailID)  VALUES             
                                             (
                                             '$input_docNo_HN_manual',
                                             '$input_pay_manual',
@@ -3471,6 +3516,495 @@ function oncheck_pay_manual($conn, $db)
                                             0, 
                                             (SELECT LastSterileDetailID FROM itemstock  WHERE itemstock.RowID = $_RowID)
                                             ) ";
+
+
+
+
+                                        $query_updateHN = "UPDATE hncode SET IsStatus = 1  WHERE DocNo = '$input_docNo_HN_manual'  ";
+                                        $query_updateHN = $conn->prepare($query_updateHN);
+                                        $query_updateHN->execute();
+
+
+                                        // echo $queryInsert2;
+                                        // exit;
+                                        $queryInsert2 = $conn->prepare($queryInsert2);
+                                        $queryInsert2->execute();
+                                        $count_itemstock++;
+
+                                        $count_new_item++;
+
+
+
+                                        $count_itemstock = 2;
+
+                                        if ($_item_status == 2 || $_item_status == 3) {
+                                            oncheck_pay_mapping($conn, $db, $_ItemCode, $input_docNo_deproom_manual, $input_date_service_manual, $_item_status, 1, $_itemtypeID, $_IsSet);
+                                            // $count_itemstock = 2;
+                                        }
+                                    }
+                                }
+
+
+                                $updatePay = "UPDATE deproom SET UserPay = $Userid WHERE deproom.DocNo = '$input_docNo_deproom_manual' ";
+                                $meQueryPay = $conn->prepare($updatePay);
+                                $meQueryPay->execute();
+                                // }
+                                // else{
+                                //     $count_itemstock = 3;
+                                // }
+
+                                $insert_log = "INSERT INTO log_activity_users (itemCode , itemstockID , qty, isStatus, DocNo, userID, createAt) 
+                            VALUES (:itemCode, :itemstockID, 1, :isStatus, :DocNo, :Userid, NOW())";
+
+                                $meQuery_log = $conn->prepare($insert_log);
+
+                                $meQuery_log->bindParam(':itemCode', $_ItemCode);
+                                $meQuery_log->bindParam(':itemstockID', $_RowID);
+                                $meQuery_log->bindValue(':isStatus', 6, PDO::PARAM_INT);
+                                $meQuery_log->bindParam(':DocNo', $input_docNo_deproom_manual);
+                                $meQuery_log->bindParam(':Userid', $Userid);
+
+
+                                $meQuery_log->execute();
+                            } else {
+                                $count_itemstock = 3;
+                            }
+                        }
+                    }
+                } else {
+                    $count_itemstock = '9';
+                }
+            } else {
+                if ($_check_exp == 'no_exp') {
+
+
+
+
+
+                    if ($input_docNo_deproom_manual == "") {
+                        $remark = "สร้างจาก ขอเบิกอุปกรณ์ ";
+                        $input_docNo_deproom_manual = createDocNo($conn, $Userid, $DepID, $deproom, $input_remark_manual, 0, 0, 0, 0, '', '', $input_Hn_pay_manual, $input_box_pay_manual, $db, 1, $checkbox_manual_ems, $checkbox_tf);
+                        $input_docNo_HN_manual = createhncodeDocNo($conn, $Userid, $DepID, $input_Hn_pay_manual, $select_deproom_manual, 1, $select_procedure_manual, $select_doctor_manual, 'สร้างจากเมนูขอเบิกอุปกรณ์', $input_docNo_deproom_manual, $db, $input_date_service_manual, $input_box_pay_manual, $checkbox_tf);
+
+                        $sql1 = " UPDATE deproom SET IsStatus = 1 , serviceDate = '$input_date_service_manual $input_time_service_manual'  , hn_record_id = '$input_Hn_pay_manual' , doctor = '$select_doctor_manual' , `procedure` = '$select_procedure_manual' , Ref_departmentroomid = '$select_deproom_manual' WHERE DocNo = '$input_docNo_deproom_manual' AND IsCancel = 0 ";
+                        $meQueryUpdate = $conn->prepare($sql1);
+                        $meQueryUpdate->execute();
+
+
+                        $p = " SELECT
+                                MIN( `procedure`.`status` ) AS status 
+                        FROM
+                            `procedure` 
+                        WHERE
+                            `procedure`.ID IN ($select_procedure_manual)  ";
+                        $meQueryp = $conn->prepare($p);
+                        $meQueryp->execute();
+                        while ($rowp = $meQueryp->fetch(PDO::FETCH_ASSOC)) {
+                            $_status = $rowp['status'];
+                        }
+
+                        $item = "SELECT item.ItemCode FROM item WHERE item.item_status2 = $_status  OR  item.item_status = 1 ";
+                        $meQueryp = $conn->prepare($item);
+                        $meQueryp->execute();
+                        while ($rowp = $meQueryp->fetch(PDO::FETCH_ASSOC)) {
+                            $_itemcode = $rowp['ItemCode'];
+
+                            $queryInsert99 = "INSERT INTO deproomdetail ( DocNo, ItemCode, Qty, IsStatus, PayDate, IsCancel, ModifyUser, ModifyTime ,IsRequest )
+                        VALUES
+                            ( '$input_docNo_deproom_manual', '$_itemcode', 1, 3,NOW(), 0, '$Userid',NOW() , 1)";
+
+                            $meQueryInsert99 = $conn->prepare($queryInsert99);
+                            $meQueryInsert99->execute();
+
+                            $query_299 = "SELECT
+                                deproomdetail.ID,
+                                deproom.Ref_departmentroomid AS departmentroomid,
+                                deproom.`procedure`,
+                                deproom.doctor,
+                                deproom.hn_record_id,
+                                deproomdetail.ItemCode,
+                                deproomdetail.Qty ,
+                                deproomdetail.PayDate ,
+                                COUNT(deproomdetailsub.ID )  AS cnt_sub,
+                                deproomdetailsub.PayDate AS ModifyDate
+                            FROM
+                                deproomdetail
+                                INNER JOIN deproom ON deproomdetail.DocNo = deproom.DocNo 
+                                LEFT JOIN deproomdetailsub ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID 
+                            WHERE
+                                deproomdetail.ItemCode = '$_itemcode' 
+                                AND deproomdetail.DocNo = '$input_docNo_deproom_manual'
+                            GROUP BY
+                                deproomdetail.ID,
+                                deproom.Ref_departmentroomid,
+                                deproom.`procedure`,
+                                deproom.doctor,
+                                deproom.hn_record_id,
+                                deproomdetail.ItemCode ,
+                                deproomdetail.Qty,
+                                deproomdetail.PayDate ";
+                            $meQuery_299 = $conn->prepare($query_299);
+                            $meQuery_299->execute();
+                            while ($row_299 = $meQuery_299->fetch(PDO::FETCH_ASSOC)) {
+                                $_ID = $row_299['ID'];
+                                $_departmentroomid = $row_299['departmentroomid'];
+                                $_procedure = $row_299['procedure'];
+                                $_hn_record_id = $row_299['hn_record_id'];
+                                $_doctor = $row_299['doctor'];
+
+
+                                $queryInsert199 = "INSERT INTO deproomdetailsub (
+                            Deproomdetail_RowID,
+                            dental_warehouse_id,
+                            IsStatus,
+                            IsCheckPay,
+                            PayDate,
+                            hn_record_id,
+                            doctor,
+                            `procedure`,
+                            itemcode_weighing,
+                            qty_weighing
+                            )
+                            VALUES
+                            (
+                                '$_ID', 
+                                '$_departmentroomid',
+                                1, 
+                                1, 
+                                NOW(), 
+                                '$_hn_record_id', 
+                                '$_doctor', 
+                                '$_procedure', 
+                                '$_itemcode', 
+                                1
+                            ) ";
+
+                                $queryInsert199 = $conn->prepare($queryInsert199);
+                                $queryInsert199->execute();
+
+                                $query99 = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty,hncode )
+                                        VALUES
+                                        ( '0', '$_itemcode','$input_date_service_manual','$_departmentroomid', $Userid,1,1,'$_hn_record_id') ";
+                                $meQuery99 = $conn->prepare($query99);
+                                $meQuery99->execute();
+
+                                $queryInsert299 = "INSERT INTO hncode_detail (DocNo,UsageCode,ItemStockID,Qty,IsStatus,IsCancel,ItemCode)  VALUES             
+                                                (
+                                                    '$input_docNo_HN_manual', 
+                                                    '0',
+                                                    '0',
+                                                    1, 
+                                                    1, 
+                                                    0, 
+                                                    '$_itemcode'
+                                                ) ";
+
+                                $query_updateHN99 = "UPDATE hncode SET IsStatus = 1  WHERE DocNo = '$input_docNo_HN_manual'   ";
+                                $query_updateHN99 = $conn->prepare($query_updateHN99);
+                                $query_updateHN99->execute();
+
+
+                                $sqlDocNo99 = "SELECT DocNo FROM his WHERE DocNo_deproom = ? LIMIT 1";
+                                $stmtDoc99 = $conn->prepare($sqlDocNo99);
+                                $stmtDoc99->execute([$input_docNo_deproom_manual]);
+                                $row99 = $stmtDoc99->fetch(PDO::FETCH_ASSOC);
+
+                                if ($row99) {
+                                    $docNo_hn = $row['DocNo'];
+
+                                    // 2. เช็คว่า ItemCode มีอยู่ใน his_detail แล้วหรือยัง
+                                    $sqlCheck99 = "SELECT Qty FROM his_detail WHERE DocNo = ? AND ItemCode = ?";
+                                    $stmtCheck99 = $conn->prepare($sqlCheck99);
+                                    $stmtCheck99->execute([$docNo_hn, $_itemcode]);
+                                    $resultCheck99 = $stmtCheck99->fetch(PDO::FETCH_ASSOC);
+
+                                    if ($resultCheck99) {
+                                        // เจอแล้ว -> UPDATE Qty +1
+                                        $sqlUpdate99 = "UPDATE his_detail SET Qty = Qty + 1 WHERE DocNo = ? AND ItemCode = ?";
+                                        $stmtUpdate99 = $conn->prepare($sqlUpdate99);
+                                        $stmtUpdate99->execute([$docNo_hn, $_itemcode]);
+                                    } else {
+                                        // ไม่เจอ -> INSERT
+                                        $sqlInsert99 = "INSERT INTO his_detail (DocNo, ItemCode, Qty) VALUES (?, ?, 1)";
+                                        $stmtInsert99 = $conn->prepare($sqlInsert99);
+                                        $stmtInsert99->execute([$docNo_hn, $_itemcode]);
+                                    }
+                                }
+
+
+
+
+                                $queryInsert299 = $conn->prepare($queryInsert299);
+                                $queryInsert299->execute();
+                            }
+                        }
+                        //  ======================
+
+                    }
+
+                    $_ItemCode = $row['ItemCode'];
+                    $_Isdeproom =  $row['Isdeproom'];
+                    $_departmentroomid =  $row['departmentroomid'];
+                    $_RowID =  $row['RowID'];
+
+                    $count_itemstock++;
+
+                    $count_itemstock = 0;
+                    $count_new_item = 0;
+
+
+                    if ($_Isdeproom == 0) {
+
+                        $query_2 = "SELECT
+                                        deproomdetail.ID,
+                                        deproom.Ref_departmentroomid AS departmentroomid,
+                                        deproom.`procedure`,
+                                        deproom.doctor,
+                                        deproom.hn_record_id,
+                                        deproomdetail.ItemCode,
+                                        deproomdetail.Qty ,
+                                        deproomdetail.PayDate ,
+                                        COUNT(deproomdetailsub.ID)  AS cnt_sub,
+                                        deproomdetailsub.PayDate AS ModifyDate
+                                    FROM
+                                        deproomdetail
+                                        INNER JOIN deproom ON deproomdetail.DocNo = deproom.DocNo 
+                                        LEFT JOIN deproomdetailsub ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID 
+                                    WHERE
+                                        deproomdetail.ItemCode = '$_ItemCode' 
+                                        AND deproomdetail.DocNo = '$input_docNo_deproom_manual'
+                                    GROUP BY
+                                        deproomdetail.ID,
+                                        deproom.Ref_departmentroomid,
+                                        deproom.`procedure`,
+                                        deproom.doctor,
+                                        deproom.hn_record_id,
+                                        deproomdetail.ItemCode ,
+                                        deproomdetail.Qty,
+                                        deproomdetail.PayDate ";
+
+
+                        $meQuery_2 = $conn->prepare($query_2);
+                        $meQuery_2->execute();
+                        while ($row_2 = $meQuery_2->fetch(PDO::FETCH_ASSOC)) {
+
+                            $return[] = $row_2;
+
+                            $_ID = $row_2['ID'];
+                            $_PayDate = $row_2['PayDate'];
+                            $_departmentroomid = $row_2['departmentroomid'];
+                            $_procedure = $row_2['procedure'];
+                            $_hn_record_id = $row_2['hn_record_id'];
+                            $_doctor = $row_2['doctor'];
+                            $_Qty_detail = $row_2['Qty'];
+                            $_Qty_detail_sub = $row_2['cnt_sub'];
+                            $_ModifyDate = $row_2['ModifyDate'];
+
+
+                            // ==============================
+
+                            $queryInsert1 = "INSERT INTO deproomdetailsub (
+                                                Deproomdetail_RowID,
+                                                ItemStockID,
+                                                dental_warehouse_id,
+                                                IsStatus,
+                                                IsCheckPay,
+                                                PayDate,
+                                                hn_record_id,
+                                                doctor,
+                                                `procedure`,
+                                                qty_weighing
+                                            )
+                                            VALUES
+                                            (
+                                                '$_ID', 
+                                                '$_RowID',
+                                                '$_departmentroomid',
+                                                1, 
+                                                1, 
+                                                NOW(), 
+                                                '$_hn_record_id', 
+                                                '$_doctor', 
+                                                '$_procedure',
+                                                1
+                                            ) ";
+
+
+                            $queryInsert1 = $conn->prepare($queryInsert1);
+                            $queryInsert1->execute();
+
+                            // =======================================================================================================================================
+                            $query = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty ,hncode )
+                                    VALUES
+                                    ( $_RowID, '$_ItemCode','$input_date_service_manual','$_departmentroomid', $Userid,1,1 ,'$_hn_record_id') ";
+                            $meQuery = $conn->prepare($query);
+                            $meQuery->execute();
+                            // =======================================================================================================================================
+
+
+                            // ==============================
+                            $queryUpdate = "UPDATE itemstock 
+                                                SET Isdeproom = 1 ,
+                                                Stockin = 1,
+                                                departmentroomid = '$_departmentroomid'
+                                                WHERE
+                                                RowID = '$_RowID' ";
+                            $meQueryUpdate = $conn->prepare($queryUpdate);
+                            $meQueryUpdate->execute();
+                            // ==============================
+                            $queryInsert2 = "INSERT INTO hncode_detail (DocNo,UsageCode,ItemStockID,Qty,IsStatus,IsCancel,LastSterileDetailID)  VALUES             
+                                                        (
+                                                        '$input_docNo_HN_manual', 
+                                                        '$input_pay_manual',
+                                                        '$_RowID',
+                                                        1, 
+                                                        1, 
+                                                        0, 
+                                                        (SELECT LastSterileDetailID FROM itemstock  WHERE itemstock.RowID = $_RowID)
+                                                        ) ";
+
+
+
+                            $query_updateHN = "UPDATE hncode SET IsStatus = 1  WHERE DocNo = '$input_docNo_HN_manual'  ";
+                            $query_updateHN = $conn->prepare($query_updateHN);
+                            $query_updateHN->execute();
+
+
+                            // echo $queryInsert2;
+                            // exit;
+                            $queryInsert2 = $conn->prepare($queryInsert2);
+                            $queryInsert2->execute();
+                            $count_itemstock++;
+
+                            $count_new_item++;
+
+
+
+                            if ($_item_status == 2 || $_item_status == 3) {
+                                oncheck_pay_mapping($conn, $db, $_ItemCode, $input_docNo_deproom_manual, $input_date_service_manual, $_item_status, 1, $_itemtypeID, $_IsSet);
+                                // $count_itemstock = 2;
+                            }
+                        }
+
+
+                        if ($count_new_item  == 0) {
+
+                            $queryInsert = "INSERT INTO deproomdetail ( DocNo, ItemCode, Qty, IsStatus, PayDate, IsCancel, ModifyUser, ModifyTime ,Ismanual)
+                                            VALUES
+                                                ( '$input_docNo_deproom_manual', '$_ItemCode', '1', 0,NOW(), 0, '$Userid',NOW() ,1)";
+
+
+
+
+
+                            $meQueryInsert = $conn->prepare($queryInsert);
+                            $meQueryInsert->execute();
+
+
+                            $query_2 = "SELECT
+                                            deproomdetail.ID,
+                                            deproom.Ref_departmentroomid AS departmentroomid,
+                                            deproom.`procedure`,
+                                            deproom.doctor,
+                                            deproom.hn_record_id,
+                                            deproomdetail.ItemCode,
+                                            deproomdetail.Qty ,
+                                            deproomdetail.PayDate ,
+                                            COUNT(deproomdetailsub.ID )  AS cnt_sub,
+                                            deproomdetailsub.PayDate AS ModifyDate
+                                        FROM
+                                            deproomdetail
+                                            INNER JOIN deproom ON deproomdetail.DocNo = deproom.DocNo 
+                                            LEFT JOIN deproomdetailsub ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID 
+                                        WHERE
+                                            deproomdetail.ItemCode = '$_ItemCode' 
+                                            AND deproomdetail.DocNo = '$input_docNo_deproom_manual'
+                                        GROUP BY
+                                            deproomdetail.ID,
+                                            deproom.Ref_departmentroomid,
+                                            deproom.`procedure`,
+                                            deproom.doctor,
+                                            deproom.hn_record_id,
+                                            deproomdetail.ItemCode ,
+                                            deproomdetail.Qty,
+                                            deproomdetail.PayDate ";
+
+
+                            $meQuery_2 = $conn->prepare($query_2);
+                            $meQuery_2->execute();
+                            while ($row_2 = $meQuery_2->fetch(PDO::FETCH_ASSOC)) {
+
+                                $return[] = $row_2;
+
+                                $_ID = $row_2['ID'];
+                                $_departmentroomid = $row_2['departmentroomid'];
+                                $_procedure = $row_2['procedure'];
+                                $_hn_record_id = $row_2['hn_record_id'];
+                                $_doctor = $row_2['doctor'];
+                                $_ModifyDate = $row_2['ModifyDate'];
+
+                                // ==============================
+
+                                $queryInsert1 = "INSERT INTO deproomdetailsub (
+                                                Deproomdetail_RowID,
+                                                ItemStockID,
+                                                dental_warehouse_id,
+                                                IsStatus,
+                                                IsCheckPay,
+                                                PayDate,
+                                                hn_record_id,
+                                                doctor,
+                                                `procedure`,
+                                                qty_weighing
+                                                )
+                                                VALUES
+                                                (
+                                                    '$_ID', 
+                                                    '$_RowID',
+                                                    '$_departmentroomid',
+                                                    1, 
+                                                    1, 
+                                                    NOW(), 
+                                                    '$_hn_record_id', 
+                                                    '$_doctor', 
+                                                    '$_procedure',
+                                                    1
+                                                ) ";
+
+
+                                $queryInsert1 = $conn->prepare($queryInsert1);
+                                $queryInsert1->execute();
+                                // ==============================
+
+                                // =======================================================================================================================================
+                                $query = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty , hncode )
+                                    VALUES
+                                    ( $_RowID, '$_ItemCode','$input_date_service_manual','$_departmentroomid', $Userid,1,1 ,'$_hn_record_id') ";
+                                $meQuery = $conn->prepare($query);
+                                $meQuery->execute();
+                                // =======================================================================================================================================
+
+
+                                $queryUpdate = "UPDATE itemstock 
+                                        SET Isdeproom = 1 ,
+                                            Stockin = 1,
+                                        departmentroomid = '$_departmentroomid'
+                                        WHERE
+                                        RowID = '$_RowID' ";
+                                $meQueryUpdate = $conn->prepare($queryUpdate);
+                                $meQueryUpdate->execute();
+                                // ==============================
+
+                                $queryInsert2 = "INSERT INTO hncode_detail (DocNo,UsageCode,ItemStockID,Qty,IsStatus,IsCancel,LastSterileDetailID)  VALUES             
+                                        (
+                                        '$input_docNo_HN_manual',
+                                        '$input_pay_manual',
+                                        '$_RowID',
+                                        1, 
+                                        1, 
+                                        0, 
+                                        (SELECT LastSterileDetailID FROM itemstock  WHERE itemstock.RowID = $_RowID)
+                                        ) ";
 
 
 
@@ -3503,13 +4037,10 @@ function oncheck_pay_manual($conn, $db)
                         $updatePay = "UPDATE deproom SET UserPay = $Userid WHERE deproom.DocNo = '$input_docNo_deproom_manual' ";
                         $meQueryPay = $conn->prepare($updatePay);
                         $meQueryPay->execute();
-                        // }
-                        // else{
-                        //     $count_itemstock = 3;
-                        // }
+
 
                         $insert_log = "INSERT INTO log_activity_users (itemCode , itemstockID , qty, isStatus, DocNo, userID, createAt) 
-                            VALUES (:itemCode, :itemstockID, 1, :isStatus, :DocNo, :Userid, NOW())";
+                                    VALUES (:itemCode, :itemstockID, 1, :isStatus, :DocNo, :Userid, NOW())";
 
                         $meQuery_log = $conn->prepare($insert_log);
 
@@ -3521,12 +4052,416 @@ function oncheck_pay_manual($conn, $db)
 
 
                         $meQuery_log->execute();
-                    } else {
-                        $count_itemstock = 3;
                     }
+
+
+                    if ($_Isdeproom == 1) {
+
+
+                        $query_old = "SELECT
+                                        deproomdetailsub.ID,
+                                        deproomdetail.ID AS detailID,
+                                        hncode_detail.ID AS hndetail_ID,
+                                        deproomdetail.ItemCode,
+                                        deproomdetail.Qty AS deproom_qty,
+                                        hncode_detail.Qty AS hncode_qty ,
+                                        deproom.hn_record_id,
+                                        DATE(deproom.serviceDate) AS serviceDate ,
+                                        deproom.Ref_departmentroomid ,
+                                        DATE(deproom.serviceDate)  AS ModifyDate,
+                                        deproomdetailsub.PayDate,
+                                        deproom.number_box,
+                                        deproom.DocNo
+                                    FROM
+                                        deproom
+                                        LEFT JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
+                                        LEFT JOIN deproomdetailsub ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID
+                                        LEFT JOIN hncode ON hncode.DocNo_SS = deproom.DocNo
+                                        LEFT JOIN hncode_detail ON hncode_detail.DocNo = hncode.DocNo 
+                                    WHERE
+                                        deproomdetail.ItemCode = '$_ItemCode' 
+                                        AND deproomdetailsub.ItemStockID = '$_RowID'
+                                        AND hncode_detail.ItemStockID = '$_RowID' 
+                                        ORDER BY deproomdetailsub.ID DESC
+                                        LIMIT 1 ";
+
+
+
+
+                        $meQuery_old = $conn->prepare($query_old);
+                        $meQuery_old->execute();
+                        while ($row_old = $meQuery_old->fetch(PDO::FETCH_ASSOC)) {
+                            $_DocNo = $row_old['DocNo'];
+                            $detailID = $row_old['detailID'];
+                            $hndetail_ID = $row_old['hndetail_ID'];
+                            $deproom_qty = $row_old['deproom_qty'];
+                            $hncode_qty = $row_old['hncode_qty'];
+                            $deproomdetailsub_id = $row_old['ID'];
+                            $_hn_record_id_borrow = $row_old['hn_record_id'];
+                            $_Ref_departmentroomid = $row_old['Ref_departmentroomid'];
+                            $_ModifyDate = $row_old['ModifyDate'];
+                            $_number_box = $row_old['number_box'];
+
+                            if ($_hn_record_id_borrow == "") {
+                                $_hn_record_id_borrow = $_number_box;
+                            }
+                            $_PayDate = $row_old['PayDate'];
+                            // $_datecheck = $row_old['datecheck'];
+
+                        }
+
+                        if ($input_docNo_deproom_manual != $_DocNo) {
+
+                            $delete_bag = "DELETE FROM bag_detail WHERE UsageCode = '$input_pay_manual' ";
+                            $meQuery_bag = $conn->prepare($delete_bag);
+                            $meQuery_bag->execute();
+
+
+                            // if ($input_Hn_pay_manual != $_hn_record_id_borrow  || $input_box_pay_manual != $_number_box || $_PayDate != $_datecheck) {
+
+                            // =======================================================================================================================================
+
+                            $query = "DELETE FROM itemstock_transaction_detail  WHERE ItemStockID = '$_RowID' 
+                            AND ItemCode = '$_ItemCode' 
+                            AND departmentroomid = '$_Ref_departmentroomid' 
+                            AND  IsStatus = '1'
+                            AND DATE(CreateDate) = '$_ModifyDate' ";
+
+                            $meQuery = $conn->prepare($query);
+                            $meQuery->execute();
+                            // =======================================================================================================================================
+
+
+
+                            $update_old_sub = "DELETE FROM deproomdetailsub WHERE deproomdetailsub.ID =  '$deproomdetailsub_id'    ";
+                            $meQuery_old_sub = $conn->prepare($update_old_sub);
+                            $meQuery_old_sub->execute();
+
+                            $queryD2 = "DELETE FROM hncode_detail WHERE ID =  '$hndetail_ID' ";
+                            $meQueryD2 = $conn->prepare($queryD2);
+                            $meQueryD2->execute();
+
+
+                            if ($_item_status == 3) {
+                                oncheck_delete_pay_mapping($conn, $db, $_ItemCode, $input_docNo_deproom_manual, $input_date_service_manual, $_item_status, $_DocNo, 2, $input_docNo_HN_manual, 1);
+                                // $count_itemstock = 2;
+                            }
+
+                            // if ($hncode_qty == 1) {
+
+                            // } else {
+                            //     $queryInsert0 = "UPDATE hncode_detail SET Qty = Qty-1 WHERE  ID =  '$hndetail_ID' ";
+                            //     $meQuery0 = $conn->prepare($queryInsert0);
+                            //     $meQuery0->execute();
+                            // }
+
+
+
+                            $query_2 = "SELECT
+                                            deproomdetail.ID,
+                                            deproom.Ref_departmentroomid AS departmentroomid,
+                                            deproom.`procedure`,
+                                            deproom.doctor,
+                                            deproom.hn_record_id,
+                                            deproomdetail.ItemCode,
+                                            deproomdetail.Qty ,
+                                            deproomdetail.PayDate ,
+                                            COUNT(deproomdetailsub.ID)  AS cnt_sub,
+                                            deproomdetailsub.PayDate AS ModifyDate
+                                        FROM
+                                            deproomdetail
+                                            INNER JOIN deproom ON deproomdetail.DocNo = deproom.DocNo 
+                                            LEFT JOIN deproomdetailsub ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID 
+                                        WHERE
+                                            deproomdetail.ItemCode = '$_ItemCode' 
+                                            AND deproomdetail.DocNo = '$input_docNo_deproom_manual'
+                                        GROUP BY
+                                            deproomdetail.ID,
+                                            deproom.Ref_departmentroomid,
+                                            deproom.`procedure`,
+                                            deproom.doctor,
+                                            deproom.hn_record_id,
+                                            deproomdetail.ItemCode ,
+                                            deproomdetail.Qty,
+                                            deproomdetail.PayDate ";
+
+
+                            $meQuery_2 = $conn->prepare($query_2);
+                            $meQuery_2->execute();
+                            while ($row_2 = $meQuery_2->fetch(PDO::FETCH_ASSOC)) {
+
+                                $return[] = $row_2;
+
+                                $_ID = $row_2['ID'];
+                                $_PayDate = $row_2['PayDate'];
+                                $_departmentroomid = $row_2['departmentroomid'];
+                                $_procedure = $row_2['procedure'];
+                                $_hn_record_id = $row_2['hn_record_id'];
+                                $_doctor = $row_2['doctor'];
+                                $_Qty_detail = $row_2['Qty'];
+                                $_Qty_detail_sub = $row_2['cnt_sub'];
+                                $_ModifyDate = $row_2['ModifyDate'];
+                                // ==============================
+
+                                $queryInsert1 = "INSERT INTO deproomdetailsub (
+                                                    Deproomdetail_RowID,
+                                                    ItemStockID,
+                                                    dental_warehouse_id,
+                                                    IsStatus,
+                                                    IsCheckPay,
+                                                    PayDate,
+                                                    hn_record_id,
+                                                    doctor,
+                                                    `procedure`,
+                                                    qty_weighing,
+                                                    hn_record_id_borrow
+                                                )
+                                                VALUES
+                                                (
+                                                    '$_ID', 
+                                                    '$_RowID',
+                                                    '$_departmentroomid',
+                                                    1, 
+                                                    1, 
+                                                    NOW(), 
+                                                    '$_hn_record_id', 
+                                                    '$_doctor', 
+                                                    '$_procedure',
+                                                    1,
+                                                    '$_hn_record_id_borrow'
+                                                ) ";
+
+
+                                $queryInsert1 = $conn->prepare($queryInsert1);
+                                $queryInsert1->execute();
+
+                                // =======================================================================================================================================
+                                $query = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty ,hncode )
+                                        VALUES
+                                        ( $_RowID, '$_ItemCode','$input_date_service_manual','$_departmentroomid', $Userid,1,1 ,'$_hn_record_id') ";
+                                $meQuery = $conn->prepare($query);
+                                $meQuery->execute();
+                                // =======================================================================================================================================
+
+
+                                // ==============================
+                                $queryUpdate = "UPDATE itemstock 
+                                                    SET Isdeproom = 1 ,
+                                                    Stockin = 1,
+                                                    departmentroomid = '$_departmentroomid'
+                                                    WHERE
+                                                    RowID = '$_RowID' ";
+                                $meQueryUpdate = $conn->prepare($queryUpdate);
+                                $meQueryUpdate->execute();
+                                // ==============================
+                                $queryInsert2 = "INSERT INTO hncode_detail (DocNo,UsageCode,ItemStockID,Qty,IsStatus,IsCancel)  VALUES             
+                                                            (
+                                                            '$input_docNo_HN_manual', 
+                                                            '$input_pay_manual',
+                                                            '$_RowID',
+                                                            1, 
+                                                            1, 
+                                                            0
+                                                            ) ";
+
+
+                                $query_updateHN = "UPDATE hncode SET IsStatus = 1  WHERE DocNo = '$input_docNo_HN_manual'  ";
+                                $query_updateHN = $conn->prepare($query_updateHN);
+                                $query_updateHN->execute();
+
+
+                                // echo $queryInsert2;
+                                // exit;
+                                $queryInsert2 = $conn->prepare($queryInsert2);
+                                $queryInsert2->execute();
+                                $count_itemstock++;
+
+                                $count_new_item++;
+
+                                if ($_item_status == 2 || $_item_status == 3) {
+                                    oncheck_pay_mapping($conn, $db, $_ItemCode, $input_docNo_deproom_manual, $input_date_service_manual, $_item_status, 1, $_itemtypeID, $_IsSet);
+                                    // $count_itemstock = 2;
+                                }
+                            }
+
+
+                            if ($count_new_item  == 0) {
+
+                                $queryInsert = "INSERT INTO deproomdetail ( DocNo, ItemCode, Qty, IsStatus, PayDate, IsCancel, ModifyUser, ModifyTime ,Ismanual)
+                                                VALUES
+                                                    ( '$input_docNo_deproom_manual', '$_ItemCode', '1', 0,NOW(), 0, '$Userid',NOW() ,1)";
+
+
+
+
+
+                                $meQueryInsert = $conn->prepare($queryInsert);
+                                $meQueryInsert->execute();
+
+
+                                $query_2 = "SELECT
+                                                deproomdetail.ID,
+                                                deproom.Ref_departmentroomid AS departmentroomid,
+                                                deproom.`procedure`,
+                                                deproom.doctor,
+                                                deproom.hn_record_id,
+                                                deproomdetail.ItemCode,
+                                                deproomdetail.Qty ,
+                                                deproomdetail.PayDate ,
+                                                COUNT(deproomdetailsub.ID )  AS cnt_sub,
+                                               deproomdetailsub.PayDate AS ModifyDate
+                                            FROM
+                                                deproomdetail
+                                                INNER JOIN deproom ON deproomdetail.DocNo = deproom.DocNo 
+                                                LEFT JOIN deproomdetailsub ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID 
+                                            WHERE
+                                                deproomdetail.ItemCode = '$_ItemCode' 
+                                                AND deproomdetail.DocNo = '$input_docNo_deproom_manual'
+                                            GROUP BY
+                                                deproomdetail.ID,
+                                                deproom.Ref_departmentroomid,
+                                                deproom.`procedure`,
+                                                deproom.doctor,
+                                                deproom.hn_record_id,
+                                                deproomdetail.ItemCode ,
+                                                deproomdetail.Qty,
+                                                deproomdetail.PayDate ";
+
+
+                                $meQuery_2 = $conn->prepare($query_2);
+                                $meQuery_2->execute();
+                                while ($row_2 = $meQuery_2->fetch(PDO::FETCH_ASSOC)) {
+
+                                    $return[] = $row_2;
+
+                                    $_ID = $row_2['ID'];
+                                    $_departmentroomid = $row_2['departmentroomid'];
+                                    $_procedure = $row_2['procedure'];
+                                    $_hn_record_id = $row_2['hn_record_id'];
+                                    $_doctor = $row_2['doctor'];
+                                    $_ModifyDate = $row_2['ModifyDate'];
+
+                                    // ==============================
+
+                                    $queryInsert1 = "INSERT INTO deproomdetailsub (
+                                                    Deproomdetail_RowID,
+                                                    ItemStockID,
+                                                    dental_warehouse_id,
+                                                    IsStatus,
+                                                    IsCheckPay,
+                                                    PayDate,
+                                                    hn_record_id,
+                                                    doctor,
+                                                    `procedure`,
+                                                    qty_weighing,
+                                                    hn_record_id_borrow
+                                                    )
+                                                    VALUES
+                                                    (
+                                                        '$_ID', 
+                                                        '$_RowID',
+                                                        '$_departmentroomid',
+                                                        1, 
+                                                        1, 
+                                                        NOW(), 
+                                                        '$_hn_record_id', 
+                                                        '$_doctor', 
+                                                        '$_procedure',
+                                                        1,
+                                                    '$_hn_record_id_borrow'
+                                                    ) ";
+
+
+                                    $queryInsert1 = $conn->prepare($queryInsert1);
+                                    $queryInsert1->execute();
+                                    // ==============================
+
+                                    // =======================================================================================================================================
+                                    $query = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty , hncode )
+                                        VALUES
+                                        ( $_RowID, '$_ItemCode','$input_date_service_manual','$_departmentroomid', $Userid,1,1 ,'$_hn_record_id') ";
+                                    $meQuery = $conn->prepare($query);
+                                    $meQuery->execute();
+                                    // =======================================================================================================================================
+
+
+                                    $queryUpdate = "UPDATE itemstock 
+                                            SET Isdeproom = 1 ,
+                                                Stockin = 1,
+                                            departmentroomid = '$_departmentroomid'
+                                            WHERE
+                                            RowID = '$_RowID' ";
+                                    $meQueryUpdate = $conn->prepare($queryUpdate);
+                                    $meQueryUpdate->execute();
+                                    // ==============================
+
+                                    $queryInsert2 = "INSERT INTO hncode_detail (DocNo,UsageCode,ItemStockID,Qty,IsStatus,IsCancel,LastSterileDetailID)  VALUES             
+                                            (
+                                            '$input_docNo_HN_manual',
+                                            '$input_pay_manual',
+                                            '$_RowID',
+                                            1, 
+                                            1, 
+                                            0, 
+                                            (SELECT LastSterileDetailID FROM itemstock  WHERE itemstock.RowID = $_RowID)
+                                            ) ";
+
+
+
+
+                                    $query_updateHN = "UPDATE hncode SET IsStatus = 1  WHERE DocNo = '$input_docNo_HN_manual'  ";
+                                    $query_updateHN = $conn->prepare($query_updateHN);
+                                    $query_updateHN->execute();
+
+
+                                    // echo $queryInsert2;
+                                    // exit;
+                                    $queryInsert2 = $conn->prepare($queryInsert2);
+                                    $queryInsert2->execute();
+                                    $count_itemstock++;
+
+                                    $count_new_item++;
+
+
+
+                                    $count_itemstock = 2;
+
+                                    if ($_item_status == 2 || $_item_status == 3) {
+                                        oncheck_pay_mapping($conn, $db, $_ItemCode, $input_docNo_deproom_manual, $input_date_service_manual, $_item_status, 1, $_itemtypeID, $_IsSet);
+                                        // $count_itemstock = 2;
+                                    }
+                                }
+                            }
+
+
+                            $updatePay = "UPDATE deproom SET UserPay = $Userid WHERE deproom.DocNo = '$input_docNo_deproom_manual' ";
+                            $meQueryPay = $conn->prepare($updatePay);
+                            $meQueryPay->execute();
+                            // }
+                            // else{
+                            //     $count_itemstock = 3;
+                            // }
+
+                            $insert_log = "INSERT INTO log_activity_users (itemCode , itemstockID , qty, isStatus, DocNo, userID, createAt) 
+                            VALUES (:itemCode, :itemstockID, 1, :isStatus, :DocNo, :Userid, NOW())";
+
+                            $meQuery_log = $conn->prepare($insert_log);
+
+                            $meQuery_log->bindParam(':itemCode', $_ItemCode);
+                            $meQuery_log->bindParam(':itemstockID', $_RowID);
+                            $meQuery_log->bindValue(':isStatus', 6, PDO::PARAM_INT);
+                            $meQuery_log->bindParam(':DocNo', $input_docNo_deproom_manual);
+                            $meQuery_log->bindParam(':Userid', $Userid);
+
+
+                            $meQuery_log->execute();
+                        } else {
+                            $count_itemstock = 3;
+                        }
+                    }
+                } else {
+                    $count_itemstock = '9';
                 }
-            } else {
-                $count_itemstock = '9';
             }
         }
     }
@@ -3855,10 +4790,174 @@ function oncheck_Returnpay_manual($conn, $db)
 
             $count_itemstock++;
 
-            if ($_Isdeproom == 1) {
-                $count_itemstock = 0;
+            if ($_item_status == 4 || $_item_status == 5) {
 
-                $query_2 = "SELECT
+
+                $query_99 = " SELECT 
+                            s.ItemCode,
+                            s.Isdeproom,
+                            s.RowID,
+                            bd.UsageCode_bag,
+                            bd.UsageCode,-- ตัวนี้คือของแต่ละชิ้นในถุง
+                            s.departmentroomid,
+                            item.item_status,
+                            item.itemtypeID2 AS itemtypeID,
+                            item.IsSet,
+                        CASE
+                                
+                                WHEN DATE( s.ExpireDate ) <= DATE(
+                                    NOW()) THEN
+                                    'exp' ELSE 'no_exp' 
+                                END AS check_exp 
+                            FROM
+                                bag_detail bd
+                                INNER JOIN itemstock s ON s.UsageCode = bd.UsageCode 
+                                INNER JOIN item  ON s.ItemCode = item.itemcode 
+                            WHERE
+                                bd.UsageCode_bag = '$input_returnpay_manual' 
+                            
+                            AND s.IsCancel = 0 AND s.Isdeproom = 1  ";
+                $count_itemstock = 0;
+                $meQuery_99 = $conn->prepare($query_99);
+                $meQuery_99->execute();
+                while ($row_99 = $meQuery_99->fetch(PDO::FETCH_ASSOC)) {
+                    $_ItemCode_99 = $row_99['ItemCode'];
+                    $_Isdeproom_99 =  $row_99['Isdeproom'];
+                    $_departmentroomid_99 =  $row_99['departmentroomid'];
+                    $_RowID_99 =  $row_99['RowID'];
+                    $_item_status_99 =  $row_99['item_status'];
+                    $_itemtypeID_99 =  $row_99['itemtypeID'];
+
+
+
+                    if ($_Isdeproom_99 == 1) {
+                        $count_itemstock = 0;
+
+                        $query_2 = "SELECT
+                                deproomdetailsub.ID ,
+                                hncode_detail.ID AS hndetail_ID,
+                                deproomdetail.ItemCode,
+                                DATE(deproom.serviceDate)  AS ModifyDate
+                            FROM
+                                deproom
+                                INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
+                                INNER JOIN deproomdetailsub ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID 
+                                INNER JOIN hncode ON hncode.DocNo_SS = deproom.DocNo 
+                                INNER JOIN hncode_detail ON hncode_detail.DocNo = hncode.DocNo
+                            WHERE
+                                deproomdetailsub.ItemStockID = '$_RowID_99' 
+                                AND deproomdetail.DocNo = '$input_docNo_deproom_manual'
+                                AND hncode_detail.ItemStockID = '$_RowID_99' ";
+                        // echo $query_2;
+                        // exit;
+                        $meQuery_2 = $conn->prepare($query_2);
+                        $meQuery_2->execute();
+                        while ($row_2 = $meQuery_2->fetch(PDO::FETCH_ASSOC)) {
+
+                            $return[] = $row_2;
+
+                            $_ID = $row_2['ID'];
+                            $_hndetail_ID = $row_2['hndetail_ID'];
+                            $_ModifyDate = $row_2['ModifyDate'];
+
+                            // ==============================
+                            $queryD1 = "DELETE FROM deproomdetailsub WHERE ID =  '$_ID' ";
+                            $meQueryD1 = $conn->prepare($queryD1);
+                            $meQueryD1->execute();
+
+                            $queryD2 = "DELETE FROM hncode_detail WHERE ID =  '$_hndetail_ID' ";
+                            $meQueryD2 = $conn->prepare($queryD2);
+                            $meQueryD2->execute();
+                            // ==============================
+
+
+                            $qq1 = "SELECT
+                            deproomdetail.ID,
+                            SUM( deproomdetail.Qty ) AS cnt,
+                            IFNULL(( SELECT SUM( deproomdetailsub.qty_weighing ) FROM deproomdetailsub WHERE deproomdetailsub.Deproomdetail_RowID = deproomdetail.ID ), 0 ) AS cnt_pay
+                        FROM
+                            deproom
+                            INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo 
+                        WHERE
+                            deproom.DocNo = '$input_docNo_deproom_manual' 
+                            AND deproom.IsCancel = 0 
+                            AND deproomdetail.IsCancel = 0 
+                            AND deproomdetail.ItemCode = '$_ItemCode_99'
+                        GROUP BY
+                            deproomdetail.ID ";
+                            $meQuery_qq1 = $conn->prepare($qq1);
+                            $meQuery_qq1->execute();
+                            while ($row_qq1 = $meQuery_qq1->fetch(PDO::FETCH_ASSOC)) {
+                                if ($row_qq1['cnt_pay'] == '0') {
+                                    $ID_Detail = $row_qq1['ID'];
+                                    $queryqq1 = "DELETE FROM deproomdetail WHERE ID =  '$ID_Detail' ";
+                                    $meQueryqq1 = $conn->prepare($queryqq1);
+                                    $meQueryqq1->execute();
+                                }
+                            }
+
+
+
+                            // =======================================================================================================================================
+
+                            if ($db == 1) {
+                                $query = "DELETE FROM itemstock_transaction_detail  WHERE ItemStockID = '$_RowID_99' 
+                                    AND ItemCode = '$_ItemCode_99' 
+                                    AND departmentroomid = '$_departmentroomid_99' 
+                                    AND  IsStatus = '1'
+                                    AND DATE(CreateDate) = '$_ModifyDate' ";
+                            } else {
+                                $query = "DELETE FROM itemstock_transaction_detail  WHERE ItemStockID = '$_RowID_99' 
+                                    AND ItemCode = '$_ItemCode_99' 
+                                    AND departmentroomid = '$_departmentroomid_99' 
+                                    AND  IsStatus = '1'
+                                    AND CONVERT(DATE,CreateDate) = '$_ModifyDate' ";
+                            }
+
+                            $meQuery = $conn->prepare($query);
+                            $meQuery->execute();
+                            // =======================================================================================================================================
+
+
+
+                            $queryUpdate = "UPDATE itemstock 
+                                    SET Isdeproom = 0 ,
+                                    departmentroomid = '35'
+                                    WHERE
+                                    RowID = '$_RowID_99' ";
+                            $meQueryUpdate = $conn->prepare($queryUpdate);
+                            $meQueryUpdate->execute();
+                            // ==============================
+                            $count_itemstock++;
+                        }
+
+                        $insert_log = "INSERT INTO log_activity_users (itemCode , itemstockID , qty, isStatus, DocNo, userID, createAt) 
+                            VALUES (:itemCode, :itemstockID, 1, :isStatus, :DocNo, :Userid, NOW())";
+
+                        $meQuery_log = $conn->prepare($insert_log);
+
+                        $meQuery_log->bindParam(':itemCode', $_ItemCode_99);
+                        $meQuery_log->bindParam(':itemstockID', $_RowID_99);
+                        $meQuery_log->bindValue(':isStatus', 7, PDO::PARAM_INT);
+                        $meQuery_log->bindParam(':DocNo', $input_docNo_deproom_manual);
+                        $meQuery_log->bindParam(':Userid', $Userid);
+
+
+                        $meQuery_log->execute();
+
+
+                        if ($_item_status_99 == 3) {
+                            oncheck_delete_pay_mapping($conn, $db, $_ItemCode_99, $input_docNo_deproom_manual, $input_date_service_manual, $_item_status_99, $input_docNo_deproom_manual, $_itemtypeID_99, $input_docNo_HN_manual, 1);
+                        }
+                    } else if ($_Isdeproom_99 == 0) {
+                        $count_itemstock = 2;
+                    }
+                }
+            } else {
+                if ($_Isdeproom == 1) {
+                    $count_itemstock = 0;
+
+                    $query_2 = "SELECT
                                 deproomdetailsub.ID ,
                                 hncode_detail.ID AS hndetail_ID,
                                 deproomdetail.ItemCode,
@@ -3873,30 +4972,30 @@ function oncheck_Returnpay_manual($conn, $db)
                                 deproomdetailsub.ItemStockID = '$_RowID' 
                                 AND deproomdetail.DocNo = '$input_docNo_deproom_manual'
                                 AND hncode_detail.ItemStockID = '$_RowID' ";
-                // echo $query_2;
-                // exit;
-                $meQuery_2 = $conn->prepare($query_2);
-                $meQuery_2->execute();
-                while ($row_2 = $meQuery_2->fetch(PDO::FETCH_ASSOC)) {
+                    // echo $query_2;
+                    // exit;
+                    $meQuery_2 = $conn->prepare($query_2);
+                    $meQuery_2->execute();
+                    while ($row_2 = $meQuery_2->fetch(PDO::FETCH_ASSOC)) {
 
-                    $return[] = $row_2;
+                        $return[] = $row_2;
 
-                    $_ID = $row_2['ID'];
-                    $_hndetail_ID = $row_2['hndetail_ID'];
-                    $_ModifyDate = $row_2['ModifyDate'];
+                        $_ID = $row_2['ID'];
+                        $_hndetail_ID = $row_2['hndetail_ID'];
+                        $_ModifyDate = $row_2['ModifyDate'];
 
-                    // ==============================
-                    $queryD1 = "DELETE FROM deproomdetailsub WHERE ID =  '$_ID' ";
-                    $meQueryD1 = $conn->prepare($queryD1);
-                    $meQueryD1->execute();
+                        // ==============================
+                        $queryD1 = "DELETE FROM deproomdetailsub WHERE ID =  '$_ID' ";
+                        $meQueryD1 = $conn->prepare($queryD1);
+                        $meQueryD1->execute();
 
-                    $queryD2 = "DELETE FROM hncode_detail WHERE ID =  '$_hndetail_ID' ";
-                    $meQueryD2 = $conn->prepare($queryD2);
-                    $meQueryD2->execute();
-                    // ==============================
+                        $queryD2 = "DELETE FROM hncode_detail WHERE ID =  '$_hndetail_ID' ";
+                        $meQueryD2 = $conn->prepare($queryD2);
+                        $meQueryD2->execute();
+                        // ==============================
 
 
-                    $qq1 = "SELECT
+                        $qq1 = "SELECT
                             deproomdetail.ID,
                             SUM( deproomdetail.Qty ) AS cnt,
                             IFNULL(( SELECT SUM( deproomdetailsub.qty_weighing ) FROM deproomdetailsub WHERE deproomdetailsub.Deproomdetail_RowID = deproomdetail.ID ), 0 ) AS cnt_pay
@@ -3910,72 +5009,73 @@ function oncheck_Returnpay_manual($conn, $db)
                             AND deproomdetail.ItemCode = '$_ItemCode'
                         GROUP BY
                             deproomdetail.ID ";
-                    $meQuery_qq1 = $conn->prepare($qq1);
-                    $meQuery_qq1->execute();
-                    while ($row_qq1 = $meQuery_qq1->fetch(PDO::FETCH_ASSOC)) {
-                        if ($row_qq1['cnt_pay'] == '0') {
-                            $ID_Detail = $row_qq1['ID'];
-                            $queryqq1 = "DELETE FROM deproomdetail WHERE ID =  '$ID_Detail' ";
-                            $meQueryqq1 = $conn->prepare($queryqq1);
-                            $meQueryqq1->execute();
+                        $meQuery_qq1 = $conn->prepare($qq1);
+                        $meQuery_qq1->execute();
+                        while ($row_qq1 = $meQuery_qq1->fetch(PDO::FETCH_ASSOC)) {
+                            if ($row_qq1['cnt_pay'] == '0') {
+                                $ID_Detail = $row_qq1['ID'];
+                                $queryqq1 = "DELETE FROM deproomdetail WHERE ID =  '$ID_Detail' ";
+                                $meQueryqq1 = $conn->prepare($queryqq1);
+                                $meQueryqq1->execute();
+                            }
                         }
-                    }
 
 
 
-                    // =======================================================================================================================================
+                        // =======================================================================================================================================
 
-                    if ($db == 1) {
-                        $query = "DELETE FROM itemstock_transaction_detail  WHERE ItemStockID = '$_RowID' 
+                        if ($db == 1) {
+                            $query = "DELETE FROM itemstock_transaction_detail  WHERE ItemStockID = '$_RowID' 
                                     AND ItemCode = '$_ItemCode' 
                                     AND departmentroomid = '$_departmentroomid' 
                                     AND  IsStatus = '1'
                                     AND DATE(CreateDate) = '$_ModifyDate' ";
-                    } else {
-                        $query = "DELETE FROM itemstock_transaction_detail  WHERE ItemStockID = '$_RowID' 
+                        } else {
+                            $query = "DELETE FROM itemstock_transaction_detail  WHERE ItemStockID = '$_RowID' 
                                     AND ItemCode = '$_ItemCode' 
                                     AND departmentroomid = '$_departmentroomid' 
                                     AND  IsStatus = '1'
                                     AND CONVERT(DATE,CreateDate) = '$_ModifyDate' ";
-                    }
+                        }
 
-                    $meQuery = $conn->prepare($query);
-                    $meQuery->execute();
-                    // =======================================================================================================================================
+                        $meQuery = $conn->prepare($query);
+                        $meQuery->execute();
+                        // =======================================================================================================================================
 
 
 
-                    $queryUpdate = "UPDATE itemstock 
+                        $queryUpdate = "UPDATE itemstock 
                                     SET Isdeproom = 0 ,
                                     departmentroomid = '35'
                                     WHERE
                                     RowID = '$_RowID' ";
-                    $meQueryUpdate = $conn->prepare($queryUpdate);
-                    $meQueryUpdate->execute();
-                    // ==============================
-                    $count_itemstock++;
-                }
+                        $meQueryUpdate = $conn->prepare($queryUpdate);
+                        $meQueryUpdate->execute();
+                        // ==============================
+                        $count_itemstock++;
+                    }
 
-                $insert_log = "INSERT INTO log_activity_users (itemCode , itemstockID , qty, isStatus, DocNo, userID, createAt) 
+                    $insert_log = "INSERT INTO log_activity_users (itemCode , itemstockID , qty, isStatus, DocNo, userID, createAt) 
                             VALUES (:itemCode, :itemstockID, 1, :isStatus, :DocNo, :Userid, NOW())";
 
-                $meQuery_log = $conn->prepare($insert_log);
+                    $meQuery_log = $conn->prepare($insert_log);
 
-                $meQuery_log->bindParam(':itemCode', $_ItemCode);
-                $meQuery_log->bindParam(':itemstockID', $_RowID);
-                $meQuery_log->bindValue(':isStatus', 7, PDO::PARAM_INT);
-                $meQuery_log->bindParam(':DocNo', $input_docNo_deproom_manual);
-                $meQuery_log->bindParam(':Userid', $Userid);
-
-
-                $meQuery_log->execute();
+                    $meQuery_log->bindParam(':itemCode', $_ItemCode);
+                    $meQuery_log->bindParam(':itemstockID', $_RowID);
+                    $meQuery_log->bindValue(':isStatus', 7, PDO::PARAM_INT);
+                    $meQuery_log->bindParam(':DocNo', $input_docNo_deproom_manual);
+                    $meQuery_log->bindParam(':Userid', $Userid);
 
 
-                if ($_item_status == 3) {
-                    oncheck_delete_pay_mapping($conn, $db, $_ItemCode, $input_docNo_deproom_manual, $input_date_service_manual, $_item_status, $input_docNo_deproom_manual, $_itemtypeID, $input_docNo_HN_manual, 1);
+                    $meQuery_log->execute();
+
+
+                    if ($_item_status == 3) {
+                        oncheck_delete_pay_mapping($conn, $db, $_ItemCode, $input_docNo_deproom_manual, $input_date_service_manual, $_item_status, $input_docNo_deproom_manual, $_itemtypeID, $input_docNo_HN_manual, 1);
+                    }
+                } else if ($_Isdeproom == 0) {
+                    $count_itemstock = 2;
                 }
-            } else if ($_Isdeproom == 0) {
-                $count_itemstock = 2;
             }
         }
     }
@@ -5252,7 +6352,8 @@ function oncheck_Returnpay($conn, $db)
                 INNER JOIN item ON itemstock.ItemCode = item.itemcode 
                 WHERE  itemstock.UsageCode = '$input_returnpay'  ";
 
-
+        // echo $query_1;
+        // exit;
         $count_itemstock = 0;
         $meQuery_1 = $conn->prepare($query_1);
         $meQuery_1->execute();
@@ -5267,10 +6368,183 @@ function oncheck_Returnpay($conn, $db)
 
             $count_itemstock++;
 
-            if ($_Isdeproom == 1) {
-                $count_itemstock = 0;
+            if ($_item_status == 4 || $_item_status == 5) {
 
-                $query_2 = "SELECT
+                $query_99 = " SELECT 
+                                        s.ItemCode,
+                                        s.Isdeproom,
+                                        s.RowID,
+                                        bd.UsageCode_bag,
+                                        bd.UsageCode,-- ตัวนี้คือของแต่ละชิ้นในถุง
+                                        s.departmentroomid,
+                                        item.item_status,
+                                        item.itemtypeID2 AS itemtypeID,
+                                        item.IsSet,
+                                    CASE
+                                            
+                                            WHEN DATE( s.ExpireDate ) <= DATE(
+                                                NOW()) THEN
+                                                'exp' ELSE 'no_exp' 
+                                            END AS check_exp 
+                                        FROM
+                                            bag_detail bd
+                                            INNER JOIN itemstock s ON s.UsageCode = bd.UsageCode 
+                                            INNER JOIN item  ON s.ItemCode = item.itemcode 
+                                        WHERE
+                                            bd.UsageCode_bag = '$input_returnpay' 
+                                        
+                                        AND s.IsCancel = 0 AND s.Isdeproom = 1  ";
+
+
+
+                $count_itemstock = 0;
+                $meQuery_99 = $conn->prepare($query_99);
+                $meQuery_99->execute();
+                while ($row_99 = $meQuery_99->fetch(PDO::FETCH_ASSOC)) {
+
+
+                    $_ItemCode_99 = $row_99['ItemCode'];
+                    $_Isdeproom_99 =  $row_99['Isdeproom'];
+                    $_departmentroomid_99 =  $row_99['departmentroomid'];
+                    $_RowID_99 =  $row_99['RowID'];
+                    $_item_status_99 =  $row_99['item_status'];
+                    $_itemtypeID_99 =  $row_99['itemtypeID'];
+
+
+                    if ($_Isdeproom_99 == 1) {
+                        $count_itemstock = 0;
+
+                        $query_2 = "SELECT
+                            deproomdetailsub.ID ,
+                            hncode_detail.ID AS hndetail_ID,
+                            hncode.DocNo ,
+	                        deproomdetail.ItemCode,
+                            DATE(deproom.serviceDate)  AS ModifyDate
+                        FROM
+                            deproom
+                            INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
+                            INNER JOIN deproomdetailsub ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID 
+                            INNER JOIN hncode ON hncode.DocNo_SS = deproom.DocNo 
+                            INNER JOIN hncode_detail ON hncode_detail.DocNo = hncode.DocNo
+                        WHERE
+                            deproomdetailsub.ItemStockID = '$_RowID_99' 
+                            AND deproomdetail.DocNo = '$DocNo_pay'
+                            AND hncode_detail.ItemStockID = '$_RowID_99' LIMIT 1";
+                        // echo $query_2;
+                        // exit;
+                        $meQuery_2 = $conn->prepare($query_2);
+                        $meQuery_2->execute();
+                        while ($row_2 = $meQuery_2->fetch(PDO::FETCH_ASSOC)) {
+
+                            $return[] = $row_2;
+                            $_ID = $row_2['ID'];
+                            $_DocNoHN = $row_2['DocNo'];
+                            $_hndetail_ID = $row_2['hndetail_ID'];
+                            $_ModifyDate = $row_2['ModifyDate'];
+
+                            // ==============================
+                            $queryD1 = "DELETE FROM deproomdetailsub WHERE ID =  '$_ID' ";
+                            $meQueryD1 = $conn->prepare($queryD1);
+                            $meQueryD1->execute();
+
+                            $queryD2 = "DELETE FROM hncode_detail WHERE ID =  '$_hndetail_ID' ";
+                            $meQueryD2 = $conn->prepare($queryD2);
+                            $meQueryD2->execute();
+                            // ==============================
+
+                            //check ว่า ตัว IsRequest = 1 เหลือกี่ตัว
+
+                            $qq1 = "SELECT
+                            deproomdetail.ID,
+                            SUM( deproomdetail.Qty ) AS cnt,
+                            IFNULL(( SELECT SUM( deproomdetailsub.qty_weighing ) FROM deproomdetailsub WHERE deproomdetailsub.Deproomdetail_RowID = deproomdetail.ID ), 0 ) AS cnt_pay
+                        FROM
+                            deproom
+                            INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo 
+                        WHERE
+                            deproom.DocNo = '$DocNo_pay' 
+                            AND deproom.IsCancel = 0 
+                            AND deproomdetail.IsCancel = 0 
+                            AND deproomdetail.ItemCode = '$_ItemCode_99'
+                            AND deproomdetail.IsRequest = 1 OR  deproomdetail.Ismanual = 1
+                        GROUP BY
+                            deproomdetail.ID ";
+                            $meQuery_qq1 = $conn->prepare($qq1);
+                            $meQuery_qq1->execute();
+                            while ($row_qq1 = $meQuery_qq1->fetch(PDO::FETCH_ASSOC)) {
+                                if ($row_qq1['cnt_pay'] == '0') {
+                                    $ID_Detail = $row_qq1['ID'];
+                                    $queryqq1 = "DELETE FROM deproomdetail WHERE ID =  '$ID_Detail' ";
+                                    $meQueryqq1 = $conn->prepare($queryqq1);
+                                    $meQueryqq1->execute();
+                                }
+                            }
+                            // =======================================================================================================================================
+
+                            if ($db == 1) {
+                                $query = "DELETE FROM itemstock_transaction_detail  WHERE ItemStockID = '$_RowID_99' 
+                        AND ItemCode = '$_ItemCode_99' 
+                        AND departmentroomid = '$_departmentroomid_99' 
+                        AND  IsStatus = '1'
+                        AND DATE(CreateDate) = '$_ModifyDate' LIMIT 1 ";
+                            } else {
+                                $query = "DELETE FROM itemstock_transaction_detail  WHERE ItemStockID = '$_RowID_99' 
+                        AND ItemCode = '$_ItemCode_99' 
+                        AND departmentroomid = '$_departmentroomid_99' 
+                        AND  IsStatus = '1'
+                        AND CONVERT(DATE,CreateDate) = '$_ModifyDate' LIMIT 1  ";
+                            }
+
+                            $meQuery = $conn->prepare($query);
+                            $meQuery->execute();
+                            // =======================================================================================================================================
+
+
+
+                            $queryUpdate = "UPDATE itemstock 
+                        SET Isdeproom = 0 ,
+                        departmentroomid = '35'
+                        WHERE
+                        RowID = '$_RowID_99' ";
+                            $meQueryUpdate = $conn->prepare($queryUpdate);
+                            $meQueryUpdate->execute();
+                            // ==============================
+                            $count_itemstock++;
+
+
+                            $insert_log = "INSERT INTO log_activity_users (itemCode , itemstockID , qty, isStatus, DocNo, userID, createAt) 
+                            VALUES (:itemCode, :itemstockID, 1, :isStatus, :DocNo, :Userid, NOW())";
+
+                            $meQuery_log = $conn->prepare($insert_log);
+
+                            $meQuery_log->bindParam(':itemCode', $_ItemCode_99);
+                            $meQuery_log->bindParam(':itemstockID', $_RowID_99);
+                            $meQuery_log->bindValue(':isStatus', 5, PDO::PARAM_INT);
+                            $meQuery_log->bindParam(':DocNo', $DocNo_pay);
+                            $meQuery_log->bindParam(':Userid', $Userid);
+
+
+                            $meQuery_log->execute();
+                        }
+
+                        if ($_item_status_99 == 3) {
+                            if (isset($_DocNoHN) && !empty($_DocNoHN)) {
+                                oncheck_delete_pay_mapping($conn, $db, $_ItemCode_99, $DocNo_pay, $input_date_service, $_item_status_99, $DocNo_pay, $_itemtypeID_99, $_DocNoHN, 0);
+                                $count_itemstock = 3;
+                            } else {
+                                $count_itemstock = 0;
+                            }
+                        }
+                    } else if ($_Isdeproom_99 == 0) {
+                        $count_itemstock = 2;
+                    }
+                }
+            } else {
+
+                if ($_Isdeproom == 1) {
+                    $count_itemstock = 0;
+
+                    $query_2 = "SELECT
                             deproomdetailsub.ID ,
                             hncode_detail.ID AS hndetail_ID,
                             hncode.DocNo ,
@@ -5286,31 +6560,31 @@ function oncheck_Returnpay($conn, $db)
                             deproomdetailsub.ItemStockID = '$_RowID' 
                             AND deproomdetail.DocNo = '$DocNo_pay'
                             AND hncode_detail.ItemStockID = '$_RowID' LIMIT 1";
-                // echo $query_2;
-                // exit;
-                $meQuery_2 = $conn->prepare($query_2);
-                $meQuery_2->execute();
-                while ($row_2 = $meQuery_2->fetch(PDO::FETCH_ASSOC)) {
+                    // echo $query_2;
+                    // exit;
+                    $meQuery_2 = $conn->prepare($query_2);
+                    $meQuery_2->execute();
+                    while ($row_2 = $meQuery_2->fetch(PDO::FETCH_ASSOC)) {
 
-                    $return[] = $row_2;
-                    $_ID = $row_2['ID'];
-                    $_DocNoHN = $row_2['DocNo'];
-                    $_hndetail_ID = $row_2['hndetail_ID'];
-                    $_ModifyDate = $row_2['ModifyDate'];
+                        $return[] = $row_2;
+                        $_ID = $row_2['ID'];
+                        $_DocNoHN = $row_2['DocNo'];
+                        $_hndetail_ID = $row_2['hndetail_ID'];
+                        $_ModifyDate = $row_2['ModifyDate'];
 
-                    // ==============================
-                    $queryD1 = "DELETE FROM deproomdetailsub WHERE ID =  '$_ID' ";
-                    $meQueryD1 = $conn->prepare($queryD1);
-                    $meQueryD1->execute();
+                        // ==============================
+                        $queryD1 = "DELETE FROM deproomdetailsub WHERE ID =  '$_ID' ";
+                        $meQueryD1 = $conn->prepare($queryD1);
+                        $meQueryD1->execute();
 
-                    $queryD2 = "DELETE FROM hncode_detail WHERE ID =  '$_hndetail_ID' ";
-                    $meQueryD2 = $conn->prepare($queryD2);
-                    $meQueryD2->execute();
-                    // ==============================
+                        $queryD2 = "DELETE FROM hncode_detail WHERE ID =  '$_hndetail_ID' ";
+                        $meQueryD2 = $conn->prepare($queryD2);
+                        $meQueryD2->execute();
+                        // ==============================
 
-                    //check ว่า ตัว IsRequest = 1 เหลือกี่ตัว
+                        //check ว่า ตัว IsRequest = 1 เหลือกี่ตัว
 
-                    $qq1 = "SELECT
+                        $qq1 = "SELECT
                             deproomdetail.ID,
                             SUM( deproomdetail.Qty ) AS cnt,
                             IFNULL(( SELECT SUM( deproomdetailsub.qty_weighing ) FROM deproomdetailsub WHERE deproomdetailsub.Deproomdetail_RowID = deproomdetail.ID ), 0 ) AS cnt_pay
@@ -5325,74 +6599,75 @@ function oncheck_Returnpay($conn, $db)
                             AND deproomdetail.IsRequest = 1 OR  deproomdetail.Ismanual = 1
                         GROUP BY
                             deproomdetail.ID ";
-                    $meQuery_qq1 = $conn->prepare($qq1);
-                    $meQuery_qq1->execute();
-                    while ($row_qq1 = $meQuery_qq1->fetch(PDO::FETCH_ASSOC)) {
-                        if ($row_qq1['cnt_pay'] == '0') {
-                            $ID_Detail = $row_qq1['ID'];
-                            $queryqq1 = "DELETE FROM deproomdetail WHERE ID =  '$ID_Detail' ";
-                            $meQueryqq1 = $conn->prepare($queryqq1);
-                            $meQueryqq1->execute();
+                        $meQuery_qq1 = $conn->prepare($qq1);
+                        $meQuery_qq1->execute();
+                        while ($row_qq1 = $meQuery_qq1->fetch(PDO::FETCH_ASSOC)) {
+                            if ($row_qq1['cnt_pay'] == '0') {
+                                $ID_Detail = $row_qq1['ID'];
+                                $queryqq1 = "DELETE FROM deproomdetail WHERE ID =  '$ID_Detail' ";
+                                $meQueryqq1 = $conn->prepare($queryqq1);
+                                $meQueryqq1->execute();
+                            }
                         }
-                    }
-                    // =======================================================================================================================================
+                        // =======================================================================================================================================
 
-                    if ($db == 1) {
-                        $query = "DELETE FROM itemstock_transaction_detail  WHERE ItemStockID = '$_RowID' 
+                        if ($db == 1) {
+                            $query = "DELETE FROM itemstock_transaction_detail  WHERE ItemStockID = '$_RowID' 
                     AND ItemCode = '$_ItemCode' 
                     AND departmentroomid = '$_departmentroomid' 
                     AND  IsStatus = '1'
                     AND DATE(CreateDate) = '$_ModifyDate' LIMIT 1 ";
-                    } else {
-                        $query = "DELETE FROM itemstock_transaction_detail  WHERE ItemStockID = '$_RowID' 
+                        } else {
+                            $query = "DELETE FROM itemstock_transaction_detail  WHERE ItemStockID = '$_RowID' 
                     AND ItemCode = '$_ItemCode' 
                     AND departmentroomid = '$_departmentroomid' 
                     AND  IsStatus = '1'
                     AND CONVERT(DATE,CreateDate) = '$_ModifyDate' LIMIT 1  ";
-                    }
+                        }
 
-                    $meQuery = $conn->prepare($query);
-                    $meQuery->execute();
-                    // =======================================================================================================================================
+                        $meQuery = $conn->prepare($query);
+                        $meQuery->execute();
+                        // =======================================================================================================================================
 
 
 
-                    $queryUpdate = "UPDATE itemstock 
+                        $queryUpdate = "UPDATE itemstock 
                     SET Isdeproom = 0 ,
                     departmentroomid = '35'
                     WHERE
                     RowID = '$_RowID' ";
-                    $meQueryUpdate = $conn->prepare($queryUpdate);
-                    $meQueryUpdate->execute();
-                    // ==============================
-                    $count_itemstock++;
+                        $meQueryUpdate = $conn->prepare($queryUpdate);
+                        $meQueryUpdate->execute();
+                        // ==============================
+                        $count_itemstock++;
 
 
-                    $insert_log = "INSERT INTO log_activity_users (itemCode , itemstockID , qty, isStatus, DocNo, userID, createAt) 
+                        $insert_log = "INSERT INTO log_activity_users (itemCode , itemstockID , qty, isStatus, DocNo, userID, createAt) 
                             VALUES (:itemCode, :itemstockID, 1, :isStatus, :DocNo, :Userid, NOW())";
 
-                    $meQuery_log = $conn->prepare($insert_log);
+                        $meQuery_log = $conn->prepare($insert_log);
 
-                    $meQuery_log->bindParam(':itemCode', $_ItemCode);
-                    $meQuery_log->bindParam(':itemstockID', $_RowID);
-                    $meQuery_log->bindValue(':isStatus', 5, PDO::PARAM_INT);
-                    $meQuery_log->bindParam(':DocNo', $DocNo_pay);
-                    $meQuery_log->bindParam(':Userid', $Userid);
+                        $meQuery_log->bindParam(':itemCode', $_ItemCode);
+                        $meQuery_log->bindParam(':itemstockID', $_RowID);
+                        $meQuery_log->bindValue(':isStatus', 5, PDO::PARAM_INT);
+                        $meQuery_log->bindParam(':DocNo', $DocNo_pay);
+                        $meQuery_log->bindParam(':Userid', $Userid);
 
 
-                    $meQuery_log->execute();
-                }
-
-                if ($_item_status == 3) {
-                    if (isset($_DocNoHN) && !empty($_DocNoHN)) {
-                        oncheck_delete_pay_mapping($conn, $db, $_ItemCode, $DocNo_pay, $input_date_service, $_item_status, $DocNo_pay, $_itemtypeID, $_DocNoHN, 0);
-                        $count_itemstock = 3;
-                    } else {
-                        $count_itemstock = 0;
+                        $meQuery_log->execute();
                     }
+
+                    if ($_item_status == 3) {
+                        if (isset($_DocNoHN) && !empty($_DocNoHN)) {
+                            oncheck_delete_pay_mapping($conn, $db, $_ItemCode, $DocNo_pay, $input_date_service, $_item_status, $DocNo_pay, $_itemtypeID, $_DocNoHN, 0);
+                            $count_itemstock = 3;
+                        } else {
+                            $count_itemstock = 0;
+                        }
+                    }
+                } else if ($_Isdeproom == 0) {
+                    $count_itemstock = 2;
                 }
-            } else if ($_Isdeproom == 0) {
-                $count_itemstock = 2;
             }
         }
 
@@ -6890,8 +8165,7 @@ function oncheck_pay($conn, $db)
                                         $wherepermission ";
 
 
-        // echo $query_1;
-        // exit;
+
         $count_itemstock = 0;
         $meQuery_1 = $conn->prepare($query_1);
         $meQuery_1->execute();
@@ -6903,21 +8177,62 @@ function oncheck_pay($conn, $db)
             $_IsSet = $row_1['IsSet'];
 
 
-            if ($_check_exp == 'no_exp') {
-                $_ItemCode = $row_1['ItemCode'];
-                $_Isdeproom =  $row_1['Isdeproom'];
-                $_departmentroomid =  $row_1['departmentroomid'];
-                $_RowID =  $row_1['RowID'];
+            if ($_item_status == 4 || $_item_status == 5) {
 
-                $count_itemstock++;
+                $query_99 = " SELECT 
+                                s.ItemCode,
+                                s.Isdeproom,
+                                s.RowID,
+                                bd.UsageCode_bag,
+                                bd.UsageCode,-- ตัวนี้คือของแต่ละชิ้นในถุง
+                                s.departmentroomid,
+                                item.item_status,
+                                item.itemtypeID2 AS itemtypeID,
+                                item.IsSet,
+                            CASE
+                                    
+                                    WHEN DATE( s.ExpireDate ) <= DATE(
+                                        NOW()) THEN
+                                        'exp' ELSE 'no_exp' 
+                                    END AS check_exp 
+                                FROM
+                                    bag_detail bd
+                                    INNER JOIN itemstock s ON s.UsageCode = bd.UsageCode 
+                                    INNER JOIN item  ON s.ItemCode = item.itemcode 
+                                WHERE
+                                    bd.UsageCode_bag = '$input_pay' 
+                                
+                                AND s.IsCancel = 0
+                                $wherepermission ";
+
+
 
                 $count_itemstock = 0;
-                $count_new_item = 0;
+                $meQuery_99 = $conn->prepare($query_99);
+                $meQuery_99->execute();
+                while ($row_99 = $meQuery_99->fetch(PDO::FETCH_ASSOC)) {
 
-                // stock
-                if ($_Isdeproom == 0) {
+                    $_check_exp = $row_99['check_exp'];
+                    $_item_status = $row_99['item_status'];
+                    $_itemtypeID = $row_99['itemtypeID'];
+                    $_IsSet = $row_99['IsSet'];
 
-                    $query_2 = "SELECT
+
+                    if ($_check_exp == 'no_exp') {
+                        $_ItemCode = $row_99['ItemCode'];
+                        $_Isdeproom =  $row_99['Isdeproom'];
+                        $_departmentroomid =  $row_99['departmentroomid'];
+                        $_RowID =  $row_99['RowID'];
+
+                        $count_itemstock++;
+
+                        $count_itemstock = 0;
+                        $count_new_item = 0;
+
+                        // stock
+                        if ($_Isdeproom == 0) {
+
+                            $query_2 = "SELECT
                                         deproomdetail.ID,
                                         deproom.Ref_departmentroomid AS departmentroomid,
                                         deproom.`procedure`,
@@ -6945,27 +8260,27 @@ function oncheck_pay($conn, $db)
                                         deproomdetail.Qty,
                                         deproomdetail.PayDate ";
 
-                    $meQuery_2 = $conn->prepare($query_2);
-                    $meQuery_2->execute();
-                    while ($row_2 = $meQuery_2->fetch(PDO::FETCH_ASSOC)) {
+                            $meQuery_2 = $conn->prepare($query_2);
+                            $meQuery_2->execute();
+                            while ($row_2 = $meQuery_2->fetch(PDO::FETCH_ASSOC)) {
 
-                        $return[] = $row_2;
+                                $return[] = $row_2;
 
-                        $_ID = $row_2['ID'];
-                        $_PayDate = $row_2['PayDate'];
-                        $_departmentroomid = $row_2['departmentroomid'];
-                        $_procedure = $row_2['procedure'];
-                        $_hn_record_id = $row_2['hn_record_id'];
-                        $_doctor = $row_2['doctor'];
-                        $_Qty_detail = $row_2['Qty'];
-                        $_Qty_detail_sub = $row_2['cnt_sub'];
-                        $_ModifyDate = $row_2['ModifyDate'];
+                                $_ID = $row_2['ID'];
+                                $_PayDate = $row_2['PayDate'];
+                                $_departmentroomid = $row_2['departmentroomid'];
+                                $_procedure = $row_2['procedure'];
+                                $_hn_record_id = $row_2['hn_record_id'];
+                                $_doctor = $row_2['doctor'];
+                                $_Qty_detail = $row_2['Qty'];
+                                $_Qty_detail_sub = $row_2['cnt_sub'];
+                                $_ModifyDate = $row_2['ModifyDate'];
 
 
 
-                        // ==============================
+                                // ==============================
 
-                        $queryInsert1 = "INSERT INTO deproomdetailsub (
+                                $queryInsert1 = "INSERT INTO deproomdetailsub (
                                             Deproomdetail_RowID,
                                             ItemStockID,
                                             dental_warehouse_id,
@@ -6991,29 +8306,29 @@ function oncheck_pay($conn, $db)
                                             1
                                         ) ";
 
-                        $queryInsert1 = $conn->prepare($queryInsert1);
-                        $queryInsert1->execute();
+                                $queryInsert1 = $conn->prepare($queryInsert1);
+                                $queryInsert1->execute();
 
-                        // =======================================================================================================================================
-                        $query = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty ,hncode )
+                                // =======================================================================================================================================
+                                $query = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty ,hncode )
                             VALUES
                             ( $_RowID, '$_ItemCode','$input_date_service','$_departmentroomid', $Userid,1,1 ,'$_hn_record_id') ";
-                        $meQuery = $conn->prepare($query);
-                        $meQuery->execute();
-                        // =======================================================================================================================================
+                                $meQuery = $conn->prepare($query);
+                                $meQuery->execute();
+                                // =======================================================================================================================================
 
 
-                        // ==============================
-                        $queryUpdate = "UPDATE itemstock 
+                                // ==============================
+                                $queryUpdate = "UPDATE itemstock 
                             SET Isdeproom = 1 ,
                                 Stockin = 1,
                             departmentroomid = '$_departmentroomid'
                             WHERE
                             RowID = '$_RowID' ";
-                        $meQueryUpdate = $conn->prepare($queryUpdate);
-                        $meQueryUpdate->execute();
-                        // ==============================
-                        $queryInsert2 = "INSERT INTO hncode_detail (DocNo,UsageCode,ItemStockID,Qty,IsStatus,IsCancel,LastSterileDetailID)  VALUES             
+                                $meQueryUpdate = $conn->prepare($queryUpdate);
+                                $meQueryUpdate->execute();
+                                // ==============================
+                                $queryInsert2 = "INSERT INTO hncode_detail (DocNo,UsageCode,ItemStockID,Qty,IsStatus,IsCancel,LastSterileDetailID)  VALUES             
                             (
                             (SELECT hncode.DocNo FROM hncode  WHERE hncode.DocNo_SS = '$DocNo_pay'  LIMIT 1 ), 
                             '$input_pay',
@@ -7025,77 +8340,77 @@ function oncheck_pay($conn, $db)
                             ) ";
 
 
-                        // 1. ค้นหา DocNo จาก DocNo_SS
-                        $sqlDocNo = "SELECT DocNo FROM his WHERE DocNo_deproom = ? LIMIT 1";
-                        $stmtDoc = $conn->prepare($sqlDocNo);
-                        $stmtDoc->execute([$DocNo_pay]);
-                        $row = $stmtDoc->fetch(PDO::FETCH_ASSOC);
+                                // 1. ค้นหา DocNo จาก DocNo_SS
+                                $sqlDocNo = "SELECT DocNo FROM his WHERE DocNo_deproom = ? LIMIT 1";
+                                $stmtDoc = $conn->prepare($sqlDocNo);
+                                $stmtDoc->execute([$DocNo_pay]);
+                                $row = $stmtDoc->fetch(PDO::FETCH_ASSOC);
 
-                        if ($row) {
-                            $docNo_hn = $row['DocNo'];
+                                if ($row) {
+                                    $docNo_hn = $row['DocNo'];
 
-                            // 2. เช็คว่า ItemCode มีอยู่ใน his_detail แล้วหรือยัง
-                            $sqlCheck = "SELECT Qty FROM his_detail WHERE DocNo = ? AND ItemCode = ?";
-                            $stmtCheck = $conn->prepare($sqlCheck);
-                            $stmtCheck->execute([$docNo_hn, $_ItemCode]);
-                            $resultCheck = $stmtCheck->fetch(PDO::FETCH_ASSOC);
+                                    // 2. เช็คว่า ItemCode มีอยู่ใน his_detail แล้วหรือยัง
+                                    $sqlCheck = "SELECT Qty FROM his_detail WHERE DocNo = ? AND ItemCode = ?";
+                                    $stmtCheck = $conn->prepare($sqlCheck);
+                                    $stmtCheck->execute([$docNo_hn, $_ItemCode]);
+                                    $resultCheck = $stmtCheck->fetch(PDO::FETCH_ASSOC);
 
-                            if ($resultCheck) {
-                                // เจอแล้ว -> UPDATE Qty +1
-                                $sqlUpdate = "UPDATE his_detail SET Qty = Qty + 1 WHERE DocNo = ? AND ItemCode = ?";
-                                $stmtUpdate = $conn->prepare($sqlUpdate);
-                                $stmtUpdate->execute([$docNo_hn, $_ItemCode]);
-                            } else {
-                                // ไม่เจอ -> INSERT
-                                $sqlInsert = "INSERT INTO his_detail (DocNo, ItemCode, Qty) VALUES (?, ?, 1)";
-                                $stmtInsert = $conn->prepare($sqlInsert);
-                                $stmtInsert->execute([$docNo_hn, $_ItemCode]);
+                                    if ($resultCheck) {
+                                        // เจอแล้ว -> UPDATE Qty +1
+                                        $sqlUpdate = "UPDATE his_detail SET Qty = Qty + 1 WHERE DocNo = ? AND ItemCode = ?";
+                                        $stmtUpdate = $conn->prepare($sqlUpdate);
+                                        $stmtUpdate->execute([$docNo_hn, $_ItemCode]);
+                                    } else {
+                                        // ไม่เจอ -> INSERT
+                                        $sqlInsert = "INSERT INTO his_detail (DocNo, ItemCode, Qty) VALUES (?, ?, 1)";
+                                        $stmtInsert = $conn->prepare($sqlInsert);
+                                        $stmtInsert->execute([$docNo_hn, $_ItemCode]);
+                                    }
+                                }
+
+
+
+
+                                $query_updateHN = "UPDATE hncode SET IsStatus = 1  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.`procedure` = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$input_date_service' ";
+                                $query_updateHN = $conn->prepare($query_updateHN);
+                                $query_updateHN->execute();
+
+
+                                // echo $queryInsert2;
+                                // exit;
+                                $queryInsert2 = $conn->prepare($queryInsert2);
+                                $queryInsert2->execute();
+                                $count_itemstock++;
+
+                                $count_new_item++;
+
+                                // ส่วนจ่ายธรรมดา
+                                if ($_item_status == 2 || $_item_status == 3) {
+                                    oncheck_pay_mapping($conn, $db, $_ItemCode, $DocNo_pay, $input_date_service, $_item_status, 0, $_itemtypeID, $_IsSet);
+                                    $count_itemstock = 2;
+                                }
                             }
-                        }
 
 
+                            if ($count_new_item  == 0) {
 
-
-                        $query_updateHN = "UPDATE hncode SET IsStatus = 1  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.`procedure` = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$input_date_service' ";
-                        $query_updateHN = $conn->prepare($query_updateHN);
-                        $query_updateHN->execute();
-
-
-                        // echo $queryInsert2;
-                        // exit;
-                        $queryInsert2 = $conn->prepare($queryInsert2);
-                        $queryInsert2->execute();
-                        $count_itemstock++;
-
-                        $count_new_item++;
-
-                        // ส่วนจ่ายธรรมดา
-                        if ($_item_status == 2 || $_item_status == 3) {
-                            oncheck_pay_mapping($conn, $db, $_ItemCode, $DocNo_pay, $input_date_service, $_item_status, 0, $_itemtypeID, $_IsSet);
-                            $count_itemstock = 2;
-                        }
-                    }
-
-
-                    if ($count_new_item  == 0) {
-
-                        if ($db == 1) {
-                            $queryInsert = "INSERT INTO deproomdetail ( DocNo, ItemCode, Qty, IsStatus, PayDate, IsCancel, ModifyUser, ModifyTime , IsRequest )
+                                if ($db == 1) {
+                                    $queryInsert = "INSERT INTO deproomdetail ( DocNo, ItemCode, Qty, IsStatus, PayDate, IsCancel, ModifyUser, ModifyTime , IsRequest )
                             VALUES
                                 ( '$DocNo_pay', '$_ItemCode', '1', 0,NOW(), 0, '$Userid',NOW() , 1)";
-                        } else {
-                            $queryInsert = "INSERT INTO deproomdetail ( DocNo, ItemCode, Qty, IsStatus, PayDate, IsCancel, ModifyUser, ModifyTime, IsRequest )
+                                } else {
+                                    $queryInsert = "INSERT INTO deproomdetail ( DocNo, ItemCode, Qty, IsStatus, PayDate, IsCancel, ModifyUser, ModifyTime, IsRequest )
                             VALUES
                                 ( '$DocNo_pay', '$_ItemCode', '1', 0, GETDATE(), 0, '$Userid',GETDATE() , 1)";
-                        }
+                                }
 
 
 
 
-                        $meQueryInsert = $conn->prepare($queryInsert);
-                        $meQueryInsert->execute();
+                                $meQueryInsert = $conn->prepare($queryInsert);
+                                $meQueryInsert->execute();
 
-                        $query_2 = "SELECT
+                                $query_2 = "SELECT
                                             deproomdetail.ID,
                                             deproom.Ref_departmentroomid AS departmentroomid,
                                             deproom.`procedure`,
@@ -7122,36 +8437,36 @@ function oncheck_pay($conn, $db)
                                             deproomdetail.ItemCode ,
                                             deproomdetail.Qty,
                                             deproomdetail.PayDate ";
-                        $meQuery_2 = $conn->prepare($query_2);
-                        $meQuery_2->execute();
-                        while ($row_2 = $meQuery_2->fetch(PDO::FETCH_ASSOC)) {
+                                $meQuery_2 = $conn->prepare($query_2);
+                                $meQuery_2->execute();
+                                while ($row_2 = $meQuery_2->fetch(PDO::FETCH_ASSOC)) {
 
-                            $return[] = $row_2;
+                                    $return[] = $row_2;
 
-                            $_ID = $row_2['ID'];
-                            $_PayDate = $row_2['PayDate'];
-                            $_departmentroomid = $row_2['departmentroomid'];
-                            $_procedure = $row_2['procedure'];
-                            $_hn_record_id = $row_2['hn_record_id'];
-                            $_doctor = $row_2['doctor'];
-                            $_Qty_detail = $row_2['Qty'];
-                            $_Qty_detail_sub = $row_2['cnt_sub'];
-                            $_ModifyDate = $row_2['ModifyDate'];
+                                    $_ID = $row_2['ID'];
+                                    $_PayDate = $row_2['PayDate'];
+                                    $_departmentroomid = $row_2['departmentroomid'];
+                                    $_procedure = $row_2['procedure'];
+                                    $_hn_record_id = $row_2['hn_record_id'];
+                                    $_doctor = $row_2['doctor'];
+                                    $_Qty_detail = $row_2['Qty'];
+                                    $_Qty_detail_sub = $row_2['cnt_sub'];
+                                    $_ModifyDate = $row_2['ModifyDate'];
 
 
-                            // if($_Qty_detail == $_Qty_detail_sub){
-                            //     $updateD = "UPDATE deproomdetail SET Qty = Qty+1 WHERE deproomdetail.ID = '$_ID'  ";
-                            //     $queryupdateD = $conn->prepare($updateD);
-                            //     $queryupdateD->execute();
+                                    // if($_Qty_detail == $_Qty_detail_sub){
+                                    //     $updateD = "UPDATE deproomdetail SET Qty = Qty+1 WHERE deproomdetail.ID = '$_ID'  ";
+                                    //     $queryupdateD = $conn->prepare($updateD);
+                                    //     $queryupdateD->execute();
 
-                            //     $count_itemstock = 1;
-                            //     echo json_encode($count_itemstock);
-                            //     unset($conn);
-                            //     die;
-                            // }
-                            // ==============================
+                                    //     $count_itemstock = 1;
+                                    //     echo json_encode($count_itemstock);
+                                    //     unset($conn);
+                                    //     die;
+                                    // }
+                                    // ==============================
 
-                            $queryInsert1 = "INSERT INTO deproomdetailsub (
+                                    $queryInsert1 = "INSERT INTO deproomdetailsub (
                                                     Deproomdetail_RowID,
                                                     ItemStockID,
                                                     dental_warehouse_id,
@@ -7178,29 +8493,29 @@ function oncheck_pay($conn, $db)
                                                 ) ";
 
 
-                            $queryInsert1 = $conn->prepare($queryInsert1);
-                            $queryInsert1->execute();
-                            // ==============================
+                                    $queryInsert1 = $conn->prepare($queryInsert1);
+                                    $queryInsert1->execute();
+                                    // ==============================
 
-                            // =======================================================================================================================================
-                            $query = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty , hncode )
+                                    // =======================================================================================================================================
+                                    $query = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty , hncode )
                             VALUES
                             ( $_RowID, '$_ItemCode','$input_date_service','$_departmentroomid', $Userid,1,1 ,'$_hn_record_id') ";
-                            $meQuery = $conn->prepare($query);
-                            $meQuery->execute();
-                            // =======================================================================================================================================
+                                    $meQuery = $conn->prepare($query);
+                                    $meQuery->execute();
+                                    // =======================================================================================================================================
 
-                            $queryUpdate = "UPDATE itemstock 
+                                    $queryUpdate = "UPDATE itemstock 
                                 SET Isdeproom = 1 ,
                                 Stockin = 1,
                                 departmentroomid = '$_departmentroomid'
                                 WHERE
                                 RowID = '$_RowID' ";
-                            $meQueryUpdate = $conn->prepare($queryUpdate);
-                            $meQueryUpdate->execute();
-                            // ==============================
+                                    $meQueryUpdate = $conn->prepare($queryUpdate);
+                                    $meQueryUpdate->execute();
+                                    // ==============================
 
-                            $queryInsert2 = "INSERT INTO hncode_detail (DocNo,UsageCode,ItemStockID,Qty,IsStatus,IsCancel)  VALUES             
+                                    $queryInsert2 = "INSERT INTO hncode_detail (DocNo,UsageCode,ItemStockID,Qty,IsStatus,IsCancel)  VALUES             
                                 (
                                 (SELECT hncode.DocNo FROM hncode  WHERE hncode.DocNo_SS = '$DocNo_pay'  LIMIT 1  ), 
                                 '$input_pay',
@@ -7209,6 +8524,906 @@ function oncheck_pay($conn, $db)
                                 1, 
                                 0
                                 ) ";
+
+
+                                    // 1. ค้นหา DocNo จาก DocNo_SS
+                                    $sqlDocNo = "SELECT DocNo FROM his WHERE DocNo_deproom = ? LIMIT 1";
+                                    $stmtDoc = $conn->prepare($sqlDocNo);
+                                    $stmtDoc->execute([$DocNo_pay]);
+                                    $row = $stmtDoc->fetch(PDO::FETCH_ASSOC);
+
+                                    if ($row) {
+                                        $docNo_hn = $row['DocNo'];
+
+                                        // 2. เช็คว่า ItemCode มีอยู่ใน his_detail แล้วหรือยัง
+                                        $sqlCheck = "SELECT Qty FROM his_detail WHERE DocNo = ? AND ItemCode = ?";
+                                        $stmtCheck = $conn->prepare($sqlCheck);
+                                        $stmtCheck->execute([$docNo_hn, $_ItemCode]);
+                                        $resultCheck = $stmtCheck->fetch(PDO::FETCH_ASSOC);
+
+                                        if ($resultCheck) {
+                                            // เจอแล้ว -> UPDATE Qty +1
+                                            $sqlUpdate = "UPDATE his_detail SET Qty = Qty + 1 WHERE DocNo = ? AND ItemCode = ?";
+                                            $stmtUpdate = $conn->prepare($sqlUpdate);
+                                            $stmtUpdate->execute([$docNo_hn, $_ItemCode]);
+                                        } else {
+                                            // ไม่เจอ -> INSERT
+                                            $sqlInsert = "INSERT INTO his_detail (DocNo, ItemCode, Qty) VALUES (?, ?, 1)";
+                                            $stmtInsert = $conn->prepare($sqlInsert);
+                                            $stmtInsert->execute([$docNo_hn, $_ItemCode]);
+                                        }
+                                    }
+
+
+
+                                    $query_updateHN = "UPDATE hncode SET IsStatus = 1  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.`procedure` = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$input_date_service' ";
+                                    $query_updateHN = $conn->prepare($query_updateHN);
+                                    $query_updateHN->execute();
+
+
+                                    // echo $queryInsert2;
+                                    // exit;
+                                    $queryInsert2 = $conn->prepare($queryInsert2);
+                                    $queryInsert2->execute();
+                                    $count_itemstock++;
+
+                                    $count_new_item++;
+
+                                    $insert_log = "INSERT INTO log_activity_users (itemCode , itemstockID , qty, isStatus, DocNo, userID, createAt) 
+                                    VALUES (:itemCode, :itemstockID, 1, :isStatus, :DocNo, :Userid, NOW())";
+
+                                    $meQuery_log = $conn->prepare($insert_log);
+
+                                    $meQuery_log->bindParam(':itemCode', $_ItemCode);
+                                    $meQuery_log->bindParam(':itemstockID', $_RowID);
+                                    $meQuery_log->bindValue(':isStatus', 4, PDO::PARAM_INT);
+                                    $meQuery_log->bindParam(':DocNo', $DocNo_pay);
+                                    $meQuery_log->bindParam(':Userid', $Userid);
+
+
+                                    $meQuery_log->execute();
+
+
+
+                                    if ($_item_status == 2 || $_item_status == 3) {
+                                        oncheck_pay_mapping($conn, $db, $_ItemCode, $DocNo_pay, $input_date_service, $_item_status, 0, $_itemtypeID, $_IsSet);
+                                    }
+
+
+                                    $count_itemstock = 2;
+
+
+
+                                    // echo json_encode($count_itemstock);
+                                    // unset($conn);
+                                    // die;
+                                }
+                            }
+
+                            $insert_log = "INSERT INTO log_activity_users (itemCode , itemstockID , qty, isStatus, DocNo, userID, createAt) 
+                                            VALUES (:itemCode, :itemstockID, 1, :isStatus, :DocNo, :Userid, NOW())";
+
+                            $meQuery_log = $conn->prepare($insert_log);
+
+                            $meQuery_log->bindParam(':itemCode', $_ItemCode);
+                            $meQuery_log->bindParam(':itemstockID', $_RowID);
+                            $meQuery_log->bindValue(':isStatus', 4, PDO::PARAM_INT);
+                            $meQuery_log->bindParam(':DocNo', $DocNo_pay);
+                            $meQuery_log->bindParam(':Userid', $Userid);
+
+
+                            $meQuery_log->execute();
+
+
+                            $updatePay = "UPDATE deproom SET UserPay = $Userid WHERE deproom.DocNo = '$DocNo_pay' ";
+                            $meQueryPay = $conn->prepare($updatePay);
+                            $meQueryPay->execute();
+                        }
+
+
+                        // ยืม
+                        if ($_Isdeproom == 1) {
+
+
+                            $query_old = " SELECT
+                                        deproomdetailsub.ID,
+                                        deproomdetail.ID AS detailID,
+                                        hncode_detail.ID AS hndetail_ID,
+                                        deproomdetail.ItemCode,
+                                        deproomdetail.Qty AS deproom_qty,
+                                        hncode_detail.Qty AS hncode_qty ,
+                                        deproom.hn_record_id,
+                                        DATE(deproom.serviceDate) AS serviceDate ,
+                                        deproom.Ref_departmentroomid ,
+                                        DATE(deproom.serviceDate)  AS ModifyDate,
+                                        deproom.number_box,
+                                        deproom.DocNo,
+                                        hncode.DocNo AS hncode_DocNo 
+                                    FROM
+                                        deproom
+                                        LEFT JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
+                                        LEFT JOIN deproomdetailsub ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID
+                                        LEFT JOIN hncode ON hncode.DocNo_SS = deproom.DocNo
+                                        LEFT JOIN hncode_detail ON hncode_detail.DocNo = hncode.DocNo 
+                                    WHERE
+                                        deproomdetail.ItemCode = '$_ItemCode' 
+                                        AND deproomdetailsub.ItemStockID = '$_RowID'
+                                        AND hncode_detail.ItemStockID = '$_RowID' 
+                                        ORDER BY deproomdetailsub.ID DESC
+                                        LIMIT 1 ";
+
+
+                            $meQuery_old = $conn->prepare($query_old);
+                            $meQuery_old->execute();
+                            while ($row_old = $meQuery_old->fetch(PDO::FETCH_ASSOC)) {
+                                $detailID = $row_old['detailID'];
+                                $hndetail_ID = $row_old['hndetail_ID'];
+                                $DocNo_borrow = $row_old['DocNo'];
+                                $DocNoHN_borrow = $row_old['hncode_DocNo'];
+                                $deproom_qty = $row_old['deproom_qty'];
+                                $hncode_qty = $row_old['hncode_qty'];
+                                $deproomdetailsub_id = $row_old['ID'];
+                                $_hn_record_id_borrow = $row_old['hn_record_id'];
+                                $_ModifyDate = $row_old['ModifyDate'];
+                                $__Ref_departmentroomid = $row_old['Ref_departmentroomid'];
+                                $_number_box = $row_old['number_box'];
+
+                                if ($_hn_record_id_borrow == "") {
+                                    $_hn_record_id_borrow = $_number_box;
+                                }
+                            }
+
+
+                            if ($DocNo_pay != $DocNo_borrow) {
+
+
+                                $checkqty = "SELECT
+                                            SUM( deproomdetail.Qty ) AS deproom_qty ,
+                                            (
+                                            SELECT
+                                            COUNT( hncode_detail.Qty ) AS hncode_qty 
+                                        FROM
+                                            hncode
+                                            LEFT JOIN hncode_detail ON hncode_detail.DocNo = hncode.DocNo 
+                                        WHERE
+                                            hncode_detail.ID = '$hndetail_ID'
+                                            ) AS hncode_qty
+                                        FROM
+                                            deproom
+                                            LEFT JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
+                                            LEFT JOIN deproomdetailsub ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID
+                                        WHERE
+                                            deproomdetail.ID = '$detailID' ";
+
+
+                                $meQuery_checkqty = $conn->prepare($checkqty);
+                                $meQuery_checkqty->execute();
+                                while ($row_checkqty = $meQuery_checkqty->fetch(PDO::FETCH_ASSOC)) {
+                                    $deproom_qty = $row_checkqty['deproom_qty'];
+                                    $hncode_qty = $row_checkqty['hncode_qty'];
+                                }
+
+
+
+
+
+
+
+                                if ($hncode_qty == 1) {
+                                    $queryD2 = "DELETE FROM hncode_detail WHERE ID =  '$hndetail_ID' ";
+                                    $meQueryD2 = $conn->prepare($queryD2);
+                                    $meQueryD2->execute();
+                                } else {
+                                    $queryInsert0 = "UPDATE hncode_detail SET Qty = Qty-1 WHERE  ID =  '$hndetail_ID' ";
+                                    $meQuery0 = $conn->prepare($queryInsert0);
+                                    $meQuery0->execute();
+                                }
+
+
+                                // 1. ค้นหา DocNo จาก DocNo_SS
+                                $sqlDocNo1 = "SELECT DocNo FROM his WHERE DocNo_deproom = ? LIMIT 1";
+                                $stmtDoc1 = $conn->prepare($sqlDocNo1);
+                                $stmtDoc1->execute([$DocNo_borrow]);
+                                $row1 = $stmtDoc1->fetch(PDO::FETCH_ASSOC);
+
+                                if ($row1) {
+                                    $docNo_hn1 = $row1['DocNo'];
+
+                                    // 2. เช็คว่า ItemCode มีอยู่ใน his_detail แล้วหรือยัง
+                                    $sqlCheck1 = "SELECT Qty FROM his_detail WHERE DocNo = ? AND ItemCode = ?";
+                                    $stmtCheck1 = $conn->prepare($sqlCheck1); // แก้ชื่อเป็น $sqlCheck1 ให้ตรงกัน
+                                    $stmtCheck1->execute([$docNo_hn1, $_ItemCode]);
+                                    $resultCheck1 = $stmtCheck1->fetch(PDO::FETCH_ASSOC);
+
+                                    if ($resultCheck1) {
+                                        if ($resultCheck1['Qty'] > 1) {
+                                            // ถ้า Qty มากกว่า 1 -> ลบ 1
+                                            $sqlUpdate = "UPDATE his_detail SET Qty = Qty - 1 WHERE DocNo = ? AND ItemCode = ?";
+                                            $stmtUpdate = $conn->prepare($sqlUpdate);
+                                            $stmtUpdate->execute([$docNo_hn1, $_ItemCode]);
+                                        } else {
+                                            // ถ้า Qty เท่ากับ 1 -> ลบ record นี้ทิ้ง
+                                            $sqlDelete = "DELETE FROM his_detail WHERE DocNo = ? AND ItemCode = ?";
+                                            $stmtDelete = $conn->prepare($sqlDelete);
+                                            $stmtDelete->execute([$docNo_hn1, $_ItemCode]);
+                                        }
+                                    }
+                                }
+
+
+                                // 1. ค้นหา DocNo จาก DocNo_SS
+                                $sqlDocNo = "SELECT DocNo FROM his WHERE DocNo_deproom = ? LIMIT 1";
+                                $stmtDoc = $conn->prepare($sqlDocNo);
+                                $stmtDoc->execute([$DocNo_pay]);
+                                $row = $stmtDoc->fetch(PDO::FETCH_ASSOC);
+
+                                if ($row) {
+                                    $docNo_hn = $row['DocNo'];
+
+                                    // 2. เช็คว่า ItemCode มีอยู่ใน his_detail แล้วหรือยัง
+                                    $sqlCheck = "SELECT Qty FROM his_detail WHERE DocNo = ? AND ItemCode = ?";
+                                    $stmtCheck = $conn->prepare($sqlCheck);
+                                    $stmtCheck->execute([$docNo_hn, $_ItemCode]);
+                                    $resultCheck = $stmtCheck->fetch(PDO::FETCH_ASSOC);
+
+                                    if ($resultCheck) {
+                                        // เจอแล้ว -> UPDATE Qty +1
+                                        $sqlUpdate = "UPDATE his_detail SET Qty = Qty + 1 WHERE DocNo = ? AND ItemCode = ?";
+                                        $stmtUpdate = $conn->prepare($sqlUpdate);
+                                        $stmtUpdate->execute([$docNo_hn, $_ItemCode]);
+                                    } else {
+                                        // ไม่เจอ -> INSERT
+                                        $sqlInsert = "INSERT INTO his_detail (DocNo, ItemCode, Qty) VALUES (?, ?, 1)";
+                                        $stmtInsert = $conn->prepare($sqlInsert);
+                                        $stmtInsert->execute([$docNo_hn, $_ItemCode]);
+                                    }
+                                }
+
+
+
+                                if ($deproom_qty == 1) {
+                                    // $update_old_detail = "DELETE FROM deproomdetail WHERE ID =  '$detailID' ";
+                                    // $meQuery_old_detail = $conn->prepare($update_old_detail);
+                                    // $meQuery_old_detail->execute();
+
+                                    $update_old_sub = "DELETE FROM deproomdetailsub WHERE deproomdetailsub.ID =  '$deproomdetailsub_id'    ";
+                                    $meQuery_old_sub = $conn->prepare($update_old_sub);
+                                    $meQuery_old_sub->execute();
+                                } else {
+                                    // $update_old_detail = "UPDATE deproomdetail SET Qty = Qty-1 WHERE  deproomdetail.ID = '$detailID' ";
+                                    // $meQuery_old_detail = $conn->prepare($update_old_detail);
+                                    // $meQuery_old_detail->execute();
+
+                                    $update_old_sub = "DELETE FROM deproomdetailsub WHERE deproomdetailsub.ID =  '$deproomdetailsub_id'   ";
+                                    $meQuery_old_sub = $conn->prepare($update_old_sub);
+                                    $meQuery_old_sub->execute();
+                                }
+
+
+
+
+                                //check ว่า ตัว IsRequest = 1 เหลือกี่ตัว
+
+                                $qq1 = "SELECT
+                            deproomdetail.ID,
+                            SUM( deproomdetail.Qty ) AS cnt,
+                            IFNULL(( SELECT SUM( deproomdetailsub.qty_weighing ) FROM deproomdetailsub WHERE deproomdetailsub.Deproomdetail_RowID = deproomdetail.ID ), 0 ) AS cnt_pay
+                        FROM
+                            deproom
+                            INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo 
+                        WHERE
+                            deproom.DocNo = '$DocNo_borrow' 
+                            AND deproom.IsCancel = 0 
+                            AND deproomdetail.IsCancel = 0 
+                            AND deproomdetail.ItemCode = '$_ItemCode'
+                            AND deproomdetail.IsRequest = 1
+                        GROUP BY
+                            deproomdetail.ID ";
+                                $meQuery_qq1 = $conn->prepare($qq1);
+                                $meQuery_qq1->execute();
+                                while ($row_qq1 = $meQuery_qq1->fetch(PDO::FETCH_ASSOC)) {
+                                    if ($row_qq1['cnt_pay'] == '0') {
+                                        $ID_Detail = $row_qq1['ID'];
+                                        $queryqq1 = "DELETE FROM deproomdetail WHERE ID =  '$ID_Detail' ";
+                                        $meQueryqq1 = $conn->prepare($queryqq1);
+                                        $meQueryqq1->execute();
+                                    }
+                                }
+
+                                $query_old = "DELETE FROM itemstock_transaction_detail  WHERE ItemStockID = '$_RowID' 
+                        AND ItemCode = '$_ItemCode' 
+                        AND departmentroomid = '$__Ref_departmentroomid' 
+                        AND  IsStatus = '1'
+                        AND DATE(CreateDate) = '$_ModifyDate' ";
+                                $meQuery_old = $conn->prepare($query_old);
+                                $meQuery_old->execute();
+
+
+                                if ($_item_status == 3) {
+                                    $select = "SELECT hncode.DocNo FROM hncode WHERE DocNo_SS = '$DocNo_pay' ";
+                                    $meQuery_select = $conn->prepare($select);
+                                    $meQuery_select->execute();
+                                    while ($row_select = $meQuery_select->fetch(PDO::FETCH_ASSOC)) {
+                                        $_DocNoHN = $row_select['DocNo'];
+                                    }
+                                    oncheck_delete_pay_mapping($conn, $db, $_ItemCode, $DocNo_pay, $input_date_service, $_item_status, $DocNo_borrow, 2, $_DocNoHN, 0);
+                                    // $count_itemstock = 2;
+                                }
+
+
+                                // echo $update_old_detail ;
+                                // exit;
+
+                                $query_2 = "SELECT
+                                        deproomdetail.ID,
+                                        deproom.Ref_departmentroomid AS departmentroomid,
+                                        deproom.`procedure`,
+                                        deproom.doctor,
+                                        deproom.hn_record_id,
+                                        deproomdetail.ItemCode,
+                                        deproomdetail.Qty ,
+                                        deproomdetail.PayDate ,
+                                        COUNT(deproomdetailsub.ID)  AS cnt_sub,
+                                        deproomdetailsub.PayDate AS ModifyDate
+                                    FROM
+                                        deproomdetail
+                                        INNER JOIN deproom ON deproomdetail.DocNo = deproom.DocNo 
+                                        LEFT JOIN deproomdetailsub ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID 
+                                    WHERE
+                                        deproomdetail.ItemCode = '$_ItemCode' 
+                                        AND deproomdetail.DocNo = '$DocNo_pay'
+                                    GROUP BY
+                                        deproomdetail.ID,
+                                        deproom.Ref_departmentroomid,
+                                        deproom.`procedure`,
+                                        deproom.doctor,
+                                        deproom.hn_record_id,
+                                        deproomdetail.ItemCode ,
+                                        deproomdetail.Qty,
+                                        deproomdetail.PayDate ";
+                                $meQuery_2 = $conn->prepare($query_2);
+                                $meQuery_2->execute();
+                                while ($row_2 = $meQuery_2->fetch(PDO::FETCH_ASSOC)) {
+                                    $return[] = $row_2;
+
+                                    $_ID = $row_2['ID'];
+                                    $_PayDate = $row_2['PayDate'];
+                                    $_departmentroomid = $row_2['departmentroomid'];
+                                    $_procedure = $row_2['procedure'];
+                                    $_hn_record_id = $row_2['hn_record_id'];
+                                    $_doctor = $row_2['doctor'];
+                                    $_Qty_detail = $row_2['Qty'];
+                                    $_Qty_detail_sub = $row_2['cnt_sub'];
+                                    $_ModifyDate = $row_2['ModifyDate'];
+
+
+                                    // ==============================
+
+                                    $queryInsert1 = "INSERT INTO deproomdetailsub (
+                                                    Deproomdetail_RowID,
+                                                    ItemStockID,
+                                                    dental_warehouse_id,
+                                                    IsStatus,
+                                                    IsCheckPay,
+                                                    PayDate,
+                                                    hn_record_id,
+                                                    doctor,
+                                                    `procedure`,
+                                                    qty_weighing,
+                                                    hn_record_id_borrow
+                                                )
+                                                VALUES (
+                                                    :Deproomdetail_RowID,
+                                                    :ItemStockID,
+                                                    :dental_warehouse_id,
+                                                    1,
+                                                    1,
+                                                    NOW(),
+                                                    :hn_record_id,
+                                                    :doctor,
+                                                    :procedure,
+                                                    1,
+                                                    :hn_record_id_borrow
+                                                )";
+
+                                    $stmt = $conn->prepare($queryInsert1);
+                                    $stmt->execute([
+                                        ':Deproomdetail_RowID' => $_ID,
+                                        ':ItemStockID' => $_RowID,
+                                        ':dental_warehouse_id' => $_departmentroomid,
+                                        ':hn_record_id' => $_hn_record_id,
+                                        ':doctor' => $_doctor,
+                                        ':procedure' => $_procedure,
+                                        ':hn_record_id_borrow' => $_hn_record_id_borrow
+                                    ]);
+
+
+
+
+
+                                    // =======================================================================================================================================
+                                    $query = "INSERT INTO itemstock_transaction_detail (
+                                                ItemStockID, 
+                                                ItemCode, 
+                                                CreateDate, 
+                                                departmentroomid, 
+                                                UserCode, 
+                                                IsStatus, 
+                                                Qty,
+                                                hncode
+                                            )
+                                            VALUES (
+                                                :ItemStockID,
+                                                :ItemCode,
+                                                :serviceDate,
+                                                :departmentroomid,
+                                                :UserCode,
+                                                1,
+                                                1,
+                                                :hncode
+                                            )";
+
+                                    $stmt = $conn->prepare($query);
+                                    $stmt->execute([
+                                        ':ItemStockID'    => $_RowID,
+                                        ':ItemCode'       => $_ItemCode,
+                                        ':serviceDate'         => $input_date_service,
+                                        ':departmentroomid' => $_departmentroomid,
+                                        ':UserCode'       => $Userid,
+                                        ':hncode'         => $_hn_record_id
+                                    ]);
+
+                                    // =======================================================================================================================================
+
+
+                                    // ==============================
+                                    $queryUpdate = "UPDATE itemstock 
+                                SET Isdeproom = 1 ,
+                                Stockin = 1,
+                                departmentroomid = '$_departmentroomid'
+                                WHERE
+                                RowID = '$_RowID' ";
+                                    $meQueryUpdate = $conn->prepare($queryUpdate);
+                                    $meQueryUpdate->execute();
+                                    // ==============================
+                                    $queryInsert2 = "INSERT INTO hncode_detail (DocNo,UsageCode,ItemStockID,Qty,IsStatus,IsCancel,LastSterileDetailID)  VALUES             
+                                (
+                                (SELECT hncode.DocNo FROM hncode  WHERE hncode.DocNo_SS = '$DocNo_pay'  LIMIT 1 ), 
+                                '$input_pay',
+                                '$_RowID',
+                                1, 
+                                1, 
+                                0, 
+                                ''
+                                ) ";
+
+
+
+
+
+
+                                    $query_updateHN = "UPDATE hncode 
+                                            SET IsStatus = 1  
+                                            WHERE HnCode = :hncode 
+                                                AND `procedure` = :procedure 
+                                                AND doctor = :doctor 
+                                                AND departmentroomid = :departmentroomid 
+                                                AND DocDate = :docdate";
+
+                                    $stmt = $conn->prepare($query_updateHN);
+                                    $stmt->execute([
+                                        ':hncode' => $_hn_record_id,
+                                        ':procedure' => $_procedure,
+                                        ':doctor' => $_doctor,
+                                        ':departmentroomid' => $_departmentroomid,
+                                        ':docdate' => $input_date_service
+                                    ]);
+
+
+                                    // echo $queryInsert2;
+                                    // exit;
+                                    $queryInsert2 = $conn->prepare($queryInsert2);
+                                    $queryInsert2->execute();
+                                    $count_itemstock++;
+
+                                    $count_new_item++;
+
+                                    if ($_item_status == 2 || $_item_status == 3) {
+                                        oncheck_pay_mapping($conn, $db, $_ItemCode, $DocNo_pay, $input_date_service, $_item_status, 0, $_itemtypeID, $_IsSet);
+                                        $count_itemstock = 2;
+                                    }
+                                }
+
+                                // รายการยังไม่มี
+                                if ($count_new_item  == 0) {
+
+
+
+                                    if ($db == 1) {
+                                        $queryInsert = "INSERT INTO deproomdetail ( DocNo, ItemCode, Qty, IsStatus, PayDate, IsCancel, ModifyUser, ModifyTime , IsRequest )
+                                    VALUES
+                                        ( '$DocNo_pay', '$_ItemCode', '1', 0,NOW(), 0, '$Userid',NOW() ,1)";
+                                    } else {
+                                        $queryInsert = "INSERT INTO deproomdetail ( DocNo, ItemCode, Qty, IsStatus, PayDate, IsCancel, ModifyUser, ModifyTime , IsRequest)
+                                    VALUES
+                                        ( '$DocNo_pay', '$_ItemCode', '1', 0, GETDATE(), 0, '$Userid',GETDATE(),1)";
+                                    }
+                                    $meQueryInsert = $conn->prepare($queryInsert);
+                                    $meQueryInsert->execute();
+
+
+                                    if ($db == 1) {
+                                        $query_2 = "SELECT
+                                                deproomdetail.ID,
+                                                deproom.Ref_departmentroomid AS departmentroomid,
+                                                deproom.`procedure`,
+                                                deproom.doctor,
+                                                deproom.hn_record_id,
+                                                deproomdetail.ItemCode,
+                                                deproomdetail.Qty ,
+                                                deproomdetail.PayDate ,
+                                                COUNT(deproomdetailsub.ID )  AS cnt_sub,
+                                                deproomdetailsub.PayDate AS ModifyDate
+                                            FROM
+                                                deproomdetail
+                                                INNER JOIN deproom ON deproomdetail.DocNo = deproom.DocNo 
+                                                LEFT JOIN deproomdetailsub ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID 
+                                            WHERE
+                                                deproomdetail.ItemCode = '$_ItemCode' 
+                                                AND deproomdetail.DocNo = '$DocNo_pay'
+                                            GROUP BY
+                                                deproomdetail.ID,
+                                                deproom.Ref_departmentroomid,
+                                                deproom.`procedure`,
+                                                deproom.doctor,
+                                                deproom.hn_record_id,
+                                                deproomdetail.ItemCode ,
+                                                deproomdetail.Qty,
+                                                deproomdetail.PayDate ";
+                                    } else {
+                                        $query_2 = "SELECT
+                                                deproomdetail.ID,
+                                                deproom.Ref_departmentroomid AS departmentroomid,
+                                                deproom.[procedure],
+                                                deproom.doctor,
+                                                deproom.hn_record_id,
+                                                deproomdetail.ItemCode,
+                                                deproomdetail.Qty ,
+                                                deproomdetail.PayDate ,
+                                                COUNT(deproomdetailsub.ID )  AS cnt_sub
+                                            FROM
+                                                deproomdetail
+                                                INNER JOIN deproom ON deproomdetail.DocNo = deproom.DocNo 
+                                                LEFT JOIN deproomdetailsub ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID 
+                                            WHERE
+                                                deproomdetail.ItemCode = '$_ItemCode' 
+                                                AND deproomdetail.DocNo = '$DocNo_pay'
+                                            GROUP BY
+                                                deproomdetail.ID,
+                                                deproom.Ref_departmentroomid,
+                                                deproom.[procedure],
+                                                deproom.doctor,
+                                                deproom.hn_record_id,
+                                                deproomdetail.ItemCode ,
+                                                deproomdetail.Qty,
+                                                deproomdetail.PayDate ";
+                                    }
+
+                                    $meQuery_2 = $conn->prepare($query_2);
+                                    $meQuery_2->execute();
+                                    while ($row_2 = $meQuery_2->fetch(PDO::FETCH_ASSOC)) {
+
+                                        $return[] = $row_2;
+
+                                        $_ID = $row_2['ID'];
+                                        $_PayDate = $row_2['PayDate'];
+                                        $_departmentroomid = $row_2['departmentroomid'];
+                                        $_procedure = $row_2['procedure'];
+                                        $_hn_record_id = $row_2['hn_record_id'];
+                                        $_doctor = $row_2['doctor'];
+                                        $_Qty_detail = $row_2['Qty'];
+                                        $_Qty_detail_sub = $row_2['cnt_sub'];
+                                        $_ModifyDate = $row_2['ModifyDate'];
+
+
+
+                                        $queryInsert1 = "INSERT INTO deproomdetailsub (
+                                                        Deproomdetail_RowID,
+                                                        ItemStockID,
+                                                        dental_warehouse_id,
+                                                        IsStatus,
+                                                        IsCheckPay,
+                                                        PayDate,
+                                                        hn_record_id,
+                                                        doctor,
+                                                        `procedure`,
+                                                        qty_weighing,
+                                                        hn_record_id_borrow
+                                                    )
+                                                    VALUES (
+                                                        :Deproomdetail_RowID, 
+                                                        :ItemStockID,
+                                                        :dental_warehouse_id,
+                                                        1, 
+                                                        1, 
+                                                        NOW(), 
+                                                        :hn_record_id, 
+                                                        :doctor, 
+                                                        :procedure,
+                                                        1,
+                                                        :hn_record_id_borrow
+                                                    )";
+
+                                        $stmt = $conn->prepare($queryInsert1);
+                                        $stmt->execute([
+                                            ':Deproomdetail_RowID' => $_ID,
+                                            ':ItemStockID' => $_RowID,
+                                            ':dental_warehouse_id' => $_departmentroomid,
+                                            ':hn_record_id' => $_hn_record_id,
+                                            ':doctor' => $_doctor,
+                                            ':procedure' => $_procedure,
+                                            ':hn_record_id_borrow' => $_hn_record_id_borrow
+                                        ]);
+
+
+                                        // $queryInsert1 = $conn->prepare($queryInsert1);
+                                        // $queryInsert1->execute();
+                                        // ==============================
+
+                                        // =======================================================================================================================================
+                                        $query = "INSERT INTO itemstock_transaction_detail (
+                                                ItemStockID, 
+                                                ItemCode, 
+                                                CreateDate, 
+                                                departmentroomid, 
+                                                UserCode, 
+                                                IsStatus, 
+                                                Qty, 
+                                                hncode
+                                            ) VALUES (
+                                                :ItemStockID,
+                                                :ItemCode,
+                                                :serviceDate,
+                                                :departmentroomid,
+                                                :UserCode,
+                                                1,
+                                                1,
+                                                :hncode
+                                            )";
+
+                                        $stmt = $conn->prepare($query);
+                                        $stmt->execute([
+                                            ':ItemStockID' => $_RowID,
+                                            ':ItemCode' => $_ItemCode,
+                                            ':serviceDate' => $input_date_service,
+                                            ':departmentroomid' => $_departmentroomid,
+                                            ':UserCode' => $Userid,
+                                            ':hncode' => $_hn_record_id
+                                        ]);
+
+
+                                        // =======================================================================================================================================
+
+
+                                        $queryUpdate = "UPDATE itemstock 
+                                    SET Isdeproom = 1 ,
+                                    Stockin = 1,
+                                    departmentroomid = '$_departmentroomid'
+                                    WHERE
+                                    RowID = '$_RowID' ";
+                                        $meQueryUpdate = $conn->prepare($queryUpdate);
+                                        $meQueryUpdate->execute();
+                                        // ==============================
+
+                                        $queryInsert2 = "INSERT INTO hncode_detail (DocNo,UsageCode,ItemStockID,Qty,IsStatus,IsCancel,LastSterileDetailID)  VALUES             
+                                    (
+                                    (SELECT hncode.DocNo FROM hncode  WHERE hncode.DocNo_SS = '$DocNo_pay'  LIMIT 1), 
+                                    '$input_pay',
+                                    '$_RowID',
+                                    1, 
+                                    1, 
+                                    0, 
+                                    (SELECT LastSterileDetailID FROM itemstock  WHERE itemstock.RowID = $_RowID)
+                                    ) ";
+
+
+
+
+                                        $query_updateHN = "UPDATE hncode SET IsStatus = 1  WHERE hncode.DocNo_SS = '$DocNo_pay'  ";
+                                        $query_updateHN = $conn->prepare($query_updateHN);
+                                        $query_updateHN->execute();
+
+
+                                        // echo $queryInsert2;
+                                        // exit;
+                                        $queryInsert2 = $conn->prepare($queryInsert2);
+                                        $queryInsert2->execute();
+                                        $count_itemstock++;
+
+                                        $count_new_item++;
+
+
+                                        $insert_log = "INSERT INTO log_activity_users (itemCode , itemstockID , qty, isStatus, DocNo, userID, createAt) 
+                                       VALUES (:itemCode, :itemstockID, 1, :isStatus, :DocNo, :Userid, NOW())";
+
+                                        $meQuery_log = $conn->prepare($insert_log);
+
+                                        $meQuery_log->bindParam(':itemCode', $_ItemCode);
+                                        $meQuery_log->bindParam(':itemstockID', $_RowID);
+                                        $meQuery_log->bindValue(':isStatus', 4, PDO::PARAM_INT);
+                                        $meQuery_log->bindParam(':DocNo', $DocNo_pay);
+                                        $meQuery_log->bindParam(':Userid', $Userid);
+
+
+                                        $meQuery_log->execute();
+
+                                        $count_itemstock = 2;
+
+                                        if ($_item_status == 2 || $_item_status == 3) {
+                                            oncheck_pay_mapping($conn, $db, $_ItemCode, $DocNo_pay, $input_date_service, $_item_status, 0, $_itemtypeID, $_IsSet);
+                                            $count_itemstock = 2;
+                                        }
+
+                                        // echo json_encode($count_itemstock);
+                                        // unset($conn);
+                                        // die;
+                                    }
+                                }
+
+                                $insert_log = "INSERT INTO log_activity_users (itemCode , itemstockID , qty, isStatus, DocNo, userID, createAt) 
+                                VALUES (:itemCode, :itemstockID, 1, :isStatus, :DocNo, :Userid, NOW())";
+
+                                $meQuery_log = $conn->prepare($insert_log);
+
+                                $meQuery_log->bindParam(':itemCode', $_ItemCode);
+                                $meQuery_log->bindParam(':itemstockID', $_RowID);
+                                $meQuery_log->bindValue(':isStatus', 4, PDO::PARAM_INT);
+                                $meQuery_log->bindParam(':DocNo', $DocNo_pay);
+                                $meQuery_log->bindParam(':Userid', $Userid);
+
+
+                                $meQuery_log->execute();
+                            } else {
+                                $count_itemstock = 3;
+                                // echo json_encode($count_itemstock);
+                                // unset($conn);
+                                // die;
+                            }
+                        }
+                    } else {
+
+                        $count_itemstock = 9;
+                        echo json_encode($count_itemstock);
+                        unset($conn);
+                        die;
+                    }
+                }
+
+                $count_itemstock = 2;
+            } else {
+                if ($_check_exp == 'no_exp') {
+
+
+
+                    $_ItemCode = $row_1['ItemCode'];
+                    $_Isdeproom =  $row_1['Isdeproom'];
+                    $_departmentroomid =  $row_1['departmentroomid'];
+                    $_RowID =  $row_1['RowID'];
+
+                    $count_itemstock++;
+
+                    $count_itemstock = 0;
+                    $count_new_item = 0;
+
+                    // stock
+                    if ($_Isdeproom == 0) {
+
+                        $query_2 = "SELECT
+                                        deproomdetail.ID,
+                                        deproom.Ref_departmentroomid AS departmentroomid,
+                                        deproom.`procedure`,
+                                        deproom.doctor,
+                                        deproom.hn_record_id,
+                                        deproomdetail.ItemCode,
+                                        deproomdetail.Qty ,
+                                        deproomdetail.PayDate ,
+                                        COUNT(deproomdetailsub.ID)  AS cnt_sub,
+                                        deproomdetailsub.PayDate AS ModifyDate
+                                    FROM
+                                        deproomdetail
+                                        INNER JOIN deproom ON deproomdetail.DocNo = deproom.DocNo 
+                                        LEFT JOIN deproomdetailsub ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID 
+                                    WHERE
+                                        deproomdetail.ItemCode = '$_ItemCode' 
+                                        AND deproomdetail.DocNo = '$DocNo_pay'
+                                    GROUP BY
+                                        deproomdetail.ID,
+                                        deproom.Ref_departmentroomid,
+                                        deproom.`procedure`,
+                                        deproom.doctor,
+                                        deproom.hn_record_id,
+                                        deproomdetail.ItemCode ,
+                                        deproomdetail.Qty,
+                                        deproomdetail.PayDate ";
+
+                        $meQuery_2 = $conn->prepare($query_2);
+                        $meQuery_2->execute();
+                        while ($row_2 = $meQuery_2->fetch(PDO::FETCH_ASSOC)) {
+
+                            $return[] = $row_2;
+
+                            $_ID = $row_2['ID'];
+                            $_PayDate = $row_2['PayDate'];
+                            $_departmentroomid = $row_2['departmentroomid'];
+                            $_procedure = $row_2['procedure'];
+                            $_hn_record_id = $row_2['hn_record_id'];
+                            $_doctor = $row_2['doctor'];
+                            $_Qty_detail = $row_2['Qty'];
+                            $_Qty_detail_sub = $row_2['cnt_sub'];
+                            $_ModifyDate = $row_2['ModifyDate'];
+
+
+
+                            // ==============================
+
+                            $queryInsert1 = "INSERT INTO deproomdetailsub (
+                                            Deproomdetail_RowID,
+                                            ItemStockID,
+                                            dental_warehouse_id,
+                                            IsStatus,
+                                            IsCheckPay,
+                                            PayDate,
+                                            hn_record_id,
+                                            doctor,
+                                            `procedure`,
+                                            qty_weighing
+                                        )
+                                        VALUES
+                                        (
+                                            '$_ID', 
+                                            '$_RowID',
+                                            '$_departmentroomid',
+                                            1, 
+                                            1, 
+                                            NOW(), 
+                                            '$_hn_record_id', 
+                                            '$_doctor', 
+                                            '$_procedure',
+                                            1
+                                        ) ";
+
+                            $queryInsert1 = $conn->prepare($queryInsert1);
+                            $queryInsert1->execute();
+
+                            // =======================================================================================================================================
+                            $query = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty ,hncode )
+                            VALUES
+                            ( $_RowID, '$_ItemCode','$input_date_service','$_departmentroomid', $Userid,1,1 ,'$_hn_record_id') ";
+                            $meQuery = $conn->prepare($query);
+                            $meQuery->execute();
+                            // =======================================================================================================================================
+
+
+                            // ==============================
+                            $queryUpdate = "UPDATE itemstock 
+                            SET Isdeproom = 1 ,
+                                Stockin = 1,
+                            departmentroomid = '$_departmentroomid'
+                            WHERE
+                            RowID = '$_RowID' ";
+                            $meQueryUpdate = $conn->prepare($queryUpdate);
+                            $meQueryUpdate->execute();
+                            // ==============================
+                            $queryInsert2 = "INSERT INTO hncode_detail (DocNo,UsageCode,ItemStockID,Qty,IsStatus,IsCancel,LastSterileDetailID)  VALUES             
+                            (
+                            (SELECT hncode.DocNo FROM hncode  WHERE hncode.DocNo_SS = '$DocNo_pay'  LIMIT 1 ), 
+                            '$input_pay',
+                            '$_RowID',
+                            1, 
+                            1, 
+                            0, 
+                            (SELECT LastSterileDetailID FROM itemstock  WHERE itemstock.RowID = $_RowID)
+                            ) ";
 
 
                             // 1. ค้นหา DocNo จาก DocNo_SS
@@ -7241,6 +9456,7 @@ function oncheck_pay($conn, $db)
 
 
 
+
                             $query_updateHN = "UPDATE hncode SET IsStatus = 1  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.`procedure` = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$input_date_service' ";
                             $query_updateHN = $conn->prepare($query_updateHN);
                             $query_updateHN->execute();
@@ -7254,63 +9470,248 @@ function oncheck_pay($conn, $db)
 
                             $count_new_item++;
 
-                            $insert_log = "INSERT INTO log_activity_users (itemCode , itemstockID , qty, isStatus, DocNo, userID, createAt) 
-                                    VALUES (:itemCode, :itemstockID, 1, :isStatus, :DocNo, :Userid, NOW())";
-
-                            $meQuery_log = $conn->prepare($insert_log);
-
-                            $meQuery_log->bindParam(':itemCode', $_ItemCode);
-                            $meQuery_log->bindParam(':itemstockID', $_RowID);
-                            $meQuery_log->bindValue(':isStatus', 4, PDO::PARAM_INT);
-                            $meQuery_log->bindParam(':DocNo', $DocNo_pay);
-                            $meQuery_log->bindParam(':Userid', $Userid);
-
-
-                            $meQuery_log->execute();
-
-
-
+                            // ส่วนจ่ายธรรมดา
                             if ($_item_status == 2 || $_item_status == 3) {
                                 oncheck_pay_mapping($conn, $db, $_ItemCode, $DocNo_pay, $input_date_service, $_item_status, 0, $_itemtypeID, $_IsSet);
+                                $count_itemstock = 2;
+                            }
+                        }
+
+
+                        if ($count_new_item  == 0) {
+
+                            if ($db == 1) {
+                                $queryInsert = "INSERT INTO deproomdetail ( DocNo, ItemCode, Qty, IsStatus, PayDate, IsCancel, ModifyUser, ModifyTime , IsRequest )
+                            VALUES
+                                ( '$DocNo_pay', '$_ItemCode', '1', 0,NOW(), 0, '$Userid',NOW() , 1)";
+                            } else {
+                                $queryInsert = "INSERT INTO deproomdetail ( DocNo, ItemCode, Qty, IsStatus, PayDate, IsCancel, ModifyUser, ModifyTime, IsRequest )
+                            VALUES
+                                ( '$DocNo_pay', '$_ItemCode', '1', 0, GETDATE(), 0, '$Userid',GETDATE() , 1)";
                             }
 
 
-                            $count_itemstock = 2;
+
+
+                            $meQueryInsert = $conn->prepare($queryInsert);
+                            $meQueryInsert->execute();
+
+                            $query_2 = "SELECT
+                                            deproomdetail.ID,
+                                            deproom.Ref_departmentroomid AS departmentroomid,
+                                            deproom.`procedure`,
+                                            deproom.doctor,
+                                            deproom.hn_record_id,
+                                            deproomdetail.ItemCode,
+                                            deproomdetail.Qty ,
+                                            deproomdetail.PayDate ,
+                                            COUNT(deproomdetailsub.ID )  AS cnt_sub,
+                                            deproomdetailsub.PayDate AS ModifyDate
+                                        FROM
+                                            deproomdetail
+                                            INNER JOIN deproom ON deproomdetail.DocNo = deproom.DocNo 
+                                            LEFT JOIN deproomdetailsub ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID 
+                                        WHERE
+                                            deproomdetail.ItemCode = '$_ItemCode' 
+                                            AND deproomdetail.DocNo = '$DocNo_pay'
+                                        GROUP BY
+                                            deproomdetail.ID,
+                                            deproom.Ref_departmentroomid,
+                                            deproom.`procedure`,
+                                            deproom.doctor,
+                                            deproom.hn_record_id,
+                                            deproomdetail.ItemCode ,
+                                            deproomdetail.Qty,
+                                            deproomdetail.PayDate ";
+                            $meQuery_2 = $conn->prepare($query_2);
+                            $meQuery_2->execute();
+                            while ($row_2 = $meQuery_2->fetch(PDO::FETCH_ASSOC)) {
+
+                                $return[] = $row_2;
+
+                                $_ID = $row_2['ID'];
+                                $_PayDate = $row_2['PayDate'];
+                                $_departmentroomid = $row_2['departmentroomid'];
+                                $_procedure = $row_2['procedure'];
+                                $_hn_record_id = $row_2['hn_record_id'];
+                                $_doctor = $row_2['doctor'];
+                                $_Qty_detail = $row_2['Qty'];
+                                $_Qty_detail_sub = $row_2['cnt_sub'];
+                                $_ModifyDate = $row_2['ModifyDate'];
+
+
+                                // if($_Qty_detail == $_Qty_detail_sub){
+                                //     $updateD = "UPDATE deproomdetail SET Qty = Qty+1 WHERE deproomdetail.ID = '$_ID'  ";
+                                //     $queryupdateD = $conn->prepare($updateD);
+                                //     $queryupdateD->execute();
+
+                                //     $count_itemstock = 1;
+                                //     echo json_encode($count_itemstock);
+                                //     unset($conn);
+                                //     die;
+                                // }
+                                // ==============================
+
+                                $queryInsert1 = "INSERT INTO deproomdetailsub (
+                                                    Deproomdetail_RowID,
+                                                    ItemStockID,
+                                                    dental_warehouse_id,
+                                                    IsStatus,
+                                                    IsCheckPay,
+                                                    PayDate,
+                                                    hn_record_id,
+                                                    doctor,
+                                                    `procedure`,
+                                                    qty_weighing
+                                                )
+                                                VALUES
+                                                (
+                                                    '$_ID', 
+                                                    '$_RowID',
+                                                    '$_departmentroomid',
+                                                    1, 
+                                                    1, 
+                                                    NOW(), 
+                                                    '$_hn_record_id', 
+                                                    '$_doctor', 
+                                                    '$_procedure',
+                                                    1
+                                                ) ";
+
+
+                                $queryInsert1 = $conn->prepare($queryInsert1);
+                                $queryInsert1->execute();
+                                // ==============================
+
+                                // =======================================================================================================================================
+                                $query = "INSERT INTO itemstock_transaction_detail ( ItemStockID, ItemCode, CreateDate, departmentroomid, UserCode, IsStatus, Qty , hncode )
+                            VALUES
+                            ( $_RowID, '$_ItemCode','$input_date_service','$_departmentroomid', $Userid,1,1 ,'$_hn_record_id') ";
+                                $meQuery = $conn->prepare($query);
+                                $meQuery->execute();
+                                // =======================================================================================================================================
+
+                                $queryUpdate = "UPDATE itemstock 
+                                SET Isdeproom = 1 ,
+                                Stockin = 1,
+                                departmentroomid = '$_departmentroomid'
+                                WHERE
+                                RowID = '$_RowID' ";
+                                $meQueryUpdate = $conn->prepare($queryUpdate);
+                                $meQueryUpdate->execute();
+                                // ==============================
+
+                                $queryInsert2 = "INSERT INTO hncode_detail (DocNo,UsageCode,ItemStockID,Qty,IsStatus,IsCancel)  VALUES             
+                                (
+                                (SELECT hncode.DocNo FROM hncode  WHERE hncode.DocNo_SS = '$DocNo_pay'  LIMIT 1  ), 
+                                '$input_pay',
+                                '$_RowID',
+                                1, 
+                                1, 
+                                0
+                                ) ";
+
+
+                                // 1. ค้นหา DocNo จาก DocNo_SS
+                                $sqlDocNo = "SELECT DocNo FROM his WHERE DocNo_deproom = ? LIMIT 1";
+                                $stmtDoc = $conn->prepare($sqlDocNo);
+                                $stmtDoc->execute([$DocNo_pay]);
+                                $row = $stmtDoc->fetch(PDO::FETCH_ASSOC);
+
+                                if ($row) {
+                                    $docNo_hn = $row['DocNo'];
+
+                                    // 2. เช็คว่า ItemCode มีอยู่ใน his_detail แล้วหรือยัง
+                                    $sqlCheck = "SELECT Qty FROM his_detail WHERE DocNo = ? AND ItemCode = ?";
+                                    $stmtCheck = $conn->prepare($sqlCheck);
+                                    $stmtCheck->execute([$docNo_hn, $_ItemCode]);
+                                    $resultCheck = $stmtCheck->fetch(PDO::FETCH_ASSOC);
+
+                                    if ($resultCheck) {
+                                        // เจอแล้ว -> UPDATE Qty +1
+                                        $sqlUpdate = "UPDATE his_detail SET Qty = Qty + 1 WHERE DocNo = ? AND ItemCode = ?";
+                                        $stmtUpdate = $conn->prepare($sqlUpdate);
+                                        $stmtUpdate->execute([$docNo_hn, $_ItemCode]);
+                                    } else {
+                                        // ไม่เจอ -> INSERT
+                                        $sqlInsert = "INSERT INTO his_detail (DocNo, ItemCode, Qty) VALUES (?, ?, 1)";
+                                        $stmtInsert = $conn->prepare($sqlInsert);
+                                        $stmtInsert->execute([$docNo_hn, $_ItemCode]);
+                                    }
+                                }
 
 
 
-                            // echo json_encode($count_itemstock);
-                            // unset($conn);
-                            // die;
+                                $query_updateHN = "UPDATE hncode SET IsStatus = 1  WHERE hncode.HnCode = '$_hn_record_id' AND hncode.`procedure` = '$_procedure' AND hncode.doctor = '$_doctor' AND hncode.departmentroomid = '$_departmentroomid' AND hncode.DocDate = '$input_date_service' ";
+                                $query_updateHN = $conn->prepare($query_updateHN);
+                                $query_updateHN->execute();
+
+
+                                // echo $queryInsert2;
+                                // exit;
+                                $queryInsert2 = $conn->prepare($queryInsert2);
+                                $queryInsert2->execute();
+                                $count_itemstock++;
+
+                                $count_new_item++;
+
+                                $insert_log = "INSERT INTO log_activity_users (itemCode , itemstockID , qty, isStatus, DocNo, userID, createAt) 
+                                    VALUES (:itemCode, :itemstockID, 1, :isStatus, :DocNo, :Userid, NOW())";
+
+                                $meQuery_log = $conn->prepare($insert_log);
+
+                                $meQuery_log->bindParam(':itemCode', $_ItemCode);
+                                $meQuery_log->bindParam(':itemstockID', $_RowID);
+                                $meQuery_log->bindValue(':isStatus', 4, PDO::PARAM_INT);
+                                $meQuery_log->bindParam(':DocNo', $DocNo_pay);
+                                $meQuery_log->bindParam(':Userid', $Userid);
+
+
+                                $meQuery_log->execute();
+
+
+
+                                if ($_item_status == 2 || $_item_status == 3) {
+                                    oncheck_pay_mapping($conn, $db, $_ItemCode, $DocNo_pay, $input_date_service, $_item_status, 0, $_itemtypeID, $_IsSet);
+                                }
+
+
+                                $count_itemstock = 2;
+
+
+
+                                // echo json_encode($count_itemstock);
+                                // unset($conn);
+                                // die;
+                            }
                         }
-                    }
 
-                    $insert_log = "INSERT INTO log_activity_users (itemCode , itemstockID , qty, isStatus, DocNo, userID, createAt) 
+                        $insert_log = "INSERT INTO log_activity_users (itemCode , itemstockID , qty, isStatus, DocNo, userID, createAt) 
                                             VALUES (:itemCode, :itemstockID, 1, :isStatus, :DocNo, :Userid, NOW())";
 
-                    $meQuery_log = $conn->prepare($insert_log);
+                        $meQuery_log = $conn->prepare($insert_log);
 
-                    $meQuery_log->bindParam(':itemCode', $_ItemCode);
-                    $meQuery_log->bindParam(':itemstockID', $_RowID);
-                    $meQuery_log->bindValue(':isStatus', 4, PDO::PARAM_INT);
-                    $meQuery_log->bindParam(':DocNo', $DocNo_pay);
-                    $meQuery_log->bindParam(':Userid', $Userid);
-
-
-                    $meQuery_log->execute();
+                        $meQuery_log->bindParam(':itemCode', $_ItemCode);
+                        $meQuery_log->bindParam(':itemstockID', $_RowID);
+                        $meQuery_log->bindValue(':isStatus', 4, PDO::PARAM_INT);
+                        $meQuery_log->bindParam(':DocNo', $DocNo_pay);
+                        $meQuery_log->bindParam(':Userid', $Userid);
 
 
-                    $updatePay = "UPDATE deproom SET UserPay = $Userid WHERE deproom.DocNo = '$DocNo_pay' ";
-                    $meQueryPay = $conn->prepare($updatePay);
-                    $meQueryPay->execute();
-                }
+                        $meQuery_log->execute();
 
 
-                // ยืม
-                if ($_Isdeproom == 1) {
+                        $updatePay = "UPDATE deproom SET UserPay = $Userid WHERE deproom.DocNo = '$DocNo_pay' ";
+                        $meQueryPay = $conn->prepare($updatePay);
+                        $meQueryPay->execute();
+                    }
 
 
-                    $query_old = " SELECT
+                    // ยืม
+                    if ($_Isdeproom == 1) {
+
+
+                        $query_old = " SELECT
                                         deproomdetailsub.ID,
                                         deproomdetail.ID AS detailID,
                                         hncode_detail.ID AS hndetail_ID,
@@ -7338,31 +9739,36 @@ function oncheck_pay($conn, $db)
                                         LIMIT 1 ";
 
 
-                    $meQuery_old = $conn->prepare($query_old);
-                    $meQuery_old->execute();
-                    while ($row_old = $meQuery_old->fetch(PDO::FETCH_ASSOC)) {
-                        $detailID = $row_old['detailID'];
-                        $hndetail_ID = $row_old['hndetail_ID'];
-                        $DocNo_borrow = $row_old['DocNo'];
-                        $DocNoHN_borrow = $row_old['hncode_DocNo'];
-                        $deproom_qty = $row_old['deproom_qty'];
-                        $hncode_qty = $row_old['hncode_qty'];
-                        $deproomdetailsub_id = $row_old['ID'];
-                        $_hn_record_id_borrow = $row_old['hn_record_id'];
-                        $_ModifyDate = $row_old['ModifyDate'];
-                        $__Ref_departmentroomid = $row_old['Ref_departmentroomid'];
-                        $_number_box = $row_old['number_box'];
+                        $meQuery_old = $conn->prepare($query_old);
+                        $meQuery_old->execute();
+                        while ($row_old = $meQuery_old->fetch(PDO::FETCH_ASSOC)) {
+                            $detailID = $row_old['detailID'];
+                            $hndetail_ID = $row_old['hndetail_ID'];
+                            $DocNo_borrow = $row_old['DocNo'];
+                            $DocNoHN_borrow = $row_old['hncode_DocNo'];
+                            $deproom_qty = $row_old['deproom_qty'];
+                            $hncode_qty = $row_old['hncode_qty'];
+                            $deproomdetailsub_id = $row_old['ID'];
+                            $_hn_record_id_borrow = $row_old['hn_record_id'];
+                            $_ModifyDate = $row_old['ModifyDate'];
+                            $__Ref_departmentroomid = $row_old['Ref_departmentroomid'];
+                            $_number_box = $row_old['number_box'];
 
-                        if ($_hn_record_id_borrow == "") {
-                            $_hn_record_id_borrow = $_number_box;
+                            if ($_hn_record_id_borrow == "") {
+                                $_hn_record_id_borrow = $_number_box;
+                            }
                         }
-                    }
 
 
-                    if ($DocNo_pay != $DocNo_borrow) {
+                        if ($DocNo_pay != $DocNo_borrow) {
+
+                            $delete_bag = "DELETE FROM bag_detail WHERE UsageCode = '$input_pay' ";
+                            $meQuery_bag = $conn->prepare($delete_bag);
+                            $meQuery_bag->execute();
 
 
-                        $checkqty = "SELECT
+
+                            $checkqty = "SELECT
                                             SUM( deproomdetail.Qty ) AS deproom_qty ,
                                             (
                                             SELECT
@@ -7381,12 +9787,12 @@ function oncheck_pay($conn, $db)
                                             deproomdetail.ID = '$detailID' ";
 
 
-                        $meQuery_checkqty = $conn->prepare($checkqty);
-                        $meQuery_checkqty->execute();
-                        while ($row_checkqty = $meQuery_checkqty->fetch(PDO::FETCH_ASSOC)) {
-                            $deproom_qty = $row_checkqty['deproom_qty'];
-                            $hncode_qty = $row_checkqty['hncode_qty'];
-                        }
+                            $meQuery_checkqty = $conn->prepare($checkqty);
+                            $meQuery_checkqty->execute();
+                            while ($row_checkqty = $meQuery_checkqty->fetch(PDO::FETCH_ASSOC)) {
+                                $deproom_qty = $row_checkqty['deproom_qty'];
+                                $hncode_qty = $row_checkqty['hncode_qty'];
+                            }
 
 
 
@@ -7394,102 +9800,102 @@ function oncheck_pay($conn, $db)
 
 
 
-                        if ($hncode_qty == 1) {
-                            $queryD2 = "DELETE FROM hncode_detail WHERE ID =  '$hndetail_ID' ";
-                            $meQueryD2 = $conn->prepare($queryD2);
-                            $meQueryD2->execute();
-                        } else {
-                            $queryInsert0 = "UPDATE hncode_detail SET Qty = Qty-1 WHERE  ID =  '$hndetail_ID' ";
-                            $meQuery0 = $conn->prepare($queryInsert0);
-                            $meQuery0->execute();
-                        }
+                            if ($hncode_qty == 1) {
+                                $queryD2 = "DELETE FROM hncode_detail WHERE ID =  '$hndetail_ID' ";
+                                $meQueryD2 = $conn->prepare($queryD2);
+                                $meQueryD2->execute();
+                            } else {
+                                $queryInsert0 = "UPDATE hncode_detail SET Qty = Qty-1 WHERE  ID =  '$hndetail_ID' ";
+                                $meQuery0 = $conn->prepare($queryInsert0);
+                                $meQuery0->execute();
+                            }
 
 
-                        // 1. ค้นหา DocNo จาก DocNo_SS
-                        $sqlDocNo1 = "SELECT DocNo FROM his WHERE DocNo_deproom = ? LIMIT 1";
-                        $stmtDoc1 = $conn->prepare($sqlDocNo1);
-                        $stmtDoc1->execute([$DocNo_borrow]);
-                        $row1 = $stmtDoc1->fetch(PDO::FETCH_ASSOC);
+                            // 1. ค้นหา DocNo จาก DocNo_SS
+                            $sqlDocNo1 = "SELECT DocNo FROM his WHERE DocNo_deproom = ? LIMIT 1";
+                            $stmtDoc1 = $conn->prepare($sqlDocNo1);
+                            $stmtDoc1->execute([$DocNo_borrow]);
+                            $row1 = $stmtDoc1->fetch(PDO::FETCH_ASSOC);
 
-                        if ($row1) {
-                            $docNo_hn1 = $row1['DocNo'];
+                            if ($row1) {
+                                $docNo_hn1 = $row1['DocNo'];
 
-                            // 2. เช็คว่า ItemCode มีอยู่ใน his_detail แล้วหรือยัง
-                            $sqlCheck1 = "SELECT Qty FROM his_detail WHERE DocNo = ? AND ItemCode = ?";
-                            $stmtCheck1 = $conn->prepare($sqlCheck1); // แก้ชื่อเป็น $sqlCheck1 ให้ตรงกัน
-                            $stmtCheck1->execute([$docNo_hn1, $_ItemCode]);
-                            $resultCheck1 = $stmtCheck1->fetch(PDO::FETCH_ASSOC);
+                                // 2. เช็คว่า ItemCode มีอยู่ใน his_detail แล้วหรือยัง
+                                $sqlCheck1 = "SELECT Qty FROM his_detail WHERE DocNo = ? AND ItemCode = ?";
+                                $stmtCheck1 = $conn->prepare($sqlCheck1); // แก้ชื่อเป็น $sqlCheck1 ให้ตรงกัน
+                                $stmtCheck1->execute([$docNo_hn1, $_ItemCode]);
+                                $resultCheck1 = $stmtCheck1->fetch(PDO::FETCH_ASSOC);
 
-                            if ($resultCheck1) {
-                                if ($resultCheck1['Qty'] > 1) {
-                                    // ถ้า Qty มากกว่า 1 -> ลบ 1
-                                    $sqlUpdate = "UPDATE his_detail SET Qty = Qty - 1 WHERE DocNo = ? AND ItemCode = ?";
-                                    $stmtUpdate = $conn->prepare($sqlUpdate);
-                                    $stmtUpdate->execute([$docNo_hn1, $_ItemCode]);
-                                } else {
-                                    // ถ้า Qty เท่ากับ 1 -> ลบ record นี้ทิ้ง
-                                    $sqlDelete = "DELETE FROM his_detail WHERE DocNo = ? AND ItemCode = ?";
-                                    $stmtDelete = $conn->prepare($sqlDelete);
-                                    $stmtDelete->execute([$docNo_hn1, $_ItemCode]);
+                                if ($resultCheck1) {
+                                    if ($resultCheck1['Qty'] > 1) {
+                                        // ถ้า Qty มากกว่า 1 -> ลบ 1
+                                        $sqlUpdate = "UPDATE his_detail SET Qty = Qty - 1 WHERE DocNo = ? AND ItemCode = ?";
+                                        $stmtUpdate = $conn->prepare($sqlUpdate);
+                                        $stmtUpdate->execute([$docNo_hn1, $_ItemCode]);
+                                    } else {
+                                        // ถ้า Qty เท่ากับ 1 -> ลบ record นี้ทิ้ง
+                                        $sqlDelete = "DELETE FROM his_detail WHERE DocNo = ? AND ItemCode = ?";
+                                        $stmtDelete = $conn->prepare($sqlDelete);
+                                        $stmtDelete->execute([$docNo_hn1, $_ItemCode]);
+                                    }
                                 }
                             }
-                        }
 
 
-                        // 1. ค้นหา DocNo จาก DocNo_SS
-                        $sqlDocNo = "SELECT DocNo FROM his WHERE DocNo_deproom = ? LIMIT 1";
-                        $stmtDoc = $conn->prepare($sqlDocNo);
-                        $stmtDoc->execute([$DocNo_pay]);
-                        $row = $stmtDoc->fetch(PDO::FETCH_ASSOC);
+                            // 1. ค้นหา DocNo จาก DocNo_SS
+                            $sqlDocNo = "SELECT DocNo FROM his WHERE DocNo_deproom = ? LIMIT 1";
+                            $stmtDoc = $conn->prepare($sqlDocNo);
+                            $stmtDoc->execute([$DocNo_pay]);
+                            $row = $stmtDoc->fetch(PDO::FETCH_ASSOC);
 
-                        if ($row) {
-                            $docNo_hn = $row['DocNo'];
+                            if ($row) {
+                                $docNo_hn = $row['DocNo'];
 
-                            // 2. เช็คว่า ItemCode มีอยู่ใน his_detail แล้วหรือยัง
-                            $sqlCheck = "SELECT Qty FROM his_detail WHERE DocNo = ? AND ItemCode = ?";
-                            $stmtCheck = $conn->prepare($sqlCheck);
-                            $stmtCheck->execute([$docNo_hn, $_ItemCode]);
-                            $resultCheck = $stmtCheck->fetch(PDO::FETCH_ASSOC);
+                                // 2. เช็คว่า ItemCode มีอยู่ใน his_detail แล้วหรือยัง
+                                $sqlCheck = "SELECT Qty FROM his_detail WHERE DocNo = ? AND ItemCode = ?";
+                                $stmtCheck = $conn->prepare($sqlCheck);
+                                $stmtCheck->execute([$docNo_hn, $_ItemCode]);
+                                $resultCheck = $stmtCheck->fetch(PDO::FETCH_ASSOC);
 
-                            if ($resultCheck) {
-                                // เจอแล้ว -> UPDATE Qty +1
-                                $sqlUpdate = "UPDATE his_detail SET Qty = Qty + 1 WHERE DocNo = ? AND ItemCode = ?";
-                                $stmtUpdate = $conn->prepare($sqlUpdate);
-                                $stmtUpdate->execute([$docNo_hn, $_ItemCode]);
-                            } else {
-                                // ไม่เจอ -> INSERT
-                                $sqlInsert = "INSERT INTO his_detail (DocNo, ItemCode, Qty) VALUES (?, ?, 1)";
-                                $stmtInsert = $conn->prepare($sqlInsert);
-                                $stmtInsert->execute([$docNo_hn, $_ItemCode]);
+                                if ($resultCheck) {
+                                    // เจอแล้ว -> UPDATE Qty +1
+                                    $sqlUpdate = "UPDATE his_detail SET Qty = Qty + 1 WHERE DocNo = ? AND ItemCode = ?";
+                                    $stmtUpdate = $conn->prepare($sqlUpdate);
+                                    $stmtUpdate->execute([$docNo_hn, $_ItemCode]);
+                                } else {
+                                    // ไม่เจอ -> INSERT
+                                    $sqlInsert = "INSERT INTO his_detail (DocNo, ItemCode, Qty) VALUES (?, ?, 1)";
+                                    $stmtInsert = $conn->prepare($sqlInsert);
+                                    $stmtInsert->execute([$docNo_hn, $_ItemCode]);
+                                }
                             }
-                        }
 
 
 
-                        if ($deproom_qty == 1) {
-                            // $update_old_detail = "DELETE FROM deproomdetail WHERE ID =  '$detailID' ";
-                            // $meQuery_old_detail = $conn->prepare($update_old_detail);
-                            // $meQuery_old_detail->execute();
+                            if ($deproom_qty == 1) {
+                                // $update_old_detail = "DELETE FROM deproomdetail WHERE ID =  '$detailID' ";
+                                // $meQuery_old_detail = $conn->prepare($update_old_detail);
+                                // $meQuery_old_detail->execute();
 
-                            $update_old_sub = "DELETE FROM deproomdetailsub WHERE deproomdetailsub.ID =  '$deproomdetailsub_id'    ";
-                            $meQuery_old_sub = $conn->prepare($update_old_sub);
-                            $meQuery_old_sub->execute();
-                        } else {
-                            // $update_old_detail = "UPDATE deproomdetail SET Qty = Qty-1 WHERE  deproomdetail.ID = '$detailID' ";
-                            // $meQuery_old_detail = $conn->prepare($update_old_detail);
-                            // $meQuery_old_detail->execute();
+                                $update_old_sub = "DELETE FROM deproomdetailsub WHERE deproomdetailsub.ID =  '$deproomdetailsub_id'    ";
+                                $meQuery_old_sub = $conn->prepare($update_old_sub);
+                                $meQuery_old_sub->execute();
+                            } else {
+                                // $update_old_detail = "UPDATE deproomdetail SET Qty = Qty-1 WHERE  deproomdetail.ID = '$detailID' ";
+                                // $meQuery_old_detail = $conn->prepare($update_old_detail);
+                                // $meQuery_old_detail->execute();
 
-                            $update_old_sub = "DELETE FROM deproomdetailsub WHERE deproomdetailsub.ID =  '$deproomdetailsub_id'   ";
-                            $meQuery_old_sub = $conn->prepare($update_old_sub);
-                            $meQuery_old_sub->execute();
-                        }
-
-
+                                $update_old_sub = "DELETE FROM deproomdetailsub WHERE deproomdetailsub.ID =  '$deproomdetailsub_id'   ";
+                                $meQuery_old_sub = $conn->prepare($update_old_sub);
+                                $meQuery_old_sub->execute();
+                            }
 
 
-                        //check ว่า ตัว IsRequest = 1 เหลือกี่ตัว
 
-                        $qq1 = "SELECT
+
+                            //check ว่า ตัว IsRequest = 1 เหลือกี่ตัว
+
+                            $qq1 = "SELECT
                             deproomdetail.ID,
                             SUM( deproomdetail.Qty ) AS cnt,
                             IFNULL(( SELECT SUM( deproomdetailsub.qty_weighing ) FROM deproomdetailsub WHERE deproomdetailsub.Deproomdetail_RowID = deproomdetail.ID ), 0 ) AS cnt_pay
@@ -7504,42 +9910,42 @@ function oncheck_pay($conn, $db)
                             AND deproomdetail.IsRequest = 1
                         GROUP BY
                             deproomdetail.ID ";
-                        $meQuery_qq1 = $conn->prepare($qq1);
-                        $meQuery_qq1->execute();
-                        while ($row_qq1 = $meQuery_qq1->fetch(PDO::FETCH_ASSOC)) {
-                            if ($row_qq1['cnt_pay'] == '0') {
-                                $ID_Detail = $row_qq1['ID'];
-                                $queryqq1 = "DELETE FROM deproomdetail WHERE ID =  '$ID_Detail' ";
-                                $meQueryqq1 = $conn->prepare($queryqq1);
-                                $meQueryqq1->execute();
+                            $meQuery_qq1 = $conn->prepare($qq1);
+                            $meQuery_qq1->execute();
+                            while ($row_qq1 = $meQuery_qq1->fetch(PDO::FETCH_ASSOC)) {
+                                if ($row_qq1['cnt_pay'] == '0') {
+                                    $ID_Detail = $row_qq1['ID'];
+                                    $queryqq1 = "DELETE FROM deproomdetail WHERE ID =  '$ID_Detail' ";
+                                    $meQueryqq1 = $conn->prepare($queryqq1);
+                                    $meQueryqq1->execute();
+                                }
                             }
-                        }
 
-                        $query_old = "DELETE FROM itemstock_transaction_detail  WHERE ItemStockID = '$_RowID' 
+                            $query_old = "DELETE FROM itemstock_transaction_detail  WHERE ItemStockID = '$_RowID' 
                         AND ItemCode = '$_ItemCode' 
                         AND departmentroomid = '$__Ref_departmentroomid' 
                         AND  IsStatus = '1'
                         AND DATE(CreateDate) = '$_ModifyDate' ";
-                        $meQuery_old = $conn->prepare($query_old);
-                        $meQuery_old->execute();
+                            $meQuery_old = $conn->prepare($query_old);
+                            $meQuery_old->execute();
 
 
-                        if ($_item_status == 3) {
-                            $select = "SELECT hncode.DocNo FROM hncode WHERE DocNo_SS = '$DocNo_pay' ";
-                            $meQuery_select = $conn->prepare($select);
-                            $meQuery_select->execute();
-                            while ($row_select = $meQuery_select->fetch(PDO::FETCH_ASSOC)) {
-                                $_DocNoHN = $row_select['DocNo'];
+                            if ($_item_status == 3) {
+                                $select = "SELECT hncode.DocNo FROM hncode WHERE DocNo_SS = '$DocNo_pay' ";
+                                $meQuery_select = $conn->prepare($select);
+                                $meQuery_select->execute();
+                                while ($row_select = $meQuery_select->fetch(PDO::FETCH_ASSOC)) {
+                                    $_DocNoHN = $row_select['DocNo'];
+                                }
+                                oncheck_delete_pay_mapping($conn, $db, $_ItemCode, $DocNo_pay, $input_date_service, $_item_status, $DocNo_borrow, 2, $_DocNoHN, 0);
+                                // $count_itemstock = 2;
                             }
-                            oncheck_delete_pay_mapping($conn, $db, $_ItemCode, $DocNo_pay, $input_date_service, $_item_status, $DocNo_borrow, 2, $_DocNoHN, 0);
-                            // $count_itemstock = 2;
-                        }
 
 
-                        // echo $update_old_detail ;
-                        // exit;
+                            // echo $update_old_detail ;
+                            // exit;
 
-                        $query_2 = "SELECT
+                            $query_2 = "SELECT
                                         deproomdetail.ID,
                                         deproom.Ref_departmentroomid AS departmentroomid,
                                         deproom.`procedure`,
@@ -7566,25 +9972,25 @@ function oncheck_pay($conn, $db)
                                         deproomdetail.ItemCode ,
                                         deproomdetail.Qty,
                                         deproomdetail.PayDate ";
-                        $meQuery_2 = $conn->prepare($query_2);
-                        $meQuery_2->execute();
-                        while ($row_2 = $meQuery_2->fetch(PDO::FETCH_ASSOC)) {
-                            $return[] = $row_2;
+                            $meQuery_2 = $conn->prepare($query_2);
+                            $meQuery_2->execute();
+                            while ($row_2 = $meQuery_2->fetch(PDO::FETCH_ASSOC)) {
+                                $return[] = $row_2;
 
-                            $_ID = $row_2['ID'];
-                            $_PayDate = $row_2['PayDate'];
-                            $_departmentroomid = $row_2['departmentroomid'];
-                            $_procedure = $row_2['procedure'];
-                            $_hn_record_id = $row_2['hn_record_id'];
-                            $_doctor = $row_2['doctor'];
-                            $_Qty_detail = $row_2['Qty'];
-                            $_Qty_detail_sub = $row_2['cnt_sub'];
-                            $_ModifyDate = $row_2['ModifyDate'];
+                                $_ID = $row_2['ID'];
+                                $_PayDate = $row_2['PayDate'];
+                                $_departmentroomid = $row_2['departmentroomid'];
+                                $_procedure = $row_2['procedure'];
+                                $_hn_record_id = $row_2['hn_record_id'];
+                                $_doctor = $row_2['doctor'];
+                                $_Qty_detail = $row_2['Qty'];
+                                $_Qty_detail_sub = $row_2['cnt_sub'];
+                                $_ModifyDate = $row_2['ModifyDate'];
 
 
-                            // ==============================
+                                // ==============================
 
-                            $queryInsert1 = "INSERT INTO deproomdetailsub (
+                                $queryInsert1 = "INSERT INTO deproomdetailsub (
                                                     Deproomdetail_RowID,
                                                     ItemStockID,
                                                     dental_warehouse_id,
@@ -7611,23 +10017,23 @@ function oncheck_pay($conn, $db)
                                                     :hn_record_id_borrow
                                                 )";
 
-                            $stmt = $conn->prepare($queryInsert1);
-                            $stmt->execute([
-                                ':Deproomdetail_RowID' => $_ID,
-                                ':ItemStockID' => $_RowID,
-                                ':dental_warehouse_id' => $_departmentroomid,
-                                ':hn_record_id' => $_hn_record_id,
-                                ':doctor' => $_doctor,
-                                ':procedure' => $_procedure,
-                                ':hn_record_id_borrow' => $_hn_record_id_borrow
-                            ]);
+                                $stmt = $conn->prepare($queryInsert1);
+                                $stmt->execute([
+                                    ':Deproomdetail_RowID' => $_ID,
+                                    ':ItemStockID' => $_RowID,
+                                    ':dental_warehouse_id' => $_departmentroomid,
+                                    ':hn_record_id' => $_hn_record_id,
+                                    ':doctor' => $_doctor,
+                                    ':procedure' => $_procedure,
+                                    ':hn_record_id_borrow' => $_hn_record_id_borrow
+                                ]);
 
 
 
 
 
-                            // =======================================================================================================================================
-                            $query = "INSERT INTO itemstock_transaction_detail (
+                                // =======================================================================================================================================
+                                $query = "INSERT INTO itemstock_transaction_detail (
                                                 ItemStockID, 
                                                 ItemCode, 
                                                 CreateDate, 
@@ -7648,30 +10054,30 @@ function oncheck_pay($conn, $db)
                                                 :hncode
                                             )";
 
-                            $stmt = $conn->prepare($query);
-                            $stmt->execute([
-                                ':ItemStockID'    => $_RowID,
-                                ':ItemCode'       => $_ItemCode,
-                                ':serviceDate'         => $input_date_service,
-                                ':departmentroomid' => $_departmentroomid,
-                                ':UserCode'       => $Userid,
-                                ':hncode'         => $_hn_record_id
-                            ]);
+                                $stmt = $conn->prepare($query);
+                                $stmt->execute([
+                                    ':ItemStockID'    => $_RowID,
+                                    ':ItemCode'       => $_ItemCode,
+                                    ':serviceDate'         => $input_date_service,
+                                    ':departmentroomid' => $_departmentroomid,
+                                    ':UserCode'       => $Userid,
+                                    ':hncode'         => $_hn_record_id
+                                ]);
 
-                            // =======================================================================================================================================
+                                // =======================================================================================================================================
 
 
-                            // ==============================
-                            $queryUpdate = "UPDATE itemstock 
+                                // ==============================
+                                $queryUpdate = "UPDATE itemstock 
                                 SET Isdeproom = 1 ,
                                 Stockin = 1,
                                 departmentroomid = '$_departmentroomid'
                                 WHERE
                                 RowID = '$_RowID' ";
-                            $meQueryUpdate = $conn->prepare($queryUpdate);
-                            $meQueryUpdate->execute();
-                            // ==============================
-                            $queryInsert2 = "INSERT INTO hncode_detail (DocNo,UsageCode,ItemStockID,Qty,IsStatus,IsCancel,LastSterileDetailID)  VALUES             
+                                $meQueryUpdate = $conn->prepare($queryUpdate);
+                                $meQueryUpdate->execute();
+                                // ==============================
+                                $queryInsert2 = "INSERT INTO hncode_detail (DocNo,UsageCode,ItemStockID,Qty,IsStatus,IsCancel,LastSterileDetailID)  VALUES             
                                 (
                                 (SELECT hncode.DocNo FROM hncode  WHERE hncode.DocNo_SS = '$DocNo_pay'  LIMIT 1 ), 
                                 '$input_pay',
@@ -7687,7 +10093,7 @@ function oncheck_pay($conn, $db)
 
 
 
-                            $query_updateHN = "UPDATE hncode 
+                                $query_updateHN = "UPDATE hncode 
                                             SET IsStatus = 1  
                                             WHERE HnCode = :hncode 
                                                 AND `procedure` = :procedure 
@@ -7695,50 +10101,50 @@ function oncheck_pay($conn, $db)
                                                 AND departmentroomid = :departmentroomid 
                                                 AND DocDate = :docdate";
 
-                            $stmt = $conn->prepare($query_updateHN);
-                            $stmt->execute([
-                                ':hncode' => $_hn_record_id,
-                                ':procedure' => $_procedure,
-                                ':doctor' => $_doctor,
-                                ':departmentroomid' => $_departmentroomid,
-                                ':docdate' => $input_date_service
-                            ]);
+                                $stmt = $conn->prepare($query_updateHN);
+                                $stmt->execute([
+                                    ':hncode' => $_hn_record_id,
+                                    ':procedure' => $_procedure,
+                                    ':doctor' => $_doctor,
+                                    ':departmentroomid' => $_departmentroomid,
+                                    ':docdate' => $input_date_service
+                                ]);
 
 
-                            // echo $queryInsert2;
-                            // exit;
-                            $queryInsert2 = $conn->prepare($queryInsert2);
-                            $queryInsert2->execute();
-                            $count_itemstock++;
+                                // echo $queryInsert2;
+                                // exit;
+                                $queryInsert2 = $conn->prepare($queryInsert2);
+                                $queryInsert2->execute();
+                                $count_itemstock++;
 
-                            $count_new_item++;
+                                $count_new_item++;
 
-                            if ($_item_status == 2 || $_item_status == 3) {
-                                oncheck_pay_mapping($conn, $db, $_ItemCode, $DocNo_pay, $input_date_service, $_item_status, 0, $_itemtypeID, $_IsSet);
-                                $count_itemstock = 2;
+                                if ($_item_status == 2 || $_item_status == 3) {
+                                    oncheck_pay_mapping($conn, $db, $_ItemCode, $DocNo_pay, $input_date_service, $_item_status, 0, $_itemtypeID, $_IsSet);
+                                    $count_itemstock = 2;
+                                }
                             }
-                        }
 
-                        // รายการยังไม่มี
-                        if ($count_new_item  == 0) {
-
+                            // รายการยังไม่มี
+                            if ($count_new_item  == 0) {
 
 
-                            if ($db == 1) {
-                                $queryInsert = "INSERT INTO deproomdetail ( DocNo, ItemCode, Qty, IsStatus, PayDate, IsCancel, ModifyUser, ModifyTime , IsRequest )
+
+                                if ($db == 1) {
+                                    $queryInsert = "INSERT INTO deproomdetail ( DocNo, ItemCode, Qty, IsStatus, PayDate, IsCancel, ModifyUser, ModifyTime , IsRequest )
                                     VALUES
                                         ( '$DocNo_pay', '$_ItemCode', '1', 0,NOW(), 0, '$Userid',NOW() ,1)";
-                            } else {
-                                $queryInsert = "INSERT INTO deproomdetail ( DocNo, ItemCode, Qty, IsStatus, PayDate, IsCancel, ModifyUser, ModifyTime , IsRequest)
+                                } else {
+                                    $queryInsert = "INSERT INTO deproomdetail ( DocNo, ItemCode, Qty, IsStatus, PayDate, IsCancel, ModifyUser, ModifyTime , IsRequest)
                                     VALUES
                                         ( '$DocNo_pay', '$_ItemCode', '1', 0, GETDATE(), 0, '$Userid',GETDATE(),1)";
-                            }
-                            $meQueryInsert = $conn->prepare($queryInsert);
-                            $meQueryInsert->execute();
+                                }
+                                $meQueryInsert = $conn->prepare($queryInsert);
+                                $meQueryInsert->execute();
 
 
-                            if ($db == 1) {
-                                $query_2 = "SELECT
+                                if ($db == 1) {
+                                    $query_2 = "SELECT
                                                 deproomdetail.ID,
                                                 deproom.Ref_departmentroomid AS departmentroomid,
                                                 deproom.`procedure`,
@@ -7765,8 +10171,8 @@ function oncheck_pay($conn, $db)
                                                 deproomdetail.ItemCode ,
                                                 deproomdetail.Qty,
                                                 deproomdetail.PayDate ";
-                            } else {
-                                $query_2 = "SELECT
+                                } else {
+                                    $query_2 = "SELECT
                                                 deproomdetail.ID,
                                                 deproom.Ref_departmentroomid AS departmentroomid,
                                                 deproom.[procedure],
@@ -7792,27 +10198,27 @@ function oncheck_pay($conn, $db)
                                                 deproomdetail.ItemCode ,
                                                 deproomdetail.Qty,
                                                 deproomdetail.PayDate ";
-                            }
+                                }
 
-                            $meQuery_2 = $conn->prepare($query_2);
-                            $meQuery_2->execute();
-                            while ($row_2 = $meQuery_2->fetch(PDO::FETCH_ASSOC)) {
+                                $meQuery_2 = $conn->prepare($query_2);
+                                $meQuery_2->execute();
+                                while ($row_2 = $meQuery_2->fetch(PDO::FETCH_ASSOC)) {
 
-                                $return[] = $row_2;
+                                    $return[] = $row_2;
 
-                                $_ID = $row_2['ID'];
-                                $_PayDate = $row_2['PayDate'];
-                                $_departmentroomid = $row_2['departmentroomid'];
-                                $_procedure = $row_2['procedure'];
-                                $_hn_record_id = $row_2['hn_record_id'];
-                                $_doctor = $row_2['doctor'];
-                                $_Qty_detail = $row_2['Qty'];
-                                $_Qty_detail_sub = $row_2['cnt_sub'];
-                                $_ModifyDate = $row_2['ModifyDate'];
+                                    $_ID = $row_2['ID'];
+                                    $_PayDate = $row_2['PayDate'];
+                                    $_departmentroomid = $row_2['departmentroomid'];
+                                    $_procedure = $row_2['procedure'];
+                                    $_hn_record_id = $row_2['hn_record_id'];
+                                    $_doctor = $row_2['doctor'];
+                                    $_Qty_detail = $row_2['Qty'];
+                                    $_Qty_detail_sub = $row_2['cnt_sub'];
+                                    $_ModifyDate = $row_2['ModifyDate'];
 
 
 
-                                $queryInsert1 = "INSERT INTO deproomdetailsub (
+                                    $queryInsert1 = "INSERT INTO deproomdetailsub (
                                                         Deproomdetail_RowID,
                                                         ItemStockID,
                                                         dental_warehouse_id,
@@ -7839,24 +10245,24 @@ function oncheck_pay($conn, $db)
                                                         :hn_record_id_borrow
                                                     )";
 
-                                $stmt = $conn->prepare($queryInsert1);
-                                $stmt->execute([
-                                    ':Deproomdetail_RowID' => $_ID,
-                                    ':ItemStockID' => $_RowID,
-                                    ':dental_warehouse_id' => $_departmentroomid,
-                                    ':hn_record_id' => $_hn_record_id,
-                                    ':doctor' => $_doctor,
-                                    ':procedure' => $_procedure,
-                                    ':hn_record_id_borrow' => $_hn_record_id_borrow
-                                ]);
+                                    $stmt = $conn->prepare($queryInsert1);
+                                    $stmt->execute([
+                                        ':Deproomdetail_RowID' => $_ID,
+                                        ':ItemStockID' => $_RowID,
+                                        ':dental_warehouse_id' => $_departmentroomid,
+                                        ':hn_record_id' => $_hn_record_id,
+                                        ':doctor' => $_doctor,
+                                        ':procedure' => $_procedure,
+                                        ':hn_record_id_borrow' => $_hn_record_id_borrow
+                                    ]);
 
 
-                                // $queryInsert1 = $conn->prepare($queryInsert1);
-                                // $queryInsert1->execute();
-                                // ==============================
+                                    // $queryInsert1 = $conn->prepare($queryInsert1);
+                                    // $queryInsert1->execute();
+                                    // ==============================
 
-                                // =======================================================================================================================================
-                                $query = "INSERT INTO itemstock_transaction_detail (
+                                    // =======================================================================================================================================
+                                    $query = "INSERT INTO itemstock_transaction_detail (
                                                 ItemStockID, 
                                                 ItemCode, 
                                                 CreateDate, 
@@ -7876,31 +10282,31 @@ function oncheck_pay($conn, $db)
                                                 :hncode
                                             )";
 
-                                $stmt = $conn->prepare($query);
-                                $stmt->execute([
-                                    ':ItemStockID' => $_RowID,
-                                    ':ItemCode' => $_ItemCode,
-                                    ':serviceDate' => $input_date_service,
-                                    ':departmentroomid' => $_departmentroomid,
-                                    ':UserCode' => $Userid,
-                                    ':hncode' => $_hn_record_id
-                                ]);
+                                    $stmt = $conn->prepare($query);
+                                    $stmt->execute([
+                                        ':ItemStockID' => $_RowID,
+                                        ':ItemCode' => $_ItemCode,
+                                        ':serviceDate' => $input_date_service,
+                                        ':departmentroomid' => $_departmentroomid,
+                                        ':UserCode' => $Userid,
+                                        ':hncode' => $_hn_record_id
+                                    ]);
 
 
-                                // =======================================================================================================================================
+                                    // =======================================================================================================================================
 
 
-                                $queryUpdate = "UPDATE itemstock 
+                                    $queryUpdate = "UPDATE itemstock 
                                     SET Isdeproom = 1 ,
                                     Stockin = 1,
                                     departmentroomid = '$_departmentroomid'
                                     WHERE
                                     RowID = '$_RowID' ";
-                                $meQueryUpdate = $conn->prepare($queryUpdate);
-                                $meQueryUpdate->execute();
-                                // ==============================
+                                    $meQueryUpdate = $conn->prepare($queryUpdate);
+                                    $meQueryUpdate->execute();
+                                    // ==============================
 
-                                $queryInsert2 = "INSERT INTO hncode_detail (DocNo,UsageCode,ItemStockID,Qty,IsStatus,IsCancel,LastSterileDetailID)  VALUES             
+                                    $queryInsert2 = "INSERT INTO hncode_detail (DocNo,UsageCode,ItemStockID,Qty,IsStatus,IsCancel,LastSterileDetailID)  VALUES             
                                     (
                                     (SELECT hncode.DocNo FROM hncode  WHERE hncode.DocNo_SS = '$DocNo_pay'  LIMIT 1), 
                                     '$input_pay',
@@ -7914,73 +10320,74 @@ function oncheck_pay($conn, $db)
 
 
 
-                                $query_updateHN = "UPDATE hncode SET IsStatus = 1  WHERE hncode.DocNo_SS = '$DocNo_pay'  ";
-                                $query_updateHN = $conn->prepare($query_updateHN);
-                                $query_updateHN->execute();
+                                    $query_updateHN = "UPDATE hncode SET IsStatus = 1  WHERE hncode.DocNo_SS = '$DocNo_pay'  ";
+                                    $query_updateHN = $conn->prepare($query_updateHN);
+                                    $query_updateHN->execute();
 
 
-                                // echo $queryInsert2;
-                                // exit;
-                                $queryInsert2 = $conn->prepare($queryInsert2);
-                                $queryInsert2->execute();
-                                $count_itemstock++;
+                                    // echo $queryInsert2;
+                                    // exit;
+                                    $queryInsert2 = $conn->prepare($queryInsert2);
+                                    $queryInsert2->execute();
+                                    $count_itemstock++;
 
-                                $count_new_item++;
+                                    $count_new_item++;
 
 
-                                $insert_log = "INSERT INTO log_activity_users (itemCode , itemstockID , qty, isStatus, DocNo, userID, createAt) 
+                                    $insert_log = "INSERT INTO log_activity_users (itemCode , itemstockID , qty, isStatus, DocNo, userID, createAt) 
                                        VALUES (:itemCode, :itemstockID, 1, :isStatus, :DocNo, :Userid, NOW())";
 
-                                $meQuery_log = $conn->prepare($insert_log);
+                                    $meQuery_log = $conn->prepare($insert_log);
 
-                                $meQuery_log->bindParam(':itemCode', $_ItemCode);
-                                $meQuery_log->bindParam(':itemstockID', $_RowID);
-                                $meQuery_log->bindValue(':isStatus', 4, PDO::PARAM_INT);
-                                $meQuery_log->bindParam(':DocNo', $DocNo_pay);
-                                $meQuery_log->bindParam(':Userid', $Userid);
+                                    $meQuery_log->bindParam(':itemCode', $_ItemCode);
+                                    $meQuery_log->bindParam(':itemstockID', $_RowID);
+                                    $meQuery_log->bindValue(':isStatus', 4, PDO::PARAM_INT);
+                                    $meQuery_log->bindParam(':DocNo', $DocNo_pay);
+                                    $meQuery_log->bindParam(':Userid', $Userid);
 
 
-                                $meQuery_log->execute();
+                                    $meQuery_log->execute();
 
-                                $count_itemstock = 2;
-
-                                if ($_item_status == 2 || $_item_status == 3) {
-                                    oncheck_pay_mapping($conn, $db, $_ItemCode, $DocNo_pay, $input_date_service, $_item_status, 0, $_itemtypeID, $_IsSet);
                                     $count_itemstock = 2;
+
+                                    if ($_item_status == 2 || $_item_status == 3) {
+                                        oncheck_pay_mapping($conn, $db, $_ItemCode, $DocNo_pay, $input_date_service, $_item_status, 0, $_itemtypeID, $_IsSet);
+                                        $count_itemstock = 2;
+                                    }
+
+                                    // echo json_encode($count_itemstock);
+                                    // unset($conn);
+                                    // die;
                                 }
-
-                                // echo json_encode($count_itemstock);
-                                // unset($conn);
-                                // die;
                             }
-                        }
 
-                        $insert_log = "INSERT INTO log_activity_users (itemCode , itemstockID , qty, isStatus, DocNo, userID, createAt) 
+                            $insert_log = "INSERT INTO log_activity_users (itemCode , itemstockID , qty, isStatus, DocNo, userID, createAt) 
                                 VALUES (:itemCode, :itemstockID, 1, :isStatus, :DocNo, :Userid, NOW())";
 
-                        $meQuery_log = $conn->prepare($insert_log);
+                            $meQuery_log = $conn->prepare($insert_log);
 
-                        $meQuery_log->bindParam(':itemCode', $_ItemCode);
-                        $meQuery_log->bindParam(':itemstockID', $_RowID);
-                        $meQuery_log->bindValue(':isStatus', 4, PDO::PARAM_INT);
-                        $meQuery_log->bindParam(':DocNo', $DocNo_pay);
-                        $meQuery_log->bindParam(':Userid', $Userid);
+                            $meQuery_log->bindParam(':itemCode', $_ItemCode);
+                            $meQuery_log->bindParam(':itemstockID', $_RowID);
+                            $meQuery_log->bindValue(':isStatus', 4, PDO::PARAM_INT);
+                            $meQuery_log->bindParam(':DocNo', $DocNo_pay);
+                            $meQuery_log->bindParam(':Userid', $Userid);
 
 
-                        $meQuery_log->execute();
-                    } else {
-                        $count_itemstock = 3;
-                        // echo json_encode($count_itemstock);
-                        // unset($conn);
-                        // die;
+                            $meQuery_log->execute();
+                        } else {
+                            $count_itemstock = 3;
+                            // echo json_encode($count_itemstock);
+                            // unset($conn);
+                            // die;
+                        }
                     }
-                }
-            } else {
+                } else {
 
-                $count_itemstock = 9;
-                echo json_encode($count_itemstock);
-                unset($conn);
-                die;
+                    $count_itemstock = 9;
+                    echo json_encode($count_itemstock);
+                    unset($conn);
+                    die;
+                }
             }
         }
 

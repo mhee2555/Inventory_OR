@@ -52,12 +52,14 @@ function showDetail_item3($conn, $db)
 
     $query = "SELECT
                     item.itemname,
-                    deproomdetail.Qty 
+                    COUNT(deproomdetailsub.ID ) AS  Qty
                 FROM
                     deproom
                     INNER JOIN deproomdetail ON deproom.DocNo = deproomdetail.DocNo
+                    INNER JOIN deproomdetailsub ON deproomdetail.ID = deproomdetailsub.Deproomdetail_RowID 
                     INNER JOIN item ON deproomdetail.ItemCode = item.itemcode 
-                WHERE  deproom.DocNo = '$DocNo' ";
+                WHERE  deproom.DocNo = '$DocNo'
+                GROUP BY item.itemname  ";
 
     $meQuery = $conn->prepare($query);
     $meQuery->execute();

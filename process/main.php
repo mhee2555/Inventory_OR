@@ -127,6 +127,9 @@ function selection_hn($conn,$db)
     $query = " SELECT COUNT(set_hn.ID) AS c 
                 FROM
                     set_hn
+                INNER JOIN doctor ON doctor.ID = set_hn.doctor
+                LEFT JOIN `procedure` ON set_hn.`procedure` = `procedure`.ID
+                INNER JOIN departmentroom ON set_hn.departmentroomid = departmentroom.id 
                 WHERE
                    ( set_hn.isStatus = 0 OR set_hn.isStatus = 1 OR set_hn.isStatus = 2 )
                 AND  set_hn.isCancel = 0 ";

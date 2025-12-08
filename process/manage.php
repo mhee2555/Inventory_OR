@@ -57,8 +57,328 @@ if (!empty($_POST['FUNC_NAME'])) {
         deleteDepartment($conn, $db);
     } else if ($_POST['FUNC_NAME'] == 'saveDepartment') {
         saveDepartment($conn, $db);
+    } else if ($_POST['FUNC_NAME'] == 'show_bag') {
+        show_bag($conn, $db);
+    } else if ($_POST['FUNC_NAME'] == 'scan_in_bag') {
+        scan_in_bag($conn, $db);
+    } else if ($_POST['FUNC_NAME'] == 'show_bag_Detail') {
+        show_bag_Detail($conn, $db);
+    } else if ($_POST['FUNC_NAME'] == 'delete_bag') {
+        delete_bag($conn, $db);
+    } else if ($_POST['FUNC_NAME'] == 'scan_out_bag') {
+        scan_out_bag($conn, $db);
+    } else if ($_POST['FUNC_NAME'] == 'delete_bag_big') {
+        delete_bag_big($conn, $db);
     }
 }
+
+function scan_out_bag($conn, $db)
+{
+    $return = array();
+
+    $UsageCode     = $_POST['UsageCode'];
+    $UsageCodeBag  = $_POST['UsageCodeBag'];
+
+    // ✅ 1. เช็คว่ามีใน bag_detail ไหม
+    $check_sql = "
+        SELECT COUNT(*) 
+        FROM bag_detail 
+        WHERE UsageCode_bag = ?
+          AND UsageCode     = ?
+    ";
+    $check = $conn->prepare($check_sql);
+    $check->execute([$UsageCodeBag, $UsageCode]);
+    $exists = (int)$check->fetchColumn();
+
+    if ($exists === 0) {
+        // ❌ ไม่พบรายการนี้ในถุง
+        $return['status']  = 'not_found_in_bag';
+        $return['message'] = 'ไม่พบรหัสนี้ในถุง';
+        echo json_encode($return);
+        unset($conn);
+        die;
+    }
+
+    // ✅ 2. เจอแล้ว → ลบออกจากถุง
+    $delete_sql = "
+        DELETE FROM bag_detail
+        WHERE UsageCode_bag = ?
+          AND UsageCode     = ?
+        LIMIT 1
+    ";
+    $del = $conn->prepare($delete_sql);
+    $del->execute([$UsageCodeBag, $UsageCode]);
+
+    // เผื่อกันกรณี DELETE ไม่ได้สักเหตุผลหนึ่ง
+    if ($del->rowCount() > 0) {
+        $return['status']  = 'success';
+        $return['message'] = 'นำรายการออกจากถุงเรียบร้อย';
+    } else {
+        $return['status']  = 'error';
+        $return['message'] = 'ลบรายการไม่สำเร็จ';
+    }
+
+    echo json_encode($return);
+    unset($conn);
+    die;
+}
+
+function delete_bag_big($conn, $db)
+{
+    $return = array();
+    $_UsageCode_bag = $_POST['UsageCode_bag'];
+
+    $delete = "DELETE FROM bag_detail WHERE  UsageCode_bag = '$_UsageCode_bag' ";
+    $meQuery = $conn->prepare($delete);
+    $meQuery->execute();
+
+    echo json_encode($return);
+    unset($conn);
+    die;
+}
+
+function delete_bag($conn, $db)
+{
+    $return = array();
+    $_UsageCode_bag = $_POST['UsageCode_bag'];
+    $_UsageCode = $_POST['UsageCode'];
+
+    $delete = "DELETE FROM bag_detail WHERE UsageCode = '$_UsageCode' AND UsageCode_bag = '$_UsageCode_bag' ";
+    $meQuery = $conn->prepare($delete);
+    $meQuery->execute();
+
+    echo json_encode($return);
+    unset($conn);
+    die;
+}
+function show_bag_Detail($conn, $db)
+{
+    $return = array();
+    $UsageCode = $_POST['UsageCode'];
+
+    $query = "
+        SELECT
+            item.itemname,
+            item.itemcode,
+            COUNT(itemstock.RowID) AS cnt
+        FROM
+            bag_detail
+            INNER JOIN itemstock 
+                ON bag_detail.UsageCode = itemstock.UsageCode
+            INNER JOIN item 
+                ON itemstock.ItemCode = item.itemcode
+        WHERE
+            bag_detail.UsageCode_bag = ?
+            AND item.itemname IS NOT NULL   -- ✅ ตัด itemname ที่เป็น NULL ทิ้ง
+        GROUP BY
+            item.itemcode,
+            item.itemname  ";
+
+    $meQuery = $conn->prepare($query);
+    $meQuery->execute([$UsageCode]);
+
+    while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+        $_itemcode = $row['itemcode'];
+        $return['main'][] = $row;
+
+        $query2 = "
+        SELECT
+            bag_detail.UsageCode
+        FROM
+            bag_detail
+            INNER JOIN itemstock 
+                ON bag_detail.UsageCode = itemstock.UsageCode
+            INNER JOIN item 
+                ON itemstock.ItemCode = item.itemcode
+        WHERE
+            bag_detail.UsageCode_bag = ?
+            AND item.itemcode = ? ";
+        $meQuery2 = $conn->prepare($query2);
+        $meQuery2->execute([$UsageCode, $_itemcode]);
+        while ($row2 = $meQuery2->fetch(PDO::FETCH_ASSOC)) {
+            $return[$_itemcode][] = $row2;
+        }
+    }
+
+    echo json_encode($return);
+    unset($conn);
+    die;
+}
+
+
+function scan_in_bag($conn, $db)
+{
+    $return = array();
+
+    $UsageCode     = $_POST['UsageCode'];
+    $UsageCodeBag  = $_POST['UsageCodeBag'];
+    $item_status   = isset($_POST['item_status']) ? (int)$_POST['item_status'] : 0;
+
+    // ✅ 0. หา ItemCode จาก itemstock ด้วย UsageCode
+    $item_sql = "
+        SELECT ItemCode
+        FROM itemstock
+        WHERE UsageCode = ?
+        LIMIT 1
+    ";
+    $stmtItem = $conn->prepare($item_sql);
+    $stmtItem->execute([$UsageCode]);
+    $rowItem = $stmtItem->fetch(PDO::FETCH_ASSOC);
+
+    if (!$rowItem) {
+        // ❌ ไม่มีรหัสนี้ใน itemstock
+        $return['status']  = 'not_found';
+        $return['message'] = 'ไม่พบรหัสนี้ในระบบ';
+        echo json_encode($return);
+        unset($conn);
+        die;
+    }
+
+    $ItemCode = $rowItem['ItemCode'];
+
+    // ✅ 0.5 เช็คว่า UsageCode นี้มีอยู่ในถุงไหนแล้วหรือยัง (ห้ามอยู่มากกว่า 1 ถุง)
+    $checkAnySql = "
+        SELECT UsageCode_bag
+        FROM bag_detail
+        WHERE UsageCode = ?
+        LIMIT 1
+    ";
+    $stmtAny = $conn->prepare($checkAnySql);
+    $stmtAny->execute([$UsageCode]);
+    $rowAny = $stmtAny->fetch(PDO::FETCH_ASSOC);
+
+    if ($rowAny) {
+        // ถ้าอยู่ในถุงเดียวกันอยู่แล้ว → ถือว่า duplicate
+        if ($rowAny['UsageCode_bag'] == $UsageCodeBag) {
+            $return['status']  = 'duplicate';
+            $return['message'] = 'รหัสนี้ถูกสแกนเข้าถุงนี้แล้ว';
+        } else {
+            // ถ้าอยู่ในถุงใบอื่น → ห้ามใส่ถุงนี้
+            $return['status']  = 'already_in_bag';
+            $return['message'] = 'รหัสนี้ถูกบรรจุในถุงใบอื่นแล้ว (' . $rowAny['UsageCode_bag'] . ')';
+        }
+
+        echo json_encode($return);
+        unset($conn);
+        die;
+    }
+
+    // ✅ 1. เช็คซ้ำในถุงเดียวกัน (กันทุกเคสเผื่อ) เผื่อมี race condition
+    $check_sql = "
+        SELECT COUNT(*) 
+        FROM bag_detail 
+        WHERE UsageCode_bag = ? 
+          AND UsageCode     = ?
+    ";
+    $check = $conn->prepare($check_sql);
+    $check->execute([$UsageCodeBag, $UsageCode]);
+    $exists = $check->fetchColumn();
+
+    if ($exists > 0) {
+        // ❌ มีข้อมูลอยู่แล้วในถุงนี้
+        $return['status']  = 'duplicate';
+        $return['message'] = 'รหัสนี้ถูกสแกนเข้าถุงนี้แล้ว';
+        echo json_encode($return);
+        unset($conn);
+        die;
+    }
+
+    // ✅ 2. เช็ค limit ตาม item_status (4 = 5 usage/ตัว, 5 = 10 usage/ตัว)
+    if ($item_status == 4 || $item_status == 5) {
+
+        $maxItemTypes    = 5;                          // สูงสุด 5 itemcode ต่างกัน
+        $maxUsagePerItem = ($item_status == 4) ? 5 : 10;
+
+        // 2.1 นับจำนวน itemcode ต่างกันที่มีอยู่แล้วในถุงนี้
+        $countItemTypeSql = "
+            SELECT COUNT(DISTINCT s.ItemCode) AS item_count
+            FROM bag_detail b
+            INNER JOIN itemstock s ON s.UsageCode = b.UsageCode
+            WHERE b.UsageCode_bag = ?
+        ";
+        $stmtType = $conn->prepare($countItemTypeSql);
+        $stmtType->execute([$UsageCodeBag]);
+        $itemTypeCount = (int)$stmtType->fetchColumn();
+
+        // 2.2 นับว่า itemcode ตัวนี้ มี usage อยู่ในถุงนี้แล้วกี่ตัว
+        $countUsageSql = "
+            SELECT COUNT(*) AS usage_count
+            FROM bag_detail b
+            INNER JOIN itemstock s ON s.UsageCode = b.UsageCode
+            WHERE b.UsageCode_bag = ?
+              AND s.ItemCode      = ?
+        ";
+        $stmtUsage = $conn->prepare($countUsageSql);
+        $stmtUsage->execute([$UsageCodeBag, $ItemCode]);
+        $usageCountForItem = (int)$stmtUsage->fetchColumn();
+
+        // ถ้าตัวนี้ยังไม่เคยอยู่ในถุงเลย (usageCountForItem = 0)
+        // แต่ในถุงมีครบ 5 ItemCode แล้ว → ห้ามเพิ่ม item ใหม่
+        if ($usageCountForItem == 0 && $itemTypeCount >= $maxItemTypes) {
+            $return['status']  = 'max_itemcode';
+            $return['message'] = 'ถุงนี้มีครบ ' . $maxItemTypes . ' รายการแล้ว ไม่สามารถเพิ่มรายการใหม่ได้';
+            echo json_encode($return);
+            unset($conn);
+            die;
+        }
+
+        // ถ้า itemcode นี้มี usage ครบตาม limit แล้ว → ห้ามเพิ่ม
+        if ($usageCountForItem >= $maxUsagePerItem) {
+            $return['status']  = 'max_usagecode';
+            $return['message'] = 'รายการนี้ใส่ครบ ' . $maxUsagePerItem . ' ชิ้นแล้วในถุงนี้';
+            echo json_encode($return);
+            unset($conn);
+            die;
+        }
+    }
+
+    // ✅ 3. ทุกอย่างผ่าน → Insert ได้
+    $insert_sql = "
+        INSERT INTO bag_detail (UsageCode_bag, UsageCode)
+        VALUES (?, ?)
+    ";
+    $insert = $conn->prepare($insert_sql);
+    $insert->execute([$UsageCodeBag, $UsageCode]);
+
+    $return['status']  = 'success';
+    $return['message'] = 'บันทึกข้อมูลเรียบร้อย';
+
+    echo json_encode($return);
+    unset($conn);
+    die;
+}
+
+
+
+function show_bag($conn, $db)
+{
+    $return = array();
+
+
+    $query = " SELECT
+                item.itemcode,
+                item.itemname,
+                itemstock.UsageCode,
+                item.item_status 
+            FROM
+                itemstock
+                INNER JOIN item ON itemstock.ItemCode = item.itemcode 
+            WHERE
+                item.item_status IN ( 4, 5 ) 
+            ORDER BY
+                item.item_status,
+                item.itemname   ";
+
+    $meQuery = $conn->prepare($query);
+    $meQuery->execute();
+    while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+        $return[] = $row;
+    }
+    echo json_encode($return);
+    unset($conn);
+    die;
+}
+
 
 function updateDetail_qty($conn, $db)
 {

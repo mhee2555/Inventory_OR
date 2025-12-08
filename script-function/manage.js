@@ -11,8 +11,423 @@ var doctor_routine = [];
 $(function () {
   click_main();
   click_menu();
+  click_rowitem();
   session();
 });
+
+function click_rowitem() {
+  $("#row_bag").hide();
+
+
+  show_bag();
+
+  $("#radio_mapping_item").click(function () {
+    $(".tab-button3").removeClass("active");
+    $(this).addClass("active");
+    $("#row_mapping_item").show();
+    $("#row_bag").hide();
+
+  });
+
+  $("#radio_mapping_bag").click(function () {
+    $(".tab-button3").removeClass("active");
+    $(this).addClass("active");
+    $("#row_mapping_item").hide();
+    $("#row_bag").show();
+
+  });
+
+}
+
+
+// let searchTimeout = null;
+
+$("#input_search_bag").on("keyup", function () {
+  clearTimeout(searchTimeout);
+
+  let input = this;
+
+  searchTimeout = setTimeout(function () {
+    var keyword = $(input).val().toLowerCase();
+
+    $("#bag_list .bag-item").each(function () {
+      var text = $(this).text().toLowerCase();
+      $(this).toggle(text.indexOf(keyword) > -1);
+    });
+
+  }, 250); // ✅ ปรับ 150–350 ได้ตามความลื่น
+});
+
+
+
+function show_bag() {
+  $.ajax({
+    url: "process/manage.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "show_bag",
+    },
+    success: function (result) {
+      var ObjData = JSON.parse(result);
+      console.log(ObjData);
+
+      var html = ``;
+
+      if (!$.isEmptyObject(ObjData)) {
+        $.each(ObjData, function (key, value) {
+
+          if (value.item_status == 4) {
+            var ttt = 25;
+          } else {
+            var ttt = 50;
+          }
+          html += `
+            <div class="bag-item" style='cursor: pointer;' id='bag_${value.UsageCode}' onclick="onfocus_bag('${value.UsageCode}','${value.item_status}')">
+              <div class="bag-name">
+                ${value.itemname}
+              </div>
+              <div class="bag-code">
+                ${value.UsageCode}  
+              </div>
+              <div class="bag-qty">
+                ${ttt}
+              </div>
+              <div class="bag-action">
+                <button class="btn btn-danger "
+                        onclick="delete_bag_big('${value.UsageCode}',${value.item_status})">
+                  ลบ
+                </button>
+              </div>
+            </div>
+          `;
+        });
+      }
+
+      $("#bag_list").html(html);
+    },
+  });
+}
+
+function onfocus_bag(UsageCode, item_status) {
+  $(".bag-item").css('background-color', "");
+  $("#bag_" + UsageCode).css('background-color', "#f7edff");
+
+  $("#input_scan_in_bag").data('usagebag', UsageCode);
+  $("#input_scan_in_bag").data('item_status', item_status);
+
+  $("#input_scan_out_bag").data('usagebag', UsageCode);
+  $("#input_scan_out_bag").data('item_status', item_status);
+
+  show_bag_Detail(UsageCode, item_status);
+}
+
+
+
+
+function show_bag_Detail(UsageCode, item_status) {
+  $.ajax({
+    url: "process/manage.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "show_bag_Detail",
+      UsageCode: UsageCode,
+    },
+    success: function (result) {
+      var ObjData = JSON.parse(result);
+      console.log(ObjData);
+
+      var html = ``;
+      $("#table_detail_bag tbody").html("");
+
+      if (!$.isEmptyObject(ObjData)) {
+        $.each(ObjData['main'], function (key, value) {
+
+          // ✅ 1. จำนวนในถุง (cnt)
+          var cnt = parseInt(value.cnt || 0);
+
+          // ✅ 2. กำหนดจำนวนสูงสุดจาก item_status
+          var max = 0;
+          if (item_status == 4) {
+            max = 5;
+          } else if (item_status == 5) {
+            max = 10;
+          }
+
+          // ✅ 3. คำนวณ "ต้องเติม"
+          var need = max > 0 ? Math.max(0, max - cnt) : 0;
+
+          var red = "";
+          if (need != 0) {
+            red = 'color:red; ';
+          }
+
+          html += `
+            <tr id="bag_${value.itemcode}" 
+                style="cursor: pointer;"
+                onclick="onshow_bag_detail('${value.itemcode}')">
+
+              <!-- รายการ -->
+              <td class="text-left" style="font-weight:bold;">
+                ${value.itemname}
+              </td>
+
+              <!-- จำนวน -->
+              <td class="text-center"  style="font-weight:bold;${red}">
+                ${cnt}
+              </td>
+
+              <!-- ต้องเติม -->
+              <td class="text-center" style="font-weight:bold;${red} ">
+                ${need}
+              </td>
+
+              <!-- ปุ่มลบ (ซ่อนอยู่เหมือนของเดิมคุณ) -->
+              <td class="text-center" >
+              </td>
+            </tr>
+          `;
+
+
+          $.each(ObjData[value.itemcode], function (key2, value2) {
+
+            html += `
+            <tr class="bagAll_${value.itemcode}" 
+                style="cursor: pointer;" >
+                
+              <!-- รายการ -->
+              <td class="text-center">
+                ${value2.UsageCode}
+              </td>
+
+              <!-- จำนวน -->
+              <td class="text-center">
+              </td>
+
+              <!-- ต้องเติม -->
+              <td class="text-center">
+              </td>
+
+              <!-- ปุ่มลบ (ซ่อนอยู่เหมือนของเดิมคุณ) -->
+              <td class="text-center" >
+                <button class="btn btn-danger btn-sm"
+                        onclick="event.stopPropagation(); delete_bag('${UsageCode}','${value2.UsageCode}',${item_status})">
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+              </td>
+            </tr>
+          `;
+
+
+          });
+
+        });
+      }
+
+      // ✅ ใส่ข้อมูลลง tbody เท่านั้น
+      $("#table_detail_bag tbody").html(html);
+    },
+  });
+}
+
+
+function delete_bag_big(UsageCode,item_status) {
+  Swal.fire({
+    title: "ยืนยัน",
+    text: "ยืนยัน! การลบข้อมูล ?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "ยืนยัน",
+    cancelButtonText: "ยกเลิก",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      $.ajax({
+        url: "process/manage.php",
+        type: "POST",
+        data: {
+          FUNC_NAME: "delete_bag_big",
+          UsageCode_bag: UsageCode,
+        },
+        success: function (result) {
+          var ObjData = JSON.parse(result);
+          console.log(ObjData);
+
+          showDialogSuccess("ลบสำเร็จ");
+          show_bag_Detail(UsageCode, item_status);
+        },
+      });
+    }
+  });
+}
+
+function delete_bag(UsageCode_bag, UsageCode, item_status) {
+  Swal.fire({
+    title: "ยืนยัน",
+    text: "ยืนยัน! การลบข้อมูล ?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "ยืนยัน",
+    cancelButtonText: "ยกเลิก",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      $.ajax({
+        url: "process/manage.php",
+        type: "POST",
+        data: {
+          FUNC_NAME: "delete_bag",
+          UsageCode_bag: UsageCode_bag,
+          UsageCode: UsageCode,
+        },
+        success: function (result) {
+          var ObjData = JSON.parse(result);
+          console.log(ObjData);
+
+          showDialogSuccess("ลบสำเร็จ");
+          show_bag_Detail(UsageCode_bag, item_status);
+        },
+      });
+    }
+  });
+}
+
+function onshow_bag_detail(itemcode) {
+  var selector = ".bagAll_" + itemcode;
+
+  // ✅ toggle แสดง/ซ่อน
+  if ($(selector).is(":visible")) {
+    $(selector).slideUp(150);
+  } else {
+    $(selector).slideDown(150);
+  }
+}
+
+
+
+$("#input_scan_in_bag").keypress(function (e) {
+  if (e.which == 13) {
+
+    // ✅ เก็บค่า this ไว้ก่อน
+    const usagebag = $(this).data('usagebag');
+    const itemStatus = $(this).data('item_status');
+    const usageCode = $(this).val().trim();
+
+    if (usagebag == undefined) {
+      showDialogFailed("กรุณาเลือกถุง");
+      $("#input_scan_in_bag").val("").focus();
+      return;
+    }
+    if(usageCode != ""){
+      $.ajax({
+        url: "process/manage.php",
+        type: "POST",
+        data: {
+          FUNC_NAME: "scan_in_bag",
+          UsageCode: usageCode,
+          UsageCodeBag: usagebag,
+          item_status: itemStatus,
+        },
+        success: function (result) {
+
+          console.log(result);
+
+          var ObjData = JSON.parse(result);
+
+          // ✅ กรณีบันทึกสำเร็จ
+          if (ObjData.status === "success") {
+
+            showDialogSuccess(ObjData.message);
+
+            // ✅ ตรงนี้แก้แล้ว ใช้ค่าที่เก็บไว้
+            show_bag_Detail(usagebag, itemStatus);
+
+          }
+
+          // ❌ กรณีสแกนซ้ำ
+          else if (ObjData.status === "duplicate") {
+            showDialogFailed(ObjData.message);
+          }
+
+          else if (ObjData.status === "not_found") {
+            showDialogFailed(ObjData.message);
+          }
+
+          else if (ObjData.status === "max_itemcode") {
+            showDialogFailed(ObjData.message);
+          }
+
+          else if (ObjData.status === "max_usagecode") {
+            showDialogFailed(ObjData.message);
+          }
+
+          else if (ObjData.status === "already_in_bag") {
+            showDialogFailed(ObjData.message);
+          }
+          else {
+            showDialogFailed('เกิดข้อผิดพลาด');
+          }
+
+          $("#input_scan_in_bag").val("");
+        },
+      });
+    }
+  }
+});
+
+$("#input_scan_out_bag").keypress(function (e) {
+  if (e.which == 13) {
+
+    // ✅ เก็บค่า this ไว้ก่อน
+    const usagebag = $(this).data('usagebag');
+    const itemStatus = $(this).data('item_status');
+    const usageCode = $(this).val().trim();
+
+    if (usagebag == undefined) {
+      showDialogFailed("กรุณาเลือกถุง");
+      $("#input_scan_out_bag").val("").focus();
+      return;
+    }
+
+    if(usageCode != ""){
+        $.ajax({
+          url: "process/manage.php",
+          type: "POST",
+          data: {
+            FUNC_NAME: "scan_out_bag",
+            UsageCode: usageCode,
+            UsageCodeBag: usagebag,
+          },
+          success: function (result) {
+
+            console.log(result);
+
+            var ObjData = JSON.parse(result);
+
+            // ✅ กรณีบันทึกสำเร็จ
+            if (ObjData.status === "success") {
+
+              showDialogSuccess(ObjData.message);
+
+              // ✅ ตรงนี้แก้แล้ว ใช้ค่าที่เก็บไว้
+              show_bag_Detail(usagebag, itemStatus);
+
+            }
+
+
+
+            else {
+              showDialogFailed('เกิดข้อผิดพลาด');
+            }
+
+            $("#input_scan_out_bag").val("");
+          },
+        });
+    }
+  }
+});
+
 
 function click_main() {
   $("#row_mapping").hide();
@@ -1591,22 +2006,22 @@ function show_modal_cabinet_ids_RFID(cabinet_ids) {
 
   let arr = value.split(",");
 
-      var img1 = ` <img src="assets/img/fingerprint_0.png" style='width:30%;' > `;
-      var img2 = ` <img src="assets/img/fingerprint_0.png" style='width:30%;' > `;
-      var img3 = ` <img src="assets/img/fingerprint_0.png" style='width:30%;' > `;
+  var img1 = ` <img src="assets/img/fingerprint_0.png" style='width:30%;' > `;
+  var img2 = ` <img src="assets/img/fingerprint_0.png" style='width:30%;' > `;
+  var img3 = ` <img src="assets/img/fingerprint_0.png" style='width:30%;' > `;
 
   arr.forEach((num) => {
 
     if (num == "2") {
-       img1 = ` <img src="assets/img/fingerprint_1.png" style='width:30%;' > `;
+      img1 = ` <img src="assets/img/fingerprint_1.png" style='width:30%;' > `;
     }
 
     if (num == "1") {
-       img2 = ` <img src="assets/img/fingerprint_1.png" style='width:30%;' > `;
+      img2 = ` <img src="assets/img/fingerprint_1.png" style='width:30%;' > `;
     }
 
     if (num == "3") {
-       img3 = ` <img src="assets/img/fingerprint_1.png" style='width:30%;' > `;
+      img3 = ` <img src="assets/img/fingerprint_1.png" style='width:30%;' > `;
     }
 
 
@@ -1617,7 +2032,7 @@ function show_modal_cabinet_ids_RFID(cabinet_ids) {
              </tr>`;
 
 
-      $("#table_detail_cabinet_ids_RFID tbody").html(_tr);
+    $("#table_detail_cabinet_ids_RFID tbody").html(_tr);
 
   });
 
@@ -1631,22 +2046,22 @@ function show_modal_cabinet_ids_Weighing(cabinet_ids) {
 
   let arr = value.split(",");
 
-      var img1 = ` <img src="assets/img/fingerprint_0.png" style='width:30%;' > `;
-      var img2 = ` <img src="assets/img/fingerprint_0.png" style='width:30%;' > `;
-      var img3 = ` <img src="assets/img/fingerprint_0.png" style='width:30%;' > `;
+  var img1 = ` <img src="assets/img/fingerprint_0.png" style='width:30%;' > `;
+  var img2 = ` <img src="assets/img/fingerprint_0.png" style='width:30%;' > `;
+  var img3 = ` <img src="assets/img/fingerprint_0.png" style='width:30%;' > `;
 
   arr.forEach((num) => {
 
     if (num == "8") {
-       img1 = ` <img src="assets/img/fingerprint_1.png" style='width:30%;' > `;
+      img1 = ` <img src="assets/img/fingerprint_1.png" style='width:30%;' > `;
     }
 
     if (num == "4") {
-       img2 = ` <img src="assets/img/fingerprint_1.png" style='width:30%;' > `;
+      img2 = ` <img src="assets/img/fingerprint_1.png" style='width:30%;' > `;
     }
 
     if (num == "5") {
-       img3 = ` <img src="assets/img/fingerprint_1.png" style='width:30%;' > `;
+      img3 = ` <img src="assets/img/fingerprint_1.png" style='width:30%;' > `;
     }
 
 
@@ -1657,7 +2072,7 @@ function show_modal_cabinet_ids_Weighing(cabinet_ids) {
              </tr>`;
 
 
-      $("#table_detail_cabinet_ids_Weighing tbody").html(_tr);
+    $("#table_detail_cabinet_ids_Weighing tbody").html(_tr);
 
   });
 

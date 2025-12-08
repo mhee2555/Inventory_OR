@@ -138,7 +138,7 @@
                                 <th scope="col" class="text-left" style="width:5%;"></th>
                                 <th scope="col" class="text-left" style="width:50%;">เลขเอกสารขอเบิกอุปกรณ์</th>
                                 <th scope="col" class="text-center" style="width:10%;">สถานะ</th>
-                                <th scope="col" class="text-center" style="width:10%;"></th>
+                                <th scope="col" class="text-center" style="width:10%;">ทั้งหมด</th>
                             </tr>
                         </thead>
                         <tbody>

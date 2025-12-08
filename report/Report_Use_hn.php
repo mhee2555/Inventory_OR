@@ -148,7 +148,7 @@ $sql = "SELECT
             FROM
             (
             SELECT
-                hncode.CreateDate,
+                deproom.ServiceDate AS CreateDate,
                 hncode.HnCode,
                 hncode.number_box,
                 hncode.DocNo_SS,
@@ -221,11 +221,9 @@ $sql = "SELECT
 
             WHERE
                 $where_date
-                -- AND hncode.DocNo = '$DocNo' -- ถ้าจะล็อกทีละ HN เพิ่มเงื่อนไขได้ที่นี่
-
             GROUP BY
                 hncode.DocNo_SS,
-                hncode.CreateDate,
+                deproom.ServiceDate,
                 hncode.HnCode,
                 hncode.number_box,
                 item.itemname,

@@ -842,12 +842,20 @@ $("#input_scan_restock").keypress(function (e) {
         var tr = ``;
         if (!$.isEmptyObject(ObjData)) {
           $.each(ObjData, function (kay, value) {
-            tr += `<tr>
+
+            if (value.Isdeproom == 0) {
+              tr += `<tr>
                                 <td class='text-center'>${value.itemcode2}</td>
                                 <td class='text-left'>${value.itemname}</td>
                                 <td class='text-center'>${value.UsageCode}</td>
                                 <td class='text-center'>อยู่คลัง</td>`;
-            tr += `</tr>`;
+              tr += `</tr>`;
+            }else{
+              Swal.fire("ล้มเหลว", "รหัสนี้ถูกสแกนจ่ายแล้ว", "error");
+              $("#input_scan_restock").val("");
+              return;
+            }
+
           });
         } else {
         }
