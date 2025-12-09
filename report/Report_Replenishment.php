@@ -384,25 +384,51 @@ if ($type_date == 3) {
 }
 
 $count = 1;
-$query = " SELECT
-            item.itemname,
-            item.itemcode2,
-            itemslotincabinet.Qty AS all_,
-            -- รวม Qty เฉพาะ Sign = '+'
-            SUM(CASE WHEN itemslotincabinet_detail.Sign = '+' THEN itemslotincabinet_detail.Qty ELSE 0 END) AS qty_plus,
-            -- รวม Qty เฉพาะ Sign = '-'
-            SUM(CASE WHEN itemslotincabinet_detail.Sign = '-' THEN itemslotincabinet_detail.Qty ELSE 0 END) AS qty_minus
+
+$query = "SELECT
+            i.itemcode,
+            i.itemname,
+            i.itemcode2,
+            s.all_,
+            d.qty_plus,
+            d.qty_minus
             FROM
-            itemslotincabinet_detail
-            INNER JOIN itemslotincabinet ON itemslotincabinet.itemcode = itemslotincabinet_detail.itemcode
-            INNER JOIN item ON itemslotincabinet.itemcode = item.itemcode
-            WHERE
-            $where_date
-            GROUP BY
-            item.itemcode,
-            item.itemname
-            HAVING
-            qty_plus > 0; -- ⭐ แสดงเฉพาะ item ที่มี Sign = '+'";
+            item i
+            -- รวมยอด Qty ทั้งหมดต่อ itemcode (ไม่โดนซ้ำ)
+            INNER JOIN (SELECT itemcode, SUM(Qty) AS all_ FROM itemslotincabinet GROUP BY itemcode) s ON s.itemcode = i.itemcode
+            -- รวมยอด + / - ต่อ itemcode (ใช้เงื่อนไขเดือนที่นี่)
+            INNER JOIN (
+                SELECT
+                itemcode,
+                SUM(CASE WHEN Sign = '+' THEN Qty ELSE 0 END) AS qty_plus,
+                SUM(CASE WHEN Sign = '-' THEN Qty ELSE 0 END) AS qty_minus
+                FROM
+                itemslotincabinet_detail
+                WHERE
+                $where_date
+                GROUP BY
+                itemcode
+            ) d ON d.itemcode = i.itemcode 
+            AND d.qty_plus > 0; ";
+// $query = " SELECT
+//             item.itemname,
+//             item.itemcode2,
+//             itemslotincabinet.Qty AS all_,
+//             -- รวม Qty เฉพาะ Sign = '+'
+//             SUM(CASE WHEN itemslotincabinet_detail.Sign = '+' THEN itemslotincabinet_detail.Qty ELSE 0 END) AS qty_plus,
+//             -- รวม Qty เฉพาะ Sign = '-'
+//             SUM(CASE WHEN itemslotincabinet_detail.Sign = '-' THEN itemslotincabinet_detail.Qty ELSE 0 END) AS qty_minus
+//             FROM
+//             itemslotincabinet_detail
+//             INNER JOIN itemslotincabinet ON itemslotincabinet.itemcode = itemslotincabinet_detail.itemcode
+//             INNER JOIN item ON itemslotincabinet.itemcode = item.itemcode
+//             WHERE
+//             $where_date
+//             GROUP BY
+//             item.itemcode,
+//             item.itemname
+//             HAVING
+//             qty_plus > 0; -- ⭐ แสดงเฉพาะ item ที่มี Sign = '+'";
 
 $meQuery1 = $conn->prepare($query);
 $meQuery1->execute();

@@ -164,6 +164,8 @@ foreach ($stockIDs as $idx => $stockID) {
     $meQuery1->bindParam(':StockID', $stockID, PDO::PARAM_INT);
     $meQuery1->execute();
 
+    $all_cnt1 = 0;
+
     while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
 
         // ถ้าต้องการให้ฟอนต์ในบรรทัด detail เล็กลงหน่อยก็ลด size ได้
@@ -175,9 +177,17 @@ foreach ($stockIDs as $idx => $stockID) {
         $html .=   '<td width="50%" align="left">'   . $Result_Detail['itemname'] . '</td>';
         $html .=   '<td width="20%" align="center">' . $Result_Detail['cnt'] . '</td>';
         $html .= '</tr>';
+        $all_cnt1 += $Result_Detail['cnt'];
 
         $count++;
     }
+
+        $html .= '<tr nobr="true" style="font-size:15px;">';
+        $html .=   '<td width="10%" align="center"></td>';
+        $html .=   '<td width="20%" align="center"></td>';
+        $html .=   '<td width="50%" align="center">รวมทั้งหมด</td>';
+        $html .=   '<td width="20%" align="center">' . $all_cnt1 . '</td>';
+        $html .= '</tr>';
 
     $html .= '</table>';
 
@@ -254,7 +264,7 @@ foreach ($stockIDs as $idx => $stockID) {
     $meQuery1 = $conn->prepare($query);
     $meQuery1->bindParam(':StockID', $stockID, PDO::PARAM_INT);
     $meQuery1->execute();
-
+    $all_cnt2 = 0;
     while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
 
         // ถ้าต้องการให้ฟอนต์ในบรรทัด detail เล็กลงหน่อยก็ลด size ได้
@@ -266,9 +276,17 @@ foreach ($stockIDs as $idx => $stockID) {
         $html .=   '<td width="50%" align="left">'   . $Result_Detail['itemname'] . '</td>';
         $html .=   '<td width="20%" align="center">' . $Result_Detail['Qty'] . '</td>';
         $html .= '</tr>';
+        $all_cnt2 += $Result_Detail['Qty'];
 
         $count++;
     }
+
+        $html .= '<tr nobr="true" style="font-size:15px;">';
+        $html .=   '<td width="10%" align="center"></td>';
+        $html .=   '<td width="20%" align="center"></td>';
+        $html .=   '<td width="50%" align="center">รวมทั้งหมด</td>';
+        $html .=   '<td width="20%" align="center">' . $all_cnt2 . '</td>';
+        $html .= '</tr>';
 
     $html .= '</table>';
 
