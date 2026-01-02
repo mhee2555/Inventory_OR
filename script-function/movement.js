@@ -53,6 +53,48 @@ $(function () {
     },
   });
 
+
+  $("#select_month_ok").change(function () {
+    var stockid = $("#id_hidden_cabinet").val();
+
+    setTimeout(() => {
+      selection_item_ok(stockid);
+    }, 500);
+
+    setTimeout(() => {
+      selection_item_detail_ok(stockid);
+    }, 1000);
+  });
+
+
+
+  $("#select_year_ok").val(2025);
+  $("#select_year_ok").datepicker({
+    view: "years", // เปิดมาที่หน้าปี
+    minView: "years", // ล็อกให้อยู่ที่หน้าปี (ไม่ลงไปเดือน/วัน)
+    dateFormat: "yyyy", // ให้ value แสดงเป็นปี เช่น 2025
+    language: "th", // ถ้ามี language pack ไทย (ไม่บังคับ)
+    onSelect: function (formattedDate, date, inst) {
+
+      var stockid = $("#id_hidden_cabinet").val();
+
+      setTimeout(() => {
+        selection_item_ok(stockid);
+      }, 500);
+
+      setTimeout(() => {
+        selection_item_detail_ok(stockid);
+      }, 1000);
+
+      // selection_follow_item();
+
+      // setTimeout(() => {
+      //   selection_follow_item_detail();
+      // }, 1000);
+    },
+  });
+
+
   $("#select_date1").val(set_date());
   $("#select_date1").datepicker({
     onSelect: function (date) {
@@ -100,6 +142,7 @@ $(function () {
   $("#normal").hide();
   $("#restock").hide();
   $("#follow").hide();
+  $("#ok").hide();
 
   // $("#radio_suds").css("color", "#bbbbb");
   // $("#radio_suds").css("background", "#EAE1F4");
@@ -121,6 +164,8 @@ $(function () {
     $("#sterile").hide();
     $("#normal").hide();
     $("#follow").hide();
+    $("#ok").hide();
+
   });
 
   $("#radio_sterile").click(function () {
@@ -132,6 +177,7 @@ $(function () {
     $("#sterile").show();
     $("#normal").hide();
     $("#follow").hide();
+    $("#ok").hide();
 
     selection_departmentRoom();
 
@@ -153,6 +199,7 @@ $(function () {
     $("#sterile").hide();
     $("#normal").show();
     $("#follow").hide();
+    $("#ok").hide();
 
     selection_departmentRoom_normal();
 
@@ -171,6 +218,7 @@ $(function () {
     $("#sterile").hide();
     $("#normal").hide();
     $("#follow").hide();
+    $("#ok").hide();
 
     $("#table_item_restock tbody").html("");
 
@@ -190,6 +238,7 @@ $(function () {
     $("#sterile1").hide();
     $("#sterile").hide();
     $("#normal").hide();
+    $("#ok").hide();
 
     var d = new Date();
     var month = d.getMonth() + 1;
@@ -211,7 +260,343 @@ $(function () {
     //   selection_item_normal();
     // }, 1000);
   });
+
+  $("#radio_ok").click(function () {
+    $(".tab-button").removeClass("active");
+    $(this).addClass("active");
+
+    $("#ok").show();
+    $("#follow").hide();
+    $("#restock").hide();
+    $("#sterile1").hide();
+    $("#sterile").hide();
+    $("#normal").hide();
+
+    var d = new Date();
+    var month = d.getMonth() + 1;
+    var output = (("" + month).length < 2 ? "0" : "") + month;
+
+    $("#select_month_ok").val(output);
+
+    show_cabinet();
+
+    $("#id_hidden_cabinet").val(2);
+
+    setTimeout(() => {
+      selection_item_ok(2);
+    }, 500);
+
+    setTimeout(() => {
+      selection_item_detail_ok(2);
+    }, 1000);
+
+  });
 });
+
+
+function show_cabinet() {
+  $(".tab-button3").removeClass("active");
+  $("#radio_rfid1").addClass("active");
+  $("#radio_rfid1").click(function () {
+
+    $(".tab-button3").removeClass("active");
+    $(this).addClass("active");
+
+    $("#id_hidden_cabinet").val(2);
+
+    setTimeout(() => {
+      selection_item_ok(2);
+    }, 500);
+
+    setTimeout(() => {
+      selection_item_detail_ok(2);
+    }, 1000);
+  });
+
+  $("#radio_rfid2").click(function () {
+    $(".tab-button3").removeClass("active");
+    $(this).addClass("active");
+
+    $("#id_hidden_cabinet").val(1);
+
+    setTimeout(() => {
+      selection_item_ok(1);
+    }, 500);
+
+    setTimeout(() => {
+      selection_item_detail_ok(1);
+    }, 1000);
+
+  });
+
+  $("#radio_rfid3").click(function () {
+    $(".tab-button3").removeClass("active");
+    $(this).addClass("active");
+
+    $("#id_hidden_cabinet").val(3);
+
+    setTimeout(() => {
+      selection_item_ok(3);
+    }, 500);
+
+    setTimeout(() => {
+      selection_item_detail_ok(3);
+    }, 1000);
+  });
+
+  $("#radio_weighing1").click(function () {
+
+    $(".tab-button3").removeClass("active");
+    $(this).addClass("active");
+
+    $("#id_hidden_cabinet").val(8);
+
+    setTimeout(() => {
+      selection_item_ok(8);
+    }, 500);
+
+    setTimeout(() => {
+      selection_item_detail_ok(8);
+    }, 1000);
+  });
+
+  $("#radio_weighing2").click(function () {
+
+    $(".tab-button3").removeClass("active");
+    $(this).addClass("active");
+
+    $("#id_hidden_cabinet").val(4);
+
+
+    setTimeout(() => {
+      selection_item_ok(4);
+    }, 500);
+
+    setTimeout(() => {
+      selection_item_detail_ok(4);
+    }, 1000);
+  });
+
+  $("#radio_weighing3").click(function () {
+
+    $(".tab-button3").removeClass("active");
+    $(this).addClass("active");
+
+    $("#id_hidden_cabinet").val(5);
+
+
+    setTimeout(() => {
+      selection_item_ok(5);
+    }, 500);
+
+    setTimeout(() => {
+      selection_item_detail_ok(5);
+    }, 1000);
+  });
+
+}
+
+$("#btn_pdf_all_item_ok").click(function () {
+  option =
+    "?select_month_ok=" +
+    $("#select_month_ok").val() +
+    "&select_year_ok=" +
+    $("#select_year_ok").val()+
+    "&id_hidden_cabinet=" +
+    $("#id_hidden_cabinet").val();
+  window.open(
+    "report/Report_item_all_ok.php" + option + "&Userid=" + Userid,
+    "_blank"
+  );
+});
+$("#btn_pdf_item_ok").click(function () {
+  option =
+    "?select_month_ok=" +
+    $("#select_month_ok").val() +
+    "&select_year_ok=" +
+    $("#select_year_ok").val()+
+    "&id_hidden_cabinet=" +
+    $("#id_hidden_cabinet").val();
+  window.open(
+    "report/Report_item_ok.php" + option + "&Userid=" + Userid,
+    "_blank"
+  );
+});
+$("#btn_excel_item_ok").click(function () {
+  option =
+    "?select_month_ok=" +
+    $("#select_month_ok").val() +
+    "&select_year_ok=" +
+    $("#select_year_ok").val()+
+    "&id_hidden_cabinet=" +
+    $("#id_hidden_cabinet").val();
+  window.open(
+    "report/phpexcel/Report_item_ok.php" + option + "&Userid=" + Userid,
+    "_blank"
+  );
+});
+
+
+function selection_item_ok(stockid) {
+
+
+  if ($.fn.DataTable.isDataTable("#table_item_ok")) {
+    $("#table_item_ok").DataTable().clear().destroy();
+  }
+
+
+  // $("#table_follow_item").DataTable().destroy();
+  $("#table_item_ok tbody").html("");
+
+
+  var num = 0;
+  var select_follow_month = $("#select_month_ok").val();
+  if (
+    select_follow_month == "04" ||
+    select_follow_month == "06" ||
+    select_follow_month == "09" ||
+    select_follow_month == "11"
+  ) {
+    num = 30;
+  } else if (select_follow_month == "02") {
+    num = 28;
+  } else {
+    num = 31;
+  }
+
+  var tr = `<th class='text-center' style="text-wrap: nowrap;width: 3%;">ลำดับ</th>`;
+  tr += `<th class='text-center' style="text-wrap: nowrap;width: 25%;">อุปกรณ์</th>`;
+
+  for (let index = 0; index < num; index++) {
+    tr += `<th class='text-center' style="text-wrap: nowrap;">${index + 1
+      }</th>`;
+  }
+
+  $("#tr_item_ok").html(tr);
+}
+
+function selection_item_detail_ok(stockid) {
+  $.ajax({
+    url: "process/movement.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "selection_item_detail_ok",
+      select_follow_month: $("#select_month_ok").val(),
+      select_follow_year: $("#select_year_ok").val(),
+      input_search_follow: $("#input_search_ok").val(),
+      stockid: stockid,
+    },
+    success: function (result) {
+      var ObjData = JSON.parse(result);
+
+
+      console.log(ObjData);
+      var tr = ``;
+      // var tr = ``;
+      if (!$.isEmptyObject(ObjData)) {
+        $.each(ObjData["item"], function (kay, value) {
+          tr += `<tr>
+                    <td class='text-center' style="text-wrap: nowrap;">${kay + 1
+            }</td>
+                    <td style="text-wrap: nowrap;">${value.itemname}</td>`;
+
+          $.each(ObjData[value.itemcode], function (kay2, value2) {
+            tr += `<td style="text-wrap: nowrap;">${value2.qty}</td>`;
+          });
+          tr += `</tr>`;
+        });
+      } else {
+      }
+
+      $("#table_item_ok tbody").html(tr);
+      // ถ้าถูก init มาก่อนแล้ว ให้ destroy ก่อน
+      if ($.fn.DataTable.isDataTable("#table_item_ok")) {
+        $("#table_item_ok").DataTable().destroy();
+      }
+
+      const tbl = $("#table_item_ok").DataTable({
+        language: {
+          emptyTable: settext("dataTables_empty"),
+          paginate: {
+            next: settext("table_itemStock_next"),
+            previous: settext("table_itemStock_previous"),
+          },
+          info:
+            settext("dataTables_Showing") +
+            " _START_ " +
+            settext("dataTables_to") +
+            " _END_ " +
+            settext("dataTables_of") +
+            " _TOTAL_ " +
+            settext("dataTables_entries") +
+            " ",
+        },
+
+        autoWidth: false, // ให้เราคุม width เอง
+        scrollX: true,
+        scrollCollapse: true,
+        scrollY: "800px",
+        fixedColumns: { leftColumns: 2, rightColumns: 0 },
+        fixedHeader: true,
+
+        paging: true,
+        pageLength: 15,
+        searching: false,
+        lengthChange: false,
+        ordering: false,
+        info: true,
+
+        columnDefs: [
+          { targets: 0, width: "50px" },
+          { targets: 1, width: "250px" },
+
+        ],
+        initComplete: function () {
+          const api = this.api();
+          api.columns.adjust();
+          if (api.fixedColumns && api.fixedColumns().relayout)
+            api.fixedColumns().relayout();
+        },
+        drawCallback: function () {
+          const api = this.api();
+          api.columns.adjust();
+          if (api.fixedColumns && api.fixedColumns().relayout)
+            api.fixedColumns().relayout();
+        },
+      });
+
+      // ถ้าตารางเพิ่งถูกโชว์ (เช่น อยู่ในแท็บ) ให้ sync อีกรอบ
+      setTimeout(() => {
+        tbl.columns.adjust().draw(false);
+        if (tbl.fixedColumns && tbl.fixedColumns().relayout) {
+          tbl.fixedColumns().relayout();
+        }
+      }, 0);
+
+      // ช่วยเวลา resize
+      $(window).on("resize", () => {
+        tbl.columns.adjust();
+        if (tbl.fixedColumns && tbl.fixedColumns().relayout) {
+          tbl.fixedColumns().relayout();
+        }
+      });
+
+      $("th").removeClass("sorting_asc");
+      if (tr == "") {
+        $(".dataTables_info").text(
+          settext("dataTables_Showing") +
+          " 0 " +
+          settext("dataTables_to") +
+          " 0 " +
+          settext("dataTables_of") +
+          " 0 " +
+          settext("dataTables_entries") +
+          ""
+        );
+      }
+    },
+  });
+}
 
 $("#btn_search_request").click(function () {
   show_detail_item_request();
@@ -850,7 +1235,7 @@ $("#input_scan_restock").keypress(function (e) {
                                 <td class='text-center'>${value.UsageCode}</td>
                                 <td class='text-center'>อยู่คลัง</td>`;
               tr += `</tr>`;
-            }else{
+            } else {
               Swal.fire("ล้มเหลว", "รหัสนี้ถูกสแกนจ่ายแล้ว", "error");
               $("#input_scan_restock").val("");
               return;
@@ -1229,7 +1614,7 @@ function selection_item() {
             value.stock_min = 0;
           }
           var color = "";
-          if (value.calculated_balance < value.stock_min) {
+          if (value.cntx < value.stock_min) {
             color = "color:red;";
           }
           var cntx = value.cnt;
@@ -1669,7 +2054,7 @@ function selection_item_rfid() {
             value.stock_min = 0;
           }
           var color = "";
-          if (value.calculated_balance < value.stock_min) {
+          if (value.cntx < value.stock_min) {
             color = "color:red;";
           }
           var cntx = value.cnt;
@@ -1928,7 +2313,7 @@ function selection_item_normal() {
             value.stock_min = 0;
           }
           var color = "";
-          if (value.calculated_balance < value.stock_min) {
+          if (value.cntx < value.stock_min) {
             color = "color:red;";
           }
           var cntx = value.cnt;

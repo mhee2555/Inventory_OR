@@ -78,8 +78,10 @@ function show_bag() {
 
           if (value.item_status == 4) {
             var ttt = 25;
-          } else {
+          } else if (value.item_status == 5) {
             var ttt = 50;
+          } else {
+            var ttt = 5;
           }
           html += `
             <div class="bag-item" style='cursor: pointer;' id='bag_${value.UsageCode}' onclick="onfocus_bag('${value.UsageCode}','${value.item_status}')">
@@ -338,7 +340,7 @@ $("#input_scan_in_bag").keypress(function (e) {
           // ✅ กรณีบันทึกสำเร็จ
           if (ObjData.status === "success") {
 
-            showDialogSuccess(ObjData.message);
+            // showDialogSuccess(ObjData.message);
 
             // ✅ ตรงนี้แก้แล้ว ใช้ค่าที่เก็บไว้
             show_bag_Detail(usagebag, itemStatus);

@@ -14,6 +14,7 @@
                 <button class="tab-button" id="radio_normal">ความเคลื่อนไหว อุปกรณ์ปกติ</button>
                 <button class="tab-button" id="radio_restock">ปรับยอดสต๊อก</button>
                 <button class="tab-button" id="radio_follow">ติดตามอุปกรณ์</button>
+                <button class="tab-button" id="radio_ok">ok item</button>
             </div>
 
             <!-- <div class="btn-group btn-group-toggle" role="group" aria-label="Basic example">
@@ -568,10 +569,7 @@
                 </div>
 
                 <div class="col-md-2">
-                    <div class="form-group ">
-                        <label for="" class="col-form-label " style="color:black;">ค้นหาชื่ออุปกรณ์</label>
-                        <input type="text" class="form-control  f18" id="input_search_follow" autocomplete="off">
-                    </div>
+
                 </div>
 
                 <div class="col-md-4 text-right" style="margin-top: 40px;">
@@ -594,6 +592,100 @@
                                     <table class="table  table-bordered" id="table_follow_item">
                                         <thead>
                                             <tr id="tr_followHard_item">
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="ok">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="form-group ">
+                        <label for="" class=" col-form-label" style="color:black;">เดือน</label>
+                        <select name="" id="select_month_ok" class="form-control f18">
+                            <option value="01">มกราคม</option>
+                            <option value="02">กุมภาพันธ์</option>
+                            <option value="03">มีนาคม</option>
+                            <option value="04">เมษายน</option>
+                            <option value="05">พฤษภาคม</option>
+                            <option value="06">มิถุนายน</option>
+                            <option value="07">กรกฎาคม</option>
+                            <option value="08">สิงหาคม</option>
+                            <option value="09">กันยายน</option>
+                            <option value="10">ตุลาคม</option>
+                            <option value="11">พฤศจิกายน</option>
+                            <option value="12">ธันวาคม</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group ">
+                        <label for="" class=" col-form-label" style="color:black;">ปี</label>
+                        <input type="text" class="form-control f18" id="select_year_ok" data-language='en' data-date-format='yyyy'>
+                        <!-- <select name="" id="select_follow_year" class="form-control f18">
+                            <option value="2025">2025</option>
+                            <option value="2026">2026</option>
+                        </select> -->
+                    </div>
+                </div>
+
+
+                <div class="col-md-2">
+  
+                </div>
+
+                <div class="col-md-6 text-right" style="margin-top: 40px;">
+                    <button class="btn btn-danger f18" style="margin-right: 10px;width: 130px;" id="btn_pdf_all_item_ok">PDF ALL</button>
+                    <button class="btn btn-danger f18" style="margin-right: 10px;width: 130px;" id="btn_pdf_item_ok">PDF</button>
+                    <button class="btn btn-success f18" style="width: 130px;" id="btn_excel_item_ok">EXCEL</button>
+                </div>
+
+                <input type="text" id="id_hidden_cabinet" hidden>
+
+                <div class="row mt-2">
+                    <div class=" col-md-12 col-lg-12  ">
+                        <div class="tab-button-group">
+                            <button class="tab-button3 active" id="radio_rfid1">ตู้RFID 1</button>
+                            <button class="tab-button3" id="radio_rfid2">ตู้RFID 2</button>
+                            <button class="tab-button3" id="radio_rfid3">ตู้RFID 3</button>
+                            <button class="tab-button3" id="radio_weighing1">ตู้Weighing 1</button>
+                            <button class="tab-button3" id="radio_weighing2">ตู้Weighing 2</button>
+                            <button class="tab-button3" id="radio_weighing3">ตู้Weighing 3</button>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-md-12 mt-3">
+
+                    <div class="card">
+
+                        <div class="card-body">
+
+                            <div class="row">
+                                <div class="col-lg-12 mt-3  table-responsive">
+
+                                    <table class="table  table-bordered" id="table_item_ok">
+                                        <thead>
+                                            <tr id="tr_item_ok">
 
                                             </tr>
                                         </thead>

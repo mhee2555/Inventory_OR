@@ -36,6 +36,8 @@ if (!empty($_POST['FUNC_NAME'])) {
         selection_follow_item_detail($conn, $db);
     } else if ($_POST['FUNC_NAME'] == 'clearStock') {
         clearStock($conn, $db);
+    } else if ($_POST['FUNC_NAME'] == 'selection_item_detail_ok') {
+        selection_item_detail_ok($conn, $db);
     }
 }
 
@@ -52,6 +54,131 @@ function clearStock($conn, $db)
     unset($conn);
     die;
 }
+
+
+function selection_item_detail_ok($conn, $db)
+{
+    $return = array();
+    $select_follow_month  = $_POST['select_follow_month'];
+    $select_follow_year   = $_POST['select_follow_year'];
+    $input_search_follow  = $_POST['input_search_follow'];
+    $stockid              = $_POST['stockid'];
+
+    // ดึงรายการ item ทั้งหมด (หัวตาราง) ตามเดือน/ปี/stockid + เงื่อนไขค้นหา
+    $is = " SELECT
+            dir.snapshot_date,
+            dir.itemcode,
+            dir.itemname
+        FROM
+            daily_item_rfid dir
+        WHERE 
+            MONTH(dir.snapshot_date) = '$select_follow_month'
+        AND YEAR(dir.snapshot_date)  = '$select_follow_year'
+        AND dir.stockID = '$stockid'
+        AND (
+            dir.itemname LIKE '%$input_search_follow%'
+            OR dir.itemcode LIKE '%$input_search_follow%'
+        )
+        GROUP BY dir.itemcode ";
+
+    $meQuery = $conn->prepare($is);
+    $meQuery->execute();
+
+    while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+        $return['item'][] = $row;
+
+        $itemCode = $row['itemcode'];
+
+        // -----------------------------------------
+        //  ดึงข้อมูลรายวันของ itemCode นี้ทั้งเดือน
+        //  จาก daily_item_rfid + วันนี้จาก itemslotincabinet
+        // -----------------------------------------
+$sub = "
+    WITH RECURSIVE calendar AS (
+        SELECT DATE('$select_follow_year-$select_follow_month-01') AS DAY
+        UNION ALL
+        SELECT DAY + INTERVAL 1 DAY
+        FROM calendar
+        WHERE DAY + INTERVAL 1 DAY <= LAST_DAY('$select_follow_year-$select_follow_month-01')
+    ),
+
+    snapshot_data AS (
+        -- 📌 snapshot ย้อนหลังจาก daily_item_rfid
+        SELECT
+            DATE(ds.snapshot_date) AS snapshot_date,
+            ds.itemcode,
+            ds.itemname,
+            ds.qty
+        FROM daily_item_rfid ds
+        WHERE ds.itemcode = '$itemCode'
+          AND ds.stockID = '$stockid'
+          AND MONTH(ds.snapshot_date) = '$select_follow_month'
+          AND YEAR(ds.snapshot_date)  = '$select_follow_year'
+          AND DATE(ds.snapshot_date) <> CURDATE()
+    ),
+
+    today_data AS (
+        " . (in_array($stockid, ['1','2','3']) ?
+
+        // ---------- 📌 today จาก itemstock (stock 1,2,3) ----------
+        "
+        SELECT
+            CURDATE() AS snapshot_date,
+            is2.ItemCode AS itemcode,
+            i.itemname,
+            COUNT(is2.itemcode) AS qty
+        FROM itemstock is2
+        LEFT JOIN item i ON is2.itemcode = i.itemcode
+        WHERE is2.StockID = '$stockid'
+          AND is2.itemcode = '$itemCode'
+        GROUP BY is2.ItemCode, i.itemname
+        "
+        :
+
+        // ---------- 📌 today จาก itemslotincabinet ----------
+        "
+        SELECT
+            CURDATE() AS snapshot_date,
+            isc.itemcode,
+            i.itemname,
+            IFNULL(isc.Qty, 0) AS qty
+        FROM itemslotincabinet isc
+        LEFT JOIN item i ON isc.itemcode = i.itemcode
+        WHERE isc.stockID = '$stockid'
+          AND isc.itemcode = '$itemCode'
+        "
+        ) . "
+    ),
+
+    d AS (
+        SELECT * FROM snapshot_data
+        UNION ALL
+        SELECT * FROM today_data
+    )
+
+    SELECT
+        c.DAY AS snapshot_date,
+        d.itemcode,
+        d.itemname,
+        COALESCE(d.qty, 0) AS qty
+    FROM calendar c
+    LEFT JOIN d ON d.snapshot_date = c.DAY
+    ORDER BY c.DAY;
+";
+
+
+        $meQuery2 = $conn->prepare($sub);
+        $meQuery2->execute();
+        while ($row2 = $meQuery2->fetch(PDO::FETCH_ASSOC)) {
+            $return[$itemCode][] = $row2;
+        }
+    }
+
+    echo json_encode($return);
+    unset($conn);
+    die;
+}
+
 
 function selection_follow_item_detail($conn, $db)
 {
@@ -489,7 +616,7 @@ function selection_item_normal($conn, $db)
 
     $wherepermission = "";
     if ($permission != '5') {
-        $wherepermission = " AND item.warehouseID = $permission ";
+        $wherepermission = " AND i.warehouseID = $permission ";
     }
 
     $Q1 = " SELECT
@@ -583,6 +710,7 @@ function selection_item_normal($conn, $db)
                 AND i.IsCancel = '0'
                 AND i.item_status != 1
                 AND i.item_status2 IS NULL
+                 $wherepermission
                 -- AND i.stock_max IS NOT NULL
             ORDER BY
                 CASE WHEN calculated_balance < i.stock_min THEN 0 ELSE 1 END,
@@ -932,7 +1060,7 @@ function selection_item_rfid($conn, $db)
 
     $wherepermission = "";
     if ($permission != '5') {
-        $wherepermission = " AND item.warehouseID = $permission ";
+        $wherepermission = " AND i.warehouseID = $permission ";
     }
 
     $Q1 = "SELECT
@@ -1422,7 +1550,7 @@ function selection_item($conn, $db)
 
     $wherepermission = "";
     if ($permission != '5') {
-        $wherepermission = " AND item.warehouseID = $permission ";
+        $wherepermission = " AND i.warehouseID = $permission ";
     }
 
     $Q1 = "SELECT

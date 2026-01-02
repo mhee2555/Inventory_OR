@@ -283,54 +283,115 @@ function scan_in_bag($conn, $db)
         die;
     }
 
-    // ✅ 2. เช็ค limit ตาม item_status (4 = 5 usage/ตัว, 5 = 10 usage/ตัว)
-    if ($item_status == 4 || $item_status == 5) {
+    if (in_array($item_status, [4, 5, 6])) {
 
-        $maxItemTypes    = 5;                          // สูงสุด 5 itemcode ต่างกัน
-        $maxUsagePerItem = ($item_status == 4) ? 5 : 10;
+        // กำหนดค่า default
+        $maxItemTypes    = null;   // null = ไม่จำกัดจำนวน itemcode
+        $maxUsagePerItem = null;
+
+        if ($item_status == 4) {
+            $maxItemTypes    = 5;   // สูงสุด 5 itemcode
+            $maxUsagePerItem = 5;   // itemcode ละ 5 ชิ้น
+        } elseif ($item_status == 5) {
+            $maxItemTypes    = 5;   // สูงสุด 5 itemcode
+            $maxUsagePerItem = 10;  // itemcode ละ 10 ชิ้น
+        } elseif ($item_status == 6) {
+            // ✅ เงื่อนไขใหม่
+            $maxUsagePerItem = 5;   // itemcode ละ 5 ชิ้น
+            // ไม่จำกัดจำนวน itemcode
+        }
 
         // 2.1 นับจำนวน itemcode ต่างกันที่มีอยู่แล้วในถุงนี้
         $countItemTypeSql = "
-            SELECT COUNT(DISTINCT s.ItemCode) AS item_count
-            FROM bag_detail b
-            INNER JOIN itemstock s ON s.UsageCode = b.UsageCode
-            WHERE b.UsageCode_bag = ?
-        ";
+        SELECT COUNT(DISTINCT s.ItemCode)
+        FROM bag_detail b
+        INNER JOIN itemstock s ON s.UsageCode = b.UsageCode
+        WHERE b.UsageCode_bag = ?
+    ";
         $stmtType = $conn->prepare($countItemTypeSql);
         $stmtType->execute([$UsageCodeBag]);
         $itemTypeCount = (int)$stmtType->fetchColumn();
 
-        // 2.2 นับว่า itemcode ตัวนี้ มี usage อยู่ในถุงนี้แล้วกี่ตัว
+        // 2.2 นับ usage ของ itemcode นี้ในถุง
         $countUsageSql = "
-            SELECT COUNT(*) AS usage_count
-            FROM bag_detail b
-            INNER JOIN itemstock s ON s.UsageCode = b.UsageCode
-            WHERE b.UsageCode_bag = ?
-              AND s.ItemCode      = ?
-        ";
+        SELECT COUNT(*)
+        FROM bag_detail b
+        INNER JOIN itemstock s ON s.UsageCode = b.UsageCode
+        WHERE b.UsageCode_bag = ?
+          AND s.ItemCode      = ?
+    ";
         $stmtUsage = $conn->prepare($countUsageSql);
         $stmtUsage->execute([$UsageCodeBag, $ItemCode]);
         $usageCountForItem = (int)$stmtUsage->fetchColumn();
 
-        // ถ้าตัวนี้ยังไม่เคยอยู่ในถุงเลย (usageCountForItem = 0)
-        // แต่ในถุงมีครบ 5 ItemCode แล้ว → ห้ามเพิ่ม item ใหม่
-        if ($usageCountForItem == 0 && $itemTypeCount >= $maxItemTypes) {
+        // ❌ จำกัดจำนวน itemcode (เฉพาะ status 4,5)
+        if ($maxItemTypes !== null && $usageCountForItem == 0 && $itemTypeCount >= $maxItemTypes) {
             $return['status']  = 'max_itemcode';
-            $return['message'] = 'ถุงนี้มีครบ ' . $maxItemTypes . ' รายการแล้ว ไม่สามารถเพิ่มรายการใหม่ได้';
+            $return['message'] = 'ถุงนี้มีครบ ' . $maxItemTypes . ' รายการแล้ว';
             echo json_encode($return);
             unset($conn);
             die;
         }
 
-        // ถ้า itemcode นี้มี usage ครบตาม limit แล้ว → ห้ามเพิ่ม
-        if ($usageCountForItem >= $maxUsagePerItem) {
+        // ❌ จำกัดจำนวน usage ต่อ itemcode
+        if ($maxUsagePerItem !== null && $usageCountForItem >= $maxUsagePerItem) {
             $return['status']  = 'max_usagecode';
-            $return['message'] = 'รายการนี้ใส่ครบ ' . $maxUsagePerItem . ' ชิ้นแล้วในถุงนี้';
+            $return['message'] = 'รายการนี้ใส่ครบ ' . $maxUsagePerItem . ' ชิ้นแล้ว';
             echo json_encode($return);
             unset($conn);
             die;
         }
     }
+
+
+    // ✅ 2. เช็ค limit ตาม item_status (4 = 5 usage/ตัว, 5 = 10 usage/ตัว)
+    // if ($item_status == 4 || $item_status == 5) {
+
+    //     $maxItemTypes    = 5;                          // สูงสุด 5 itemcode ต่างกัน
+    //     $maxUsagePerItem = ($item_status == 4) ? 5 : 10;
+
+    //     // 2.1 นับจำนวน itemcode ต่างกันที่มีอยู่แล้วในถุงนี้
+    //     $countItemTypeSql = "
+    //         SELECT COUNT(DISTINCT s.ItemCode) AS item_count
+    //         FROM bag_detail b
+    //         INNER JOIN itemstock s ON s.UsageCode = b.UsageCode
+    //         WHERE b.UsageCode_bag = ?
+    //     ";
+    //     $stmtType = $conn->prepare($countItemTypeSql);
+    //     $stmtType->execute([$UsageCodeBag]);
+    //     $itemTypeCount = (int)$stmtType->fetchColumn();
+
+    //     // 2.2 นับว่า itemcode ตัวนี้ มี usage อยู่ในถุงนี้แล้วกี่ตัว
+    //     $countUsageSql = "
+    //         SELECT COUNT(*) AS usage_count
+    //         FROM bag_detail b
+    //         INNER JOIN itemstock s ON s.UsageCode = b.UsageCode
+    //         WHERE b.UsageCode_bag = ?
+    //           AND s.ItemCode      = ?
+    //     ";
+    //     $stmtUsage = $conn->prepare($countUsageSql);
+    //     $stmtUsage->execute([$UsageCodeBag, $ItemCode]);
+    //     $usageCountForItem = (int)$stmtUsage->fetchColumn();
+
+    //     // ถ้าตัวนี้ยังไม่เคยอยู่ในถุงเลย (usageCountForItem = 0)
+    //     // แต่ในถุงมีครบ 5 ItemCode แล้ว → ห้ามเพิ่ม item ใหม่
+    //     if ($usageCountForItem == 0 && $itemTypeCount >= $maxItemTypes) {
+    //         $return['status']  = 'max_itemcode';
+    //         $return['message'] = 'ถุงนี้มีครบ ' . $maxItemTypes . ' รายการแล้ว ไม่สามารถเพิ่มรายการใหม่ได้';
+    //         echo json_encode($return);
+    //         unset($conn);
+    //         die;
+    //     }
+
+    //     // ถ้า itemcode นี้มี usage ครบตาม limit แล้ว → ห้ามเพิ่ม
+    //     if ($usageCountForItem >= $maxUsagePerItem) {
+    //         $return['status']  = 'max_usagecode';
+    //         $return['message'] = 'รายการนี้ใส่ครบ ' . $maxUsagePerItem . ' ชิ้นแล้วในถุงนี้';
+    //         echo json_encode($return);
+    //         unset($conn);
+    //         die;
+    //     }
+    // }
 
     // ✅ 3. ทุกอย่างผ่าน → Insert ได้
     $insert_sql = "
@@ -364,7 +425,7 @@ function show_bag($conn, $db)
                 itemstock
                 INNER JOIN item ON itemstock.ItemCode = item.itemcode 
             WHERE
-                item.item_status IN ( 4, 5 ) 
+                item.item_status IN ( 4, 5 ,6) 
             ORDER BY
                 item.item_status,
                 item.itemname   ";

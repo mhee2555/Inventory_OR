@@ -276,6 +276,7 @@ function selection_Ex($conn,$db)
                     INNER JOIN item ON item.itemcode = itemstock.ItemCode
                     WHERE
                         itemstock.IsCancel = 0 
+                        AND item.IsCancel = 0 
                         AND IsSell = 0
                         AND DATE_FORMAT( itemstock.ExpireDate, '%Y-%m-%d' ) <= DATE_FORMAT( NOW(), '%Y-%m-%d' ) $wheredep $wherepermission ";
     }else{

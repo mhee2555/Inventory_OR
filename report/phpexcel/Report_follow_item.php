@@ -177,74 +177,156 @@ if (!$items) {
 //       AND d.snapshot_date >= :startDate
 //       AND d.snapshot_date <  DATE_ADD(:endDate, INTERVAL 1 DAY) ";
 
-$sqlData = "
-            WITH RECURSIVE
-            calendar AS (
-                SELECT DATE(:startDate_cal) AS day
-                UNION ALL
-                SELECT day + INTERVAL 1 DAY
-                FROM calendar
-                WHERE day + INTERVAL 1 DAY <= :endDate_cal
-            ),
-            items AS (
-                SELECT DISTINCT s.itemCode AS itemcode
-                FROM set_item_daily s
-            ),
-            ds AS (
-                SELECT
-                    DATE(dsi.snapshot_date) AS ddate,
-                    dsi.itemcode,
-                    MAX(dsi.itemname) AS itemname,
-                    SUM(dsi.calculated_balance) AS val
-                FROM daily_stock_item dsi
-                WHERE dsi.snapshot_date >= :startDate_ds
-                AND dsi.snapshot_date <  DATE_ADD(:endDate_ds, INTERVAL 1 DAY)
-                AND DATE(dsi.snapshot_date) <> CURDATE()
-                AND dsi.itemcode IN (SELECT itemcode FROM items)
-                GROUP BY DATE(dsi.snapshot_date), dsi.itemcode
-            ),
-            today_calc AS (
-                SELECT
-                    i.itemcode,
-                    i.itemname,
-                    CASE
-                        WHEN IFNULL(s.cnt, 0) > IFNULL(i.stock_balance, 0)
-                            THEN (IFNULL(s.cnt, 0) - IFNULL(tp.cnt_pay, 0))
-                        ELSE (IFNULL(i.stock_balance, 0) - IFNULL(tp.cnt_pay, 0))
-                    END AS val
-                FROM item i
-                INNER JOIN items it ON it.itemcode = i.itemcode
-                LEFT JOIN (
-                    SELECT ItemCode, COUNT(*) AS cnt
-                    FROM itemstock
-                    GROUP BY ItemCode
-                ) s ON s.ItemCode = i.itemcode
-                LEFT JOIN (
-                    SELECT ItemCode, COUNT(*) AS cnt_pay
-                    FROM itemstock_transaction_detail
-                    WHERE IsStatus IN (1, 9)
-                    GROUP BY ItemCode
-                ) tp ON tp.ItemCode = i.itemcode
-            ),
-            d AS (
-                SELECT ddate, itemcode, itemname, val FROM ds
-                UNION ALL
-                SELECT CURDATE() AS ddate, itemcode, itemname, val
-                FROM today_calc
-            )
+$sqlData = "WITH RECURSIVE
+                calendar AS (
+                    SELECT DATE(:startDate_cal) AS day
+                    UNION ALL
+                    SELECT day + INTERVAL 1 DAY
+                    FROM calendar
+                    WHERE day + INTERVAL 1 DAY <= :endDate_cal
+                ),
+
+                -- รายการ item ที่ต้องตาม (แบบเดิมจาก set_item_daily)
+                items AS (
+                    SELECT DISTINCT s.itemCode AS itemcode
+                    FROM set_item_daily s
+                ),
+
+                -- ข้อมูลย้อนหลังจาก daily_stock_item (ยกเว้นวันนี้) แบบเดิม แต่ไม่ล็อก itemcode
+                ds AS (
+                    SELECT
+                        DATE(dsi.snapshot_date) AS ddate,
+                        dsi.itemcode,
+                        MAX(dsi.itemname) AS itemname,
+                        SUM(dsi.calculated_balance) AS val
+                    FROM daily_stock_item dsi
+                    WHERE dsi.snapshot_date >= :startDate_ds
+                    AND dsi.snapshot_date < DATE_ADD(:endDate_ds, INTERVAL 1 DAY)
+                    AND DATE(dsi.snapshot_date) <> CURDATE()
+                    AND dsi.itemcode IN (SELECT itemcode FROM items)
+                    GROUP BY DATE(dsi.snapshot_date), dsi.itemcode
+                ),
+
+                -- ✅ ของ “วันนี้” ใช้ยอด COUNT ของห้อง 35 ตามเงื่อนไขที่ให้มา
+                today_calc AS (
+                    SELECT
+                        i.itemcode,
+                        i.itemname,
+                        IFNULL(s.cnt, 0) AS val
+                    FROM item i
+                    INNER JOIN items it
+                        ON it.itemcode = i.itemcode
+                    LEFT JOIN (
+                        SELECT
+                            ItemCode,
+                            COUNT(*) AS cnt
+                        FROM itemstock
+                        WHERE itemstock.IsCancel = 0
+                        AND itemstock.Stockin = 1
+                        AND itemstock.Adjust_stock = 0
+                        AND itemstock.IsDeproom = 0
+                        AND itemstock.departmentroomid = 35
+                        GROUP BY ItemCode
+                    ) s ON s.ItemCode = i.itemcode
+                ),
+
+                -- รวมย้อนหลัง + วันนี้
+                d AS (
+                    SELECT ddate, itemcode, itemname, val
+                    FROM ds
+
+                    UNION ALL
+
+                    SELECT
+                        CURDATE() AS ddate,
+                        itemcode,
+                        itemname,
+                        val
+                    FROM today_calc
+                )
+
+            -- ยิงออกมาเต็มช่วงวัน x item ที่ต้องตาม
             SELECT
-                c.day          AS ddate,
-                it.itemcode    AS itemcode,
+                c.day                      AS ddate,
+                it.itemcode                AS itemcode,
                 COALESCE(dd.itemname, i2.itemname) AS itemname,
-                COALESCE(dd.val, 0) AS val
+                COALESCE(dd.val, 0)        AS val
             FROM calendar c
             CROSS JOIN items it
             LEFT JOIN d dd
-                ON dd.itemcode = it.itemcode AND dd.ddate = c.day
+                ON dd.itemcode = it.itemcode
+            AND dd.ddate    = c.day
             LEFT JOIN item i2
                 ON i2.itemcode = it.itemcode
-            ORDER BY c.day, it.itemcode
-            ";
+            ORDER BY
+                c.day,
+                it.itemcode; ";
+// $sqlData = "  WITH RECURSIVE
+//             calendar AS (
+//                 SELECT DATE(:startDate_cal) AS day
+//                 UNION ALL
+//                 SELECT day + INTERVAL 1 DAY
+//                 FROM calendar
+//                 WHERE day + INTERVAL 1 DAY <= :endDate_cal
+//             ),
+//             items AS (
+//                 SELECT DISTINCT s.itemCode AS itemcode
+//                 FROM set_item_daily s
+//             ),
+//             ds AS (
+//                 SELECT
+//                     DATE(dsi.snapshot_date) AS ddate,
+//                     dsi.itemcode,
+//                     MAX(dsi.itemname) AS itemname,
+//                     SUM(dsi.calculated_balance) AS val
+//                 FROM daily_stock_item dsi
+//                 WHERE dsi.snapshot_date >= :startDate_ds
+//                 AND dsi.snapshot_date <  DATE_ADD(:endDate_ds, INTERVAL 1 DAY)
+//                 AND DATE(dsi.snapshot_date) <> CURDATE()
+//                 AND dsi.itemcode IN (SELECT itemcode FROM items)
+//                 GROUP BY DATE(dsi.snapshot_date), dsi.itemcode
+//             ),
+//             today_calc AS (
+//                 SELECT
+//                     i.itemcode,
+//                     i.itemname,
+//                     CASE
+//                         WHEN IFNULL(s.cnt, 0) > IFNULL(i.stock_balance, 0)
+//                             THEN (IFNULL(s.cnt, 0) - IFNULL(tp.cnt_pay, 0))
+//                         ELSE (IFNULL(i.stock_balance, 0) - IFNULL(tp.cnt_pay, 0))
+//                     END AS val
+//                 FROM item i
+//                 INNER JOIN items it ON it.itemcode = i.itemcode
+//                 LEFT JOIN (
+//                     SELECT ItemCode, COUNT(*) AS cnt
+//                     FROM itemstock
+//                     GROUP BY ItemCode
+//                 ) s ON s.ItemCode = i.itemcode
+//                 LEFT JOIN (
+//                     SELECT ItemCode, COUNT(*) AS cnt_pay
+//                     FROM itemstock_transaction_detail
+//                     WHERE IsStatus IN (1, 9)
+//                     GROUP BY ItemCode
+//                 ) tp ON tp.ItemCode = i.itemcode
+//             ),
+//             d AS (
+//                 SELECT ddate, itemcode, itemname, val FROM ds
+//                 UNION ALL
+//                 SELECT CURDATE() AS ddate, itemcode, itemname, val
+//                 FROM today_calc
+//             )
+//             SELECT
+//                 c.day          AS ddate,
+//                 it.itemcode    AS itemcode,
+//                 COALESCE(dd.itemname, i2.itemname) AS itemname,
+//                 COALESCE(dd.val, 0) AS val
+//             FROM calendar c
+//             CROSS JOIN items it
+//             LEFT JOIN d dd
+//                 ON dd.itemcode = it.itemcode AND dd.ddate = c.day
+//             LEFT JOIN item i2
+//                 ON i2.itemcode = it.itemcode
+//             ORDER BY c.day, it.itemcode   ";
 $stmData = $conn->prepare($sqlData);
 $stmData->execute([
     ':startDate_cal' => $startDate, // YYYY-MM-01
