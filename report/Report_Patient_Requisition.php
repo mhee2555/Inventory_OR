@@ -249,8 +249,7 @@ $query = "SELECT
                 AND itemstock.CabinetUserID != 278
                 AND itemstock.CabinetUserID != 251
                 AND itemstock.CabinetUserID != 277
-                $where_date 
-                GROUP BY item.itemname , itemstock.LastCabinetModify  ";
+                $where_date  ";
                 
 // $query = " SELECT
 //                 item.itemcode2,

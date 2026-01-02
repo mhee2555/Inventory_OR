@@ -222,8 +222,6 @@ $query = "SELECT
             INNER JOIN item ON itemstock.ItemCode = item.itemcode 
             $where_date
             AND itemstock.StockID != 0
-            AND itemstock.CabinetUserID != 177 
-            AND itemstock.CabinetUserID != 278 
             GROUP BY
             item.itemcode ";
 // $query = " SELECT
