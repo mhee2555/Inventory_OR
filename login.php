@@ -43,7 +43,12 @@
                     <label>รหัสผ่าน</label>
                     <input type="password" class="form-control" id="input_PassWord" style="font-size:18px;">
                 </div>
-
+                <!-- ✅ ADD: ลิงก์/ปุ่มรีเซ็ตรหัสผ่าน -->
+                <div class="d-flex justify-content-end mb-2">
+                    <button type="button" class="btn btn-link p-0" id="btn_forgot_password">
+                        รีเซ็ตรหัสผ่าน
+                    </button>
+                </div>
 
                 <button type="submit" class="btn btn-login btn-block mt-3" id="btn_login">เข้าสู่ระบบ</button>
 
@@ -69,6 +74,74 @@
         </div>
     </div>
 
+
+
+    <div class="modal fade" id="modalResetPassword" tabindex="-1" role="dialog" aria-labelledby="modalResetPasswordLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalResetPasswordLabel">
+                        <i class="fas fa-key"></i> รีเซ็ตรหัสผ่าน
+                        <span class="badge">Reset</span>
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="hint-box mb-3">
+                        กรอก <b>UserName</b> และตั้งรหัสผ่านใหม่ (อย่างน้อย <b>8 ตัวอักษร</b>)
+                    </div>
+
+                    <div class="form-group">
+                        <label>UserName</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                            </div>
+                            <input type="text" class="form-control" id="reset_identity" placeholder="เช่น username">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>รหัสผ่านใหม่</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                            </div>
+                            <input type="password" class="form-control" id="reset_new_password" placeholder="อย่างน้อย 8 ตัวอักษร">
+                        </div>
+                        <div class="pw-meter" id="pw_hint">แนะนำ: ผสมตัวอักษร+ตัวเลข</div>
+                    </div>
+
+                    <div class="form-group mb-0">
+                        <label>ยืนยันรหัสผ่านใหม่</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-shield-alt"></i></span>
+                            </div>
+                            <input type="password" class="form-control" id="reset_confirm_password" placeholder="พิมพ์ซ้ำอีกครั้ง">
+                        </div>
+                        <div class="pw-meter" id="pw_match_text"></div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        <i class="fas fa-times"></i> ปิด
+                    </button>
+                    <button type="button" class="btn btn-primary" id="btn_reset_submit">
+                        <i class="fas fa-check-circle"></i> ยืนยันรีเซ็ต
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
 
     <!-- <div class="wallpaper">
 
@@ -215,6 +288,71 @@
 
 
         })
+
+
+        // เปิด Modal
+        $("#btn_forgot_password").click(function() {
+            // ใส่ค่า default จากช่อง login ได้ (ถ้ามี)
+            $("#reset_identity").val($("#input_UserName").val());
+
+            $("#reset_new_password").val("");
+            $("#reset_confirm_password").val("");
+
+            $("#modalResetPassword").modal("show");
+
+            setTimeout(() => $("#reset_identity").focus(), 300);
+        });
+
+        // กด submit รีเซ็ต
+        $("#btn_reset_submit").click(function() {
+            const identity = ($("#reset_identity").val() || "").trim();
+            const p1 = ($("#reset_new_password").val() || "").trim();
+            const p2 = ($("#reset_confirm_password").val() || "").trim();
+
+            if (!identity) {
+                showDialogFailed("กรุณากรอก UserName");
+                return;
+            }
+            if (p1.length < 8) {
+                showDialogFailed("รหัสผ่านต้องยาวอย่างน้อย 8 ตัวอักษร");
+                return;
+            }
+            if (p1 !== p2) {
+                showDialogFailed("รหัสผ่านใหม่และยืนยันรหัสผ่านไม่ตรงกัน");
+                return;
+            }
+
+            // TODO: ส่งไปหลังบ้าน (คุณทำ process/reset_password.php หรือ process/login.php ก็ได้)
+            $.ajax({
+                url: "process/login.php", // หรือไฟล์อื่นที่คุณทำ
+                type: "POST",
+                data: {
+                    FUNC_NAME: "ResetPassword",
+                    identity: identity,
+                    new_password: p1
+                },
+                success: function(result) {
+                    // คุณกำหนดรูปแบบ response เองได้
+                    // ตัวอย่าง: return "success" หรือ JSON
+                    if (result === "success") {
+                        Swal.fire({
+                            title: "สำเร็จ",
+                            text: "รีเซ็ตรหัสผ่านเรียบร้อย",
+                            icon: "success"
+                        });
+                        $("#modalResetPassword").modal("hide");
+                    } else {
+                        showDialogFailed("รีเซ็ตไม่สำเร็จ: " + result);
+                    }
+                },
+                error: function(xhr) {
+                    showDialogFailed("เกิดข้อผิดพลาดในการเชื่อมต่อ");
+                    console.log(xhr);
+                }
+            });
+        });
+
+
 
         // function selection_Doctor() {
         //     $.ajax({

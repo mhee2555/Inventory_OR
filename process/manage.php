@@ -1009,6 +1009,16 @@ function saveUser($conn)
         return isset($_POST[$key]) ? $_POST[$key] : $default;
     }
 
+    // ====== ADD: password hashing helper (PHP 8.2) ======
+    function hashPassword82(string $plain): string
+    {
+        return password_hash($plain, PASSWORD_ARGON2ID, [
+            'memory_cost' => 1 << 16, // 64MB
+            'time_cost'   => 4,
+            'threads'     => 2,
+        ]);
+    }
+
     // $select_user_rfid     = post('select_user_rfid', '');
     // $select_user_weighing = post('select_user_weighing', '');
     $input_empcodeUser    = post('input_empcodeUser', '');
@@ -1054,6 +1064,9 @@ function saveUser($conn)
                 die;
             }
 
+            // ====== ADD: hash password for INSERT ======
+            $pwdToSave = hashPassword82($input_passWord);
+
             // 3) INSERT users
             $sqlInsertUser = "INSERT INTO users 
                 (EmpCode, UserName, Password, IsCancel, DeptID, display, permission, IsAdmin)
@@ -1063,7 +1076,7 @@ function saveUser($conn)
             $stmt->execute([
                 ':emp'      => $input_empcodeUser,
                 ':uname'    => $input_userName,
-                ':pwd'      => $input_passWord, // ถ้าต้องการ hash: password_hash($input_passWord, PASSWORD_DEFAULT)
+                ':pwd'      => $pwdToSave, // ✅ hash แล้ว
                 ':iscancel' => $IsCancel,
                 ':perm'     => $select_permission,
                 ':isadmin'  => $IsAdmin_new
@@ -1080,8 +1093,6 @@ function saveUser($conn)
                 ':lname'   => $input_lastUser,
                 ':isadmin' => $IsAdmin_new
             ]);
-
-
 
             // 5) INSERT / SETUP config_menu ตามสิทธิ์
             if ($IsAdmin_new == 1) {
@@ -1127,7 +1138,7 @@ function saveUser($conn)
             die;
         }
 
-        $emID      = (int)$row['emID'];
+        $emID = (int)$row['emID'];
 
         // 1) เช็กซ้ำ UserName กับ "คนอื่น"
         $stmt = $conn->prepare("SELECT ID FROM users WHERE UserName = :uname AND ID <> :id LIMIT 1");
@@ -1149,6 +1160,17 @@ function saveUser($conn)
             die;
         }
 
+        // ====== ADD: keep old password if no new password provided ======
+        $pwdToSave = '';
+        if (trim($input_passWord) !== '') {
+            $pwdToSave = hashPassword82($input_passWord); // ✅ มีรหัสใหม่ -> hash
+        } else {
+            // ✅ ไม่กรอกรหัสใหม่ -> ใช้ของเดิม (กันทับด้วยค่าว่าง)
+            $stmtPwd = $conn->prepare("SELECT Password FROM users WHERE ID = :id LIMIT 1");
+            $stmtPwd->execute([':id' => $input_IDUser]);
+            $pwdToSave = (string)$stmtPwd->fetchColumn();
+        }
+
         $sqlUpdateUser = "UPDATE users SET
                         IsAdmin        = :isadmin,
                         EmpCode        = :emp,
@@ -1161,22 +1183,22 @@ function saveUser($conn)
         $params = [
             // ':rfid'     => $select_user_rfid,
             // ':weigh'    => $select_user_weighing,
-            ':isadmin'  => $IsAdmin_new,
-            ':emp'      => $input_empcodeUser,
-            ':uname'    => $input_userName,
-            ':pwd'      => $input_passWord, // ถ้าต้องการ hash: password_hash($input_passWord, PASSWORD_DEFAULT)
+            ':isadmin'    => $IsAdmin_new,
+            ':emp'        => $input_empcodeUser,
+            ':uname'      => $input_userName,
+            ':pwd'        => $pwdToSave, // ✅ hash/ของเดิม
             ':iscancel22' => (int)$IsCancel,
-            ':perm'     => $select_permission,
-            ':id'       => $input_IDUser
+            ':perm'       => $select_permission,
+            ':id'         => $input_IDUser
         ];
 
         // echo ออกมาดูก่อน
         echo "<pre>";
         print_r($params);
         echo "</pre>";
+
         $stmt = $conn->prepare($sqlUpdateUser);
         $stmt->execute($params);
-
 
         // 4) UPDATE employee
         $sqlUpdateEmp = "UPDATE employee SET
@@ -1232,13 +1254,250 @@ function saveUser($conn)
         if ($conn && $conn->inTransaction()) {
             $conn->rollBack();
         }
-        // คุณอาจ echo code อื่น หรือ ส่งข้อความ error แทน
         echo "error";
-        // ใน dev/log จริงควรบันทึก $e->getMessage()
         unset($conn);
         die;
     }
 }
+
+
+// function saveUser($conn)
+// {
+//     function post($key, $default = '')
+//     {
+//         return isset($_POST[$key]) ? $_POST[$key] : $default;
+//     }
+
+//     // $select_user_rfid     = post('select_user_rfid', '');
+//     // $select_user_weighing = post('select_user_weighing', '');
+//     $input_empcodeUser    = post('input_empcodeUser', '');
+//     $input_nameUser       = post('input_nameUser', '');
+//     $input_lastUser       = post('input_lastUser', '');
+//     $input_userName       = post('input_userName', '');
+//     $input_passWord       = post('input_passWord', '');
+//     $select_permission    = post('select_permission', '');
+//     $IsCancel             = isset($_POST['IsCancel']) ? (int)$_POST['IsCancel'] : 0;
+//     $input_IDUser         = post('input_IDUser', '');
+//     $IsAdmin_new          = isset($_POST['IsAdmin']) ? (int)$_POST['IsAdmin'] : 0;
+
+//     // ค่าดีฟอลต์กรณีว่าง
+//     // if ($select_user_rfid === "")     $select_user_rfid = 0;
+//     // if ($select_user_weighing === "") $select_user_weighing = 0;
+
+//     try {
+//         // ใช้ทรานแซคชันเพื่อความสอดคล้องของข้อมูล
+//         $conn->beginTransaction();
+
+//         // ------------------------------------------------------------
+//         // กรณีเพิ่มผู้ใช้ใหม่ (INSERT)
+//         // ------------------------------------------------------------
+//         if ($input_IDUser === "") {
+
+//             // 1) ตรวจซ้ำ UserName
+//             $stmt = $conn->prepare("SELECT ID FROM users WHERE UserName = :uname LIMIT 1");
+//             $stmt->execute([':uname' => $input_userName]);
+//             if ($stmt->fetch(PDO::FETCH_ASSOC)) {
+//                 echo 2; // ซ้ำ UserName
+//                 $conn->rollBack();
+//                 unset($conn);
+//                 die;
+//             }
+
+//             // 2) ตรวจซ้ำ EmpCode
+//             $stmt = $conn->prepare("SELECT ID FROM users WHERE EmpCode = :emp LIMIT 1");
+//             $stmt->execute([':emp' => $input_empcodeUser]);
+//             if ($stmt->fetch(PDO::FETCH_ASSOC)) {
+//                 echo 1; // ซ้ำ EmpCode
+//                 $conn->rollBack();
+//                 unset($conn);
+//                 die;
+//             }
+
+//             // 3) INSERT users
+//             $sqlInsertUser = "INSERT INTO users 
+//                 (EmpCode, UserName, Password, IsCancel, DeptID, display, permission, IsAdmin)
+//                 VALUES
+//                 (:emp, :uname, :pwd, :iscancel, 1, 3, :perm, :isadmin)";
+//             $stmt = $conn->prepare($sqlInsertUser);
+//             $stmt->execute([
+//                 ':emp'      => $input_empcodeUser,
+//                 ':uname'    => $input_userName,
+//                 ':pwd'      => $input_passWord, // ถ้าต้องการ hash: password_hash($input_passWord, PASSWORD_DEFAULT)
+//                 ':iscancel' => $IsCancel,
+//                 ':perm'     => $select_permission,
+//                 ':isadmin'  => $IsAdmin_new
+//             ]);
+//             $newUserId = (int)$conn->lastInsertId();
+
+//             // 4) INSERT employee
+//             $sqlInsertEmp = "INSERT INTO employee (EmpCode, FirstName, LastName, DepID, IsAdmin)
+//                              VALUES (:emp, :fname, :lname, 1, :isadmin)";
+//             $stmt = $conn->prepare($sqlInsertEmp);
+//             $stmt->execute([
+//                 ':emp'     => $input_empcodeUser,
+//                 ':fname'   => $input_nameUser,
+//                 ':lname'   => $input_lastUser,
+//                 ':isadmin' => $IsAdmin_new
+//             ]);
+
+
+
+//             // 5) INSERT / SETUP config_menu ตามสิทธิ์
+//             if ($IsAdmin_new == 1) {
+//                 $insertSql = "INSERT INTO config_menu 
+//                     (userID,main,recieve_stock,create_request,request_item,set_hn,pay,hn,movement,manage,report,permission) 
+//                     VALUES (:userID,1,1,1,1,1,1,1,1,1,1,1)";
+//             } else {
+//                 $insertSql = "INSERT INTO config_menu 
+//                     (userID,main,recieve_stock,create_request,request_item,set_hn,pay,hn,movement,manage,report,permission) 
+//                     VALUES (:userID,1,1,1,1,1,1,1,1,0,1,0)";
+//             }
+//             $stmt = $conn->prepare($insertSql);
+//             $stmt->execute([':userID' => $newUserId]);
+
+//             // 6) INSERT user_cabinet
+//             $sqlInsertCab = "INSERT INTO user_cabinet (user_id) VALUES (:uid)";
+//             $stmt = $conn->prepare($sqlInsertCab);
+//             $stmt->execute([':uid' => $newUserId]);
+
+//             $conn->commit();
+//             echo "insert success";
+//             unset($conn);
+//             die;
+//         }
+
+//         // ------------------------------------------------------------
+//         // กรณีแก้ไขผู้ใช้เดิม (UPDATE)
+//         // ------------------------------------------------------------
+//         // ดึง employee.ID คู่กับผู้ใช้เดิม
+//         $sqlGet = "SELECT employee.ID AS emID, users.EmpCode AS curEmpCode, users.UserName AS curUserName
+//                    FROM users
+//                    INNER JOIN employee ON users.EmpCode = employee.EmpCode
+//                    WHERE users.ID = :id
+//                    LIMIT 1";
+//         $stmt = $conn->prepare($sqlGet);
+//         $stmt->execute([':id' => $input_IDUser]);
+//         $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+//         if (!$row) {
+//             echo 3; // ไม่พบข้อมูลเดิม (หรือจะกำหนด code อื่นก็ได้)
+//             $conn->rollBack();
+//             unset($conn);
+//             die;
+//         }
+
+//         $emID      = (int)$row['emID'];
+
+//         // 1) เช็กซ้ำ UserName กับ "คนอื่น"
+//         $stmt = $conn->prepare("SELECT ID FROM users WHERE UserName = :uname AND ID <> :id LIMIT 1");
+//         $stmt->execute([':uname' => $input_userName, ':id' => $input_IDUser]);
+//         if ($stmt->fetch(PDO::FETCH_ASSOC)) {
+//             echo 2; // ซ้ำ UserName
+//             $conn->rollBack();
+//             unset($conn);
+//             die;
+//         }
+
+//         // 2) เช็กซ้ำ EmpCode กับ "คนอื่น"
+//         $stmt = $conn->prepare("SELECT ID FROM users WHERE EmpCode = :emp AND ID <> :id LIMIT 1");
+//         $stmt->execute([':emp' => $input_empcodeUser, ':id' => $input_IDUser]);
+//         if ($stmt->fetch(PDO::FETCH_ASSOC)) {
+//             echo 1; // ซ้ำ EmpCode
+//             $conn->rollBack();
+//             unset($conn);
+//             die;
+//         }
+
+//         $sqlUpdateUser = "UPDATE users SET
+//                         IsAdmin        = :isadmin,
+//                         EmpCode        = :emp,
+//                         UserName       = :uname,
+//                         Password       = :pwd,
+//                         IsCancel       = :iscancel22,
+//                         permission     = :perm
+//                     WHERE ID = :id";
+
+//         $params = [
+//             // ':rfid'     => $select_user_rfid,
+//             // ':weigh'    => $select_user_weighing,
+//             ':isadmin'  => $IsAdmin_new,
+//             ':emp'      => $input_empcodeUser,
+//             ':uname'    => $input_userName,
+//             ':pwd'      => $input_passWord, // ถ้าต้องการ hash: password_hash($input_passWord, PASSWORD_DEFAULT)
+//             ':iscancel22' => (int)$IsCancel,
+//             ':perm'     => $select_permission,
+//             ':id'       => $input_IDUser
+//         ];
+
+//         // echo ออกมาดูก่อน
+//         echo "<pre>";
+//         print_r($params);
+//         echo "</pre>";
+//         $stmt = $conn->prepare($sqlUpdateUser);
+//         $stmt->execute($params);
+
+
+//         // 4) UPDATE employee
+//         $sqlUpdateEmp = "UPDATE employee SET
+//                 IsAdmin   = :isadmin,
+//                 EmpCode   = :emp,
+//                 FirstName = :fname,
+//                 LastName  = :lname
+//             WHERE ID = :emid";
+//         $stmt = $conn->prepare($sqlUpdateEmp);
+//         $stmt->execute([
+//             ':isadmin' => $IsAdmin_new,
+//             ':emp'     => $input_empcodeUser,
+//             ':fname'   => $input_nameUser,
+//             ':lname'   => $input_lastUser,
+//             ':emid'    => $emID
+//         ]);
+
+//         // 5) UPDATE / UPSERT สิทธิ์เมนู ตามสถานะแอดมิน
+//         if ($IsAdmin_new == 1) {
+//             $sqlCfg = "UPDATE config_menu SET 
+//                         main=1, recieve_stock=1, create_request=1, request_item=1, 
+//                         set_hn=1, pay=1, hn=1, movement=1, manage=1, report=1, permission=1
+//                        WHERE userID = :userID";
+//         } else {
+//             $sqlCfg = "UPDATE config_menu SET 
+//                         main=1, recieve_stock=1, create_request=1, request_item=1, 
+//                         set_hn=1, pay=1, hn=1, movement=1, manage=0, report=1, permission=0
+//                        WHERE userID = :userID";
+//         }
+//         $stmt = $conn->prepare($sqlCfg);
+//         $stmt->execute([':userID' => $input_IDUser]);
+
+//         // ถ้าไม่มีแถวถูกอัปเดต (ยังไม่มี config_menu ของ user นี้) -> INSERT ให้
+//         if ($stmt->rowCount() === 0) {
+//             if ($IsAdmin_new == 1) {
+//                 $insCfg = "INSERT INTO config_menu 
+//                     (userID,main,recieve_stock,create_request,request_item,set_hn,pay,hn,movement,manage,report,permission) 
+//                     VALUES (:userID,1,1,1,1,1,1,1,1,1,1,1)";
+//             } else {
+//                 $insCfg = "INSERT INTO config_menu 
+//                     (userID,main,recieve_stock,create_request,request_item,set_hn,pay,hn,movement,manage,report,permission) 
+//                     VALUES (:userID,1,1,1,1,1,1,1,1,0,1,0)";
+//             }
+//             $stmt = $conn->prepare($insCfg);
+//             $stmt->execute([':userID' => $input_IDUser]);
+//         }
+
+//         $conn->commit();
+//         echo "insert success";
+//         unset($conn);
+//         die;
+//     } catch (Exception $e) {
+//         if ($conn && $conn->inTransaction()) {
+//             $conn->rollBack();
+//         }
+//         // คุณอาจ echo code อื่น หรือ ส่งข้อความ error แทน
+//         echo "error";
+//         // ใน dev/log จริงควรบันทึก $e->getMessage()
+//         unset($conn);
+//         die;
+//     }
+// }
 
 
 // function saveUser($conn)

@@ -33,7 +33,7 @@ $(function () {
   session();
   select_item();
 
-  $("#select_follow_year").val(2025);
+  $("#select_follow_year").val(2026);
   $("#select_follow_year").datepicker({
     view: "years", // เปิดมาที่หน้าปี
     minView: "years", // ล็อกให้อยู่ที่หน้าปี (ไม่ลงไปเดือน/วัน)
@@ -68,7 +68,7 @@ $(function () {
 
 
 
-  $("#select_year_ok").val(2025);
+  $("#select_year_ok").val(2026);
   $("#select_year_ok").datepicker({
     view: "years", // เปิดมาที่หน้าปี
     minView: "years", // ล็อกให้อยู่ที่หน้าปี (ไม่ลงไปเดือน/วัน)
@@ -401,7 +401,7 @@ $("#btn_pdf_all_item_ok").click(function () {
     "?select_month_ok=" +
     $("#select_month_ok").val() +
     "&select_year_ok=" +
-    $("#select_year_ok").val()+
+    $("#select_year_ok").val() +
     "&id_hidden_cabinet=" +
     $("#id_hidden_cabinet").val();
   window.open(
@@ -414,7 +414,7 @@ $("#btn_pdf_item_ok").click(function () {
     "?select_month_ok=" +
     $("#select_month_ok").val() +
     "&select_year_ok=" +
-    $("#select_year_ok").val()+
+    $("#select_year_ok").val() +
     "&id_hidden_cabinet=" +
     $("#id_hidden_cabinet").val();
   window.open(
@@ -427,7 +427,7 @@ $("#btn_excel_item_ok").click(function () {
     "?select_month_ok=" +
     $("#select_month_ok").val() +
     "&select_year_ok=" +
-    $("#select_year_ok").val()+
+    $("#select_year_ok").val() +
     "&id_hidden_cabinet=" +
     $("#id_hidden_cabinet").val();
   window.open(
@@ -1613,13 +1613,14 @@ function selection_item() {
           if (value.stock_min == null) {
             value.stock_min = 0;
           }
-          var color = "";
-          if (value.cntx < value.stock_min) {
-            color = "color:red;";
-          }
+
           var cntx = value.cnt;
           if (value.cntx < value.stock_balance) {
             value.cntx = value.stock_balance;
+          }
+          var color = "";
+          if (cntx < value.stock_min) {
+            color = "color:red;";
           }
 
           tr += `<tr>
@@ -2053,14 +2054,17 @@ function selection_item_rfid() {
           if (value.stock_min == null) {
             value.stock_min = 0;
           }
-          var color = "";
-          if (value.cntx < value.stock_min) {
-            color = "color:red;";
-          }
+
           var cntx = value.cnt;
           if (value.cntx < value.stock_balance) {
             value.cntx = value.stock_balance;
           }
+
+          var color = "";
+          if (cntx < value.stock_min) {
+            color = "color:red;";
+          }
+
           tr += `<tr>
                                   <td class='text-center' style="text-wrap: nowrap;">${kay + 1
             }</td>
@@ -2312,15 +2316,16 @@ function selection_item_normal() {
           if (value.stock_min == null) {
             value.stock_min = 0;
           }
-          var color = "";
-          if (value.cntx < value.stock_min) {
-            color = "color:red;";
-          }
+
           var cntx = value.cnt;
           if (value.cntx < value.stock_balance) {
             value.cntx = value.stock_balance;
           }
 
+          var color = "";
+          if (cntx < value.stock_min) {
+            color = "color:red;";
+          }
           tr += `<tr>
                                   <td class='text-center' style="text-wrap: nowrap;">${kay + 1
             }</td>

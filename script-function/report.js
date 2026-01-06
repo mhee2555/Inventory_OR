@@ -17,7 +17,6 @@ $(function () {
     "-" +
     year;
 
-
   $("#select_year1").val(year);
   $("#select_year1").datepicker({
     view: 'years',      // เปิดมาที่หน้าปี
@@ -176,12 +175,18 @@ $(function () {
 
       var d = new Date();
       var month = d.getMonth() + 1;
+      var year = d.getFullYear();
+
+
 
       $("#select_month1").val(month);
       $("#select_month2").val(month);
-      $("#select_year1").val("2568");
+      $("#select_year1").val(year+543);
     }
     if ($(this).val() == "3") {
+      var d = new Date();
+      var year = d.getFullYear();
+
       $("#row_typeday").hide();
       $("#row_day").hide();
       $("#row_typemonth").hide();
@@ -192,8 +197,8 @@ $(function () {
 
       $("#radio_year1").prop("checked", true).trigger("click");
 
-      $("#select_year1").val("2568");
-      $("#select_year2").val("2568");
+      $("#select_year1").val(year+543);
+      $("#select_year2").val(year+543);
     }
   });
 
