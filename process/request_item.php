@@ -362,53 +362,109 @@ function show_detail_item_request($conn, $db)
 
     $wheretype = "";
     if ($select_typeItem != "") {
-        $wheretype = " AND itemtype.ID = '$select_typeItem' ";
+        $wheretype = " AND it.ID = '$select_typeItem' ";
     }
 
     $wherepermission = "";
     if ($permission != '5') {
-        $wherepermission = " AND item.warehouseID = $permission ";
+        $wherepermission = " AND i.warehouseID = $permission ";
     }
 
     $query = "SELECT
-                * 
-            FROM
-                (
-                SELECT
-                    item.itemcode,
-                    item.itemcode2,
-                    item.itemname AS Item_name,
-                    itemtype.TyeName,
-                    item.stock_min,
-                    COUNT( itemstock.RowID ) AS cnt,
-                    ( SELECT COUNT( ID ) FROM itemstock_transaction_detail WHERE ItemCode = item.itemcode AND IsStatus = 1 ) AS cnt_pay,
-                    COUNT( itemstock.RowID ) - ( SELECT COUNT( ID ) FROM itemstock_transaction_detail WHERE ItemCode = item.itemcode AND IsStatus = 1 ) AS remain_balance 
+                result.*
                 FROM
-                    item
-                    LEFT JOIN itemtype ON itemtype.ID = item.itemtypeID
-                    INNER JOIN itemstock ON item.itemcode = itemstock.ItemCode 
-                WHERE
-                    item.IsNormal = 1 
-                    AND item.IsCancel = 0 
-                    AND item.item_status != 1
-                    AND ( item.IsSet != 1 AND  item.IsSet != 2 )
-                    AND ( item.itemcode LIKE '%$input_Search%' OR item.itemname LIKE '%$input_Search%' ) 
+                (
+                    SELECT
+                    i.itemcode,
+                    i.itemcode2,
+                    i.itemname AS Item_name,
+                    it.TyeName,
+                    i.stock_min,
+                    IFNULL(s.cnt, 0) AS cnt, -- เดิมคุณใช้ COUNT(itemstock.RowID)
+                    IFNULL(ss.cntx, 0) AS cntx, -- ✅ เพิ่มจาก query ใหม่
+                    IFNULL(tp.cnt_pay, 0) AS cnt_pay,
+                    IFNULL(s.cnt, 0) - IFNULL(tp.cnt_pay, 0) AS remain_balance
+                    FROM
+                    item i
+                    LEFT JOIN itemtype it ON it.ID = i.itemtypeID
+                    /* นับ stock ทั้งหมด (แทน COUNT จาก join itemstock เดิม) */
+                    LEFT JOIN (SELECT ItemCode, COUNT(*) AS cnt FROM itemstock WHERE IsCancel = 0 -- ถ้าต้องการเงื่อนไขเดิมของ itemstock เพิ่มเติม ใส่ตรงนี้ได้
+                        GROUP BY ItemCode) s ON s.ItemCode = i.itemcode
+                    /* ✅ cntx: นับ stock ที่ departmentroomid != '100' */
+                    LEFT JOIN (
+                        SELECT
+                        ItemCode,
+                        COUNT(*) AS cntx
+                        FROM
+                        itemstock
+                        WHERE
+                        itemstock.IsCancel = 0
+                        AND itemstock.Stockin = 1
+                        AND itemstock.Adjust_stock = 0
+                        AND itemstock.IsDeproom = 0
+                        AND itemstock.departmentroomid = 35
+                        GROUP BY
+                        ItemCode
+                    ) ss ON ss.ItemCode = i.itemcode
+                    /* นับจ่าย */
+                    LEFT JOIN (SELECT ItemCode, COUNT(*) AS cnt_pay FROM itemstock_transaction_detail WHERE IsStatus = 1 GROUP BY ItemCode) tp ON tp.ItemCode = i.itemcode
+                    WHERE
+                    i.IsNormal = 1
+                    AND i.IsCancel = 0
+                    AND i.item_status != 1
+                    AND (i.IsSet != 1 AND i.IsSet != 2)
+                    AND (i.itemcode LIKE '%$input_Search%' OR i.itemname LIKE '%$input_Search%')
                     $wherepermission
                     $wheretype 
-                GROUP BY
-                    item.itemcode,
-                    item.itemcode2,
-                    item.itemname,
-                    itemtype.TyeName,
-                    item.stock_min 
-                ) AS result 
-            ORDER BY
-            CASE
-                    
+                ) AS result
+                ORDER BY
+                CASE
                     WHEN remain_balance < stock_min THEN
-                    1 ELSE 2 
+                    1
+                    ELSE
+                    2
                 END ASC,
-                remain_balance ASC ";
+                remain_balance ASC;";
+
+    // $query = "SELECT
+    //             * 
+    //         FROM
+    //             (
+    //             SELECT
+    //                 item.itemcode,
+    //                 item.itemcode2,
+    //                 item.itemname AS Item_name,
+    //                 itemtype.TyeName,
+    //                 item.stock_min,
+    //                 COUNT( itemstock.RowID ) AS cnt,
+    //                 ( SELECT COUNT( ID ) FROM itemstock_transaction_detail WHERE ItemCode = item.itemcode AND IsStatus = 1 ) AS cnt_pay,
+    //                 COUNT( itemstock.RowID ) - ( SELECT COUNT( ID ) FROM itemstock_transaction_detail WHERE ItemCode = item.itemcode AND IsStatus = 1 ) AS remain_balance 
+    //             FROM
+    //                 item
+    //                 LEFT JOIN itemtype ON itemtype.ID = item.itemtypeID
+    //                 INNER JOIN itemstock ON item.itemcode = itemstock.ItemCode 
+    //             WHERE
+    //                 item.IsNormal = 1 
+    //                 AND item.IsCancel = 0 
+    //                 AND item.item_status != 1
+    //                 AND ( item.IsSet != 1 AND  item.IsSet != 2 )
+    //                 AND ( item.itemcode LIKE '%$input_Search%' OR item.itemname LIKE '%$input_Search%' ) 
+    //                 $wherepermission
+    //                 $wheretype 
+    //             GROUP BY
+    //                 item.itemcode,
+    //                 item.itemcode2,
+    //                 item.itemname,
+    //                 itemtype.TyeName,
+    //                 item.stock_min 
+    //             ) AS result 
+    //         ORDER BY
+    //         CASE
+                    
+    //                 WHEN remain_balance < stock_min THEN
+    //                 1 ELSE 2 
+    //             END ASC,
+    //             remain_balance ASC ";
 
 
 

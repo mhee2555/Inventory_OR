@@ -17,15 +17,17 @@ if (!empty($_POST['FUNC_NAME'])) {
 
 function ResetPassword($conn)
 {
-    $identity    = trim($_POST['identity']);      // UserName
+    $username    = trim($_POST['username']);
+    $empcode     = trim($_POST['empcode']);
     $newPassword = (string)($_POST['new_password']);
 
-    // validate
-    if ($identity === '') {
+    // ต้องกรอกทั้งสองอย่าง
+    if ($username === '' || $empcode === '') {
         echo "invalid_identity";
         unset($conn);
         die;
     }
+
     if (mb_strlen($newPassword) < 8) {
         echo "invalid_password";
         unset($conn);
@@ -33,9 +35,14 @@ function ResetPassword($conn)
     }
 
     try {
-        // หา user จาก UserName (คุณบอกว่าใช้ username อย่างเดียว)
-        $stmt = $conn->prepare("SELECT ID, UserName, IsCancel FROM users WHERE UserName = :u LIMIT 1");
-        $stmt->execute([':u' => $identity]);
+        // ✅ ต้อง match ทั้ง UserName และ EmpCode
+        $stmt = $conn->prepare("
+            SELECT ID, IsCancel
+            FROM users
+            WHERE UserName = :u AND EmpCode = :e
+            LIMIT 1
+        ");
+        $stmt->execute([':u' => $username, ':e' => $empcode]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if (!$user || (int)$user['IsCancel'] === 1) {
@@ -44,7 +51,6 @@ function ResetPassword($conn)
             die;
         }
 
-        // hash (PHP 8.2 / Argon2id)
         $hash = password_hash($newPassword, PASSWORD_ARGON2ID, [
             'memory_cost' => 1 << 16, // 64MB
             'time_cost'   => 4,
@@ -57,18 +63,17 @@ function ResetPassword($conn)
             die;
         }
 
-        // update
         $upd = $conn->prepare("UPDATE users SET Password = :p WHERE ID = :id");
         $upd->execute([
             ':p'  => $hash,
-            ':id' => $user['ID']
+            ':id' => (int)$user['ID']
         ]);
 
-        // (optional) log activity เหมือน login (กำหนด isStatus ใหม่ เช่น 98)
+        // log (optional)
         $insert_log = "INSERT INTO log_activity_users (itemCode, itemstockID ,qty, isStatus, DocNo, userID, createAt)
                        VALUES ('', 0, 0, :isStatus, '', :Userid, NOW())";
         $meQuery_log = $conn->prepare($insert_log);
-        $meQuery_log->bindValue(':isStatus', 98, PDO::PARAM_INT); // 98 = reset password (กำหนดเอง)
+        $meQuery_log->bindValue(':isStatus', 98, PDO::PARAM_INT);
         $meQuery_log->bindValue(':Userid', (int)$user['ID'], PDO::PARAM_INT);
         $meQuery_log->execute();
 
@@ -81,6 +86,7 @@ function ResetPassword($conn)
         die;
     }
 }
+
 
 
 

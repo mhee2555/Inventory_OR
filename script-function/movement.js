@@ -476,6 +476,10 @@ function selection_item_ok(stockid) {
 }
 
 function selection_item_detail_ok(stockid) {
+
+
+
+
   $.ajax({
     url: "process/movement.php",
     type: "POST",
@@ -493,6 +497,22 @@ function selection_item_detail_ok(stockid) {
       console.log(ObjData);
       var tr = ``;
       // var tr = ``;
+      var d = new Date();
+      var day   = d.getDate();        // 1-31
+      var month = d.getMonth() + 1;   // 0-11 (ต้อง +1)
+      var year  = d.getFullYear();
+
+
+
+    var datenow =
+        year + "-" +
+        (("" + month).length < 2 ? "0" : "") + month + "-" +
+        (("" + day).length < 2 ? "0" : "") + day;
+
+
+
+
+      console.log(1111);
       if (!$.isEmptyObject(ObjData)) {
         $.each(ObjData["item"], function (kay, value) {
           tr += `<tr>
@@ -501,7 +521,11 @@ function selection_item_detail_ok(stockid) {
                     <td style="text-wrap: nowrap;">${value.itemname}</td>`;
 
           $.each(ObjData[value.itemcode], function (kay2, value2) {
-            tr += `<td style="text-wrap: nowrap;">${value2.qty}</td>`;
+            if(datenow == value2.snapshot_date){
+              tr += `<td style="text-wrap: nowrap;background-color:cornflowerblue;">${value2.qty}</td>`;
+            }else{
+              tr += `<td style="text-wrap: nowrap;">${value2.qty}</td>`;
+            }
           });
           tr += `</tr>`;
         });

@@ -107,6 +107,16 @@
                     </div>
 
                     <div class="form-group">
+                        <label>รหัสพนักงาน (EmpCode)</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-id-badge"></i></span>
+                            </div>
+                            <input type="text" class="form-control" id="reset_empcode" placeholder="เช่น 12345">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
                         <label>รหัสผ่านใหม่</label>
                         <div class="input-group">
                             <div class="input-group-prepend">
@@ -303,14 +313,18 @@
             setTimeout(() => $("#reset_identity").focus(), 300);
         });
 
-        // กด submit รีเซ็ต
         $("#btn_reset_submit").click(function() {
-            const identity = ($("#reset_identity").val() || "").trim();
+            const username = ($("#reset_identity").val() || "").trim();
+            const empcode = ($("#reset_empcode").val() || "").trim();
             const p1 = ($("#reset_new_password").val() || "").trim();
             const p2 = ($("#reset_confirm_password").val() || "").trim();
 
-            if (!identity) {
+            if (!username) {
                 showDialogFailed("กรุณากรอก UserName");
+                return;
+            }
+            if (!empcode) {
+                showDialogFailed("กรุณากรอก รหัสพนักงาน (EmpCode)");
                 return;
             }
             if (p1.length < 8) {
@@ -322,18 +336,16 @@
                 return;
             }
 
-            // TODO: ส่งไปหลังบ้าน (คุณทำ process/reset_password.php หรือ process/login.php ก็ได้)
             $.ajax({
-                url: "process/login.php", // หรือไฟล์อื่นที่คุณทำ
+                url: "process/login.php",
                 type: "POST",
                 data: {
                     FUNC_NAME: "ResetPassword",
-                    identity: identity,
+                    username: username,
+                    empcode: empcode,
                     new_password: p1
                 },
                 success: function(result) {
-                    // คุณกำหนดรูปแบบ response เองได้
-                    // ตัวอย่าง: return "success" หรือ JSON
                     if (result === "success") {
                         Swal.fire({
                             title: "สำเร็จ",
@@ -341,16 +353,22 @@
                             icon: "success"
                         });
                         $("#modalResetPassword").modal("hide");
+                    } else if (result === "notfound") {
+                        showDialogFailed("ไม่พบผู้ใช้งาน (UserName/EmpCode ไม่ตรงกัน)");
+                    } else if (result === "invalid_identity") {
+                        showDialogFailed("กรุณากรอก UserName และ EmpCode");
+                    } else if (result === "invalid_password") {
+                        showDialogFailed("รหัสผ่านใหม่ไม่ถูกต้อง");
                     } else {
                         showDialogFailed("รีเซ็ตไม่สำเร็จ: " + result);
                     }
                 },
-                error: function(xhr) {
+                error: function() {
                     showDialogFailed("เกิดข้อผิดพลาดในการเชื่อมต่อ");
-                    console.log(xhr);
                 }
             });
         });
+
 
 
 
