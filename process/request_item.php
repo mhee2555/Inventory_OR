@@ -412,6 +412,7 @@ function show_detail_item_request($conn, $db)
                     i.IsNormal = 1
                     AND i.IsCancel = 0
                     AND i.item_status != 1
+                    AND i.item_status2 IS NULL
                     AND (i.IsSet != 1 AND i.IsSet != 2)
                     AND (i.itemcode LIKE '%$input_Search%' OR i.itemname LIKE '%$input_Search%')
                     $wherepermission

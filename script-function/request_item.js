@@ -248,7 +248,7 @@ function show_detail_item_request() {
           if (value.stock_min == null) {
             value.stock_min = 0;
           }
-          if (value.cnt < value.stock_min) {
+          if (value.cntx < value.stock_min) {
             color = "style='color:red;line-height: 40px;' ";
             input_cnt = `<input tyle='text' class='text-center form-control numonly loop_qty_request' data-itemcode="${value.itemcode}" >`;
           }
@@ -256,7 +256,7 @@ function show_detail_item_request() {
                       <td class='text-center' style='line-height: 40px;'>${value.itemcode2}</td>
                       <td class='text-left' style='line-height: 40px;'>${value.Item_name}</td>
                       <td class='text-center' style='line-height: 40px;'>${value.stock_min}</td>
-                      <td class='text-center'  ${color}>${value.cnt}</td>
+                      <td class='text-center'  ${color}>${value.cntx}</td>
                       <td class='text-center' style='line-height: 40px;'>${input_cnt}</td>
                    </tr>`;
         });
