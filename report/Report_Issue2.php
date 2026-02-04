@@ -392,7 +392,70 @@ $count = 1;
 //             ORDER BY
 //             item.itemname ASC  ";
 
-$query  ="SELECT 
+// $query  ="SELECT 
+//                 x.itemname,
+//                 x.itemcode2,
+//                 x.itemcode,
+//                 SUM(x.cnt)      AS cnt,
+//                 SUM(x.cnt_pay)  AS cnt_pay,
+//                 x.TyeName
+//             FROM (
+//                 /* ---- แหล่ง deproom ---- */
+//                 SELECT
+//                     i.itemname,
+//                     i.itemcode2,
+//                     i.itemcode,
+//                     SUM(drd.Qty)          AS cnt,
+//                     COUNT(drs.ID)         AS cnt_pay,
+//                     it.TyeName
+//                 FROM deproom dr
+//                 INNER JOIN deproomdetail drd 
+//                     ON dr.DocNo = drd.DocNo
+//                 INNER JOIN deproomdetailsub drs 
+//                     ON drs.Deproomdetail_RowID = drd.ID
+//                 INNER JOIN itemstock s 
+//                     ON s.RowID = drs.ItemStockID
+//                 INNER JOIN item i 
+//                     ON s.ItemCode = i.itemcode
+//                 INNER JOIN itemtype it 
+//                     ON i.itemtypeID = it.ID
+//                 WHERE
+//                     dr.IsCancel = 0
+//                     AND drd.IsCancel = 0
+//                     $where_date
+//                 GROUP BY
+//                     i.itemcode, i.itemname, i.itemcode2, it.TyeName
+
+//                 UNION ALL
+
+//                 /* ---- แหล่ง sell_department ---- */
+//                 SELECT
+//                     i.itemname,
+//                     i.itemcode2,
+//                     i.itemcode,
+//                     COUNT(sdd.ItemStockID) AS cnt,
+//                     COUNT(sdd.ItemStockID) AS cnt_pay,
+//                     it.TyeName
+//                 FROM sell_department sd
+//                 INNER JOIN sell_department_detail sdd 
+//                     ON sdd.DocNo = sd.DocNo
+//                 LEFT JOIN item i 
+//                     ON i.itemcode = sdd.itemCode
+//                 LEFT JOIN itemtype it 
+//                     ON i.itemtypeID = it.ID
+//                 WHERE
+//                     sdd.ItemStockID IS NOT NULL
+//                     $where_date2
+//                 GROUP BY
+//                     i.itemcode, i.itemname, i.itemcode2, it.TyeName
+//             ) x
+//             GROUP BY
+//                 x.itemcode, x.itemname, x.itemcode2, x.TyeName
+//             ORDER BY
+//                 SUM(x.cnt_pay) DESC,   -- เรียงยอดจ่ายมากสุดก่อน
+//                 x.itemname ASC;        -- เผื่ออยากเรียงชื่อเพิ่ม ";
+
+    $query = " SELECT 
                 x.itemname,
                 x.itemcode2,
                 x.itemcode,
@@ -400,7 +463,7 @@ $query  ="SELECT
                 SUM(x.cnt_pay)  AS cnt_pay,
                 x.TyeName
             FROM (
-                /* ---- แหล่ง deproom ---- */
+                /* ---- แหล่ง deproom (รองรับ itemcode_weighing) ---- */
                 SELECT
                     i.itemname,
                     i.itemcode2,
@@ -413,10 +476,13 @@ $query  ="SELECT
                     ON dr.DocNo = drd.DocNo
                 INNER JOIN deproomdetailsub drs 
                     ON drs.Deproomdetail_RowID = drd.ID
-                INNER JOIN itemstock s 
+
+                LEFT JOIN itemstock s 
                     ON s.RowID = drs.ItemStockID
+
                 INNER JOIN item i 
-                    ON s.ItemCode = i.itemcode
+                    ON i.itemcode = COALESCE(s.ItemCode, drs.itemcode_weighing)
+
                 INNER JOIN itemtype it 
                     ON i.itemtypeID = it.ID
                 WHERE
@@ -452,8 +518,8 @@ $query  ="SELECT
             GROUP BY
                 x.itemcode, x.itemname, x.itemcode2, x.TyeName
             ORDER BY
-                SUM(x.cnt_pay) DESC,   -- เรียงยอดจ่ายมากสุดก่อน
-                x.itemname ASC;        -- เผื่ออยากเรียงชื่อเพิ่ม ";
+                SUM(x.cnt_pay) DESC,
+                x.itemname ASC; ";
             
 
 $meQuery1 = $conn->prepare($query);
