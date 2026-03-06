@@ -231,8 +231,11 @@ $query = "SELECT *,
                     SELECT COUNT(*)
                     FROM log_return lr
                     LEFT JOIN itemstock isr ON lr.itemstockID = isr.RowID
-                    WHERE isr.ItemCode = i.itemcode
-                    AND DATE(lr.createAt) BETWEEN '$date1' AND '$date2'
+                    WHERE DATE(lr.createAt) BETWEEN '$date1' AND '$date2'
+                    AND (
+                            (lr.itemstockID IS NOT NULL AND lr.itemstockID > 0 AND isr.ItemCode = i.itemcode)
+                        OR ((lr.itemstockID IS NULL OR lr.itemstockID = 0) AND lr.itemCode = i.itemcode)
+                    )
                 ) AS cnt_return,
 
                 -- Net usage
@@ -241,10 +244,14 @@ $query = "SELECT *,
                         SELECT COUNT(*)
                         FROM log_return lr
                         LEFT JOIN itemstock isr ON lr.itemstockID = isr.RowID
-                        WHERE isr.ItemCode = i.itemcode
-                        AND DATE(lr.createAt) BETWEEN '$date1' AND '$date2'
+                        WHERE DATE(lr.createAt) BETWEEN '$date1' AND '$date2'
+                        AND (
+                                (lr.itemstockID IS NOT NULL AND lr.itemstockID > 0 AND isr.ItemCode = i.itemcode)
+                            OR ((lr.itemstockID IS NULL OR lr.itemstockID = 0) AND lr.itemCode = i.itemcode)
+                        )
                     )
                 ) AS net_cnt,
+
                 -- % Utilization
                 ROUND((
                     (COUNT(ds.ID) -
@@ -302,10 +309,11 @@ $query = "SELECT *,
                 INNER JOIN deproomdetail dd ON d.DocNo = dd.DocNo
                 INNER JOIN deproomdetailsub ds ON dd.ID = ds.Deproomdetail_RowID
                 LEFT JOIN itemstock ist ON ds.ItemStockID = ist.RowID
-                LEFT JOIN item i ON ist.ItemCode = i.itemcode
+                LEFT JOIN item i ON i.itemcode = COALESCE(ist.ItemCode, ds.itemcode_weighing)
             WHERE
                 DATE(d.ServiceDate) BETWEEN '$date1' AND '$date2'
-                        AND i.itemcode IS NOT NULL
+                AND COALESCE(ist.ItemCode, ds.itemcode_weighing) IS NOT NULL
+                AND COALESCE(ist.ItemCode, ds.itemcode_weighing) <> ''
             GROUP BY
                 i.itemcode
         ) AS final_result

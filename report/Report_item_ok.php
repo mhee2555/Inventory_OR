@@ -242,6 +242,7 @@ while ($row = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
         LEFT JOIN item i ON is2.itemcode = i.itemcode
         WHERE is2.StockID = '$stockid'
           AND is2.itemcode = '$_itemcode'
+          AND is2.IsStock = 1
         GROUP BY is2.ItemCode, i.itemname
         "
         :
@@ -275,6 +276,77 @@ while ($row = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
     FROM calendar c
     LEFT JOIN d ON d.snapshot_date = c.DAY
     ORDER BY c.DAY; ";
+
+    // $sub = "     WITH RECURSIVE calendar AS (
+    //     SELECT DATE('$select_year_ok-$select_month_ok-01') AS DAY
+    //     UNION ALL
+    //     SELECT DAY + INTERVAL 1 DAY
+    //     FROM calendar
+    //     WHERE DAY + INTERVAL 1 DAY <= LAST_DAY('$select_year_ok-$select_month_ok-01')
+    // ),
+
+    // snapshot_data AS (
+    //     -- 📌 snapshot ย้อนหลังจาก daily_item_rfid
+    //     SELECT
+    //         DATE(ds.snapshot_date) AS snapshot_date,
+    //         ds.itemcode,
+    //         ds.itemname,
+    //         ds.qty
+    //     FROM daily_item_rfid ds
+    //     WHERE ds.itemcode = '$_itemcode'
+    //       AND ds.stockID = '$stockid'
+    //       AND MONTH(ds.snapshot_date) = '$select_month_ok '
+    //       AND YEAR(ds.snapshot_date)  = '$select_year_ok'
+    //       AND DATE(ds.snapshot_date) <> CURDATE()
+    // ),
+
+    // today_data AS (
+    //     " . (in_array($stockid, ['1', '2', '3']) ?
+
+    //     // ---------- 📌 today จาก itemstock (stock 1,2,3) ----------
+    //     "
+    //     SELECT
+    //         CURDATE() AS snapshot_date,
+    //         is2.ItemCode AS itemcode,
+    //         i.itemname,
+    //         COUNT(is2.itemcode) AS qty
+    //     FROM itemstock is2
+    //     LEFT JOIN item i ON is2.itemcode = i.itemcode
+    //     WHERE is2.StockID = '$stockid'
+    //       AND is2.itemcode = '$_itemcode'
+    //     GROUP BY is2.ItemCode, i.itemname
+    //     "
+    //     :
+
+    //     // ---------- 📌 today จาก itemslotincabinet ----------
+    //     "
+    //     SELECT
+    //         CURDATE() AS snapshot_date,
+    //         isc.itemcode,
+    //         i.itemname,
+    //         IFNULL(isc.Qty, 0) AS qty
+    //     FROM itemslotincabinet isc
+    //     LEFT JOIN item i ON isc.itemcode = i.itemcode
+    //     WHERE isc.stockID = '$stockid'
+    //       AND isc.itemcode = '$_itemcode'
+    //     "
+    // ) . "
+    // ),
+
+    // d AS (
+    //     SELECT * FROM snapshot_data
+    //     UNION ALL
+    //     SELECT * FROM today_data
+    // )
+
+    // SELECT
+    //     c.DAY AS snapshot_date,
+    //     d.itemcode,
+    //     d.itemname,
+    //     COALESCE(d.qty, 0) AS qty
+    // FROM calendar c
+    // LEFT JOIN d ON d.snapshot_date = c.DAY
+    // ORDER BY c.DAY; ";
 
 
     $meQuery2 = $conn->prepare($sub);

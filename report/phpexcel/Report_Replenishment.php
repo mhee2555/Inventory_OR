@@ -122,19 +122,34 @@ $sheet->setCellValue('F8', 'คงเหลือล่าสุด');
 
 $dataArray = [];
 
+
 $query = "SELECT
             item.itemname,
             item.itemcode2,
             COUNT(itemstock.ItemCode) AS qty,
-            (SELECT COUNT(itemstock.RowID) FROM itemstock WHERE itemstock.ItemCode = item.itemcode AND itemstock.StockID = '2') AS all_ 
+            (SELECT COUNT(itemstock.RowID) FROM itemstock WHERE itemstock.ItemCode = item.itemcode AND itemstock.StockID != 0 ) AS all_ 
             FROM
             itemstock
             INNER JOIN item ON itemstock.ItemCode = item.itemcode 
-            WHERE
-            itemstock.StockID = '2' 
             $where_date
+            AND itemstock.StockID != 0
+            AND itemstock.IsStock = 1
             GROUP BY
             item.itemcode ";
+
+// $query = "SELECT
+//             item.itemname,
+//             item.itemcode2,
+//             COUNT(itemstock.ItemCode) AS qty,
+//             (SELECT COUNT(itemstock.RowID) FROM itemstock WHERE itemstock.ItemCode = item.itemcode AND itemstock.StockID = '2') AS all_ 
+//             FROM
+//             itemstock
+//             INNER JOIN item ON itemstock.ItemCode = item.itemcode 
+//             WHERE
+//             itemstock.StockID = '2' 
+//             $where_date
+//             GROUP BY
+//             item.itemcode ";
 
 // $query = "  SELECT
 //                 item.itemname,
@@ -373,27 +388,54 @@ $sheet->getStyle('F5')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGH
 $sheet->setCellValue('A8', 'ลำดับ'); // หัวข้อ
 $sheet->setCellValue('B8', 'รหัสอุปกรณ์');
 $sheet->setCellValue('C8', 'อุปกรณ์');
-$sheet->setCellValue('D8', 'ทั้งหมด');
-$sheet->setCellValue('E8', 'เติมอุปกรณ์เข้าตู้');
-$sheet->setCellValue('F8', 'คงเหลือล่าสุด');
+$sheet->setCellValue('D8', 'เติมอุปกรณ์เข้าตู้');
+$sheet->setCellValue('E8', 'คงเหลือล่าสุด');
 
 
 $dataArray = [];
 
-$query = " SELECT
-                item.itemname,
-                item.itemcode2,
-                COUNT( itemstock.ItemCode ) AS all_,
-                itemslotincabinet_detail.Qty AS qty 
+
+$query = "SELECT
+            i.itemcode,
+            i.itemname,
+            i.itemcode2,
+            s.all_,
+            d.qty_plus,
+            d.qty_minus
             FROM
+            item i
+            -- รวมยอด Qty ทั้งหมดต่อ itemcode (ไม่โดนซ้ำ)
+            INNER JOIN (SELECT itemcode, SUM(Qty) AS all_ FROM itemslotincabinet GROUP BY itemcode) s ON s.itemcode = i.itemcode
+            -- รวมยอด + / - ต่อ itemcode (ใช้เงื่อนไขเดือนที่นี่)
+            INNER JOIN (
+                SELECT
+                itemcode,
+                SUM(CASE WHEN Sign = '+' THEN Qty ELSE 0 END) AS qty_plus,
+                SUM(CASE WHEN Sign = '-' THEN Qty ELSE 0 END) AS qty_minus
+                FROM
                 itemslotincabinet_detail
-                INNER JOIN item ON itemslotincabinet_detail.itemcode = item.itemcode
-                INNER JOIN itemstock ON itemstock.ItemCode = item.itemcode 
-            WHERE
-                itemslotincabinet_detail.Sign = '+' 
+                WHERE
                 $where_date
-            GROUP BY
-                item.itemcode ";
+                AND itemslotincabinet_detail.Sel = 0
+                GROUP BY
+                itemcode
+            ) d ON d.itemcode = i.itemcode 
+            AND d.qty_plus > 0; ";
+
+// $query = " SELECT
+//                 item.itemname,
+//                 item.itemcode2,
+//                 COUNT( itemstock.ItemCode ) AS all_,
+//                 itemslotincabinet_detail.Qty AS qty 
+//             FROM
+//                 itemslotincabinet_detail
+//                 INNER JOIN item ON itemslotincabinet_detail.itemcode = item.itemcode
+//                 INNER JOIN itemstock ON itemstock.ItemCode = item.itemcode 
+//             WHERE
+//                 itemslotincabinet_detail.Sign = '+' 
+//                 $where_date
+//             GROUP BY
+//                 item.itemcode ";
 
 // $query = " SELECT
 //                 item.itemname,
@@ -417,7 +459,7 @@ while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
             'itemcode2'   => $row['itemcode2'],
             'itemname'    => $row['itemname'],
             'all_'   => $row['all_'],
-            'qty'   => $row['qty']
+            'qty_plus'   => $row['qty_plus']
         ];
 }
 
@@ -426,15 +468,13 @@ $count = 1;
 
 foreach ($dataArray as $item) {
 
-    $sum = $item['all_'] - $item['qty'] ;
 
 
     $sheet->setCellValue('A' . $rowIndex, (string)$count);
     $sheet->setCellValue('B' . $rowIndex, (string)$item['itemcode2']);
     $sheet->setCellValue('C' . $rowIndex, (string)$item['itemname']);
-    $sheet->setCellValue('D' . $rowIndex, (string)$sum);
-    $sheet->setCellValue('E' . $rowIndex, (string)$item['qty']);
-    $sheet->setCellValue('F' . $rowIndex, (string)$item['all_']);
+    $sheet->setCellValue('D' . $rowIndex, (string)$item['qty_plus']);
+    $sheet->setCellValue('E' . $rowIndex, (string)$item['all_']);
 
     $sheet->getRowDimension($rowIndex)->setRowHeight(30);
     $rowIndex++;
@@ -442,7 +482,7 @@ foreach ($dataArray as $item) {
 }
 
 
-$sheet->getStyle('A8:F8')->applyFromArray([
+$sheet->getStyle('A8:E8')->applyFromArray([
     'fill' => [
         'fillType' => Fill::FILL_SOLID,
         'startColor' => [
@@ -482,11 +522,11 @@ $styleArray_Center = [
     ],
 ];
 
-$sheet->getStyle('A8:F8')->applyFromArray($styleArray);
+$sheet->getStyle('A8:E8')->applyFromArray($styleArray);
 $sheet->getStyle('A8:A' . ($rowIndex - 1))->applyFromArray($styleArray);
 
 $sheet->getStyle('A8')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-$sheet->getStyle('A8:F' . ($rowIndex - 1))->applyFromArray($styleArray_Center);
+$sheet->getStyle('A8:E' . ($rowIndex - 1))->applyFromArray($styleArray_Center);
 
 $sheet->getStyle('A8')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 $sheet->getStyle('C9:C' . ($rowIndex - 1))->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
@@ -500,7 +540,6 @@ $sheet->getColumnDimension('B')->setWidth(30); // คอลัมน์ B ปร
 $sheet->getColumnDimension('C')->setWidth(30); // คอลัมน์ B ปรับอัตโนมัติ
 $sheet->getColumnDimension('D')->setWidth(30); // คอลัมน์ B ปรับอัตโนมัติ
 $sheet->getColumnDimension('E')->setWidth(30); // คอลัมน์ B ปรับอัตโนมัติ
-$sheet->getColumnDimension('F')->setWidth(30); // คอลัมน์ B ปรับอัตโนมัติ
 
 
 $spreadsheet->setActiveSheetIndex(0);

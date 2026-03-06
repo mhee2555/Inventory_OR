@@ -450,54 +450,125 @@ $sum_all44 = 0;
             // echo $query;
             // exit;
 
+    // $query = "SELECT
+    //                 hncode.DocNo_SS,
+    //                 i.itemname,
+    //                 i.itemcode,
+    //                 i.itemcode2,
+    //                 MIN(drs.ItemStockID) AS ItemStockID,   -- ใช้ MIN เพื่อให้ order/group ชัดเจน
+    //                 i.SalePrice,
+    //                 i.item_status,
+    //                 COUNT(drs.ID) AS cnt,
+    //                 COUNT(lr.id) AS cnt_return
+    //             FROM hncode
+    //             INNER JOIN deproom dr
+    //                 ON hncode.DocNo_SS = dr.DocNo
+    //             INNER JOIN deproomdetail drd
+    //                 ON dr.DocNo = drd.DocNo
+    //             INNER JOIN deproomdetailsub drs
+    //                 ON drd.ID = drs.Deproomdetail_RowID
+
+    //             LEFT JOIN itemstock s
+    //                 ON s.RowID = drs.ItemStockID
+
+    //             /* itemcode ที่ใช้จริง: ถ้ามี stock ใช้ stock.ItemCode ถ้าไม่มีก็ใช้ itemcode_weighing */
+    //             LEFT JOIN item i
+    //                 ON i.itemcode = COALESCE(s.ItemCode, drs.itemcode_weighing)
+
+    //             /* คืนของ: รองรับทั้ง lr.itemstockID > 0 และ =0 */
+    //             LEFT JOIN log_return lr
+    //                 ON lr.DocNo = hncode.DocNo_SS
+    //             AND (
+    //                     (lr.itemstockID > 0 AND lr.itemstockID = drs.ItemStockID)
+    //                     OR
+    //                     (lr.itemstockID = 0 AND lr.itemCode = i.itemcode)
+    //             )
+
+    //             WHERE hncode.DocNo = '$DocNo'
+
+    //             GROUP BY
+    //                 hncode.DocNo_SS,
+    //                 i.itemname,
+    //                 i.itemcode,
+    //                 i.itemcode2,
+    //                 i.SalePrice,
+    //                 i.item_status
+
+    //             ORDER BY
+    //                 MIN(drs.ItemStockID) ASC,
+    //                 (COUNT(drs.ID) - COUNT(lr.id)) DESC,
+    //                 i.itemname ASC; ";
+
     $query = "SELECT
-                    hncode.DocNo_SS,
-                    i.itemname,
-                    i.itemcode,
-                    i.itemcode2,
-                    MIN(drs.ItemStockID) AS ItemStockID,   -- ใช้ MIN เพื่อให้ order/group ชัดเจน
-                    i.SalePrice,
-                    i.item_status,
-                    COUNT(drs.ID) AS cnt,
-                    COUNT(lr.id) AS cnt_return
-                FROM hncode
-                INNER JOIN deproom dr
-                    ON hncode.DocNo_SS = dr.DocNo
-                INNER JOIN deproomdetail drd
-                    ON dr.DocNo = drd.DocNo
-                INNER JOIN deproomdetailsub drs
-                    ON drd.ID = drs.Deproomdetail_RowID
+    base.DocNo_SS,
+    base.itemname,
+    base.BarCode,
+    base.itemcode,
+    base.itemcode2,
+    base.ItemStockID,
+    base.SalePrice,
+    base.item_status,
+    base.cnt,
+    IFNULL(ret.cnt_return, 0) AS cnt_return
+FROM
+(
+    /* ✅ ฐาน: นับ drs ให้ถูกก่อน */
+    SELECT
+        hn.DocNo_SS,
+        i.itemname,
+        i.BarCode,
+        i.itemcode,
+        i.itemcode2,
+        MIN(drs.ItemStockID) AS ItemStockID,
+        i.SalePrice,
+        i.item_status,
+        COUNT(drs.ID) AS cnt,
+        dr.DocNo AS DocNo_DR
+    FROM hncode hn
+    INNER JOIN deproom dr
+        ON hn.DocNo_SS = dr.DocNo
+    INNER JOIN deproomdetail drd
+        ON dr.DocNo = drd.DocNo
+    INNER JOIN deproomdetailsub drs
+        ON drd.ID = drs.Deproomdetail_RowID
+    LEFT JOIN itemstock s
+        ON s.RowID = drs.ItemStockID
+    LEFT JOIN item i
+        ON i.itemcode = COALESCE(s.ItemCode, drs.itemcode_weighing)
+    WHERE hn.DocNo = '$DocNo'
+    GROUP BY
+        hn.DocNo_SS,
+        dr.DocNo,
+        i.itemname,
+        i.BarCode,
+        i.itemcode,
+        i.itemcode2,
+        i.SalePrice,
+        i.item_status
+) base
 
-                LEFT JOIN itemstock s
-                    ON s.RowID = drs.ItemStockID
+LEFT JOIN
+(
+    /* ✅ ยอดคืน: รวมทุก DocNo ก่อน แล้วค่อย join ด้วย base.DocNo_DR */
+    SELECT
+        lr.DocNo AS DocNo_DR,
+        lr.itemCode,
+        COUNT(*) AS cnt_return
+    FROM log_return lr
+    GROUP BY lr.DocNo, lr.itemCode
+) ret
+  ON ret.DocNo_DR = base.DocNo_DR
+ AND ret.itemCode = base.itemcode
 
-                /* itemcode ที่ใช้จริง: ถ้ามี stock ใช้ stock.ItemCode ถ้าไม่มีก็ใช้ itemcode_weighing */
-                LEFT JOIN item i
-                    ON i.itemcode = COALESCE(s.ItemCode, drs.itemcode_weighing)
-
-                /* คืนของ: รองรับทั้ง lr.itemstockID > 0 และ =0 */
-                LEFT JOIN log_return lr
-                    ON lr.DocNo = hncode.DocNo_SS
-                AND (
-                        (lr.itemstockID > 0 AND lr.itemstockID = drs.ItemStockID)
-                        OR
-                        (lr.itemstockID = 0 AND lr.itemCode = i.itemcode)
-                )
-
-                WHERE hncode.DocNo = '$DocNo'
-
-                GROUP BY
-                    hncode.DocNo_SS,
-                    i.itemname,
-                    i.itemcode,
-                    i.itemcode2,
-                    i.SalePrice,
-                    i.item_status
-
-                ORDER BY
-                    MIN(drs.ItemStockID) ASC,
-                    (COUNT(drs.ID) - COUNT(lr.id)) DESC,
-                    i.itemname ASC; ";
+ORDER BY
+    base.ItemStockID ASC,
+    (CASE
+        WHEN IFNULL(base.BarCode,'') = ''
+        THEN (base.cnt - IFNULL(ret.cnt_return,0))
+        ELSE 0
+     END) DESC,
+    base.itemname ASC;
+ ";
                     
 $meQuery1 = $conn->prepare($query);
 $meQuery1->execute();
@@ -510,13 +581,14 @@ while ($Result_Detail = $meQuery1->fetch(PDO::FETCH_ASSOC)) {
     $cnt_return = $Result_Detail['cnt_return'];
     $item_status = $Result_Detail['item_status'];
     $ItemStockID = $Result_Detail['ItemStockID'];
+    $BarCode = $Result_Detail['BarCode'];
 
     
     if ($Result_Detail['cnt'] != 0) {
 
         $style="";
         $style2="background-color:#E6E6FA;";
-        if($ItemStockID == 0){
+        if($ItemStockID == 0 && ($BarCode == '' || $BarCode == null)){
             $style = " background-color:#e1bee7; ";
             $style2 = " background-color:#e1bee7; ";
         }else{

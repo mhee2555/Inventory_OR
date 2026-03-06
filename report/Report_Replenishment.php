@@ -222,6 +222,7 @@ $query = "SELECT
             INNER JOIN item ON itemstock.ItemCode = item.itemcode 
             $where_date
             AND itemstock.StockID != 0
+            AND itemstock.IsStock = 1
             GROUP BY
             item.itemcode ";
 // $query = " SELECT
@@ -404,10 +405,12 @@ $query = "SELECT
                 itemslotincabinet_detail
                 WHERE
                 $where_date
+                AND itemslotincabinet_detail.Sel = 0
                 GROUP BY
                 itemcode
             ) d ON d.itemcode = i.itemcode 
             AND d.qty_plus > 0; ";
+
 // $query = " SELECT
 //             item.itemname,
 //             item.itemcode2,

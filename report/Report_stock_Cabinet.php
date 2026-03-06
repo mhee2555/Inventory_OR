@@ -154,6 +154,7 @@ foreach ($stockIDs as $idx => $stockID) {
             LEFT JOIN item ON itemstock.itemcode = item.itemcode
         WHERE
             itemstock.StockID = :StockID
+            AND itemstock.IsStock = 1
         GROUP BY
             itemstock.ItemCode, item.itemname
         ORDER BY

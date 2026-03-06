@@ -244,7 +244,7 @@ $query = "SELECT
                 left JOIN stock_room_type ON stock_room.stkr_type_id = stock_room_type.stkr_type_id
                 left JOIN itemstock_transaction_detail ON itemstock_transaction_detail.ItemStockID = itemstock.RowID
                 WHERE
-                itemstock.StockID ='0'
+                    itemstock.IsStock = 0
                 AND itemstock.CabinetUserID != 177
                 AND itemstock.CabinetUserID != 278
                 AND itemstock.CabinetUserID != 251
@@ -463,6 +463,7 @@ $query = " SELECT
             WHERE
                 itemslotincabinet_detail.Sign = '-' 
                 $where_date
+                AND itemslotincabinet_detail.Sel = 0
                 AND itemslotincabinet_detail.UserID != 177
                 AND itemslotincabinet_detail.UserID != 278
                 AND itemstock.CabinetUserID != 251

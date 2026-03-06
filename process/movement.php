@@ -131,6 +131,7 @@ $sub = "
         LEFT JOIN item i ON is2.itemcode = i.itemcode
         WHERE is2.StockID = '$stockid'
           AND is2.itemcode = '$itemCode'
+          AND is2.IsStock = 1
         GROUP BY is2.ItemCode, i.itemname
         "
         :

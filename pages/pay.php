@@ -239,7 +239,7 @@
                                     </div>
                                 </div>
 
-                                
+
 
                                 <div class="col-md-1 text-right" style="max-width: 7.333333%;">
                                     <div class="form-check " style="margin-top: 35px;">
@@ -431,7 +431,7 @@
 <div id="return">
 
     <div class="row mt-3">
-        <div class=" col-md-12 col-lg-9  ">
+        <div class=" col-md-12 col-lg-8  ">
 
             <div class="tab-button-group">
                 <button class="tab-button2 active" id="radio_return">สแกนคืนอุปกรณ์</button>
@@ -447,7 +447,11 @@
             </div> -->
         </div>
 
-        <div class="col-lg-3 text-right">
+        <div class="col-lg-2 text-right"  style="margin-top: 37px;">
+            <input type="text" class="form-control" id="show_hn_barcode">
+        </div>
+
+        <div class="col-lg-2 text-right">
             <div class="form-check " style="margin-top: 38px;">
                 <input type="checkbox" class="form-check-input" id="checkbox_showReturn" style="width: 25px;height: 25px;">
                 <label class="form-check-label f18 ml-4 mt-1" for="checkbox_showReturn" style="color:black;font-weight:bold;">แสดงแบบแยกรหัสอุปกรณ์</label>
@@ -1184,6 +1188,36 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="modalHNCheck" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">กรอก HN เพื่อยืนยัน</h5>
+        <button type="button" class="close" data-dismiss="modal">
+          <span>&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body p-4">
+        <input
+          type="text"
+          class="form-control form-control-lg"
+          id="input_hncode_modal"
+          placeholder="กรอก HN หรือเลขกล่อง"
+        />
+        <small class="text-danger mt-3 d-block"
+               id="hn_modal_error"
+               style="display:none;">
+        </small>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
 
 
 <div class="modal fade" id="myModal_Procedure" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

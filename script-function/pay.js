@@ -3,7 +3,6 @@ var UserName = "";
 var Userid = "";
 var IsSound = "";
 
-
 var procedure_id_Array = [];
 var doctor_Array = [];
 
@@ -15,7 +14,8 @@ var doctor_edit_hn_block_Array = [];
 
 var procedure_edit_ems_Array = [];
 var doctor_edit_ems_Array = [];
-
+var pendingBarCode = "";
+var pendingUsageCode = "";
 $(function () {
 
   session();
@@ -1323,7 +1323,7 @@ function show_detail_deproom_pay() {
             if (value2.cnt_return == 0) {
               var txt22 = 'ยังไม่ได้คืน';
               var txt_btn = 'btn-danger';
-            }else{
+            } else {
               var txt22 = 'คืนแล้ว';
               var txt_btn = 'btn-success';
             }
@@ -4364,6 +4364,8 @@ $("#btn_send_return_data").click(function () {
           FUNC_NAME: "onReturnData",
         },
         success: function (result) {
+
+          $("#show_hn_barcode").val("");
           $("body").loadingModal("destroy");
           feeddata_waitReturn();
         },
@@ -4371,63 +4373,400 @@ $("#btn_send_return_data").click(function () {
     }
   });
 });
+// $("#input_scan_return").keypress(function (e) {
+//   if (e.which == 13) {
+//     $("#input_scan_return").val(convertString($(this).val().trim()));
+//     $.ajax({
+//       url: "process/pay.php",
+//       type: "POST",
+//       data: {
+//         FUNC_NAME: "checkScanReturn",
+//         UsageCode: $(this).val(),
+//       },
+//       success: function (result) {
+//         var ObjData = JSON.parse(result);
+
+//         if (!$.isEmptyObject(ObjData)) {
+//           $.each(ObjData, function (kay, value) {
+
+//             if (value.HasBarCode == 1) {
+//               pendingBarCode = value.BarCode || null;
+
+//               // เปิด modal
+//               $("#hn_modal_error").hide().text("");
+//               $("#input_hncode_modal").val("");
+
+//               $("#modalHNCheck").modal('toggle');
+
+//               // โฟกัสช่องกรอก
+//               setTimeout(() => $("#input_hncode_modal").focus(), 200);
+
+//               $("#input_scan_return").val("");
+//               return; // หยุด flow ไม่ให้ไป updateReturn
+//             }
+
+
+
+//             if (value.Isdeproom == 0) {
+//               showDialogFailed("รหัสนี้อยู่คลังสต๊อกห้องผ่าตัด");
+//               $("#input_scan_return").val("");
+//               if (IsSound == 1) {
+//                 playNot_Found_Item();
+//               }
+//               return;
+//             }
+//             if (value.IsCross == 9) {
+//               showDialogFailed("สแกนรหัสซ้ำ");
+//               $("#input_scan_return").val("");
+//               if (IsSound == 1) {
+//                 playNot_Found_Item();
+//               }
+//               return;
+//             }
+//             var UsageCode = value.UsageCode;
+//             // alert(UsageCode);
+//             $.ajax({
+//               url: "process/pay.php",
+//               type: "POST",
+//               data: {
+//                 FUNC_NAME: "updateReturn",
+//                 UsageCode: UsageCode,
+//               },
+//               success: function (result) {
+//                 feeddata_waitReturn();
+//               },
+//             });
+//           });
+//         } else {
+//           showDialogFailed("QR Code ไม่ถูกต้องไม่พบรหัสนี้ในระบบ");
+//           if (IsSound == 1) {
+//             playNot_Found_Item();
+//           }
+//         }
+
+//         $("#input_scan_return").val("");
+//       },
+//     });
+//   }
+// });
+
+
+// $("#input_scan_return").keypress(function (e) {
+//   if (e.which == 13) {
+
+//     $("#input_scan_return").val(convertString($(this).val().trim()));
+
+//     $.ajax({
+//       url: "process/pay.php",
+//       type: "POST",
+//       data: {
+//         FUNC_NAME: "checkScanReturn",
+//         UsageCode: $(this).val(),
+//       },
+//       success: function (result) {
+
+//         var ObjData = JSON.parse(result);
+
+//         if (!$.isEmptyObject(ObjData)) {
+
+//           $.each(ObjData, function (kay, value) {
+
+//             // ===================================================
+//             // ✅ CASE 1: เจอ BarCode -> ต้องเช็ค HN ก่อน
+//             // ===================================================
+//             if (value.HasBarCode == 1) {
+
+//               pendingBarCode = value.BarCode || "";
+//               pendingUsageCode = value.UsageCode || "";
+
+//               // 🔥 ถ้ามี HN จำไว้แล้ว → เช็คเลย ไม่ต้อง modal
+//               let hnSaved = $("#show_hn_barcode").val().trim();
+
+//               if (hnSaved != "") {
+
+//                 checkAndInsertReturnSave(pendingBarCode, hnSaved);
+//                 $("#input_scan_return").val("");
+//                 return;
+//               }
+
+//               // ❗ ถ้ายังไม่มี HN → เปิด modal ให้กรอก
+//               $("#hn_modal_error").hide().text("");
+//               $("#input_hncode_modal").val("");
+
+//               $("#modalHNCheck").modal("show");
+
+//               setTimeout(() => $("#input_hncode_modal").focus(), 200);
+
+//               $("#input_scan_return").val("");
+//               return;
+//             }
+
+//             // ===================================================
+//             // ✅ CASE 2: Flow เดิม (UsageCode)
+//             // ===================================================
+//             if (value.Isdeproom == 0) {
+//               showDialogFailed("รหัสนี้อยู่คลังสต๊อกห้องผ่าตัด");
+//               $("#input_scan_return").val("");
+//               if (IsSound == 1) playNot_Found_Item();
+//               return;
+//             }
+
+//             if (value.IsCross == 9) {
+//               showDialogFailed("สแกนรหัสซ้ำ");
+//               $("#input_scan_return").val("");
+//               if (IsSound == 1) playNot_Found_Item();
+//               return;
+//             }
+
+//             // ✅ ผ่านแล้ว updateReturn ตามเดิม
+//             $.ajax({
+//               url: "process/pay.php",
+//               type: "POST",
+//               data: {
+//                 FUNC_NAME: "updateReturn",
+//                 UsageCode: value.UsageCode,
+//               },
+//               success: function () {
+//                 feeddata_waitReturn();
+//               },
+//             });
+
+//           });
+
+//         } else {
+
+//           showDialogFailed("QR Code ไม่ถูกต้องไม่พบรหัสนี้ในระบบ");
+//           if (IsSound == 1) playNot_Found_Item();
+//         }
+
+//         $("#input_scan_return").val("");
+//       },
+//     });
+//   }
+// });
+
 $("#input_scan_return").keypress(function (e) {
   if (e.which == 13) {
-    $("#input_scan_return").val(convertString($(this).val().trim()));
+
+    const input = convertString($(this).val().trim());
+    $("#input_scan_return").val(input);
+
+    // ถ้าว่าง ไม่ต้องยิง
+    if (!input) return;
+
     $.ajax({
       url: "process/pay.php",
       type: "POST",
+      dataType: "json",
       data: {
         FUNC_NAME: "checkScanReturn",
-        UsageCode: $(this).val(),
+        UsageCode: input,
       },
-      success: function (result) {
-        var ObjData = JSON.parse(result);
+      success: function (ObjData) {
 
-        if (!$.isEmptyObject(ObjData)) {
-          $.each(ObjData, function (kay, value) {
-            if (value.Isdeproom == 0) {
-              showDialogFailed("รหัสนี้อยู่คลังสต๊อกห้องผ่าตัด");
-              $("#input_scan_return").val("");
-              if (IsSound == 1) {
-                playNot_Found_Item();
-              }
-              return;
-            }
-            if (value.IsCross == 9) {
-              showDialogFailed("สแกนรหัสซ้ำ");
-              $("#input_scan_return").val("");
-              if (IsSound == 1) {
-                playNot_Found_Item();
-              }
-              return;
-            }
-            var UsageCode = value.UsageCode;
-            // alert(UsageCode);
-            $.ajax({
-              url: "process/pay.php",
-              type: "POST",
-              data: {
-                FUNC_NAME: "updateReturn",
-                UsageCode: UsageCode,
-              },
-              success: function (result) {
-                feeddata_waitReturn();
-              },
-            });
-          });
-        } else {
+        // ถ้า backend ส่ง [] หรือไม่เจอ
+        if (!ObjData || $.isEmptyObject(ObjData)) {
           showDialogFailed("QR Code ไม่ถูกต้องไม่พบรหัสนี้ในระบบ");
-          if (IsSound == 1) {
-            playNot_Found_Item();
-          }
+          if (IsSound == 1) playNot_Found_Item();
+          $("#input_scan_return").val("");
+          return;
         }
 
+        // ObjData เป็น object 1 แถวแล้ว (LIMIT 1) ไม่ต้อง each
+        const value = ObjData;
+
+        // ===================================================
+        // ✅ CASE A: สแกนมาเป็น BarCode
+        // ===================================================
+        // (รองรับทั้ง MatchType และ fallback จาก IsBarCodeMatch)
+        if (value.MatchType === "BarCode" || value.IsBarCodeMatch == 1) {
+
+          pendingBarCode = value.BarCode || input;
+          pendingUsageCode = value.UsageCode || "";
+
+          // 🔥 ถ้ามี HN จำไว้แล้ว → เช็คเลย ไม่ต้อง modal
+          let hnSaved = $("#show_hn_barcode").val().trim();
+
+          if (hnSaved != "") {
+            checkAndInsertReturnSave(pendingBarCode, hnSaved);
+            $("#input_scan_return").val("");
+            return;
+          }
+
+          // ❗ ถ้ายังไม่มี HN → เปิด modal ให้กรอก
+          $("#hn_modal_error").hide().text("");
+          $("#input_hncode_modal").val("");
+          $("#modalHNCheck").modal("show");
+
+          setTimeout(() => $("#input_hncode_modal").focus(), 200);
+
+          $("#input_scan_return").val("");
+          return;
+        }
+
+        // ===================================================
+        // ✅ CASE B: สแกนมาเป็น UsageCode (หรือ Both ให้ถือว่า UsageCode)
+        // ===================================================
+        // ถ้า MatchType เป็น Both ให้ถือว่า UsageCode ก่อน (กัน flow เดิมพัง)
+        if (value.MatchType === "UsageCode" || value.MatchType === "Both" || value.IsUsageMatch == 1) {
+
+          if (value.Isdeproom == 0) {
+            showDialogFailed("รหัสนี้อยู่คลังสต๊อกห้องผ่าตัด");
+            $("#input_scan_return").val("");
+            if (IsSound == 1) playNot_Found_Item();
+            return;
+          }
+
+          if (value.IsCross == 9) {
+            showDialogFailed("สแกนรหัสซ้ำ");
+            $("#input_scan_return").val("");
+            if (IsSound == 1) playNot_Found_Item();
+            return;
+          }
+
+          // ✅ ผ่านแล้ว updateReturn ตามเดิม
+
+          $.ajax({
+            url: "process/pay.php",
+            type: "POST",
+            data: {
+              FUNC_NAME: "updateReturn",
+              UsageCode: value.UsageCode,
+            },
+            success: function () {
+              feeddata_waitReturn();
+            },
+          });
+
+          $("#input_scan_return").val("");
+          return;
+        }
+
+        // ===================================================
+        // ✅ CASE C: Unknown
+        // ===================================================
+        showDialogFailed("ไม่สามารถระบุได้ว่าเป็น UsageCode หรือ BarCode");
+        if (IsSound == 1) playNot_Found_Item();
         $("#input_scan_return").val("");
       },
+
+      error: function () {
+        showDialogFailed("เชื่อมต่อผิดพลาด (AJAX Error)");
+        if (IsSound == 1) playNot_Found_Item();
+        $("#input_scan_return").val("");
+      }
     });
   }
 });
+
+
+function checkAndInsertReturnSave(barcode, hn) {
+
+  $.ajax({
+    url: "process/pay.php",
+    type: "POST",
+    data: {
+      FUNC_NAME: "checkBarcodeInHn",
+      HnCode: hn,
+      BarCode: barcode,
+    },
+    success: function (res) {
+
+      let data = JSON.parse(res);
+
+      if (data.ok && String(data.found) === "1") {
+
+        // ✅ INSERT ลง return_save
+        $.ajax({
+          url: "process/pay.php",
+          type: "POST",
+          dataType: "json", // ✅ สำคัญมาก ให้ parse JSON อัตโนมัติ
+          data: {
+            FUNC_NAME: "insertReturnSave",
+            BarCode: barcode,
+            hncode: hn,
+            itemCode: data.itemcode,
+          },
+          success: function (res) {
+
+            // ❌ ถ้า backend ส่ง ok=false
+            if (!res.ok) {
+              Swal.fire({
+                icon: "error",
+                title: "ผิดพลาด",
+                text: res.message || "เกิดข้อผิดพลาด",
+              });
+              return;
+            }
+
+            // ⚠️ ถ้าคืนครบแล้ว (ไม่ insert)
+            if (res.skipped_insert == 1) {
+              Swal.fire({
+                icon: "info",
+                title: "คืนครบแล้ว",
+                text: res.message,
+                timer: 1500,
+                showConfirmButton: false,
+              });
+              return;
+            }
+
+            // ✅ Insert สำเร็จ
+            Swal.fire({
+              icon: "success",
+              title: "บันทึกสำเร็จ",
+              text:
+                res.check
+                  ? `เหลืออีก ${res.check.remain_qty} ชิ้น`
+                  : "บันทึกสำเร็จ",
+              timer: 1200,
+              showConfirmButton: false,
+            });
+
+            // โหลดข้อมูลใหม่
+            feeddata_waitReturn();
+          },
+
+          error: function (xhr, status, error) {
+            Swal.fire({
+              icon: "error",
+              title: "AJAX Error",
+              text: error,
+            });
+          },
+        });
+
+
+      } else {
+        showDialogFailed(data.message || "ไม่พบ BarCode นี้ใน HN");
+        if (IsSound == 1) playNot_Found_Item();
+      }
+    },
+  });
+}
+
+
+$("#input_hncode_modal").off("keypress").on("keypress", function (e) {
+  if (e.which != 13) return;
+
+  let hn = convertString($(this).val().trim());
+
+  if (hn == "") {
+    $("#hn_modal_error").show().text("กรุณากรอก HN/เลขกล่อง");
+    return;
+  }
+
+  // ✅ จำค่า HN ไว้ใช้ครั้งต่อไป
+  $("#show_hn_barcode").val(hn);
+
+  // ✅ เช็ค + Insert
+  checkAndInsertReturnSave(pendingBarCode, hn);
+
+  // ปิด modal
+  $("#modalHNCheck").modal("hide");
+});
+
+
 
 $("#input_search_history_return").keyup(function (e) {
   feeddata_history_Return();
