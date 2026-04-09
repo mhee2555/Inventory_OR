@@ -415,8 +415,8 @@ $query = "SELECT
                 FROM
                 itemslotincabinet_detail
                 WHERE
+                itemslotincabinet_detail.Sel = 0
                 $where_date
-                AND itemslotincabinet_detail.Sel = 0
                 GROUP BY
                 itemcode
             ) d ON d.itemcode = i.itemcode 

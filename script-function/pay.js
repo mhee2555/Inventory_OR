@@ -4712,18 +4712,20 @@ function checkAndInsertReturnSave(barcode, hn) {
             }
 
             // ✅ Insert สำเร็จ
-            Swal.fire({
-              icon: "success",
-              title: "บันทึกสำเร็จ",
-              text:
-                res.check
-                  ? `เหลืออีก ${res.check.remain_qty} ชิ้น`
-                  : "บันทึกสำเร็จ",
-              timer: 1200,
-              showConfirmButton: false,
-            });
+            // Swal.fire({
+            //   icon: "success",
+            //   title: "บันทึกสำเร็จ",
+            //   text:
+            //     res.check
+            //       ? `เหลืออีก ${res.check.remain_qty} ชิ้น`
+            //       : "บันทึกสำเร็จ",
+            //   timer: 1200,
+            //   showConfirmButton: false,
+            // });
 
             // โหลดข้อมูลใหม่
+
+            $("#input_scan_return").focus();
             feeddata_waitReturn();
           },
 

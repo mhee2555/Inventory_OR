@@ -224,6 +224,7 @@ foreach ($stockMap as $stockid => $stockName) {
                 COUNT(is2.itemcode) AS qty
             FROM itemstock is2
             WHERE is2.StockID = :stockid
+            AND is2.IsStock = 1
             GROUP BY is2.ItemCode
         ";
     } else {

@@ -992,11 +992,18 @@ function deleteUser($conn)
     $EmpCode = $_POST['EmpCode'];
 
 
-    $query = "DELETE FROM users WHERE ID = '$ID' ";
-    $query = "DELETE FROM employee WHERE EmpCode = '$EmpCode' ";
+    $query1 = "DELETE FROM users WHERE ID = '$ID' ";
+    $query2 = "DELETE FROM employee WHERE EmpCode = '$EmpCode' ";
+    $query3 = "DELETE FROM user_cabinet WHERE user_id = '$ID' ";
 
-    $meQuery = $conn->prepare($query);
-    $meQuery->execute();
+    $meQuery1 = $conn->prepare($query1);
+    $meQuery1->execute();
+
+    $meQuery2 = $conn->prepare($query2);
+    $meQuery2->execute();
+
+    $meQuery3 = $conn->prepare($query3);
+    $meQuery3->execute();
     echo "delete success";
     unset($conn);
     die;
@@ -1108,9 +1115,17 @@ function saveUser($conn)
             $stmt->execute([':userID' => $newUserId]);
 
             // 6) INSERT user_cabinet
-            $sqlInsertCab = "INSERT INTO user_cabinet (user_id) VALUES (:uid)";
+            $cabinets = [1, 2, 3, 4, 5, 8];
+
+            $sqlInsertCab = "INSERT INTO user_cabinet (user_id, cabinet_id) VALUES (:uid, :cabinet_id)";
             $stmt = $conn->prepare($sqlInsertCab);
-            $stmt->execute([':uid' => $newUserId]);
+
+            foreach ($cabinets as $cab) {
+                $stmt->execute([
+                    ':uid' => $newUserId,
+                    ':cabinet_id' => $cab
+                ]);
+            }
 
             $conn->commit();
             echo "insert success";
