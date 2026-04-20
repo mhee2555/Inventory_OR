@@ -36,6 +36,8 @@ if (!empty($_POST['FUNC_NAME'])) {
         selection_add_item($conn,$db);
     } else if ($_POST['FUNC_NAME'] == 'onUpdatesound') {
         onUpdatesound($conn,$db);
+    } else if ($_POST['FUNC_NAME'] == 'onUpdateauto') {
+        onUpdateauto($conn,$db);
     }
 }
 
@@ -351,6 +353,25 @@ function selection_receive_stock($conn,$db)
 }
 
 
+
+function onUpdateauto($conn,$db)
+{
+    $return = [];
+    $Userid = $_POST['Userid'];
+    $select_auto = $_POST['select_auto'];
+
+    $query = "UPDATE users SET IspayAuto = $select_auto WHERE ID = '$Userid' ";
+
+    $_SESSION['IspayAuto'] = $select_auto;
+
+
+    $meQuery = $conn->prepare($query);
+    $meQuery->execute();
+
+    echo json_encode($return);
+    unset($conn);
+    die;
+}
 
 function onUpdatesound($conn,$db)
 {

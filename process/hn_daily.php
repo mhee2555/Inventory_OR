@@ -29,7 +29,183 @@ if (!empty($_POST['FUNC_NAME'])) {
         updateDetail_qty($conn, $db);
     } else if ($_POST['FUNC_NAME'] == 'onUPDATE_his') {
         onUPDATE_his($conn, $db);
+    } else if ($_POST['FUNC_NAME'] == 'set_hn') {
+        set_hn($conn, $db);
+    } else if ($_POST['FUNC_NAME'] == 'check_routine') {
+        check_routine($conn, $db);
+    } else if ($_POST['FUNC_NAME'] == 'onconfirm_request') {
+        onconfirm_request($conn, $db);
     }
+}
+
+
+function onconfirm_request($conn, $db)
+{
+    $return = array();
+    $txt_docno_request = $_POST['txt_docno_request'];
+    $array_itemcode = $_POST['array_itemcode'];
+    $array_qty = $_POST['array_qty'];
+
+
+    $Userid = $_SESSION['Userid'];
+    $DepID = $_SESSION['DepID'];
+    $deproom = $_SESSION['deproom'];
+
+
+
+
+    $count = 0;
+    if ($txt_docno_request == "") {
+        $remark = "สร้างจาก ขอเบิกอุปกรณ์ ";
+        $txt_docno_request = createDocNo($conn, $Userid, $DepID, $deproom, $remark, 0, 1, 0, 0, '', '', '', '', $db, 0,0,0);
+    }
+
+    foreach ($array_itemcode as $key => $value) {
+
+        $_cntcheck = 0;
+        $queryCheck = "SELECT COUNT( deproomdetail.ItemCode ) AS cntcheck  , IsCancel
+                        FROM
+                            deproomdetail 
+                        WHERE
+                            deproomdetail.DocNo = '$txt_docno_request' 
+                            AND deproomdetail.ItemCode = '$value' ";
+
+
+        $meQuery = $conn->prepare($queryCheck);
+        $meQuery->execute();
+        while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+            $_cntcheck = $row['cntcheck'];
+            $_IsCancel = $row['IsCancel'];
+        }
+
+        if ($_cntcheck > 0) {
+
+            if ($_IsCancel == 0) {
+                $queryUpdate = "UPDATE deproomdetail 
+                SET Qty = (Qty +  $array_qty[$key])
+                WHERE
+                    DocNo = '$txt_docno_request' 
+                    AND ItemCode = '$value'  ";
+            } else {
+                $queryUpdate = "UPDATE deproomdetail 
+                SET Qty = $array_qty[$key] , IsCancel = 0
+                WHERE
+                    DocNo = '$txt_docno_request' 
+                    AND ItemCode = '$value'  ";
+            }
+
+            $meQueryUpdate = $conn->prepare($queryUpdate);
+            $meQueryUpdate->execute();
+        } else {
+
+            if ($db == 1) {
+                $queryInsert = "INSERT INTO deproomdetail ( DocNo, ItemCode, Qty, IsStatus, PayDate, IsCancel, ModifyUser, ModifyTime , IsStart  , IsQtyStart  )
+                VALUES
+                    ( '$txt_docno_request', '$value', '$array_qty[$key]', 0, NOW(), 0, '$Userid',NOW() , 1 , $array_qty[$key])";
+            } else {
+                $queryInsert = "INSERT INTO deproomdetail ( DocNo, ItemCode, Qty, IsStatus, PayDate, IsCancel, ModifyUser, ModifyTime , IsStart  , IsQtyStart  )
+                VALUES
+                    ( '$txt_docno_request', '$value', '$array_qty[$key]', 0, GETDATE(), 0, '$Userid',GETDATE() , 1 , $array_qty[$key])";
+            }
+
+
+
+            $meQueryInsert = $conn->prepare($queryInsert);
+            $meQueryInsert->execute();
+        }
+
+
+        $insert_log = "INSERT INTO log_activity_users (itemCode, qty, isStatus, DocNo, userID, createAt) 
+                        VALUES (:itemCode, :qty, :isStatus, :DocNo, :Userid, NOW())";
+
+        $meQuery_log = $conn->prepare($insert_log);
+
+        $meQuery_log->bindParam(':itemCode', $value);
+        $meQuery_log->bindParam(':qty', $array_qty[$key]);
+        $meQuery_log->bindValue(':isStatus', 1, PDO::PARAM_INT);
+        $meQuery_log->bindParam(':DocNo', $txt_docno_request);
+        $meQuery_log->bindParam(':Userid', $Userid);
+
+
+        $meQuery_log->execute();
+
+
+        $count++;
+    }
+
+
+    echo json_encode($txt_docno_request);
+    unset($conn);
+    die;
+}
+
+
+
+function check_routine($conn, $db)
+{
+    $return = array();
+    $select_deproom_request = $_POST['select_deproom_request'];
+    $procedure_id_Array = $_POST['procedure_id_Array'];
+    $doctor_Array = $_POST['doctor_Array'];
+    $txt_docno_request = $_POST['txt_docno_request'];
+
+    $procedure_id_Array = implode(",", $procedure_id_Array);
+    $doctor_Array = implode(",", $doctor_Array);
+
+    $select = "SELECT
+                    routine_detail.itemcode,
+                    routine_detail.qty 
+                FROM
+                    routine_detail
+                    INNER JOIN routine ON routine_detail.routine_id = routine.id 
+                    INNER JOIN item ON item.itemcode = routine_detail.itemcode 
+                WHERE
+                    routine.doctor = '$doctor_Array' 
+                    AND routine.proceduce = '$procedure_id_Array' 
+                    AND item.IsCancel = '0' 
+                    AND routine.departmentroomid = '$select_deproom_request' ";
+    $meQuery = $conn->prepare($select);
+    $meQuery->execute();
+    while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+        $return[] = $row;
+    }
+    echo json_encode($return);
+    unset($conn);
+    die;
+}
+
+
+function set_hn($conn, $db)
+{
+    $ID = $_POST['ID'];
+    $return = array();
+    $Q1 = "SELECT
+                set_hn.ID,
+                set_hn.hncode,
+                DATE_FORMAT( set_hn.serviceDate, '%d-%m-%Y' ) AS serviceDate,
+                DATE_FORMAT( set_hn.serviceDate, '%H:%i' ) AS serviceTime,
+                set_hn.doctor,
+                set_hn.departmentroomid,
+                set_hn.`procedure`,
+                set_hn.remark,
+                set_hn.isStatus,
+                set_hn.userID,
+                set_hn.isCancel,
+                set_hn.createAt ,
+                set_hn.DocNo_deproom 
+            FROM
+                set_hn 
+            WHERE set_hn.ID = '$ID'  ";
+    $meQuery = $conn->prepare($Q1);
+    $meQuery->execute();
+    while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
+        $return[] = $row;
+    }
+
+
+    echo json_encode($return);
+    unset($conn);
+    die;
 }
 
 function onUPDATE_his($conn, $db)
@@ -232,6 +408,7 @@ function update_create_request($conn, $db)
 {
     $return = array();
     $ID = $_POST['ID'];
+    $IspayAuto = $_POST['IspayAuto'];
     $Userid = $_SESSION['Userid'];
     $DepID = $_SESSION['DepID'];
 

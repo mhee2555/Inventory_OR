@@ -475,6 +475,12 @@ $("#btn_save_hn_manual").click(function () {
           doctor_Array = [];
           $(".clear_procedure").attr("hidden", true);
           procedure_id_Array = [];
+
+
+
+
+
+
         },
       });
     }
@@ -692,6 +698,7 @@ function session() {
       deproom = ObjData.deproom;
       RefDepID = ObjData.RefDepID;
       Permission_name = ObjData.Permission_name;
+      IspayAuto = ObjData.IspayAuto;
 
 
     },

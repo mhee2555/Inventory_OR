@@ -16,6 +16,7 @@
     $return['EmpCode'][] = $_SESSION['EmpCode'];
     $return['Permission_name'][] = $_SESSION['Permission_name'];
     $return['IsSound'][] = $_SESSION['IsSound'];
+    $return['IspayAuto'][] = $_SESSION['IspayAuto'];
 
 
     echo json_encode($return);

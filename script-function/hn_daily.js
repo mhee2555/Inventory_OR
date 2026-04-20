@@ -1,3 +1,8 @@
+var procedure_id_Array = [];
+var doctor_Array = [];
+var select_deproom_request = "";
+var DocNo_deproom = "";
+
 $(function () {
   $("#checkbox_filter").change(function () {
     $("#select_type").val("");
@@ -95,7 +100,6 @@ function set_his() {
     success: function (result) {
       var ObjData = JSON.parse(result);
       if (!$.isEmptyObject(ObjData)) {
-        
         $(".tab-button").removeClass("active");
         $("#radio_his").addClass("active");
 
@@ -301,7 +305,7 @@ function show_detail_his(ID, IsStatus) {
         parseFloat(QQ).toLocaleString(undefined, {
           minimumFractionDigits: 2,
           maximumFractionDigits: 2,
-        })
+        }),
       );
 
       $("#table_detail_his tbody").html(_tr);
@@ -517,6 +521,7 @@ function update_create_request(ID) {
         data: {
           FUNC_NAME: "update_create_request",
           ID: ID,
+          IspayAuto: IspayAuto,
         },
         success: function (result) {
           show_detail_daily();
@@ -542,6 +547,102 @@ function update_create_request(ID) {
           //   loadScript("script-function/create_request.js");
           //   loadScript("assets/lang/create_request.js");
           // });
+
+          if (IspayAuto == 1) {
+            $.ajax({
+              url: "process/hn_daily.php",
+              type: "POST",
+              data: {
+                FUNC_NAME: "set_hn",
+                ID: ID,
+              },
+              success: function (result) {
+                var ObjData = JSON.parse(result);
+                if (!$.isEmptyObject(ObjData)) {
+                  $.each(ObjData, function (kay, value) {
+                    select_deproom_request = value.departmentroomid;
+                    DocNo_deproom = value.DocNo_deproom;
+
+                    $.ajax({
+                      url: "process/pay.php",
+                      type: "POST",
+                      data: {
+                        FUNC_NAME: "showDetail_Doctor",
+                        doctor: value.doctor,
+                      },
+                      success: function (result) {
+                        var ObjData = JSON.parse(result);
+                        if (!$.isEmptyObject(ObjData)) {
+                          $.each(ObjData, function (kay, value) {
+                            doctor_Array.push(value.ID.toString());
+                          });
+                        }
+                      },
+                    });
+
+                    $.ajax({
+                      url: "process/pay.php",
+                      type: "POST",
+                      data: {
+                        FUNC_NAME: "showDetail_Procedure",
+                        procedure: value.procedure,
+                      },
+                      success: function (result) {
+                        var ObjData = JSON.parse(result);
+                        if (!$.isEmptyObject(ObjData)) {
+                          $.each(ObjData, function (kay, value) {
+                            procedure_id_Array.push(value.ID.toString());
+                          });
+                        }
+                      },
+                    });
+                  });
+                }
+              },
+            });
+
+            showLoading();
+            setTimeout(() => {
+              $.ajax({
+                url: "process/hn_daily.php",
+                type: "POST",
+                data: {
+                  FUNC_NAME: "check_routine",
+                  procedure_id_Array: procedure_id_Array,
+                  doctor_Array: doctor_Array,
+                  select_deproom_request: select_deproom_request,
+                  txt_docno_request: DocNo_deproom,
+                },
+                success: function (result) {
+                  var ObjData = JSON.parse(result);
+                  if (!$.isEmptyObject(ObjData)) {
+                    $.each(ObjData, function (kay, value) {
+                      itemcode_array.push(value.itemcode.toString());
+                      qty_array.push(value.qty.toString());
+                    });
+
+                    $.ajax({
+                      url: "process/hn_daily.php",
+                      type: "POST",
+                      data: {
+                        FUNC_NAME: "onconfirm_request",
+                        array_itemcode: itemcode_array,
+                        array_qty: qty_array,
+                        txt_docno_request: DocNo_deproom,
+                      },
+                      success: function (result) {},
+                    });
+
+                  } else {
+                    showDialogFailed("ไม่พบ Routine");
+                    $("#btn_routine").attr("disabled", false);
+                  }
+                },
+              });
+
+             $("body").loadingModal("destroy");
+            }, 3000);
+          }
         },
       });
     }
@@ -656,6 +757,7 @@ function session() {
       deproom = ObjData.deproom;
       RefDepID = ObjData.RefDepID;
       Permission_name = ObjData.Permission_name;
+      IspayAuto = ObjData.IspayAuto;
     },
   });
 }

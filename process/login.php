@@ -181,6 +181,7 @@ function LoginUser($conn, $db)
                 users.B_ID,
                 users.Lang,
                 users.IsSound,
+                users.IspayAuto,
                 users.display,
                 users.font,
                 employee.DepID,
@@ -271,6 +272,7 @@ function LoginUser($conn, $db)
     $_SESSION['Lang']        = $row['Lang'];
     $_SESSION['display']     = $row['display'];
     $_SESSION['IsSound']     = $row['IsSound'];
+    $_SESSION['IspayAuto']     = $row['IspayAuto'];
     $_SESSION['font']        = $row['font'];
     $_SESSION['RefDepID']    = $row['RefDepID'];
     $_SESSION['UserName']    = $row['UserName'];
