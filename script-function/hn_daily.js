@@ -504,6 +504,9 @@ function show_detail_daily() {
 }
 
 function update_create_request(ID) {
+  qty_array = [];
+  itemcode_array = [];
+
   Swal.fire({
     title: "ยืนยัน",
     text: "ยืนยัน! การไปหน้าสร้างใบขอเบิกอุปกรณ์ ?",
@@ -600,7 +603,7 @@ function update_create_request(ID) {
                 }
               },
             });
-
+            //
             showLoading();
             setTimeout(() => {
               $.ajax({
@@ -621,31 +624,49 @@ function update_create_request(ID) {
                       qty_array.push(value.qty.toString());
                     });
 
-                    $.ajax({
-                      url: "process/hn_daily.php",
-                      type: "POST",
-                      data: {
-                        FUNC_NAME: "onconfirm_request",
-                        array_itemcode: itemcode_array,
-                        array_qty: qty_array,
-                        txt_docno_request: DocNo_deproom,
-                      },
-                      success: function (result) {},
-                    });
+                    setTimeout(() => {
+                      $.ajax({
+                        url: "process/hn_daily.php",
+                        type: "POST",
+                        data: {
+                          FUNC_NAME: "onconfirm_request",
+                          array_itemcode: itemcode_array,
+                          array_qty: qty_array,
+                          txt_docno_request: DocNo_deproom,
+                        },
+                        success: function (result) {
+                          $("body").loadingModal("destroy");
+                        },
+                      });
+                    }, 1000);
+
+
+
 
                   } else {
+                    $("body").loadingModal("destroy");
                     showDialogFailed("ไม่พบ Routine");
                     $("#btn_routine").attr("disabled", false);
                   }
                 },
               });
 
-             $("body").loadingModal("destroy");
             }, 3000);
           }
         },
       });
     }
+  });
+}
+
+function showLoading() {
+  $("body").loadingModal({
+    position: "auto",
+    text: "กำลังโหลด...",
+    color: "#fff",
+    opacity: "0.7",
+    backgroundColor: "rgb(0,0,0)",
+    animation: "threeBounce",
   });
 }
 

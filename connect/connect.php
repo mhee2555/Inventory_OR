@@ -9,7 +9,7 @@ date_default_timezone_set("Asia/Bangkok");
 
 
 
-if($db == 1){
+// if($db == 1){
 
 	$host = '10.11.9.6'; // e.g., localhost, 127.0.0.1
 	$dbname = 'inventory_or';
@@ -29,23 +29,23 @@ if($db == 1){
 	} catch (PDOException $e) {
 		echo "Connection failed: " . $e->getMessage();
 	}
-}else{
+// }else{
 
-	$p_DB = "1";
-	$serverName = '10.11.9.21';
-	$userName = 'sa';
-	$userPassword = 'A$192dijd';
-	$dbName = 'or_smc';
+// 	$p_DB = "1";
+// 	$serverName = '10.11.9.21';
+// 	$userName = 'sa';
+// 	$userPassword = 'A$192dijd';
+// 	$dbName = 'or_smc';
 
 
-	try{
-		$conn = new PDO("sqlsrv:server=$serverName; Database = $dbName", $userName, $userPassword);
-		$conn->setAttribute(PDO::SQLSRV_ATTR_ENCODING, PDO::SQLSRV_ENCODING_UTF8);
-	}
-	catch(Exception $e){
-		die(print_r($e->getMessage()));
-	}
-}
+// 	try{
+// 		$conn = new PDO("sqlsrv:server=$serverName; Database = $dbName", $userName, $userPassword);
+// 		$conn->setAttribute(PDO::SQLSRV_ATTR_ENCODING, PDO::SQLSRV_ENCODING_UTF8);
+// 	}
+// 	catch(Exception $e){
+// 		die(print_r($e->getMessage()));
+// 	}
+// }
  
 
 

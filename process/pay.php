@@ -13379,6 +13379,8 @@ function show_detail_item_ByDocNo($conn, $db)
                 itemtype.TyeName 
             ORDER BY deproomdetail.ModifyTime DESC ";
 
+     
+
     $meQuery = $conn->prepare($query);
     $meQuery->execute();
     while ($row = $meQuery->fetch(PDO::FETCH_ASSOC)) {
